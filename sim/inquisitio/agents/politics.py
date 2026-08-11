@@ -1,82 +1,56 @@
+"""Politics agent — fear Critical / Inquisitor, value Hooks."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any
+import random
 
-from inquisitio.model import FactionId, LocationId
-
-
-@dataclass
-class PlayDecision:
-    card_id: str
-    location: LocationId
-    move_agent: bool = True
-    agent_dest: LocationId | None = None
-    intent: str = ""
-    feint: bool = False
-    blame_target: FactionId | None = None
+from inquisitio.cards.loader import load_all_cards
+from inquisitio.engine.state import FactionId, GameState
 
 
-@dataclass
-class AccuseDecision:
-    accuse: bool
-    target: FactionId | None = None
-    strategic: bool = False
-    reason: str = ""
+class PoliticsAgent:
+    def __init__(self, rng: random.Random):
+        self.rng = rng
 
-
-@dataclass
-class BeliefState:
-    """Simple belief: likely focus locations per rival."""
-
-    focus: dict[FactionId, dict[LocationId, float]] = field(default_factory=dict)
-    seen_plays: dict[FactionId, list[str]] = field(default_factory=dict)
-
-    def observe_play(self, faction: FactionId, location: LocationId, card_id: str) -> None:
-        bucket = self.focus.setdefault(faction, {})
-        for loc in list(bucket.keys()):
-            bucket[loc] *= 0.85
-        bucket[location] = bucket.get(location, 0.1) + 0.4
-        self.seen_plays.setdefault(faction, []).append(card_id)
-
-    def likely_location(self, faction: FactionId) -> LocationId | None:
-        bucket = self.focus.get(faction) or {}
-        if not bucket:
+    def choose_card(self, state: GameState, faction: FactionId, legal: list[str]) -> str | None:
+        if not legal:
             return None
-        return max(bucket.items(), key=lambda kv: kv[1])[0]
-
-
-@dataclass
-class PoliticsState:
-    alliances: dict[FactionId, FactionId] = field(default_factory=dict)  # me -> ally
-    threats: dict[FactionId, float] = field(default_factory=dict)
-
-    def set_ally(self, me: FactionId, ally: FactionId) -> None:
-        self.alliances[me] = ally
-
-    def decay(self) -> None:
-        # alliances last one era unless refreshed
-        self.alliances.clear()
-
-
-def intrigue_progress(state, faction: FactionId) -> float:
-    p = state.player(faction)
-    mapping = {
-        FactionId.SWIETE_OFICJUM: min(1.0, (p.stakes * 2 + p.influence_tribunal / 4.0) / 2.0),
-        FactionId.CIENIE_AL_ANDALUS: (p.evacuated_relics * 2 + p.relics) / 4.0,
-        FactionId.KORONA_BORGIOWIE: (p.control_palace + p.control_market) / 4.0,
-        FactionId.KABALA_TOLEDO: p.clues / 4.0,
-        FactionId.GILDIA_CIENI: len(set(p.collapses)) / 2.0,
-    }
-    return float(mapping.get(faction, 0.0))
-
-
-def build_threat_map(state, me: FactionId) -> dict[FactionId, float]:
-    threats: dict[FactionId, float] = {}
-    for f in state.rivals(me):
-        t = intrigue_progress(state, f)
-        # critical heresy is opportunity for oficjum / gildia
-        if state.player(f).heresy >= state.threshold:
-            t += 0.35
-        threats[f] = t
-    return threats
+        cards = load_all_cards()
+        pl = state.players[faction]
+        scored: list[tuple[float, str]] = []
+        for cid in legal:
+            c = cards[cid]
+            score = 0.0
+            # fear critical: avoid self heresy when high
+            if pl.heresy >= 6:
+                score -= c.heresy * 3
+            else:
+                score += c.heresy * 0.2  # power edge
+            score += c.target_heresy * 1.5
+            score += c.gold * 0.8
+            score += c.agents * 0.5
+            if c.creates_hook:
+                score += 2.0
+            if c.arrest:
+                score += 1.5
+            if "interrogation" in c.tags:
+                score += 1.8
+            if c.type == "signature":
+                score += 3.0
+            # Oficjum likes stacks path
+            if faction == FactionId.SWIETE_OFICJUM and "autodafe" in c.tags:
+                score += 2.5
+            if faction == FactionId.CIENIE_AL_ANDALUS and "relic" in c.tags:
+                score += 2.5
+            if faction == FactionId.KORONA_BORGIOWIE and "decree" in c.tags:
+                score += 3.0
+            if faction == FactionId.KABALA_TOLEDO and "fragment" in c.tags:
+                score += 2.5
+            if faction == FactionId.GILDIA_CIENI and "fall" in c.tags:
+                score += 2.5
+            # avoid inquisitor tile overcrowding via move when heresy high
+            if pl.heresy >= 5 and c.agents:
+                score += 0.5
+            score += self.rng.random() * 0.3
+            scored.append((score, cid))
+        scored.sort(reverse=True)
+        return scored[0][1]

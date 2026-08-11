@@ -1,20 +1,26 @@
 ---
 id: time-05
-name: Auto de Fe w Toledo
+name: Auto-da-fé Toledo
 faction: time
 type: wydarzenie
-tier: basic
 cost: 0
 heresy: 0
 target_heresy: 0
-location: any
+location: null
 agents: 0
-tags: [wydarzenie, historia, proces]
-status: draft
+tags: [edict, autodafe]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
-# Auto de Fe w Toledo
+# Auto-da-fé Toledo
 
-**Efekt globalny:** Natychmiast: każdy gracz z Herezją ≥ 7 musi przenieść 1 Agenta do Lochów (jeśli ma na planszy). W tej Erze **Rzucenie Oskarżenia** nie wymaga reakcji — jest darmową akcją w Fazie IV dla każdego gracza raz.
+**Efekt:** EDYKT. Wymuś Autodafé w lokacji Inkwizytora (każdy Agent tam → właściciel +1 Herezja). Nie zużywa limitu gracza na Autodafé; zużywa globalny limit Ery (ta Era „miała” Autodafé). Prawo stołu: Toledo pali niezależnie od woli Oficjum.
 
-**Narracja:** Publiczny spektakl wiary. Stół wie, że ktoś spłonie — pytanie tylko kto.
+**Przy stole:** Nagły pożar. Figury przy Inkwizytorze dostają paniki; Oficjum może dostać Stos „za darmo”.
+
+**Warstwa:** C — edykt wymuszający Autodafé.

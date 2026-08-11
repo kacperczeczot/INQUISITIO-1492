@@ -1,29 +1,34 @@
-# Gildia Cieni *(Świat Przestępczy)*
+# Gildia Cieni *(Świat przestępczy)*
 
-**Styl:** Szantaż, podrzucanie dowodów, eliminacje.  
-**Cel zwycięstwa:** Paraliż ekonomiczny rywali i **upadek 2 frakcji**.
+**Styl:** Szantaż, podrzucanie, skrytobójstwo, Upadek frakcji.  
+**Cel:** Doprowadzić do **Upadku 2 frakcji**. Upadek na rywalu = w chwili oznaczenia ma: **publiczny/aktywny Hak** na sobie **lub** Twojego **Podwójnego** w jego strukturze **lub** spalona Autodafé jego lokacja kluczowa (Pałac / Rynek / Gildia — wybierz 1 „klucz” na frakcję przy setupie lub domyślnie: Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, Gildia→Rynek gdy jesteś ofiarą).
 
 ## Tożsamość przy stole
 
-Brokerzy strachu. Specjaliści od „gorącego ziemniaka” Herezji i cichych eliminacji w Dzielnicy Smogów.
+Sprzedajesz strach wszystkim. Nie potrzebujesz Czystości — potrzebujesz, by inni **padli**. Elastyczne sojusze; jutro zdrada.
 
 ## Mocne strony
 
-- Wrabianie (`target_heresy`) bez brudzenia własnych rąk
-- Skrytobójstwa i szantaż ekonomiczny
-- Elastyczność sojuszy — sprzedają usługi wszystkim
+- `target_heresy`, Haki, Fałszywy Świadek
+- Kontrola Lochów przez przekupionych strażników
+- Signature Upadku Domu
 
 ## Słabości
 
-- Cel „upadku 2 frakcji” wymaga czasu i synergii stołu
-- Słabi, gdy stół gra „czyściutko” (niska Herezja globalna)
+- Słaby Stos / Relikwia jako własne cele
+- Stół może Cię spalić jako „oczywistego szantażystę”
+- Anti-AP limitów Haków boli, gdy chcesz kontrolować wszystkich
 
-## Agentowie
+## Agenci
 
-Figurki: złodzieje / szantażyści. Preferowane lokacje: Gildia, Rynek, Lochy.
+Złodzieje, szantażyści, maski.
 
-## Talia startowa (prototyp)
+## Talia
 
 10 kart → [`../cards/factions/gildia-cieni/`](../cards/factions/gildia-cieni/)
 
-Sugerowane archetypy: Fabrykowanie Dowodów, Podrzucenie Księgi, Szantaż, Skrytobójstwo, Fałszywy Świadek, Przekupiony Strażnik, Czarny Rynek, Lista Dłużników, Zatrute Złoto, Upadek Domu.
+| Warstwa | Zawartość |
+| :--- | :--- |
+| A | Strażnik, czarny rynek, podrzucenie, informator, fałszywy świadek |
+| B | Szantaż, skrytobójstwo, zatrute złoto |
+| C | Lista dłużników, Signature *Upadek Domu* |

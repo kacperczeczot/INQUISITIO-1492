@@ -3,18 +3,24 @@ id: time-01
 name: Upadek Grenady
 faction: time
 type: wydarzenie
-tier: basic
 cost: 0
 heresy: 0
 target_heresy: 0
-location: any
+location: null
 agents: 0
-tags: [wydarzenie, historia]
-status: draft
+tags: [edict]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Upadek Grenady
 
-**Efekt globalny:** W tej Erze akcje Cienia w **Pałacu** kosztują +1 Herezji. Odkryj 1 Relikwię w Lochach (jeśli dostępna w puli).
+**Efekt:** EDYKT Ery. Każdy gracz z Agentem na Rynku: +1 Herezja. Prawo stołu na tę Erę: Rynek jest „skażony upadkiem” — obecność kosztuje reputację.
 
-**Narracja:** Koniec emiratu Nasrydów — oficjalnie triumf Wiary; w cieniu: pośpiech o archiwa Alhambry.
+**Przy stole:** Wszyscy uciekają z Rynku albo świadomie biorą Herezję za handel. Panika ekonomiczna.
+
+**Warstwa:** C — edykt zmieniający koszt obecności na Rynku.

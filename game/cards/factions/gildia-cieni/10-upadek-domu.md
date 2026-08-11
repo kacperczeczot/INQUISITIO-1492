@@ -2,19 +2,25 @@
 id: gc-10
 name: Upadek Domu
 faction: gildia-cieni
-type: akcja
-tier: signature
+type: signature
 cost: 3
 heresy: 2
 target_heresy: 0
-location: gildia
-agents: 1
-tags: [signature, upadek, zwyciestwo]
-status: draft
+location: null
+agents: 0
+tags: [signature, fall]
+creates_hook: false
+breaks_rule: true
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Upadek Domu
 
-**Efekt:** Wskaż gracza, który w tej grze: (a) stracił Agenta na stosie, **lub** (b) ma Herezję ≥ 8, **lub** (c) ma 0 złota i 0 Kontroli/Wskazówek/Relikwii w schowku. Oznacz go żetonem **Upadku Frakcji**. Jeśli masz 2 takie żetony na różnych frakcjach, wygrywasz.
+**Efekt:** Zapłać 3 złota. Ty: +2 Herezja. SIGNATURE — łamie regułę „Upadek tylko z odmowy Haka / standardowego triggera”: jeśli rywal ma ujawniony Hak, wykrytego Podwójnego **albo** spaloną kluczową lokację, oznacz Upadek wobec niego. Przy 2 Upadkach — natychmiast sprawdź wygraną Gildii.
 
-**Bluff / Uwagi:** Finish condition Gildii. Wymaga setupu ze stołu — nie solo-win w 2 Eru.
+**Przy stole:** Egzekucja domu. Stół boi się trzymać ujawnione brudy, gdy Gildia ma Signature.
+
+**Warstwa:** C — signature Upadku i finisher.

@@ -1,18 +1,25 @@
 # Lista komponentów (prototyp)
 
-Lista pod **druk 3D** (figurki, żetony): [`print-3d.md`](print-3d.md).
+Lista pod **druk 3D** (figurki, żetony): [`print-3d.md`](print-3d.md) — pełna rozpiska ilości i siluet.  
+Zasady: [`../../docs/rules/README.md`](../../docs/rules/README.md).
 
-## Plansza i znaczniki
+## Plansza i znaczniki wspólne
 
 | Komponent | Ilość (szacunek) | Notatka |
 | :--- | ---: | :--- |
-| Plansza główna (5 lokacji) | 1 | Modułowa, karton |
+| Plansza główna (5 lokacji) | 1 | A3 / 2×A4; slot Inkwizytora + Areszt w Lochach |
+| Figurka Wielkiego Inkwizytora | 1 | Patrol / Autodafé |
 | Żetony Relikwii | 6–8 | Mat + złocenia |
-| Znaczniki Herezji (płomienie) | 5 | Po 1 na gracza / lub wspólny tor + markery |
-| Znaczniki Wpływu / kontroli | ~30 | Pałac, Rynek, inne |
-| Znaczniki złota | ~40 | Ekonomika Korony/Gildii |
-| Żetony Wskazówek Kodeksu | 4+ | Kabała |
-| Karta / żeton Autodafé (stos) | 1–3 | Eliminacja Agentów |
+| Znaczniki Herezji (płomienie) | 5 | 1 na gracza na Torze Herezji |
+| Żetony Hak | 12 | **Jeden typ** |
+| Nakładki Podwójny | 8 | Na bazę Agenta |
+| Znaczniki złota | ~40 | Koszty kart |
+| Fragmenty Kodeksu | 6 | Kabała |
+| Stosy / Autodafé | 4 | Oficjum / świat |
+| Upadek frakcji | 4 | Gildia |
+| Dekret | 4 | Korona (postęp signature) |
+| Marker 1. gracza | 1 | |
+| Marker Szlaku Morskiego | 1 | Flota Kolumba / ewakuacja |
 
 ## Frakcje (×5)
 
@@ -20,19 +27,35 @@ Na frakcję:
 
 | Komponent | Ilość |
 | :--- | ---: |
-| Talia kart (start) | 10 (+ docelowo więcej) |
-| Pionki Agentów | 3–4 |
+| Talia kart | 10 (warstwy A/B/C w jednej talii) |
+| Pionki Agentów | 3 |
 | Planszetka gracza (Tor Herezji 0–10) | 1 |
-| Karta pomocy / cel zwycięstwa | 1 |
+| Karta pomocy / cel zwycięstwa | 1 (lub nadruk na planszetce) |
 
 ## Talie wspólne
 
-| Talia | Ilość kart (prototyp) |
+| Talia | Ilość kart |
 | :--- | ---: |
+| Talia Czasu (edykty) | 8+ |
+
+## Papier (PnP, nie 3D)
+
+| Element | Ilość |
+| :--- | ---: |
+| Plansza | 1 |
+| Planszetki | do 5 |
+| Karty frakcji | 50 |
 | Talia Czasu | 8+ |
-| (opcjonalnie) Talia Procesu / Sędziego | TBD |
+| Teach sheet | 1–2 strony |
 
 ## Estetyka
 
 Pixel art: głęboka czerwień, złoto, czerń, pergaminowa biel.  
 Referencje klimatu: *Blasphemous*, *Loop Hero*.
+
+## Kolejność produkcji
+
+1. PnP z generatora Markdown → `assets/prototypes/`
+2. Sesje UX
+3. Freeze tekstów
+4. Final pixel art / druk 3D figurek wg [`print-3d.md`](print-3d.md)

@@ -1,114 +1,190 @@
-# Zasady gry — szkic prototypu (Faza 1)
+# Zasady prototypu — INQUISITIO 1492
 
-> Playable paper prototype. Pełny rulebook PL → Faza 4.  
-> Komponenty: [`../../game/components/inventory.md`](../../game/components/inventory.md)  
-> Plansza: [`../../game/board/locations.md`](../../game/board/locations.md)  
-> Planszetka: [`../../game/board/player-board.md`](../../game/board/player-board.md)  
-> Setupy playtestowe (2–3p / 4–5p): [`../../playtesting/setups.md`](../../playtesting/setups.md)
+Playable szkic pod stół **3–5 graczy**.  
+GDD: [`../gdd/Inquisitio_1492_GDD.md`](../gdd/Inquisitio_1492_GDD.md) · Roadmap: [`../roadmap.md`](../roadmap.md) · Setupy: [`../../playtesting/setups.md`](../../playtesting/setups.md)
 
-## Wartości prototypu
-
-| Parametr | Wartość |
-| :--- | :--- |
-| Gracze | 2–5 |
-| Ręka startowa | **5** (+ **mulligan** do 2 kart) |
-| Limit ręki | **5** (dobierz do 5 na koniec Fazy IV) |
-| Agenci na frakcję | **3** |
-| Złoto startowe | **2** na gracza |
-| Próg oskarżenia | **7** (wariant playtest: 8) |
-| Relikwie setup | **1** w Lochach + **2** w puli odkrytej obok planszy (reszta zakryta w puli) |
-| Wskazówki Kodeksu | pula **6+** żetonów (Kabała zbiera 4) |
-| Er / limit czasu | opcjonalnie **6 Er**; wcześniej wygrywa spełnienie Intrygi |
-| **Skill > luck** | Talia Czasu = wybór z 2; Szlak Morski otwieralny za złoto; 1. gracz bez kostki |
+> Prototyp (warstwy A/B/C). Pełny rulebook dla graczy — po sesjach PnP (patrz roadmap).
 
 ---
 
-## Setup
+## 1. Komponenty
 
-Dla wariantów liczby graczy i skróconego 2–3p → [`../../playtesting/setups.md`](../../playtesting/setups.md).
-
-1. Rozłóż planszę 5 lokacji (kolejność 1→5).
-2. Każdy gracz wybiera frakcję: talia 10 kart, 3 Agenci, planszetka (Herezja = 0), cel zwycięstwa.
-3. Wymieszaj Talię Czasu (8 kart); połóż zakryty stos.
-4. Umieść 1 Relikwię w Lochach; 2 Relikwie odkryte w puli; pozostałe zakryte.
-5. Każdy dobiera **5** kart; **mulligan:** raz możesz odłożyć do **2** kart na spód talii i dobrać tyle samo.
-6. **Pierwszy gracz:** ustalacie przy stole (nie losujcie domyślnie). Propozycja: ten, kto **nie** wybierał frakcji jako pierwszy / kto uczy reguł. Kostka tylko przy remisie decyzji.
+| Element | Ilość (orient.) | Uwagi |
+| :--- | :--- | :--- |
+| Plansza 5 lokacji | 1 | Łańcuch + slot Inkwizytora + Areszt w Lochach |
+| Planszetka gracza | 1 / gracza | Tor Herezji 0–10, cel frakcji, złoto |
+| Talia frakcji | 10 kart / frakcja | Warstwa A używa kart `layer: A` (5 szt.) |
+| Agenci | 3 / gracza | Kolor frakcji; nakładka **Podwójny** (B+) |
+| Wielki Inkwizytor | 1 figurka | Stany: Patrol / Autodafé |
+| Żetony Hak | ~10 | **Jeden typ** |
+| Relikwie / Fragmenty / Stosy | wg setupu | Cele narracyjne |
+| Złoto | pula | Drugorzędne (koszty kart, łapówki opcjonalne) |
+| Talia Czasu | ≥8 | Warstwa C — edykty |
 
 ---
 
-## Runda = 4 fazy (Era)
+## 2. Setup (3–5p)
 
-### I. Wydarzenie Historyczne (Talia Czasu) — wybór, nie czysty los
+1. Rozłóż planszę (kolejność lokacji 1→5). Inkwizytor na **Trybunale**, stan **Patrol**.
+2. Każdy wybiera frakcję: talia, 3 Agenci, planszetka (Herezja = 0), cel zwycięstwa.
+3. Złoto startowe: **3** na gracza.
+4. Relikwie / Fragmenty według [`setups.md`](../../playtesting/setups.md).
+5. Dobierz **5** kart (Warstwa A: tylko z `layer: A` w talii testowej PnP; pełna gra C: cała talia 10).
+6. **Pierwszy gracz:** ustala stół (nie losujcie domyślnie).
+7. Talia Czasu: od Ery 1 (C) lub od Ery 2 w skróconym teście.
 
-1. Odkryj **2** wierzchnie karty Talii Czasu.
-2. Wybiera gracz z **najniższym postępem Intrygi** (dogrywka). Remis → aktualny pierwszy gracz.
-   - **Postęp przy stole (bez kalkulatora):** % celu frakcji — Oficjum: Stosy÷2 (+ Wpływ÷4); Al-Andalus: (ewakuacje×2 + Relikwie na ręku)÷4; Korona: (Kontrola Pałac+Rynek)÷4; Kabała: Wskazówki÷4; Gildia: unikalne Upadki÷2. Kto ma najmniej — wybiera.
-3. Wybrane wydarzenie obowiązuje w tej Erze; **odrzucone** idzie na **spód** talii (wróci później).
-4. To jest decyzja polityczna (kogo wspomagasz / blokujesz), nie rzut.
+**Brak.** Gra jest na 3–5 graczy.
 
-### II. Planowanie Intryg
+---
 
-Zaczynając od pierwszego gracza, **naprzemiennie** (1 karta na turę gracza), aż każdy zagra **2 karty** w tej Erze (w 2-graczu: po 3):
+## 3. Przebieg Ery
 
-1. Zagraj **zakrytą** kartę Akcji pod wybraną lokacją (slot kart).
-2. Opcjonalnie: umieść lub przesuń **1 Agenta** o max 1 lokację (chyba że karta mówi inaczej).
-3. **Szlak Morski (skill):** jeśli Szlak zamknięty, gracz z Agentem na Rynku lub w Gildii może **raz na swoją turę** zapłacić **3 złota**, by otworzyć Szlak (nie trzeba czekać na Flotę Kolumba). Flota nadal otwiera Szlak za darmo.
+| Faza | Nazwa | Co się dzieje |
+| :---: | :--- | :--- |
+| 0 | Start Ery | Reset limitów anti-AP (Hak / Przesłuchanie / Nasłanie) |
+| I | Inkwizytor | Patrol 0–1 lokacji **lub** Autodafé (jeśli wolno) |
+| II | Plan / Intryga | Naprzemiennie: zakryta karta pod lokacją + opcjonalny ruch Agenta; Haki (B+) |
+| III | Odkrycie | Lokacje 1→5: odkryj karty, efekty, Herezja |
+| IV | Lochy | Przesłuchania aresztowanych (B+) |
+| V | Dwór | Oskarżenia przy Krytycznej → Werdykt |
+| VI | Czystka | Dobór do 5; edykt Talii Czasu (C); przesuń 1. gracza |
 
-Karty typu **reakcja** zatrzymaj w ręce — zagrywasz je poza kolejką, gdy spełniony warunek.
+---
 
-**Permanent:** zagraj odkryty na swoją planszetkę; zajmuje slot zagrania w tej turze.
+## 4. Poziom Herezji (ikona)
 
-### III. Odkrycie i Konfrontacja
+Tor **0–10** na planszetce.
+
+| Zakres | Strefa | Skutek |
+| :---: | :--- | :--- |
+| 0–3 | Czysta | Bezpieczniej, słabsze akcje |
+| 4–6 | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 7–10 | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
+
+**Źródła:** `heresy` karty, `target_heresy` (wrabianie), ujawniony Hak, Autodafé (Agenci w lokacji), wykryty Podwójny, edykty.
+
+→ [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
+
+---
+
+## 5. Wielki Inkwizytor
+
+Figurka NPC. Na Fazie I:
+
+1. **Nasłanie (opcjonalne):** raz na gracza na Erę możesz wskazać kierunek / lokację docelową według reguł frakcji i kart. **Oficjum** ma stałą przewagę: przy konflikcie nasłań wygrywa Oficjum (chyba że karta Signature mówi inaczej).
+2. **Patrol:** Inkwizytor przesuwa się o **0 lub 1** lokację wzdłuż łańcucha (domyślnie w stronę wskazaną nasłaniem; bez nasłania — decyzja gracza z najniższą Herezją / 1. gracz przy remisie).
+3. **Autodafé** (max **co 2 Ery**): jeśli ogłoszone — w lokacji Inkwizytora każdy obecny Agent daje właścicielowi **+1 Herezja**; połóż **1 Stos** (Oficjum liczy Stosy). Relikwia w lokacji wraca do puli lub spala się (ustalenie setupu: prototyp = wraca do puli).
+
+→ [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md)
+
+---
+
+## 6. Faza II — Plan / Intryga
+
+Zaczynając od 1. gracza, naprzemiennie aż każdy zagra **2 karty** w tej Erze (przy 5p: 2; przy 3p playtest możesz grać 3 — zanotuj):
+
+1. Zagraj **zakrytą** kartę Akcji pod wybraną lokacją (koszt złota z ręki natychmiast lub przy odkryciu — prototyp: **płać przy zagraniu**).
+2. Zastosuj wymagania `location` / `agents` jeśli karta wymaga Agenta w lokacji (sprawdzane przy odkryciu; jeśli brak — karta fizzle, Herezja i tak jeśli zapisana jako koszt gry — prototyp: fizzle bez Herezji).
+3. Opcjonalnie: wystaw lub przesuń **1 Agenta** o max 1 lokację (chyba że karta mówi inaczej).
+4. **(B+)** Przed lub po swoim zagraniu możesz **wymusić Hak** (1 / Erę) — ofiara spełnia żądanie albo +2 Herezja.
+
+Karty **reakcja** trzymaj w ręce — zagrywasz poza kolejką przy spełnionym warunku.  
+**Signature / permanent:** według tekstu karty (C).
+
+---
+
+## 7. Faza III — Odkrycie
 
 Od lokacji **1 → 5**:
 
-1. Odkryj wszystkie karty pod lokacją (kolejność: od pierwszego gracza wokół stołu).
-2. Rozpatrz efekty; dodaj Herezję z frontmatter kart (`heresy` / `target_heresy`).
-3. **Starcie Agentów** (prototyp): jeśli w lokacji są Agenci ≥ 2 frakcji i ktoś zagrał efekt eliminacji/aresztu — rozpatrz karty najpierw, potem w razie remisu „kontroli przestrzeni” wygrywa gracz z większą liczbą Agentów; przy remisie — gracz z niższą Herezją.
-4. Transport Relikwii według kart.
-
-### IV. Sąd Inkwizycyjny & Czyszczenie
-
-1. Sprawdź Tory Herezji. Każdy gracz w strefie Krytycznej (≥ 7) może zostać celem **Rzucenia Oskarżenia** (darmowa reakcja raz na gracza na Erę, chyba że karta mówi inaczej).
-2. Rozpatrz Procesy (patrz niżej).
-3. Uwolnij Agentów z Lochów według efektów / zapłaty 2 złota (opcjonalnie).
-4. Zbierz zasoby jawne lokacji, jeśli masz w nich Agenta i nie zagrałeś Cienia w tej lokacji w Erze (prototyp: +1 złoto z Pałacu/Rynku).
-5. Dobierz do limitu ręki **5**. Przesuń znacznik pierwszego gracza w lewo.
+1. Odkryj karty w kolejności od 1. gracza wokół stołu.
+2. Rozpatrz efekty; dodaj `heresy` zagrywającemu i `target_heresy` wskazanym.
+3. Areszty (`arrest`) → Agent do Lochów.
+4. Konflikty przestrzeni: więcej Agentów frakcji wygrywa „kontrolę” lokacji przy remisie efektów eliminacji; dalej niższa Herezja.
 
 ---
 
-## Procedura Procesu
+## 8. Warstwa B — Lochy i Haki
 
-Gdy ktoś **Rzuci Oskarżenie** na gracza z Herezją ≥ 7:
+### Lochy / Przesłuchanie (1 / gracza / Erę)
 
-1. **Aresztowanie** — 1 Agent oskarżonego z planszy → Lochy (jeśli brak na planszy: +1 Herezji zamiast tego).
-2. **Przekupstwo & licytacja** — oskarżony: odrzuć **3** karty **lub** zapłać **5** złota. Nawet przy oczyszczeniu: **konfiskata** 1 żetonu postępu Intrygi. Inni mogą przebijać złotem (Korona).
-3. **Wyrok / Autodafé** — jeśli nie oczyszczony: Agent w Lochach idzie na stos (eliminacja). Oficjum zapisuje 1 Stos. Oskarżony: −1 Wpływ / utrata 1 żetonu postępu Intrygi (jeśli ma).
+Masz dostęp, jeśli masz Agenta w Lochach **lub** kartę dającą dostęp. Wybierz aresztowanego Agenta rywala:
 
----
+1. **Podwójny** — znacznik na figurce; przy swoim ruchu możesz raz na Erę ruszyć tym Agentem jak swoim **lub** przy Werdykcie dodać +1 głos „w imieniu” właściciela (prototyp: ruch). Wykrycie (karta / Inkwizytor w lokacji z Podwójnym): właściciel **+2 Herezja**, znacznik znika.
+2. **Hak** — bierzesz żeton Haka na właściciela.
+3. **+2 Herezja** właścicielowi zamiast (1) lub (2).
 
-## Zwycięstwo
+→ [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
 
-Natychmiast, gdy gracz spełni **warunek Intrygi** swojej frakcji (patrz `game/factions/`).
+### Haki (1 typ żetonu)
 
-- **Święte Oficjum:** **2** Stosy — **4 Wpływ Trybunału → 1 Stos** (Wpływ z procesu gdy oskarżasz lub Agent w Trybunale/Lochach).
-- **Korona:** ≥**2** żetony Kontroli w **Pałacu** i ≥**2** na **Rynku**.
-- **Kabała:** **4** Wskazówek (max 1/Era, strefa Obserwowana).
-- **Upadek frakcji (Gildia):** 2 żetony Upadku na różnych rywalach.
+**Wymuszenie (1 / gracza / Erę):** ogłoś żądanie z listy przykładowej: *nie oskarżaj X / zagłosuj skazać|uniewinnić / przesuń Agenta / nie graj Cienia w lokacji Y / oddaj 1 złoto*. Ofiara spełnia **albo** odmawia → Hak znika, ofiara **+2 Herezja** (cap 10).
 
-**Remis / limit Er:** najwyższy sumaryczny postęp Intrygi (Stosy / Relikwie ewakuowane / Kontrole / Wskazówki / Upadki); remis → najniższa Herezja.
-
-**Presja publiczna (prototyp sim / stół):** na początku Fazy IV gracz z najwyższym postępem Intrygi (≥ ~35% celu) otrzymuje **+1 Herezji** (scrutiny).
+→ [`../../game/mechanics/haki.md`](../../game/mechanics/haki.md)
 
 ---
 
-## Quick reference — 4 fazy
+## 9. Warstwa A/B/C — Werdykt stołu
 
-| Faza | Co robisz |
-| :---: | :--- |
-| **I** | Odkryj Talię Czasu |
-| **II** | Zakryte karty pod lokacje + Agenci |
-| **III** | Odkryj 1→5, efekty, Herezja, Relikwie |
-| **IV** | Oskarżenia, Procesy, dobór do 5 |
+Gdy ktoś jest w **Krytycznej**, inny gracz może **Rzucić Oskarżenie** (1× przeciw temu samemu graczowi / Erę):
 
-**Herezja:** 0–3 czysta · 4–6 obserwowana · **7–10** można oskarżyć
+1. Oskarżyciel ogłasza cel.
+2. Każdy **poza oskarżonym** głosuje tajnie lub jawnie (prototyp: **jawnie**): Skazać / Uniewinnić.
+3. Remis → Uniewinnienie.
+4. **Skazanie:** 1 Agent oskarżonego → **Stos** (eliminacja) **lub** do Lochów +1 Herezja (wybór oskarżyciela; Oficjum zwykle wybiera Stos). Oficjum zapisuje Stos jeśli Agent spłonął.
+5. **Uniewinnienie:** oskarżyciel **+1 Herezja**.
+
+To głosowanie stołu: Skazać albo Uniewinnić.
+
+→ [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
+
+---
+
+## 10. Warstwa C — Signature i Talia Czasu
+
+- Pełna talia **10** kart / frakcję, w tym Signature (`breaks_rule: true`) — czytaj kartę; łamie wskazaną regułę raz.
+- Na końcu Ery (po czystce): odkryj **1** edykt z Talii Czasu (lub wybór z 2 — playtest) obowiązujący następną Erę / natychmiast według tekstu.
+
+---
+
+## 11. Zwycięstwo
+
+Natychmiast, gdy spełnisz warunek frakcji:
+
+| Frakcja | Warunek |
+| :--- | :--- |
+| Święte Oficjum | **2 Stosy** **lub** **2** skazania Werdyktem rywali, którzy byli w Krytycznej |
+| Cienie Al-Andalus | **2 Relikwie** ewakuowane poza planszę; ≥1 z udziałem Podwójnego **lub** ewakuacja bez Autodafé na lokacji wyjścia w tej Erze |
+| Korona | **2** zagrane Dekrety signature w grze **oraz** aktywne Haki na **2** różnych graczach |
+| Kabała | **3 Fragmenty**; w chwili wygranej Herezja **4–6** |
+| Gildia | **2 upadki**: na rywalu publiczny Hak w chwili Upadku **lub** Podwójny pod Twoją kontrolą **lub** jego kluczowa lokacja spalona Autodafé (Pałac/Rynek/Gildia — ustal przy stole: 1 lokacja „klucz” na frakcję) |
+
+**Limit Er (domyślnie 8):** jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis → najniższa Herezja.
+
+---
+
+## 12. Limity anti-AP (zapamiętaj)
+
+Na gracza na Erę: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie Inkwizytora.  
+Autodafé: max **co 2 Ery** (Signature Oficjum może łamać — czytaj kartę).
+
+---
+
+## 13. Teach sheet (1 strona — do PnP)
+
+1. **Herezja** pali Cię publicznie; Krytyczna = można Cię oskarżyć.  
+2. **Inkwizytor** chodzi i może spalić lokację (Autodafé).  
+3. Zagrywasz **zakryte** karty pod lokacje; potem odkrycie 1→5.  
+4. **Werdykt:** stół głosuje Skazać / Uniewinnić.  
+5. **(B)** Lochy → Podwójny lub Hak. Hak = spełnij żądanie albo +Herezja.  
+6. **(C)** Signature łamią reguły; Talia Czasu zmienia prawo Ery.
+
+---
+
+## 14. Warstwy testowe
+
+| Warstwa | Co jest w grze | Czego nie ma |
+| :--- | :--- | :--- |
+| **A** | Herezja, Inkwizytor, Werdykt, 5 prostych kart | Haki, Podwójni, Signature |
+| **B** | + Lochy, Haki, karty narzędzi | Signature |
+| **C** | Pełne 10 + Signature + Talia Czasu | — |

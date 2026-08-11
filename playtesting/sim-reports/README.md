@@ -1,5 +1,4 @@
-# Raporty symulacji
+# Sim reports
 
-Wyniki `python -m inquisitio run` / `compare` z pakietu [`../../sim/`](../../sim/).
-
-Pliki `*.json` + `*.md` generowane automatycznie — można commitować wybrane runy referencyjne.
+Raporty: deadlock / legal moves / Autodafé / Haki / Podwójni / oskarżenia / długość.  
+Wins = informacja pomocnicza.

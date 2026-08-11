@@ -3,18 +3,24 @@ id: time-03
 name: Flota Kolumba
 faction: time
 type: wydarzenie
-tier: basic
 cost: 0
 heresy: 0
 target_heresy: 0
-location: any
+location: null
 agents: 0
-tags: [wydarzenie, historia, szlak]
-status: draft
+tags: [edict, relic]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Flota Kolumba
 
-**Efekt globalny:** Otwórz **Szlak Morski** do końca gry (za darmo). Alternatywnie Szlak można otworzyć **akcją skillową** za 3 złota z Agentem na Rynku/Gildii — Flota nie jest wymagana.
+**Efekt:** EDYKT. Otwórz Szlak Morski do końca gry. Od teraz ewakuacja Relikwii z Rynku lub Gildii jest dozwolona (standardowa ścieżka Cieni). Prawo stołu zmienia się trwale.
 
-**Narracja:** Oficjalnie — Indie. W rzeczywistości — jeden z nielicznych bezpiecznych korytarzy dla wiedzy, którą Inkwizycja chce spalić.
+**Przy stole:** Przełom gry o Relikwie. Cienie przyspieszają; Oficjum musi zamykać Rynek i Gildię.
+
+**Warstwa:** C — trwały edykt Szlaku Morskiego.

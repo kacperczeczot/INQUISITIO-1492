@@ -1,3 +1,4 @@
-from inquisitio.agents.base import IntrigueAgent, make_agent
+from inquisitio.agents.base import RandomAgent
+from inquisitio.agents.politics import PoliticsAgent
 
-__all__ = ["IntrigueAgent", "make_agent"]
+__all__ = ["RandomAgent", "PoliticsAgent"]

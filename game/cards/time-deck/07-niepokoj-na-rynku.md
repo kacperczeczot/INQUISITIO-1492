@@ -3,18 +3,24 @@ id: time-07
 name: Niepokój na Rynku
 faction: time
 type: wydarzenie
-tier: basic
 cost: 0
 heresy: 0
 target_heresy: 0
-location: any
+location: null
 agents: 0
-tags: [wydarzenie, historia, rynek]
-status: draft
+tags: [edict]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Niepokój na Rynku
 
-**Efekt globalny:** W tej Erze **Rynek**: handel daje +1 złoto ekstra, ale każdy Agent na Rynku na koniec Fazy III otrzymuje właścicielowi +1 Herezji (tłum szuka winnych). Odkryj 1 Relikwię na Rynku, jeśli pula niepusta.
+**Efekt:** EDYKT Ery. Przesuń Inkwizytora o 1 lokację w stronę Rynku (najkrótsza ścieżka); jeśli już sąsiaduje z Rynkiem, wejdź na Rynek. Prawo stołu: niepokój handlu przyciąga Inkwizycję.
 
-**Narracja:** Zaraza, pogłoski o czarach, samosądy — idealna zasłona dla przemytu i obław.
+**Przy stole:** Rynek staje się strefą śmierci Autodafé. Kupcy i Cienie uciekają.
+
+**Warstwa:** C — edykt ruchu Inkwizytora.

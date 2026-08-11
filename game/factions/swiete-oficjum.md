@@ -1,29 +1,38 @@
 # Święte Oficjum *(Torquemada)*
 
-**Styl:** Kontrola, opresja, obławy, wymuszanie Czystości.  
-**Cel zwycięstwa:** Oczyścić miasto z heretyków i **skazać 2 Agentów na stos** *(kalibracja sim)*. Alternatywnie: **4 Wpływ w Trybunale = 1 Stos** (gdy oskarżasz lub masz Agenta w Trybunale/Lochach).
+**Styl:** Terror publiczny, Autodafé, kontrola Trybunału i Lochów.  
+**Cel zwycięstwa:** **2 Stosy** z Autodafé lub Werdyktu **albo** doprowadzenie **2 różnych rywali** do Krytycznej i **skazanie** ich głosem stołu.
 
 ## Tożsamość przy stole
 
-Publiczna twarz prawa Bożego. Najsilniejsza w Trybunale i Lochach. Korzysta z wysokiej Herezji rywali — im więcej oskarżeń, tym bliżej zwycięstwa.
+Publiczna twarz prawa Bożego. Wszyscy wiedzą, kim jesteś — i dlatego boją się Cię albo sojuszą przeciw Tobie. Masz **stałą przewagę przy konflikcie nasłań Inkwizytora**.
 
 ## Mocne strony
 
-- Inicjowanie i wygrywanie Procesów
-- Kary za Herezję innych graczy
-- Kontrola lokacji „Światła” (Trybunał, Lochy)
+- Inicjowanie Autodafé i zbieranie Stosów
+- Oskarżenia przy Krytycznej; zysk z cudzego ognia
+- Preferowane lokacje: Trybunał, Lochy, Rynek (obławy)
 
 ## Słabości
 
-- Słabsza w ukrytym transporcie Relikwii
-- Może stać się celem sojuszu stołu, gdy zbyt blisko 3. stosu
+- Stół łatwo się sprzymierza, gdy blisko 2. Stosu
+- Słabszy transport Relikwii i gra w Cieniu
+- Uniewinnienie na Werdykcie boli (+Herezja na Ciebie jako oskarżyciela)
 
-## Agentowie
+## Agenci
 
-Figurki: inkwizytorzy / familiariusze. Preferowane lokacje: Trybunał, Lochy, Rynek (publiczne obławy).
+Figurki: familiariusze / inkwizytorzy. Czytelny kolor „światła”.
 
-## Talia startowa (prototyp)
+## Talia
 
 10 kart → [`../cards/factions/swiete-oficjum/`](../cards/factions/swiete-oficjum/)
 
-Sugerowane archetypy: Obława, Wymuszenie Zeznania, Autodafé, Konfiskata, Edykt Czystości, Familiariusz, Świadek Koronny, Proces Pokazowy, Relikwiarz (konfiskata), Oczyść Miasto.
+| Warstwa | Zawartość |
+| :--- | :--- |
+| A | Patrol, złoto Trybunału, wrabianie, ostrzeżenie, wezwanie |
+| B | Areszt, przesłuchanie, nasłanie |
+| C | Świadek koronny, Signature *Oczyść Miasto* |
+
+## Notatka designu
+
+Oficjum nie **jest** Inkwizytorem — **wpływa** na niego. Jeśli snowball Stosów zabija dramat, tnij częstotliwość Autodafé, nie wywalaj Werdyktu.

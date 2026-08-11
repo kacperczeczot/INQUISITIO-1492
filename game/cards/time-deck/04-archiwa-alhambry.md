@@ -3,18 +3,24 @@ id: time-04
 name: Archiwa Alhambry
 faction: time
 type: wydarzenie
-tier: basic
 cost: 0
 heresy: 0
 target_heresy: 0
-location: any
+location: null
 agents: 0
-tags: [wydarzenie, historia, relikwia]
-status: draft
+tags: [edict, fragment]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Archiwa Alhambry
 
-**Efekt globalny:** Odkryj 1 Relikwię w Gildii (z puli). W tej Erze akcje Cienia w **Lochach** dają dodatkowe +1 złoto wykonawcy, ale +1 Herezji.
+**Efekt:** EDYKT Ery. Jeśli Kabała ma Agenta w Trybunale lub Lochach, zyskuje 1 Fragment. W przeciwnym razie edykt nie daje nikomu efektu. Prawo stołu: archiwa otwierają się tylko dla obecnych.
 
-**Narracja:** Oficjalnie — inwentaryzacja łupów Grenady. W cieniu — pośpiech o Fragmenty Kodeksu zagrzebane w rejestrach.
+**Przy stole:** Kabała ustawia Agenta z wyprzedzeniem; stół widzi darmowy Fragment albo nic.
+
+**Warstwa:** C — edykt Fragmentu dla Kabały.

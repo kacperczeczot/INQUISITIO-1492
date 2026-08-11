@@ -1,29 +1,34 @@
 # Kabała z Toledo *(Uczeni & Alchemicy)*
 
-**Styl:** Zakryta wiedza, manipulowanie Poziomem Herezji.  
-**Cel zwycięstwa:** Odkodować Przedwieczny Kodeks — **zebrać 4 Wskazówki** (max 1/Era, sweet spot 4–6).
+**Styl:** Sweet spot Herezji 4–6, Fragmenty Kodeksu, Imię, archiwum.  
+**Cel:** Zebrać **3 Fragmenty** zdobyte z Przesłuchań / Imienia / kart Kodeksu; w chwili zwycięstwa Twoja Herezja musi być w **Obserwowanej (4–6)**.
 
 ## Tożsamość przy stole
 
-Gracze wiedzy zakazanej. Żyją na krawędzi Toru Herezji: strefa Obserwowana (4–6) to ich „sweet spot”.
+Nie jesteś niewinny — jesteś **dokładnie wystarczająco winny**. Za niska Herezja = brak mocy. Za wysoka = Werdykt zanim odczytasz Kodeks.
 
 ## Mocne strony
 
-- Manipulacja Herezją (własną i cudzą)
-- Generowanie Wskazówek z lokacji Cienia / Relikwii
-- Alchemia i karty o wysokim ryzyku/nagrody
+- Kontrola własnego toru Herezji (zwierciadło, rytuały)
+- Fragmenty z Lochów i zakazanej wiedzy
+- Signature pieczęci łamiące limity wiedzy
 
 ## Słabości
 
-- Łatwo wpaść w strefę Krytyczną
-- Inkwizycja i Gildia chętnie ich wrabiają
+- Wygrana zablokowana poza 4–6 — stół może Cię **wypchnąć** Hakiem lub wrabianiem
+- Słabsza naga siła Autodafé
+- Zależność od dostępu do Lochów / kart B
 
-## Agentowie
+## Agenci
 
-Figurki: uczeni / alchemicy. Preferowane lokacje: Gildia, Trybunał (archiwa), Lochy (więźniowie z wiedzą).
+Skrzynki, uczeni, kabaliści z Toledo.
 
-## Talia startowa (prototyp)
+## Talia
 
 10 kart → [`../cards/factions/kabala-toledo/`](../cards/factions/kabala-toledo/)
 
-Sugerowane archetypy: Zakazana Alchemia, Fragment Kodeksu, Użycie Artefaktu, Rytuał Gwiazd, Przepis na Płomień, Archiwum Ukryte, Transmutacja Winy, Wskazówka I–IV (cykl), Zwierciadło Herezji, Pieczęć Salomona.
+| Warstwa | Zawartość |
+| :--- | :--- |
+| A | Rytuał, transmutacja, zakazana wiedza, zwierciadło, wskazówka |
+| B | Przesłuchanie Imienia, archiwum, areszt wiedzy |
+| C | Fragment Kodeksu, Signature *Pieczęć Salomona* |

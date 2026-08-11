@@ -1,99 +1,99 @@
+"""Write drama-focused batch reports."""
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 from inquisitio.runner.batch import BatchSummary
 
-
-def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[3]
-
-
-def default_report_dir() -> Path:
-    return _repo_root() / "playtesting" / "sim-reports"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+REPORT_DIR = REPO_ROOT / "playtesting" / "sim-reports"
 
 
-def write_report(
-    summary: BatchSummary,
-    *,
-    out_dir: Path | None = None,
-    label: str | None = None,
-) -> tuple[Path, Path]:
-    out_dir = out_dir or default_report_dir()
-    out_dir.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    base = label or f"batch-t{summary.threshold}-{summary.setup}-{ts}"
-    json_path = out_dir / f"{base}.json"
-    md_path = out_dir / f"{base}.md"
-    data = summary.to_dict()
-    json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    md_path.write_text(render_markdown(summary), encoding="utf-8")
-    return json_path, md_path
+def _ts() -> str:
+    return datetime.now().strftime("%Y%m%d-%H%M%S")
 
 
-def write_compare_report(
-    results: dict[str, BatchSummary],
-    *,
-    out_dir: Path | None = None,
-) -> tuple[Path, Path]:
-    out_dir = out_dir or default_report_dir()
-    out_dir.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    base = f"compare-7vs8-{ts}"
-    json_path = out_dir / f"{base}.json"
-    md_path = out_dir / f"{base}.md"
-    payload = {k: v.to_dict() for k, v in results.items()}
-    json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    lines = ["# Compare thresholds\n"]
-    for k, s in results.items():
-        lines.append(f"## Próg {k}\n")
-        lines.append(render_markdown(s))
-        lines.append("")
-    # quick delta
-    if "7" in results and "8" in results:
-        a, b = results["7"], results["8"]
-        lines.append("## Delta (7 − 8)\n")
-        lines.append(f"- accusations/game: {a.accusations - b.accusations:+.2f}")
-        lines.append(f"- critical_entries/game: {a.critical_entries - b.critical_entries:+.2f}")
-        lines.append(f"- verdicts/game: {a.verdicts - b.verdicts:+.2f}")
-        lines.append(f"- stakes/game: {a.stakes - b.stakes:+.2f}")
-        lines.append("")
-        lines.append("Skopiuj metryki do `playtesting/balance-notes.md` (tabela A/B).")
-    md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return json_path, md_path
+def write_report(summary: BatchSummary) -> tuple[Path, Path]:
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    stamp = _ts()
+    base = f"drama-{summary.setup}-t{summary.threshold}-{stamp}"
+    jp = REPORT_DIR / f"{base}.json"
+    mp = REPORT_DIR / f"{base}.md"
+    data = {
+        "games": summary.games,
+        "setup": summary.setup,
+        "threshold": summary.threshold,
+        "wins": summary.wins,
+        "metrics": {
+            "autodafe_avg": summary.autodafe_avg,
+            "accusations_avg": summary.accusations_avg,
+            "convictions_avg": summary.convictions_avg,
+            "hooks_avg": summary.hooks_avg,
+            "hooks_forced_avg": summary.hooks_forced_avg,
+            "doubles_avg": summary.doubles_avg,
+            "deadlocks_avg": summary.deadlocks_avg,
+            "legal_moves_avg": summary.legal_moves_avg,
+            "eras_avg": summary.eras_avg,
+            "cards_played_avg": summary.cards_played_avg,
+        },
+        "note": "Wins are informational. Primary metrics: deadlock, legal moves, drama events.",
+    }
+    jp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    md = [
+        f"# Drama report — {summary.setup}",
+        "",
+        f"Games: {summary.games} · threshold: {summary.threshold}",
+        "",
+        "## Wins (informational)",
+        "",
+    ]
+    for k, v in sorted(summary.wins.items(), key=lambda x: -x[1]):
+        md.append(f"- {k}: {v}")
+    md += [
+        "",
+        "## Drama / health metrics",
+        "",
+        f"- Autodafé / game: **{summary.autodafe_avg:.2f}**",
+        f"- Accusations / game: **{summary.accusations_avg:.2f}**",
+        f"- Convictions / game: **{summary.convictions_avg:.2f}**",
+        f"- Hooks created / game: **{summary.hooks_avg:.2f}**",
+        f"- Hooks forced / game: **{summary.hooks_forced_avg:.2f}**",
+        f"- Doubles / game: **{summary.doubles_avg:.2f}**",
+        f"- Deadlocks (no legal play) / game: **{summary.deadlocks_avg:.2f}**",
+        f"- Legal moves sampled / game: **{summary.legal_moves_avg:.1f}**",
+        f"- Eras / game: **{summary.eras_avg:.2f}**",
+        f"- Cards played / game: **{summary.cards_played_avg:.1f}**",
+        "",
+        "> Sim filters deadlocks and drama frequency. Political balance = table.",
+        "",
+    ]
+    mp.write_text("\n".join(md), encoding="utf-8")
+    return jp, mp
 
 
-def render_markdown(summary: BatchSummary) -> str:
-    wins = "\n".join(f"| {k} | {v} | {100*v/summary.games:.1f}% |" for k, v in sorted(summary.wins.items()))
-    heresy = "\n".join(
-        f"| {k} | {v:.2f} |" for k, v in sorted(summary.max_heresy_avg.items())
-    )
-    return f"""# Batch {summary.setup} (próg {summary.threshold})
-
-- Games: **{summary.games}**
-- Avg eras: **{summary.avg_eras:.2f}**
-- Critical entries / game: **{summary.critical_entries:.2f}**
-- Accusations / game: **{summary.accusations:.2f}**
-- Verdicts / game: **{summary.verdicts:.2f}**
-- Stakes / game: **{summary.stakes:.2f}**
-- Feint rate: **{summary.feint_rate:.1%}**
-- Strategic accusation rate: **{summary.strategic_accusation_rate:.1%}**
-
-## Wins
-
-| Faction | Wins | Winrate |
-| :--- | ---: | ---: |
-{wins}
-
-## Win reasons
-
-{chr(10).join(f"- {k}: {v}" for k, v in sorted(summary.win_reasons.items()))}
-
-## Avg max heresy seen
-
-| Faction | Max heresy (avg) |
-| :--- | ---: |
-{heresy}
-"""
+def write_compare_report(results: dict[int, BatchSummary]) -> tuple[Path, Path]:
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    stamp = _ts()
+    jp = REPORT_DIR / f"compare-thresholds-{stamp}.json"
+    mp = REPORT_DIR / f"compare-thresholds-{stamp}.md"
+    payload = {
+        str(k): {
+            "wins": v.wins,
+            "accusations_avg": v.accusations_avg,
+            "deadlocks_avg": v.deadlocks_avg,
+            "autodafe_avg": v.autodafe_avg,
+        }
+        for k, v in results.items()
+    }
+    jp.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    lines = ["# Threshold compare (drama experiment)", ""]
+    for t, s in sorted(results.items()):
+        lines.append(
+            f"- t={t}: accusations={s.accusations_avg:.2f}, "
+            f"autodafe={s.autodafe_avg:.2f}, deadlocks={s.deadlocks_avg:.2f}, wins={s.wins}"
+        )
+    lines.append("")
+    mp.write_text("\n".join(lines), encoding="utf-8")
+    return jp, mp

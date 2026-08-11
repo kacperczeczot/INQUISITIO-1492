@@ -2,19 +2,25 @@
 id: kt-10
 name: Pieczęć Salomona
 faction: kabala-toledo
-type: akcja
-tier: signature
-cost: 2
-heresy: 2
+type: signature
+cost: 3
+heresy: 0
 target_heresy: 0
-location: gildia
-agents: 1
-tags: [kodeks, signature, wskazowka]
-status: draft
+location: null
+agents: 0
+tags: [signature, fragment]
+creates_hook: false
+breaks_rule: true
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Pieczęć Salomona
 
-**Efekt:** Jeśli masz ≥ 3 Wskazówki, dobierz 1 Wskazówkę i ustaw Herezję na 6. Jeśli masz 4 Wskazówki po efekcie, natychmiast sprawdź warunek zwycięstwa. W przeciwnym razie dobierz 1 Wskazówkę i +1 Herezji.
+**Efekt:** Zapłać 3 złota. SIGNATURE — łamie regułę „Herezja zmienia się tylko efektami kart/Autodafé/Werdyktu”: jeśli masz 3 Fragmenty i Herezję 4–6, wygrywasz natychmiast. Jeśli masz 3 Fragmenty, ale Herezja jest poza 4–6, ustaw ją na 5 (wymuszenie sweet spotu), potem sprawdź wygraną.
 
-**Bluff / Uwagi:** Finish / almost-finish. Trzyma Kabałę na krawędzi Krytycznej.
+**Przy stole:** Kulminacja Kabały. Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6, zanim zagrasz Pieczęć.
+
+**Warstwa:** C — signature łamiące reguły toru Herezji.

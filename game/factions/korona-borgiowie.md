@@ -1,29 +1,34 @@
 # Korona & Borgiowie *(Ferdynand / Izabela)*
 
-**Styl:** Manipulowanie zasobami, dekrety, przekupstwo.  
-**Cel zwycięstwa:** Pełna kontrola polityczna nad **Pałacem** i **Rynkiem** (**≥2** żetony Kontroli w każdej lokacji).
+**Styl:** Dekrety, pieczęć, przekupstwo, Haki na dworze.  
+**Cel:** Zagraj **2 Dekrety signature** w trakcie gry **oraz** miej **aktywne Haki na 2 różnych graczach** w chwili zwycięstwa.
 
 ## Tożsamość przy stole
 
-Władza świecka — złoto, prawo, sojusze. Wygrywa nie stosem, lecz monopolami instytucjonalnymi.
+Oficjalna władza świecka. Nie musisz krzyczeć Herezją — zmieniasz **prawo stołu** i trzymasz ludzi za gardło Hakami. Pałac i Rynek to Twoje sceny.
 
 ## Mocne strony
 
-- Generowanie i wydawanie złota
-- Dekrety zmieniające reguły lokacji
-- Przekupstwo w Fazie Procesu (obrona i atak)
+- Złoto, faworyci, listy żelazne
+- Manipulacja głosami przez Haki i przekupstwo
+- Signature dekretów łamiące limity Ery
 
 ## Słabości
 
-- Mniej „twardej” eliminacji Agentów
-- Cel zwycięstwa czytelny — stół może blokować Pałac/Rynek
+- Cel dwuczłonowy (Dekrety + Haki) — wolniejszy start
+- Stół widzi Pieczęć z daleka
+- Autodafé na Pałacu boli wszystkich, także Ciebie
 
-## Agentowie
+## Agenci
 
-Figurki: dworzanie / kapitanowie. Preferowane lokacje: Pałac, Rynek, Trybunał (wpływ na wyroki).
+Kapitanowie straży, faworyci, urzędnicy.
 
-## Talia startowa (prototyp)
+## Talia
 
 10 kart → [`../cards/factions/korona-borgiowie/`](../cards/factions/korona-borgiowie/)
 
-Sugerowane archetypy: Dekret Królewski, Przekupstwo Sędziego, Pobór Podatków, List Żelazny, Faworyt Dworu, Fałszywe Akta, Kontrola Rynku, Sojusz Dynastyczny, Kapitan Straży, Pieczęć Korony.
+| Warstwa | Zawartość |
+| :--- | :--- |
+| A | Rozkaz, pobór, plotka, faworyt, list |
+| B | Areszt królewski, szantaż pieczęcią, przekupstwo |
+| C | Dekret królewski, Signature *Pieczęć Korony* |

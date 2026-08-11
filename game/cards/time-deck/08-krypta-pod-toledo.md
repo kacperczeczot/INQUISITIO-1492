@@ -3,18 +3,24 @@ id: time-08
 name: Krypta pod Toledo
 faction: time
 type: wydarzenie
-tier: basic
 cost: 0
 heresy: 0
 target_heresy: 0
-location: any
+location: null
 agents: 0
-tags: [wydarzenie, historia, wskazowka, relikwia]
-status: draft
+tags: [edict, relic]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: C
+status: prototyp
 ---
 
 # Krypta pod Toledo
 
-**Efekt globalny:** Odkryj 1 Relikwię w Lochach **oraz** połóż 1 Wskazówkę Kodeksu na Trybunale (do zabrania akcją Cienia / Agentem). W tej Erze pierwszy gracz, który weźmie Relikwię lub Wskazówkę z efektu tej karty, otrzymuje +1 Herezji.
+**Efekt:** EDYKT. Umieść Relikwię w Lochach. Pierwszy Agent, który wejdzie tam w następnej Erze, może ją podjąć. Prawo stołu: Relikwia pojawia się w najniebezpieczniejszym miejscu.
 
-**Narracja:** Pod bibliotekami — nie tylko kurz. Fragment Przedwiecznego Kodeksu czeka na tego, kto się nie boi płomienia.
+**Przy stole:** Wyścig do Lochów. Cienie vs Oficjum — kto pierwszy, ten bierze.
+
+**Warstwa:** C — edykt Relikwii w Lochach.

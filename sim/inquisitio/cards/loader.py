@@ -1,120 +1,102 @@
+"""Card loader — markdown YAML frontmatter from game/cards."""
 from __future__ import annotations
 
-import re
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from inquisitio.model import Card, CardTier, CardType, FactionId, LocationId
-
-_FRONTMATTER = re.compile(r"^---\s*\n(.*?)\n---\s*\n?(.*)$", re.DOTALL)
-
-
-def _repo_root() -> Path:
-    # sim/inquisitio/cards/loader.py -> repo root
-    return Path(__file__).resolve().parents[3]
+# repo: sim/inquisitio/cards/loader.py -> parents[3] = repo root
+REPO_ROOT = Path(__file__).resolve().parents[3]
+CARDS_ROOT = REPO_ROOT / "game" / "cards"
 
 
-def default_cards_root() -> Path:
-    return _repo_root() / "game" / "cards"
+@dataclass
+class Card:
+    id: str
+    name: str
+    faction: str
+    type: str = "akcja"
+    cost: int = 0
+    heresy: int = 0
+    target_heresy: int = 0
+    location: str | None = None
+    agents: int = 0
+    tags: list[str] = field(default_factory=list)
+    creates_hook: bool = False
+    breaks_rule: bool = False
+    gold: int = 0
+    arrest: bool = False
+    layer: str = "A"
+    status: str = "prototyp"
+    text: str = ""
+    raw: dict[str, Any] = field(default_factory=dict)
 
 
-def _parse_frontmatter(text: str) -> tuple[dict[str, Any], str]:
-    m = _FRONTMATTER.match(text.strip())
-    if not m:
-        raise ValueError("missing YAML frontmatter")
-    data = yaml.safe_load(m.group(1)) or {}
-    body = m.group(2).strip()
-    return data, body
+_CACHE: dict[str, Card] | None = None
 
 
-def _as_location(value: str) -> LocationId:
-    value = (value or "any").strip().lower()
-    try:
-        return LocationId(value)
-    except ValueError:
-        return LocationId.ANY
-
-
-def _as_faction(value: str) -> FactionId:
-    return FactionId(value.strip().lower())
-
-
-def _as_type(value: str) -> CardType:
-    return CardType(value.strip().lower())
-
-
-def _as_tier(value: str) -> CardTier:
-    return CardTier((value or "basic").strip().lower())
-
-
-def card_from_dict(data: dict[str, Any], body: str = "") -> Card:
-    tags = data.get("tags") or []
-    if isinstance(tags, str):
-        tags = [tags]
+def _parse_md(path: Path) -> Card | None:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        return None
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return None
+    meta = yaml.safe_load(parts[1]) or {}
+    body = parts[2].strip()
+    if "id" not in meta:
+        return None
     return Card(
-        id=str(data["id"]),
-        name=str(data["name"]),
-        faction=_as_faction(str(data["faction"])),
-        type=_as_type(str(data.get("type", "akcja"))),
-        tier=_as_tier(str(data.get("tier", "basic"))),
-        cost=int(data.get("cost", 0)),
-        heresy=int(data.get("heresy", 0)),
-        target_heresy=int(data.get("target_heresy", 0)),
-        location=_as_location(str(data.get("location", "any"))),
-        agents=int(data.get("agents", 0)),
-        tags=tuple(str(t) for t in tags),
-        status=str(data.get("status", "draft")),
-        effect_text=body,
-        raw=dict(data),
+        id=str(meta["id"]),
+        name=str(meta.get("name", meta["id"])),
+        faction=str(meta.get("faction", "")),
+        type=str(meta.get("type", "akcja")),
+        cost=int(meta.get("cost") or 0),
+        heresy=int(meta.get("heresy") or 0),
+        target_heresy=int(meta.get("target_heresy") or 0),
+        location=meta.get("location"),
+        agents=int(meta.get("agents") or 0),
+        tags=list(meta.get("tags") or []),
+        creates_hook=bool(meta.get("creates_hook")),
+        breaks_rule=bool(meta.get("breaks_rule")),
+        gold=int(meta.get("gold") or 0),
+        arrest=bool(meta.get("arrest")),
+        layer=str(meta.get("layer") or "A"),
+        status=str(meta.get("status") or "prototyp"),
+        text=body,
+        raw=meta,
     )
 
 
-def load_card_file(path: Path) -> Card:
-    text = path.read_text(encoding="utf-8")
-    data, body = _parse_frontmatter(text)
-    return card_from_dict(data, body)
+def load_all_cards(force: bool = False) -> dict[str, Card]:
+    global _CACHE
+    if _CACHE is not None and not force:
+        return _CACHE
+    cards: dict[str, Card] = {}
+    for path in CARDS_ROOT.rglob("*.md"):
+        if path.name.upper() == "SCHEMA.MD" or path.name == "SCHEMA.md":
+            continue
+        c = _parse_md(path)
+        if c:
+            cards[c.id] = c
+    _CACHE = cards
+    return cards
 
 
-class CardLoader:
-    def __init__(self, cards_root: Path | None = None) -> None:
-        self.cards_root = cards_root or default_cards_root()
-        self._by_id: dict[str, Card] = {}
+def cards_for_faction(faction: str, max_layer: str = "C") -> list[Card]:
+    order = {"A": 0, "B": 1, "C": 2}
+    cap = order.get(max_layer, 2)
+    all_c = load_all_cards()
+    out = [
+        c
+        for c in all_c.values()
+        if c.faction == faction and order.get(c.layer, 2) <= cap
+    ]
+    out.sort(key=lambda c: c.id)
+    return out
 
-    def load_all(self) -> dict[str, Card]:
-        self._by_id.clear()
-        files: list[Path] = []
-        faction_dir = self.cards_root / "factions"
-        if faction_dir.exists():
-            files.extend(sorted(faction_dir.glob("*/*.md")))
-        time_dir = self.cards_root / "time-deck"
-        if time_dir.exists():
-            files.extend(sorted(time_dir.glob("*.md")))
-        for path in files:
-            if path.name == "SCHEMA.md":
-                continue
-            card = load_card_file(path)
-            if card.id in self._by_id:
-                raise ValueError(f"duplicate card id: {card.id}")
-            self._by_id[card.id] = card
-        return dict(self._by_id)
 
-    def get(self, card_id: str) -> Card:
-        if not self._by_id:
-            self.load_all()
-        return self._by_id[card_id]
-
-    def by_faction(self, faction: FactionId) -> list[Card]:
-        if not self._by_id:
-            self.load_all()
-        return sorted(
-            (c for c in self._by_id.values() if c.faction == faction),
-            key=lambda c: c.id,
-        )
-
-    @property
-    def all_cards(self) -> dict[str, Card]:
-        if not self._by_id:
-            self.load_all()
-        return dict(self._by_id)
+def time_cards(max_layer: str = "C") -> list[Card]:
+    return cards_for_faction("time", max_layer=max_layer)

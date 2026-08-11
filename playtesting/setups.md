@@ -1,82 +1,87 @@
-# Setupy playtestowe
+# Setupy playtestowe (3–5 graczy)
 
-Warianty setupu pod Fazę 2. Bazowe zasady: [`../docs/rules/README.md`](../docs/rules/README.md).  
+Warianty setupu pod sesje PnP. Bazowe zasady: [`../docs/rules/README.md`](../docs/rules/README.md).  
 Po sesji: skopiuj [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md) → `sessions/YYYY-MM-DD-skrot.md`.
+
+Gra jest na **3–5 graczy**. Warstwa PnP (`A` / `B` / `C`) ustala, które karty są w talii.
 
 ---
 
-## 2–3 graczy (uproszczony)
+## Parametry wspólne
 
-Cel: szybkie pętle (ok. 45–75 min), czytelny Tor Herezji, mniej szumu asymetrii.
+| Parametr | 3p | 4–5p |
+| :--- | :--- | :--- |
+| Karty w Fazie II | **2** na gracza / Erę (opcja playtest: **3**) | **2** |
+| Limit Er | **6–8** | **8** |
+| Relikwie | 1 w Lochach + **1** odkryta w puli | 1 w Lochach + **2** odkryte |
+| Fragmenty Kodeksu (pula) | **4** | **6** |
+| Próg Krytycznej | **7** (eksperyment: 8) | **7** (lub 8) |
+| Złoto startowe | **3** | **3** |
+| Agenci | **3** | **3** |
+| Ręka | **5** | **5** |
+| Inkwizytor | Start Trybunał, Patrol | j.w. |
 
-### Parametry
+### Karty wg warstwy PnP
 
-| Parametr | Wartość |
+| Warstwa | W talii gracza |
 | :--- | :--- |
-| Karty w Fazie II | **2** na gracza na Erę |
-| Limit Er | **5** (wcześniej: spełnienie Intrygi) |
-| Relikwie | **1** w Lochach + **1** w puli odkrytej (reszta zakryta, mniejsza pula: 4–5 żetonów) |
-| Wskazówki Kodeksu | pula **4** (cel Kabały nadal 4 — przy 2–3p graj Kabałę tylko gdy jest w składzie) |
-| Próg oskarżenia | **7** (domyślnie) lub **8** wg protokołu A/B |
-| Złoto startowe | **2** |
-| Agenci | **3** |
+| **A** | Tylko `layer: A` (5 kart) — Inkwizytor + Werdykt |
+| **B** | A + B (bez Signature) |
+| **C** | Pełne 10 + Talia Czasu |
+
+---
+
+## 3 graczy
+
+Cel: czytelny stół (~60–90 min), dramat Werdyktu / Inkwizytora bez pełnego szumu 5 frakcji.
 
 ### Rekomendowane składy
 
-| Gracze | Skład | Co testuje |
-| :---: | :--- | :--- |
-| 2 | Święte Oficjum + Cienie Al-Andalus | Presja procesów vs tempo Relikwii |
-| 2 | Święte Oficjum + Kabała z Toledo | Sweet spot 4–6 vs oskarżenia |
-| 2 | Korona & Borgiowie + Gildia Cieni | Kontrola vs wrabianie (uwaga: słabszy „stół”) |
-| 3 | Oficjum + Al-Andalus + Korona | Klasyczny trójkąt władza / wiara / cień |
-| 3 | Oficjum + Kabała + Gildia | Herezja jako waluta stołu |
-| 3 | Al-Andalus + Korona + Gildia | Bez Oficjum — czy Procesy wciąż działają? |
+| Kod / skład | Co testuje |
+| :--- | :--- |
+| Oficjum + Cienie + Korona | Terror / Relikwie / Dekrety+Haki |
+| Oficjum + Kabała + Gildia | Sweet spot Herezji vs Upadek vs Stosy |
+| Cienie + Korona + Gildia | Polityka bez Oficjum — czy Autodafé/Werdykt wciąż żyją? |
+| Oficjum + Cienie + Gildia | Stosy vs Relikwie vs Upadek |
 
-### Notatki 2p
+### Notatki 3p
 
-- **Gildia** i **Kabała** mają mniej celów do wrabiania — metryki wrabiania mogą być zawyżone lub niewystarczające (hipoteza #3 w `balance-notes.md`).
-- Unikaj 2p: Gildia + Kabała bez Oficjum (mało presji stosu / procesów).
-- Przy 2p w Fazie II: po **3** karty na gracza na Erę (zamiast 2), żeby tempo nie padało.
+- Gildia i Kabała mają mniej celów — metryki Haków / wrabiania mogą być ostrzejsze.
+- Pierwsza sesja Warstwy A: preferuj **Oficjum + Cienie + Korona**.
 
 ---
 
-## 4–5 graczy (pełny asymetryczny)
+## 4 graczy
 
-Cel: pełna asymetria, sojusze stołu, snowball Oficjum, tempo Relikwii w 60–90+ min.
+Cel: asymetria + sojusze, bez pełnej piątki.
 
-### Parametry
-
-| Parametr | Wartość |
-| :--- | :--- |
-| Karty w Fazie II | **2** na gracza na Erę |
-| Limit Er | **6** (opcjonalnie) |
-| Relikwie | jak w zasadach: **1** w Lochach + **2** odkryte w puli |
-| Wskazówki | pula **6+** |
-| Próg oskarżenia | **7** lub **8** (A/B) |
-| Złoto / Agenci / ręka | jak w zasadach prototypu |
-
-### 5 graczy
-
-Wszystkie frakcje przy stole.
-
-### 4 graczy — którą frakcję wyłączyć
+### Którą frakcję wyłączyć
 
 | Wyłącz | Gdy chcesz przetestować |
 | :--- | :--- |
-| **Gildia Cieni** | Czystszy stół bez brokera Upadku; Fokus na Relikwie / Kontrolę / Stosy |
-| **Kabała z Toledo** | Mniej manipulacji Herezją; Oficjum vs Al-Andalus vs Korona (+ Gildia) |
-| **Korona & Borgiowie** | Mniej złota/kontroli; ostrzejsze procesy i Relikwie |
-| **Cienie Al-Andalus** | Brak ewakuacji — Fokus Herezja / Upadek / Stosy (krótszy cel) |
-| **Święte Oficjum** | Tylko jeśli testujesz „czy gra żyje bez inkwizytora” (osobna hipoteza) |
+| **Gildia Cieni** | Czystszy stół; fokus Relikwie / Stosy / Dekrety |
+| **Kabała z Toledo** | Mniej sweet-spotu Herezji; ostrzejszy Werdykt |
+| **Korona** | Mniej Haków/Dekretów; ostrzejsze Relikwie i Stosy |
+| **Cienie Al-Andalus** | Brak ewakuacji — fokus Herezja / Upadek / Stosy |
+| **Święte Oficjum** | Osobna hipoteza: czy Inkwizytor NPC wystarcza bez gracza-Oficjum |
 
-Domyślnie przy pierwszej sesji 4p: **wyłącz Gildię** (najłatwiejszy pełny asymetryczny core).
+Domyślnie pierwsza sesja 4p: **wyłącz Gildię**.
+
+---
+
+## 5 graczy
+
+Wszystkie frakcje. Pełny chaos Haków, Podwójnych i Werdyktów (~90+ min).  
+Używaj Warstwy **C** dopiero po gate’ach A/B przy stole.
 
 ---
 
 ## Checklista przed sesją
 
 1. Wydruk / szkic: [`../game/board/locations.md`](../game/board/locations.md), [`../game/board/player-board.md`](../game/board/player-board.md)
-2. Talie 10 kart × frakcje przy stole + Talia Czasu (8)
-3. Żetony: Herezja, złoto, Relikwie, Kontrola, Wskazówki, Stosy / Upadek
-4. Ustal próg oskarżenia (**7** lub **8**) i zapisz w notatce sesji
-5. Wybierz wiersz setupu z tej strony
+2. Komponenty: [`../game/components/inventory.md`](../game/components/inventory.md), [`../game/components/print-3d.md`](../game/components/print-3d.md)
+3. Talie wg warstwy + (C) Talia Czasu 8
+4. Żetony: Herezja, złoto, Relikwie, Fragmenty, Haki, Podwójni, Stosy, Upadek, Dekret, Inkwizytor
+5. Ustal próg oskarżenia (**7** lub **8**) i warstwę A/B/C — zapisz w notatce sesji
+6. Wybierz skład z tej strony
+7. Po grze: [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md) (UX: downtime, AP, emocja Werdyktu)

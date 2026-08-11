@@ -1,59 +1,102 @@
+"""Smoke tests — layers A/B/C, setups 3–5p."""
+from __future__ import annotations
+
+import random
+from pathlib import Path
+
 import pytest
 
-from inquisitio.cards.loader import CardLoader
-from inquisitio.engine.setup import create_game, resolve_setup
+from inquisitio.agents.politics import PoliticsAgent
+from inquisitio.cards.loader import cards_for_faction, load_all_cards, time_cards
+from inquisitio.engine.dungeon import arrest_agent, interrogate
+from inquisitio.engine.heresy import add_heresy, is_critical
+from inquisitio.engine.hooks import force_hook, grant_hook
+from inquisitio.engine.inquisitor import can_autodafe, resolve_autodafe
+from inquisitio.engine.setup import SETUP_PRESETS, new_game
+from inquisitio.engine.state import FactionId
 from inquisitio.engine.turn import play_game
-from inquisitio.engine.win import check_winner
-from inquisitio.engine.effects.registry import register_defaults, get_handler, _REGISTRY
-from inquisitio.model import FactionId
-from inquisitio.runner.batch import run_batch
+from inquisitio.engine.verdict import run_verdict
 
 
-def test_loader_counts():
-    cards = CardLoader().load_all()
-    assert len(cards) == 58
-    assert sum(1 for c in cards.values() if c.faction == FactionId.TIME) == 8
-    assert sum(1 for c in cards.values() if c.faction == FactionId.SWIETE_OFICJUM) == 10
+def test_no_2p_setup():
+    assert all(len(v) >= 3 for v in SETUP_PRESETS.values())
+    with pytest.raises(ValueError):
+        new_game(factions=[FactionId.SWIETE_OFICJUM, FactionId.CIENIE_AL_ANDALUS])
 
 
-def test_all_handlers_registered():
-    register_defaults()
-    cards = CardLoader().load_all()
-    missing = [cid for cid in cards if get_handler(cid) is None]
-    assert not missing, f"missing handlers: {missing}"
-    assert len(_REGISTRY) >= 58
+def test_layer_a_cards_simple():
+    for fac in [
+        "swiete-oficjum",
+        "cienie-al-andalus",
+        "korona-borgiowie",
+        "kabala-toledo",
+        "gildia-cieni",
+    ]:
+        a = cards_for_faction(fac, max_layer="A")
+        assert len(a) == 5
+        for c in a:
+            assert c.layer == "A"
+            assert c.type != "signature"
+            assert not c.breaks_rule
+            assert not c.creates_hook
 
 
-def test_smoke_game_completes():
-    cfg = resolve_setup(players=3, seed=7)
-    state = create_game(cfg)
-    play_game(state)
-    assert state.winner is not None
-    assert state.era >= 1
-    assert state.metrics.plays > 0
+def test_layer_c_full_decks():
+    for fac in [
+        "swiete-oficjum",
+        "cienie-al-andalus",
+        "korona-borgiowie",
+        "kabala-toledo",
+        "gildia-cieni",
+    ]:
+        assert len(cards_for_faction(fac, max_layer="C")) == 10
+    assert len(time_cards("C")) >= 8
 
 
-def test_win_stakes():
-    cfg = resolve_setup(setup_name="3p-oficjum-alandalus-korona", seed=0)
-    state = create_game(cfg)
-    state.player(FactionId.SWIETE_OFICJUM).stakes = 2
-    assert check_winner(state) == FactionId.SWIETE_OFICJUM
+def test_heresy_and_verdict_layer_a():
+    rng = random.Random(1)
+    state = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="A")
+    accused = FactionId.CIENIE_AL_ANDALUS
+    add_heresy(state, accused, 8)
+    assert is_critical(state.players[accused], state.accusation_threshold)
+    state.eras_since_autodafe = 5
+    assert can_autodafe(state)
+    resolve_autodafe(state)
+    run_verdict(state, FactionId.SWIETE_OFICJUM, accused, rng)
+    assert state.metrics.accusations >= 1
 
 
-def test_win_korona_needs_two_each():
-    cfg = resolve_setup(setup_name="3p-oficjum-alandalus-korona", seed=0)
-    state = create_game(cfg)
-    k = state.player(FactionId.KORONA_BORGIOWIE)
-    k.control_palace = 1
-    k.control_market = 1
-    assert check_winner(state) is None
-    k.control_palace = 2
-    k.control_market = 2
-    assert check_winner(state) == FactionId.KORONA_BORGIOWIE
+def test_dungeon_and_hooks_layer_b():
+    rng = random.Random(2)
+    state = new_game(setup="3p-oficjum-alandalus-korona", seed=2, layer="B")
+    victim = FactionId.CIENIE_AL_ANDALUS
+    assert arrest_agent(state, victim)
+    out = interrogate(state, FactionId.SWIETE_OFICJUM, victim, rng, prefer="double")
+    assert out == "double"
+    assert state.metrics.doubles_created >= 1
+    grant_hook(state, FactionId.KORONA_BORGIOWIE, victim)
+    assert force_hook(state, FactionId.KORONA_BORGIOWIE, victim, comply=False)
+    assert state.metrics.hooks_forced >= 1
+    assert state.players[victim].heresy >= 2
 
 
-def test_batch_deterministic():
-    a = run_batch(games=5, setup="3p-oficjum-alandalus-korona", seed=99, threshold=7)
-    b = run_batch(games=5, setup="3p-oficjum-alandalus-korona", seed=99, threshold=7)
-    assert a.wins == b.wins
-    assert a.avg_eras == b.avg_eras
+def test_smoke_full_game_layer_c():
+    rng = random.Random(42)
+    state = new_game(setup="3p-oficjum-alandalus-korona", seed=42, layer="C")
+    agent = PoliticsAgent(rng)
+
+    def choose(st, fid, legal):
+        return agent.choose_card(st, fid, legal)
+
+    winner = play_game(state, rng, choose)
+    assert winner in state.turn_order
+    assert state.metrics.eras >= 1
+    proc = Path(__file__).resolve().parents[1] / "inquisitio" / "engine" / "process.py"
+    assert not proc.exists()
+
+
+def test_cards_load():
+    cards = load_all_cards()
+    assert "so-01" in cards
+    assert "time-01" in cards
+    assert cards["so-10"].breaks_rule

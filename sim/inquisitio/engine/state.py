@@ -1,130 +1,117 @@
+"""Game state for political intrigue prototype (layers A–C)."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any
 
-from inquisitio.model import LOCATION_ORDER, FactionId, LocationId, heresy_zone
+
+class FactionId(str, Enum):
+    SWIETE_OFICJUM = "swiete-oficjum"
+    CIENIE_AL_ANDALUS = "cienie-al-andalus"
+    KORONA_BORGIOWIE = "korona-borgiowie"
+    KABALA_TOLEDO = "kabala-toledo"
+    GILDIA_CIENI = "gildia-cieni"
+
+
+LOCATIONS = [
+    "trybunal",
+    "palac",
+    "lochy",
+    "rynek",
+    "gildia",
+]
+
+LOCATION_INDEX = {name: i for i, name in enumerate(LOCATIONS)}
+
+
+class InquisitorMode(str, Enum):
+    PATROL = "patrol"
+    AUTODAFE = "autodafe"
 
 
 @dataclass
 class AgentToken:
     owner: FactionId
-    location: LocationId | None = None  # None = off board (reserve)
-    in_dungeon: bool = False
-    burned: bool = False
-
-
-@dataclass
-class PlayedCard:
-    card_id: str
-    owner: FactionId
-    location: LocationId
-    face_down: bool = True
+    location: str
+    arrested: bool = False
+    double_agent: bool = False  # controlled by another
+    controller: FactionId | None = None
 
 
 @dataclass
 class PlayerState:
     faction: FactionId
     heresy: int = 0
-    gold: int = 2
+    gold: int = 3
     hand: list[str] = field(default_factory=list)
     deck: list[str] = field(default_factory=list)
     discard: list[str] = field(default_factory=list)
-    permanents: list[str] = field(default_factory=list)
     agents: list[AgentToken] = field(default_factory=list)
-    relics: int = 0
-    evacuated_relics: int = 0
-    clues: int = 0
-    control_palace: int = 0
-    control_market: int = 0
-    influence_tribunal: int = 0
-    stakes: int = 0  # Oficjum stosy
-    collapses: list[FactionId] = field(default_factory=list)  # Gildia upadki
-    accused_this_era: bool = False
-    played_shadow_locs: set[LocationId] = field(default_factory=set)
-    cards_played_this_era: int = 0
-
-    def living_agents(self) -> list[AgentToken]:
-        return [a for a in self.agents if not a.burned]
-
-    def agents_on_board(self) -> list[AgentToken]:
-        return [a for a in self.living_agents() if a.location is not None and not a.in_dungeon]
-
-    def agents_in(self, loc: LocationId) -> list[AgentToken]:
-        return [a for a in self.agents_on_board() if a.location == loc]
-
-    def dungeon_agents(self) -> list[AgentToken]:
-        return [a for a in self.living_agents() if a.in_dungeon]
-
-    def add_heresy(self, amount: int) -> None:
-        self.heresy = max(0, min(10, self.heresy + amount))
-
-    def zone(self) -> str:
-        return heresy_zone(self.heresy)
+    # victory trackers
+    stacks: int = 0  # Oficjum
+    relics_evacuated: int = 0  # Cienie
+    decrees_played: int = 0  # Korona
+    fragments: int = 0  # Kabala
+    falls: int = 0  # Gildia
+    # hooks this player HOLDS on others: target faction -> count
+    hooks_on: dict[FactionId, int] = field(default_factory=dict)
+    # anti-AP per era
+    used_hook: bool = False
+    used_interrogation: bool = False
+    used_inquisitor_send: bool = False
+    avoided_autodafe: bool = False
+    path_via_double: bool = False
 
 
 @dataclass
-class GameMetrics:
-    critical_entries: int = 0
+class DramaMetrics:
+    autodafe_count: int = 0
     accusations: int = 0
-    verdicts: int = 0
-    stakes_total: int = 0
-    feints: int = 0
-    plays: int = 0
-    strategic_accusations: int = 0
-    max_heresy_seen: dict[str, int] = field(default_factory=dict)
-    intrigue_log: list[dict[str, Any]] = field(default_factory=list)
-
-    def log(self, **kwargs: Any) -> None:
-        self.intrigue_log.append(kwargs)
+    convictions: int = 0
+    hooks_created: int = 0
+    hooks_forced: int = 0
+    doubles_created: int = 0
+    cards_played: int = 0
+    legal_moves_sampled: int = 0
+    deadlocks: int = 0  # eras where a player had zero legal plays
+    eras: int = 0
 
 
 @dataclass
 class GameState:
     players: dict[FactionId, PlayerState]
-    order: list[FactionId]
-    cards: dict[str, Any]  # card_id -> Card
-    threshold: int = 7
-    era: int = 0
-    max_eras: int = 6
-    first_player_idx: int = 0
+    turn_order: list[FactionId]
+    era: int = 1
+    max_eras: int = 8
+    accusation_threshold: int = 7
+    inquisitor_location: str = "trybunal"
+    inquisitor_mode: InquisitorMode = InquisitorMode.PATROL
+    eras_since_autodafe: int = 99
     sea_route_open: bool = False
-    relic_pool: int = 5
-    relics_on_board: dict[LocationId, int] = field(default_factory=dict)
-    clue_pool: int = 6
+    relics_on_board: dict[str, int] = field(default_factory=dict)
     time_deck: list[str] = field(default_factory=list)
     time_discard: list[str] = field(default_factory=list)
-    current_time: str | None = None
-    slots: dict[LocationId, list[PlayedCard]] = field(default_factory=dict)
     winner: FactionId | None = None
-    win_reason: str = ""
-    metrics: GameMetrics = field(default_factory=GameMetrics)
+    metrics: DramaMetrics = field(default_factory=DramaMetrics)
+    log: list[str] = field(default_factory=list)
     rng_seed: int = 0
-    era_modifiers: dict[str, Any] = field(default_factory=dict)
+    layer: str = "C"  # A, B, or C content enabled
 
-    def __post_init__(self) -> None:
-        if not self.slots:
-            self.slots = {loc: [] for loc in LOCATION_ORDER}
-        if not self.relics_on_board:
-            self.relics_on_board = {loc: 0 for loc in LOCATION_ORDER}
+    def alive_factions(self) -> list[FactionId]:
+        return list(self.turn_order)
 
-    def player(self, faction: FactionId) -> PlayerState:
-        return self.players[faction]
+    def add_log(self, msg: str) -> None:
+        self.log.append(f"E{self.era}: {msg}")
 
-    def rivals(self, faction: FactionId) -> list[FactionId]:
-        return [f for f in self.order if f != faction]
 
-    def turn_order(self) -> list[FactionId]:
-        n = len(self.order)
-        start = self.first_player_idx % n
-        return [self.order[(start + i) % n] for i in range(n)]
+def heresy_zone(value: int) -> str:
+    if value <= 3:
+        return "czysta"
+    if value <= 6:
+        return "obserwowana"
+    return "krytyczna"
 
-    def clear_era_slots(self) -> None:
-        for loc in LOCATION_ORDER:
-            self.slots[loc].clear()
-        for p in self.players.values():
-            p.accused_this_era = False
-            p.played_shadow_locs.clear()
-            p.cards_played_this_era = 0
-        self.era_modifiers.clear()
-        self.current_time = None
+
+def clamp_heresy(v: int) -> int:
+    return max(0, min(10, v))

@@ -1,29 +1,42 @@
 # Poziom Herezji
 
-Ikoniczna mechanika tytułu. Każdy gracz ma **Tor Herezji 0–10** na planszetce.
+Ikoniczna mechanika tytułu — **centralny filar** obok Inkwizytora, Lochów/Podwójnych, Haków i Signature.
+
+Każdy gracz ma **Tor Herezji 0–10** na planszetce. Herezja mierzy, jak bardzo jesteś **spalony publicznie**. Im wyżej, tym mocniejsze karty możesz „udźwignąć” — i tym bliżej stosu.
 
 ## Strefy
 
-| Zakres | Strefa | Efekt |
+| Zakres | Strefa | Przy stole |
 | :---: | :--- | :--- |
-| 0–3 | **Czysta** | Brak podejrzeń. Bezpieczne, słabsze akcje. |
-| 4–6 | **Obserwowana** | Większa czujność Inkwizycji. Dostęp do alchemii i zakazanych paktów. |
-| 7–10 | **Krytyczna / HERETYK** | Inni gracze mogą **Rzucić Oskarżenie** (akcja reaktywna). |
+| 0–3 | **Czysta** | Brak podejrzeń. Bezpieczne, zwykle słabsze akcje. Oficjum lubi Cię tu widzieć — jesteś nieskuteczny. |
+| 4–6 | **Obserwowana** | Czujność Inkwizycji. Kabała **musi** tu żyć przy wygranej. Ryzykowniejsze karty, alchemia, Cień. |
+| 7–10 | **Krytyczna / HERETYK** | Inni mogą **Rzucić Oskarżenie** → [`werdykt-stolu.md`](werdykt-stolu.md). Jesteś tematem rozmowy stołu. |
 
-> **Do przetestowania:** próg oskarżenia **7** vs **8**.
+> Próg oskarżenia w prototypie: **7**. Sim może porównać 7 vs 8 jako eksperyment dramatu.
 
 ## Źródła Herezji
 
-1. **Dwuostrze władzy** — silne karty (`heresy: +1/+2/+3`) podnoszą tor zagrywającego.
-2. **Wrabianie** — karty przenoszą Herezję na rywala (`target_heresy`).
-3. **Efekty lokacji / wydarzeń** — Talia Czasu i akcje Cienia.
+1. **Dwuostrze władzy** — karty z `heresy: +N` podnoszą Twój tor przy zagraniu.
+2. **Wrabianie** — `target_heresy` dokłada Herezję wskazanemu rywalowi (Gildia, plotki, fałszywe tropy).
+3. **Hak ujawniony** — ofiara odmawia żądania → zwykle **+2 Herezja** (cap 10).
+4. **Autodafé** — każdy Agent w spalonej lokacji: właściciel **+1 Herezja**.
+5. **Podwójny wykryty** — skandal: właściciel **+2 Herezja** (prototyp); znacznik znika.
+6. **Werdykt — uniewinnienie** — oskarżyciel **+1 Herezja** (wstyd publiczny).
+7. **Talia Czasu / lokacje** — edykty i efekty Cienia.
 
-## Procedura Procesu (gdy Herezja ≥ próg)
+## Dwuostrze przy stole
 
-1. **Aresztowanie** — Agent oskarżonego → Lochy.
-2. **Przekupstwo & licytacja** — odrzucanie kart, złoto dla Sędziego, zrzucanie winy.
-3. **Wyrok / Autodafé** — porażka = Agent na stosie (eliminacja) + utrata Wpływu na rzecz Inkwizycji.
+Gracz w Czystej jest bezpieczny i słaby. Gracz w Obserwowanej gra ostrzem. Gracz w Krytycznej **wygrał tempo** albo **za chwilę spłonie** — stół decyduje Werdyktem.
 
-## Notatki balansu
+Krytyczna otwiera **głos stołu** ([`werdykt-stolu.md`](werdykt-stolu.md)).
 
-Zapisuj wyniki w `playtesting/` — zwłaszcza: jak często ktoś wchodzi w strefę krytyczną, ile oskarżeń pada na rundę, czy Inkwizycja wygrywa „za darmo” z procesów.
+## Powiązania
+
+- [`wielki-inkwizytor.md`](wielki-inkwizytor.md) — Autodafé żywi tor.
+- [`werdykt-stolu.md`](werdykt-stolu.md) — oskarżenie przy ≥7.
+- [`haki.md`](haki.md) — odmowa = pożar publiczny.
+- [`lochy-przesluchania.md`](lochy-przesluchania.md) — wybór: Herezja / Hak / Podwójny.
+
+## Playtest — loguj
+
+Ile wejść w Krytyczną / Erę; ile oskarżeń; czy gracze **boją się** 6→7; czy Kabała utrzymuje 4–6.

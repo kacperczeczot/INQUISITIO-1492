@@ -3,18 +3,24 @@ id: gc-05
 name: Fałszywy Świadek
 faction: gildia-cieni
 type: reakcja
-tier: basic
-cost: 1
+cost: 0
 heresy: 0
-target_heresy: 1
-location: trybunal
+target_heresy: 0
+location: null
 agents: 0
-tags: [reakcja, proces, wrabianie]
-status: draft
+tags: [reaction]
+creates_hook: false
+breaks_rule: false
+gold: 0
+arrest: false
+layer: A
+status: prototyp
 ---
 
 # Fałszywy Świadek
 
-**Efekt (reakcja):** Podczas Procesu: przenieś oskarżenie na innego gracza z Herezją ≥ 4 **lub** dodaj +1 Herezji oskarżonemu i weź 1 złoto.
+**Efekt:** Reakcja (koszt 0). Podczas Werdyktu, po ujawnieniu większości, zmień swój głos. Limit: 1 / Erę.
 
-**Bluff / Uwagi:** Manipulacja Fazą IV bez brudzenia własnego Toru.
+**Przy stole:** Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.
+
+**Warstwa:** A — reakcja Werdyktu.

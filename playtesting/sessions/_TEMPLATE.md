@@ -1,41 +1,57 @@
-# Sesja YYYY-MM-DD
+# Sesja playtest — szablon
 
-- **Skrót pliku:** `YYYY-MM-DD-skrot`
-- **Gracze / frakcje:**
-- **Setup:** 2–3p uproszczony / 4–5p pełny (odznacz) — szczegóły: [`../setups.md`](../setups.md)
-- **Wariant Herezji (próg):** 7 / 8
-- **Liczba Er:**
-- **Czas gry (min):**
-- **Zwycięzca / warunek:**
+**Data:**  
+**Gracze (3–5):**  
+**Warstwa PnP (A/B/C):**  
+**Setup:** [`../setups.md`](../setups.md)  
+**Czas gry (min):**  
+**Teach (min):**  
 
-## Metryki Herezji (ta sesja)
+## Frakcje przy stole
 
-| Metryka | Wartość |
-| :--- | :--- |
-| Wejścia w strefę Krytyczną (łącznie) | |
-| Liczba Rzutów Oskarżenia | |
-| Procesy ze wyrokiem (Autodafé) | |
-| Stosy Oficjum na koniec | |
-| Snowball Oficjum? (tak/nie + krótko) | |
+| Gracz | Frakcja | Herezja końcowa | Cel blisko? |
+| :--- | :--- | ---: | :--- |
+| | | | |
 
-> Jeśli to sesja z protokołu A/B: przepisz też do tabeli w [`../balance-notes.md`](../balance-notes.md).
+## Dramat — silniki
 
-## Przebieg (skrót)
+| Event | Ile razy | Notatka |
+| :--- | ---: | :--- |
+| Wejście w Krytyczną | | |
+| Oskarżenie / Werdykt | | |
+| Autodafé | | |
+| Hak utworzony / wymuszony | | |
+| Podwójny | | |
+| Signature zagrane | | |
+| Edykt Czasu | | |
 
--
+## Human UX (obowiązkowe)
 
-## Co działało
-
--
-
-## Co zepsuć / zmienić
-
--
-
-## Zmiany kart (ID)
-
-| ID | Zmiana | Powód |
+| Metryka | Wartość | Notatka |
 | :--- | :--- | :--- |
-| | | |
+| **Downtime** — najdłuższy blok (Faza III / Werdykt), min | | |
+| **AP / paraliż** — ktoś zamarł >~1 min? (tak/nie + kto) | | |
+| **Emocja Werdyktu** (1–5) | | 1=pusty formalizm, 5=krzyk/zdrada |
+| **Strach przed Inkwizytorem** (1–5) | | |
+| **Czytelność PnP / ikon** (1–5) | | |
+| **Teach sheet wystarczył?** (tak/nie) | | |
 
-Po zatwierdzeniu: zaktualizuj [`../heresy-calibration.md`](../heresy-calibration.md) i log w [`../balance-notes.md`](../balance-notes.md).
+Alarmy: downtime bloku **>~15–20 min**; emocja Werdyktu **<3** przy ≥1 oskarżeniu.
+
+## Deadlock / legal
+
+- Czy ktoś nie miał legalnego ruchu?
+- Czy limity anti-AP (1 Hak / Przesłuchanie / Nasłanie) wystarczyły?
+
+## Werdykt sesji
+
+Co zostawić / co ciąć / co niejasne:
+
+1.  
+2.  
+3.  
+
+## Zwycięzca
+
+**Frakcja:**  
+**Jak wygrał (Herezja / silnik):**  
