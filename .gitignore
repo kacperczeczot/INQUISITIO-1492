@@ -1,0 +1,26 @@
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Edytory / IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Pliki robocze lokalne
+*.local.md
+.env
+.venv/
+node_modules/
+
+# Eksporty i cache grafiki
+*.psd.bak
+*.aseprite-tmp
+.cache/
+tmp/
+temp/
+
+# Wydruki / generowane PDF (trzymaj źródła w repo)
+*.pdf
+!docs/**/*.pdf
