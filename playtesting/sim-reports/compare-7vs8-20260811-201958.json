@@ -1,0 +1,58 @@
+{
+  "7": {
+    "games": 150,
+    "threshold": 7,
+    "setup": "3p-oficjum-alandalus-korona",
+    "wins": {
+      "korona-borgiowie": 69,
+      "cienie-al-andalus": 45,
+      "swiete-oficjum": 36
+    },
+    "win_reasons": {
+      "limit er": 56,
+      "2 stosy": 29,
+      "2 relikwie ewakuowane": 34,
+      "kontrola Palac+Rynek (2+2)": 31
+    },
+    "avg_eras": 4.493333333333333,
+    "critical_entries": 1.0933333333333333,
+    "accusations": 1.36,
+    "verdicts": 0.11333333333333333,
+    "stakes": 0.7533333333333333,
+    "feint_rate": 0.20674774421341702,
+    "strategic_accusation_rate": 0.8921568627450981,
+    "max_heresy_avg": {
+      "korona-borgiowie": 2.966666666666667,
+      "cienie-al-andalus": 6.626666666666667,
+      "swiete-oficjum": 4.46
+    }
+  },
+  "8": {
+    "games": 150,
+    "threshold": 8,
+    "setup": "3p-oficjum-alandalus-korona",
+    "wins": {
+      "korona-borgiowie": 85,
+      "cienie-al-andalus": 44,
+      "swiete-oficjum": 21
+    },
+    "win_reasons": {
+      "limit er": 66,
+      "2 relikwie ewakuowane": 30,
+      "kontrola Palac+Rynek (2+2)": 36,
+      "2 stosy": 18
+    },
+    "avg_eras": 4.626666666666667,
+    "critical_entries": 0.9266666666666666,
+    "accusations": 1.0266666666666666,
+    "verdicts": 0.08666666666666667,
+    "stakes": 0.5933333333333334,
+    "feint_rate": 0.20497131931166349,
+    "strategic_accusation_rate": 0.9155844155844156,
+    "max_heresy_avg": {
+      "korona-borgiowie": 3.22,
+      "cienie-al-andalus": 6.733333333333333,
+      "swiete-oficjum": 4.58
+    }
+  }
+}

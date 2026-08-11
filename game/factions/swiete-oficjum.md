@@ -1,7 +1,7 @@
 # Święte Oficjum *(Torquemada)*
 
 **Styl:** Kontrola, opresja, obławy, wymuszanie Czystości.  
-**Cel zwycięstwa:** Oczyścić miasto z heretyków i **skazać 3 Agentów na stos**.
+**Cel zwycięstwa:** Oczyścić miasto z heretyków i **skazać 2 Agentów na stos** *(kalibracja sim)*. Alternatywnie: **4 Wpływ w Trybunale = 1 Stos** (gdy oskarżasz lub masz Agenta w Trybunale/Lochach).
 
 ## Tożsamość przy stole
 

@@ -1,0 +1,28 @@
+{
+  "games": 150,
+  "threshold": 7,
+  "setup": "3p-oficjum-alandalus-korona",
+  "wins": {
+    "korona-borgiowie": 91,
+    "swiete-oficjum": 42,
+    "cienie-al-andalus": 17
+  },
+  "win_reasons": {
+    "kontrola Palac+Rynek (2+2)": 36,
+    "limit er": 101,
+    "2 relikwie ewakuowane": 12,
+    "2 stosy": 1
+  },
+  "avg_eras": 4.673333333333333,
+  "critical_entries": 1.08,
+  "accusations": 1.6733333333333333,
+  "verdicts": 0.16,
+  "stakes": 0.2,
+  "feint_rate": 0.20200849748937813,
+  "strategic_accusation_rate": 0.8406374501992032,
+  "max_heresy_avg": {
+    "swiete-oficjum": 4.233333333333333,
+    "korona-borgiowie": 3.8266666666666667,
+    "cienie-al-andalus": 6.56
+  }
+}

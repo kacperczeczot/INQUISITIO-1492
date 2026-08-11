@@ -1,7 +1,7 @@
 # Kabała z Toledo *(Uczeni & Alchemicy)*
 
 **Styl:** Zakryta wiedza, manipulowanie Poziomem Herezji.  
-**Cel zwycięstwa:** Odkodować Przedwieczny Kodeks — **zebrać 4 Wskazówki**.
+**Cel zwycięstwa:** Odkodować Przedwieczny Kodeks — **zebrać 4 Wskazówki** (max 1/Era, sweet spot 4–6).
 
 ## Tożsamość przy stole
 

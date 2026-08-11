@@ -1,7 +1,7 @@
 # Korona & Borgiowie *(Ferdynand / Izabela)*
 
 **Styl:** Manipulowanie zasobami, dekrety, przekupstwo.  
-**Cel zwycięstwa:** Pełna kontrola polityczna nad **Pałacem** i **Rynkiem**.
+**Cel zwycięstwa:** Pełna kontrola polityczna nad **Pałacem** i **Rynkiem** (**≥2** żetony Kontroli w każdej lokacji).
 
 ## Tożsamość przy stole
 

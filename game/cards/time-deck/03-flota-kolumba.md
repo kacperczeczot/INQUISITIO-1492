@@ -15,6 +15,6 @@ status: draft
 
 # Flota Kolumba
 
-**Efekt globalny:** Otwórz **Szlak Morski** do końca gry: z Rynku lub Gildii można ewakuować Relikwię poza planszę za dodatkową akcję Agenta + 2 złota.
+**Efekt globalny:** Otwórz **Szlak Morski** do końca gry (za darmo). Alternatywnie Szlak można otworzyć **akcją skillową** za 3 złota z Agentem na Rynku/Gildii — Flota nie jest wymagana.
 
 **Narracja:** Oficjalnie — Indie. W rzeczywistości — jeden z nielicznych bezpiecznych korytarzy dla wiedzy, którą Inkwizycja chce spalić.

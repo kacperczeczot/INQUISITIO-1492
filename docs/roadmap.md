@@ -6,21 +6,26 @@
 - [x] Struktura repozytorium
 - [x] Opisy frakcji i lokacji (szkice)
 
-## Faza 1 — Prototyp papierowy
+## Faza 1 — Prototyp papierowy ✅
 
-- [ ] 10 kart startowych × 5 frakcji (`game/cards/factions/`)
-- [ ] Talia Czasu — min. 8 wydarzeń historycznych (`game/cards/time-deck/`)
-- [ ] Szkic planszy 5 lokacji (`game/board/`)
-- [ ] Planszetki graczy z Torem Herezji 0–10
-- [ ] Szkic zasad (`docs/rules/`)
+- [x] 10 kart startowych × 5 frakcji (`game/cards/factions/`)
+- [x] Talia Czasu — min. 8 wydarzeń historycznych (`game/cards/time-deck/`)
+- [x] Szkic planszy 5 lokacji (`game/board/`)
+- [x] Planszetki graczy z Torem Herezji 0–10
+- [x] Szkic zasad (`docs/rules/`)
 
 ## Faza 2 — Playtesting & balans
 
-- [ ] Sesje 2–3 graczy (uproszczony setup)
+Infrastruktura w `playtesting/` gotowa (setupy, protokół 7 vs 8, macierz Herezji, szablony sesji).  
+**Silnik symulacji intryg:** [`../sim/`](../sim/) — batch A/B, agenci polityczni, raporty w `playtesting/sim-reports/`.  
+Poniższe punkty sesyjne ludzkie odhaczasz **po realnych rozgrywkach** — nie wcześniej.
+
+- [ ] Sesje 2–3 graczy (uproszczony setup) — setup: [`../playtesting/setups.md`](../playtesting/setups.md)
 - [ ] Sesje 4–5 graczy (pełny asymetryczny setup)
-- [ ] Test progu oskarżenia: **7** vs **8** na Torze Herezji
-- [ ] Kalibracja kosztów Herezji kart (+1 / +2 / +3)
-- [ ] Notatki w `playtesting/sessions/`
+- [ ] Test progu oskarżenia: **7** vs **8** — protokół + `python -m inquisitio compare` ([`../sim/README.md`](../sim/README.md))
+- [ ] Kalibracja kosztów Herezji kart (+1 / +2 / +3) — macierz: [`../playtesting/heresy-calibration.md`](../playtesting/heresy-calibration.md)
+- [x] Szablony notatek w `playtesting/sessions/` (README + `_TEMPLATE.md`)
+- [x] Silnik symulacji (`sim/`) z agentami intrygi + batch raportami
 
 ## Faza 3 — Produkcja wizualna
 

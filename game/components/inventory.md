@@ -1,5 +1,7 @@
 # Lista komponentów (prototyp)
 
+Lista pod **druk 3D** (figurki, żetony): [`print-3d.md`](print-3d.md).
+
 ## Plansza i znaczniki
 
 | Komponent | Ilość (szacunek) | Notatka |

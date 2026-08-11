@@ -1,0 +1,33 @@
+{
+  "games": 200,
+  "threshold": 7,
+  "setup": "5p-full",
+  "wins": {
+    "gildia-cieni": 29,
+    "swiete-oficjum": 119,
+    "korona-borgiowie": 12,
+    "cienie-al-andalus": 39,
+    "kabala-toledo": 1
+  },
+  "win_reasons": {
+    "upadek 2 frakcji": 28,
+    "2 stosy": 118,
+    "limit er": 6,
+    "kontrola Palac+Rynek (2+2)": 10,
+    "2 relikwie ewakuowane": 38
+  },
+  "avg_eras": 3.885,
+  "critical_entries": 1.935,
+  "accusations": 3.35,
+  "verdicts": 0.28,
+  "stakes": 1.47,
+  "feint_rate": 0.28187372708757635,
+  "strategic_accusation_rate": 0.9029850746268657,
+  "max_heresy_avg": {
+    "gildia-cieni": 3.68,
+    "kabala-toledo": 5.52,
+    "korona-borgiowie": 4.0,
+    "swiete-oficjum": 4.795,
+    "cienie-al-andalus": 7.345
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "games": 100,
+  "threshold": 7,
+  "setup": "3p-oficjum-kabala-gildia",
+  "wins": {
+    "kabala-toledo": 93,
+    "gildia-cieni": 7
+  },
+  "win_reasons": {
+    "4 wskazowki": 40,
+    "limit er": 53,
+    "upadek 2 frakcji": 7
+  },
+  "avg_eras": 4.13,
+  "critical_entries": 1.09,
+  "accusations": 2.38,
+  "verdicts": 0.02,
+  "stakes": 0.02,
+  "feint_rate": 0.27486187845303867,
+  "strategic_accusation_rate": 0.7689075630252101,
+  "max_heresy_avg": {
+    "gildia-cieni": 3.0927835051546393,
+    "kabala-toledo": 6.21,
+    "swiete-oficjum": 5.39
+  }
+}

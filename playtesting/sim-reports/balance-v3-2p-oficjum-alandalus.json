@@ -1,0 +1,25 @@
+{
+  "games": 120,
+  "threshold": 7,
+  "setup": "2p-oficjum-alandalus",
+  "wins": {
+    "swiete-oficjum": 114,
+    "cienie-al-andalus": 6
+  },
+  "win_reasons": {
+    "limit er": 33,
+    "2 stosy": 81,
+    "2 relikwie ewakuowane": 6
+  },
+  "avg_eras": 4.375,
+  "critical_entries": 1.2166666666666666,
+  "accusations": 1.4833333333333334,
+  "verdicts": 0.15833333333333333,
+  "stakes": 1.6,
+  "feint_rate": 0.22170542635658916,
+  "strategic_accusation_rate": 0.8539325842696629,
+  "max_heresy_avg": {
+    "cienie-al-andalus": 6.933333333333334,
+    "swiete-oficjum": 4.333333333333333
+  }
+}
