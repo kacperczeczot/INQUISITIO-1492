@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>Żetony</title>
+<style>
+:root {
+  --ink: #1a120c;
+  --parch: #f4ead7;
+  --blood: #7a1f1f;
+  --gold: #a67c2d;
+  --line: #2a1c12;
+  --ui: rgba(244, 234, 215, 0.92);
+  --slot: #1a120c;
+  /* locked print sizes */
+  --card-w: 63mm;
+  --card-h: 88mm;
+  --board-w: 420mm;
+  --board-h: 594mm;
+  --page-a4-w: 210mm;
+  --page-a4-h: 297mm;
+  --player-w: 210mm; /* ½ A4 / A5 */
+  --player-h: 148mm;
+  --heresy-pip: 18mm;
+  --agent-d: 20mm;
+  --token-d: 20mm;
+  --token-r: 2mm; /* lekko zaokrąglony kwadrat */
+  --card-slot-w: 63mm;
+  --card-slot-h: 88mm;
+  --board-margin: 8mm;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  color: var(--ink); background: #ddd3c0; margin: 0; padding: 8mm;
+}
+h1 { color: var(--blood); font-size: 16pt; margin: 0 0 3mm; }
+h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line); }
+.meta { font-size: 9pt; color: #444; margin-bottom: 3mm; }
+.nav a { margin-right: 4mm; }
+.sheet { page-break-after: always; margin-bottom: 8mm; }
+/* A4 page frame — same lock idea as board A2 */
+.page-a4 {
+  position: relative;
+  width: var(--page-a4-w);
+  height: var(--page-a4-h);
+  min-width: var(--page-a4-w);
+  max-width: var(--page-a4-w);
+  min-height: var(--page-a4-h);
+  max-height: var(--page-a4-h);
+  background: var(--parch);
+  border: 0.5mm solid var(--line);
+  padding: 8mm;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin-bottom: 8mm;
+}
+.page-a4 > h1:first-child { margin-top: 0; }
+/* Teach może zajmować >1 A4 wysokości — szerokość i min-wysokość zostają zablokowane */
+.page-a4.teach-page {
+  height: auto;
+  max-height: none;
+  min-height: var(--page-a4-h);
+  overflow: visible;
+}
+.ico { width: 5mm; height: 5mm; object-fit: cover; vertical-align: middle; border-radius: 1mm; }
+.ico-fallback {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: auto; height: auto; min-width: 5mm; min-height: 5mm;
+  font-size: 11pt; line-height: 1; font-weight: normal;
+  border: none; background: transparent;
+}
+/* Board chrome icons — set with .board-chrome .ico below in BOARD section */
+
+/* ===== BOARD: A2 portrait — token row + 3 cards side-by-side per node ===== */
+.board-stack {
+  position: relative;
+  width: 420mm;
+  height: 594mm;
+  min-width: 420mm;
+  min-height: 594mm;
+  max-width: 420mm;
+  max-height: 594mm;
+  border: 0.6mm solid var(--line);
+  overflow: hidden;
+  background: var(--parch);
+  flex-shrink: 0;
+}
+.board-a4-grid {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Exact A2 midlines = A4 tile seams (210×297 mm portrait tiles) */
+.a4-cut {
+  position: absolute;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+}
+.a4-cut-v {
+  left: 210mm; /* half of 420 */
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.4mm dashed rgba(42, 28, 18, 0.45);
+}
+.a4-cut-h {
+  top: 297mm; /* half of 594 */
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 0.4mm dashed rgba(42, 28, 18, 0.45);
+}
+.board-ui {
+  position: relative; z-index: 2;
+  width: 100%; height: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+.board-chrome {
+  position: absolute;
+  top: var(--board-margin); left: var(--board-margin); right: var(--board-margin);
+  z-index: 3;
+  display: block;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: initial;
+  pointer-events: none;
+}
+.board-chrome .pool-box,
+.board-chrome .time-deck {
+  pointer-events: auto;
+}
+.pool-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 3mm;
+  /* leave room for time-deck on the right (2×63mm + gaps ≈ 140mm) */
+  margin-right: 145mm;
+}
+.pool-box {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 2mm;
+  background: rgba(244, 234, 215, 0.98);
+  border: 0.45mm solid var(--line);
+  padding: 2.5mm 3mm 3mm;
+  width: max-content;
+  max-width: none;
+}
+.pool-box .pool-title {
+  font-size: 16pt; font-weight: bold; color: var(--blood);
+  margin: 0; border: none; padding: 0;
+  text-align: center; line-height: 1.15;
+  width: 100%;
+  border-bottom: 0.35mm solid var(--gold);
+  padding-bottom: 1.5mm;
+  white-space: nowrap;
+}
+.pool-box .pool-body {
+  display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
+  gap: 2mm;
+}
+.pool-slots { display: inline-flex; flex-wrap: nowrap; gap: 2mm; vertical-align: middle; }
+.sq {
+  width: var(--token-d); height: var(--token-d);
+  border: 0.45mm solid var(--slot);
+  background: #fff; display: inline-block;
+  border-radius: var(--token-r);
+  box-sizing: border-box;
+}
+/* Talia Czasu = karty — osobny blok top-right, nie rozciąga pul żetonów */
+.time-deck {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 2mm;
+  background: rgba(244, 234, 215, 0.98);
+  border: 0.45mm solid var(--line);
+  padding: 2.5mm 3mm 3mm;
+}
+.time-deck .pool-title {
+  font-size: 16pt; font-weight: bold; color: var(--blood);
+  margin: 0; border: none; padding: 0;
+  text-align: center; line-height: 1.15;
+  width: 100%;
+  border-bottom: 0.35mm solid var(--gold);
+  padding-bottom: 1.5mm;
+}
+.time-deck .pool-body {
+  display: flex; flex-wrap: nowrap;
+  gap: 3mm;
+  align-items: flex-end;
+  justify-content: center;
+}
+.time-card {
+  display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
+}
+.time-card .card-slot {
+  width: var(--card-slot-w);
+  height: var(--card-slot-h);
+}
+.time-card .lbl {
+  font-size: 12pt; font-weight: bold; color: var(--ink); line-height: 1.1;
+}
+.board-chrome .ico {
+  width: 16mm; height: 16mm; border-radius: 2mm;
+}
+.board-chrome .ico-fallback {
+  min-width: 16mm; min-height: 16mm; font-size: 18pt;
+}
+.board-play {
+  position: absolute;
+  left: var(--board-margin); right: var(--board-margin);
+  /* clear short token pools; time-deck sits top-right outside node cluster */
+  top: 48mm;
+  bottom: var(--board-margin);
+  z-index: 2;
+}
+.board-streets {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.board-streets line {
+  stroke: rgba(122, 31, 31, 0.72);
+  stroke-width: 0.55;
+  stroke-linecap: round;
+}
+.loc-node {
+  position: absolute;
+  /* 1× karta 63mm (stos ≤3) + pad; żetony zawijają się w wierszu */
+  width: 116mm;
+  height: auto;
+  transform: translate(-50%, -50%);
+  background: rgba(244, 234, 215, 0.98);
+  border: 0.55mm solid var(--line);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 2.5mm;
+  gap: 2mm;
+  box-sizing: border-box;
+  z-index: 1;
+}
+.loc-head {
+  font-size: 18pt; font-weight: bold; color: var(--blood);
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin: 0; border: none; padding: 0 0 1.5mm;
+  border-bottom: 0.45mm solid var(--gold);
+  width: 100%;
+  flex-shrink: 0;
+  line-height: 1.15;
+}
+/* One row: all tokens for this location (wrap for Lochy arrests) */
+.token-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2mm;
+  width: 100%;
+  flex-shrink: 0;
+}
+.agent {
+  width: var(--agent-d); height: var(--agent-d); border-radius: 50%;
+  border: 0.5mm solid var(--slot); background: #fff;
+  box-sizing: border-box; flex: 0 0 auto;
+}
+.relic-slot {
+  width: var(--token-d); height: var(--token-d);
+  border-radius: var(--token-r);
+  border: 0.5mm solid var(--gold); background: #fff8e8;
+  display: block; flex: 0 0 auto;
+  box-sizing: border-box;
+}
+.arrest {
+  width: var(--agent-d); height: var(--agent-d);
+  border: 0.5mm solid var(--blood);
+  background: #f5e4e4; border-radius: 50%;
+  box-sizing: border-box; flex: 0 0 auto;
+}
+/* Jeden slot 63×88 = stos do 3 kart */
+.card-row {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5mm;
+  width: 100%;
+  flex-shrink: 0;
+}
+.card-slot {
+  width: var(--card-slot-w);
+  height: var(--card-slot-h);
+  border: 0.5mm dashed var(--line);
+  background: rgba(255,255,255,0.97);
+  box-sizing: border-box;
+  flex: 0 0 var(--card-slot-h);
+}
+
+/* ===== CARDS: 63×88 mm — HDR / art / effect / lore ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, var(--card-w));
+  gap: 3mm;
+  justify-content: start;
+}
+.card-proto {
+  position: relative;
+  width: var(--card-w); height: var(--card-h);
+  min-width: var(--card-w); max-width: var(--card-w);
+  min-height: var(--card-h); max-height: var(--card-h);
+  border: 0.5mm solid var(--line);
+  background: var(--parch);
+  display: flex; flex-direction: column;
+  overflow: visible;
+  flex-shrink: 0;
+}
+.card-proto::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1.4mm;
+  background: var(--faction-edge, var(--blood));
+  z-index: 2;
+}
+.card-proto .hdr {
+  padding: 2mm 2.5mm 1.2mm 3.2mm;
+  border-bottom: 0.35mm solid var(--line);
+  background: rgba(255,255,255,0.28);
+  flex-shrink: 0;
+}
+.card-proto .hdr-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5mm;
+}
+.card-proto .name {
+  font-size: 12pt;
+  font-weight: bold;
+  color: var(--blood);
+  line-height: 1.15;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.card-proto .name.name-long {
+  font-size: 10.5pt;
+}
+.card-proto .type-badge {
+  flex: 0 0 auto;
+  font-size: 6.5pt;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 1mm;
+  padding: 0.4mm 1.1mm;
+  white-space: nowrap;
+  line-height: 1.2;
+  border: 0.25mm solid rgba(42,28,18,0.45);
+  color: #3a3028;
+  background: rgba(255,255,255,0.55);
+}
+.card-proto .type-badge.type-akcja {
+  color: #2a1c12;
+  background: rgba(255,255,255,0.7);
+  border-color: rgba(42,28,18,0.55);
+}
+.card-proto .type-badge.type-reakcja {
+  color: #1a3348;
+  background: #d8e4ee;
+  border-color: #3a5a72;
+}
+.card-proto .type-badge.type-specjalna {
+  color: #5c4010;
+  background: #f0dfa8;
+  border-color: #a67c2d;
+}
+.card-proto .type-badge.type-wydarzenie {
+  color: #f4ead7;
+  background: #3a2e1c;
+  border-color: #1e1810;
+}
+.card-proto .stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1mm;
+  margin-top: 1.2mm;
+}
+.card-proto .stat-row:empty { display: none; }
+.card-proto .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6mm;
+  font-size: 7.5pt;
+  font-weight: bold;
+  line-height: 1.2;
+  padding: 0.55mm 1.4mm;
+  border-radius: 1.2mm;
+  border: 0.25mm solid rgba(42,28,18,0.4);
+  background: rgba(255,255,255,0.65);
+  white-space: nowrap;
+}
+.card-proto .badge-ico { font-size: 8pt; line-height: 1; }
+/* Moneta (CSS) — nie emoji „kamienia” */
+.coin {
+  display: inline-block;
+  width: 3.4mm;
+  height: 3.4mm;
+  flex: 0 0 3.4mm;
+  border-radius: 50%;
+  box-sizing: border-box;
+  vertical-align: middle;
+  background:
+    radial-gradient(circle at 32% 28%, #fff6c8 0%, #e8c84a 38%, #c9a227 72%, #8a6a14 100%);
+  border: 0.35mm solid #6a5210;
+  box-shadow: inset 0 0 0 0.35mm rgba(255, 236, 160, 0.55);
+}
+.card-proto .badge-gold {
+  color: #5c4010;
+  background: #f0dfa8;
+  border-color: #a67c2d;
+}
+.card-proto .badge-heresy {
+  color: #3a3028;
+  background: rgba(255,255,255,0.7);
+}
+.card-proto .badge-heresy-hot {
+  color: #fff8f4;
+  background: #6e1818;
+  border-color: #3a0c0c;
+}
+.card-proto .badge-heresy-cool {
+  color: #1e3a2e;
+  background: #cfe0d6;
+  border-color: #2d5a45;
+}
+.card-proto .heresy-caption {
+  margin-top: 0.8mm;
+  font-size: 7.5pt;
+  line-height: 1.25;
+  color: #6e1818;
+  font-weight: 600;
+}
+.card-art {
+  flex: 0 0 12mm;
+  height: 12mm;
+  margin: 0;
+  border-bottom: 0.35mm solid var(--line);
+  border-top: none;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2mm,
+      rgba(42,28,18,0.04) 2mm,
+      rgba(42,28,18,0.04) 4mm
+    );
+  box-shadow: inset 0 0 0 0.25mm dashed rgba(42,28,18,0.35);
+  outline: 0.25mm dashed rgba(42,28,18,0.28);
+  outline-offset: -1.2mm;
+  box-sizing: border-box;
+}
+.card-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 2mm 2.5mm 2.2mm 3.2mm;
+  box-sizing: border-box;
+}
+.card-effect {
+  flex: 1 1 auto;
+  display: block;
+  font-size: 11pt;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+.card-effect strong { font-weight: bold; }
+.card-effect em { font-style: italic; font-weight: inherit; }
+.card-effect .fx-block + .fx-block {
+  margin-top: 1.5mm;
+  padding-top: 1.4mm;
+  border-top: 0.3mm solid rgba(42, 28, 18, 0.28);
+}
+.card-effect .fx-break {
+  margin: 0 0 1.2mm;
+  padding: 1mm 1.4mm;
+  background: rgba(122, 31, 31, 0.12);
+  border: 0.3mm solid rgba(122, 31, 31, 0.45);
+  border-radius: 1mm;
+  font-size: 10pt;
+  line-height: 1.3;
+}
+.card-effect .fx-banner {
+  margin: 0 0 1.2mm;
+  padding: 0.7mm 0 0.9mm;
+  font-size: 9pt;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 0.35mm solid rgba(42, 28, 18, 0.4);
+  line-height: 1.25;
+}
+.card-effect .fx-banner.fx-edykt {
+  color: #3a2e1c;
+  border-bottom-color: #3a2e1c;
+}
+.card-effect .fx-banner.fx-dekret {
+  color: #8a6420;
+  border-bottom-color: #a67c2d;
+}
+.card-effect .fx-break + .fx-block,
+.card-effect .fx-banner + .fx-block {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+.card-lore {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 1.8mm;
+  border-top: 0.3mm solid rgba(42, 28, 18, 0.28);
+  font-size: 9pt;
+  font-style: italic;
+  line-height: 1.35;
+  color: #3a3028;
+  opacity: 0.72;
+}
+/* Card tints + faction edge */
+.card-proto.faction-swiete-oficjum { background: #f1ddd6; --faction-edge: #7a1f1f; }
+.card-proto.faction-swiete-oficjum .name { color: #7a1f1f; }
+.card-proto.faction-cienie-al-andalus { background: #dde8e2; --faction-edge: #1e4d3a; }
+.card-proto.faction-cienie-al-andalus .name { color: #1e4d3a; }
+.card-proto.faction-korona-borgiowie { background: #f2e6c8; --faction-edge: #8a6420; }
+.card-proto.faction-korona-borgiowie .name { color: #8a6420; }
+.card-proto.faction-kabala-toledo { background: #e6dde8; --faction-edge: #4a2d5c; }
+.card-proto.faction-kabala-toledo .name { color: #4a2d5c; }
+.card-proto.faction-gildia-cieni { background: #e5dfd2; --faction-edge: #4a3c28; }
+.card-proto.faction-gildia-cieni .name { color: #4a3c28; }
+.card-proto.faction-time { background: #e8e2d4; --faction-edge: #3a2e1c; }
+.card-proto.faction-time .name { color: #3a2e1c; }
+body.bw .card-proto {
+  filter: grayscale(1);
+  border-width: 0.7mm;
+  border-color: #111;
+}
+
+/* ===== PLAYER BOARD: ½ A4 — fixed mm budget (see game/board/player-board.md) =====
+   Outer 210×148 · pad 3 → 204×142
+   Rows: header auto (treść) + heresy 28 + body 1fr (+ gaps 1.5×2)
+*/
+.player-stack {
+  position: relative;
+  width: var(--player-w);
+  height: var(--player-h);
+  min-width: var(--player-w); max-width: var(--player-w);
+  min-height: var(--player-h); max-height: var(--player-h);
+  border: 0.55mm solid var(--line);
+  margin: 0 0 1mm;
+  overflow: hidden;
+  background: var(--parch);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  page-break-inside: avoid;
+}
+.player-stack.faction-swiete-oficjum { background: #f1ddd6; }
+.player-stack.faction-swiete-oficjum .pb-head h2 { color: #7a1f1f; border-bottom-color: #7a1f1f; }
+.player-stack.faction-cienie-al-andalus { background: #dde8e2; }
+.player-stack.faction-cienie-al-andalus .pb-head h2 { color: #1e4d3a; border-bottom-color: #2f6b52; }
+.player-stack.faction-korona-borgiowie { background: #f2e6c8; }
+.player-stack.faction-korona-borgiowie .pb-head h2 { color: #8a6420; border-bottom-color: #a67c2d; }
+.player-stack.faction-kabala-toledo { background: #e6dde8; }
+.player-stack.faction-kabala-toledo .pb-head h2 { color: #4a2d5c; border-bottom-color: #6b4580; }
+.player-stack.faction-gildia-cieni { background: #e5dfd2; }
+.player-stack.faction-gildia-cieni .pb-head h2 { color: #4a3c28; border-bottom-color: #6b5a3e; }
+
+.player-ui {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 3mm;
+  display: grid;
+  /* auto = zero dziury pod celem; wolne mm idą w korpus */
+  grid-template-rows: auto 28mm minmax(0, 1fr);
+  gap: 1.5mm;
+  overflow: hidden;
+  align-content: stretch;
+}
+.pb-head {
+  grid-row: 1;
+  overflow: hidden;
+  min-height: 0;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6mm;
+}
+.pb-head h2 {
+  margin: 0;
+  padding: 0 0 0.4mm;
+  border: none;
+  border-bottom: 0.35mm solid var(--gold);
+  font-size: 18pt;
+  line-height: 1.1;
+  color: var(--blood);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 0 auto;
+}
+.pb-goal {
+  margin: 0;
+  font-size: 15pt;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #222;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+.pb-heresy {
+  grid-row: 2;
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8mm;
+}
+.pb-section-title {
+  flex: 0 0 auto;
+  font-size: 13pt;
+  font-weight: bold;
+  color: var(--blood);
+  margin: 0;
+  line-height: 1;
+}
+.heresy-track {
+  display: flex;
+  gap: 0.35mm;
+  width: 100%;
+  height: var(--heresy-pip);
+  flex: 0 0 var(--heresy-pip);
+}
+.heresy-pip {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  border: 0.35mm solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13pt;
+  font-weight: bold;
+  background: #fff;
+  box-sizing: border-box;
+}
+.heresy-pip.z1 { background: #dcebc8; }
+.heresy-pip.z2 { background: #f0d9a8; }
+.heresy-pip.z3 { background: #e8b8b8; }
+.heresy-zones {
+  display: grid;
+  grid-template-columns: 4fr 3fr 4fr;
+  margin: 0; /* tuż pod torem — nigdy margin-top: auto */
+  flex: 0 0 auto;
+  font-size: 11pt;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.05;
+}
+.heresy-zones .hz-z1 { color: #3d5a20; }
+.heresy-zones .hz-z2 { color: #7a5a18; }
+.heresy-zones .hz-z3 { color: #7a1f1f; }
+
+.pb-body {
+  grid-row: 3;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  gap: 2mm;
+  overflow: hidden;
+}
+.pb-body.layer-a {
+  grid-template-columns: 70mm minmax(0, 1fr) 36mm 72mm;
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-areas: "agents gold limits progress";
+}
+/* C: dwa niezależne rzędy — Haki ≠ Postęp (różne szerokości) */
+.pb-body.layer-c {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1.07fr) minmax(0, 1fr); /* ~45:42 */
+}
+.pb-row {
+  display: grid;
+  gap: 2mm;
+  min-height: 0;
+  min-width: 0;
+}
+.pb-row-top {
+  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Haki: 2×20 + pad */
+}
+.pb-row-bot {
+  grid-template-columns: minmax(0, 1fr) 72mm; /* Postęp: do 3×20 */
+}
+.pb-box {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 0.4mm solid var(--line);
+  background: rgba(255,255,255,0.55);
+  padding: 1.5mm;
+  display: grid;
+  grid-template-rows: 7mm minmax(0, 1fr);
+  gap: 1mm;
+}
+.pb-body.layer-a .pb-box.agents { grid-area: agents; }
+.pb-body.layer-a .pb-box.gold { grid-area: gold; }
+.pb-body.layer-a .pb-box.limits { grid-area: limits; }
+.pb-body.layer-a .pb-box.progress { grid-area: progress; }
+.pb-box-title {
+  margin: 0;
+  padding: 0 0 0.5mm;
+  border-bottom: 0.25mm solid var(--gold);
+  font-size: 13pt;
+  font-weight: bold;
+  color: var(--blood);
+  line-height: 1.1;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.pb-slots {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2mm;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+.pb-tray {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0.35mm dashed var(--gold);
+  border-radius: var(--token-r);
+  background: rgba(255, 248, 232, 0.65);
+  box-sizing: border-box;
+}
+.agent-slot {
+  width: var(--agent-d); height: var(--agent-d);
+  flex: 0 0 var(--agent-d);
+  border-radius: 50%;
+  border: 0.5mm solid var(--slot);
+  background: #fff;
+  box-sizing: border-box;
+}
+.pb-token {
+  width: var(--token-d); height: var(--token-d);
+  flex: 0 0 var(--token-d);
+  border: 0.5mm solid var(--slot);
+  background: #fff;
+  border-radius: var(--token-r);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pb-token.hook-slot { border-color: var(--line); }
+.pb-token.progress-slot {
+  border-style: dashed;
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.75);
+}
+.pb-token .ico-fallback {
+  font-size: 16pt;
+  line-height: 1;
+  min-width: 0;
+  min-height: 0;
+  opacity: 0.32; /* ghost w odcisku — odróżnić od prawdziwego żetonu */
+}
+/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — mieści się w ~130×41 mm */
+.pb-body.layer-c .pb-box.limits {
+  grid-template-columns: 1fr;
+  grid-template-rows: 7mm minmax(0, 1fr);
+  align-items: stretch;
+  gap: 1mm;
+  padding: 1.5mm;
+  overflow: hidden;
+}
+.pb-body.layer-c .pb-box.limits .pb-box-title {
+  border-bottom: 0.25mm solid var(--gold);
+  padding: 0 0 0.5mm;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 13pt;
+}
+.pb-body.layer-c .pb-box.limits .pb-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2mm;
+  align-items: center;
+  justify-items: stretch;
+  width: 100%;
+  min-height: 0;
+}
+.pb-limit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1mm;
+  min-width: 0;
+  width: 100%;
+}
+.pb-limit .pb-token {
+  width: 12mm; height: 12mm;
+  flex: 0 0 12mm;
+  border-style: dashed;
+}
+.pb-limit .pb-token .ico-fallback { font-size: 11pt; }
+.pb-limit-lbl {
+  font-size: 12pt;
+  font-weight: bold;
+  color: var(--ink);
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.pb-body.layer-a .pb-box.limits {
+  grid-template-rows: 7mm minmax(0, 1fr);
+}
+.pb-body.layer-a .pb-box.limits .pb-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 2mm;
+}
+.pb-body.layer-a .pb-limit-lbl { font-size: 11pt; }
+
+.page-a4.player-page {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0;
+  border: none;
+}
+.page-a4.player-page .player-stack {
+  margin: 0;
+  border-radius: 0;
+}
+.page-a4.player-page .player-stack + .player-stack {
+  border-top: none;
+}
+
+/* tokens — 20×20 mm rounded squares packed onto one A4 */
+.page-a4.token-page {
+  padding: 6mm;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5mm;
+}
+.page-a4.token-page > h1 {
+  margin: 0 0 1mm;
+  font-size: 13pt;
+  flex-shrink: 0;
+}
+.token-cut {
+  display: flex;
+  flex-direction: column;
+  gap: 2mm;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.token-group {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2mm;
+  margin: 0;
+  flex-shrink: 0;
+}
+.token-group h3 {
+  flex: 0 0 28mm;
+  width: 28mm;
+  font-size: 8.5pt;
+  margin: 0;
+  padding-top: 3mm;
+  color: var(--blood);
+  line-height: 1.15;
+  font-weight: bold;
+}
+.token-sheet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5mm;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: start;
+}
+.token-disc {
+  width: var(--token-d); height: var(--token-d);
+  min-width: var(--token-d); min-height: var(--token-d);
+  border-radius: var(--token-r);
+  border: 0.55mm solid var(--line);
+  background: var(--parch);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 0.35mm var(--gold);
+  flex-shrink: 0;
+}
+.token-disc img {
+  width: 14mm; height: 14mm; object-fit: cover; border-radius: 1mm;
+}
+.token-disc .ico-fallback {
+  min-width: 0; min-height: 0;
+  font-size: 22pt; line-height: 1;
+}
+.token-disc .coin {
+  width: 12mm; height: 12mm; flex: 0 0 12mm;
+  border-width: 0.55mm;
+  box-shadow: inset 0 0 0 0.55mm rgba(255, 236, 160, 0.55);
+}
+.verdict { font-size: 11pt; }
+.verdict ol { margin: 2mm 0 3mm 6mm; font-size: 11pt; line-height: 1.35; }
+.verdict table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10pt;
+}
+.verdict th, .verdict td {
+  border: 0.35mm solid var(--line);
+  padding: 3mm;
+  height: 12mm;
+}
+.teach-page { font-size: 10pt; line-height: 1.35; }
+.teach-page ul, .teach-page ol { margin: 2mm 0 2mm 5mm; }
+.teach-page p { margin: 1.5mm 0; }
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+@page board-a2 {
+  size: 420mm 594mm;
+  margin: 0;
+}
+@media print {
+  body { background: white; padding: 0; margin: 0; }
+  .nav { display: none; }
+  .sheet { page-break-after: always; margin: 0; }
+  .page-a4 {
+    width: 210mm; height: 297mm;
+    min-width: 210mm; max-width: 210mm;
+    min-height: 297mm; max-height: 297mm;
+    margin: 0;
+    border: none;
+    page-break-after: always;
+    padding: 4mm;
+    box-sizing: border-box;
+  }
+  .card-proto {
+    overflow: hidden;
+    box-shadow:
+      -0.8mm -0.8mm 0 0 #000,
+      0.8mm -0.8mm 0 0 #000,
+      -0.8mm 0.8mm 0 0 #000,
+      0.8mm 0.8mm 0 0 #000;
+  }
+  .card-effect { overflow: hidden; }
+  .board-stack {
+    width: 420mm; height: 594mm;
+    min-width: 420mm; min-height: 594mm;
+    max-width: 420mm; max-height: 594mm;
+    page: board-a2;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="nav"><a href="index.html">← Indeks PnP</a></nav>
+
+<div class="page-a4 token-page" data-page-mm="210x297">
+  <h1>Żetony</h1>
+  <div class="token-cut">
+  <div class="token-group"><h3>Inkwizytor ×1</h3><div class="token-sheet"><div class="token-disc" title="Inkwizytor"><span class="ico-fallback" title="Inkwizytor">✝️</span></div></div></div><div class="token-group"><h3>Herezja ×5</h3><div class="token-sheet"><div class="token-disc" title="Herezja"><span class="ico-fallback" title="Herezja">🔥</span></div><div class="token-disc" title="Herezja"><span class="ico-fallback" title="Herezja">🔥</span></div><div class="token-disc" title="Herezja"><span class="ico-fallback" title="Herezja">🔥</span></div><div class="token-disc" title="Herezja"><span class="ico-fallback" title="Herezja">🔥</span></div><div class="token-disc" title="Herezja"><span class="ico-fallback" title="Herezja">🔥</span></div></div></div><div class="token-group"><h3>Złoto ×12</h3><div class="token-sheet"><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div><div class="token-disc" title="Złoto"><span class="coin" title="Złoto" aria-hidden="true"></span></div></div></div><div class="token-group"><h3>Stos ×4</h3><div class="token-sheet"><div class="token-disc" title="Stos"><span class="ico-fallback" title="Stos">🪵</span></div><div class="token-disc" title="Stos"><span class="ico-fallback" title="Stos">🪵</span></div><div class="token-disc" title="Stos"><span class="ico-fallback" title="Stos">🪵</span></div><div class="token-disc" title="Stos"><span class="ico-fallback" title="Stos">🪵</span></div></div></div><div class="token-group"><h3>Relikwia ×6</h3><div class="token-sheet"><div class="token-disc" title="Relikwia"><span class="ico-fallback" title="Relikwia">💎</span></div><div class="token-disc" title="Relikwia"><span class="ico-fallback" title="Relikwia">💎</span></div><div class="token-disc" title="Relikwia"><span class="ico-fallback" title="Relikwia">💎</span></div><div class="token-disc" title="Relikwia"><span class="ico-fallback" title="Relikwia">💎</span></div><div class="token-disc" title="Relikwia"><span class="ico-fallback" title="Relikwia">💎</span></div><div class="token-disc" title="Relikwia"><span class="ico-fallback" title="Relikwia">💎</span></div></div></div><div class="token-group"><h3>Fragment ×6</h3><div class="token-sheet"><div class="token-disc" title="Fragment"><span class="ico-fallback" title="Fragment">📜</span></div><div class="token-disc" title="Fragment"><span class="ico-fallback" title="Fragment">📜</span></div><div class="token-disc" title="Fragment"><span class="ico-fallback" title="Fragment">📜</span></div><div class="token-disc" title="Fragment"><span class="ico-fallback" title="Fragment">📜</span></div><div class="token-disc" title="Fragment"><span class="ico-fallback" title="Fragment">📜</span></div><div class="token-disc" title="Fragment"><span class="ico-fallback" title="Fragment">📜</span></div></div></div><div class="token-group"><h3>Dekret ×4</h3><div class="token-sheet"><div class="token-disc" title="Dekret"><span class="ico-fallback" title="Dekret">🔏</span></div><div class="token-disc" title="Dekret"><span class="ico-fallback" title="Dekret">🔏</span></div><div class="token-disc" title="Dekret"><span class="ico-fallback" title="Dekret">🔏</span></div><div class="token-disc" title="Dekret"><span class="ico-fallback" title="Dekret">🔏</span></div></div></div>
+  </div>
+</div>
+
+
+<div class="page-a4 token-page" data-page-mm="210x297">
+  <h1>Żetony (cd.)</h1>
+  <div class="token-cut">
+  <div class="token-group"><h3>Upadek ×4</h3><div class="token-sheet"><div class="token-disc" title="Upadek"><span class="ico-fallback" title="Upadek">☠️</span></div><div class="token-disc" title="Upadek"><span class="ico-fallback" title="Upadek">☠️</span></div><div class="token-disc" title="Upadek"><span class="ico-fallback" title="Upadek">☠️</span></div><div class="token-disc" title="Upadek"><span class="ico-fallback" title="Upadek">☠️</span></div></div></div><div class="token-group"><h3>Zużycie Ery ×15</h3><div class="token-sheet"><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div><div class="token-disc" title="Zużycie Ery"><span class="ico-fallback" title="Zużycie Ery">✕</span></div></div></div><div class="token-group"><h3>Hak ×10</h3><div class="token-sheet"><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div><div class="token-disc" title="Hak"><span class="ico-fallback" title="Hak">🪝</span></div></div></div><div class="token-group"><h3>Podwójny ×6</h3><div class="token-sheet"><div class="token-disc" title="Podwójny"><span class="ico-fallback" title="Podwójny">🎭</span></div><div class="token-disc" title="Podwójny"><span class="ico-fallback" title="Podwójny">🎭</span></div><div class="token-disc" title="Podwójny"><span class="ico-fallback" title="Podwójny">🎭</span></div><div class="token-disc" title="Podwójny"><span class="ico-fallback" title="Podwójny">🎭</span></div><div class="token-disc" title="Podwójny"><span class="ico-fallback" title="Podwójny">🎭</span></div><div class="token-disc" title="Podwójny"><span class="ico-fallback" title="Podwójny">🎭</span></div></div></div>
+  </div>
+</div>
+
+</body>
+</html>
