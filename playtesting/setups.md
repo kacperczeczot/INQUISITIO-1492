@@ -1,9 +1,4 @@
-# Setupy playtestowe (3–5 graczy)
-
-Warianty setupu pod sesje PnP. Bazowe zasady: [`../docs/rules/README.md`](../docs/rules/README.md).  
-Po sesji: skopiuj [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md) → `sessions/YYYY-MM-DD-skrot.md`.
-
-Gra jest na **3–5 graczy**. Warstwa PnP (`A` / `B` / `C`) ustala, które karty są w talii.
+[Strona główna](../README.md) > [Playtesting](README.md)
 
 ---
 
@@ -28,6 +23,30 @@ Gra jest na **3–5 graczy**. Warstwa PnP (`A` / `B` / `C`) ustala, które karty
 | **A** | Tylko `layer: A` (5 kart) — Inkwizytor + Werdykt |
 | **B** | A + B (bez Signature) |
 | **C** | Pełne 10 + Talia Czasu |
+
+---
+
+### Presety silnika (`sim`)
+
+| Kod | Skład |
+| :--- | :--- |
+| `3p-oficjum-alandalus-korona` | Oficjum + Cienie + Korona |
+| `3p-oficjum-kabala-gildia` | Oficjum + Kabała + Gildia |
+| `3p-cienie-korona-gildia` | Cienie + Korona + Gildia *(bez Oficjum)* |
+| `3p-oficjum-alandalus-gildia` | Oficjum + Cienie + Gildia |
+| `4p-core` | bez Gildii |
+| `4p-no-kabala` | bez Kabały |
+| `4p-no-korona` | bez Korony |
+| `4p-no-cienie` | bez Cieni |
+| `4p-no-oficjum` | bez Oficjum |
+| `5p-full` | wszystkie 5 |
+
+```bash
+cd sim && source .venv/bin/activate
+python -m inquisitio setups
+python -m inquisitio matrix --games 80 --layers B,C   # cała matryca balansu
+pytest tests/test_balance.py -v
+```
 
 ---
 

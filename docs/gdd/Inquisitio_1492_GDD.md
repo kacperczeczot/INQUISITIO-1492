@@ -1,19 +1,4 @@
-# INQUISITIO 1492: Cienie Toledo
-## Game Design Document (prototyp)
-
-| Pole | Wartość |
-| :--- | :--- |
-| **Tytuł** | INQUISITIO 1492: Cienie Toledo |
-| **Status** | Prototyp polityczny (warstwy A → B → C) |
-| **Gatunek** | Card-driven board game / ciężka intryga polityczna |
-| **Gracze** | **3–5** |
-| **Czas** | 60–90+ min |
-| **Złożoność** | Zaawansowana (teach 15–20 min + demo Ery) |
-| **Estetyka** | Mroczny pixel art: czerwień, złoto, czerń, pergamin |
-
-Lore: [`../lore/sekret-1492.md`](../lore/sekret-1492.md)  
-Zasady playable: [`../rules/README.md`](../rules/README.md)  
-Roadmap (dane + stół): [`../roadmap.md`](../roadmap.md)
+[Strona główna](../../README.md) > [Dokumentacja](../README.md) > [GDD](README.md)
 
 ---
 
@@ -37,7 +22,7 @@ Sim filtruje deadlocki; dramat mierzy sesja ludzka.
 | **Wielki Inkwizytor** | Figurka NPC: Patrol i Autodafé. Spala lokacje; gracze manewrują lub nasyłają go na siebie. |
 | **Lochy / Podwójni** | Areszt → jedno Przesłuchanie: Podwójny, Hak albo +Herezja. Zaufanie do liczby Agentów pęka. |
 | **Haki** | Jeden typ żetonu. Wymuszenie żądania albo ujawnienie (+Herezja). Prywatna władza strachu. |
-| **Karty signature** | Asymetria łamiąca reguły (warstwa C) — rzadkie, czytelne, bolesne. |
+| **Karty specjalne** | Asymetria łamiąca reguły (warstwa C) — rzadkie, czytelne, bolesne. |
 
 Szczegóły procedur: [`../../game/mechanics/`](../../game/mechanics/).
 
@@ -45,7 +30,7 @@ Szczegóły procedur: [`../../game/mechanics/`](../../game/mechanics/).
 
 ## 3. Plansza — instytucje
 
-Pięć lokacji w łańcuchu. Każda ma **Światło** (jawne) i **Cień** (ukryte / ryzykowne).
+Pięć lokacji na **grafie miasta** (cykl + cięciwa Lochy–Pałac). Każda ma **Światło** (jawne) i **Cień** (ukryte / ryzykowne). Kolejność odkrywania kart (1→5) ≠ graf ruchu.
 
 | # | Lokacja | Światło | Cień |
 | :---: | :--- | :--- | :--- |
@@ -55,7 +40,7 @@ Pięć lokacji w łańcuchu. Każda ma **Światło** (jawne) i **Cień** (ukryte
 | 4 | Rynek | Handel, nastroje | Herezja publiczna, zamieszki |
 | 5 | Gildia / Smogi | Informatorzy | Szantaż, handel Relikwiami |
 
-Inkwizytor stoi w jednej lokacji. Agenci poruszają się o 1 wzdłuż łańcucha (chyba że Signature łamie regułę).
+Inkwizytor stoi w jednej lokacji. Agenci / Patrol poruszają się o **1 krawędź** grafu (chyba że karta specjalna łamie regułę).
 
 → [`../../game/board/locations.md`](../../game/board/locations.md)
 
@@ -65,13 +50,13 @@ Inkwizytor stoi w jednej lokacji. Agenci poruszają się o 1 wzdłuż łańcucha
 
 Cele wymagają **brudnych rąk** (Herezja, silniki), nie czystego zbieractwa.
 
-| Frakcja | Fantazja | Wygrana |
+| Frakcja | Fantazja | Wygrana (C) |
 | :--- | :--- | :--- |
-| **Święte Oficjum** | Terror prawa Bożego | 2 Stosy (Autodafé/Werdykt) **lub** 2 skazania rywali z Krytycznej |
-| **Cienie Al-Andalus** | Stealth, Relikwie | 2 Relikwie ewakuowane; ≥1 ścieżka przez Podwójnego lub unik Autodafé |
-| **Korona & Borgiowie** | Dekrety, pieczęć | 2 Dekrety signature **oraz** aktywne Haki na 2 graczach |
-| **Kabała z Toledo** | Kodeks, sweet spot | 3 Fragmenty z Przesłuchań/Imienia; przy wygranej Herezja 4–6 |
-| **Gildia Cieni** | Szantaż, upadek | 2 upadki frakcji (publiczny Hak / Podwójny / spalona lokacja kluczowa) |
+| **Święte Oficjum** | Terror prawa Bożego | 3 Stosy **lub** skazania (2@≤3p / 3@4–5p) |
+| **Cienie Al-Andalus** | Stealth, Relikwie | 2 Relikwie + ścieżka (Podwójny / cichy exit / szlak) |
+| **Korona & Borgiowie** | Dekrety, pieczęć | 2 Dekrety + ≥1 Hak (Era 7@3p / 6@4–5p); 5p też 1+2 Haki |
+| **Kabała z Toledo** | Kodeks, sweet spot | 3 Fragmenty + Herezja 4–6 (Era wg liczby graczy) |
+| **Gildia Cieni** | Szantaż, upadek | 2 upadki (3 bez Oficjum) |
 
 Opisy: [`../../game/factions/`](../../game/factions/).
 
@@ -105,7 +90,7 @@ Tor Herezji, figurka Inkwizytora, żeton Hak (1 typ), znacznik Podwójny na Agen
 | :--- | :--- | :--- |
 | **A** | Herezja + Inkwizytor + Werdykt + 5 prostych kart | Solo feel → PnP A → sesja: czy Werdykt boli? |
 | **B** | Lochy + Haki + narzędzia | PnP B → sesja: pazur bez paraliżu AP |
-| **C** | 10 kart + Signature + Talia Czasu | PnP C → sesje → teach → pełny rulebook → freeze → art |
+| **C** | 10 kart + karty specjalne + Talia Czasu | PnP C → sesje → teach → pełny rulebook → freeze → art |
 
 Szczegóły cyklu wydawniczego: [`../roadmap.md`](../roadmap.md).
 

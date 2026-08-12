@@ -1,3 +1,8 @@
+[Strona główna](../../README.md) > [Playtesting](../README.md) > [Sesje](README.md)
+
+---
+
+
 # Sesja playtest — szablon
 
 **Data:**  

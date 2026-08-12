@@ -1,3 +1,8 @@
+[Strona główna](../../README.md) > [Dokumentacja](../README.md) > [Lore](README.md)
+
+---
+
+
 # Sekret 1492 Roku
 
 Wizja świata wzorowana na uniwersum *Assassin's Creed*: autentyczne wydarzenia historyczne są oficjalną zasłoną dla starcia sekretnych stowarzyszeń.

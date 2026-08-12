@@ -1,89 +1,64 @@
-# Playtesting — notatki balansu (dramat)
+[Strona główna](../README.md) > [Playtesting](README.md)
 
-Sim filtruje: deadlocki, legal moves, częstotliwość Autodafé / oskarżeń / Haków / Podwójnych.  
-Wins w raporcie są informacyjne.  
+---
+
+
+# Playtesting — balans (stan aktualny)
+
+Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Podwójni.  
 **Werdykt fun = sesja ludzka** ([`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md)).
 
 Setupy: [`setups.md`](setups.md) · Silnik: [`../sim/README.md`](../sim/README.md).
 
-## Hipotezy dramatu
+## Hipotezy (otwarte na stole)
 
-1. Próg oskarżenia **7** vs **8** — który daje lepszy dramat Werdyktu bez snowballa Oficjum?
-2. **Herezja** — czy gracze boją się 6→7 i jednocześnie chcą mocy kart z `heresy`?
-3. **Autodafé** — czy pali lokacje we właściwym tempie (max co 2 Ery)?
-4. **Hak** — czy 1 wymuszenie/Erę wystarcza przeciw AP, a odmowa (+2 Herezja) boli?
-5. **Podwójny** — czy wykrycie psuje zaufanie przy stole?
-6. **Kabała 4–6** — czy stół wypycha ją poza sweet spot?
-7. **Signature** — czy psują czytelność Inkwizytora/Werdyktu z Warstwy A?
-8. Tempo Relikwii: czy 2 ewakuacje są osiągalne w 60–90 min?
+1. Próg oskarżenia **7** vs **8** — dramat Werdyktu vs snowball Oficjum?
+2. Sweet spot Kabały **4–6** — czy stół wypycha?
+3. Tempo Relikwii — 2 ewakuacje w 60–90 min?
 
-## Symulacja (przed / obok stołu)
+## Gate przed stołem
 
 ```bash
 cd sim && source .venv/bin/activate
-python -m inquisitio compare --games 50 --setup 3p-oficjum-alandalus-korona --seed 42
+python -m inquisitio matrix --games 100 --layers A,B,C --seed 42
+python -m inquisitio feel --setup 3p-oficjum-alandalus-korona --seed 42 --layer C
+pytest tests/test_balance.py tests/test_smoke.py -q
 ```
 
-Wklej metryki z `playtesting/sim-reports/` do protokołu A/B poniżej (kolumny mogą być runami sim **lub** sesjami ludzkimi).
+Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
----
+## Stan teraz (seed 42, 100 gier / skład) — 2026-08-12
 
-## Protokół A/B — próg oskarżenia 7 vs 8
+Matryca **30/30**, pytest **79**. Deadlocki ~0–0.4. Warstwa **C** = live-ready pod playtest.
 
-Cel: hipoteza #1 (dramat Werdyktu vs snowball Oficjum).
+### Wins C
 
-### Procedura
+| Setup | Oficjum | Cienie | Korona | Kabała | Gildia |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| 3p Oficjum–Cienie–Korona | 24% | 34% | 42% | — | — |
+| 3p Oficjum–Kabała–Gildia | 30% | — | — | 38% | 32% |
+| 3p Cienie–Korona–Gildia | — | 34% | 29% | — | 37% |
+| 3p Oficjum–Cienie–Gildia | 24% | 39% | — | — | 37% |
+| 5p-full | 26% | 10% | 20% | 22% | 22% |
 
-1. Ten sam skład z [`setups.md`](setups.md) w obu sesjach / batchach.
-2. **A** — próg **7**. **B** — próg **8**.
-3. Nie zmieniaj kosztów `heresy` kart między A i B.
-4. Zapisz metryki; wpisz werdykt.
+### Soft-spoty do stołu
 
-### Metryki
+- 3p z Koroną — Korona ~42% (w gate, lider)
+- 5p Cienie — ~10% (dolna półka)
+- A teach — Gildia/Korona często wygrywają tie-break (OK dla teach)
 
-| Metryka | Sesja A (próg 7) | Sesja B (próg 8) |
-| :--- | :--- | :--- |
-| Data / plik sesji lub raport sim | | |
-| Gracze / frakcje / warstwa PnP | | |
-| Liczba Er (avg) | | |
-| Wejścia w Krytyczną | | |
-| Oskarżenia / skazania | | |
-| Autodafé | | |
-| Haki utworzone / wymuszone | | |
-| Podwójni | | |
-| Stosy Oficjum | | |
-| Emocja Werdyktu 1–5 (stół) / dramat sim | | |
-| Snowball Oficjum 1–5 | | |
-| Downtime bloku III/Werdykt (min) | | |
+### Reguły win (C) — skrót
 
-### Kryterium decyzji
-
-- Preferuj próg, przy którym **Oskarżenie pada ≥1×** w typowej sesji, a Oficjum nie zbiera Stosów „za darmo” przed połową gry.
-- Przy 7 za dużo oskarżeń / snowball → rozważ **8** lub obniż tempo `target_heresy`.
-- Przy 8 martwa Krytyczna → zostań przy **7** lub podnieś Herezję na kartach.
-
-### Werdykt
-
-| Pole | Wartość |
+| Frakcja | Cel |
 | :--- | :--- |
-| Wybrany próg | *(do wypełnienia po sesjach)* |
-| Powód | |
-| Data | |
+| Oficjum | 3 Stosy **lub** skazania (2@≤3p / 3@4–5p) |
+| Cienie | 2 Relikwie + ścieżka |
+| Korona | 2 Dekrety + ≥1 Hak (Era 7@3p / 6@4–5p); 5p też 1 Dekret+2 Haki od Ery 6 |
+| Kabała | 3 Fragmenty + Herezja 4–6 (Era 7@3p / 6@4p / 5@5p) |
+| Gildia | 2 upadki (3 bez Oficjum) |
 
----
+Szczegóły: [`../docs/rules/ksiega.md`](../docs/rules/ksiega.md) · słownik: [`../docs/rules/slownik.md`](../docs/rules/slownik.md) · frakcje: [`../game/factions/`](../game/factions/).
 
-## Co logować po każdej sesji (UX)
+## Po sesji
 
-- Emocja Werdyktu, strach przed Inkwizytorem (1–5)
-- Downtime / AP
-- Czy Signature zepsuły teach Warstwy A
-
-Szablon: [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md).
-
----
-
-## Log zmian balansu (prototyp polityczny)
-
-| Data | Zmiana | Powód |
-| :--- | :--- | :--- |
-| 2026-08-12 | Przebudowa prototypu: Herezja + Inkwizytor + Werdykt + Lochy/Haki + Signature | Nowy rdzeń polityczny |
+Loguj UX w `sessions/` — nie dokładaj tu changelogu iteracji sim.
