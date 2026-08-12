@@ -1,26 +1,23 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Święte Oficjum](README.md)
+
 ---
 id: so-02
 name: Skarbiec Trybunału
 faction: swiete-oficjum
 type: akcja
-cost: 1
+cost_gold: 1
 heresy: 0
+heresy_text: Konfiskata majątku skazańców to prawny obowiązek trybunału.
+layer: A
+tags:
+- gold
+effect: Zyskaj 2 złota.
+lore: 'Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.'
 target_heresy: 0
-location: null
 agents: 0
-tags: [gold]
 creates_hook: false
 breaks_rule: false
 gold: 2
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Skarbiec Trybunału
-
-**Efekt:** Zapłać 1 złoto. Zyskaj 2 złota (netto +1). Pobierasz konfiskaty z kasy Trybunału — czysta ekonomia, zero Herezji.
-
-**Przy stole:** Sygnał, że budujesz budżet pod areszt i przesłuchanie; rywale widzą paliwo Oficjum.
-
-**Warstwa:** A — prosty silnik zasobów.

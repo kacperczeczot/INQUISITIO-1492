@@ -1,26 +1,23 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Cienie Al-Andalus](README.md)
+
 ---
 id: caa-09
 name: Kurier Relikwii
 faction: cienie-al-andalus
 type: akcja
-cost: 2
+cost_gold: 2
 heresy: 0
+layer: C
+tags:
+- relic
+- move
+effect: Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.
+lore: Bluff kierunku Relikwii jest połową gry Cieni.
 target_heresy: 0
-location: null
-agents: 1
-tags: [relic, move]
+agents: 0
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Kurier Relikwii
-
-**Efekt:** Zapłać 2 złota. Przenieś Relikwię z lokacji Twojego Agenta do sąsiedniej lokacji. Możesz też przesunąć tego Agenta o 1 lokację.
-
-**Przy stole:** Kluczowy krok ewakuacji. Bluff kierunku Relikwii jest połową gry Cieni.
-
-**Warstwa:** C — narzędzie celu Relikwii.

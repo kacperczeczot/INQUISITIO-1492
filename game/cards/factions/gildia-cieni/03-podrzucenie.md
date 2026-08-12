@@ -1,26 +1,23 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Gildia Cieni](README.md)
+
 ---
 id: gc-03
 name: Podrzucenie Księgi
 faction: gildia-cieni
 type: akcja
-cost: 1
+cost_gold: 1
 heresy: 0
+heresy_text: Zakazana księga ląduje w cudzej komnacie o świcie.
+layer: A
+tags:
+- heresy
+effect: "Wskaż rywala: +1 Herezja."
+lore: 'Klasyczny frame: zakazana księga ląduje w cudzej komnacie.'
 target_heresy: 1
-location: null
 agents: 0
-tags: [heresy]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Podrzucenie Księgi
-
-**Efekt:** Zapłać 1 złoto. Wskaż rywala: +1 Herezja. Podrzucasz zakazaną księgę — Ty bez Herezji.
-
-**Przy stole:** Klasyczny frame. Idealne przed Werdyktem albo pod Hak Korony.
-
-**Warstwa:** A — Herezja na cel.

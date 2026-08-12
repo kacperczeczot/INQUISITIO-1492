@@ -1,26 +1,28 @@
+[Strona główna](../../../README.md) > [Gra](../../README.md) > [Karty](../README.md) > [Talia Czasu](README.md)
+
 ---
 id: time-08
 name: Krypta pod Toledo
 faction: time
 type: wydarzenie
-cost: 0
+cost_gold: 0
 heresy: 0
+layer: C
+tags:
+- edict
+- relic
+effect: |
+  EDYKT.
+  Umieść Relikwię w Lochach.
+
+  Jeśli pierwszy Agent jest w Lochach w następnej Erze:
+  Przenieś Relikwię do tego Agenta.
+lore: Wyścig do Lochów. Cienie vs Oficjum — kto pierwszy, ten bierze.
 target_heresy: 0
-location: null
 agents: 0
-tags: [edict, relic]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Krypta pod Toledo
-
-**Efekt:** EDYKT. Umieść Relikwię w Lochach. Pierwszy Agent, który wejdzie tam w następnej Erze, może ją podjąć. Prawo stołu: Relikwia pojawia się w najniebezpieczniejszym miejscu.
-
-**Przy stole:** Wyścig do Lochów. Cienie vs Oficjum — kto pierwszy, ten bierze.
-
-**Warstwa:** C — edykt Relikwii w Lochach.

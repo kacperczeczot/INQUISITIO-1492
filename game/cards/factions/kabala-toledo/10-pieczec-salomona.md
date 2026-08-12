@@ -1,26 +1,30 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Kabała z Toledo](README.md)
+
 ---
 id: kt-10
 name: Pieczęć Salomona
 faction: kabala-toledo
 type: signature
-cost: 3
+cost_gold: 3
 heresy: 0
+layer: C
+tags:
+- signature
+- fragment
+effect: |
+  Łamie regułę „Herezja tylko z karty”:
+
+  Jeśli masz 3 Fragmenty i Herezję 4–6:
+  zwycięstwo.
+
+  Jeśli masz 3 Fragmenty bez Herezji 4–6:
+  Ustaw swoją Herezję na 5.
+lore: Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.
 target_heresy: 0
-location: null
 agents: 0
-tags: [signature, fragment]
 creates_hook: false
 breaks_rule: true
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Pieczęć Salomona
-
-**Efekt:** Zapłać 3 złota. SIGNATURE — łamie regułę „Herezja zmienia się tylko efektami kart/Autodafé/Werdyktu”: jeśli masz 3 Fragmenty i Herezję 4–6, wygrywasz natychmiast. Jeśli masz 3 Fragmenty, ale Herezja jest poza 4–6, ustaw ją na 5 (wymuszenie sweet spotu), potem sprawdź wygraną.
-
-**Przy stole:** Kulminacja Kabały. Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6, zanim zagrasz Pieczęć.
-
-**Warstwa:** C — signature łamiące reguły toru Herezji.

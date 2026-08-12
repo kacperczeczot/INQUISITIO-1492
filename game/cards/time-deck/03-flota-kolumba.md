@@ -1,26 +1,23 @@
+[Strona główna](../../../README.md) > [Gra](../../README.md) > [Karty](../README.md) > [Talia Czasu](README.md)
+
 ---
 id: time-03
 name: Flota Kolumba
 faction: time
 type: wydarzenie
-cost: 0
+cost_gold: 0
 heresy: 0
+layer: C
+tags:
+- edict
+- relic
+effect: EDYKT. Otwórz Szlak Morski do końca gry.
+lore: Przełom gry o Relikwie. Cienie przyspieszają; Oficjum musi zamykać Rynek i Gildię.
 target_heresy: 0
-location: null
 agents: 0
-tags: [edict, relic]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Flota Kolumba
-
-**Efekt:** EDYKT. Otwórz Szlak Morski do końca gry. Od teraz ewakuacja Relikwii z Rynku lub Gildii jest dozwolona (standardowa ścieżka Cieni). Prawo stołu zmienia się trwale.
-
-**Przy stole:** Przełom gry o Relikwie. Cienie przyspieszają; Oficjum musi zamykać Rynek i Gildię.
-
-**Warstwa:** C — trwały edykt Szlaku Morskiego.

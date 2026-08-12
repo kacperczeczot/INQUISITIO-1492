@@ -1,26 +1,23 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Korona i Borgiowie](README.md)
+
 ---
 id: kb-01
 name: Rozkaz Dworu
 faction: korona-borgiowie
 type: akcja
-cost: 1
+cost_gold: 1
 heresy: 0
+heresy_text: Królewski nakaz wiąże bez pytania biskupów o zgodę.
+layer: A
+tags:
+- move
+effect: Przesuń swojego Agenta o 1 lokację.
+lore: Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu.
 target_heresy: 0
-location: null
 agents: 1
-tags: [move]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Rozkaz Dworu
-
-**Efekt:** Zapłać 1 złoto. Przesuń 1 swojego Agenta o 1 lokację. Oficjalny rozkaz — bez Herezji.
-
-**Przy stole:** Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu.
-
-**Warstwa:** A — fundament ruchu Korony.

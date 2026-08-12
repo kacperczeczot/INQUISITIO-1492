@@ -1,26 +1,23 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Święte Oficjum](README.md)
+
 ---
 id: so-03
 name: Podejrzenie
 faction: swiete-oficjum
 type: akcja
-cost: 1
+cost_gold: 1
 heresy: 0
+heresy_text: Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.
+layer: A
+tags:
+- heresy
+effect: "Wskaż rywala: +1 Herezja."
+lore: Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.
 target_heresy: 1
-location: null
 agents: 0
-tags: [heresy]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Podejrzenie
-
-**Efekt:** Zapłać 1 złoto. Wskaż rywala: +1 Herezja. Ty nie bierzesz Herezji — oskarżenie „z urzędu”, nie skandal na Ciebie.
-
-**Przy stole:** Publiczne napiętnowanie. Stół wie, kogo Oficjum oznaczyło; ofiara bluffuje spokój albo panikuje.
-
-**Warstwa:** A — czysta Herezja na cel.

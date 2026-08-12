@@ -1,26 +1,24 @@
+[Strona główna](../../../README.md) > [Gra](../../README.md) > [Karty](../README.md) > [Talia Czasu](README.md)
+
 ---
 id: time-06
 name: Spisek na Dworze
 faction: time
 type: wydarzenie
-cost: 0
+cost_gold: 0
 heresy: 0
+layer: C
+tags:
+- edict
+- hook
+effect: |
+  EDYKT Ery. Gracz Korony lub Gildii z najniższą Herezją: Załóż Hak na rywala. Remis: decyzja stołu.
+lore: Nagły szantaż dla „najczystszej” Korony/Gildii. Reszta negocjuje, kto dostanie Hak.
 target_heresy: 0
-location: null
 agents: 0
-tags: [edict, hook]
-creates_hook: false
+creates_hook: true
 breaks_rule: false
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Spisek na Dworze
-
-**Efekt:** EDYKT Ery. Spośród graczy Korony i Gildii (obecnych przy stole) wybierz tego z najniższą Herezją — bierze 1 Hak na wybranego gracza. Remis: decyzja stołu / los. Prawo stołu: dwór i podziemie dostają dźwignię polityczną.
-
-**Przy stole:** Nagły szantaż dla „najczystszej” Korony/Gildii. Reszta negocjuje, kto dostanie Hak.
-
-**Warstwa:** C — edykt Haka dla Korony/Gildii.

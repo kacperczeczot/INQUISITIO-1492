@@ -1,26 +1,24 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Gildia Cieni](README.md)
+
 ---
 id: gc-04
 name: Informator
 faction: gildia-cieni
 type: akcja
-cost: 1
+cost_gold: 1
 heresy: 1
+heresy_text: Donosiciel pamięta twarz i zapach srebra.
+layer: A
+tags:
+- hook
+- heresy
+effect: Załóż Hak na rywala.
+lore: 'Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.'
 target_heresy: 0
-location: null
-agents: 1
-tags: [move]
-creates_hook: false
+agents: 0
+creates_hook: true
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Informator
-
-**Efekt:** Zapłać 1 złoto. Przesuń 1 swojego Agenta o 1 lokację. Ty: +1 Herezja — kontakt z donosicielem brudzi.
-
-**Przy stole:** Ruch za cenę śladu; Gildia płaci reputacją za pozycję.
-
-**Warstwa:** A — ruch + samoherezja.

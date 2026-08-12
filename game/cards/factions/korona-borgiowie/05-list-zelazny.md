@@ -1,26 +1,23 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Korona i Borgiowie](README.md)
+
 ---
 id: kb-05
 name: List Żelazny
 faction: korona-borgiowie
-type: reakcja
-cost: 0
+type: akcja
+cost_gold: 3
 heresy: 0
+layer: A
+tags:
+- decree
+- hook
+effect: Załóż Hak na rywala.
+lore: 'List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.'
 target_heresy: 0
-location: null
 agents: 0
-tags: [reaction]
-creates_hook: false
+creates_hook: true
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# List Żelazny
-
-**Efekt:** Reakcja (koszt 0). Anuluj dokładnie +1 Herezję, którą właśnie miałeś dostać. Limit: 1 / Erę.
-
-**Przy stole:** Immunitet na jedno piętno — Korona „ma papier”. Rywale wolą bić Cię mocniej albo w innej Erze.
-
-**Warstwa:** A — reakcja ochronna.

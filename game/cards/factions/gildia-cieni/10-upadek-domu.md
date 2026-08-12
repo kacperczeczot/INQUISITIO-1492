@@ -1,26 +1,29 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Gildia Cieni](README.md)
+
 ---
 id: gc-10
 name: Upadek Domu
 faction: gildia-cieni
 type: signature
-cost: 3
+cost_gold: 3
 heresy: 2
+heresy_text: Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.
+layer: C
+tags:
+- signature
+- fall
+- heresy
+effect: |
+  Łamie regułę „Upadek tylko z odmowy Haka”:
+
+  Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej:
+  Oznacz Upadek wobec tego rywala.
+lore: Egzekucja domu. Stół boi się trzymać ujawnione brudy.
 target_heresy: 0
-location: null
 agents: 0
-tags: [signature, fall]
 creates_hook: false
 breaks_rule: true
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Upadek Domu
-
-**Efekt:** Zapłać 3 złota. Ty: +2 Herezja. SIGNATURE — łamie regułę „Upadek tylko z odmowy Haka / standardowego triggera”: jeśli rywal ma ujawniony Hak, wykrytego Podwójnego **albo** spaloną kluczową lokację, oznacz Upadek wobec niego. Przy 2 Upadkach — natychmiast sprawdź wygraną Gildii.
-
-**Przy stole:** Egzekucja domu. Stół boi się trzymać ujawnione brudy, gdy Gildia ma Signature.
-
-**Warstwa:** C — signature Upadku i finisher.

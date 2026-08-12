@@ -1,26 +1,24 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Cienie Al-Andalus](README.md)
+
 ---
 id: caa-05
 name: Ukryty Kurier
 faction: cienie-al-andalus
-type: reakcja
-cost: 0
+type: akcja
+cost_gold: 2
 heresy: 0
+layer: A
+tags:
+- relic
+effect: |
+  Jeśli masz Agenta w lokacji z Relikwią:
+  Ewakuuj Relikwię z tej lokacji.
+lore: 'Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar.'
 target_heresy: 0
-location: null
 agents: 0
-tags: [reaction]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Ukryty Kurier
-
-**Efekt:** Reakcja (koszt 0). Po ogłoszeniu Autodafé przesuń 1 swojego Agenta o 1 lokację z dala od Inkwizytora.
-
-**Przy stole:** Ubezpieczenie ewakuacji. Oficjum liczy się z tym, że Cienie znikną w momencie wyroku.
-
-**Warstwa:** A — reakcja anty-Autodafé.

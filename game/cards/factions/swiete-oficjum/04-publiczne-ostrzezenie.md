@@ -1,26 +1,27 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Święte Oficjum](README.md)
+
 ---
 id: so-04
 name: Publiczne Ostrzeżenie
 faction: swiete-oficjum
 type: akcja
-cost: 1
+cost_gold: 2
 heresy: 1
+heresy_text: Częste wzywanie Inkwizytora budzi niepokój samych kardynałów.
+layer: A
+tags:
+- inquisitor
+- heresy
+effect: |
+  Przesuń Inkwizytora do lokacji ze swoim Agentem.
+
+  Limit: 1 nasłanie / gracza / Erę.
+lore: Oficjum nasyła Inkwizytora przed Autodafé. Stół przestawia plany.
 target_heresy: 0
-location: null
-agents: 1
-tags: [move, heresy]
+agents: 0
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Publiczne Ostrzeżenie
-
-**Efekt:** Zapłać 1 złoto. Przesuń 1 swojego Agenta o 1 lokację. Ty: +1 Herezja. Dwuostrze władzy — pokaz siły kosztuje reputację.
-
-**Przy stole:** Wyglądasz jak ktoś, kto przesadził z kazaniem; dobre pokrycie, gdy i tak celujesz w Obserwowaną.
-
-**Warstwa:** A — ruch + samoherezja.

@@ -1,26 +1,26 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Kabała z Toledo](README.md)
+
 ---
 id: kt-09
 name: Fragment Kodeksu
 faction: kabala-toledo
 type: akcja
-cost: 2
+cost_gold: 2
 heresy: 1
+heresy_text: Pergamin Salomona brudzi palce i sumienie.
+layer: C
+tags:
+- fragment
+- heresy
+effect: |
+  Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale:
+  Zyskaj Fragment.
+lore: Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko.
 target_heresy: 0
-location: null
 agents: 0
-tags: [fragment]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: C
 status: prototyp
 ---
-
-# Fragment Kodeksu
-
-**Efekt:** Zapłać 2 złota. Jeśli masz Agenta w Lochach lub Trybunale, zyskaj 1 Fragment. Ty: +1 Herezja — czytanie Kodeksu brudzi.
-
-**Przy stole:** Jawny postęp do 3 Fragmentów. Oficjum wie, kiedy jesteś blisko wygranej.
-
-**Warstwa:** C — bezpośredni Fragment.

@@ -1,26 +1,26 @@
+[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Gildia Cieni](README.md)
+
 ---
 id: gc-05
 name: Fałszywy Świadek
 faction: gildia-cieni
 type: reakcja
-cost: 0
+cost_gold: 0
 heresy: 0
+layer: A
+tags:
+- reaction
+effect: |
+  Podczas Werdyktu, po ujawnieniu większości:
+  Zmień swój głos.
+
+  Limit: 1 / Erę.
+lore: Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.
 target_heresy: 0
-location: null
 agents: 0
-tags: [reaction]
 creates_hook: false
 breaks_rule: false
 gold: 0
 arrest: false
-layer: A
 status: prototyp
 ---
-
-# Fałszywy Świadek
-
-**Efekt:** Reakcja (koszt 0). Podczas Werdyktu, po ujawnieniu większości, zmień swój głos. Limit: 1 / Erę.
-
-**Przy stole:** Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.
-
-**Warstwa:** A — reakcja Werdyktu.

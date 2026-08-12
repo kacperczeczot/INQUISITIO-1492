@@ -1,45 +1,58 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Karty](README.md)
+
+---
+
 # SCHEMA kart — prototyp intrygi
 
-Frontmatter YAML + pełny opis efektu po `---`.
+Frontmatter YAML jest **jedynym źródłem** treści karty (body po `---` puste).
+**Nie ma `table_note`.** Cały opis z dawnego Efektu + Przy stole jest w polach poniżej.
 
-## Pola
+**Zbiorczy przegląd wszystkich kart:** [`KATALOG.md`](KATALOG.md) (auto-generowany z plików poniżej; `python3 tools/cards/build_catalog.py`).
 
-| Pole | Typ | Opis |
+**Słownictwo `effect`:** [`../mechanics/leksykon.md`](../mechanics/leksykon.md) — **zamknięty** słownik (komendy, klej, szablony). Słowo spoza leksykonu = błąd.
+
+## Pola na karcie PnP
+
+**Strefy layoutu (generator):** pasek frakcji (lewa krawędź) → **HDR** (nazwa, type-badge, pigułki; `heresy_text` tylko gdy `heresy ≠ 0`) → **slot art** (~12 mm placeholder) → **EFFECT** (`effect`, banery Łamie/EDYKT/DEKRET) → **FOOT** (`lore`, niski kontrast).
+
+| Pole | Rola | Przykład |
 | :--- | :--- | :--- |
-| `id` | string | np. `so-01`, `caa-03`, `time-01` |
-| `name` | string | Nazwa karty |
-| `faction` | string | `swiete-oficjum` \| `cienie-al-andalus` \| `korona-borgiowie` \| `kabala-toledo` \| `gildia-cieni` \| `time` |
-| `type` | string | `akcja` \| `reakcja` \| `permanent` \| `signature` \| `wydarzenie` |
-| `cost` | int | Koszt złota (0+) |
-| `heresy` | int | Herezja na zagrywającego (0+) |
-| `target_heresy` | int | Herezja na wskazanego rywala (0+) |
-| `location` | string\|null | Wymagana / docelowa lokacja |
-| `agents` | int | Wystaw / przesuń Agentów (0+) |
-| `tags` | list | np. `[move]`, `[gold]`, `[arrest]`, `[hook]`, `[interrogation]` |
-| `creates_hook` | bool | Czy daje żeton Haka |
-| `breaks_rule` | bool | Signature łamiące regułę (opis w tekście) |
-| `gold` | int | Złoto zyskiwane (opcjonalne, default 0) |
-| `arrest` | bool | Aresztuj Agenta (B+) |
-| `layer` | string | `A` \| `B` \| `C` — warstwa wprowadzenia |
-| `status` | string | `prototyp` |
+| `effect` | Instrukcja akcji | `Przesuń swojego Agenta o 1 lokację.` |
+| `heresy` | Liczba (pigułka gdy ≠ 0) | `0`, `1`, `2` |
+| `heresy_text` | Klimat / powód fabularny akcji | `Konfiskata majątku skazańców to prawny obowiązek trybunału.` |
+| `lore` | Klimat przy stole (drukowane) | `Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.` |
+| `cost_gold` | Koszt (pigułka gdy > 0) | `1` |
 
-## Warstwy
+### Podział
 
-- **A:** dokładnie 5 kart/frakcję — ruch, zasoby, prosta Herezja. **Zero** signature / breaks_rule / hooks / doubles.
-- **B:** dokładka narzędzi (Lochy, Haki) — nadal bez signature.
-- **C:** pełne 10 + signature; Talia Czasu ≥8 edyktów.
+- **`effect`** — reguły wg [`../mechanics/leksykon.md`](../mechanics/leksykon.md): lead komendy/etykiety, Title Case / CAPS wg leksykonu, **zero prozy**. Bez „Zapłać N” (→ `cost_gold`), bez „Ty: +N Herezja” (→ `heresy`).
+- **`heresy`** — jedyny wskaźnik mechaniczny Herezji na zagrywającym (pigułka `[🔥 N]`).
+- **`heresy_text`** — **wyłącznie** klimat, historia i powód fabularny. Nie powtarza ani nie tłumaczy mechaniki. Pole opcjonalne — pomiń, gdy akcja nie wymaga dodatkowego smaku.
+- **`lore`** — szept przy stole / konsekwencja społeczna. **Nie** notatki Teach, sim, ID kart, warstw A/B/C ani żargon EN.
+- Herezja na rywala (`Wskaż rywala: +1 Herezja`) zostaje w **`effect`**.
 
-## Format body (po `---`)
+### `heresy_text` — zasady pisania
 
-```
-# {Name}
+**Gdy `heresy == 0`:** krótkie zdanie budujące klimat — dlaczego akcja jest bezpieczna politycznie lub religijnie w Toledo 1492 (np. *„Królewski nakaz wiąże bez pytania biskupów o zgodę”*). Jeśli karta nie wymaga opisu — **pomiń pole**.
 
-**Efekt:** {2–5 zdań grywalnych reguł PL zgodnych z frontmatter; przy signature/breaks_rule — jawna złamana reguła.}
+**Gdy `heresy > 0`:** zwięzły opis skandalu, plotki lub otwartego naruszenia prawa (np. *„Częste wzywanie Inkwizytora budzi niepokój samych kardynałów”*).
 
-**Przy stole:** {1–2 zdania o bluffie, polityce, groźbie lub dramacie.}
+**Styl:** kronika lub szept w sali tronowej. Zero żargonu planszówkowego.
 
-**Warstwa:** {A|B|C} — krótko dlaczego ta warstwa.
-```
+**Zakaz w `heresy_text`:** powtarzanie pigułki i zasad — m.in. „bez Herezji”, „zero Herezji”, „czysta ekonomia”, „Ty nie…”, „na Ciebie”, „nie dodaje Herezji”, „sweet spot”, „efekt karty”.
+
+### `lore` — zasady pisania
+
+**Tak:** klimat, napięcie przy stole, co widzą rywale.  
+**Nie:** `Teach A/B/C`, `Cel A:`, ID kart (`so-04`, `kt-06+`), `sim`, `warstwa`, `reposition`, `double-dip`, `sweet spot`, `Finisher`, `czysta ekonomia`, angielski żargon balansu.
+
+Notatki playtestowe → [`playtesting/`](../../playtesting/), nie na kartę.
+
+## Meta (nie treść karty)
+
+`id`, `name`, `type`, `faction`, `layer`, `tags`, `target_heresy`, `agents`, `creates_hook`, `breaks_rule`, `gold`, `arrest`, `status`, `effects` (sim).
+
+Meta steruje też simem (`apply_generic`): `gold`, `heresy`, `target_heresy`, `agents`, `arrest`, `creates_hook` muszą zgadzać się z `effect`.
 
 ## Przykład
 
@@ -49,25 +62,32 @@ id: so-01
 name: Patrol Familiariuszy
 faction: swiete-oficjum
 type: akcja
-cost: 1
+cost_gold: 1
 heresy: 0
-target_heresy: 0
-location: null
-agents: 1
-tags: [move]
-creates_hook: false
-breaks_rule: false
-gold: 0
-arrest: false
+heresy_text: Familiariusze obchodzą miasto pod szyldem porządku i prawa.
+effect: Przesuń swojego Agenta o 1 lokację.
+lore: Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt.
 layer: A
+tags: [move]
 status: prototyp
 ---
+```
 
-# Patrol Familiariuszy
-
-**Efekt:** Zapłać 1 złoto. Przesuń 1 swojego Agenta o 1 lokację. Familiariusze obchodzą miasto pod szyldem porządku — bez Herezji na Ciebie.
-
-**Przy stole:** Cichy reposition przed Patrol-em Inkwizytora albo zbliżenie do rywala, którego chcesz mieć w zasięgu aresztu.
-
-**Warstwa:** A — fundament ruchu bez haków i terroru.
+```yaml
+---
+id: so-04
+name: Publiczne Ostrzeżenie
+faction: swiete-oficjum
+type: akcja
+cost_gold: 2
+heresy: 1
+heresy_text: Częste wzywanie Inkwizytora budzi niepokój samych kardynałów.
+effect: |
+  Przesuń Inkwizytora do lokacji ze swoim Agentem.
+  Limit: 1 nasłanie / gracza / Erę.
+lore: Oficjum nasyła Inkwizytora przed Autodafé. Stół przestawia plany.
+layer: A
+tags: [inquisitor, heresy]
+status: prototyp
+---
 ```
