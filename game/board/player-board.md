@@ -1,77 +1,88 @@
-# Planszetka gracza — Tor Herezji (prototyp)
-
-Wydrukuj **1 na gracza** (A5 lub pół A4). Uniwersalna planszetka — wpisz / wklej cel frakcji z [`../factions/`](../factions/).
-
-Szczegóły stref: [`../mechanics/poziom-herezji.md`](../mechanics/poziom-herezji.md).
+[Strona główna](../../README.md) > [Gra](../README.md) > [Plansza](README.md)
 
 ---
 
-## Layout do wydruku
+# Planszetka gracza — mat pod komponenty
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  INQUISITIO 1492 — PLANSZETKA GRACZA                        │
-│  Frakcja: _______________________________                   │
-│  Cel zwycięstwa: _________________________________________  │
-│  _________________________________________________________  │
-├─────────────────────────────────────────────────────────────┤
-│  TOR HEREZJI  (znacznik start: 0)                           │
-│                                                             │
-│   CZYSTA          OBSERWOWANA         KRYTYCZNA / HERETYK   │
-│  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐             │
-│  │ 0 │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │ 8 │ 9 │10 │             │
-│  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘             │
-│    brak podejrzeń   sweet spot Kabały   oskarżenie możliwe  │
-│    (bezpieczne)     (4–6)               (próg prototypu: 7) │
-├──────────────────────┬──────────────────────────────────────┤
-│  ZŁOTO               │  HAKI (max 2 aktywne)                │
-│  ○ ○ ○ ○ ○ ○ ○ ○     │  Hak → ofiara: ____ / ____           │
-│  (start: 3)          │  Limit Ery: wymuszenie 1×            │
-├──────────────────────┼──────────────────────────────────────┤
-│  AGENCI (3)          │  POSTĘP INTRYGI                      │
-│  na planszy: ○ ○ ○   │  Relikwie ewakuowane: [ ][ ]         │
-│  w Lochach:  □ □ □   │  Fragmenty Kodeksu: [ ][ ][ ]        │
-│  na stosie:  ▲ ▲ ▲   │  Stosy (Oficjum): [ ][ ]             │
-│  Podwójni: nakładka  │  Dekrety (Korona): [ ][ ]            │
-│                      │  Upadki (Gildia): [ ][ ]             │
-├──────────────────────┴──────────────────────────────────────┤
-│  LIMITY ERY (odznacz):  Hak □  Przesłuchanie □  Nasłanie □  │
-│  RĘKA / LIMIT: 5     ODRZUCONE: _____                       │
-│  Notatki sesji: ___________________________________________ │
-└─────────────────────────────────────────────────────────────┘
-```
+Wydrukuj **1 na gracza** (½ A4 = **210×148 mm**). Mata na żetony/figurki, nie karta do ołówka.
+
+Szczegóły Herezji: [`../mechanics/poziom-herezji.md`](../mechanics/poziom-herezji.md).  
+Cele: [`../factions/`](../factions/). Żetony: [`../components/print-3d.md`](../components/print-3d.md).
 
 ---
 
-## Pola — skrót
+## Budżet mm (nie łamać)
 
-| Pole | Start | Uwagi |
+```
+210 × 148  (zewnętrzne)
+└─ padding 3 mm → obszar roboczy 204 × 142
+   ├─ NAGŁÓWEK     auto    frakcja 18 pt + cel 15 pt (wysokość = treść, zero dziury)
+   ├─ gap           1.5 mm
+   ├─ HEREZJA      28 mm   tytuł 13 pt + tor 18 mm + strefy 11 pt (tuż pod torem)
+   ├─ gap           1.5 mm
+   └─ KORPUS       1fr     reszta mm
+        Warstwa C:
+        ├─ rząd 1  ~1.07fr Agenci 70 | Złoto flex | Haki 48
+        ├─ gap      2 mm
+        └─ rząd 2  ~1fr    Limity flex (3 kolumny ✕+etykieta) | Postęp 72
+        Warstwa A: jeden rząd 1fr
+                   Agenci 70 | Złoto flex | Limit 36 | Postęp 72
+```
+
+**Limity Ery (C) — budżet szerokości:**  
+`204 − 72 − 2 = 130 mm` na box → tytuł pełną szerokość, potem **3 równe kolumny** (~43 mm): żeton 12 mm nad etykietą.  
+Nie układać etykiet w poziomie obok żetonu (3× „Przesłuchanie” nie mieści się).
+
+**Twarde odciski:** Agent Ø20, żeton 20×20, Zużycie 12×12.  
+Szerokość studni = liczba odcisków (+ pad), nie „wspólna kolumna z sąsiadem”.
+
+Typografia (w budżecie): tytuł **18 pt** · cel **15 pt** · box **13 pt** · limity **12 pt** · tor/strefy Herezji **13 / 11 pt**.  
+Nagłówek: rząd `auto` (nie sztywne mm) — dziura pod celem = błąd.  
+Strefy Herezji: **bez** `margin-top: auto` — przyklejone pod tor 0–10.
+
+---
+
+## Strefy
+
+| Strefa | Forma | Komponent |
 | :--- | :--- | :--- |
-| Tor Herezji | **0** | Znacznik płomienia / pionek |
-| Złoto | **3** | Bank wspólny poza planszetką |
-| Agenci | **3** | Na planszy / w Lochach / na Stosie |
-| Haki | 0 | Max 2 aktywne; ofiara na żetonie |
-| Relikwie / Fragmenty / Stosy / Dekrety / Upadki | 0 | Według frakcji |
-| Cel zwycięstwa | tekst | Skopiuj z karty frakcji |
+| Herezja | tor 0–10 | 1 znacznik |
+| Agenci | 3×○ | rezerwa |
+| Złoto | tacka | stos monet |
+| Haki (B+) | 2×□ | max 2 aktywne |
+| Limity Ery | 1–3×□12 | żeton Zużycie |
+| Postęp | 2–3×□ | żetony celu frakcji |
 
-## Cele do wklejenia (skrót)
+### Postęp
 
-| Frakcja | Cel |
-| :--- | :--- |
-| Święte Oficjum | **2 Stosy** lub **2** skazania Werdyktem z Krytycznej |
-| Cienie Al-Andalus | **2 Relikwie** ewakuowane (+ ścieżka Podwójny / unik Autodafé) |
-| Korona & Borgiowie | **2 Dekrety** signature + Haki na **2** graczach |
-| Kabała z Toledo | **3 Fragmenty**; przy wygranej Herezja **4–6** |
-| Gildia Cieni | **2 upadki** (Hak / Podwójny / spalona lokacja kluczowa) |
+| Frakcja | n | Żeton |
+| :--- | ---: | :--- |
+| Oficjum | 3 | Stos |
+| Cienie | 2 | Relikwia |
+| Korona | 2 | Dekret |
+| Kabała | 3 | Fragment |
+| Gildia | 2 | Upadek |
 
-## Strefy (przypomnienie)
+### Świadomie poza matą
 
-| Zakres | Strefa | Efekt |
-| :---: | :--- | :--- |
-| 0–3 | Czysta | Bezpieczne, słabsze akcje |
-| 4–6 | Obserwowana | Czujność Inkwizycji; sweet spot Kabały |
-| 7–10 | Krytyczna | Inni mogą **Rzucić Oskarżenie** → Werdykt stołu |
+Pozycja Agenta = plansza/Areszt/Stos · ofiara Haka = na żetonie · Podwójny = nakładka na bazie · zero pól do pisania.
 
-## PnP
+---
 
-Czytelny tor Herezji > ozdobniki. Final art po freeze tekstów.
+## Layout
+
+```
+┌─ 210 × 148 ─────────────────────────────────────────────┐
+│ FRAKCJA                                                 │
+│ Cel: …                                                  │  auto
+├─────────────────────────────────────────────────────────┤
+│ HEREZJA                                                 │
+│ [0]…[10]                                                │
+│ Czysta 0–3 | Obserwowana 4–6 | Krytyczna 7–10           │  28 mm
+├──────────┬────────────────────────────┬─────────────────┤
+│ AGENCI   │ ZŁOTO (tacka)              │ HAKI            │
+│ ○ ○ ○    │                            │ □ □             │  ~1fr
+├──────────┴──────────────┬─────────────┴─────────────────┤
+│ LIMITY  □ Nasłanie …    │ POSTĘP  □ □ (□)               │  ~1fr
+└─────────────────────────┴───────────────────────────────┘
+```

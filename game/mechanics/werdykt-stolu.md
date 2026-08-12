@@ -1,4 +1,11 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Mechaniki](README.md)
+
+---
+
 # Werdykt stołu
+
+> **Źródło szczegółów** dla haseł [Werdykt](../../docs/rules/slownik.md#werdykt), [Oskarżenie](../../docs/rules/slownik.md#oskarżenie), [Stos](../../docs/rules/slownik.md#stos) w [`slownik.md`](../../docs/rules/slownik.md).  
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.V) · [`poziom-herezji.md`](poziom-herezji.md) · [`haki.md`](haki.md)
 
 Gdy gracz jest w strefie **Krytycznej** (Herezja ≥ 7), inny gracz może **Rzucić Oskarżenie**.
 
@@ -16,17 +23,19 @@ Powód narracyjny (Agent w lokacji, Autodafé, plotka) pomaga przy stole, ale w 
 
 1. **Oskarżyciel** wskazuje cel w Krytycznej.
 2. Krótka runda argumentów (opcjonalnie, max ~2 min — anti-AP).
-3. **Głosowanie** (prototyp: **jawne**): każdy gracz **oprócz oskarżonego** głosuje **Skazać** albo **Uniewinnić**.
-4. Remis (równa liczba) → **Uniewinnienie**.
+3. **Głosowanie jawne:** każdy gracz **oprócz oskarżonego** głosuje **Skazać** albo **Uniewinnić**.
+   - Każdy głos ma domyślnie **wagę 1**.
+   - Efekty kart (np. Korona) mogą ustawić **wagę 2** na wskazany Werdykt — wtedy ten głos liczy się jak dwa głosy o tej samej decyzji.
+4. Remis (suma wag równa) → **Uniewinnienie**.
 5. **Skazanie:**
    - Oskarżyciel wybiera: Agent celu → **Stos** (eliminacja z gry) **lub** Agent → **Lochy** i cel **+1 Herezja**.
-   - Jeśli Stos: Oficjum zapisuje **1 Stos** (nawet jeśli oskarżycielem był kto inny — prototyp: Stos zawsze dla toru Oficjum / puli Autodafé; jeśli Oficjum nie gra, żeton Stosu i tak istnieje jako licznik świata).
+   - Jeśli Stos: Oficjum zapisuje **1 Stos** (nawet jeśli oskarżycielem był kto inny — Stos zawsze dla toru Oficjum / puli Autodafé; jeśli Oficjum nie gra, żeton Stosu i tak istnieje jako licznik świata).
 6. **Uniewinnienie:** oskarżyciel **+1 Herezja**.
 
 ## Polityka
 
 - Haki (B+) mogą wymusić głos przed krokiem 3.
-- Podwójni nie głosują sami; kontroler może ruszać ciałem, nie oddaje drugiego głosu (prototyp).
+- Podwójni: kontroler rusza ciałem; **nie** oddaje dodatkowego głosu przy Werdykcie.
 - Oficjum wygrywa Stosami; reszta stołu może celowo uniewinniać, by ciąć snowball.
 
 ## Warstwa A

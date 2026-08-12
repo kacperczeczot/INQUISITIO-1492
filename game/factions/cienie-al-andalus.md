@@ -1,7 +1,11 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Frakcje](README.md)
+
+---
+
 # Cienie Al-Andalus *(Bractwo)*
 
 **Styl:** Ukryte ruchy, Relikwie, poświęcenie, unikanie Autodafé.  
-**Cel:** Ewakuować **2 Relikwie** poza planszę; co najmniej **jedna** ścieżka przez **Podwójnego** albo ewakuacja w Erze **bez** Autodafé na lokacji wyjścia.
+**Cel:** Ewakuować **2 Relikwie**; ścieżka przez **Podwójnego**, cichy exit (bez Autodafé na wyjściu) **albo** szlak morski (edykt Czasu).
 
 ## Tożsamość przy stole
 
@@ -31,4 +35,4 @@ Kaptury, skrytobójcy bractwa. Łatwo pomylić z Gildią — celowo.
 | :--- | :--- |
 | A | Przejście, złoto kryjówki, cień, fałszywy trop, kurier |
 | B | Ucieczka, szantaż bractwa, kaptur |
-| C | Kurier Relikwii, Signature *Echo Alhambry* |
+| C | Kurier Relikwii, karta specjalna *Echo Alhambry* |

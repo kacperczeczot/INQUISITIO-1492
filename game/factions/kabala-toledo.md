@@ -1,7 +1,11 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Frakcje](README.md)
+
+---
+
 # Kabała z Toledo *(Uczeni & Alchemicy)*
 
 **Styl:** Sweet spot Herezji 4–6, Fragmenty Kodeksu, Imię, archiwum.  
-**Cel:** Zebrać **3 Fragmenty** zdobyte z Przesłuchań / Imienia / kart Kodeksu; w chwili zwycięstwa Twoja Herezja musi być w **Obserwowanej (4–6)**.
+**Cel:** **3 Fragmenty** + Herezja **4–6**; od Ery **7**@3p / **6**@4p / **5**@5p.
 
 ## Tożsamość przy stole
 
@@ -11,7 +15,7 @@ Nie jesteś niewinny — jesteś **dokładnie wystarczająco winny**. Za niska H
 
 - Kontrola własnego toru Herezji (zwierciadło, rytuały)
 - Fragmenty z Lochów i zakazanej wiedzy
-- Signature pieczęci łamiące limity wiedzy
+- Karty specjalne pieczęci łamiące limity wiedzy
 
 ## Słabości
 
@@ -31,4 +35,4 @@ Skrzynki, uczeni, kabaliści z Toledo.
 | :--- | :--- |
 | A | Rytuał, transmutacja, zakazana wiedza, zwierciadło, wskazówka |
 | B | Przesłuchanie Imienia, archiwum, areszt wiedzy |
-| C | Fragment Kodeksu, Signature *Pieczęć Salomona* |
+| C | Fragment Kodeksu, karta specjalna *Pieczęć Salomona* |

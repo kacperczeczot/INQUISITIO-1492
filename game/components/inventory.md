@@ -1,13 +1,17 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Komponenty](README.md)
+
+---
+
 # Lista komponentów (prototyp)
 
 Lista pod **druk 3D** (figurki, żetony): [`print-3d.md`](print-3d.md) — pełna rozpiska ilości i siluet.  
-Zasady: [`../../docs/rules/README.md`](../../docs/rules/README.md).
+Zasady: [`../../docs/rules/ksiega.md`](../../docs/rules/ksiega.md) · hub: [`../../docs/rules/README.md`](../../docs/rules/README.md).
 
 ## Plansza i znaczniki wspólne
 
 | Komponent | Ilość (szacunek) | Notatka |
 | :--- | ---: | :--- |
-| Plansza główna (5 lokacji) | 1 | A3 / 2×A4; slot Inkwizytora + Areszt w Lochach |
+| Plansza główna (5 lokacji) | 1 | **A2** / 4×A4 (2×2); sloty fizyczne + Areszt w Lochach |
 | Figurka Wielkiego Inkwizytora | 1 | Patrol / Autodafé |
 | Żetony Relikwii | 6–8 | Mat + złocenia |
 | Znaczniki Herezji (płomienie) | 5 | 1 na gracza na Torze Herezji |
@@ -17,7 +21,7 @@ Zasady: [`../../docs/rules/README.md`](../../docs/rules/README.md).
 | Fragmenty Kodeksu | 6 | Kabała |
 | Stosy / Autodafé | 4 | Oficjum / świat |
 | Upadek frakcji | 4 | Gildia |
-| Dekret | 4 | Korona (postęp signature) |
+| Dekret | 4 | Korona (postęp karty specjalnej) |
 | Marker 1. gracza | 1 | |
 | Marker Szlaku Morskiego | 1 | Flota Kolumba / ewakuacja |
 
@@ -55,7 +59,8 @@ Referencje klimatu: *Blasphemous*, *Loop Hero*.
 
 ## Kolejność produkcji
 
-1. PnP z generatora Markdown → `assets/prototypes/`
-2. Sesje UX
-3. Freeze tekstów
-4. Final pixel art / druk 3D figurek wg [`print-3d.md`](print-3d.md)
+1. Heavy sim + feel C ([`../../docs/roadmap.md`](../../docs/roadmap.md))
+2. PnP warstwa **C** (UI-only) → `assets/prototypes/`
+3. Sesje UX (pełne mechaniki)
+4. Freeze tekstów
+5. Final pixel art / druk 3D figurek wg [`print-3d.md`](print-3d.md)

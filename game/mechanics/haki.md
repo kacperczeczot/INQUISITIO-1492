@@ -1,4 +1,11 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Mechaniki](README.md)
+
+---
+
 # Haki
+
+> **Źródło szczegółów** dla haseł [Hak](../../docs/rules/slownik.md#hak), [Wymuszenie](../../docs/rules/slownik.md#wymuszenie) w [`slownik.md`](../../docs/rules/slownik.md).  
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.II) · [`lochy-przesluchania.md`](lochy-przesluchania.md) · [`werdykt-stolu.md`](werdykt-stolu.md)
 
 **Warstwa B.** Twarda waluta strachu — **jeden typ żetonu**.
 
@@ -12,7 +19,7 @@ Połóż Hak przy sobie z oznaczeniem **ofiary** (kolor / inicjał). Nie drukuje
 
 - Przesłuchanie w Lochach (opcja „Złam → Hak”)
 - Karty z `creates_hook: true`
-- Signature / edykty (warstwa C)
+- karta specjalna / edykty (warstwa C)
 
 **Limit posiadania (prototyp):** max **2** aktywne Haki na gracza; nadmiar musisz zużyć lub odrzucić bez efektu.
 

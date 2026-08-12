@@ -1,4 +1,11 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Mechaniki](README.md)
+
+---
+
 # Lochy i Przesłuchania
+
+> **Źródło szczegółów** dla haseł [Lochy](../../docs/rules/slownik.md#lochy), [Przesłuchanie](../../docs/rules/slownik.md#przesłuchanie), [Podwójny](../../docs/rules/slownik.md#podwójny), [Areszt](../../docs/rules/slownik.md#areszt) w [`slownik.md`](../../docs/rules/slownik.md).  
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.IV) · [`haki.md`](haki.md) · [`poziom-herezji.md`](poziom-herezji.md)
 
 **Warstwa B.** Władza nad ciałami: areszt nie kończy się „wykupem za złoto”. Kończy się **złamaniem**, **Hakiem** albo publiczną Herezją.
 
@@ -18,7 +25,7 @@ Wybierz aresztowanego Agenta **rywala** i jedno:
 
 | Opcja | Skutek |
 | :--- | :--- |
-| **Złam → Podwójny** | Znacznik Podwójnego na figurce. Raz na Erę możesz wykonać nim ruch o 1 jak swoim Agentem (nadal należy kolorem do właściciela). |
+| **Złam → Podwójny** | Znacznik Podwójnego na figurce. Raz na Erę możesz wykonać nim ruch o 1 jak swoim Agentem (należy kolorem do właściciela; **bez** dodatkowego głosu przy Werdykcie). |
 | **Złam → Hak** | Bierzesz 1 żeton Haka na właściciela Agenta ([`haki.md`](haki.md)). |
 | **Wymuś Herezję** | Właściciel **+2 Herezja**; Agent zostaje w Areszcie. |
 

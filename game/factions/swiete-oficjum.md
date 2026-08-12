@@ -1,7 +1,11 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Frakcje](README.md)
+
+---
+
 # Święte Oficjum *(Torquemada)*
 
 **Styl:** Terror publiczny, Autodafé, kontrola Trybunału i Lochów.  
-**Cel zwycięstwa:** **2 Stosy** z Autodafé lub Werdyktu **albo** doprowadzenie **2 różnych rywali** do Krytycznej i **skazanie** ich głosem stołu.
+**Cel:** **3 Stosy** **lub** skazania Werdyktem (**2**@≤3p / **3**@4–5p).
 
 ## Tożsamość przy stole
 
@@ -15,9 +19,10 @@ Publiczna twarz prawa Bożego. Wszyscy wiedzą, kim jesteś — i dlatego boją 
 
 ## Słabości
 
-- Stół łatwo się sprzymierza, gdy blisko 2. Stosu
+- Stół łatwo się sprzymierza, gdy blisko 3. Stosu / 2. skazania
 - Słabszy transport Relikwii i gra w Cieniu
 - Uniewinnienie na Werdykcie boli (+Herezja na Ciebie jako oskarżyciela)
+- Edykt *Auto-da-fé Toledo* pali lokację **bez** darmowego Stosu
 
 ## Agenci
 
@@ -29,9 +34,9 @@ Figurki: familiariusze / inkwizytorzy. Czytelny kolor „światła”.
 
 | Warstwa | Zawartość |
 | :--- | :--- |
-| A | Patrol, złoto Trybunału, wrabianie, ostrzeżenie, wezwanie |
+| A | Patrol, złoto, Podejrzenie, **nasłanie Inkwizytora** (so-04), Wezwanie |
 | B | Areszt, przesłuchanie, nasłanie |
-| C | Świadek koronny, Signature *Oczyść Miasto* |
+| C | Świadek koronny, karta specjalna *Oczyść Miasto* |
 
 ## Notatka designu
 

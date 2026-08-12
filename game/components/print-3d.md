@@ -1,8 +1,12 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Komponenty](README.md)
+
+---
+
 # Lista elementów do druku 3D — prototyp playtest
 
 Komplet pod pierwszą testową grę (**3–5 graczy**).  
 Karty, plansza i planszetki = **druk papierowy** (nie tu).  
-Źródło ilości: [`inventory.md`](inventory.md) · zasady: [`../../docs/rules/README.md`](../../docs/rules/README.md).
+Źródło ilości: [`inventory.md`](inventory.md) · zasady: [`../../docs/rules/ksiega.md`](../../docs/rules/ksiega.md).
 
 ---
 
@@ -14,7 +18,7 @@ Karty, plansza i planszetki = **druk papierowy** (nie tu).
 | :--- | ---: | :--- |
 | Figurka Wielkiego Inkwizytora | **1** | Wyższa niż Agent (~40–50 mm); baza z miejscem na żeton stanu **Patrol / Autodafé** |
 
-Silueta: mitra / krzyż / płaszcz. Czytelna z daleka na planszy A3.
+Silueta: mitra / krzyż / płaszcz. Czytelna z daleka na planszy A2.
 
 ### Agenci (figurki pionków)
 
@@ -46,16 +50,19 @@ Wymagania: wysokość ~25–35 mm, baza okrągła z kolorem frakcji, **5 wyraźn
 
 ## Priorytet 2 — żetony (zalecane w 3D)
 
+Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agenci zostają na okrągłej bazie).
+
 | Element | Ilość | Kształt / uwagi |
 | :--- | ---: | :--- |
 | **Hak** | **12** | **Jeden typ** — hak / łańcuch; ofiarę oznacza się kolorem / żetonem obok |
-| Relikwia | **8** | kafelek / medalion; 1–2 warianty wyglądu OK |
-| Fragment Kodeksu | **6** | mały heks / fragment pergaminu (Kabała) |
-| Złoto | **40** | moneta / dysk; opcjonalnie 2 rozmiary (1 i 5) |
+| Relikwia | **8** | kafelek; 1–2 warianty wyglądu OK |
+| Fragment Kodeksu | **6** | fragment pergaminu (Kabała) |
+| Złoto | **40** | kafelek ze znakiem monety; opcjonalnie 2 wartości (1 i 5) |
 | Stos / Autodafé | **4** | płomień + stos / krzyż inkwizycji |
 | Upadek frakcji (Gildia) | **4** | czarna pieczęć / zbita tarcza |
-| Dekret (Korona) | **4** | pieczęć / pergamin (postęp signature) |
-| Stan Inkwizytora | **2** | małe dyski: Patrol / Autodafé (jeśli nie na bazie figurki) |
+| Dekret (Korona) | **4** | pieczęć / pergamin (postęp karty specjalnej) |
+| Zużycie Ery | **15** | mały kafelek ✕ — limit Nasłanie / Hak / Przesłuchanie |
+| Stan Inkwizytora | **2** | małe kafle: Patrol / Autodafé (jeśli nie na bazie figurki) |
 
 ---
 
@@ -73,7 +80,7 @@ Wymagania: wysokość ~25–35 mm, baza okrągła z kolorem frakcji, **5 wyraźn
 
 ## Nie drukować w 3D (papier / PnP)
 
-- Plansza 5 lokacji (A3 lub 2×A4)
+- Plansza 5 lokacji (**A2** lub 4×A4)
 - Planszetki gracza ×5 (Tor Herezji)
 - Karty frakcji (10 × 5) + Talia Czasu (8+)
 - Teach sheet / cele zwycięstwa

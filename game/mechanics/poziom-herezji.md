@@ -1,6 +1,13 @@
+[Strona główna](../../README.md) > [Gra](../README.md) > [Mechaniki](README.md)
+
+---
+
 # Poziom Herezji
 
-Ikoniczna mechanika tytułu — **centralny filar** obok Inkwizytora, Lochów/Podwójnych, Haków i Signature.
+> **Źródło szczegółów** dla haseł [Herezja](../../docs/rules/slownik.md#herezja), [Krytyczna](../../docs/rules/slownik.md#krytyczna) w [`slownik.md`](../../docs/rules/slownik.md).  
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) · [`werdykt-stolu.md`](werdykt-stolu.md) · [`wielki-inkwizytor.md`](wielki-inkwizytor.md)
+
+Ikoniczna mechanika tytułu — **centralny filar** obok Inkwizytora, Lochów/Podwójnych, Haków i karta specjalna.
 
 Każdy gracz ma **Tor Herezji 0–10** na planszetce. Herezja mierzy, jak bardzo jesteś **spalony publicznie**. Im wyżej, tym mocniejsze karty możesz „udźwignąć” — i tym bliżej stosu.
 
