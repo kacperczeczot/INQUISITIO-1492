@@ -4,7 +4,9 @@ import argparse
 import sys
 
 from inquisitio.engine.setup import SETUP_PRESETS
+from inquisitio.runner.balance import faction_shares, run_matrix
 from inquisitio.runner.batch import compare_thresholds, run_batch
+from inquisitio.runner.feel import render_feel, run_feel
 from inquisitio.runner.report import write_compare_report, write_report
 
 
@@ -27,6 +29,25 @@ def main(argv: list[str] | None = None) -> int:
     p_cmp.add_argument("--seed", type=int, default=42)
     p_cmp.add_argument("--layer", type=str, default="C", choices=["A", "B", "C"])
 
+    p_feel = sub.add_parser("feel", help="Solo Dev-Play: narrative log of one game")
+    p_feel.add_argument(
+        "--setup",
+        type=str,
+        default="3p-oficjum-alandalus-korona",
+        choices=sorted(SETUP_PRESETS.keys()),
+    )
+    p_feel.add_argument("--seed", type=int, default=42)
+    p_feel.add_argument("--layer", type=str, default="A", choices=["A", "B", "C"])
+    p_feel.add_argument("--threshold", type=int, default=7)
+    p_feel.add_argument("--max-eras", type=int, default=None)
+
+    p_mtx = sub.add_parser("matrix", help="Balance matrix: all setups × layers")
+    p_mtx.add_argument("--games", type=int, default=80)
+    p_mtx.add_argument("--seed", type=int, default=42)
+    p_mtx.add_argument("--layers", type=str, default="B,C", help="Comma list A,B,C")
+    p_mtx.add_argument("--setup", type=str, default=None, help="Single setup (default: all)")
+    p_mtx.add_argument("--threshold", type=int, default=7)
+
     sub.add_parser("setups", help="List setup presets (3–5p)")
 
     args = parser.parse_args(argv)
@@ -34,6 +55,17 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "setups":
         for name, factions in SETUP_PRESETS.items():
             print(f"{name}: {', '.join(f.value for f in factions)}")
+        return 0
+
+    if args.cmd == "feel":
+        result = run_feel(
+            setup=args.setup,
+            seed=args.seed,
+            layer=args.layer,
+            threshold=args.threshold,
+            max_eras=args.max_eras,
+        )
+        print(render_feel(result), end="")
         return 0
 
     if args.cmd == "run":
@@ -70,6 +102,32 @@ def main(argv: list[str] | None = None) -> int:
                 f"deadlocks={s.deadlocks_avg:.2f} wins={s.wins}"
             )
         return 0
+
+    if args.cmd == "matrix":
+        layers = tuple(x.strip() for x in args.layers.split(",") if x.strip())
+        setups = [args.setup] if args.setup else None
+        rows = run_matrix(
+            games=args.games,
+            seed=args.seed,
+            layers=layers,
+            setups=setups,
+            threshold=args.threshold,
+        )
+        failed = 0
+        for summary, ok, errors in rows:
+            shares = faction_shares(summary)
+            mark = "OK" if ok else "FAIL"
+            share_s = " ".join(f"{k}:{v:.0%}" for k, v in shares.items())
+            print(
+                f"[{mark}] {summary.setup} L{summary.layer} "
+                f"dead={summary.deadlocks_avg:.2f} acc={summary.accusations_avg:.2f} | {share_s}"
+            )
+            if not ok:
+                failed += 1
+                for e in errors:
+                    print(f"       ! {e}")
+        print(f"\n{len(rows) - failed}/{len(rows)} passed")
+        return 1 if failed else 0
 
     return 1
 

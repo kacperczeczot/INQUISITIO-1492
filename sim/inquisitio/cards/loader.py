@@ -1,6 +1,7 @@
 """Card loader — markdown YAML frontmatter from game/cards."""
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -18,7 +19,8 @@ class Card:
     name: str
     faction: str
     type: str = "akcja"
-    cost: int = 0
+    cost: int = 0  # alias of cost_gold (sim engine)
+    cost_gold: int = 0
     heresy: int = 0
     target_heresy: int = 0
     location: str | None = None
@@ -30,8 +32,24 @@ class Card:
     arrest: bool = False
     layer: str = "A"
     status: str = "prototyp"
+    effect: str = ""
+    heresy_text: str = ""
+    lore: str = ""
+    table_note: str = ""  # deprecated; kept for compat, unused
     text: str = ""
     raw: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def type_label(self) -> str:
+        """Human label for PnP, e.g. Akcja."""
+        labels = {
+            "akcja": "Akcja",
+            "reakcja": "Reakcja",
+            "permanent": "Permanent",
+            "signature": "Specjalna",
+            "wydarzenie": "Wydarzenie",
+        }
+        return labels.get(self.type, self.type.title())
 
 
 _CACHE: dict[str, Card] | None = None
@@ -48,12 +66,42 @@ def _parse_md(path: Path) -> Card | None:
     body = parts[2].strip()
     if "id" not in meta:
         return None
+
+    cost_gold = int(meta.get("cost_gold", meta.get("cost") or 0))
+    effect = str(meta.get("effect") or "").strip()
+    heresy_text = str(meta.get("heresy_text") or "").strip()
+    lore = str(meta.get("lore") or "").strip()
+    # legacy aliases — fold into lore, never keep as separate printed field
+    legacy_note = str(meta.get("table_note") or "").strip()
+    if legacy_note and legacy_note not in lore:
+        lore = f"{lore} {legacy_note}".strip() if lore else legacy_note
+
+    # Legacy body: **Efekt:** / **Przy stole:** — only if fields missing
+    if not effect and body:
+        m = re.search(
+            r"\*\*Efekt:\*\*\s*(.+?)(?:\n\n|\*\*[A-ZĄĆĘŁŃÓŚŹŻ]|\Z)",
+            body,
+            re.S,
+        )
+        if m:
+            effect = re.sub(r"\s+", " ", m.group(1)).strip()
+        m2 = re.search(
+            r"\*\*Przy stole:\*\*\s*(.+?)(?:\n\n|\*\*[A-ZĄĆĘŁŃÓŚŹŻ]|\Z)",
+            body,
+            re.S,
+        )
+        if m2:
+            przy = re.sub(r"\s+", " ", m2.group(1)).strip()
+            if przy and przy not in lore:
+                lore = f"{lore} {przy}".strip() if lore else przy
+
     return Card(
         id=str(meta["id"]),
         name=str(meta.get("name", meta["id"])),
         faction=str(meta.get("faction", "")),
         type=str(meta.get("type", "akcja")),
-        cost=int(meta.get("cost") or 0),
+        cost=cost_gold,
+        cost_gold=cost_gold,
         heresy=int(meta.get("heresy") or 0),
         target_heresy=int(meta.get("target_heresy") or 0),
         location=meta.get("location"),
@@ -65,6 +113,10 @@ def _parse_md(path: Path) -> Card | None:
         arrest=bool(meta.get("arrest")),
         layer=str(meta.get("layer") or "A"),
         status=str(meta.get("status") or "prototyp"),
+        effect=effect,
+        heresy_text=heresy_text,
+        lore=lore,
+        table_note="",
         text=body,
         raw=meta,
     )

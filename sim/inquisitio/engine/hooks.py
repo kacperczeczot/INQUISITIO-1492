@@ -10,6 +10,7 @@ def grant_hook(state: GameState, holder: FactionId, target: FactionId) -> None:
         return
     pl = state.players[holder]
     pl.hooks_on[target] = pl.hooks_on.get(target, 0) + 1
+    pl.hook_victims_ever.add(target)
     state.metrics.hooks_created += 1
     state.add_log(f"Hook {holder.value} on {target.value}")
 
@@ -40,8 +41,8 @@ def force_hook(
         state.add_log(f"Hook complied {target.value} under {holder.value}")
         return True
     add_heresy(state, target, 2, reason="hook_reveal")
-    # Gildia fall on refuse
-    if holder == FactionId.GILDIA_CIENI:
+    # Gildia fall on refuse — A teach + C (B awards falls mainly via verdict)
+    if holder == FactionId.GILDIA_CIENI and state.layer in ("A", "C"):
         holder_pl.falls += 1
         state.add_log(f"Gildia fall -> {holder_pl.falls}")
     state.add_log(f"Hook revealed on {target.value}")
@@ -53,4 +54,10 @@ def count_hooks_held(state: GameState, holder: FactionId) -> int:
 
 
 def distinct_hook_victims(state: GameState, holder: FactionId) -> int:
+    """Active hooks (current)."""
     return len(active_hook_targets(state, holder))
+
+
+def distinct_hook_victims_ever(state: GameState, holder: FactionId) -> int:
+    """Lifetime distinct victims — used for Korona victory (force doesn't erase progress)."""
+    return len(state.players[holder].hook_victims_ever)

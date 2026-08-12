@@ -18,12 +18,14 @@ def _ts() -> str:
 def write_report(summary: BatchSummary) -> tuple[Path, Path]:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     stamp = _ts()
-    base = f"drama-{summary.setup}-t{summary.threshold}-{stamp}"
+    layer = getattr(summary, "layer", "C")
+    base = f"drama-{summary.setup}-L{layer}-t{summary.threshold}-{stamp}"
     jp = REPORT_DIR / f"{base}.json"
     mp = REPORT_DIR / f"{base}.md"
     data = {
         "games": summary.games,
         "setup": summary.setup,
+        "layer": layer,
         "threshold": summary.threshold,
         "wins": summary.wins,
         "metrics": {
@@ -42,9 +44,9 @@ def write_report(summary: BatchSummary) -> tuple[Path, Path]:
     }
     jp.write_text(json.dumps(data, indent=2), encoding="utf-8")
     md = [
-        f"# Drama report — {summary.setup}",
+        f"# Drama report — {summary.setup} (layer {layer})",
         "",
-        f"Games: {summary.games} · threshold: {summary.threshold}",
+        f"Games: {summary.games} · threshold: {summary.threshold} · layer: {layer}",
         "",
         "## Wins (informational)",
         "",
@@ -76,23 +78,41 @@ def write_report(summary: BatchSummary) -> tuple[Path, Path]:
 def write_compare_report(results: dict[int, BatchSummary]) -> tuple[Path, Path]:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     stamp = _ts()
-    jp = REPORT_DIR / f"compare-thresholds-{stamp}.json"
-    mp = REPORT_DIR / f"compare-thresholds-{stamp}.md"
+    sample = next(iter(results.values()))
+    setup = sample.setup.replace("/", "-")
+    layer = getattr(sample, "layer", "C")
+    jp = REPORT_DIR / f"compare-thresholds-{setup}-L{layer}-{stamp}.json"
+    mp = REPORT_DIR / f"compare-thresholds-{setup}-L{layer}-{stamp}.md"
     payload = {
-        str(k): {
-            "wins": v.wins,
-            "accusations_avg": v.accusations_avg,
-            "deadlocks_avg": v.deadlocks_avg,
-            "autodafe_avg": v.autodafe_avg,
-        }
-        for k, v in results.items()
+        "setup": sample.setup,
+        "layer": layer,
+        "games": sample.games,
+        "thresholds": {
+            str(k): {
+                "wins": v.wins,
+                "accusations_avg": v.accusations_avg,
+                "convictions_avg": v.convictions_avg,
+                "deadlocks_avg": v.deadlocks_avg,
+                "autodafe_avg": v.autodafe_avg,
+                "hooks_avg": v.hooks_avg,
+                "doubles_avg": v.doubles_avg,
+                "eras_avg": v.eras_avg,
+            }
+            for k, v in results.items()
+        },
     }
     jp.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    lines = ["# Threshold compare (drama experiment)", ""]
+    lines = [
+        f"# Threshold compare — {sample.setup} (layer {layer})",
+        "",
+        f"Games / threshold: {sample.games}",
+        "",
+    ]
     for t, s in sorted(results.items()):
         lines.append(
-            f"- t={t}: accusations={s.accusations_avg:.2f}, "
-            f"autodafe={s.autodafe_avg:.2f}, deadlocks={s.deadlocks_avg:.2f}, wins={s.wins}"
+            f"- t={t}: accusations={s.accusations_avg:.2f}, convictions={s.convictions_avg:.2f}, "
+            f"autodafe={s.autodafe_avg:.2f}, hooks={s.hooks_avg:.2f}, doubles={s.doubles_avg:.2f}, "
+            f"deadlocks={s.deadlocks_avg:.2f}, eras={s.eras_avg:.2f}, wins={s.wins}"
         )
     lines.append("")
     mp.write_text("\n".join(lines), encoding="utf-8")

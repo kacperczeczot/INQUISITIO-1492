@@ -14,6 +14,7 @@ from inquisitio.engine.state import (
 )
 
 SETUP_PRESETS: dict[str, list[FactionId]] = {
+    # --- 3p (playtesting/setups.md) ---
     "3p-oficjum-alandalus-korona": [
         FactionId.SWIETE_OFICJUM,
         FactionId.CIENIE_AL_ANDALUS,
@@ -24,12 +25,48 @@ SETUP_PRESETS: dict[str, list[FactionId]] = {
         FactionId.KABALA_TOLEDO,
         FactionId.GILDIA_CIENI,
     ],
-    "4p-core": [
+    "3p-cienie-korona-gildia": [
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+        FactionId.GILDIA_CIENI,
+    ],
+    "3p-oficjum-alandalus-gildia": [
+        FactionId.SWIETE_OFICJUM,
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.GILDIA_CIENI,
+    ],
+    # --- 4p (exclude one faction) ---
+    "4p-core": [  # no Gildia — default first 4p
         FactionId.SWIETE_OFICJUM,
         FactionId.CIENIE_AL_ANDALUS,
         FactionId.KORONA_BORGIOWIE,
         FactionId.KABALA_TOLEDO,
     ],
+    "4p-no-kabala": [
+        FactionId.SWIETE_OFICJUM,
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+        FactionId.GILDIA_CIENI,
+    ],
+    "4p-no-korona": [
+        FactionId.SWIETE_OFICJUM,
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KABALA_TOLEDO,
+        FactionId.GILDIA_CIENI,
+    ],
+    "4p-no-cienie": [
+        FactionId.SWIETE_OFICJUM,
+        FactionId.KORONA_BORGIOWIE,
+        FactionId.KABALA_TOLEDO,
+        FactionId.GILDIA_CIENI,
+    ],
+    "4p-no-oficjum": [
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+        FactionId.KABALA_TOLEDO,
+        FactionId.GILDIA_CIENI,
+    ],
+    # --- 5p ---
     "5p-full": [
         FactionId.SWIETE_OFICJUM,
         FactionId.CIENIE_AL_ANDALUS,

@@ -1,8 +1,13 @@
+[Strona główna](../README.md) > [Symulacja](README.md)
+
+---
+
+
 # INQUISITIO 1492 — silnik symulacji
 
-Silnik Python pod prototyp polityczny (warstwy **A → B → C**): Herezja, Inkwizytor, Werdykt, Lochy/Podwójni, Haki, Signature, Talia Czasu.  
+Silnik Python pod prototyp (**warstwa C** na stół; A/B = filtry talii w sim).  
 Karty: Markdown → YAML z [`../game/cards/`](../game/cards/).  
-Batch-raporty: dramat + zdrowie reguł → [`../playtesting/sim-reports/`](../playtesting/sim-reports/).
+Raporty batch: lokalnie → [`../playtesting/sim-reports/`](../playtesting/sim-reports/) (gitignore; skrót do [`../playtesting/balance-notes.md`](../playtesting/balance-notes.md)).
 
 ## Instalacja
 
@@ -22,11 +27,22 @@ Wymaga Python **≥ 3.9** (zalecane 3.11+).
 # lista setupów (tylko 3–5p)
 python -m inquisitio setups
 
-# batch
-python -m inquisitio run --games 50 --setup 3p-oficjum-alandalus-korona --layer C --threshold 7 --seed 42
+# Solo Dev-Play — narracyjny log 1 partii
+python -m inquisitio feel --setup 3p-oficjum-alandalus-korona --seed 42 --layer C
 
-# porównanie progu Herezji 7 vs 8 (eksperyment dramatu)
-python -m inquisitio compare --games 50 --setup 3p-oficjum-alandalus-korona --seed 42
+# heavy sim / matryca
+python -m inquisitio run --games 200 --setup 3p-oficjum-alandalus-korona --layer C --threshold 7 --seed 42
+python -m inquisitio matrix --games 100 --layers C --seed 42
+
+# porównanie progu Herezji 7 vs 8
+python -m inquisitio compare --games 100 --setup 3p-oficjum-alandalus-korona --seed 42 --layer C
+```
+
+## Testy
+
+```bash
+pytest tests/test_smoke.py tests/test_balance.py -v
+# test_balance: 10 setupów × B/C + multi-seed na core compositions
 ```
 
 ## Metryki raportu
@@ -61,13 +77,8 @@ Nie są pełnym blfem ludzkim. Orientacyjne intenty:
 | Kabała | Sweet spot Herezji 4–6, Fragmenty |
 | Gildia | Wrabianie, Haki, Upadek |
 
-## Testy
-
-```bash
-pytest tests/test_smoke.py -v
-```
-
 ## Roadmap stołu
 
-Solo Dev-Play / PnP / UX: [`../docs/roadmap.md`](../docs/roadmap.md).  
-Zasady: [`../docs/rules/README.md`](../docs/rules/README.md).
+Kolejność: **heavy sim → feel C → PnP C → sesja pełnych mechanik**.  
+Szczegóły: [`../docs/roadmap.md`](../docs/roadmap.md).  
+Zasady: hub [`../docs/rules/README.md`](../docs/rules/README.md) · księga [`../docs/rules/ksiega.md`](../docs/rules/ksiega.md) · słownik [`../docs/rules/slownik.md`](../docs/rules/slownik.md).

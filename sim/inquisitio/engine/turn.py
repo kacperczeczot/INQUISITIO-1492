@@ -56,30 +56,51 @@ def play_era(state: GameState, rng: random.Random, agent_choose) -> FactionId | 
     era_start_inquisitor(state, rng)
 
     for fid in state.turn_order:
+        pl = state.players[fid]
+        pl.gold += 1
+        state.add_log(f"{fid.value} gold trickle +1 (now {pl.gold})")
         legal = _legal_card_ids(state, fid)
         state.metrics.legal_moves_sampled += len(legal)
         if not legal:
             state.metrics.deadlocks += 1
+            state.add_log(f"{fid.value} deadlock (no legal cards)")
             _draw(state, fid, 1)
             continue
         choice = agent_choose(state, fid, legal)
         if choice:
             play_card(state, fid, choice, rng)
-        # optional hook force
-        if state.layer in ("B", "C"):
+        # optional hook force (A teach has Haki on kb/gc cards)
+        if state.layer in ("A", "B", "C"):
             targets = active_hook_targets(state, fid)
-            if targets and not state.players[fid].used_hook and rng.random() < 0.4:
+            force_p = 0.35 if state.layer == "A" else 0.4
+            if targets and not state.players[fid].used_hook and rng.random() < force_p:
                 t = targets[0]
                 # victim complies if heresy would hurt more
                 comply = state.players[t].heresy >= 6 or rng.random() < 0.55
                 force_hook(state, fid, t, comply=comply)
-        # accusation
+        # accusation — table politics vs Oficjum snowball
         accused_list = [a for a in eligible_accused(state) if a != fid]
-        if accused_list and rng.random() < 0.5:
-            run_verdict(state, fid, accused_list[0], rng)
+        if accused_list:
+            so = state.players.get(FactionId.SWIETE_OFICJUM)
+            so_near = bool(
+                so and (so.stacks >= 2 or len(so.condemned_rivals) >= 1)
+            )
+            # Prefer accusing Oficjum when they lead; otherwise random critical
+            if so_near and FactionId.SWIETE_OFICJUM in accused_list:
+                target = FactionId.SWIETE_OFICJUM
+                p_acc = 0.7
+            elif so_near:
+                target = accused_list[0]
+                p_acc = 0.25  # avoid feeding free Stosy
+            else:
+                target = accused_list[0]
+                p_acc = 0.5
+            if rng.random() < p_acc:
+                run_verdict(state, fid, target, rng)
         w = check_winner(state)
         if w:
             state.winner = w
+            state.add_log(f"WINNER {w.value}")
             return w
         _draw(state, fid, 1)
         # hand size soft cap
@@ -87,16 +108,52 @@ def play_era(state: GameState, rng: random.Random, agent_choose) -> FactionId | 
         while len(pl.hand) > 6:
             pl.discard.append(pl.hand.pop(0))
 
-    # Cienie sea evacuate opportunity
-    if state.sea_route_open and FactionId.CIENIE_AL_ANDALUS in state.players:
+    # Cienie evacuate (B/C passive; A: second Relic after Kurier)
+    if FactionId.CIENIE_AL_ANDALUS in state.players:
         pl = state.players[FactionId.CIENIE_AL_ANDALUS]
-        for loc in ("rynek", "gildia"):
-            if state.relics_on_board.get(loc, 0) > 0 and any(
-                ag.location == loc and not ag.arrested for ag in pl.agents
-            ):
+        evacuated = False
+        harbor = ("rynek", "gildia")
+        if state.layer == "C" and state.sea_route_open:
+            for loc in harbor:
+                if state.relics_on_board.get(loc, 0) > 0 and any(
+                    ag.location == loc and not ag.arrested for ag in pl.agents
+                ):
+                    state.relics_on_board[loc] -= 1
+                    pl.relics_evacuated += 1
+                    pl.avoided_autodafe = True
+                    evacuated = True
+                    state.add_log(
+                        f"cienie-al-andalus sea evacuate from {loc} "
+                        f"(total={pl.relics_evacuated})"
+                    )
+                    break
+        if not evacuated and state.layer in ("A", "B", "C"):
+            if state.layer == "A" and pl.relics_evacuated < 1:
+                chance = 0.0  # A: first Relic must be Kurier
+            elif state.layer == "A":
+                chance = 0.70  # second Relic after Kurier
+            elif state.layer == "B":
+                chance = 0.15
+            else:
+                chance = 0.32  # C: Cienie ~50% w Oficjum–Cienie–Gildia / multi-seed
+            for loc in harbor:
+                if chance <= 0:
+                    break
+                if state.relics_on_board.get(loc, 0) <= 0:
+                    continue
+                if state.inquisitor_location == loc:
+                    continue
+                if not any(ag.location == loc and not ag.arrested for ag in pl.agents):
+                    continue
+                if rng.random() >= chance:
+                    break
                 state.relics_on_board[loc] -= 1
                 pl.relics_evacuated += 1
                 pl.avoided_autodafe = True
+                state.add_log(
+                    f"cienie-al-andalus quiet harbor evacuate from {loc} "
+                    f"(total={pl.relics_evacuated})"
+                )
                 break
 
     # time edict layer C
@@ -108,6 +165,7 @@ def play_era(state: GameState, rng: random.Random, agent_choose) -> FactionId | 
     w = check_winner(state)
     if w:
         state.winner = w
+        state.add_log(f"WINNER {w.value}")
     return w
 
 
@@ -116,8 +174,11 @@ def play_game(state: GameState, rng: random.Random, agent_choose) -> FactionId:
         play_era(state, rng, agent_choose)
         if state.winner:
             return state.winner
+        if state.era >= state.max_eras:
+            break
         state.era += 1
     if state.winner:
         return state.winner
     state.winner = end_game_tiebreak(state)
+    state.add_log(f"TIEBREAK WINNER {state.winner.value}")
     return state.winner

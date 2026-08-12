@@ -16,6 +16,7 @@ class BatchSummary:
     games: int
     setup: str
     threshold: int
+    layer: str = "C"
     wins: dict[str, int] = field(default_factory=dict)
     autodafe_avg: float = 0.0
     accusations_avg: float = 0.0
@@ -90,6 +91,7 @@ def run_batch(
         games=games,
         setup=setup_name,
         threshold=threshold,
+        layer=layer,
         wins=dict(wins),
         autodafe_avg=totals["autodafe"] / n,
         accusations_avg=totals["accusations"] / n,

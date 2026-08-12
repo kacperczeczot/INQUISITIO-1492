@@ -25,6 +25,7 @@ def test_no_2p_setup():
 
 
 def test_layer_a_cards_simple():
+    """A decks: 5 cards, no signatures; Haki dozwolone na teach (kb-04, gc-04)."""
     for fac in [
         "swiete-oficjum",
         "cienie-al-andalus",
@@ -38,7 +39,10 @@ def test_layer_a_cards_simple():
             assert c.layer == "A"
             assert c.type != "signature"
             assert not c.breaks_rule
-            assert not c.creates_hook
+            # A-layer Haki: Faworyt, Informator, List Żelazny
+            if c.creates_hook:
+                assert c.id in ("kb-04", "gc-04", "kb-05")
+                assert "hook" in c.tags
 
 
 def test_layer_c_full_decks():
@@ -80,6 +84,37 @@ def test_dungeon_and_hooks_layer_b():
     assert state.players[victim].heresy >= 2
 
 
+def test_board_graph_neighbors():
+    from inquisitio.engine.inquisitor import move_inquisitor, neighbors, shortest_path, step_toward
+    from inquisitio.engine.state import LOCATIONS, NEIGHBORS
+
+    assert set(NEIGHBORS) == set(LOCATIONS)
+    for loc, ns in NEIGHBORS.items():
+        assert len(ns) >= 2, loc
+        for n in ns:
+            assert loc in NEIGHBORS[n], f"asymmetric {loc}->{n}"
+
+    assert set(neighbors("trybunal")) == {"palac", "lochy"}
+    assert set(neighbors("palac")) == {"trybunal", "rynek", "lochy"}
+    # two paths Trybunał → Rynek; neither requires the old chain through Lochy-only
+    assert len(shortest_path("trybunal", "rynek")) == 3  # T-P-R
+    assert step_toward("trybunal", "rynek") == "palac"
+    assert step_toward("gildia", "trybunal") in {"lochy", "rynek"}
+
+    state = new_game(setup="3p-oficjum-alandalus-korona", seed=3, layer="A")
+    state.inquisitor_location = "trybunal"
+    move_inquisitor(state, random.Random(0), toward="rynek")
+    assert state.inquisitor_location == "palac"
+    move_inquisitor(state, random.Random(0), toward="rynek")
+    assert state.inquisitor_location == "rynek"
+    # random patrol stays on graph
+    for seed in range(20):
+        cur = state.inquisitor_location
+        move_inquisitor(state, random.Random(seed))
+        nxt = state.inquisitor_location
+        assert nxt == cur or nxt in NEIGHBORS[cur]
+
+
 def test_smoke_full_game_layer_c():
     rng = random.Random(42)
     state = new_game(setup="3p-oficjum-alandalus-korona", seed=42, layer="C")
@@ -95,8 +130,66 @@ def test_smoke_full_game_layer_c():
     assert not proc.exists()
 
 
+def test_feel_cli_layer_a():
+    from inquisitio.runner.feel import render_feel, run_feel
+
+    result = run_feel(setup="3p-oficjum-alandalus-korona", seed=7, layer="A")
+    text = render_feel(result)
+    assert "=== Era 1 ===" in text
+    assert "=== Metryki ===" in text
+    assert "Winner:" in text
+    assert result.state.winner is not None
+    assert result.state.metrics.eras >= 1
+    assert "Autodafé:" in text
+
+
+def test_layer_c_deadlocks_low():
+    """Gold trickle should keep C out of the ~16 deadlock spiral."""
+    from inquisitio.runner.batch import run_batch
+
+    summary = run_batch(
+        games=50,
+        setup="3p-oficjum-alandalus-korona",
+        seed=42,
+        layer="C",
+        threshold=7,
+    )
+    assert summary.deadlocks_avg < 2.0, f"deadlocks_avg={summary.deadlocks_avg}"
+
+
 def test_cards_load():
     cards = load_all_cards()
     assert "so-01" in cards
     assert "time-01" in cards
     assert cards["so-10"].breaks_rule
+    so = cards["so-01"]
+    assert so.cost_gold == so.cost == 1
+    assert so.effect
+    assert "Zapłać" not in so.effect
+    assert so.heresy_text and so.lore
+    assert "bez Herezji" not in so.heresy_text.lower()
+    assert not so.table_note
+    hot = cards["caa-03"]
+    assert hot.heresy == 1 and hot.heresy_text and hot.lore
+    clean = cards["gc-01"]
+    assert clean.heresy == 0 and clean.heresy_text and clean.lore
+    assert "bez Herezji" not in clean.heresy_text.lower()
+    for c in cards.values():
+        assert c.effect, c.id
+        assert c.heresy_text or c.lore, c.id
+        if c.heresy_text:
+            assert "bez herezji" not in c.heresy_text.lower(), c.id
+        assert not (c.raw or {}).get("table_note"), c.id
+    assert "Tunele starej Toledo" in cards["caa-01"].heresy_text
+    assert "Handel spod lady" in (cards["gc-02"].lore or "")
+    assert "Teach" not in (cards["so-04"].lore or "")
+    assert "Załóż Hak" in cards["kb-08"].effect
+    assert "Zyskaj Hak" not in cards["kb-08"].effect
+    assert cards["kb-05"].creates_hook and "hook" in cards["kb-05"].tags
+    assert cards["so-05"].target_heresy == 1
+    assert cards["caa-09"].agents == 0
+    for c in cards.values():
+        lore = (c.lore or "").lower()
+        assert "teach a" not in lore and "reposition" not in lore, c.id
+        assert "double-dip" not in lore and "sweet spot" not in lore, c.id
+        assert "czysta ekonomia" not in lore, c.id

@@ -24,6 +24,15 @@ LOCATIONS = [
 
 LOCATION_INDEX = {name: i for i, name in enumerate(LOCATIONS)}
 
+# Cycle + Lochy–Pałac chord (see game/board/locations.md). Phase III order ≠ graph.
+NEIGHBORS: dict[str, tuple[str, ...]] = {
+    "trybunal": ("palac", "lochy"),
+    "palac": ("trybunal", "rynek", "lochy"),
+    "lochy": ("trybunal", "palac", "gildia"),
+    "rynek": ("palac", "gildia"),
+    "gildia": ("rynek", "lochy"),
+}
+
 
 class InquisitorMode(str, Enum):
     PATROL = "patrol"
@@ -49,19 +58,25 @@ class PlayerState:
     discard: list[str] = field(default_factory=list)
     agents: list[AgentToken] = field(default_factory=list)
     # victory trackers
-    stacks: int = 0  # Oficjum
+    stacks: int = 0  # Oficjum (Autodafé / Werdykt)
+    condemned_rivals: set[FactionId] = field(default_factory=set)  # Oficjum alternate
     relics_evacuated: int = 0  # Cienie
     decrees_played: int = 0  # Korona
     fragments: int = 0  # Kabala
     falls: int = 0  # Gildia
     # hooks this player HOLDS on others: target faction -> count
     hooks_on: dict[FactionId, int] = field(default_factory=dict)
+    # lifetime distinct hook victims (survives force/consume — Korona win path)
+    hook_victims_ever: set[FactionId] = field(default_factory=set)
     # anti-AP per era
     used_hook: bool = False
     used_interrogation: bool = False
     used_inquisitor_send: bool = False
     avoided_autodafe: bool = False
     path_via_double: bool = False
+    # A teach / shared pressure metric
+    frames_dealt: int = 0
+    used_kurier: bool = False  # A: caa-05 once
 
 
 @dataclass

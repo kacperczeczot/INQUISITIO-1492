@@ -30,12 +30,21 @@ def run_verdict(
     state.metrics.accusations += 1
     votes_burn = 0
     votes_spare = 0
+    so = state.players.get(FactionId.SWIETE_OFICJUM)
+    so_near_win = bool(
+        so and (so.stacks >= 2 or len(so.condemned_rivals) >= 1)
+    )
     for fid in state.turn_order:
         if fid == accused:
             continue
-        # politics: spare self-allies with low heresy; burn high threats
         accused_h = state.players[accused].heresy
-        prefer_burn = accused_h >= 8 or rng.random() < 0.45
+        # Table politics: cut Oficjum snowball; pile on Oficjum when they lead
+        if accused == FactionId.SWIETE_OFICJUM and so_near_win:
+            prefer_burn = accused_h >= 7 or rng.random() < 0.65
+        elif so_near_win and accused != FactionId.SWIETE_OFICJUM:
+            prefer_burn = accused_h >= 9 or rng.random() < 0.22
+        else:
+            prefer_burn = accused_h >= 8 or rng.random() < 0.45
         weight = 2 if double_vote == fid else 1
         if prefer_burn:
             votes_burn += weight
@@ -55,7 +64,22 @@ def run_verdict(
                 pl.agents.remove(ag)
                 break
         if FactionId.SWIETE_OFICJUM in state.players:
-            state.players[FactionId.SWIETE_OFICJUM].stacks += 1
+            so_pl = state.players[FactionId.SWIETE_OFICJUM]
+            # B teach: Stos from Werdykt only if Oficjum oskarża (cuts 5p snowball)
+            if state.layer != "B" or accuser == FactionId.SWIETE_OFICJUM:
+                so_pl.stacks += 1
+            if accused != FactionId.SWIETE_OFICJUM:
+                so_pl.condemned_rivals.add(accused)
+        # Gildia fall: accuse with leverage, or 40% if your Hak-victim is condemned by anyone
+        if FactionId.GILDIA_CIENI in state.players and accused != FactionId.GILDIA_CIENI:
+            gp = state.players[FactionId.GILDIA_CIENI]
+            leveraged = accused in gp.hook_victims_ever
+            p_fall = 0.25 if state.layer == "B" else 0.4
+            if leveraged and (
+                accuser == FactionId.GILDIA_CIENI or rng.random() < p_fall
+            ):
+                gp.falls += 1
+                state.add_log(f"gildia-cieni fall via hooked verdict (total={gp.falls})")
         # mark fall for gildia tracking if hook/double context — handled elsewhere
     else:
         add_heresy(state, accuser, 1, reason="failed_accusation")
