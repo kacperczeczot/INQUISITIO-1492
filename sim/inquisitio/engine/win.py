@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from inquisitio.config import CONFIG
 from inquisitio.engine.hooks import distinct_hook_victims, distinct_hook_victims_ever
-from inquisitio.engine.state import FactionId, GameState, heresy_zone
+from inquisitio.engine.state import FactionId, GameState
 
 
 def _pc(n: int) -> str:
@@ -52,7 +52,7 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             if pl.relics_evacuated >= relic_need:
                 if state.sea_route_open or pl.path_via_double or pl.avoided_autodafe:
                     return (fid, "caa_sea_route")
-                elif state.era >= base_era or n_players >= 5:
+                elif state.era >= base_era:
                     return (fid, "caa_era")
 
         elif fid == FactionId.KORONA_BORGIOWIE:
@@ -100,7 +100,10 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
         elif fid == FactionId.GILDIA_CIENI:
             cfg_gc = cfg_v.gildia_cieni
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
-            base_falls = cfg_gc.falls.no_oficjum if (state.layer == "B" or no_oficjum) else cfg_gc.falls.default
+            if state.layer == "B" or no_oficjum:
+                base_falls = cfg_gc.falls.no_oficjum
+            else:
+                base_falls = cfg_gc.falls.default
             falls_need = max(1, base_falls + ov.get("gc_falls_offset", 0))
 
             if pl.falls >= falls_need:

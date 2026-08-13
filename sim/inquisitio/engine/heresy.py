@@ -11,7 +11,7 @@ def add_heresy(state: GameState, faction: FactionId, amount: int, reason: str = 
     before = p.heresy
     p.heresy = clamp_heresy(p.heresy + amount)
     state.add_log(
-        f"{faction.value} heresy {before}->{p.heresy} ({heresy_zone(p.heresy)})"
+        f"{faction.value} heresy {before}->{p.heresy} ({heresy_zone(p.heresy, state.accusation_threshold)})"
         + (f" [{reason}]" if reason else "")
     )
 

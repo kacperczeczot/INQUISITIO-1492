@@ -193,3 +193,35 @@ def test_cards_load():
         assert "teach a" not in lore and "reposition" not in lore, c.id
         assert "double-dip" not in lore and "sweet spot" not in lore, c.id
         assert "czysta ekonomia" not in lore, c.id
+
+
+def test_ssot_win_paths_match_yaml():
+    from inquisitio.engine.win import check_winner_details
+    from inquisitio.engine.state import heresy_zone
+
+    st = new_game(setup="3p-cienie-korona-kabala", seed=1, layer="C")
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+    caa.relics_evacuated = 2
+    caa.path_via_double = True
+    st.era = 8
+    assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
+
+    st5 = new_game(setup="5p-full", seed=1, layer="C")
+    caa5 = st5.players[FactionId.CIENIE_AL_ANDALUS]
+    caa5.relics_evacuated = 2
+    st5.era = 1
+    got = check_winner_details(st5)
+    assert got is None or got[0] != FactionId.CIENIE_AL_ANDALUS
+    st5.era = 5
+    assert check_winner_details(st5) == (FactionId.CIENIE_AL_ANDALUS, "caa_era")
+
+    gc = st5.players[FactionId.GILDIA_CIENI]
+    caa5.relics_evacuated = 0
+    st5.era = 1
+    gc.falls = 2
+    assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
+
+    assert heresy_zone(5, critical_min=6) == "obserwowana"
+    assert heresy_zone(6, critical_min=6) == "krytyczna"
+    assert heresy_zone(6, critical_min=7) == "obserwowana"
+

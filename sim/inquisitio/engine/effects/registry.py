@@ -299,8 +299,8 @@ def _kt_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
                 pl.fragments += 1
                 state.add_log(f"{fid.value} fragment (total={pl.fragments})")
         elif state.layer == "C":
-            # Cap 2 on ≤4p; 5p may finish path via kt-05 (crowded table)
-            cap = 3 if len(state.turn_order) >= 5 else 2
+            pc = f"{len(state.turn_order)}p"
+            cap = int(CONFIG.victory.kabala_toledo.fragments[pc])
             if pl.fragments < cap and any(
                 ag.location in ("lochy", "trybunal") for ag in pl.agents
             ):

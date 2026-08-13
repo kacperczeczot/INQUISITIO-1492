@@ -108,12 +108,13 @@ class GameState:
     inquisitor_location: str = "trybunal"
     inquisitor_mode: InquisitorMode = InquisitorMode.PATROL
     eras_since_autodafe: int = 99
-    autodafe_cooldown: int = 2
+    autodafe_cooldown: int = 3
     sea_route_open: bool = False
     relics_on_board: dict[str, int] = field(default_factory=dict)
     time_deck: list[str] = field(default_factory=list)
     time_discard: list[str] = field(default_factory=list)
     winner: FactionId | None = None
+    win_path: str | None = None
     metrics: DramaMetrics = field(default_factory=DramaMetrics)
     log: list[str] = field(default_factory=list)
     rng_seed: int = 0
@@ -127,10 +128,11 @@ class GameState:
         self.log.append(f"E{self.era}: {msg}")
 
 
-def heresy_zone(value: int) -> str:
+def heresy_zone(value: int, critical_min: int = 7) -> str:
+    """Clean 0–3; observed until accusation threshold; critical at threshold+."""
     if value <= 3:
         return "czysta"
-    if value <= 6:
+    if value < critical_min:
         return "obserwowana"
     return "krytyczna"
 
