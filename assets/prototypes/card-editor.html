@@ -737,6 +737,34 @@ function computeEffectText(action, cost, heresy) {
   }
 }
 
+// Auto Derive Tags based on Action, Type, and Heresy
+function computeAutoTags(action, type, heresy) {
+  const tags = new Set();
+  
+  switch (action) {
+    case 'move_agent': tags.add('move'); break;
+    case 'gain_gold': tags.add('gold'); break;
+    case 'frame_rival': tags.add('heresy'); break;
+    case 'send_inquisitor': tags.add('inquisitor'); break;
+    case 'arrest': tags.add('arrest'); break;
+    case 'interrogate': tags.add('interrogation'); break;
+    case 'creates_hook': tags.add('hook'); break;
+    case 'evacuate_relic': tags.add('relic'); break;
+    case 'grant_fragment': tags.add('fragment'); break;
+    case 'autodafe': tags.add('autodafe'); break;
+    case 'move_double_agent': tags.add('double'); break;
+    case 'change_vote': tags.add('reaction'); break;
+    case 'mark_fall': tags.add('fall'); break;
+    case 'force_hook': tags.add('decree'); tags.add('hook'); break;
+  }
+  
+  if (heresy > 0) tags.add('heresy');
+  if (type === 'signature') tags.add('signature');
+  if (type === 'reakcja') tags.add('reaction');
+  
+  return Array.from(tags);
+}
+
 // Populate Tags Checkboxes
 const tagsContainer = document.getElementById('tags-container');
 AVAILABLE_TAGS.forEach(tag => {
@@ -780,7 +808,7 @@ function updateLivePreview() {
   
   const effectTextarea = document.getElementById('card-effect');
 
-  // Handle custom vs auto action state
+  // Handle custom vs auto action & tag state
   if (action === 'custom') {
     effectTextarea.removeAttribute('readonly');
     effectTextarea.style.background = '#ffffff';
@@ -788,6 +816,12 @@ function updateLivePreview() {
     effectTextarea.setAttribute('readonly', 'readonly');
     effectTextarea.style.background = '#f2ece4';
     effectTextarea.value = computeEffectText(action, cost, heresy);
+    
+    // Auto-derive & sync tags
+    const autoTags = computeAutoTags(action, type, heresy);
+    document.querySelectorAll('#tags-container input[type="checkbox"]').forEach(cb => {
+      cb.checked = autoTags.includes(cb.value);
+    });
   }
   
   const effect = effectTextarea.value.trim();
