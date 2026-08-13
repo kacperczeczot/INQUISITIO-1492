@@ -1,6 +1,4 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Święte Oficjum](README.md)
-
----
+--- 
 id: so-05
 name: Wezwanie do Trybunału
 faction: swiete-oficjum
@@ -10,11 +8,8 @@ heresy: 0
 layer: A
 tags:
 - reaction
-effect: |
-  Jeśli rywal zagrywa kartę z Herezją ≥ 1:
-  Wskaż tego rywala: +1 Herezja.
-
-  Limit: bez Przesuń z karty / tę Erę.
+effect: 'Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. Limit:
+  bez Przesuń z karty / tę Erę.'
 lore: Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.
 target_heresy: 1
 agents: 0
@@ -23,4 +18,5 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
----
+--- 
+

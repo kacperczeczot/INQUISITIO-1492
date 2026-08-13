@@ -1,6 +1,4 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Cienie Al-Andalus](README.md)
-
----
+--- 
 id: caa-10
 name: Echo Alhambry
 faction: cienie-al-andalus
@@ -13,11 +11,9 @@ tags:
 - signature
 - relic
 - heresy
-effect: |
-  Łamie regułę „Relikwia tylko ze Szlaku Morskiego”:
-
-  Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty:
-  Ewakuuj do 2 Relikwii z lokacji Twoich Agentów.
+effect: 'Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora
+  w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji
+  Twoich Agentów.'
 lore: As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.
 target_heresy: 0
 agents: 0
@@ -26,4 +22,5 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
----
+--- 
+

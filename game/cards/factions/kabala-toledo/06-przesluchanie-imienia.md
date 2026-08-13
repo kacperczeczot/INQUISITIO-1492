@@ -1,6 +1,4 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Kabała z Toledo](README.md)
-
----
+--- 
 id: kt-06
 name: Przesłuchanie Imienia
 faction: kabala-toledo
@@ -11,15 +9,12 @@ layer: B
 tags:
 - interrogation
 - fragment
-effect: |
-  Wykonaj Przesłuchanie.
+effect: 'Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment. Limit:
+  1 / Erę.'
+lore: 'Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej”
+  opcji Podwójnego.
 
-  Limit: 1 / Erę.
-
-  Jeśli +2 Herezja lub Hak:
-  Zyskaj Fragment.
-lore: |
-  Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Podwójnego.
+  '
 target_heresy: 0
 agents: 0
 creates_hook: false
@@ -27,4 +22,5 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
----
+--- 
+

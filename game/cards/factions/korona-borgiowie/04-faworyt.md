@@ -1,6 +1,4 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Korona i Borgiowie](README.md)
-
----
+--- 
 id: kb-04
 name: Faworyt Dworu
 faction: korona-borgiowie
@@ -13,9 +11,7 @@ tags:
 - hook
 - move
 - heresy
-effect: |
-  Przesuń swojego Agenta o 1 lokację.
-  Załóż Hak na rywala.
+effect: Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala.
 lore: Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.
 target_heresy: 0
 agents: 1
@@ -24,4 +20,5 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
----
+--- 
+

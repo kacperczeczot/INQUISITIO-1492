@@ -1,6 +1,4 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Korona i Borgiowie](README.md)
-
----
+--- 
 id: kb-10
 name: Pieczęć Korony
 faction: korona-borgiowie
@@ -13,11 +11,8 @@ tags:
 - signature
 - decree
 - heresy
-effect: |
-  DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”:
-
-  Jeśli masz aktywne Haki na ≥ 2 graczach:
-  zwycięstwo.
+effect: 'DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli masz aktywne Haki
+  na ≥ 2 graczach: zwycięstwo.'
 lore: Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.
 target_heresy: 0
 agents: 0
@@ -26,4 +21,5 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
----
+--- 
+
