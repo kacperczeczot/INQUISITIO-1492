@@ -3,10 +3,11 @@ id: caa-01
 name: Przejście Podziemiami
 faction: cienie-al-andalus
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
 heresy_text: Tunele starej Toledo znane tylko wtajemniczonym w bractwie.
-layer: A
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.

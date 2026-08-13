@@ -3,10 +3,11 @@ id: kt-01
 name: Rytuał Przejścia
 faction: kabala-toledo
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
 heresy_text: Symboliczne przejście przez próg nie budzi alarmu familiariuszy.
-layer: A
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.

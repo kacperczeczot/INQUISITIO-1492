@@ -3,9 +3,10 @@ id: kb-07
 name: Szantaż Pieczęcią
 faction: korona-borgiowie
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: B
 tags:
 - hook
 effect: Załóż Hak na rywala z Herezją ≥ 4.

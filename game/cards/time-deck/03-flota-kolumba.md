@@ -3,9 +3,10 @@ id: time-03
 name: Flota Kolumba
 faction: time
 type: wydarzenie
+layer: C
+cost: 0
 cost_gold: 0
 heresy: 0
-layer: C
 tags:
 - edict
 - relic

@@ -3,9 +3,10 @@ id: gc-06
 name: Szantaż
 faction: gildia-cieni
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: B
 tags:
 - hook
 effect: Załóż Hak na rywala.

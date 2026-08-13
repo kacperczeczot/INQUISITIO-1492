@@ -1,11 +1,12 @@
---- 
+---
 id: gc-09
 name: Lista Dłużników
 faction: gildia-cieni
 type: akcja
+layer: C
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: C
 tags:
 - hook
 - fall
@@ -19,5 +20,4 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

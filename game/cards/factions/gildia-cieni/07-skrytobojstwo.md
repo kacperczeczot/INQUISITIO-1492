@@ -3,10 +3,11 @@ id: gc-07
 name: Skrytobójstwo
 faction: gildia-cieni
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 1
 heresy_text: Ciało w kanałach Gildii mówi więcej niż świadek na rynku.
-layer: B
 tags:
 - arrest
 - heresy

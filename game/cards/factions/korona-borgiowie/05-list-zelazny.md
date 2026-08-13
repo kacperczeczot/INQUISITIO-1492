@@ -3,14 +3,15 @@ id: kb-05
 name: List Żelazny
 faction: korona-borgiowie
 type: akcja
+layer: A
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: A
 tags:
 - decree
 - hook
 effect: Załóż Hak na rywala.
-lore: 'List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.'
+lore: List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.
 target_heresy: 0
 agents: 0
 creates_hook: true

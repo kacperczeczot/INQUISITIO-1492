@@ -3,10 +3,11 @@ id: kb-01
 name: Rozkaz Dworu
 faction: korona-borgiowie
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
 heresy_text: Królewski nakaz wiąże bez pytania biskupów o zgodę.
-layer: A
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.

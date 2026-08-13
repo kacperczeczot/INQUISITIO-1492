@@ -3,10 +3,11 @@ id: caa-03
 name: Cień na Rynku
 faction: cienie-al-andalus
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 1
 heresy_text: Kupcy rozpoznają obce oblicze w tłumie na placu.
-layer: A
 tags:
 - move
 - relic

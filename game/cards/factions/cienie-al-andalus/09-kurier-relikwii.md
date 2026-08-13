@@ -3,9 +3,10 @@ id: caa-09
 name: Kurier Relikwii
 faction: cienie-al-andalus
 type: akcja
+layer: C
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: C
 tags:
 - relic
 - move

@@ -3,10 +3,11 @@ id: gc-01
 name: Przekupiony Strażnik
 faction: gildia-cieni
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
 heresy_text: Strażnik zna cenę milczenia lepiej niż modlitwy.
-layer: A
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.

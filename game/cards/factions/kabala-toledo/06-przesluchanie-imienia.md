@@ -1,11 +1,12 @@
---- 
+---
 id: kt-06
 name: Przesłuchanie Imienia
 faction: kabala-toledo
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: B
 tags:
 - interrogation
 - fragment
@@ -22,5 +23,4 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

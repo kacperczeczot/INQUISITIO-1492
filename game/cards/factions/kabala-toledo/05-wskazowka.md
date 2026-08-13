@@ -1,11 +1,12 @@
---- 
+---
 id: kt-05
 name: Wskazówka Cyklu
 faction: kabala-toledo
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
-layer: A
 tags:
 - fragment
 effect: 'Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz
@@ -18,5 +19,4 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

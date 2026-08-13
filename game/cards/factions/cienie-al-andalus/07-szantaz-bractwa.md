@@ -3,10 +3,11 @@ id: caa-07
 name: Szantaż Bractwa
 faction: cienie-al-andalus
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
 heresy_text: Bractwo zna imiona sąsiadów lepiej niż proboszczowie.
-layer: B
 tags:
 - hook
 effect: Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta.

@@ -3,9 +3,10 @@ id: so-09
 name: Świadek Koronny
 faction: swiete-oficjum
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
-layer: B
 tags:
 - hook
 effect: Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.

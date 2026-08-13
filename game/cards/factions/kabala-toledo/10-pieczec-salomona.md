@@ -1,11 +1,12 @@
---- 
+---
 id: kt-10
 name: Pieczęć Salomona
 faction: kabala-toledo
 type: signature
+layer: C
+cost: 1
 cost_gold: 1
 heresy: 0
-layer: C
 tags:
 - signature
 - fragment
@@ -19,5 +20,4 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

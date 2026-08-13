@@ -1,12 +1,13 @@
---- 
+---
 id: kb-04
 name: Faworyt Dworu
 faction: korona-borgiowie
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 1
 heresy_text: Faworyzm dworu budzi zazdrość kortegan i biskupów.
-layer: A
 tags:
 - hook
 - move
@@ -20,5 +21,4 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

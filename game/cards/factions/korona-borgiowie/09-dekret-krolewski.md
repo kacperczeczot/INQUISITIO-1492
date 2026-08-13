@@ -1,12 +1,13 @@
---- 
+---
 id: kb-09
 name: Dekret Królewski
 faction: korona-borgiowie
 type: signature
+layer: C
+cost: 3
 cost_gold: 3
 heresy: 1
 heresy_text: Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.
-layer: C
 tags:
 - signature
 - decree
@@ -21,5 +22,4 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

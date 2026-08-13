@@ -1,12 +1,13 @@
---- 
+---
 id: caa-08
 name: Kaptur Nocy
 faction: cienie-al-andalus
 type: akcja
+layer: B
+cost: 1
 cost_gold: 1
 heresy: 1
 heresy_text: Podwójny agent zostawia ślad w rejestrze gości.
-layer: B
 tags:
 - double
 - heresy
@@ -19,5 +20,4 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

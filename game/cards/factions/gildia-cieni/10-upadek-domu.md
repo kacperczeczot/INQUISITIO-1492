@@ -1,12 +1,13 @@
---- 
+---
 id: gc-10
 name: Upadek Domu
 faction: gildia-cieni
 type: signature
+layer: C
+cost: 3
 cost_gold: 3
 heresy: 2
 heresy_text: Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.
-layer: C
 tags:
 - signature
 - fall
@@ -21,5 +22,4 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

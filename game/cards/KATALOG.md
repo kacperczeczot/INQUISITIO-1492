@@ -103,7 +103,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja.  Limit: bez Przesuń z karty / tę Erę. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. Limit: bez Przesuń z karty / tę Erę. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -188,7 +188,7 @@ Kart: **10**
 | `cost_gold` | 4 |
 | `heresy` | 2 |
 | `heresy_text` | Autodafé z rozkazu trybunału pali strach, nie tylko drewno. |
-| `effect` | Łamie regułę „Autodafé / 2 Ery”: Ogłoś Autodafé w lokacji Inkwizytora.  Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos. |
+| `effect` | Łamie regułę „Autodafé / 2 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos. |
 | `lore` | Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika. |
 | `tags` | signature, autodafe, heresy |
 | `status` | prototyp |
@@ -279,7 +279,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. |
+| `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
 | `lore` | Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar. |
 | `tags` | relic |
 | `status` | prototyp |
@@ -364,7 +364,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
-| `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”:  Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
+| `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
 | `lore` | As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej. |
 | `tags` | signature, relic, heresy |
 | `status` | prototyp |
@@ -523,7 +523,7 @@ Kart: **10**
 | `cost_gold` | 3 |
 | `heresy` | 1 |
 | `heresy_text` | Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać. |
-| `effect` | DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie Haka.  Odmowa: +3 Herezja. |
+| `effect` | DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie Haka. Odmowa: +3 Herezja. |
 | `lore` | Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru. |
 | `tags` | signature, decree, heresy |
 | `status` | prototyp |
@@ -540,7 +540,7 @@ Kart: **10**
 | `cost_gold` | 2 |
 | `heresy` | 2 |
 | `heresy_text` | Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu. |
-| `effect` | DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”:  Jeśli masz aktywne Haki na ≥ 2 graczach: zwycięstwo. |
+| `effect` | DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli masz aktywne Haki na ≥ 2 graczach: zwycięstwo. |
 | `lore` | Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie. |
 | `tags` | signature, decree, heresy |
 | `status` | prototyp |
@@ -631,7 +631,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment.  Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto. |
+| `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto. |
 | `lore` | Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale. |
 | `tags` | fragment |
 | `status` | prototyp |
@@ -648,7 +648,7 @@ Kart: **10**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Wykonaj Przesłuchanie.  Limit: 1 / Erę.  Jeśli +2 Herezja lub Hak: Zyskaj Fragment. |
+| `effect` | Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment. Limit: 1 / Erę. |
 | `lore` | Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Podwójnego. |
 | `tags` | interrogation, fragment |
 | `status` | prototyp |
@@ -716,7 +716,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Łamie regułę „Herezja tylko z karty”:  Jeśli masz 3 Fragmenty i Herezję 4–6: zwycięstwo.  Jeśli masz 3 Fragmenty bez Herezji 4–6: Ustaw swoją Herezję na 5. |
+| `effect` | Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty i Herezję 4–6: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji 4–6: Ustaw swoją Herezję na 5. |
 | `lore` | Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6. |
 | `tags` | signature, fragment |
 | `status` | prototyp |
@@ -807,7 +807,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos.  Limit: 1 / Erę. |
+| `effect` | Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit: 1 / Erę. |
 | `lore` | Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -875,7 +875,7 @@ Kart: **10**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala.  Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala. |
+| `effect` | Załóż Hak na rywala. Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala. |
 | `lore` | Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole. |
 | `tags` | hook, fall |
 | `status` | prototyp |
@@ -892,7 +892,7 @@ Kart: **10**
 | `cost_gold` | 3 |
 | `heresy` | 2 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
-| `effect` | Łamie regułę „Upadek tylko z odmowy Haka”:  Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
+| `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
 | `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
 | `tags` | signature, fall, heresy |
 | `status` | prototyp |

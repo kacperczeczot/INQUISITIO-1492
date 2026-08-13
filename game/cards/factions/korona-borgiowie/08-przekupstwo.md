@@ -3,9 +3,10 @@ id: kb-08
 name: Przekupstwo Sędziego
 faction: korona-borgiowie
 type: akcja
+layer: B
+cost: 3
 cost_gold: 3
 heresy: 0
-layer: B
 tags:
 - verdict
 effect: W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala.

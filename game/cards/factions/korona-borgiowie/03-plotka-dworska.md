@@ -3,13 +3,14 @@ id: kb-03
 name: Plotka Dworska
 faction: korona-borgiowie
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
 heresy_text: Szept z sali tronowej dociera do familiariusza szybciej niż msza.
-layer: A
 tags:
 - heresy
-effect: "Wskaż rywala: +1 Herezja."
+effect: 'Wskaż rywala: +1 Herezja.'
 lore: Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4).
 target_heresy: 1
 agents: 0

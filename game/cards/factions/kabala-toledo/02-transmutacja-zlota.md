@@ -3,13 +3,14 @@ id: kt-02
 name: Transmutacja Złota
 faction: kabala-toledo
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
-layer: A
 tags:
 - gold
 effect: Zyskaj 2 złota.
-lore: 'Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.'
+lore: Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.
 target_heresy: 0
 agents: 0
 creates_hook: false

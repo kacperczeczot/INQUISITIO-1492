@@ -1,11 +1,12 @@
---- 
+---
 id: gc-05
 name: Fałszywy Świadek
 faction: gildia-cieni
 type: reakcja
+layer: A
+cost: 0
 cost_gold: 0
 heresy: 0
-layer: A
 tags:
 - reaction
 effect: 'Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit: 1 / Erę.'
@@ -17,5 +18,4 @@ breaks_rule: false
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

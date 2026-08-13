@@ -3,10 +3,11 @@ id: so-01
 name: Patrol Familiariuszy
 faction: swiete-oficjum
 type: akcja
+layer: A
+cost: 1
 cost_gold: 1
 heresy: 0
 heresy_text: Familiariusze obchodzą miasto pod szyldem porządku i prawa.
-layer: A
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.

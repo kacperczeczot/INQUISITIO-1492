@@ -3,10 +3,11 @@ id: caa-06
 name: Ucieczka z Lochów
 faction: cienie-al-andalus
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
 heresy_text: Klucz od strażnika, który nigdy nie służył Koronie.
-layer: B
 tags:
 - move
 - arrest

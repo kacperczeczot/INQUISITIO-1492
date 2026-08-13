@@ -1,12 +1,13 @@
---- 
+---
 id: so-10
 name: Oczyść Miasto
 faction: swiete-oficjum
 type: signature
+layer: C
+cost: 4
 cost_gold: 4
 heresy: 2
 heresy_text: Autodafé z rozkazu trybunału pali strach, nie tylko drewno.
-layer: C
 tags:
 - signature
 - autodafe
@@ -21,5 +22,4 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

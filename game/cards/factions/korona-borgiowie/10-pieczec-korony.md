@@ -1,12 +1,13 @@
---- 
+---
 id: kb-10
 name: Pieczęć Korony
 faction: korona-borgiowie
 type: signature
+layer: C
+cost: 2
 cost_gold: 2
 heresy: 2
 heresy_text: Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.
-layer: C
 tags:
 - signature
 - decree
@@ -21,5 +22,4 @@ breaks_rule: true
 gold: 0
 arrest: false
 status: prototyp
---- 
-
+---

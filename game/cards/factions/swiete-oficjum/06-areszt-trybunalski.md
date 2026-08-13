@@ -3,10 +3,11 @@ id: so-06
 name: Areszt Trybunalski
 faction: swiete-oficjum
 type: akcja
+layer: B
+cost: 2
 cost_gold: 2
 heresy: 0
 heresy_text: Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie.
-layer: B
 tags:
 - arrest
 effect: Aresztuj Agenta rywala w lokacji swojego Agenta.

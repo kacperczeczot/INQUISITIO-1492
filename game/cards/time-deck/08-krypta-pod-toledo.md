@@ -3,18 +3,23 @@ id: time-08
 name: Krypta pod Toledo
 faction: time
 type: wydarzenie
+layer: C
+cost: 0
 cost_gold: 0
 heresy: 0
-layer: C
 tags:
 - edict
 - relic
-effect: |
-  EDYKT.
+effect: 'EDYKT.
+
   Umieść Relikwię w Lochach.
 
+
   Jeśli pierwszy Agent jest w Lochach w następnej Erze:
+
   Przenieś Relikwię do tego Agenta.
+
+  '
 lore: Wyścig do Lochów. Cienie vs Oficjum — kto pierwszy, ten bierze.
 target_heresy: 0
 agents: 0
