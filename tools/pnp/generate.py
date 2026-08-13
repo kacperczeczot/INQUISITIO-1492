@@ -29,10 +29,10 @@ from inquisitio.cards.loader import Card, cards_for_faction, load_all_cards  # n
 
 FACTIONS = [
     # slug, name, goal, progress_label, progress_n, progress_icon
-    ("swiete-oficjum", "Święte Oficjum", "3 Stosy lub skazania Werdyktem (2@≤3p / 3@4–5p)", "Stosy", 3, "stack"),
-    ("cienie-al-andalus", "Cienie Al-Andalus", "2 Relikwie + ścieżka (Podwójny / cichy exit / szlak)", "Relikwie", 2, "relic"),
-    ("korona-borgiowie", "Korona & Borgiowie", "2 Dekrety + ≥1 Hak (Era 7@3p / 6@4–5p); 5p: też 1+2 Haki", "Dekrety", 2, "decree"),
-    ("kabala-toledo", "Kabała z Toledo", "3 Fragmenty + Herezja 4–6 (Era 7@3p / 6@4p / 5@5p)", "Fragmenty", 3, "fragment"),
+    ("swiete-oficjum", "Święte Oficjum", "2 Stosy@3p / 3 Stosy@4p / 5 Stosów@5p lub skazania Werdyktem", "Stosy", 3, "stack"),
+    ("cienie-al-andalus", "Cienie Al-Andalus", "2 Relikwie + ścieżka (Era 6+ przy 3p / 5+ przy 4-5p)", "Relikwie", 2, "relic"),
+    ("korona-borgiowie", "Korona & Borgiowie", "2 Dekrety (od Ery 6@3p / 5@4-5p z ≥1 Hakiem); na 4-5p też 1 Dekret + 2 Haki", "Dekrety", 2, "decree"),
+    ("kabala-toledo", "Kabała z Toledo", "3 Fragmenty (2 przy 3p i 5p) + Herezja 3–7", "Fragmenty", 3, "fragment"),
     ("gildia-cieni", "Gildia Cieni", "2 upadki (3 bez Oficjum)", "Upadki", 2, "fall"),
 ]
 
@@ -1053,6 +1053,7 @@ body.bw .card-proto {
 }
 .heresy-pip.z1 { background: #dcebc8; }
 .heresy-pip.z2 { background: #f0d9a8; }
+.heresy-pip.z2-3 { background: linear-gradient(135deg, #f0d9a8 50%, #e8b8b8 50%); }
 .heresy-pip.z3 { background: #e8b8b8; }
 .heresy-zones {
   display: grid;
@@ -1582,7 +1583,7 @@ def render_player_boards(layer: str) -> str:
 
     for slug, name, goal, progress_label, progress_n, progress_icon in FACTIONS:
         pips = "".join(
-            f'<span class="heresy-pip {"z1" if i <= 3 else "z2" if i <= 6 else "z3"}">{i}</span>'
+            f'<span class="heresy-pip {"z1" if i <= 3 else "z2" if i <= 6 else "z2-3" if i == 7 else "z3"}">{i}</span>'
             for i in range(11)
         )
         agents = "".join('<span class="agent-slot" title="Agent Ø20 mm"></span>' for _ in range(3))
@@ -1665,8 +1666,8 @@ def render_player_boards(layer: str) -> str:
       <div class="heresy-track">{pips}</div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–3</span>
-        <span class="hz-z2">Obserwowana 4–7</span>
-        <span class="hz-z3">Krytyczna 8–10</span>
+        <span class="hz-z2">Obserw. 4–6 (4–7@4p+)</span>
+        <span class="hz-z3">Krytyczna ≥7@3p (≥8@4p+)</span>
       </div>
     </section>
     {body}
