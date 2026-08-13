@@ -223,6 +223,24 @@ input:checked + .slider:before {
   min-width: 140px !important;
 }
 
+.checkbox-item {
+  flex: 0 0 auto !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.checkbox-item input {
+  width: auto !important;
+  accent-color: var(--blood);
+}
+
 label {
   font-size: 0.78rem;
   font-weight: 700;
@@ -706,18 +724,18 @@ pre.code-out {
 
     <!-- Group 3: Detailed Faction Flags -->
     <div class="form-row">
-      <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
-        <input type="checkbox" id="card-arrest-flag" style="width:auto; cursor:pointer;">
-        <label for="card-arrest-flag" style="margin:0; cursor:pointer;">Aresztowanie Agenta</label>
-      </div>
-      <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
-        <input type="checkbox" id="card-creates-hook-flag" style="width:auto; cursor:pointer;">
-        <label for="card-creates-hook-flag" style="margin:0; cursor:pointer;">Założenie Haka</label>
-      </div>
-      <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
-        <input type="checkbox" id="card-no-move-limit" style="width:auto; cursor:pointer;">
-        <label for="card-no-move-limit" style="margin:0; cursor:pointer;">Zakaz Ruchu w Reakcji</label>
-      </div>
+      <label class="form-group checkbox-item" id="group-arrest-flag">
+        <input type="checkbox" id="card-arrest-flag">
+        <span>Aresztowanie Agenta</span>
+      </label>
+      <label class="form-group checkbox-item" id="group-creates-hook-flag">
+        <input type="checkbox" id="card-creates-hook-flag">
+        <span>Założenie Haka</span>
+      </label>
+      <label class="form-group checkbox-item" id="group-no-move-limit">
+        <input type="checkbox" id="card-no-move-limit">
+        <span>Zakaz Ruchu w Reakcji</span>
+      </label>
     </div>
 
     <div class="form-row">
@@ -1110,9 +1128,18 @@ function updateActionFieldVisibility() {
 
     const hasVal = el.type === 'checkbox' ? el.checked : Boolean(el.value.trim());
     if (showAll || allowedFields.includes(id) || hasVal) {
-      parentGroup.style.display = 'flex';
+      parentGroup.style.display = '';
     } else {
       parentGroup.style.display = 'none';
+    }
+  });
+
+  // Hide empty .form-row containers when all child form-groups inside are hidden
+  document.querySelectorAll('.panel .form-row').forEach(row => {
+    const groups = Array.from(row.querySelectorAll('.form-group'));
+    if (groups.length > 0) {
+      const anyVisible = groups.some(g => g.style.display !== 'none');
+      row.style.display = anyVisible ? '' : 'none';
     }
   });
 }
