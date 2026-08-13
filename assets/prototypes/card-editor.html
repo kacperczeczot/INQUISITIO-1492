@@ -710,43 +710,43 @@ function computeEffectText(action, cost, heresy) {
     case 'move_agent':
       return 'Przesuń swojego Agenta o 1 lokację.';
     case 'gain_gold':
-      return 'Zyskaj 2 złota z kasy dworskiej.';
+      return 'Zyskaj 2 złota.';
     case 'frame_rival':
       return 'Wskaż rywala: +1 Herezja.';
     case 'send_inquisitor':
       return 'Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.';
     case 'arrest':
-      return 'Aresztuj Agenta rywala w swojej lokacji. Limit: 1 areszt / Erę.';
+      return 'Aresztuj Agenta rywala w lokacji swojego Agenta. Limit: 1 areszt / Erę.';
     case 'interrogate':
-      return 'Przesłuchaj Agenta w Lochach lub Trybunale. Limit: 1 przesłuchanie / Erę.';
+      return 'Wykonaj Przesłuchanie na aresztowanym Agentem rywala. Limit: 1 / gracza / Erę.';
     case 'creates_hook':
-      return 'Zyskaj 1 Hak na wybranego rywala.';
+      return 'Załóż Hak na rywala.';
     case 'evacuate_relic':
-      return 'Ewakuuj 1 Relikwię ze Szlaku Morskiego.';
+      return 'Ewakuuj Relikwię z tej lokacji.';
     case 'move_relic':
       return 'Przesuń 1 Relikwię do sąsiedniej lokacji.';
     case 'free_agent':
       return 'Uwolnij swojego aresztowanego Agenta z Lochów.';
     case 'grant_fragment':
-      return 'Zyskaj 1 Fragment Kabały z Lochów lub Archiwum.';
+      return 'Zyskaj Fragment.';
     case 'grant_fragment_or_gold':
-      return 'Zyskaj 1 Fragment Kabały lub 2 złota.';
+      return 'Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.';
     case 'autodafe':
-      return 'Wywołaj Autodafé. Przesuń Inkwizytora do lokacji z najwyższą Herezją. Co 2 Ery.';
+      return 'Wywołaj Autodafé w lokacji Inkwizytora. Co 2 Ery.';
     case 'move_double_agent':
       return 'Jeśli masz Podwójnego: Przesuń tego Podwójnego o 1 lokację.';
     case 'change_vote':
-      return 'Zmień głos w Trybunale po ujawnieniu większości. Limit: 1 / Erę.';
+      return 'Zmień swój głos w Trybunale. Limit: 1 / Erę.';
     case 'mark_fall':
-      return 'Zaznacz Upadek wybranego Domu / Rywala.';
+      return 'Oznaczenie Upadku wobec wybranego rywala.';
     case 'force_hook':
-      return 'Wymuś przekazanie 1 Haka od rywala pod rygorem +3 Herezji.';
+      return 'Wymuś spełnienie Haka. Odmowa: +3 Herezja.';
     case 'check_victory':
       return 'Sprawdź warunki zwycięstwa frakcji.';
     case 'check_victory_or_set_heresy':
-      return 'Jeśli masz 3 Fragmenty: wygraj w strefie 4–6 Herezji (lub ustaw Herezję na 5).';
+      return 'Jeśli masz 3 Fragmenty w strefie 4–6 Herezji: Zwycięstwo.';
     case 'gain_gold_and_frame':
-      return 'Zyskaj 1 złoto i Wskaż rywala: +1 Herezja.';
+      return 'Zyskaj złoto. Wskaż rywala: +1 Herezja.';
     default:
       return '';
   }
