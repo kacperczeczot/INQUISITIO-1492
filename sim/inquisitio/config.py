@@ -85,6 +85,14 @@ class GameConfig:
         key = f"{n_players}p"
         return self.system.accusation_threshold[key]
 
+    def start_gold_for(self, n_players: int) -> int:
+        """Starting gold for a given player count."""
+        sg = self.system.start_gold
+        if isinstance(sg, (_Section, dict)):
+            key = f"{n_players}p"
+            return sg[key]
+        return int(sg)
+
     def victory_raw(self) -> dict[str, Any]:
         """Raw victory dict for sync_config templating."""
         return self._raw["victory"]

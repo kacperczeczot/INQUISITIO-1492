@@ -1,5 +1,8 @@
 system:
-  start_gold: 3
+  start_gold:
+    3p: 3
+    4p: 3
+    5p: 2
   agents_per_player: 3
   hand_limit: 5
   max_eras: 8
@@ -14,7 +17,7 @@ victory:
     stacks:
       3p: 2
       4p: 3
-      5p: 5
+      5p: 4
     condemns:
       3p: 2
       4p: 3

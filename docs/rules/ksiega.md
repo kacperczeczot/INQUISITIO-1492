@@ -33,7 +33,7 @@
 
 1. Rozłóż planszę (kolejność lokacji 1→5). Inkwizytor na **Trybunale**, stan **Patrol**.
 2. Każdy wybiera frakcję: talia, 3 Agenci, planszetka (Herezja = 0), cel zwycięstwa.
-3. Złoto startowe: **3** na gracza.
+3. Złoto startowe: **{'3p': 3, '4p': 3, '5p': 2}** na gracza.
 4. Relikwie / Fragmenty według [`../../playtesting/setups.md`](../../playtesting/setups.md).
 5. Dobierz **5** kart z talii 10 (C).
 6. **Pierwszy gracz:** ustala stół (nie losujcie domyślnie).
@@ -154,7 +154,7 @@ Natychmiast, gdy spełnisz warunek frakcji:
 
 | Frakcja | Warunek (C — stół) |
 | :--- | :--- |
-| Święte Oficjum | **2 Stosy**@3p / **3 Stosy**@4p / **5 Stosów**@5p **lub** skazania Werdyktem (**2** przy 3p, **3** przy 4p, **4** przy 5p) |
+| Święte Oficjum | **2 Stosy**@3p / **3 Stosy**@4p / **4 Stosów**@5p **lub** skazania Werdyktem (**2** przy 3p, **3** przy 4p, **4** przy 5p) |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 6+ przy 3p / Era 5+ przy 4–5p) |
 | Korona | **2** Dekrety (od Ery **6**@3p / **5**@4–5p z ≥1 Hakiem); na **4–5p** też 1 Dekret + 2 Haki od Ery 6 |
 | Kabała | **3 Fragmenty** (**2** przy 3p i 5p) + Herezja **3–7** (od Ery **7**@3p / **6**@4–5p) |

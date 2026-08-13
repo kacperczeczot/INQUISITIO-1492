@@ -151,8 +151,10 @@ def new_game(
     n_players = len(faction_list)
     sys = sys_overrides or {}
 
-    # Read defaults from CONFIG, allow sys_overrides to override
-    start_gold = sys.get("start_gold", CONFIG.system.start_gold)
+    if "start_gold" in sys:
+        start_gold = sys["start_gold"]
+    else:
+        start_gold = CONFIG.start_gold_for(n_players)
     agents_count = sys.get("agents_per_player", CONFIG.system.agents_per_player)
     hand_limit = sys.get("hand_limit", CONFIG.system.hand_limit)
     max_eras = sys.get("max_eras", CONFIG.system.max_eras)
