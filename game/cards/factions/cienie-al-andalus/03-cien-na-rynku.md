@@ -5,20 +5,13 @@ faction: cienie-al-andalus
 type: akcja
 layer: A
 cost: 1
-cost_gold: 1
 heresy: 1
-heresy_text: Kupcy rozpoznają obce oblicze w tłumie na placu.
 tags:
 - move
 - relic
 - heresy
 effect: Przesuń swojego Agenta o 1 lokację.
+heresy_text: Kupcy rozpoznają obce oblicze w tłumie na placu.
 lore: Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień.
-target_heresy: 0
 agents: 1
-creates_hook: false
-breaks_rule: false
-gold: 0
-arrest: false
-status: prototyp
 ---

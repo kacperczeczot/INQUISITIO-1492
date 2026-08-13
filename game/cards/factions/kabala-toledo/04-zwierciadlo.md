@@ -5,18 +5,10 @@ faction: kabala-toledo
 type: akcja
 layer: A
 cost: 1
-cost_gold: 1
-heresy: 0
-heresy_text: Zwierciadło odbija winę na obce imię w rejestrze familiariuszy.
 tags:
 - heresy
 effect: 'Wskaż rywala: +1 Herezja.'
+heresy_text: Zwierciadło odbija winę na obce imię w rejestrze familiariuszy.
 lore: Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.
 target_heresy: 1
-agents: 0
-creates_hook: false
-breaks_rule: false
-gold: 0
-arrest: false
-status: prototyp
 ---

@@ -5,19 +5,11 @@ faction: cienie-al-andalus
 type: akcja
 layer: B
 cost: 1
-cost_gold: 1
 heresy: 1
-heresy_text: Podwójny agent zostawia ślad w rejestrze gości.
 tags:
 - double
 - heresy
 effect: 'Jeśli masz Podwójnego: Przesuń tego Podwójnego o 1 lokację.'
+heresy_text: Podwójny agent zostawia ślad w rejestrze gości.
 lore: Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Podwójnego.
-target_heresy: 0
-agents: 0
-creates_hook: false
-breaks_rule: false
-gold: 0
-arrest: false
-status: prototyp
 ---

@@ -226,8 +226,30 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
             if gen_text != curr_text:
                 meta["effect"] = gen_text
                 if not dry_run:
-                    new_yaml = yaml.dump(meta, allow_unicode=True, sort_keys=False)
-                    new_content = f"--- \n{new_yaml}--- \n" + "---".join(parts[2:])
+                    clean_meta = {}
+                    for k in ["id", "name", "faction", "type", "layer", "cost"]:
+                        if k in meta:
+                            clean_meta[k] = meta[k]
+                    if meta.get("heresy"):
+                        clean_meta["heresy"] = meta["heresy"]
+                    if meta.get("tags"):
+                        clean_meta["tags"] = meta["tags"]
+                    if meta.get("effect"):
+                        clean_meta["effect"] = meta["effect"]
+                    if meta.get("heresy_text"):
+                        clean_meta["heresy_text"] = meta["heresy_text"]
+                    if meta.get("lore"):
+                        clean_meta["lore"] = meta["lore"]
+                    for flag in ["target_heresy", "agents", "gold"]:
+                        if meta.get(flag):
+                            clean_meta[flag] = meta[flag]
+                    for flag in ["creates_hook", "breaks_rule", "arrest"]:
+                        val = meta.get(flag)
+                        if val:
+                            clean_meta[flag] = val
+
+                    new_yaml = yaml.dump(clean_meta, allow_unicode=True, sort_keys=False)
+                    new_content = f"---\n{new_yaml}---\n" + "---".join(parts[2:])
                     path.write_text(new_content, encoding="utf-8")
                 updated_files.append(f"{cid}: {curr_text} -> {gen_text}")
         except Exception as e:

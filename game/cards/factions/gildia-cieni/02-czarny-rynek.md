@@ -5,17 +5,9 @@ faction: gildia-cieni
 type: akcja
 layer: A
 cost: 1
-cost_gold: 1
-heresy: 0
 tags:
 - gold
 effect: Zyskaj 2 złota.
 lore: Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.
-target_heresy: 0
-agents: 0
-creates_hook: false
-breaks_rule: false
 gold: 2
-arrest: false
-status: prototyp
 ---

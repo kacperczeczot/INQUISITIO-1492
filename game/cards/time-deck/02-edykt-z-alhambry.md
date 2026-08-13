@@ -5,8 +5,6 @@ faction: time
 type: wydarzenie
 layer: C
 cost: 0
-cost_gold: 0
-heresy: 0
 tags:
 - edict
 effect: 'EDYKT Ery. Gracz Cieni: Przesuń swojego Agenta o 1 lokację. Każdy inny gracz
@@ -14,11 +12,4 @@ effect: 'EDYKT Ery. Gracz Cieni: Przesuń swojego Agenta o 1 lokację. Każdy in
 
   '
 lore: Cienie dostają darmowy krok ewakuacji; reszta unika Gildii albo płaci.
-target_heresy: 0
-agents: 0
-creates_hook: false
-breaks_rule: false
-gold: 0
-arrest: false
-status: prototyp
 ---
