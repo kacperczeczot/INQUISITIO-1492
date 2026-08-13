@@ -20,6 +20,9 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = PROJECT_ROOT / "game_config.yaml"
 
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 def load_config() -> dict:
     with open(CONFIG_PATH, encoding="utf-8") as f:
@@ -270,6 +273,24 @@ def sync_setups(cfg: dict) -> list[str]:
     return ["Zsynchronizowano playtesting/setups.md"]
 
 
+def sync_cards(cfg: dict) -> list[str]:
+    """Sync card markdown files (parameters + effect text) and KATALOG.md from game_config.yaml."""
+    from tools.pnp.generate_card_text import sync_card_markdowns
+    from tools.cards.build_catalog import main as build_catalog_main
+
+    # 1. Sync card parameters (cost, layer, type) & effect text
+    updated_files = sync_card_markdowns(dry_run=False)
+
+    # 2. Rebuild KATALOG.md
+    build_catalog_main()
+
+    res = [f"Zsynchronizowano {len(cfg.get('cards', {}))} kart w game/cards/"]
+    if updated_files:
+        res.append(f"Zaktualizowano opisy efektów dla {len(updated_files)} kart")
+    res.append("Przegenerowano game/cards/KATALOG.md")
+    return res
+
+
 def main():
     print("═══════════════════════════════════════════════════════")
     print("INQUISITIO-1492 — SYNCHRONIZACJA KONFIGURACJI")
@@ -296,8 +317,8 @@ def main():
     print(f"   ⚔️ Gildia: Upadki {v['gildia_cieni']['falls']}")
     print()
 
-    # Sync docs
-    print("📝 Synchronizuję dokumentację zasad z game_config.yaml...")
+    # Sync docs & cards
+    print("📝 Synchronizuję dokumentację i pliki kart z game_config.yaml...")
     for ch in sync_ksiega(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_teach_sheet(cfg):
@@ -306,17 +327,20 @@ def main():
         print(f"   ✅ {ch}")
     for ch in sync_setups(cfg):
         print(f"   ✅ {ch}")
+    for ch in sync_cards(cfg):
+        print(f"   ✅ {ch}")
 
     print()
     print("═══════════════════════════════════════════════════════")
-    print("✅ KONFIGURACJA ZSYNCHRONIZOWANA DLA WSZYSTKICH PLIKÓW!")
+    print("✅ KONFIGURACJA ZSYNCHRONIZOWANA DLA WSZYSTKICH PLIKÓW I KART!")
     print("═══════════════════════════════════════════════════════")
     print()
     print("Następne kroki:")
-    print("  1. Sprawdź zmiany: git diff docs/ playtesting/")
+    print("  1. Sprawdź zmiany: git diff docs/ game/cards/ playtesting/")
     print("  2. Uruchom testy: sim/.venv/bin/pytest sim/tests/ -q")
 
 
 if __name__ == "__main__":
     main()
+
 
