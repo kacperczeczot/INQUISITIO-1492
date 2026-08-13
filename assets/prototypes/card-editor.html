@@ -406,9 +406,10 @@ textarea {
   opacity: 0.8;
 }
 
-.card-heresy-text {
-  margin-top: 1mm;
+.card-proto .heresy-caption {
+  margin-top: 0.8mm;
   font-size: 7.5pt;
+  line-height: 1.25;
   color: #6e1818;
   font-weight: 600;
 }
@@ -641,17 +642,17 @@ pre.code-out {
             <div class="type-badge type-akcja" id="prev-type">AKCJA</div>
           </div>
           <div class="stat-row" id="prev-stats">
-            <span class="badge badge-gold"><span class="coin"></span><span id="prev-cost">2</span></span>
-            <span class="badge badge-heresy-hot">🔥 <span id="prev-heresy">1</span></span>
+            <span class="badge badge-gold" id="prev-cost-badge"><span class="coin"></span><span id="prev-cost">2</span></span>
+            <span class="badge badge-heresy-hot" id="prev-heresy-badge">🔥 +<span id="prev-heresy">1</span></span>
+          </div>
+          <div class="heresy-caption" id="prev-heresy-text">
+            Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.
           </div>
         </div>
         <div class="card-art"></div>
         <div class="card-main">
           <div class="card-effect" id="prev-effect">
             Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.
-          </div>
-          <div class="card-heresy-text" id="prev-heresy-text">
-            Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.
           </div>
           <div class="card-lore" id="prev-lore">
             Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
@@ -803,8 +804,21 @@ function updateLivePreview() {
   typeBadge.textContent = type.toUpperCase();
   typeBadge.className = `type-badge type-${type}`;
 
-  document.getElementById('prev-cost').textContent = cost;
-  document.getElementById('prev-heresy').textContent = heresy;
+  const costBadge = document.getElementById('prev-cost-badge');
+  if (cost > 0) {
+    costBadge.style.display = 'inline-flex';
+    document.getElementById('prev-cost').textContent = cost;
+  } else {
+    costBadge.style.display = 'none';
+  }
+
+  const heresyBadge = document.getElementById('prev-heresy-badge');
+  if (heresy > 0) {
+    heresyBadge.style.display = 'inline-flex';
+    document.getElementById('prev-heresy').textContent = heresy;
+  } else {
+    heresyBadge.style.display = 'none';
+  }
 
   document.getElementById('prev-effect').innerHTML = effect.replace(/\n/g, '<br>') || '<em>Brak treści reguły...</em>';
   
