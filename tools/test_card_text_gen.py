@@ -68,11 +68,22 @@ def format_card_text(cid: str, data: dict) -> str:
     theresy = data.get("target_heresy")
 
     if act == "move_agent":
-        if agents == 1:
+        if data.get("free_agent"):
+            if agents == 1:
+                parts.append("Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację.")
+            else:
+                parts.append("Uwolnij swojego aresztowanego Agenta z Lochów.")
+        elif condition == "has_double_agent":
+            parts.append("Przesuń tego Podwójnego o 1 lokację.")
+        elif data.get("move_relic"):
+            parts.append("Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.")
+        elif agents == 1:
             parts.append("Przesuń swojego Agenta o 1 lokację.")
         elif agents and agents > 1:
             noun = declension_pl(agents, "lokację", "lokacje", "lokacji")
             parts.append(f"Przesuń swojego Agenta o {agents} {noun}.")
+        else:
+            parts.append("Przesuń swojego Agenta o 1 lokację.")
     elif act == "gain_gold":
         if gold == 1:
             parts.append("Zyskaj złoto.")
@@ -82,12 +93,15 @@ def format_card_text(cid: str, data: dict) -> str:
         if theresy:
             parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "frame_rival":
-        tscope = data.get("target_scope")
-        prefix = "Wskaż tego rywala:" if tscope == "triggering_rival" else "Wskaż rywala:"
-        if theresy == 1:
-            parts.append(f"{prefix} +1 Herezja.")
-        elif theresy and theresy > 1:
-            parts.append(f"{prefix} +{theresy} Herezja.")
+        if data.get("change_vote"):
+            parts.append("Zmień swój głos.")
+        else:
+            tscope = data.get("target_scope")
+            prefix = "Wskaż tego rywala:" if tscope == "triggering_rival" else "Wskaż rywala:"
+            if theresy == 1:
+                parts.append(f"{prefix} +1 Herezja.")
+            elif theresy and theresy > 1:
+                parts.append(f"{prefix} +{theresy} Herezja.")
     elif act == "send_inquisitor":
         if tloc == "agent_location":
             parts.append("Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta.")
@@ -114,7 +128,12 @@ def format_card_text(cid: str, data: dict) -> str:
         else:
             parts.append("Wykonaj Przesłuchanie.")
     elif act == "creates_hook":
-        if condition == "rival_in_dungeon_or_inquisitor":
+        if data.get("mark_fall") and condition == "rival_has_hook_or_double_or_autodafe":
+            parts.append("Oznacz Upadek wobec tego rywala.")
+        elif data.get("penalty_heresy"):
+            pen = data.get("penalty_heresy", 3)
+            parts.append(f"Wymuś spełnienie Haka. Odmowa: +{pen} Herezja.")
+        elif condition == "rival_in_dungeon_or_inquisitor":
             parts.append("Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.")
         elif condition == "heresy_gte_4":
             parts.append("Załóż Hak na rywala z Herezją ≥ 4.")
@@ -136,18 +155,6 @@ def format_card_text(cid: str, data: dict) -> str:
             parts.append("Ewakuuj do 2 Relikwii z lokacji Twoich Agentów.")
         else:
             parts.append("Ewakuuj Relikwię z tej lokacji.")
-    elif act == "free_agent":
-        if agents == 1:
-            parts.append("Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację.")
-        else:
-            parts.append("Uwolnij swojego aresztowanego Agenta z Lochów.")
-    elif act == "move_double_agent":
-        parts.append("Przesuń tego Podwójnego o 1 lokację.")
-    elif act == "move_relic":
-        parts.append("Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.")
-    elif act == "force_hook":
-        pen = data.get("penalty_heresy", 3)
-        parts.append(f"Wymuś spełnienie Haka. Odmowa: +{pen} Herezja.")
     elif act == "check_victory":
         band = data.get("target_heresy_band")
         fb = data.get("fallback_heresy")
@@ -159,8 +166,6 @@ def format_card_text(cid: str, data: dict) -> str:
         parts.append("Zyskaj Fragment.")
         if condition == "agent_in_dungeon_or_tribunal":
             parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.")
-    elif act == "change_vote":
-        parts.append("Zmień swój głos.")
     elif act == "mark_fall":
         parts.append("Oznacz Upadek wobec tego rywala.")
 

@@ -225,7 +225,7 @@ cards:
     cost: 2
     agents: 1
     free_agent: true
-    action: free_agent
+    action: move_agent
     target_loc: dungeon
     tags:
     - move
@@ -246,7 +246,7 @@ cards:
     layer: B
     cost: 1
     heresy: 1
-    action: move_double_agent
+    action: move_agent
     condition: has_double_agent
     tags:
     - double
@@ -257,7 +257,7 @@ cards:
     layer: C
     cost: 2
     move_relic: true
-    action: move_relic
+    action: move_agent
     target_loc: neighbor_location
     tags:
     - relic
@@ -365,7 +365,7 @@ cards:
     heresy: 1
     decree: 1
     penalty_heresy: 3
-    action: force_hook
+    action: creates_hook
     breaks_rule: 1 wymuszenie Haka / gracza / Erę
     tags:
     - signature
@@ -538,7 +538,7 @@ cards:
     cost: 0
     change_vote: true
     vote_change_limit: 1
-    action: change_vote
+    action: frame_rival
     trigger: after_verdict_majority_revealed
     tags:
     - reaction
@@ -593,7 +593,7 @@ cards:
     cost: 3
     heresy: 2
     mark_fall: true
-    action: mark_fall
+    action: creates_hook
     condition: rival_has_hook_or_double_or_autodafe
     breaks_rule: Upadek tylko z odmowy Haka
     tags:

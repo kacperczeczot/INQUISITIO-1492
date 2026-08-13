@@ -87,23 +87,17 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 
 | Wartość `action` | Powiązane parametry dedykowane | Opis komendy i generowana fraza leksykonu |
 | :--- | :--- | :--- |
-| `move_agent` | `agents` | Przemieszcza własnego agenta o N lokacji (`Przesuń swojego Agenta o N lokacji.`) |
+| `move_agent` | `agents`, `free_agent`, `move_relic`, `target_loc`, `condition` | Przemieszcza agenta (własnego, Podwójnego, uwolnienie z Lochów lub ruch Relikwii) |
 | `gain_gold` | `gold`, `target_heresy` | Pozyskuje N złota z banku (`Zyskaj N złota.`) oraz opcjonalnie wskaż rywala (+N Herezja) |
-| `frame_rival` | `target_heresy`, `target_scope` | Przydziela rywalowi +N Herezji (`Wskaż (tego) rywala: +N Herezja.`) |
+| `frame_rival` | `target_heresy`, `target_scope`, `change_vote` | Przydziela rywalowi +N Herezji (`Wskaż rywala: +N Herezja.`) lub zmienia głos w Werdykcie |
 | `send_inquisitor` | `target_loc`, `inquisitor_send_limit` | Przesuwa Inkwizytora (`Przesuń Inkwizytora do lokacji ze swoim Agentem.`) |
 | `arrest` | `target_loc`, `arrest` | Aresztuje agenta rywala (`Aresztuj Agenta rywala w lokacji swojego Agenta.`) |
 | `interrogate` | `target_loc`, `bonus_on_heresy`, `interrogate_limit` | Przeprowadza Przesłuchanie (`Wykonaj Przesłuchanie na aresztowanym Agentem rywala.`) |
-| `creates_hook` | `condition`, `target_loc`, `verdict_weight`, `on_refusal`, `creates_hook` | Zakłada Hak na rywala (`Załóż Hak na rywala.`) |
+| `creates_hook` | `condition`, `target_loc`, `verdict_weight`, `on_refusal`, `creates_hook`, `penalty_heresy`, `mark_fall` | Zakłada Hak na rywala, wymusza realizację Haka lub oznacza Upadek Domu |
 | `autodafe` | `breaks_rule` | Wywołuje spalenie Autodafé (`Ogłoś Autodafé w lokacji Inkwizytora.`) |
 | `evacuate_relic` | `max_relics`, `condition`, `kurier_limit` | Ewakuuje Relikwie (`Ewakuuj Relikwię z tej lokacji.`) |
-| `free_agent` | `target_loc`, `agents` | Uwalnia własnego agenta z Lochów (`Uwolnij swojego aresztowanego Agenta z Lochów.`) |
-| `move_double_agent` | `condition` | Przesuwa Podwójnego Agenta (`Przesuń tego Podwójnego o 1 lokację.`) |
-| `move_relic` | `target_loc` | Przenosi Relikwię (`Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.`) |
-| `force_hook` | `decree`, `penalty_heresy` | Wymusza realizację Haka (`Wymuś spełnienie Haka. Odmowa: +N Herezja.`) |
 | `check_victory` | `decree`, `condition`, `target_heresy_band`, `fallback_heresy` | Sprawdza natychmiastowe zwycięstwo (Korony / Kabały z korektą Herezji) |
 | `grant_fragment` | `condition` | Pozyskuje Fragment Kodeksu (`Zyskaj Fragment.`) oraz opcjonalnie złoto alternatywne |
-| `change_vote` | `trigger`, `vote_change_limit` | Zmienia głos w Trybunale (`Zmień swój głos.`) |
-| `mark_fall` | `condition`, `on_refusal` | Oznacza Upadek rywala dla Gildii Cieni |
 
 ### 3. Filtry Lokacji (`target_loc`)
 
