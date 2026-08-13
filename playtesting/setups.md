@@ -26,20 +26,29 @@
 
 ---
 
-### Presety silnika (`sim`)
+### Presety silnika (`sim` — 16 kombinacji)
 
 | Kod | Skład |
 | :--- | :--- |
+| **3p (10 kombinacji):** | |
 | `3p-oficjum-alandalus-korona` | Oficjum + Cienie + Korona |
 | `3p-oficjum-kabala-gildia` | Oficjum + Kabała + Gildia |
 | `3p-cienie-korona-gildia` | Cienie + Korona + Gildia *(bez Oficjum)* |
 | `3p-oficjum-alandalus-gildia` | Oficjum + Cienie + Gildia |
+| `3p-oficjum-alandalus-kabala` | Oficjum + Cienie + Kabała |
+| `3p-oficjum-korona-gildia` | Oficjum + Korona + Gildia |
+| `3p-oficjum-korona-kabala` | Oficjum + Korona + Kabała |
+| `3p-cienie-korona-kabala` | Cienie + Korona + Kabała *(bez Oficjum)* |
+| `3p-cienie-kabala-gildia` | Cienie + Kabała + Gildia *(bez Oficjum)* |
+| `3p-korona-kabala-gildia` | Korona + Kabała + Gildia *(bez Oficjum)* |
+| **4p (5 kombinacji):** | |
 | `4p-core` | bez Gildii |
 | `4p-no-kabala` | bez Kabały |
 | `4p-no-korona` | bez Korony |
 | `4p-no-cienie` | bez Cieni |
 | `4p-no-oficjum` | bez Oficjum |
-| `5p-full` | wszystkie 5 |
+| **5p (1 kombinacja):** | |
+| `5p-full` | wszystkie 5 frakcji |
 
 ```bash
 cd sim && source .venv/bin/activate

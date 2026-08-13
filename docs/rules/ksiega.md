@@ -67,7 +67,7 @@ Wydarzenia ramowe są **obowiązkowe**. **Okno reakcji** — opcjonalne karty ty
      * `3 Lochy` ↔ `1 Trybunał`, `2 Pałac`, `5 Gildia`  
      * `4 Rynek` ↔ `2 Pałac`, `5 Gildia`  
      * `5 Gildia` ↔ `3 Lochy`, `4 Rynek`
-3. **Autodafé (procedura)** (max **co 2 Ery**): jeśli **Ogłoś** — w lokacji Inkwizytora każdy obecny Agent → właściciel **+1 Herezja**; połóż **1 Stos**; Relikwia → pula. **Wymuś Autodafé** (edykt) = to samo **bez** Stosu.
+3. **Autodafé (procedura)** (max **co 2 Ery**): jeśli **Ogłoś** — w lokacji Inkwizytora: każdy obecny Agent rywala w strefie **Czystej (0–3 Herezji)** → trafia do **Aresztu w Lochach** (+1 Herezja dla właściciela, bez Stosu); w strefie **Obserwowanej lub Krytycznej (≥4 Herezji)** → **spalony na Stosie** (+1 Herezja dla właściciela, **+1 Stos** dla Oficjum); Relikwia → pula. **Wymuś Autodafé** (edykt) = to samo **bez** Stosu.
 
 → [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md) · hasło: [Inkwizytor](slownik.md#inkwizytor), [Autodafé](slownik.md#autodafé)
 
@@ -154,11 +154,11 @@ Natychmiast, gdy spełnisz warunek frakcji:
 
 | Frakcja | Warunek (C — stół) |
 | :--- | :--- |
-| Święte Oficjum | **3 Stosy** **lub** skazania Werdyktem (**2** przy ≤3p, **3** przy 4–5p) |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski) |
-| Korona | **2** Dekrety + ≥1 Hak (od Ery **7**@3p / **6**@4–5p); na **5p** też 1 Dekret + 2 Haki od Ery 6 |
-| Kabała | **3 Fragmenty** + Herezja **4–6** (od Ery **7**@3p / **6**@4p / **5**@5p) |
-| Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
+| Święte Oficjum | **3 Stosy**@3p / **4 Stosy**@4p / **5 Stosów**@5p **lub** skazania Werdyktem (**2** przy 3p, **3** przy 4p, **4** przy 5p) |
+| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 6+ przy 4–5p; **3 Relikwie** w 3p bez Oficjum) |
+| Korona | **2** Dekrety + ≥1 Hak (od Ery **7**@3p / **6**@4–5p); na **4–5p** też 1 Dekret + 2 Haki od Ery 6 |
+| Kabała | **3 Fragmenty** + Herezja **4–6** (od Ery **7**@3p / **6**@4–5p) |
+| Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum lub 5p |
 
 Sim teach (A/B): inne progi / tie-break — nie drukuj osobno; szczegóły w silniku.
 
@@ -212,7 +212,7 @@ Zamrożone reguły (bez „ustal przy stole”):
 | Trickle złota | **+1** na początek swojej tury (E.II) |
 | Fizzle (brak lokacji/agentów) | bez Herezji |
 | Relikwia przy Autodafé | wraca do puli |
-| Werdykt | głosowanie **jawne** |
+| Werdykt | głosowanie **jawne** (na 4–5p Stos dla Oficjum tylko gdy Oficjum oskarżało) |
 | Podwójny | tylko ruch (bez głosu) |
 | Karty / Erę | **do 2** (zagranie lub pas) |
 | Talia Czasu | odkryj **1** edykt |
