@@ -90,6 +90,7 @@ class DramaMetrics:
     cards_played: int = 0
     legal_moves_sampled: int = 0
     deadlocks: int = 0  # eras where a player had zero legal plays
+    forced_passes: int = 0  # turns where player had no affordable cards
     eras: int = 0
 
 

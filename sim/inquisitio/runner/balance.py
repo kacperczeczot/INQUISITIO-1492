@@ -11,29 +11,75 @@ LAYERS = ("A", "B", "C")
 
 @dataclass(frozen=True)
 class BalanceGate:
-    max_share: float
-    min_share: float
-    max_deadlocks: float
-    min_accusations: float = 0.0
+    # Cel Ścisły (Target Band)
+    target_max: float
+    target_min: float
+    # Zakres Krytyczny (Red Line Boundary)
+    critical_max: float
+    critical_min: float
+    max_deadlocks: float = 0.5
+    min_accusations: float = 1.0
+
+    @property
+    def max_share(self) -> float:
+        return self.critical_max
+
+    @property
+    def min_share(self) -> float:
+        return self.critical_min
 
 
 def gate_for(setup: str, layer: str) -> BalanceGate:
-    """Gates: C live-ready; B mid; A teach. Bounds allow ~80-game sampling noise."""
+    """Gates: C live-ready; B mid; A teach. Strict evaluation of Red Line critical bounds."""
     n = len(SETUP_PRESETS[setup])
     if layer == "C":
         if n <= 3:
-            return BalanceGate(0.52, 0.14, 0.5, min_accusations=1.0)
+            return BalanceGate(
+                target_max=0.38, target_min=0.28,
+                critical_max=0.45, critical_min=0.20,
+                max_deadlocks=0.5, min_accusations=1.0
+            )
         if n == 4:
-            return BalanceGate(0.50, 0.06, 0.5, min_accusations=1.0)
-        return BalanceGate(0.48, 0.05, 0.5, min_accusations=1.2)
+            return BalanceGate(
+                target_max=0.30, target_min=0.20,
+                critical_max=0.35, critical_min=0.15,
+                max_deadlocks=0.5, min_accusations=1.0
+            )
+        return BalanceGate(
+            target_max=0.24, target_min=0.16,
+            critical_max=0.30, critical_min=0.10,
+            max_deadlocks=0.5, min_accusations=1.2
+        )
     if layer == "B":
         if n <= 3:
-            return BalanceGate(0.55, 0.10, 0.5)
-        return BalanceGate(0.52, 0.03, 0.5)
+            return BalanceGate(
+                target_max=0.40, target_min=0.25,
+                critical_max=0.48, critical_min=0.15,
+                max_deadlocks=0.5, min_accusations=0.0
+            )
+        if n == 4:
+            return BalanceGate(
+                target_max=0.32, target_min=0.18,
+                critical_max=0.40, critical_min=0.10,
+                max_deadlocks=0.5, min_accusations=0.0
+            )
+        return BalanceGate(
+            target_max=0.26, target_min=0.14,
+            critical_max=0.32, critical_min=0.08,
+            max_deadlocks=0.5, min_accusations=0.0
+        )
     # A teach
     if n <= 3:
-        return BalanceGate(0.72, 0.05, 0.5)
-    return BalanceGate(0.65, 0.0, 0.5)
+        return BalanceGate(
+            target_max=0.45, target_min=0.20,
+            critical_max=0.55, critical_min=0.10,
+            max_deadlocks=0.5, min_accusations=0.0
+        )
+    return BalanceGate(
+        target_max=0.35, target_min=0.12,
+        critical_max=0.45, critical_min=0.05,
+        max_deadlocks=0.5, min_accusations=0.0
+    )
 
 
 def faction_shares(summary: BatchSummary) -> dict[str, float]:
@@ -48,10 +94,13 @@ def evaluate(summary: BatchSummary) -> tuple[bool, list[str]]:
     vals = list(shares.values())
     errors: list[str] = []
     mx, mn = max(vals), min(vals)
-    if mx > gate.max_share:
-        errors.append(f"max_share={mx:.2f}>{gate.max_share} wins={summary.wins}")
-    if mn < gate.min_share:
-        errors.append(f"min_share={mn:.2f}<{gate.min_share} wins={summary.wins}")
+
+    # Red line checks (Critical Failure)
+    if mx > gate.critical_max:
+        errors.append(f"CRITICAL OVERPOWER: max_share={mx:.2f}>{gate.critical_max} wins={summary.wins}")
+    if mn < gate.critical_min:
+        errors.append(f"CRITICAL UNDERPOWER: min_share={mn:.2f}<{gate.critical_min} wins={summary.wins}")
+
     if summary.deadlocks_avg > gate.max_deadlocks:
         errors.append(f"deadlocks={summary.deadlocks_avg:.2f}>{gate.max_deadlocks}")
     if summary.accusations_avg < gate.min_accusations:

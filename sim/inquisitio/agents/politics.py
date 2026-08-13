@@ -16,6 +16,24 @@ class PoliticsAgent:
             return None
         cards = load_all_cards()
         pl = state.players[faction]
+
+        # --- HEURYTYKA TAKTYCZNEGO PASA (Oszczędzanie złota na Karty Signature / Finishery) ---
+        # Jeśli gracz ma na ręce kluczową kartę Signature/Finisher, której jeszcze nie może opłacić (np. brakuje 1zł),
+        # a zagranie obecnych tanich kart wyczyściłoby skarbiec, gracz pasuje, aby w kolejnej turze odłożyć złoto na Signature.
+        finisher_in_hand = [
+            cards[cid] for cid in pl.hand
+            if cards[cid].type == "signature" or "autodafe" in cards[cid].tags or "relic" in cards[cid].tags or "decree" in cards[cid].tags or "fragment" in cards[cid].tags
+        ]
+        for fin in finisher_in_hand:
+            if fin.cost_gold > pl.gold and (pl.gold + 1 >= fin.cost_gold):
+                # Jeśli jedyne dostępne zgrania to tanie karty ścinające złoto do 0, a finiszer wygrywa wkrótce:
+                if legal:
+                    best_cheap_score = max(cards[cid].cost_gold for cid in legal)
+                    if best_cheap_score > 0 and pl.gold - best_cheap_score < fin.cost_gold - 1:
+                        # Spasuj taktycznie, aby zachować złoto na finiszer w następnej turze
+                        if self.rng.random() < 0.75:
+                            return None
+
         scored: list[tuple[float, str]] = []
         for cid in legal:
             c = cards[cid]

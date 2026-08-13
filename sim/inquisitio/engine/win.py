@@ -9,15 +9,14 @@ def check_winner(state: GameState) -> FactionId | None:
     for fid in state.turn_order:
         pl = state.players[fid]
         if fid == FactionId.SWIETE_OFICJUM:
-            # C: 3; A/B: 3 always (A nasłanie was too easy at 2)
+            # C: 4 Stosy dla 4-5p, 3 dla <=3p (zbięcie dominacji Oficjum)
             if state.layer == "C":
-                stack_need = 3
+                stack_need = 5 if len(state.turn_order) >= 5 else (4 if len(state.turn_order) == 4 else 3)
             else:
                 stack_need = 3 if state.layer == "A" else (
                     2 if len(state.turn_order) <= 3 else 3
                 )
-            condemn_need = 2 if len(state.turn_order) <= 3 else 3
-            # B teach: Stosy path only
+            condemn_need = 4 if len(state.turn_order) >= 5 else (3 if len(state.turn_order) == 4 else 2)
             condemn_ok = (
                 state.layer != "B" and len(pl.condemned_rivals) >= condemn_need
             )
@@ -28,16 +27,15 @@ def check_winner(state: GameState) -> FactionId | None:
                 pl.path_via_double
                 or pl.avoided_autodafe
                 or state.sea_route_open
+                or (len(state.turn_order) >= 4 and state.era >= 6)
             )
             if state.layer == "A":
                 if pl.relics_evacuated >= 2 and state.era >= 5:
                     return fid
-            elif pl.relics_evacuated >= 2 and path_ok:
+            elif pl.relics_evacuated >= 2 and (path_ok or len(state.turn_order) >= 5):
                 return fid
         elif fid == FactionId.KORONA_BORGIOWIE:
-            # A: teach (kb-04/05) — finisz mid-game dopiero B/C; A = tie-break
             hooks_ever = distinct_hook_victims_ever(state, fid)
-            # C: 2 Dekrety + ≥1 Hak; Era 7 w 3p, Era 6 w 4–5p
             era_need = 7 if len(state.turn_order) <= 3 else 6
             if (
                 state.layer == "C"
@@ -46,10 +44,9 @@ def check_winner(state: GameState) -> FactionId | None:
                 and state.era >= era_need
             ):
                 return fid
-            # 5p floor: late alternate (1 Dekret + 2 Haki) od Ery 6
             if (
                 state.layer == "C"
-                and len(state.turn_order) >= 5
+                and len(state.turn_order) >= 4
                 and pl.decrees_played >= 1
                 and hooks_ever >= 2
                 and state.era >= 6
@@ -57,7 +54,7 @@ def check_winner(state: GameState) -> FactionId | None:
                 return fid
         elif fid == FactionId.KABALA_TOLEDO:
             if state.layer == "A":
-                pass  # Fragmenty tylko tie-break
+                pass
             elif state.layer == "B":
                 if (
                     pl.fragments >= 3
@@ -68,17 +65,12 @@ def check_winner(state: GameState) -> FactionId | None:
             elif (
                 pl.fragments >= 3
                 and heresy_zone(pl.heresy) == "obserwowana"
-                and state.era
-                >= (
-                    5
-                    if len(state.turn_order) >= 5
-                    else (7 if len(state.turn_order) <= 3 else 6)
-                )
+                and state.era >= (6 if len(state.turn_order) >= 4 else 7)
             ):
                 return fid
         elif fid == FactionId.GILDIA_CIENI:
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
-            falls_need = 3 if state.layer == "B" or no_oficjum else 2
+            falls_need = 3 if state.layer == "B" or no_oficjum or len(state.turn_order) >= 5 else 2
             if pl.falls >= falls_need:
                 return fid
     return None

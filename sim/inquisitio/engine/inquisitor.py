@@ -89,7 +89,7 @@ def resolve_autodafe(
     state.inquisitor_mode = InquisitorMode.AUTODAFE
     state.metrics.autodafe_count += 1
     state.eras_since_autodafe = 0
-    hit_rival = False
+    hit_rival_dirty = False
     so = None
     for fid, pl in state.players.items():
         if fid.value == "swiete-oficjum":
@@ -97,17 +97,22 @@ def resolve_autodafe(
         for ag in pl.agents:
             if ag.location == loc and not ag.arrested:
                 add_heresy(state, fid, 1, reason=f"autodafe:{loc}")
-                if so and fid != so:
-                    hit_rival = True
-    if award_stack and so and hit_rival:
+                if pl.heresy <= 3:
+                    ag.arrested = True
+                    ag.location = "lochy"
+                    state.add_log(f"Autodafé (Czysta <=3): {fid.value} agent arrested -> Lochy")
+                else:
+                    if so and fid != so:
+                        hit_rival_dirty = True
+                    state.add_log(f"Autodafé (Obserwowana/Krytyczna >=4): {fid.value} agent burned")
+    if award_stack and so and hit_rival_dirty:
         so_pl = state.players[so]
-        # C: dampen free Stosy once Oficjum is already at 2 (anti 5p snowball)
         if state.layer == "C" and so_pl.stacks >= 2 and not force:
             state.add_log("Autodafé: pressure only (Oficjum at 2+ Stosy)")
         else:
             so_pl.stacks += 1
             state.add_log(f"Autodafé stack -> {so_pl.stacks}")
-    elif so and hit_rival and not award_stack:
+    elif so and hit_rival_dirty and not award_stack:
         state.add_log("Autodafé: pressure only (no Oficjum stack)")
     state.inquisitor_mode = InquisitorMode.PATROL
     state.add_log(f"Autodafé at {loc}")

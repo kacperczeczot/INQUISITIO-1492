@@ -22,7 +22,7 @@ def test_setup_preset_size(setup: str):
 @pytest.mark.parametrize("layer", PRODUCT_LAYERS)
 def test_balance_matrix_product(setup: str, layer: str):
     """Every documented composition must pass win-share + health gates."""
-    games = 100
+    games = 300
     summary = run_batch(
         games=games, setup=setup, seed=42, layer=layer, threshold=7
     )
@@ -84,7 +84,7 @@ def test_matrix_cli_helper_covers_all_presets():
 def test_balance_c_multi_seed_core_setups(setup: str, seed: int):
     """Core compositions must hold across seeds on layer C (no seed-42 overfitting)."""
     summary = run_batch(
-        games=100, setup=setup, seed=seed, layer="C", threshold=7
+        games=300, setup=setup, seed=seed, layer="C", threshold=7
     )
     ok, errors = evaluate(summary)
     assert ok, f"{setup} seed={seed} {errors} wins={summary.wins}"

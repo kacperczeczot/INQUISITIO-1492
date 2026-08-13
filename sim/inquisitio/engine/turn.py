@@ -55,20 +55,26 @@ def play_era(state: GameState, rng: random.Random, agent_choose) -> FactionId | 
     _reset_era_flags(state)
     era_start_inquisitor(state, rng)
 
+    # Phase E.II — Plan / Intryga (2 rounds of card play or pass)
+    for round_num in range(2):
+        for fid in state.turn_order:
+            pl = state.players[fid]
+            if round_num == 0:
+                pl.gold += 1
+                state.add_log(f"{fid.value} gold trickle +1 (now {pl.gold})")
+            legal = _legal_card_ids(state, fid)
+            state.metrics.legal_moves_sampled += len(legal)
+            if not legal:
+                state.metrics.forced_passes += 1
+                state.add_log(f"{fid.value} pass (no legal cards)")
+            else:
+                choice = agent_choose(state, fid, legal)
+                if choice:
+                    play_card(state, fid, choice, rng)
+                else:
+                    state.add_log(f"{fid.value} pass (savings)")
+
     for fid in state.turn_order:
-        pl = state.players[fid]
-        pl.gold += 1
-        state.add_log(f"{fid.value} gold trickle +1 (now {pl.gold})")
-        legal = _legal_card_ids(state, fid)
-        state.metrics.legal_moves_sampled += len(legal)
-        if not legal:
-            state.metrics.deadlocks += 1
-            state.add_log(f"{fid.value} deadlock (no legal cards)")
-            _draw(state, fid, 1)
-            continue
-        choice = agent_choose(state, fid, legal)
-        if choice:
-            play_card(state, fid, choice, rng)
         # optional hook force (A teach has Haki on kb/gc cards)
         if state.layer in ("A", "B", "C"):
             targets = active_hook_targets(state, fid)
