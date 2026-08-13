@@ -8,7 +8,7 @@
 Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Podwójni.  
 **Werdykt fun = sesja ludzka** ([`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md)).
 
-Setupy: [`setups.md`](setups.md) · Silnik: [`../sim/README.md`](../sim/README.md).
+Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) · Silnik: [`../sim/README.md`](../sim/README.md).
 
 ## Hipotezy (otwarte na stole)
 

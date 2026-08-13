@@ -48,7 +48,12 @@ def _legal_card_ids(state: GameState, fid: FactionId) -> list[str]:
     return legal
 
 
-def play_era(state: GameState, rng: random.Random, agent_choose) -> FactionId | None:
+def play_era(
+    state: GameState,
+    rng: random.Random,
+    agent_choose,
+    win_overrides: dict | None = None,
+) -> FactionId | None:
     """One era. agent_choose(state, fid, legal_ids) -> card_id | None."""
     state.metrics.eras += 1
     state.eras_since_autodafe += 1
@@ -168,16 +173,21 @@ def play_era(state: GameState, rng: random.Random, agent_choose) -> FactionId | 
         resolve_time_edict(state, edict, rng)
         state.time_discard.append(edict)
 
-    w = check_winner(state)
+    w = check_winner(state, win_overrides)
     if w:
         state.winner = w
         state.add_log(f"WINNER {w.value}")
     return w
 
 
-def play_game(state: GameState, rng: random.Random, agent_choose) -> FactionId:
+def play_game(
+    state: GameState,
+    rng: random.Random,
+    agent_choose,
+    win_overrides: dict | None = None,
+) -> FactionId:
     while state.era <= state.max_eras and state.winner is None:
-        play_era(state, rng, agent_choose)
+        play_era(state, rng, agent_choose, win_overrides=win_overrides)
         if state.winner:
             return state.winner
         if state.era >= state.max_eras:
@@ -188,3 +198,4 @@ def play_game(state: GameState, rng: random.Random, agent_choose) -> FactionId:
     state.winner = end_game_tiebreak(state)
     state.add_log(f"TIEBREAK WINNER {state.winner.value}")
     return state.winner
+

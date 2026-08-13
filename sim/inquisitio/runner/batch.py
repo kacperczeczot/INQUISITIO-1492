@@ -36,8 +36,8 @@ class BatchSummary:
     avg_heresy_end: float = 0.0
     passes_forced_pct: float = 0.0
 
-def _run_single_game_tuple(args: tuple[str, int, int, str]) -> dict:
-    setup_name, gseed, threshold, layer = args
+def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict:
+    setup_name, gseed, threshold, layer, win_overrides = args
     rng = random.Random(gseed)
     state = new_game(setup=setup_name, seed=gseed, threshold=threshold, layer=layer)
     agent = PoliticsAgent(rng)
@@ -45,7 +45,7 @@ def _run_single_game_tuple(args: tuple[str, int, int, str]) -> dict:
     def choose(st: GameState, fid: FactionId, legal: list[str]):
         return agent.choose_card(st, fid, legal)
 
-    winner = play_game(state, rng, choose)
+    winner = play_game(state, rng, choose, win_overrides=win_overrides)
     m = state.metrics
 
     gold_sum = sum(pl.gold for pl in state.players.values())
@@ -77,6 +77,7 @@ def run_batch(
     setup: str | None = None,
     seed: int = 42,
     layer: str = "C",
+    win_overrides: dict | None = None,
 ) -> BatchSummary:
     setup_name = setup or (
         "5p-full"
@@ -111,7 +112,7 @@ def run_batch(
     if games >= 100:
         max_workers = min(os.cpu_count() or 4, 16)
         task_args = [
-            (setup_name, seed + i * 17, threshold, layer)
+            (setup_name, seed + i * 17, threshold, layer, win_overrides)
             for i in range(games)
         ]
         with ProcessPoolExecutor(max_workers=max_workers) as executor:
@@ -138,7 +139,7 @@ def run_batch(
             totals["heresy_end"] += res["heresy_sum"]
     else:
         for i in range(games):
-            res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer))
+            res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer, win_overrides))
             wins[res["winner"]] += 1
             eras_list.append(res["eras"])
             if res["is_limit"]:
