@@ -649,9 +649,9 @@ pre.code-out {
       </label>
     </div>
 
-    <!-- Group 1: Targets & Values -->
-    <div class="form-row">
-      <div class="form-group">
+    <!-- Single Unified Flex-Wrap Container for all Advanced Parameters -->
+    <div class="form-row adv-fields-container">
+      <div class="form-group form-group-medium">
         <label for="card-target-loc">Strefa Celu</label>
         <select id="card-target-loc">
           <option value="" selected>Brak (Domyślna)</option>
@@ -664,7 +664,8 @@ pre.code-out {
           <option value="guild_or_market">Gildia lub Rynek</option>
         </select>
       </div>
-      <div class="form-group">
+
+      <div class="form-group form-group-medium">
         <label for="card-target-scope">Zakres Celu</label>
         <select id="card-target-scope">
           <option value="" selected>Dowolny rywal</option>
@@ -672,26 +673,23 @@ pre.code-out {
           <option value="triggering_rival">Rywal wyzwalający</option>
         </select>
       </div>
-    </div>
 
-    <div class="form-row">
       <div class="form-group form-group-short">
         <label for="card-target-heresy">Herezja Rywala (+🔥)</label>
         <input type="number" id="card-target-heresy" value="" min="0" max="5" placeholder="0"/>
       </div>
+
       <div class="form-group form-group-short">
         <label for="card-gold">Zysk Złota</label>
         <input type="number" id="card-gold" value="" min="0" max="10" placeholder="0"/>
       </div>
+
       <div class="form-group form-group-short">
         <label for="card-agents">Ruchy Agentów</label>
         <input type="number" id="card-agents" value="" min="0" max="5" placeholder="0"/>
       </div>
-    </div>
 
-    <!-- Group 2: Conditions & Triggers -->
-    <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-medium">
         <label for="card-condition">Warunek Aktywacji</label>
         <select id="card-condition">
           <option value="" selected>Brak warunku</option>
@@ -707,7 +705,8 @@ pre.code-out {
           <option value="heresy_gte_4">Herezja rywala ≥ 4</option>
         </select>
       </div>
-      <div class="form-group">
+
+      <div class="form-group form-group-medium">
         <label for="card-trigger">Trigger Reakcji</label>
         <select id="card-trigger">
           <option value="" selected>Brak wyzwalacza</option>
@@ -715,15 +714,12 @@ pre.code-out {
           <option value="after_verdict_majority_revealed">Po ujawnieniu większości Werdyktu</option>
         </select>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="card-breaks-rule">Baner Zniesienia Reguły</label>
-      <input type="text" id="card-breaks-rule" value="" placeholder="np. Autodafé z ręki co 2 Ery"/>
-    </div>
+      <div class="form-group form-group-medium">
+        <label for="card-breaks-rule">Baner Zniesienia Reguły</label>
+        <input type="text" id="card-breaks-rule" value="" placeholder="np. Autodafé z ręki co 2 Ery"/>
+      </div>
 
-    <!-- Group 3: Detailed Faction Flags -->
-    <div class="form-row">
       <label class="form-group checkbox-item" id="group-arrest-flag">
         <input type="checkbox" id="card-arrest-flag">
         <span>Aresztowanie Agenta</span>
@@ -736,9 +732,7 @@ pre.code-out {
         <input type="checkbox" id="card-no-move-limit">
         <span>Zakaz Ruchu w Reakcji</span>
       </label>
-    </div>
 
-    <div class="form-row">
       <div class="form-group form-group-short">
         <label for="card-decree">Dekret Królewski</label>
         <input type="number" id="card-decree" value="" min="0" max="3" placeholder="0"/>
@@ -751,31 +745,27 @@ pre.code-out {
         <label for="card-max-relics">Max Relikwii</label>
         <input type="number" id="card-max-relics" value="" min="1" max="2" placeholder="1"/>
       </div>
-    </div>
 
-    <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-medium">
         <label for="card-on-refusal">Odmowa Haka</label>
         <select id="card-on-refusal">
           <option value="" selected>Brak (Odmowa ze złota)</option>
           <option value="mark_fall">Oznacz Upadek Domu</option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-medium">
         <label for="card-bonus-on-heresy">Bonus za Herezję</label>
         <select id="card-bonus-on-heresy">
           <option value="" selected>Brak</option>
           <option value="grant_fragment">Fragment Kodeksu</option>
         </select>
       </div>
-    </div>
 
-    <div class="form-row">
       <div class="form-group form-group-short">
         <label for="card-penalty-heresy">Kara Herezji za Odmowę</label>
         <input type="number" id="card-penalty-heresy" value="" min="1" max="5" placeholder="3"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-medium">
         <label for="card-heresy-band">Pasmo Herezji Kabały</label>
         <input type="text" id="card-heresy-band" value="" placeholder="4, 6"/>
       </div>
@@ -783,10 +773,7 @@ pre.code-out {
         <label for="card-fallback-heresy">Korekta Herezji</label>
         <input type="number" id="card-fallback-heresy" value="" min="1" max="10" placeholder="5"/>
       </div>
-    </div>
 
-    <!-- Group 4: Anti-AP Limits -->
-    <div class="form-row">
       <div class="form-group form-group-short">
         <label for="card-limit-inq">Limit Nasłania Inkwizytora</label>
         <input type="number" id="card-limit-inq" value="" min="0" max="1" placeholder="0"/>
