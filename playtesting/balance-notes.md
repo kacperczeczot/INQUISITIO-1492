@@ -97,9 +97,30 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 | **Kabała z Toledo** | `kt-03`, `kt-09`, `kt-10` | `kt-03` = **0 zł**; `kt-09` = **1 zł**; `kt-10` = **1 zł** | Podniesienie płynności skarbcowej Kabały w tłoku z 9.2% do 11.8% -> 20.0%. |
 | **Korona & Borgiowie** | `kb-04`, `kb-05`, `kb-07` | `kb-04` = **1 zł**; `kb-05` = **2 zł**; `kb-07` = **2 zł**; Era wygranej = **5**@4–5p | Zbalansowanie wybuchu wygranych Korony w Erze 5 w setupie `4p-core`. |
 | **Gildia Cieni** | `gc-08`, `win.py` | `gc-08` koszt = **1 zł**; Upadki na 5p = **3 Upadki** | Usunięcie biernych wygranych w Erze 3 z przypadkowych Haków rywali. |
-| **Cienie Al-Andalus** | `caa-05`, `caa-10` | `caa-05` koszt = **1 zł**; `caa-10` = **1 zł**; 3p bez Oficjum = **3 Relikwie** | Stabilizacja Cieni w samym centrum Celu Ścisłego (20.0%). |
+---
+
+## 📜 Chronologiczna Historia Zmian Balansu (Patch Notes)
+
+### 🟢 Patch v1.2 (2026-08-13) — Rekalibracja 5p & Asymetryczne Złoto Startowe
+- **Święte Oficjum (`5p Stosy`):** Obniżenie wymogu z 5 do **4 Stosy** w składzie 5-osobowym. 
+  - *Efekt:* Wzrost wygranych Oficjum w 5p z 10.5% do **20.4%** (trafienie w idealny punkt 20.0%) i skok wyniku balansu 5p z **`🔴 0.0 pkt`** do **`🟢 52.9 pkt`**.
+- **Złoto Startowe (`start_gold`):** Wprowadzenie asymetrycznego budżetu startowego wg liczby graczy (`3p: 3zł` | `4p: 3zł` | `5p: 2zł`).
+  - *Efekt:* Zmniejszenie startowej dominacji Korony/Gildii w tłoku 5p przy zachowaniu płynności bez pasa biedy w 3p i 4p.
+- **Limit Er (`max_eras`):** Audyt L1 wykazał, że 9 Er obniża deadlocki o połowę (z 7.1% do 3.5%). Zachowano 8 Er w konfiguracji bazowej z notatką analityczną do rekalibracji bramek.
+
+### 🟡 Patch v1.1 (2026-08-13) — Pakiet 5 Fal Optymalizacji Monte Carlo (5,000,000 Partii)
+- **Święte Oficjum:** `so-05` koszt reakcji = 0 zł.
+- **Kabała z Toledo:** `kt-03` = 0 zł, `kt-09` = 1 zł, `kt-10` = 1 zł (poprawa skarbu z 9.2% do 20.0%).
+- **Korona & Borgiowie:** `kb-04` = 1 zł, `kb-05` = 2 zł, `kb-07` = 2 zł, Era wygranej = 5 w 4–5p (stłumienie wybuchu w 4p-core).
+- **Gildia Cieni:** `gc-08` koszt = 1 zł, Upadki w 5p = 3 (usunięcie biernych wygranych w 3. Erze).
+- **Cienie Al-Andalus:** `caa-05` = 1 zł, `caa-10` = 1 zł, 3p bez Oficjum = 3 Relikwie.
+
+### ⚪ Patch v1.0 (Inicjalny) — Zrębowa Kalibracja Progowo-Ścieżkowa
+- Ustalenie progów oskarżenia (7 dla 3p, 8 dla 4–5p).
+- Definicja bazowych celów frakcyjnych i progu bezpiecznika 8 Er.
 
 ---
+
 
 ## 🛠️ Synchronizacja Konfiguracji (Single Source of Truth)
 
