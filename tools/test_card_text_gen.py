@@ -147,15 +147,16 @@ def format_card_text(cid: str, data: dict) -> str:
         pen = data.get("penalty_heresy", 3)
         parts.append(f"Wymuś spełnienie Haka. Odmowa: +{pen} Herezja.")
     elif act == "check_victory":
-        parts.append("zwycięstwo.")
+        band = data.get("target_heresy_band")
+        fb = data.get("fallback_heresy")
+        if band and fb:
+            parts.append(f"i Herezję {band[0]}–{band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji {band[0]}–{band[1]}: Ustaw swoją Herezję na {fb}.")
+        else:
+            parts.append("zwycięstwo.")
     elif act == "grant_fragment":
         parts.append("Zyskaj Fragment.")
     elif act == "grant_fragment_or_gold":
         parts.append("Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.")
-    elif act == "check_victory_or_set_heresy":
-        band = data.get("target_heresy_band", [4, 6])
-        fb = data.get("fallback_heresy", 5)
-        parts.append(f"i Herezję {band[0]}–{band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji {band[0]}–{band[1]}: Ustaw swoją Herezję na {fb}.")
     elif act == "change_vote":
         parts.append("Zmień swój głos.")
     elif act == "gain_gold_and_frame":

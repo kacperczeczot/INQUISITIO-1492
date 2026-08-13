@@ -100,10 +100,9 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 | `move_double_agent` | `condition` | Przesuwa Podwójnego Agenta (`Przesuń tego Podwójnego o 1 lokację.`) |
 | `move_relic` | `target_loc` | Przenosi Relikwię (`Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.`) |
 | `force_hook` | `decree`, `penalty_heresy` | Wymusza realizację Haka (`Wymuś spełnienie Haka. Odmowa: +N Herezja.`) |
-| `check_victory` | `decree`, `condition` | Sprawdza natychmiastowe zwycięstwo polityczne Korony |
+| `check_victory` | `decree`, `condition`, `target_heresy_band`, `fallback_heresy` | Sprawdza natychmiastowe zwycięstwo (Korony / Kabały z korektą Herezji) |
 | `grant_fragment` | *(brak)* | Pozyskuje Fragment Kodeksu (`Zyskaj Fragment.`) |
 | `grant_fragment_or_gold`| `condition` | Zyskuje Fragment lub złoto alternatywne |
-| `check_victory_or_set_heresy` | `condition`, `target_heresy_band`, `fallback_heresy` | Zwycięstwo Kabały lub korekta Herezji na 5 |
 | `change_vote` | `trigger`, `vote_change_limit` | Zmienia głos w Trybunale (`Zmień swój głos.`) |
 | `gain_gold_and_frame` | `gold`, `target_heresy` | Zyskuje złoto oraz przydziela rywalowi +N Herezji |
 | `mark_fall` | `condition`, `on_refusal` | Oznacza Upadek rywala dla Gildii Cieni |

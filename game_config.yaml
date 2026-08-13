@@ -483,7 +483,7 @@ cards:
     type: signature
     layer: C
     cost: 1
-    action: check_victory_or_set_heresy
+    action: check_victory
     condition: fragments_eq_3
     target_heresy_band:
     - 4

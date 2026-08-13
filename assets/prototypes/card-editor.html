@@ -643,7 +643,6 @@ pre.code-out {
           <option value="mark_fall">Oznaczenie Upadku</option>
           <option value="force_hook">Wymuszenie Haka</option>
           <option value="check_victory">Sprawdzenie Zwycięstwa</option>
-          <option value="check_victory_or_set_heresy">Rytuał Salomona</option>
           <option value="gain_gold_and_frame">Zatrute Złoto</option>
           <option value="custom">Ręczna edycja własna</option>
         </select>
@@ -989,15 +988,17 @@ function computeEffectText(spec) {
     const pen = spec.penalty_heresy || 3;
     parts.push(`Wymuś spełnienie Haka. Odmowa: +${pen} Herezja.`);
   } else if (act === "check_victory") {
-    parts.push("zwycięstwo.");
+    if (spec.target_heresy_band && spec.fallback_heresy) {
+      const band = spec.target_heresy_band;
+      const fb = spec.fallback_heresy;
+      parts.push(`i Herezję ${band[0]}–${band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji ${band[0]}–${band[1]}: Ustaw swoją Herezję na ${fb}.`);
+    } else {
+      parts.push("zwycięstwo.");
+    }
   } else if (act === "grant_fragment") {
     parts.push("Zyskaj Fragment.");
   } else if (act === "grant_fragment_or_gold") {
     parts.push("Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
-  } else if (act === "check_victory_or_set_heresy") {
-    const band = spec.target_heresy_band || [4, 6];
-    const fb = spec.fallback_heresy || 5;
-    parts.push(`i Herezję ${band[0]}–${band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji ${band[0]}–${band[1]}: Ustaw swoją Herezję na ${fb}.`);
   } else if (act === "change_vote") {
     parts.push("Zmień swój głos.");
   } else if (act === "gain_gold_and_frame") {
@@ -1040,7 +1041,7 @@ function computeAutoTags(action, type, heresy) {
     case 'change_vote': tags.add('reaction'); break;
     case 'mark_fall': tags.add('fall'); break;
     case 'force_hook': tags.add('decree'); tags.add('hook'); break;
-    case 'check_victory_or_set_heresy': tags.add('fragment'); break;
+    case 'check_victory': tags.add('fragment'); break;
     case 'gain_gold_and_frame': tags.add('gold'); tags.add('heresy'); break;
   }
   
@@ -1095,10 +1096,9 @@ const ACTION_FIELDS_MAP = {
   move_double_agent: ['card-condition'],
   move_relic: ['card-target-loc'],
   force_hook: ['card-decree', 'card-penalty-heresy'],
-  check_victory: ['card-decree', 'card-condition'],
+  check_victory: ['card-decree', 'card-condition', 'card-heresy-band', 'card-fallback-heresy'],
   grant_fragment: [],
   grant_fragment_or_gold: ['card-condition'],
-  check_victory_or_set_heresy: ['card-condition', 'card-heresy-band', 'card-fallback-heresy'],
   change_vote: ['card-trigger'],
   gain_gold_and_frame: ['card-gold', 'card-target-heresy'],
   mark_fall: ['card-condition', 'card-on-refusal']
