@@ -56,70 +56,69 @@ _CACHE: dict[str, Card] | None = None
 
 
 def _parse_md(path: Path) -> Card | None:
+    if path.name.upper() in ("SCHEMA.MD", "KATALOG.MD", "README.MD"):
+        return None
     text = path.read_text(encoding="utf-8")
-    if not text.startswith("---"):
-        return None
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return None
-    meta = yaml.safe_load(parts[1]) or {}
-    body = parts[2].strip()
-    if "id" not in meta:
-        return None
+    parts = text.split("---")
+    for i in range(len(parts) - 1):
+        try:
+            meta = yaml.safe_load(parts[i])
+            if isinstance(meta, dict) and "id" in meta and "faction" in meta:
+                body = "---".join(parts[i + 1 :]).strip()
+                cost_gold = int(meta.get("cost_gold", meta.get("cost") or 0))
+                effect = str(meta.get("effect") or "").strip()
+                heresy_text = str(meta.get("heresy_text") or "").strip()
+                lore = str(meta.get("lore") or "").strip()
+                legacy_note = str(meta.get("table_note") or "").strip()
+                if legacy_note and legacy_note not in lore:
+                    lore = f"{lore} {legacy_note}".strip() if lore else legacy_note
 
-    cost_gold = int(meta.get("cost_gold", meta.get("cost") or 0))
-    effect = str(meta.get("effect") or "").strip()
-    heresy_text = str(meta.get("heresy_text") or "").strip()
-    lore = str(meta.get("lore") or "").strip()
-    # legacy aliases — fold into lore, never keep as separate printed field
-    legacy_note = str(meta.get("table_note") or "").strip()
-    if legacy_note and legacy_note not in lore:
-        lore = f"{lore} {legacy_note}".strip() if lore else legacy_note
+                if not effect and body:
+                    m = re.search(
+                        r"\*\*Efekt:\*\*\s*(.+?)(?:\n\n|\*\*[A-ZĄĆĘŁŃÓŚŹŻ]|\Z)",
+                        body,
+                        re.S,
+                    )
+                    if m:
+                        effect = re.sub(r"\s+", " ", m.group(1)).strip()
+                    m2 = re.search(
+                        r"\*\*Przy stole:\*\*\s*(.+?)(?:\n\n|\*\*[A-ZĄĆĘŁŃÓŚŹŻ]|\Z)",
+                        body,
+                        re.S,
+                    )
+                    if m2:
+                        przy = re.sub(r"\s+", " ", m2.group(1)).strip()
+                        if przy and przy not in lore:
+                            lore = f"{lore} {przy}".strip() if lore else przy
 
-    # Legacy body: **Efekt:** / **Przy stole:** — only if fields missing
-    if not effect and body:
-        m = re.search(
-            r"\*\*Efekt:\*\*\s*(.+?)(?:\n\n|\*\*[A-ZĄĆĘŁŃÓŚŹŻ]|\Z)",
-            body,
-            re.S,
-        )
-        if m:
-            effect = re.sub(r"\s+", " ", m.group(1)).strip()
-        m2 = re.search(
-            r"\*\*Przy stole:\*\*\s*(.+?)(?:\n\n|\*\*[A-ZĄĆĘŁŃÓŚŹŻ]|\Z)",
-            body,
-            re.S,
-        )
-        if m2:
-            przy = re.sub(r"\s+", " ", m2.group(1)).strip()
-            if przy and przy not in lore:
-                lore = f"{lore} {przy}".strip() if lore else przy
-
-    return Card(
-        id=str(meta["id"]),
-        name=str(meta.get("name", meta["id"])),
-        faction=str(meta.get("faction", "")),
-        type=str(meta.get("type", "akcja")),
-        cost=cost_gold,
-        cost_gold=cost_gold,
-        heresy=int(meta.get("heresy") or 0),
-        target_heresy=int(meta.get("target_heresy") or 0),
-        location=meta.get("location"),
-        agents=int(meta.get("agents") or 0),
-        tags=list(meta.get("tags") or []),
-        creates_hook=bool(meta.get("creates_hook")),
-        breaks_rule=bool(meta.get("breaks_rule")),
-        gold=int(meta.get("gold") or 0),
-        arrest=bool(meta.get("arrest")),
-        layer=str(meta.get("layer") or "A"),
-        status=str(meta.get("status") or "prototyp"),
-        effect=effect,
-        heresy_text=heresy_text,
-        lore=lore,
-        table_note="",
-        text=body,
-        raw=meta,
-    )
+                return Card(
+                    id=str(meta["id"]),
+                    name=str(meta.get("name", meta["id"])),
+                    faction=str(meta.get("faction", "")),
+                    type=str(meta.get("type", "akcja")),
+                    cost=cost_gold,
+                    cost_gold=cost_gold,
+                    heresy=int(meta.get("heresy") or 0),
+                    target_heresy=int(meta.get("target_heresy") or 0),
+                    location=meta.get("location"),
+                    agents=int(meta.get("agents") or 0),
+                    tags=list(meta.get("tags") or []),
+                    creates_hook=bool(meta.get("creates_hook")),
+                    breaks_rule=bool(meta.get("breaks_rule")),
+                    gold=int(meta.get("gold") or 0),
+                    arrest=bool(meta.get("arrest")),
+                    layer=str(meta.get("layer") or "A"),
+                    status=str(meta.get("status") or "prototyp"),
+                    effect=effect,
+                    heresy_text=heresy_text,
+                    lore=lore,
+                    table_note="",
+                    text=body,
+                    raw=meta,
+                )
+        except Exception:
+            continue
+    return None
 
 
 def load_all_cards(force: bool = False) -> dict[str, Card]:

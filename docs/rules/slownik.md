@@ -133,7 +133,7 @@ Strefa Herezji **7–10**. Inni gracze mogą **Rzucić Oskarżenie** przeciw Tob
 
 ## Limit / Erę
 
-Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **2** karty Akcji na gracza na Erę. Autodafé: max co 2 Ery.  
+Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **max 2** karty Akcji na gracza na Erę (z opcją pasa). Autodafé: max co 2 Ery.  
 **Maksymalnie** (np. max 2 Haki) = twardy cap posiadania, nie to samo co Limit / Erę.
 
 **Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Może / musi](#może--musi) · leksykon §2

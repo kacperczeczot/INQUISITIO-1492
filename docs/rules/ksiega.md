@@ -60,14 +60,20 @@ Wydarzenia ramowe są **obowiązkowe**. **Okno reakcji** — opcjonalne karty ty
 ### E.I — Inkwizytor (faza)
 
 1. **Nasłanie (opcjonalne):** raz na gracza na Erę możesz wskazać kierunek / lokację docelową według reguł frakcji i kart. **Oficjum** ma stałą przewagę: przy konflikcie nasłań wygrywa Oficjum (chyba że karta specjalna mówi inaczej).
-2. **Patrol:** Inkwizytor przesuwa się o **0 lub 1** lokację wzdłuż **krawędzi grafu** (domyślnie jeden krok po najkrótszej ścieżce w stronę nasłania; **bez nasłania** — gracz z **najniższą Herezją** wybiera; remis → **1. gracz**). Sąsiedztwo: [`../../game/board/locations.md`](../../game/board/locations.md).
+2. **Patrol:** Inkwizytor przesuwa się o **0 lub 1** lokację wzdłuż **krawędzi grafu** (domyślnie jeden krok po najkrótszej ścieżce w stronę nasłania; **bez nasłania** — gracz z **najniższą Herezją** wybiera; remis → **1. gracz**).
+   * **Połączenia miejskie (graf):**  
+     * `1 Trybunał` ↔ `2 Pałac`, `3 Lochy`  
+     * `2 Pałac` ↔ `1 Trybunał`, `3 Lochy`, `4 Rynek`  
+     * `3 Lochy` ↔ `1 Trybunał`, `2 Pałac`, `5 Gildia`  
+     * `4 Rynek` ↔ `2 Pałac`, `5 Gildia`  
+     * `5 Gildia` ↔ `3 Lochy`, `4 Rynek`
 3. **Autodafé (procedura)** (max **co 2 Ery**): jeśli **Ogłoś** — w lokacji Inkwizytora każdy obecny Agent → właściciel **+1 Herezja**; połóż **1 Stos**; Relikwia → pula. **Wymuś Autodafé** (edykt) = to samo **bez** Stosu.
 
 → [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md) · hasło: [Inkwizytor](slownik.md#inkwizytor), [Autodafé](slownik.md#autodafé)
 
 ### E.II — Plan / Intryga (faza)
 
-Zaczynając od 1. gracza, naprzemiennie aż każdy zagra **2 karty** w tej Erze (także przy 3p i 5p):
+Zaczynając od 1. gracza, każdy wykonuje naprzemiennie **2 tury**. W swojej turze zagrywasz **zakrytą** kartę Akcji (płacąc jej koszt) **albo pasujesz**:
 
 1. **E.II.1** Na początek swojej tury: otrzymaj **+1 złoto** (trickle).
 2. **E.II.2** Zagraj **zakrytą** kartę Akcji pod wybraną lokacją (**płać złoto przy zagraniu**). → [Inicjacja karty](#suplement-i--inicjacja-karty--zdolności)
@@ -208,7 +214,7 @@ Zamrożone reguły (bez „ustal przy stole”):
 | Relikwia przy Autodafé | wraca do puli |
 | Werdykt | głosowanie **jawne** |
 | Podwójny | tylko ruch (bez głosu) |
-| Karty / Erę | **2** (3–5p) |
+| Karty / Erę | **do 2** (zagranie lub pas) |
 | Talia Czasu | odkryj **1** edykt |
 | Patrol bez nasłania | najniższa Herezja; remis → 1. gracz |
 | Limit Er / remis | 8 Er; najbliższy cel, potem najniższa Herezja |
