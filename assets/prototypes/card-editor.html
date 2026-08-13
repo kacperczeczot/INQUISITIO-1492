@@ -704,52 +704,130 @@ const AVAILABLE_TAGS = [
   'double', 'fall', 'reaction', 'signature', 'edict'
 ];
 
-// Rule Builder for Auto-generating Effect Text
-function computeEffectText(action, cost, heresy) {
-  switch (action) {
-    case 'move_agent':
-      return 'Przesuń swojego Agenta o 1 lokację.';
-    case 'gain_gold':
-      return 'Zyskaj 2 złota.';
-    case 'frame_rival':
-      return 'Wskaż rywala: +1 Herezja.';
-    case 'send_inquisitor':
-      return 'Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.';
-    case 'arrest':
-      return 'Aresztuj Agenta rywala w lokacji swojego Agenta. Limit: 1 areszt / Erę.';
-    case 'interrogate':
-      return 'Wykonaj Przesłuchanie na aresztowanym Agentem rywala. Limit: 1 / gracza / Erę.';
-    case 'creates_hook':
-      return 'Załóż Hak na rywala.';
-    case 'evacuate_relic':
-      return 'Ewakuuj Relikwię z tej lokacji.';
-    case 'move_relic':
-      return 'Przesuń 1 Relikwię do sąsiedniej lokacji.';
-    case 'free_agent':
-      return 'Uwolnij swojego aresztowanego Agenta z Lochów.';
-    case 'grant_fragment':
-      return 'Zyskaj Fragment.';
-    case 'grant_fragment_or_gold':
-      return 'Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.';
-    case 'autodafe':
-      return 'Wywołaj Autodafé w lokacji Inkwizytora. Co 2 Ery.';
-    case 'move_double_agent':
-      return 'Jeśli masz Podwójnego: Przesuń tego Podwójnego o 1 lokację.';
-    case 'change_vote':
-      return 'Zmień swój głos w Trybunale. Limit: 1 / Erę.';
-    case 'mark_fall':
-      return 'Oznaczenie Upadku wobec wybranego rywala.';
-    case 'force_hook':
-      return 'Wymuś spełnienie Haka. Odmowa: +3 Herezja.';
-    case 'check_victory':
-      return 'Sprawdź warunki zwycięstwa frakcji.';
-    case 'check_victory_or_set_heresy':
-      return 'Jeśli masz 3 Fragmenty w strefie 4–6 Herezji: Zwycięstwo.';
-    case 'gain_gold_and_frame':
-      return 'Zyskaj złoto. Wskaż rywala: +1 Herezja.';
-    default:
-      return '';
+function declensionPl(n, s1, s2, s3) {
+  if (n === 1) return s1;
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return s2;
+  return s3;
+}
+
+// Exact 1:1 Port of Python generate_card_effect_text from tools/pnp/generate_card_text.py
+function computeEffectText(spec) {
+  const parts = [];
+  const act = spec.action;
+  const tloc = spec.target_loc;
+  const gold = spec.gold;
+  const agents = spec.agents;
+  const theresy = spec.target_heresy;
+  const condition = spec.condition;
+  const breaksRule = spec.breaks_rule;
+
+  // 1. Breaks rule banner
+  if (breaksRule) {
+    parts.push(`ŁAMIE REGUŁĘ: ${breaksRule}.`);
   }
+
+  // 2. Condition
+  if (condition === "relic_present") {
+    parts.push("Jeśli w lokacji Twojego Agenta jest Relikwia:");
+  } else if (condition === "has_double_agent") {
+    parts.push("Jeśli masz Podwójnego:");
+  } else if (condition === "heresy_gte_4") {
+    parts.push("Jeśli rywal ma Herezję ≥ 4:");
+  } else if (condition === "agent_in_dungeon_or_tribunal") {
+    parts.push("Jeśli masz Agenta w Lochach lub Trybunale:");
+  } else if (condition === "fragments_eq_3") {
+    parts.push("Jeśli masz 3 Fragmenty");
+  } else if (condition === "active_hooks_gte_2") {
+    parts.push("Jeśli masz aktywne Haki na ≥ 2 graczach:");
+  } else if (condition === "no_inquisitor_or_double_or_sea_route") {
+    parts.push("Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty:");
+  } else if (condition === "has_fragment_and_agent_in_dungeon_or_tribunal") {
+    parts.push("Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale:");
+  } else if (condition === "rival_has_hook_or_double_or_autodafe") {
+    parts.push("Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej:");
+  }
+
+  // 3. Main Action Commands
+  if (act === "move_agent") {
+    if (agents === 1) parts.push("Przesuń swojego Agenta o 1 lokację.");
+    else if (agents && agents > 1) parts.push(`Przesuń swojego Agenta o ${agents} ${declensionPl(agents, "lokację", "lokacje", "lokacji")}.`);
+    else parts.push("Przesuń swojego Agenta o 1 lokację.");
+  } else if (act === "gain_gold") {
+    if (gold === 1) parts.push("Zyskaj złoto.");
+    else if (gold && gold >= 2) parts.push(`Zyskaj ${gold} ${declensionPl(gold, "złoto", "złota", "złota")}.`);
+    else parts.push("Zyskaj 2 złota.");
+  } else if (act === "frame_rival") {
+    const prefix = spec.target_scope === "triggering_rival" ? "Wskaż tego rywala:" : "Wskaż rywala:";
+    const h = theresy || 1;
+    parts.push(`${prefix} +${h} Herezja.`);
+  } else if (act === "send_inquisitor") {
+    if (tloc === "agent_location") parts.push("Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta.");
+    else if (tloc === "same_location") parts.push("Przesuń Inkwizytora do lokacji ze swoim Agentem.");
+    else parts.push("Przesuń Inkwizytora.");
+  } else if (act === "arrest") {
+    if (tloc === "same_location") parts.push("Aresztuj Agenta rywala w lokacji swojego Agenta.");
+    else if (tloc === "palace_or_same_location") parts.push("Aresztuj Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.");
+    else if (tloc === "dungeon_or_tribunal") parts.push("Aresztuj Agenta rywala w Lochach lub w Trybunale.");
+    else if (tloc === "guild_or_market") parts.push("Aresztuj Agenta rywala w Gildii lub na Rynku.");
+    else parts.push("Aresztuj Agenta rywala.");
+  } else if (act === "interrogate") {
+    if (tloc === "dungeon") parts.push("Wykonaj Przesłuchanie na aresztowanego Agenta rywala.");
+    else if (spec.bonus_on_heresy === "grant_fragment") parts.push("Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment.");
+    else parts.push("Wykonaj Przesłuchanie.");
+  } else if (act === "creates_hook") {
+    if (condition === "rival_in_dungeon_or_inquisitor") parts.push("Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.");
+    else if (condition === "heresy_gte_4") parts.push("Załóż Hak na rywala z Herezją ≥ 4.");
+    else if (tloc === "neighbor_location") parts.push("Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta.");
+    else if (spec.verdict_weight === 2) parts.push("W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala.");
+    else if (agents === 1) parts.push("Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala.");
+    else parts.push("Załóż Hak na rywala.");
+
+    if (spec.on_refusal === "mark_fall") parts.push("Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala.");
+  } else if (act === "autodafe") {
+    parts.push("Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos.");
+  } else if (act === "evacuate_relic") {
+    if (spec.max_relics === 2) parts.push("Ewakuuj do 2 Relikwii z lokacji Twoich Agentów.");
+    else parts.push("Ewakuuj Relikwię z tej lokacji.");
+  } else if (act === "free_agent") {
+    if (agents === 1) parts.push("Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację.");
+    else parts.push("Uwolnij swojego aresztowanego Agenta z Lochów.");
+  } else if (act === "move_double_agent") {
+    parts.push("Przesuń tego Podwójnego o 1 lokację.");
+  } else if (act === "move_relic") {
+    parts.push("Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.");
+  } else if (act === "force_hook") {
+    const pen = spec.penalty_heresy || 3;
+    parts.push(`Wymuś spełnienie Haka. Odmowa: +${pen} Herezja.`);
+  } else if (act === "check_victory") {
+    parts.push("zwycięstwo.");
+  } else if (act === "grant_fragment") {
+    parts.push("Zyskaj Fragment.");
+  } else if (act === "grant_fragment_or_gold") {
+    parts.push("Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
+  } else if (act === "check_victory_or_set_heresy") {
+    const band = spec.target_heresy_band || [4, 6];
+    const fb = spec.fallback_heresy || 5;
+    parts.push(`i Herezję ${band[0]}–${band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji ${band[0]}–${band[1]}: Ustaw swoją Herezję na ${fb}.`);
+  } else if (act === "change_vote") {
+    parts.push("Zmień swój głos.");
+  } else if (act === "gain_gold_and_frame") {
+    parts.push("Zyskaj złoto. Wskaż rywala: +1 Herezja.");
+  } else if (act === "mark_fall") {
+    parts.push("Oznacz Upadek wobec tego rywala.");
+  }
+
+  // 4. Anti-AP limits
+  if (spec.inquisitor_send_limit === 1) parts.push("Limit: 1 nasłanie / gracza / Erę.");
+  else if (spec.interrogate_limit === 1) {
+    if (spec.id === "so-07") parts.push("Limit: 1 / gracza / Erę.");
+    else parts.push("Limit: 1 / Erę.");
+  } else if (spec.kurier_limit === 1 || spec.vote_change_limit === 1) parts.push("Limit: 1 / Erę.");
+  else if (spec.no_move_limit) parts.push("Limit: bez Przesuń z karty / tę Erę.");
+  else if (spec.limit_per_era === 1) parts.push("Limit: 1 / Erę.");
+
+  return parts.join(" ").trim();
 }
 
 // Auto Derive Tags based on Action, Type, and Heresy
@@ -835,7 +913,7 @@ function updateLivePreview() {
   } else if (isAuto) {
     effectTextarea.setAttribute('readonly', 'readonly');
     effectTextarea.style.background = '#f2ece4';
-    effectTextarea.value = computeEffectText(action, cost, heresy);
+    effectTextarea.value = computeEffectText({ id: cid, action, cost, heresy });
     
     // Auto-derive & sync tags
     const autoTags = computeAutoTags(action, type, heresy);
