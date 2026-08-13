@@ -1,0 +1,22 @@
+{
+  "pythonVersion": "3.9",
+  "venvPath": "sim",
+  "venv": ".venv",
+  "extraPaths": [
+    "sim"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "tools/pnp",
+      "extraPaths": [
+        "../../sim"
+      ]
+    },
+    {
+      "root": "sim",
+      "extraPaths": [
+        "."
+      ]
+    }
+  ]
+}

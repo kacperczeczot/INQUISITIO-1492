@@ -1511,7 +1511,7 @@ def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug
         heresy_text = (getattr(c, "heresy_text", None) or "").strip()
         lore = (c.lore or "").strip()
         cost = int(getattr(c, "cost_gold", None) or c.cost or 0)
-        heresy = int(c.heresy or 0)
+        heresy = c.heresy or 0
         badges = _gold_badge(cost) + _heresy_badge(heresy)
         type_label = getattr(c, "type_label", None) or c.type
         type_cls = _type_badge_class(c.type)
