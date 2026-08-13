@@ -199,12 +199,14 @@ input:checked + .slider:before {
 .form-group {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 0.35rem;
 }
 
 .form-row {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   gap: 0.75rem;
 }
 
@@ -234,6 +236,7 @@ input:checked + .slider:before {
   font-weight: 600;
   color: var(--text-main);
   margin: 0;
+  height: 38px;
 }
 
 .checkbox-item input {
@@ -242,23 +245,30 @@ input:checked + .slider:before {
 }
 
 label {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  height: 1.1rem;
+  margin-bottom: 0.15rem;
 }
 
 input[type="text"],
 input[type="number"],
-select,
-textarea {
+select {
   background: #ffffff;
   border: 1px solid rgba(42, 28, 18, 0.3);
   border-radius: 6px;
   color: var(--text-main);
-  padding: 0.55rem 0.75rem;
-  font-size: 0.9rem;
+  padding: 0 0.65rem;
+  height: 38px;
+  box-sizing: border-box;
+  font-size: 0.88rem;
   font-family: inherit;
   transition: all 0.2s ease;
   width: 100%;
