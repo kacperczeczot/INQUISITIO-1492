@@ -81,29 +81,31 @@ Każdy wpis karty w `cards:` zawiera słownik deklaratywnych właściwości:
 | `gold` | `int` | `0 .. 10` | Złoto pozyskiwane z banku |
 | `agents` | `int` | `0 .. 3` | Liczba ruchów przemieszczenia agenta |
 
-### 2. Deklaratywne Komendy Mechaniczne (`action`)
+### 2. Deklaratywne Komendy Mechaniczne (`action`) oraz Powiązane Parametry Dedykowane
 
-| Wartość `action` | Wymagane / Opcjonalne pola dodatkowe | Opis komendy i tekst leksykonu |
+Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości pomocniczych. Poniższa tabela grupuje parametry wg komend mechanicznych:
+
+| Wartość `action` | Powiązane parametry dedykowane | Opis komendy i generowana fraza leksykonu |
 | :--- | :--- | :--- |
-| `move_agent` | `agents: N` | Przemieszcza własnego agenta o N lokacji |
-| `gain_gold` | `gold: N` | Pozyskuje N złota z banku |
-| `frame_rival` | `target_heresy: N`, `target_scope` | Wskazuje rywala i przydziela mu +N Herezji |
-| `send_inquisitor` | `target_loc`, `inquisitor_send_limit` | Przesuwa Inkwizytora w stronę lub do lokacji agenta |
-| `arrest` | `target_loc` | Aresztuje agenta rywala w określonej strefie |
-| `interrogate` | `target_loc`, `bonus_on_heresy`, `interrogate_limit` | Przeprowadza Przesłuchanie aresztowanego agenta |
-| `autodafe` | `autodafe: true`, `breaks_rule` | Wywołuje natychmiastowe spalenie Autodafé |
-| `evacuate_relic` | `max_relics`, `condition`, `kurier_limit` | Ewakuuje Relikwie ze strefy do własnej puli |
-| `free_agent` | `target_loc: dungeon` | Uwalnia własnego agenta z Lochów |
-| `move_double_agent` | `condition: has_double_agent` | Przesuwa figurkę Podwójnego Agenta |
-| `move_relic` | `target_loc: neighbor_location` | Przenosi figurkę Relikwii do sąsiedniej lokacji |
-| `creates_hook` | `condition`, `target_loc`, `verdict_weight`, `on_refusal` | Zakłada Hak na wybranego lub przefiltrowanego rywala |
-| `force_hook` | `decree: N`, `penalty_heresy: N` | Wymusza realizację Haka (z karą Herezji za odmowę) |
-| `check_victory` | `decree: N`, `condition` | Sprawdza natychmiastowe zwycięstwo polityczne Korony |
-| `grant_fragment` | `grant_fragment: N` | Pozyskuje N Fragmentów Kodeksu |
-| `grant_fragment_or_gold`| `condition: agent_in_dungeon_or_tribunal` | Zyskuje Fragment lub złoto alternatywne |
+| `move_agent` | `agents` | Przemieszcza własnego agenta o N lokacji (`Przesuń swojego Agenta o N lokacji.`) |
+| `gain_gold` | `gold` | Pozyskuje N złota z banku (`Zyskaj N złota.`) |
+| `frame_rival` | `target_heresy`, `target_scope` | Przydziela rywalowi +N Herezji (`Wskaż (tego) rywala: +N Herezja.`) |
+| `send_inquisitor` | `target_loc`, `inquisitor_send_limit` | Przesuwa Inkwizytora (`Przesuń Inkwizytora do lokacji ze swoim Agentem.`) |
+| `arrest` | `target_loc`, `arrest` | Aresztuje agenta rywala (`Aresztuj Agenta rywala w lokacji swojego Agenta.`) |
+| `interrogate` | `target_loc`, `bonus_on_heresy`, `interrogate_limit` | Przeprowadza Przesłuchanie (`Wykonaj Przesłuchanie na aresztowanym Agentem rywala.`) |
+| `creates_hook` | `condition`, `target_loc`, `verdict_weight`, `on_refusal`, `creates_hook` | Zakłada Hak na rywala (`Załóż Hak na rywala.`) |
+| `autodafe` | `breaks_rule` | Wywołuje spalenie Autodafé (`Ogłoś Autodafé w lokacji Inkwizytora.`) |
+| `evacuate_relic` | `max_relics`, `condition`, `kurier_limit` | Ewakuuje Relikwie (`Ewakuuj Relikwię z tej lokacji.`) |
+| `free_agent` | `target_loc`, `agents` | Uwalnia własnego agenta z Lochów (`Uwolnij swojego aresztowanego Agenta z Lochów.`) |
+| `move_double_agent` | `condition` | Przesuwa Podwójnego Agenta (`Przesuń tego Podwójnego o 1 lokację.`) |
+| `move_relic` | `target_loc` | Przenosi Relikwię (`Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.`) |
+| `force_hook` | `decree`, `penalty_heresy` | Wymusza realizację Haka (`Wymuś spełnienie Haka. Odmowa: +N Herezja.`) |
+| `check_victory` | `decree`, `condition` | Sprawdza natychmiastowe zwycięstwo polityczne Korony |
+| `grant_fragment` | *(brak)* | Pozyskuje Fragment Kodeksu (`Zyskaj Fragment.`) |
+| `grant_fragment_or_gold`| `condition` | Zyskuje Fragment lub złoto alternatywne |
 | `check_victory_or_set_heresy` | `condition`, `target_heresy_band`, `fallback_heresy` | Zwycięstwo Kabały lub korekta Herezji na 5 |
-| `change_vote` | `trigger`, `vote_change_limit` | Zmienia głos po ujawnieniu większości Werdyktu |
-| `gain_gold_and_frame` | `gold: N`, `target_heresy: N` | Zyskuje złoto oraz wstrzymuje rywalowi +N Herezji |
+| `change_vote` | `trigger`, `vote_change_limit` | Zmienia głos w Trybunale (`Zmień swój głos.`) |
+| `gain_gold_and_frame` | `gold`, `target_heresy` | Zyskuje złoto oraz przydziela rywalowi +N Herezji |
 | `mark_fall` | `condition`, `on_refusal` | Oznacza Upadek rywala dla Gildii Cieni |
 
 ### 3. Filtry Lokacji (`target_loc`)

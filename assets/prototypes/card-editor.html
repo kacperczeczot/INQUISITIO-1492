@@ -611,8 +611,12 @@ pre.code-out {
     </div>
 
     <!-- Advanced Parameters Section Header -->
-    <div style="font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--blood); margin-top: 0.4rem; padding-top: 0.6rem; border-top: 1.5px dashed var(--panel-border);">
-      Parametry Celowania, Warunków & Flag
+    <div style="font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--blood); margin-top: 0.4rem; padding-top: 0.6rem; border-top: 1.5px dashed var(--panel-border); display: flex; align-items: center; justify-content: space-between;">
+      <span>Parametry Dedykowane Akcji</span>
+      <label style="font-size: 0.72rem; font-weight: 600; text-transform: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem;">
+        <input type="checkbox" id="show-all-fields-toggle" onchange="updateLivePreview()">
+        Pokaż wszystkie pola
+      </label>
     </div>
 
     <!-- Group 1: Targets & Values -->
@@ -1050,7 +1054,60 @@ function handleAutoToggle() {
   updateLivePreview();
 }
 
+const ACTION_FIELDS_MAP = {
+  move_agent: ['card-agents'],
+  gain_gold: ['card-gold'],
+  frame_rival: ['card-target-heresy', 'card-target-scope'],
+  send_inquisitor: ['card-target-loc', 'card-limit-inq'],
+  arrest: ['card-target-loc', 'card-arrest-flag'],
+  interrogate: ['card-target-loc', 'card-bonus-on-heresy', 'card-limit-int'],
+  creates_hook: ['card-condition', 'card-target-loc', 'card-verdict-weight', 'card-on-refusal', 'card-creates-hook-flag'],
+  autodafe: ['card-breaks-rule'],
+  evacuate_relic: ['card-max-relics', 'card-condition'],
+  free_agent: ['card-target-loc', 'card-agents'],
+  move_double_agent: ['card-condition'],
+  move_relic: ['card-target-loc'],
+  force_hook: ['card-decree', 'card-penalty-heresy'],
+  check_victory: ['card-decree', 'card-condition'],
+  grant_fragment: [],
+  grant_fragment_or_gold: ['card-condition'],
+  check_victory_or_set_heresy: ['card-condition', 'card-heresy-band', 'card-fallback-heresy'],
+  change_vote: ['card-trigger'],
+  gain_gold_and_frame: ['card-gold', 'card-target-heresy'],
+  mark_fall: ['card-condition', 'card-on-refusal']
+};
+
+function updateActionFieldVisibility() {
+  const action = document.getElementById('card-action').value;
+  const showAll = document.getElementById('show-all-fields-toggle')?.checked || action === 'custom';
+  const allowedFields = ACTION_FIELDS_MAP[action] || [];
+
+  const allAdvFields = [
+    'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents',
+    'card-condition', 'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
+    'card-no-move-limit', 'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal',
+    'card-bonus-on-heresy', 'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy',
+    'card-limit-inq', 'card-limit-int', 'card-limit-era'
+  ];
+
+  allAdvFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const parentGroup = el.closest('.form-group');
+    if (!parentGroup) return;
+
+    const hasVal = el.type === 'checkbox' ? el.checked : Boolean(el.value.trim());
+    if (showAll || allowedFields.includes(id) || hasVal) {
+      parentGroup.style.display = 'flex';
+    } else {
+      parentGroup.style.display = 'none';
+    }
+  });
+}
+
 function updateLivePreview() {
+  updateActionFieldVisibility();
+
   const isAuto = document.getElementById('auto-text-toggle').checked;
   const cid = document.getElementById('card-id').value.trim();
   const faction = document.getElementById('card-faction').value;
