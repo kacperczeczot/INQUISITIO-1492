@@ -1665,8 +1665,8 @@ def render_player_boards(layer: str) -> str:
       <div class="heresy-track">{pips}</div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–3</span>
-        <span class="hz-z2">Obserwowana 4–6</span>
-        <span class="hz-z3">Krytyczna 7–10</span>
+        <span class="hz-z2">Obserwowana 4–7</span>
+        <span class="hz-z3">Krytyczna 8–10</span>
       </div>
     </section>
     {body}

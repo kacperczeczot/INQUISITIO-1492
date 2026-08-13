@@ -130,7 +130,7 @@ def new_game(
     setup: str | None = None,
     players: int | None = None,
     seed: int = 42,
-    threshold: int = 7,
+    threshold: int = 8,
     layer: str = "C",
     max_eras: int = 8,
 ) -> GameState:

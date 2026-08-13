@@ -16,10 +16,10 @@ Każdy gracz ma **Tor Herezji 0–10** na planszetce. Herezja mierzy, jak bardzo
 | Zakres | Strefa | Przy stole |
 | :---: | :--- | :--- |
 | 0–3 | **Czysta** | Brak podejrzeń. Bezpieczne, zwykle słabsze akcje. Oficjum lubi Cię tu widzieć — jesteś nieskuteczny. |
-| 4–6 | **Obserwowana** | Czujność Inkwizycji. Kabała **musi** tu żyć przy wygranej. Ryzykowniejsze karty, alchemia, Cień. |
-| 7–10 | **Krytyczna / HERETYK** | Inni mogą **Rzucić Oskarżenie** → [`werdykt-stolu.md`](werdykt-stolu.md). Jesteś tematem rozmowy stołu. |
+| 4–7 | **Obserwowana** | Czujność Inkwizycji. Kabała **musi** tu żyć przy wygranej. Ryzykowniejsze karty, alchemia, Cień. |
+| 8–10 | **Krytyczna / HERETYK** | Inni mogą **Rzucić Oskarżenie** → [`werdykt-stolu.md`](werdykt-stolu.md). Jesteś tematem rozmowy stołu. |
 
-> Próg oskarżenia w prototypie: **7**. Sim może porównać 7 vs 8 jako eksperyment dramatu.
+> Próg oskarżenia na planszetce: **8**.
 
 ## Źródła Herezji
 

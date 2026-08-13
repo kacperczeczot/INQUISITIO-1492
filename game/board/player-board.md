@@ -78,7 +78,7 @@ Pozycja Agenta = plansza/Areszt/Stos · ofiara Haka = na żetonie · Podwójny =
 ├─────────────────────────────────────────────────────────┤
 │ HEREZJA                                                 │
 │ [0]…[10]                                                │
-│ Czysta 0–3 | Obserwowana 4–6 | Krytyczna 7–10           │  28 mm
+│ Czysta 0–3 | Obserwowana 4–7 | Krytyczna 8–10           │  28 mm
 ├──────────┬────────────────────────────┬─────────────────┤
 │ AGENCI   │ ZŁOTO (tacka)              │ HAKI            │
 │ ○ ○ ○    │                            │ □ □             │  ~1fr
