@@ -274,9 +274,10 @@ def sync_setups(cfg: dict) -> list[str]:
 
 
 def sync_cards(cfg: dict) -> list[str]:
-    """Sync card markdown files (parameters + effect text) and KATALOG.md from game_config.yaml."""
+    """Sync card markdown files (parameters + effect text), KATALOG.md, and card-editor.html from game_config.yaml."""
     from tools.pnp.generate_card_text import sync_card_markdowns
     from tools.cards.build_catalog import main as build_catalog_main
+    from tools.pnp.sync_card_editor import main as sync_card_editor_main
 
     # 1. Sync card parameters (cost, layer, type) & effect text
     updated_files = sync_card_markdowns(dry_run=False)
@@ -284,10 +285,14 @@ def sync_cards(cfg: dict) -> list[str]:
     # 2. Rebuild KATALOG.md
     build_catalog_main()
 
+    # 3. Sync card-editor.html CARDS_DATABASE
+    sync_card_editor_main()
+
     res = [f"Zsynchronizowano {len(cfg.get('cards', {}))} kart w game/cards/"]
     if updated_files:
         res.append(f"Zaktualizowano opisy efektów dla {len(updated_files)} kart")
     res.append("Przegenerowano game/cards/KATALOG.md")
+    res.append("Zsynchronizowano baza kart w card-editor.html")
     return res
 
 
