@@ -13,7 +13,7 @@ python tools/pnp/generate.py
 # opcjonalnie: --bw (grayscale pod Xerox), --layer A|B
 ```
 
-Karty czytają schemat z `game/cards/` (`effect`, `heresy`/`heresy_text`, `lore`, `cost_gold`).  
+Karty czytają schemat z `game/cards/` (`effect`, `heresy`/`heresy_text`, `lore`, `cost`).  
 Layout PnP: HDR → slot art → EFFECT (banery) → lore — [`game/cards/SCHEMA.md`](../../game/cards/SCHEMA.md).  
 Leksykon komend: [`game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md).
 
