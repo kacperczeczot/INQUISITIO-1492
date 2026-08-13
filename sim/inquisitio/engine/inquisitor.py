@@ -77,7 +77,7 @@ def send_inquisitor(state: GameState, sender: FactionId, location: str) -> bool:
 
 
 def can_autodafe(state: GameState) -> bool:
-    return state.eras_since_autodafe >= 2
+    return state.eras_since_autodafe >= state.autodafe_cooldown
 
 
 def resolve_autodafe(

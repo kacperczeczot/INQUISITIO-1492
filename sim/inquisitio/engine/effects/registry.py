@@ -5,6 +5,7 @@ import random
 from typing import Callable
 
 from inquisitio.cards.loader import Card, load_all_cards
+from inquisitio.config import CONFIG
 from inquisitio.engine.dungeon import arrest_agent, interrogate
 from inquisitio.engine.heresy import add_heresy
 from inquisitio.engine.hooks import (
@@ -206,11 +207,13 @@ def _so_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
         if card.id == "so-04" and state.layer != "A":
             _move_agent(state, fid, rng, 1)
             return
-        if pl.used_inquisitor_send:
+        limit = card.raw.get("inquisitor_send_limit", 1) if isinstance(card.raw, dict) else 1
+        if pl.inquisitor_send_count >= limit:
             return
         locs = [ag.location for ag in pl.agents if not ag.arrested]
         if locs:
             send_inquisitor(state, fid, rng.choice(locs))
+            pl.inquisitor_send_count += 1
             pl.used_inquisitor_send = True
     elif card.id == "so-10":
         # Signature already paid generic costs above; do not re-apply (double heresy).
@@ -224,8 +227,9 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
         if state.layer != "A":
             _move_agent(state, fid, rng, 1)
             return
-        # A teach: Kurier once — second Relic via quiet harbor / drag
-        if pl.used_kurier:
+        # A teach: Kurier limit per era
+        limit = card.raw.get("kurier_limit", 1) if isinstance(card.raw, dict) else 1
+        if pl.kurier_count >= limit:
             return
         for ag in pl.agents:
             if ag.arrested:
@@ -235,6 +239,7 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                 continue
             state.relics_on_board[loc] -= 1
             pl.relics_evacuated += 1
+            pl.kurier_count += 1
             pl.used_kurier = True
             state.add_log(
                 f"{fid.value} evacuated relic from {loc} (total={pl.relics_evacuated})"
@@ -343,14 +348,18 @@ FACTION_HANDLERS: dict[str, Handler] = {
 
 
 def play_card(state: GameState, fid: FactionId, card_id: str, rng: random.Random) -> bool:
-    cards = load_all_cards()
+    sys = state.sys_overrides or {}
+    cards = load_all_cards(card_overrides=sys.get("card_overrides"))
     card = cards.get(card_id)
     if not card:
         return False
     pl = state.players[fid]
     if card_id not in pl.hand:
         return False
-    cost = max(0, card.cost)
+    sys = state.sys_overrides or {}
+    card_cost_offset = sys.get("card_cost_offset", CONFIG.economy.card_cost_offset)
+    sig_offset = sys.get("sig_cost_offset", CONFIG.economy.sig_cost_offset) if (card.breaks_rule or card.type == "signature") else 0
+    cost = max(0, card.cost + card_cost_offset + sig_offset)
     if pl.gold < cost:
         return False
     gold_before = pl.gold

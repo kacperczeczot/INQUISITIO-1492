@@ -121,19 +121,35 @@ def _parse_md(path: Path) -> Card | None:
     return None
 
 
-def load_all_cards(force: bool = False) -> dict[str, Card]:
+def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> dict[str, Card]:
     global _CACHE
-    if _CACHE is not None and not force:
+    if _CACHE is None or force:
+        cards: dict[str, Card] = {}
+        for path in CARDS_ROOT.rglob("*.md"):
+            if path.name.upper() == "SCHEMA.MD" or path.name == "SCHEMA.md":
+                continue
+            c = _parse_md(path)
+            if c:
+                cards[c.id] = c
+        _CACHE = cards
+
+    if not card_overrides:
         return _CACHE
-    cards: dict[str, Card] = {}
-    for path in CARDS_ROOT.rglob("*.md"):
-        if path.name.upper() == "SCHEMA.MD" or path.name == "SCHEMA.md":
-            continue
-        c = _parse_md(path)
-        if c:
-            cards[c.id] = c
-    _CACHE = cards
-    return cards
+
+    # Return deep copies with applied overrides
+    import copy
+    modified_cards = copy.deepcopy(_CACHE)
+    for cid, ov in card_overrides.items():
+        if cid in modified_cards:
+            card = modified_cards[cid]
+            for field_name, val in ov.items():
+                if hasattr(card, field_name):
+                    setattr(card, field_name, val)
+                    if field_name == "cost":
+                        card.cost_gold = val
+                    elif field_name == "cost_gold":
+                        card.cost = val
+    return modified_cards
 
 
 def cards_for_faction(faction: str, max_layer: str = "C") -> list[Card]:

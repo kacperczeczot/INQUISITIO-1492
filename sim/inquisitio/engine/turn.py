@@ -4,6 +4,7 @@ from __future__ import annotations
 import random
 
 from inquisitio.cards.loader import load_all_cards
+from inquisitio.config import CONFIG
 from inquisitio.engine.effects.registry import play_card, resolve_time_edict
 from inquisitio.engine.heresy import is_critical
 from inquisitio.engine.hooks import active_hook_targets, force_hook
@@ -31,19 +32,28 @@ def _reset_era_flags(state: GameState) -> None:
         pl.used_hook = False
         pl.used_interrogation = False
         pl.used_inquisitor_send = False
+        pl.used_kurier = False
+        pl.inquisitor_send_count = 0
+        pl.interrogate_count = 0
+        pl.kurier_count = 0
+        pl.vote_change_count = 0
 
 
 def _legal_card_ids(state: GameState, fid: FactionId) -> list[str]:
-    cards = load_all_cards()
+    sys = state.sys_overrides or {}
+    cards = load_all_cards(card_overrides=sys.get("card_overrides"))
     pl = state.players[fid]
     legal = []
+    card_cost_offset = sys.get("card_cost_offset", CONFIG.economy.card_cost_offset)
     for cid in pl.hand:
         c = cards.get(cid)
         if not c:
             continue
         if c.type == "reakcja":
             continue
-        if pl.gold >= max(0, c.cost):
+        sig_offset = sys.get("sig_cost_offset", CONFIG.economy.sig_cost_offset) if (c.breaks_rule or c.type == "signature") else 0
+        cost = max(0, c.cost + card_cost_offset + sig_offset)
+        if pl.gold >= cost:
             legal.append(cid)
     return legal
 
@@ -55,6 +65,7 @@ def play_era(
     win_overrides: dict | None = None,
 ) -> FactionId | None:
     """One era. agent_choose(state, fid, legal_ids) -> card_id | None."""
+    sys = state.sys_overrides or {}
     state.metrics.eras += 1
     state.eras_since_autodafe += 1
     _reset_era_flags(state)
@@ -124,7 +135,8 @@ def play_era(
         pl = state.players[FactionId.CIENIE_AL_ANDALUS]
         evacuated = False
         harbor = ("rynek", "gildia")
-        if state.layer == "C" and state.sea_route_open:
+        sea_era = sys.get("sea_route_era", CONFIG.variants.sea_route_era)
+        if state.layer == "C" and (state.sea_route_open or state.era >= sea_era):
             for loc in harbor:
                 if state.relics_on_board.get(loc, 0) > 0 and any(
                     ag.location == loc and not ag.arrested for ag in pl.agents
@@ -168,7 +180,8 @@ def play_era(
                 break
 
     # time edict layer C
-    if state.layer == "C" and state.time_deck:
+    freq = sys.get("time_deck_freq", CONFIG.variants.time_deck_freq)
+    if state.layer == "C" and state.time_deck and (state.era % freq == 0):
         edict = state.time_deck.pop()
         resolve_time_edict(state, edict, rng)
         state.time_discard.append(edict)

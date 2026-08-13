@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS
 from inquisitio.runner.batch import BatchSummary, run_batch
 
@@ -33,22 +34,17 @@ def gate_for(setup: str, layer: str) -> BalanceGate:
     """Gates: C live-ready; B mid; A teach. Strict evaluation of Red Line critical bounds."""
     n = len(SETUP_PRESETS[setup])
     if layer == "C":
-        if n <= 3:
-            return BalanceGate(
-                target_max=0.38, target_min=0.28,
-                critical_max=0.45, critical_min=0.20,
-                max_deadlocks=0.5, min_accusations=1.0
-            )
-        if n == 4:
-            return BalanceGate(
-                target_max=0.30, target_min=0.20,
-                critical_max=0.35, critical_min=0.15,
-                max_deadlocks=0.5, min_accusations=1.0
-            )
+        # Read from CONFIG
+        pc = f"{n}p"
+        bt = CONFIG.telemetry_norms.balance_targets
+        targets = bt[pc]
+        t = targets["target"]
+        c = targets["critical"]
         return BalanceGate(
-            target_max=0.24, target_min=0.16,
-            critical_max=0.30, critical_min=0.10,
-            max_deadlocks=0.5, min_accusations=1.2
+            target_max=t[1], target_min=t[0],
+            critical_max=c[1], critical_min=c[0],
+            max_deadlocks=0.5,
+            min_accusations=1.0 if n <= 4 else 1.2,
         )
     if layer == "B":
         if n <= 3:

@@ -1,25 +1,36 @@
 """Victory checks — faction political goals with parameterized overrides."""
 from __future__ import annotations
 
+from inquisitio.config import CONFIG
 from inquisitio.engine.hooks import distinct_hook_victims, distinct_hook_victims_ever
 from inquisitio.engine.state import FactionId, GameState, heresy_zone
+
+
+def _pc(n: int) -> str:
+    """Player count key for CONFIG lookups."""
+    return f"{n}p"
 
 
 def check_winner(state: GameState, win_overrides: dict | None = None) -> FactionId | None:
     ov = win_overrides or {}
     n_players = len(state.turn_order)
+    pc = _pc(n_players)
+    cfg_v = CONFIG.victory
 
     for fid in state.turn_order:
         pl = state.players[fid]
 
         if fid == FactionId.SWIETE_OFICJUM:
             if state.layer == "C":
-                base_stack = 5 if n_players >= 5 else 3
+                base_stack = cfg_v.swiete_oficjum.stacks[pc]
             else:
                 base_stack = 3 if state.layer == "A" else (2 if n_players <= 3 else 3)
             stack_need = max(1, base_stack + ov.get("so_stacks_offset", 0))
 
-            base_condemn = 4 if n_players >= 5 else (3 if n_players == 4 else 2)
+            if state.layer == "C":
+                base_condemn = cfg_v.swiete_oficjum.condemns[pc]
+            else:
+                base_condemn = 4 if n_players >= 5 else (3 if n_players == 4 else 2)
             condemn_need = max(1, base_condemn + ov.get("so_condemns_offset", 0))
             condemn_ok = (state.layer != "B" and len(pl.condemned_rivals) >= condemn_need)
 
@@ -27,14 +38,15 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 return fid
 
         elif fid == FactionId.CIENIE_AL_ANDALUS:
-            base_era = (5 if n_players >= 4 else 6) + ov.get("caa_era_offset", 0)
+            cfg_caa = cfg_v.cienie_al_andalus
+            base_era = cfg_caa.path_era[pc] + ov.get("caa_era_offset", 0)
             path_ok = (
                 pl.path_via_double
                 or pl.avoided_autodafe
                 or state.sea_route_open
                 or (n_players >= 4 and state.era >= base_era)
             )
-            relic_need = 2
+            relic_need = cfg_caa.relics
             if "caa_relics" in ov:
                 relic_need = ov["caa_relics"]
             elif "caa_relics_5p" in ov and n_players >= 5:
@@ -47,10 +59,11 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 return fid
 
         elif fid == FactionId.KORONA_BORGIOWIE:
+            cfg_kb = cfg_v.korona_borgiowie
             hooks_ever = distinct_hook_victims_ever(state, fid)
-            base_era = (6 if n_players <= 3 else 5) + ov.get("kb_era_offset", 0)
-            decrees_need = ov.get("kb_decrees_3p", 2) if n_players <= 3 else 2
-            hooks_need = ov.get("kb_hooks", 1)
+            base_era = cfg_kb.era[pc] + ov.get("kb_era_offset", 0)
+            decrees_need = ov.get("kb_decrees_3p", cfg_kb.decrees[pc]) if n_players <= 3 else cfg_kb.decrees.get("4p", 2)
+            hooks_need = ov.get("kb_hooks", cfg_kb.hooks[pc])
 
             if (
                 state.layer == "C"
@@ -59,25 +72,30 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 and state.era >= base_era
             ):
                 return fid
+
+            # Alternative path (4p+)
+            alt = cfg_kb.alt_path
             if (
                 state.layer == "C"
-                and n_players >= 4
-                and pl.decrees_played >= 1
-                and hooks_ever >= max(2, hooks_need)
-                and state.era >= (6 + ov.get("kb_era_offset", 0))
+                and n_players >= alt.min_players
+                and pl.decrees_played >= alt.decrees
+                and hooks_ever >= max(alt.hooks, hooks_need)
+                and state.era >= (alt.era + ov.get("kb_era_offset", 0))
             ):
                 return fid
 
         elif fid == FactionId.KABALA_TOLEDO:
-            frag_need = 2 if n_players >= 5 else 3
+            cfg_kt = cfg_v.kabala_toledo
+            frag_need = cfg_kt.fragments[pc]
             if "kt_fragments" in ov:
                 frag_need = ov["kt_fragments"]
             elif "kt_fragments_5p" in ov and n_players >= 5:
                 frag_need = ov["kt_fragments_5p"]
 
-            h_low, h_high = ov.get("kt_heresy_band", (3, 7))
+            band = ov.get("kt_heresy_band", cfg_kt.heresy_band)
+            h_low, h_high = band[0], band[1]
             heresy_ok = (h_low <= pl.heresy <= h_high)
-            base_era = (6 if n_players >= 4 else 7) + ov.get("kt_era_offset", 0)
+            base_era = cfg_kt.era[pc] + ov.get("kt_era_offset", 0)
 
             if state.layer == "A":
                 pass
@@ -88,8 +106,9 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 return fid
 
         elif fid == FactionId.GILDIA_CIENI:
+            cfg_gc = cfg_v.gildia_cieni
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
-            base_falls = 3 if state.layer == "B" or no_oficjum or n_players >= 5 else 2
+            base_falls = cfg_gc.falls.no_oficjum if (state.layer == "B" or no_oficjum) else cfg_gc.falls.default
             falls_need = max(1, base_falls + ov.get("gc_falls_offset", 0))
 
             if pl.falls >= falls_need:

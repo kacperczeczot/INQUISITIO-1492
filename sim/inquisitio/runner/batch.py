@@ -30,6 +30,14 @@ class BatchSummary:
     eras_avg: float = 0.0
     eras_min: int = 8
     eras_max: int = 1
+    autodafe_min: int = 0
+    autodafe_max: int = 0
+    accusations_min: int = 0
+    accusations_max: int = 0
+    gold_min: float = 0.0
+    gold_max: float = 0.0
+    heresy_min: float = 0.0
+    heresy_max: float = 0.0
     eras_limit_pct: float = 0.0
     cards_played_avg: float = 0.0
     avg_gold_end: float = 0.0
@@ -39,7 +47,7 @@ class BatchSummary:
 def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict:
     setup_name, gseed, threshold, layer, win_overrides = args
     rng = random.Random(gseed)
-    state = new_game(setup=setup_name, seed=gseed, threshold=threshold, layer=layer)
+    state = new_game(setup=setup_name, seed=gseed, threshold=threshold, layer=layer, sys_overrides=win_overrides)
     agent = PoliticsAgent(rng)
 
     def choose(st: GameState, fid: FactionId, legal: list[str]):
@@ -107,6 +115,10 @@ def run_batch(
         limit_games=0,
     )
     eras_list = []
+    autodafe_list = []
+    accusations_list = []
+    gold_list = []
+    heresy_list = []
 
     # Parallel Execution via ProcessPoolExecutor if games >= 100
     if games >= 100:
@@ -121,6 +133,12 @@ def run_batch(
         for res in game_results:
             wins[res["winner"]] += 1
             eras_list.append(res["eras"])
+            autodafe_list.append(res["autodafe"])
+            accusations_list.append(res["accusations"])
+            n_pl = len(SETUP_PRESETS[setup_name])
+            gold_list.append(res["gold_sum"] / n_pl)
+            heresy_list.append(res["heresy_sum"] / n_pl)
+
             if res["is_limit"]:
                 totals["limit_games"] += 1
 
@@ -142,6 +160,12 @@ def run_batch(
             res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer, win_overrides))
             wins[res["winner"]] += 1
             eras_list.append(res["eras"])
+            autodafe_list.append(res["autodafe"])
+            accusations_list.append(res["accusations"])
+            n_pl = len(SETUP_PRESETS[setup_name])
+            gold_list.append(res["gold_sum"] / n_pl)
+            heresy_list.append(res["heresy_sum"] / n_pl)
+
             if res["is_limit"]:
                 totals["limit_games"] += 1
 
@@ -180,6 +204,14 @@ def run_batch(
         eras_avg=totals["eras"] / n,
         eras_min=min(eras_list) if eras_list else 1,
         eras_max=max(eras_list) if eras_list else 8,
+        autodafe_min=min(autodafe_list) if autodafe_list else 0,
+        autodafe_max=max(autodafe_list) if autodafe_list else 0,
+        accusations_min=min(accusations_list) if accusations_list else 0,
+        accusations_max=max(accusations_list) if accusations_list else 0,
+        gold_min=min(gold_list) if gold_list else 0.0,
+        gold_max=max(gold_list) if gold_list else 0.0,
+        heresy_min=min(heresy_list) if heresy_list else 0.0,
+        heresy_max=max(heresy_list) if heresy_list else 0.0,
         eras_limit_pct=totals["limit_games"] / n,
         cards_played_avg=totals["cards"] / n,
         avg_gold_end=totals["gold_end"] / tot_players if tot_players else 0.0,

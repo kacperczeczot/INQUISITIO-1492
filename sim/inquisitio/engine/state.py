@@ -77,6 +77,10 @@ class PlayerState:
     # A teach / shared pressure metric
     frames_dealt: int = 0
     used_kurier: bool = False  # A: caa-05 once
+    inquisitor_send_count: int = 0
+    interrogate_count: int = 0
+    kurier_count: int = 0
+    vote_change_count: int = 0
 
 
 @dataclass
@@ -104,6 +108,7 @@ class GameState:
     inquisitor_location: str = "trybunal"
     inquisitor_mode: InquisitorMode = InquisitorMode.PATROL
     eras_since_autodafe: int = 99
+    autodafe_cooldown: int = 2
     sea_route_open: bool = False
     relics_on_board: dict[str, int] = field(default_factory=dict)
     time_deck: list[str] = field(default_factory=list)
@@ -113,6 +118,7 @@ class GameState:
     log: list[str] = field(default_factory=list)
     rng_seed: int = 0
     layer: str = "C"  # A, B, or C content enabled
+    sys_overrides: dict = field(default_factory=dict)
 
     def alive_factions(self) -> list[FactionId]:
         return list(self.turn_order)

@@ -5,6 +5,7 @@ import random
 from typing import Iterable
 
 from inquisitio.cards.loader import cards_for_faction, time_cards
+from inquisitio.config import CONFIG
 from inquisitio.engine.state import (
     LOCATIONS,
     AgentToken,
@@ -107,8 +108,7 @@ SETUP_PRESETS: dict[str, list[FactionId]] = {
 }
 
 
-def _start_agents(faction: FactionId) -> list[AgentToken]:
-    # spread lightly
+def _start_agents(faction: FactionId, count: int = 3) -> list[AgentToken]:
     homes = {
         FactionId.SWIETE_OFICJUM: "trybunal",
         FactionId.CIENIE_AL_ANDALUS: "gildia",
@@ -117,11 +117,11 @@ def _start_agents(faction: FactionId) -> list[AgentToken]:
         FactionId.GILDIA_CIENI: "rynek",
     }
     home = homes[faction]
-    return [
-        AgentToken(owner=faction, location=home),
-        AgentToken(owner=faction, location=home),
-        AgentToken(owner=faction, location="rynek"),
-    ]
+    tokens = []
+    for i in range(count):
+        loc = home if i < 2 else "rynek"
+        tokens.append(AgentToken(owner=faction, location=loc))
+    return tokens
 
 
 def new_game(
@@ -133,6 +133,7 @@ def new_game(
     threshold: int = 8,
     layer: str = "C",
     max_eras: int = 8,
+    sys_overrides: dict | None = None,
 ) -> GameState:
     if setup:
         factions = SETUP_PRESETS[setup]
@@ -147,20 +148,37 @@ def new_game(
     if len(faction_list) < 3 or len(faction_list) > 5:
         raise ValueError("Players must be 3–5 (no 2p mode)")
 
+    n_players = len(faction_list)
+    sys = sys_overrides or {}
+
+    # Read defaults from CONFIG, allow sys_overrides to override
+    start_gold = sys.get("start_gold", CONFIG.system.start_gold)
+    agents_count = sys.get("agents_per_player", CONFIG.system.agents_per_player)
+    hand_limit = sys.get("hand_limit", CONFIG.system.hand_limit)
+    max_eras = sys.get("max_eras", CONFIG.system.max_eras)
+
+    # Threshold: sys_overrides > explicit param > CONFIG per player count
+    if "threshold" in sys:
+        final_threshold = sys["threshold"]
+    elif threshold != 8:
+        final_threshold = threshold
+    else:
+        final_threshold = CONFIG.threshold_for(n_players)
+
     rng = random.Random(seed)
     players_map: dict[FactionId, PlayerState] = {}
     for fid in faction_list:
         deck_cards = cards_for_faction(fid.value, max_layer=layer)
         ids = [c.id for c in deck_cards]
         rng.shuffle(ids)
-        hand = ids[:5]
-        deck = ids[5:]
+        hand = ids[:hand_limit]
+        deck = ids[hand_limit:]
         players_map[fid] = PlayerState(
             faction=fid,
             hand=hand,
             deck=deck,
-            agents=_start_agents(fid),
-            gold=3,
+            agents=_start_agents(fid, agents_count),
+            gold=start_gold,
         )
 
     relics = {loc: 0 for loc in LOCATIONS}
@@ -174,11 +192,13 @@ def new_game(
     state = GameState(
         players=players_map,
         turn_order=faction_list,
-        accusation_threshold=threshold,
+        accusation_threshold=final_threshold,
         relics_on_board=relics,
         time_deck=tdeck,
         rng_seed=seed,
         layer=layer,
         max_eras=max_eras,
+        autodafe_cooldown=sys.get("autodafe_cooldown", CONFIG.system.autodafe_cooldown),
+        sys_overrides=sys,
     )
     return state
