@@ -24,6 +24,7 @@ def build_level1_tests():
     s = CONFIG.system
     base_threshold = s.accusation_threshold["4p"]
     base_gold = CONFIG.start_gold_for(4)
+    base_hand_limit = CONFIG.hand_limit_for(4)
     return [
         ("L1_BAZA", "Baza (Bieżące parametry systemowe)", {}),
         ("L1_THRESHOLD_PLUS1", f"Próg Oskarżenia (Herezja): {base_threshold + 1} (+1)", {"threshold": base_threshold + 1}),
@@ -34,8 +35,8 @@ def build_level1_tests():
         ("L1_START_GOLD_MINUS1", f"Złoto startowe: {base_gold - 1}zł (-1)", {"start_gold": base_gold - 1}),
         ("L1_AGENTS_PLUS1", f"Liczba agentów na gracza: {s.agents_per_player + 1} (+1)", {"agents_per_player": s.agents_per_player + 1}),
         ("L1_AGENTS_MINUS1", f"Liczba agentów na gracza: {s.agents_per_player - 1} (-1)", {"agents_per_player": s.agents_per_player - 1}),
-        ("L1_HAND_LIMIT_PLUS1", f"Limit kart na ręce: {s.hand_limit + 1} (+1)", {"hand_limit": s.hand_limit + 1}),
-        ("L1_HAND_LIMIT_MINUS1", f"Limit kart na ręce: {s.hand_limit - 1} (-1)", {"hand_limit": s.hand_limit - 1}),
+        ("L1_HAND_LIMIT_PLUS1", f"Limit kart na ręce: {base_hand_limit + 1} (+1)", {"hand_limit": base_hand_limit + 1}),
+        ("L1_HAND_LIMIT_MINUS1", f"Limit kart na ręce: {base_hand_limit - 1} (-1)", {"hand_limit": base_hand_limit - 1}),
         ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown + 1} Ery (+1)", {"autodafe_cooldown": s.autodafe_cooldown + 1}),
         ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown - 1} Erę (-1)", {"autodafe_cooldown": s.autodafe_cooldown - 1}),
     ]

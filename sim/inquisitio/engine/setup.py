@@ -156,7 +156,10 @@ def new_game(
     else:
         start_gold = CONFIG.start_gold_for(n_players)
     agents_count = sys.get("agents_per_player", CONFIG.system.agents_per_player)
-    hand_limit = sys.get("hand_limit", CONFIG.system.hand_limit)
+    if "hand_limit" in sys:
+        hand_limit = sys["hand_limit"]
+    else:
+        hand_limit = CONFIG.hand_limit_for(n_players)
     max_eras = sys.get("max_eras", CONFIG.system.max_eras)
 
     # Threshold: sys_overrides > explicit param > CONFIG per player count

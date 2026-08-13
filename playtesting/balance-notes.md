@@ -23,6 +23,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | **Cooldown Autodafé** | **2 Ery** | **2 Ery** | **2 Ery** | Zabezpieczenie przed seryjnym spalaniem agentów erę po erze. |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę + trickle +1 złota w 1. rundzie poprawiają płynność ekonomii. |
 | **Złoto Startowe** | **3 zł** | **3 zł** | **2 zł** | W 5p 2zł zwalnia wczesny rozmach Korony/Gildii i daje czas Oficjum/Kabale (skok wyniku 5p do 65.5 pkt); w 3–4p 3zł zapewnia płynność. |
+| **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **6 Kart** | W 5p limit 6 kart daje szeroki wybór akcji w tłoku (skok wyniku 5p do 69.1 pkt); w 3–4p limit 5 kart trzyma tempo. |
 | **Otwarcie Szlaku Morskiego (Cienie)** | **Era 6** | **Era 5** | **Era 5** | Automatyczny dostęp do ewakuacji morskiej w 5. Erze dla wyższych składów. |
 
 ---
@@ -104,8 +105,8 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 ### 🟢 Patch v1.2 (2026-08-13) — Rekalibracja 5p & Asymetryczne Złoto Startowe
 - **Święte Oficjum (`5p Stosy`):** Obniżenie wymogu z 5 do **4 Stosy** w składzie 5-osobowym. 
   - *Efekt:* Wzrost wygranych Oficjum w 5p z 10.5% do **20.4%** (trafienie w idealny punkt 20.0%) i skok wyniku balansu 5p z **`🔴 0.0 pkt`** do **`🟢 52.9 pkt`**.
-- **Złoto Startowe (`start_gold`):** Wprowadzenie asymetrycznego budżetu startowego wg liczby graczy (`3p: 3zł` | `4p: 3zł` | `5p: 2zł`).
-  - *Efekt:* Zmniejszenie startowej dominacji Korony/Gildii w tłoku 5p przy zachowaniu płynności bez pasa biedy w 3p i 4p.
+- **Limit Kart na Ręce (`hand_limit`):** Wprowadzenie asymetrycznego limitu kart (`3p: 5` | `4p: 5` | `5p: 6`).
+  - *Efekt:* W 5p limit 6 kart dostarcza szeroki wybór opcji taktycznych w tłoku 15 agentów, wykręcając skok wyniku 5p aż do **`🟢 69.1 pkt`** (`+69.1 pkt` w L1).
 - **Limit Er (`max_eras`):** Audyt L1 wykazał, że 9 Er obniża deadlocki o połowę (z 7.1% do 3.5%). Zachowano 8 Er w konfiguracji bazowej z notatką analityczną do rekalibracji bramek.
 
 ### 🟡 Patch v1.1 (2026-08-13) — Pakiet 5 Fal Optymalizacji Monte Carlo (5,000,000 Partii)

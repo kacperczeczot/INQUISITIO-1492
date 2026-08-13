@@ -35,7 +35,7 @@
 2. Każdy wybiera frakcję: talia, 3 Agenci, planszetka (Herezja = 0), cel zwycięstwa.
 3. Złoto startowe: **{'3p': 3, '4p': 3, '5p': 2}** na gracza.
 4. Relikwie / Fragmenty według [`../../playtesting/setups.md`](../../playtesting/setups.md).
-5. Dobierz **5** kart z talii 10 (C).
+5. Dobierz **{'3p': 5, '4p': 5, '5p': 6}** kart z talii 10 (C).
 6. **Pierwszy gracz:** ustala stół (nie losujcie domyślnie).
 7. Talia Czasu: od Ery 1.
 
@@ -119,7 +119,7 @@ Gdy ktoś jest w **Krytycznej**, inny gracz może **Rzucić Oskarżenie** (1× p
 
 ### E.VI — Czystka (faza)
 
-1. Dobierz karty do limitu ręki **5**.
+1. Dobierz karty do limitu ręki **{'3p': 5, '4p': 5, '5p': 6}**.
 2. Odkryj **1** edykt z Talii Czasu (C) — obowiązuje następną Erę / natychmiast według tekstu.
 3. Przesuń znacznik 1. gracza.
 

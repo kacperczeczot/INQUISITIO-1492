@@ -4,7 +4,10 @@ system:
     4p: 3
     5p: 2
   agents_per_player: 3
-  hand_limit: 5
+  hand_limit:
+    3p: 5
+    4p: 5
+    5p: 6
   max_eras: 8
   autodafe_cooldown: 2
   cards_per_era: 2

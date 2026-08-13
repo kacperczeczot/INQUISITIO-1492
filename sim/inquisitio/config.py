@@ -93,6 +93,14 @@ class GameConfig:
             return sg[key]
         return int(sg)
 
+    def hand_limit_for(self, n_players: int) -> int:
+        """Hand limit for a given player count."""
+        hl = self.system.hand_limit
+        if isinstance(hl, (_Section, dict)):
+            key = f"{n_players}p"
+            return hl[key]
+        return int(hl)
+
     def victory_raw(self) -> dict[str, Any]:
         """Raw victory dict for sync_config templating."""
         return self._raw["victory"]
