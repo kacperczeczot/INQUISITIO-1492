@@ -19,9 +19,10 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Oskarżenia (Krytyczna Herezja)** | **7** | **8** | **8** | Na 3p niższy próg wymusza dynamikę Werdyktu przy pustszym stole; na 4–5p próg 8 zapobiega snowballowi Świętego Oficjum. |
 | **Strefy Herezji (Czysta / Obserw. / Kryt.)** | **0–3 / 4–6 / 7–10** | **0–3 / 4–7 / 8–10** | **0–3 / 4–7 / 8–10** | Poszerzenie strefy Obserwowanej (4–7) w 4-5p daje Kabałce przestrzeń na budowanie układów bez natychmiastowego oskarżenia. |
-| **Maksymalna Liczba Er** | **8** | **8** | **8** | Hard-cap zapobiegający przedłużaniu się gier. |
+| **Maksymalna Liczba Er** | **8** | **8** | **8** | Hard-cap zapobiegający przedłużaniu się gier. Audyt L1 wykazał, że 9 Er redukuje deadlocki o połowę (z 7.1% do 3.5%), lecz wymaga rekalibracji bramek warstw B/C. |
 | **Cooldown Autodafé** | **2 Ery** | **2 Ery** | **2 Ery** | Zabezpieczenie przed seryjnym spalaniem agentów erę po erze. |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę + trickle +1 złota w 1. rundzie poprawiają płynność ekonomii. |
+| **Złoto Startowe** | **3 zł** | **3 zł** | **2 zł** | W 5p 2zł zwalnia wczesny rozmach Korony/Gildii i daje czas Oficjum/Kabale (skok wyniku 5p do 65.5 pkt); w 3–4p 3zł zapewnia płynność. |
 | **Otwarcie Szlaku Morskiego (Cienie)** | **Era 6** | **Era 5** | **Era 5** | Automatyczny dostęp do ewakuacji morskiej w 5. Erze dla wyższych składów. |
 
 ---
@@ -31,7 +32,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia planszy:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy - spalenie agentów):** `3p` = **2 Stosy** | `4p` = **3 Stosy** | `5p` = **5 Stosów**. *(Obniżenie dominacji w tłoku na 5p z 36.8% do 23.3%)*.
+- **Ścieżka A (Stosy - spalenie agentów):** `3p` = **2 Stosy** | `4p` = **3 Stosy** | `5p` = **4 Stosy**. *(Korekta 5p z 5 na 4 Stosy zapobiega zepchnięciu Oficjum do 10.5% i podnosi wynik 5p z 0.0 do 44.6 pkt)*.
 - **Ścieżka B (Skazania Stołu - Werdykt):** `3p` = **2 Skazania** | `4p` = **3 Skazania** | `5p` = **4 Skazania**.
 
 ### 2. Cienie Al-Andalus
@@ -92,7 +93,7 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 | Frakcja | ID Karty / Mechanika | Koszt / Zmiana | Uzasadnienie Analityczne |
 | :--- | :--- | :--- | :--- |
-| **Święte Oficjum** | `so-05`, `win.py` | `so-05` koszt = **0 zł** (reakcja); 5p Stosy = **5 Stosów** | Obniżenie darmowej dominacji Oficjum w Lochach na 5p z 36.8% do 23.3%. |
+| **Święte Oficjum** | `so-05`, `win.py` | `so-05` koszt = **0 zł** (reakcja); 5p Stosy = **4 Stosy** | Optymalizacja wygranych Oficjum w 5p z 10.5% do 20.4% (trafienie w punkt idealny 20%). |
 | **Kabała z Toledo** | `kt-03`, `kt-09`, `kt-10` | `kt-03` = **0 zł**; `kt-09` = **1 zł**; `kt-10` = **1 zł** | Podniesienie płynności skarbcowej Kabały w tłoku z 9.2% do 11.8% -> 20.0%. |
 | **Korona & Borgiowie** | `kb-04`, `kb-05`, `kb-07` | `kb-04` = **1 zł**; `kb-05` = **2 zł**; `kb-07` = **2 zł**; Era wygranej = **5**@4–5p | Zbalansowanie wybuchu wygranych Korony w Erze 5 w setupie `4p-core`. |
 | **Gildia Cieni** | `gc-08`, `win.py` | `gc-08` koszt = **1 zł**; Upadki na 5p = **3 Upadki** | Usunięcie biernych wygranych w Erze 3 z przypadkowych Haków rywali. |
