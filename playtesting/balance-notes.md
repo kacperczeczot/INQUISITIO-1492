@@ -103,12 +103,17 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Patch Notes)
 
-### 🟢 Patch v1.2 (2026-08-13) — Rekalibracja 5p & Asymetryczne Złoto Startowe
+### 🟢 Patch v1.2 (2026-08-13) — Rekalibracja 5p, Pasma Kabały & Parametrów Asymetrycznych
 - **Święte Oficjum (`5p Stosy`):** Obniżenie wymogu z 5 do **4 Stosy** w składzie 5-osobowym. 
   - *Efekt:* Wzrost wygranych Oficjum w 5p z 10.5% do **20.4%** (trafienie w idealny punkt 20.0%) i skok wyniku balansu 5p z **`🔴 0.0 pkt`** do **`🟢 52.9 pkt`**.
+- **Złoto Startowe (`start_gold`):** Wprowadzenie asymetrycznego budżetu startowego wg liczby graczy (`3p: 3zł` | `4p: 3zł` | `5p: 2zł`).
+  - *Efekt:* Zmniejszenie startowej dominacji Korony/Gildii w tłoku 5p bez wywoływania pasa biedy w 3–4p.
+- **Limit Kart na Ręce (`hand_limit`):** Wprowadzenie asymetrycznego limitu kart na ręce (`3p: 5` | `4p: 5` | `5p: 6`).
+  - *Efekt:* W 5p limit 6 kart dostarcza szeroki wybór opcji taktycznych w tłoku 15 agentów na mapie.
 - **Kabała z Toledo (`heresy_band`):** Poszerzenie górnej granicy pasma z 7 do **8 (`[3, 8]`)**.
-  - *Efekt:* Podniesienie wyniku `Global Score` z 59.8 do **`🟢 63.9 pkt`** (`+4.1 pkt`) oraz `5p Score` do **`🟢 79.4 pkt`** (`+10.3 pkt`).
+  - *Efekt:* Podniesienie wyniku `Global Score` z 59.8 do **`🟢 64.5 pkt`** (`+4.7 pkt`) oraz `5p Score` do **`🟢 79.4 pkt`** (`+10.3 pkt`).
 - **Limit Er (`max_eras`):** Audyt L1 wykazał, że 9 Er obniża deadlocki o połowę (z 7.1% do 3.5%). Zachowano 8 Er w konfiguracji bazowej z notatką analityczną do rekalibracji bramek.
+
 
 
 ### 🟡 Patch v1.1 (2026-08-13) — Pakiet 5 Fal Optymalizacji Monte Carlo (5,000,000 Partii)
