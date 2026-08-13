@@ -610,6 +610,163 @@ pre.code-out {
       </select>
     </div>
 
+    <!-- Advanced Parameters Section Header -->
+    <div style="font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--blood); margin-top: 0.4rem; padding-top: 0.6rem; border-top: 1.5px dashed var(--panel-border);">
+      Parametry Celowania, Warunków & Flag
+    </div>
+
+    <!-- Group 1: Targets & Values -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-target-loc">Strefa Celu (target_loc)</label>
+        <select id="card-target-loc">
+          <option value="" selected>Brak (Domyślna)</option>
+          <option value="same_location">same_location</option>
+          <option value="agent_location">agent_location</option>
+          <option value="neighbor_location">neighbor_location</option>
+          <option value="dungeon">dungeon</option>
+          <option value="palace_or_same_location">palace_or_same_location</option>
+          <option value="dungeon_or_tribunal">dungeon_or_tribunal</option>
+          <option value="guild_or_market">guild_or_market</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="card-target-scope">Zakres Celu (target_scope)</label>
+        <select id="card-target-scope">
+          <option value="" selected>Brak (free_rival)</option>
+          <option value="free_rival">free_rival (Wskaż rywala)</option>
+          <option value="triggering_rival">triggering_rival (Wskaż tego rywala)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-target-heresy">Herezja Rywala (+🔥)</label>
+        <input type="number" id="card-target-heresy" value="" min="0" max="5" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label for="card-gold">Zysk Złota (gold)</label>
+        <input type="number" id="card-gold" value="" min="0" max="10" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label for="card-agents">Ruchy Agentów (agents)</label>
+        <input type="number" id="card-agents" value="" min="0" max="5" placeholder="0"/>
+      </div>
+    </div>
+
+    <!-- Group 2: Conditions & Triggers -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-condition">Warunek Aktywacji (condition)</label>
+        <select id="card-condition">
+          <option value="" selected>Brak warunku</option>
+          <option value="relic_present">relic_present</option>
+          <option value="has_double_agent">has_double_agent</option>
+          <option value="agent_in_dungeon_or_tribunal">agent_in_dungeon_or_tribunal</option>
+          <option value="fragments_eq_3">fragments_eq_3</option>
+          <option value="active_hooks_gte_2">active_hooks_gte_2</option>
+          <option value="no_inquisitor_or_double_or_sea_route">no_inquisitor_or_double_or_sea_route</option>
+          <option value="has_fragment_and_agent_in_dungeon_or_tribunal">has_fragment_and_agent_in_dungeon_or_tribunal</option>
+          <option value="rival_has_hook_or_double_or_autodafe">rival_has_hook_or_double_or_autodafe</option>
+          <option value="rival_in_dungeon_or_inquisitor">rival_in_dungeon_or_inquisitor</option>
+          <option value="heresy_gte_4">heresy_gte_4</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="card-trigger">Trigger Reakcji (trigger)</label>
+        <select id="card-trigger">
+          <option value="" selected>Brak triggera</option>
+          <option value="rival_plays_heresy_gte_1">rival_plays_heresy_gte_1</option>
+          <option value="after_verdict_majority_revealed">after_verdict_majority_revealed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="card-breaks-rule">Baner Zniesienia Reguły (breaks_rule)</label>
+      <input type="text" id="card-breaks-rule" value="" placeholder="np. Autodafé z ręki co 2 Ery"/>
+    </div>
+
+    <!-- Group 3: Detailed Faction Flags -->
+    <div class="form-row">
+      <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
+        <input type="checkbox" id="card-arrest-flag" style="width:auto; cursor:pointer;">
+        <label for="card-arrest-flag" style="margin:0; cursor:pointer;">arrest: true</label>
+      </div>
+      <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
+        <input type="checkbox" id="card-creates-hook-flag" style="width:auto; cursor:pointer;">
+        <label for="card-creates-hook-flag" style="margin:0; cursor:pointer;">creates_hook: true</label>
+      </div>
+      <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
+        <input type="checkbox" id="card-no-move-limit" style="width:auto; cursor:pointer;">
+        <label for="card-no-move-limit" style="margin:0; cursor:pointer;">no_move_limit: true</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-decree">Dekret (decree)</label>
+        <input type="number" id="card-decree" value="" min="0" max="3" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label for="card-verdict-weight">Waga Głosu (verdict_weight)</label>
+        <input type="number" id="card-verdict-weight" value="" min="1" max="3" placeholder="1"/>
+      </div>
+      <div class="form-group">
+        <label for="card-max-relics">Max Relikwii (max_relics)</label>
+        <input type="number" id="card-max-relics" value="" min="1" max="2" placeholder="1"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-on-refusal">Odmowa Haka (on_refusal)</label>
+        <select id="card-on-refusal">
+          <option value="" selected>Brak (Odmowa złoto)</option>
+          <option value="mark_fall">mark_fall (Oznacz Upadek)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="card-bonus-on-heresy">Bonus Herezji (bonus_on_heresy)</label>
+        <select id="card-bonus-on-heresy">
+          <option value="" selected>Brak</option>
+          <option value="grant_fragment">grant_fragment (Fragment)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-penalty-heresy">Kara Herezji (penalty_heresy)</label>
+        <input type="number" id="card-penalty-heresy" value="" min="1" max="5" placeholder="3"/>
+      </div>
+      <div class="form-group">
+        <label for="card-heresy-band">Pasmo Kabały (target_heresy_band)</label>
+        <input type="text" id="card-heresy-band" value="" placeholder="4, 6"/>
+      </div>
+      <div class="form-group">
+        <label for="card-fallback-heresy">Korekta Herezji (fallback_heresy)</label>
+        <input type="number" id="card-fallback-heresy" value="" min="1" max="10" placeholder="5"/>
+      </div>
+    </div>
+
+    <!-- Group 4: Anti-AP Limits -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="card-limit-inq">Limit Nasłania (inquisitor_send_limit)</label>
+        <input type="number" id="card-limit-inq" value="" min="0" max="1" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label for="card-limit-int">Limit Przesłuchania (interrogate_limit)</label>
+        <input type="number" id="card-limit-int" value="" min="0" max="1" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label for="card-limit-era">Limit / Erę (limit_per_era)</label>
+        <input type="number" id="card-limit-era" value="" min="0" max="1" placeholder="0"/>
+      </div>
+    </div>
+
     <div class="form-group">
       <label>Dostępne Tagi (PnP / Filtry)</label>
       <div class="tags-grid" id="tags-container">
@@ -903,7 +1060,44 @@ function updateLivePreview() {
   const cost = parseInt(document.getElementById('card-cost').value) || 0;
   const heresy = parseInt(document.getElementById('card-heresy').value) || 0;
   const action = document.getElementById('card-action').value;
-  
+
+  // Read all advanced mechanical parameters
+  const target_loc = document.getElementById('card-target-loc').value || undefined;
+  const target_scope = document.getElementById('card-target-scope').value || undefined;
+  const target_heresy = parseInt(document.getElementById('card-target-heresy').value) || undefined;
+  const gold = parseInt(document.getElementById('card-gold').value) || undefined;
+  const agents = parseInt(document.getElementById('card-agents').value) || undefined;
+  const condition = document.getElementById('card-condition').value || undefined;
+  const trigger = document.getElementById('card-trigger').value || undefined;
+  const breaks_rule = document.getElementById('card-breaks-rule').value.trim() || undefined;
+  const arrest = document.getElementById('card-arrest-flag').checked || undefined;
+  const creates_hook = document.getElementById('card-creates-hook-flag').checked || undefined;
+  const no_move_limit = document.getElementById('card-no-move-limit').checked || undefined;
+  const decree = parseInt(document.getElementById('card-decree').value) || undefined;
+  const verdict_weight = parseInt(document.getElementById('card-verdict-weight').value) || undefined;
+  const max_relics = parseInt(document.getElementById('card-max-relics').value) || undefined;
+  const on_refusal = document.getElementById('card-on-refusal').value || undefined;
+  const bonus_on_heresy = document.getElementById('card-bonus-on-heresy').value || undefined;
+  const penalty_heresy = parseInt(document.getElementById('card-penalty-heresy').value) || undefined;
+  const fallback_heresy = parseInt(document.getElementById('card-fallback-heresy').value) || undefined;
+  const inquisitor_send_limit = parseInt(document.getElementById('card-limit-inq').value) || undefined;
+  const interrogate_limit = parseInt(document.getElementById('card-limit-int').value) || undefined;
+  const limit_per_era = parseInt(document.getElementById('card-limit-era').value) || undefined;
+
+  let target_heresy_band = undefined;
+  const bandVal = document.getElementById('card-heresy-band').value.trim();
+  if (bandVal) {
+    const parsed = bandVal.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+    if (parsed.length >= 2) target_heresy_band = parsed;
+  }
+
+  const spec = {
+    id: cid, action, cost, heresy, target_loc, target_scope, target_heresy, gold, agents,
+    condition, trigger, breaks_rule, arrest, creates_hook, no_move_limit, decree,
+    verdict_weight, max_relics, on_refusal, bonus_on_heresy, penalty_heresy,
+    target_heresy_band, fallback_heresy, inquisitor_send_limit, interrogate_limit, limit_per_era
+  };
+
   const effectTextarea = document.getElementById('card-effect');
 
   // Handle custom vs auto action & tag state
@@ -913,7 +1107,7 @@ function updateLivePreview() {
   } else if (isAuto) {
     effectTextarea.setAttribute('readonly', 'readonly');
     effectTextarea.style.background = '#f2ece4';
-    effectTextarea.value = computeEffectText({ id: cid, action, cost, heresy });
+    effectTextarea.value = computeEffectText(spec);
     
     // Auto-derive & sync tags
     const autoTags = computeAutoTags(action, type, heresy);
@@ -973,12 +1167,32 @@ function updateLivePreview() {
   yamlStr += `    type: ${type}\n`;
   yamlStr += `    layer: ${layer}\n`;
   yamlStr += `    cost: ${cost}\n`;
-  if (heresy > 0) {
-    yamlStr += `    heresy: ${heresy}\n`;
-  }
-  if (action !== 'custom') {
-    yamlStr += `    action: ${action}\n`;
-  }
+  if (heresy > 0) yamlStr += `    heresy: ${heresy}\n`;
+  if (action !== 'custom') yamlStr += `    action: ${action}\n`;
+  
+  if (target_loc) yamlStr += `    target_loc: ${target_loc}\n`;
+  if (target_scope) yamlStr += `    target_scope: ${target_scope}\n`;
+  if (target_heresy) yamlStr += `    target_heresy: ${target_heresy}\n`;
+  if (gold) yamlStr += `    gold: ${gold}\n`;
+  if (agents) yamlStr += `    agents: ${agents}\n`;
+  if (condition) yamlStr += `    condition: ${condition}\n`;
+  if (trigger) yamlStr += `    trigger: ${trigger}\n`;
+  if (breaks_rule) yamlStr += `    breaks_rule: "${breaks_rule}"\n`;
+  if (arrest) yamlStr += `    arrest: true\n`;
+  if (creates_hook) yamlStr += `    creates_hook: true\n`;
+  if (no_move_limit) yamlStr += `    no_move_limit: true\n`;
+  if (decree) yamlStr += `    decree: ${decree}\n`;
+  if (verdict_weight) yamlStr += `    verdict_weight: ${verdict_weight}\n`;
+  if (max_relics) yamlStr += `    max_relics: ${max_relics}\n`;
+  if (on_refusal) yamlStr += `    on_refusal: ${on_refusal}\n`;
+  if (bonus_on_heresy) yamlStr += `    bonus_on_heresy: ${bonus_on_heresy}\n`;
+  if (penalty_heresy) yamlStr += `    penalty_heresy: ${penalty_heresy}\n`;
+  if (target_heresy_band) yamlStr += `    target_heresy_band: [${target_heresy_band.join(', ')}]\n`;
+  if (fallback_heresy) yamlStr += `    fallback_heresy: ${fallback_heresy}\n`;
+  if (inquisitor_send_limit) yamlStr += `    inquisitor_send_limit: ${inquisitor_send_limit}\n`;
+  if (interrogate_limit) yamlStr += `    interrogate_limit: ${interrogate_limit}\n`;
+  if (limit_per_era) yamlStr += `    limit_per_era: ${limit_per_era}\n`;
+
   if (selectedTags.length > 0) {
     yamlStr += `    tags:\n`;
     selectedTags.forEach(t => { yamlStr += `    - ${t}\n`; });
@@ -994,20 +1208,14 @@ function updateLivePreview() {
   mdStr += `type: ${type}\n`;
   mdStr += `layer: ${layer}\n`;
   mdStr += `cost: ${cost}\n`;
-  if (heresy > 0) {
-    mdStr += `heresy: ${heresy}\n`;
-  }
+  if (heresy > 0) mdStr += `heresy: ${heresy}\n`;
   if (selectedTags.length > 0) {
     mdStr += `tags:\n`;
     selectedTags.forEach(t => { mdStr += `- ${t}\n`; });
   }
   mdStr += `effect: '${effect}'\n`;
-  if (heresy > 0 && heresyText) {
-    mdStr += `heresy_text: ${heresyText}\n`;
-  }
-  if (lore) {
-    mdStr += `lore: ${lore}\n`;
-  }
+  if (heresy > 0 && heresyText) mdStr += `heresy_text: ${heresyText}\n`;
+  if (lore) mdStr += `lore: ${lore}\n`;
   mdStr += `---\n`;
 
   document.getElementById('md-output').textContent = mdStr;
@@ -1023,9 +1231,19 @@ function copyCode(elementId) {
 }
 
 // Event Listeners for live real-time update
-['card-id', 'card-faction', 'card-name', 'card-type', 'card-layer', 'card-cost', 'card-heresy', 'card-action', 'card-effect', 'card-heresy-text', 'card-lore'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updateLivePreview);
-  document.getElementById(id).addEventListener('change', updateLivePreview);
+[
+  'card-id', 'card-faction', 'card-name', 'card-type', 'card-layer', 'card-cost', 'card-heresy', 'card-action',
+  'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents', 'card-condition',
+  'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag', 'card-no-move-limit',
+  'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal', 'card-bonus-on-heresy',
+  'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy', 'card-limit-inq', 'card-limit-int',
+  'card-limit-era', 'card-effect', 'card-heresy-text', 'card-lore'
+].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', updateLivePreview);
+    el.addEventListener('change', updateLivePreview);
+  }
 });
 
 // Initialize on page load
