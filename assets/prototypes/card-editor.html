@@ -209,8 +209,18 @@ input:checked + .slider:before {
 }
 
 .form-row > .form-group {
-  flex: 1 1 160px;
-  min-width: 140px;
+  flex: 1 1 150px;
+  min-width: 120px;
+}
+
+.form-group-short {
+  flex: 0 0 110px !important;
+  min-width: 90px !important;
+}
+
+.form-group-medium {
+  flex: 0 1 180px !important;
+  min-width: 140px !important;
 }
 
 label {
@@ -535,11 +545,11 @@ pre.code-out {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-id">ID Karty</label>
-        <input type="text" id="card-id" value="so-08" placeholder="np. caa-08"/>
+        <input type="text" id="card-id" value="so-08" placeholder="so-08"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-medium">
         <label for="card-faction">Frakcja</label>
         <select id="card-faction">
           <option value="swiete-oficjum" selected>Święte Oficjum</option>
@@ -550,15 +560,7 @@ pre.code-out {
           <option value="time">Talia Czasu</option>
         </select>
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="card-name">Nazwa Karty</label>
-      <input type="text" id="card-name" value="Nasłanie Inkwizytora" placeholder="Nazwa karty..."/>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-medium">
         <label for="card-type">Typ Karty</label>
         <select id="card-type">
           <option value="akcja" selected>Akcja</option>
@@ -566,7 +568,14 @@ pre.code-out {
           <option value="signature">Specjalna (Signature)</option>
         </select>
       </div>
-      <div class="form-group">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group" style="flex: 1 1 200px;">
+        <label for="card-name">Nazwa Karty</label>
+        <input type="text" id="card-name" value="Nasłanie Inkwizytora" placeholder="Nazwa karty..."/>
+      </div>
+      <div class="form-group form-group-short">
         <label for="card-layer">Warstwa</label>
         <select id="card-layer">
           <option value="A">Warstwa A</option>
@@ -577,42 +586,40 @@ pre.code-out {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
-        <label for="card-cost">Koszt (Złoto)</label>
+      <div class="form-group form-group-short">
+        <label for="card-cost">Koszt</label>
         <input type="number" id="card-cost" value="2" min="0" max="5"/>
       </div>
-      <div class="form-group">
-        <label for="card-heresy">Herezja (🔥)</label>
+      <div class="form-group form-group-short">
+        <label for="card-heresy">Herezja 🔥</label>
         <input type="number" id="card-heresy" value="1" min="0" max="3"/>
       </div>
-    </div>
-
-    <!-- Action / Specifier Select -->
-    <div class="form-group">
-      <label for="card-action">Akcja Mechaniczna</label>
-      <select id="card-action">
-        <option value="send_inquisitor" selected>Nasłanie Inkwizytora</option>
-        <option value="move_agent">Ruch Agenta</option>
-        <option value="gain_gold">Zysk Złota</option>
-        <option value="frame_rival">Wskazanie Rywala (+🔥)</option>
-        <option value="arrest">Aresztowanie Agenta</option>
-        <option value="interrogate">Przesłuchanie Agenta</option>
-        <option value="creates_hook">Założenie Haka</option>
-        <option value="evacuate_relic">Ewakuacja Relikwii</option>
-        <option value="move_relic">Przesunięcie Relikwii</option>
-        <option value="free_agent">Uwolnienie z Lochów</option>
-        <option value="grant_fragment">Fragment Kodeksu</option>
-        <option value="grant_fragment_or_gold">Fragment lub Złoto</option>
-        <option value="autodafe">Ogłoszenie Autodafé</option>
-        <option value="move_double_agent">Ruch Podwójnego Agenta</option>
-        <option value="change_vote">Zmiana Głosu w Werdykcie</option>
-        <option value="mark_fall">Oznaczenie Upadku</option>
-        <option value="force_hook">Wymuszenie Haka</option>
-        <option value="check_victory">Sprawdzenie Zwycięstwa</option>
-        <option value="check_victory_or_set_heresy">Rytuał Salomona</option>
-        <option value="gain_gold_and_frame">Zatrute Złoto</option>
-        <option value="custom">Ręczna edycja własna</option>
-      </select>
+      <div class="form-group" style="flex: 1 1 180px;">
+        <label for="card-action">Akcja Mechaniczna</label>
+        <select id="card-action">
+          <option value="send_inquisitor" selected>Nasłanie Inkwizytora</option>
+          <option value="move_agent">Ruch Agenta</option>
+          <option value="gain_gold">Zysk Złota</option>
+          <option value="frame_rival">Wskazanie Rywala (+🔥)</option>
+          <option value="arrest">Aresztowanie Agenta</option>
+          <option value="interrogate">Przesłuchanie Agenta</option>
+          <option value="creates_hook">Założenie Haka</option>
+          <option value="evacuate_relic">Ewakuacja Relikwii</option>
+          <option value="move_relic">Przesunięcie Relikwii</option>
+          <option value="free_agent">Uwolnienie z Lochów</option>
+          <option value="grant_fragment">Fragment Kodeksu</option>
+          <option value="grant_fragment_or_gold">Fragment lub Złoto</option>
+          <option value="autodafe">Ogłoszenie Autodafé</option>
+          <option value="move_double_agent">Ruch Podwójnego Agenta</option>
+          <option value="change_vote">Zmiana Głosu w Werdykcie</option>
+          <option value="mark_fall">Oznaczenie Upadku</option>
+          <option value="force_hook">Wymuszenie Haka</option>
+          <option value="check_victory">Sprawdzenie Zwycięstwa</option>
+          <option value="check_victory_or_set_heresy">Rytuał Salomona</option>
+          <option value="gain_gold_and_frame">Zatrute Złoto</option>
+          <option value="custom">Ręczna edycja własna</option>
+        </select>
+      </div>
     </div>
 
     <!-- Advanced Parameters Section Header -->
@@ -650,15 +657,15 @@ pre.code-out {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-target-heresy">Herezja Rywala (+🔥)</label>
         <input type="number" id="card-target-heresy" value="" min="0" max="5" placeholder="0"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-gold">Zysk Złota</label>
         <input type="number" id="card-gold" value="" min="0" max="10" placeholder="0"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-agents">Ruchy Agentów</label>
         <input type="number" id="card-agents" value="" min="0" max="5" placeholder="0"/>
       </div>
@@ -714,15 +721,15 @@ pre.code-out {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-decree">Dekret Królewski</label>
         <input type="number" id="card-decree" value="" min="0" max="3" placeholder="0"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-verdict-weight">Waga Głosu</label>
         <input type="number" id="card-verdict-weight" value="" min="1" max="3" placeholder="1"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-max-relics">Max Relikwii</label>
         <input type="number" id="card-max-relics" value="" min="1" max="2" placeholder="1"/>
       </div>
@@ -746,7 +753,7 @@ pre.code-out {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-penalty-heresy">Kara Herezji za Odmowę</label>
         <input type="number" id="card-penalty-heresy" value="" min="1" max="5" placeholder="3"/>
       </div>
@@ -754,7 +761,7 @@ pre.code-out {
         <label for="card-heresy-band">Pasmo Herezji Kabały</label>
         <input type="text" id="card-heresy-band" value="" placeholder="4, 6"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-fallback-heresy">Korekta Herezji</label>
         <input type="number" id="card-fallback-heresy" value="" min="1" max="10" placeholder="5"/>
       </div>
@@ -762,15 +769,15 @@ pre.code-out {
 
     <!-- Group 4: Anti-AP Limits -->
     <div class="form-row">
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-limit-inq">Limit Nasłania Inkwizytora</label>
         <input type="number" id="card-limit-inq" value="" min="0" max="1" placeholder="0"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-limit-int">Limit Przesłuchania</label>
         <input type="number" id="card-limit-int" value="" min="0" max="1" placeholder="0"/>
       </div>
-      <div class="form-group">
+      <div class="form-group form-group-short">
         <label for="card-limit-era">Limit na Erę</label>
         <input type="number" id="card-limit-era" value="" min="0" max="1" placeholder="0"/>
       </div>
