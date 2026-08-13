@@ -589,28 +589,28 @@ pre.code-out {
 
     <!-- Action / Specifier Select -->
     <div class="form-group">
-      <label for="card-action">Akcja Mechaniczna (action)</label>
+      <label for="card-action">Akcja Mechaniczna</label>
       <select id="card-action">
-        <option value="send_inquisitor" selected>send_inquisitor (Nasłanie Inkwizytora)</option>
-        <option value="move_agent">move_agent (Ruch Agenta)</option>
-        <option value="gain_gold">gain_gold (Zysk Złota)</option>
-        <option value="frame_rival">frame_rival (Wskaż rywala: +1 Herezja)</option>
-        <option value="arrest">arrest (Aresztowanie Agenta)</option>
-        <option value="interrogate">interrogate (Przesłuchanie)</option>
-        <option value="creates_hook">creates_hook (Zysk Haka)</option>
-        <option value="evacuate_relic">evacuate_relic (Ewakuacja Relikwii)</option>
-        <option value="move_relic">move_relic (Przesunięcie Relikwii)</option>
-        <option value="free_agent">free_agent (Uwolnienie z Lochów)</option>
-        <option value="grant_fragment">grant_fragment (Fragment Kabały)</option>
-        <option value="grant_fragment_or_gold">grant_fragment_or_gold (Fragment lub Złoto)</option>
-        <option value="autodafe">autodafe (Wywołaj Autodafé)</option>
-        <option value="move_double_agent">move_double_agent (Ruch Podwójnego)</option>
-        <option value="change_vote">change_vote (Fałszywy Świadek / Zmiana Głosu)</option>
-        <option value="mark_fall">mark_fall (Oznaczenie Upadku)</option>
-        <option value="force_hook">force_hook (Dekret Królewski / Wymuszenie Haka)</option>
-        <option value="check_victory">check_victory (Sprawdź Zwycięstwo)</option>
-        <option value="check_victory_or_set_heresy">check_victory_or_set_heresy (Pieczęć Salomona)</option>
-        <option value="gain_gold_and_frame">gain_gold_and_frame (Zatrute Złoto)</option>
+        <option value="send_inquisitor" selected>Nasłanie Inkwizytora</option>
+        <option value="move_agent">Ruch Agenta</option>
+        <option value="gain_gold">Zysk Złota</option>
+        <option value="frame_rival">Wskazanie Rywala (+🔥)</option>
+        <option value="arrest">Aresztowanie Agenta</option>
+        <option value="interrogate">Przesłuchanie Agenta</option>
+        <option value="creates_hook">Założenie Haka</option>
+        <option value="evacuate_relic">Ewakuacja Relikwii</option>
+        <option value="move_relic">Przesunięcie Relikwii</option>
+        <option value="free_agent">Uwolnienie z Lochów</option>
+        <option value="grant_fragment">Fragment Kodeksu</option>
+        <option value="grant_fragment_or_gold">Fragment lub Złoto</option>
+        <option value="autodafe">Ogłoszenie Autodafé</option>
+        <option value="move_double_agent">Ruch Podwójnego Agenta</option>
+        <option value="change_vote">Zmiana Głosu w Werdykcie</option>
+        <option value="mark_fall">Oznaczenie Upadku</option>
+        <option value="force_hook">Wymuszenie Haka</option>
+        <option value="check_victory">Sprawdzenie Zwycięstwa</option>
+        <option value="check_victory_or_set_heresy">Rytuał Salomona</option>
+        <option value="gain_gold_and_frame">Zatrute Złoto</option>
         <option value="custom">Ręczna edycja własna</option>
       </select>
     </div>
@@ -627,24 +627,24 @@ pre.code-out {
     <!-- Group 1: Targets & Values -->
     <div class="form-row">
       <div class="form-group">
-        <label for="card-target-loc">Strefa Celu (target_loc)</label>
+        <label for="card-target-loc">Strefa Celu</label>
         <select id="card-target-loc">
           <option value="" selected>Brak (Domyślna)</option>
-          <option value="same_location">same_location</option>
-          <option value="agent_location">agent_location</option>
-          <option value="neighbor_location">neighbor_location</option>
-          <option value="dungeon">dungeon</option>
-          <option value="palace_or_same_location">palace_or_same_location</option>
-          <option value="dungeon_or_tribunal">dungeon_or_tribunal</option>
-          <option value="guild_or_market">guild_or_market</option>
+          <option value="same_location">Lokacja własnego Agenta</option>
+          <option value="agent_location">W stronę własnego Agenta</option>
+          <option value="neighbor_location">Sąsiednia lokacja</option>
+          <option value="dungeon">Lochy</option>
+          <option value="palace_or_same_location">Pałac lub lokacja Agenta</option>
+          <option value="dungeon_or_tribunal">Lochy lub Trybunał</option>
+          <option value="guild_or_market">Gildia lub Rynek</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="card-target-scope">Zakres Celu (target_scope)</label>
+        <label for="card-target-scope">Zakres Celu</label>
         <select id="card-target-scope">
-          <option value="" selected>Brak (free_rival)</option>
-          <option value="free_rival">free_rival (Wskaż rywala)</option>
-          <option value="triggering_rival">triggering_rival (Wskaż tego rywala)</option>
+          <option value="" selected>Dowolny rywal</option>
+          <option value="free_rival">Dowolny rywal</option>
+          <option value="triggering_rival">Rywal wyzwalający</option>
         </select>
       </div>
     </div>
@@ -655,11 +655,11 @@ pre.code-out {
         <input type="number" id="card-target-heresy" value="" min="0" max="5" placeholder="0"/>
       </div>
       <div class="form-group">
-        <label for="card-gold">Zysk Złota (gold)</label>
+        <label for="card-gold">Zysk Złota</label>
         <input type="number" id="card-gold" value="" min="0" max="10" placeholder="0"/>
       </div>
       <div class="form-group">
-        <label for="card-agents">Ruchy Agentów (agents)</label>
+        <label for="card-agents">Ruchy Agentów</label>
         <input type="number" id="card-agents" value="" min="0" max="5" placeholder="0"/>
       </div>
     </div>
@@ -667,33 +667,33 @@ pre.code-out {
     <!-- Group 2: Conditions & Triggers -->
     <div class="form-row">
       <div class="form-group">
-        <label for="card-condition">Warunek Aktywacji (condition)</label>
+        <label for="card-condition">Warunek Aktywacji</label>
         <select id="card-condition">
           <option value="" selected>Brak warunku</option>
-          <option value="relic_present">relic_present</option>
-          <option value="has_double_agent">has_double_agent</option>
-          <option value="agent_in_dungeon_or_tribunal">agent_in_dungeon_or_tribunal</option>
-          <option value="fragments_eq_3">fragments_eq_3</option>
-          <option value="active_hooks_gte_2">active_hooks_gte_2</option>
-          <option value="no_inquisitor_or_double_or_sea_route">no_inquisitor_or_double_or_sea_route</option>
-          <option value="has_fragment_and_agent_in_dungeon_or_tribunal">has_fragment_and_agent_in_dungeon_or_tribunal</option>
-          <option value="rival_has_hook_or_double_or_autodafe">rival_has_hook_or_double_or_autodafe</option>
-          <option value="rival_in_dungeon_or_inquisitor">rival_in_dungeon_or_inquisitor</option>
-          <option value="heresy_gte_4">heresy_gte_4</option>
+          <option value="relic_present">Relikwia w lokacji Agenta</option>
+          <option value="has_double_agent">Posiadanie Podwójnego Agenta</option>
+          <option value="agent_in_dungeon_or_tribunal">Agent w Lochach lub Trybunale</option>
+          <option value="fragments_eq_3">Posiadanie 3 Fragmentów</option>
+          <option value="active_hooks_gte_2">Aktywne Haki na ≥ 2 graczach</option>
+          <option value="no_inquisitor_or_double_or_sea_route">Brak Inkwizytora / Podwójny / Szlak otwarty</option>
+          <option value="has_fragment_and_agent_in_dungeon_or_tribunal">≥1 Fragment i Agent w Lochach/Trybunale</option>
+          <option value="rival_has_hook_or_double_or_autodafe">Rywal ma Hak / Podwójnego / Autodafé</option>
+          <option value="rival_in_dungeon_or_inquisitor">Agent w Lochach lub u Inkwizytora</option>
+          <option value="heresy_gte_4">Herezja rywala ≥ 4</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="card-trigger">Trigger Reakcji (trigger)</label>
+        <label for="card-trigger">Trigger Reakcji</label>
         <select id="card-trigger">
-          <option value="" selected>Brak triggera</option>
-          <option value="rival_plays_heresy_gte_1">rival_plays_heresy_gte_1</option>
-          <option value="after_verdict_majority_revealed">after_verdict_majority_revealed</option>
+          <option value="" selected>Brak wyzwalacza</option>
+          <option value="rival_plays_heresy_gte_1">Gdy rywal zagrywa kartę z Herezją ≥ 1</option>
+          <option value="after_verdict_majority_revealed">Po ujawnieniu większości Werdyktu</option>
         </select>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="card-breaks-rule">Baner Zniesienia Reguły (breaks_rule)</label>
+      <label for="card-breaks-rule">Baner Zniesienia Reguły</label>
       <input type="text" id="card-breaks-rule" value="" placeholder="np. Autodafé z ręki co 2 Ery"/>
     </div>
 
@@ -701,61 +701,61 @@ pre.code-out {
     <div class="form-row">
       <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
         <input type="checkbox" id="card-arrest-flag" style="width:auto; cursor:pointer;">
-        <label for="card-arrest-flag" style="margin:0; cursor:pointer;">arrest: true</label>
+        <label for="card-arrest-flag" style="margin:0; cursor:pointer;">Aresztowanie Agenta</label>
       </div>
       <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
         <input type="checkbox" id="card-creates-hook-flag" style="width:auto; cursor:pointer;">
-        <label for="card-creates-hook-flag" style="margin:0; cursor:pointer;">creates_hook: true</label>
+        <label for="card-creates-hook-flag" style="margin:0; cursor:pointer;">Założenie Haka</label>
       </div>
       <div class="form-group" style="display:flex; align-items:center; gap:0.4rem; margin-top:0.3rem;">
         <input type="checkbox" id="card-no-move-limit" style="width:auto; cursor:pointer;">
-        <label for="card-no-move-limit" style="margin:0; cursor:pointer;">no_move_limit: true</label>
+        <label for="card-no-move-limit" style="margin:0; cursor:pointer;">Zakaz Ruchu w Reakcji</label>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="card-decree">Dekret (decree)</label>
+        <label for="card-decree">Dekret Królewski</label>
         <input type="number" id="card-decree" value="" min="0" max="3" placeholder="0"/>
       </div>
       <div class="form-group">
-        <label for="card-verdict-weight">Waga Głosu (verdict_weight)</label>
+        <label for="card-verdict-weight">Waga Głosu</label>
         <input type="number" id="card-verdict-weight" value="" min="1" max="3" placeholder="1"/>
       </div>
       <div class="form-group">
-        <label for="card-max-relics">Max Relikwii (max_relics)</label>
+        <label for="card-max-relics">Max Relikwii</label>
         <input type="number" id="card-max-relics" value="" min="1" max="2" placeholder="1"/>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="card-on-refusal">Odmowa Haka (on_refusal)</label>
+        <label for="card-on-refusal">Odmowa Haka</label>
         <select id="card-on-refusal">
-          <option value="" selected>Brak (Odmowa złoto)</option>
-          <option value="mark_fall">mark_fall (Oznacz Upadek)</option>
+          <option value="" selected>Brak (Odmowa ze złota)</option>
+          <option value="mark_fall">Oznacz Upadek Domu</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="card-bonus-on-heresy">Bonus Herezji (bonus_on_heresy)</label>
+        <label for="card-bonus-on-heresy">Bonus za Herezję</label>
         <select id="card-bonus-on-heresy">
           <option value="" selected>Brak</option>
-          <option value="grant_fragment">grant_fragment (Fragment)</option>
+          <option value="grant_fragment">Fragment Kodeksu</option>
         </select>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="card-penalty-heresy">Kara Herezji (penalty_heresy)</label>
+        <label for="card-penalty-heresy">Kara Herezji za Odmowę</label>
         <input type="number" id="card-penalty-heresy" value="" min="1" max="5" placeholder="3"/>
       </div>
       <div class="form-group">
-        <label for="card-heresy-band">Pasmo Kabały (target_heresy_band)</label>
+        <label for="card-heresy-band">Pasmo Herezji Kabały</label>
         <input type="text" id="card-heresy-band" value="" placeholder="4, 6"/>
       </div>
       <div class="form-group">
-        <label for="card-fallback-heresy">Korekta Herezji (fallback_heresy)</label>
+        <label for="card-fallback-heresy">Korekta Herezji</label>
         <input type="number" id="card-fallback-heresy" value="" min="1" max="10" placeholder="5"/>
       </div>
     </div>
@@ -763,15 +763,15 @@ pre.code-out {
     <!-- Group 4: Anti-AP Limits -->
     <div class="form-row">
       <div class="form-group">
-        <label for="card-limit-inq">Limit Nasłania (inquisitor_send_limit)</label>
+        <label for="card-limit-inq">Limit Nasłania Inkwizytora</label>
         <input type="number" id="card-limit-inq" value="" min="0" max="1" placeholder="0"/>
       </div>
       <div class="form-group">
-        <label for="card-limit-int">Limit Przesłuchania (interrogate_limit)</label>
+        <label for="card-limit-int">Limit Przesłuchania</label>
         <input type="number" id="card-limit-int" value="" min="0" max="1" placeholder="0"/>
       </div>
       <div class="form-group">
-        <label for="card-limit-era">Limit / Erę (limit_per_era)</label>
+        <label for="card-limit-era">Limit na Erę</label>
         <input type="number" id="card-limit-era" value="" min="0" max="1" placeholder="0"/>
       </div>
     </div>
