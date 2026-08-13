@@ -19,7 +19,7 @@
 
 ## Przebieg Ery (skrót A)
 
-1. **Inkwizytor** — nasłanie (opcjonalnie, 1×/gracz/Erę) → ruch 0–1 lokacji → ewentualne Autodafé (max co 2 Ery).
+1. **Inkwizytor** — nasłanie (opcjonalnie, 1×/gracz/Erę) → ruch 0–1 lokacji → ewentualne Autodafé (max co 3 Ery).
 2. **Plan** — na początek tury **+1 złoto**; każdy zagrywa **2** zakryte karty pod lokacje (**płać przy zagraniu**); opcjonalnie ruch Agenta o 1.
 3. **Odkrycie** — lokacje 1→5: efekty, Herezja, areszty (jeśli karta).
 4. **Dwór** — jeśli ktoś w Krytycznej: oskarżenie → Werdykt.
@@ -34,8 +34,8 @@
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpiecznie, zwykle słabiej |
-| 4–6 (3p) / 4–7 (4–5p) | Obserwowana | Ryzyko; Kabała lubi ten pas |
-| 7–10 (3p) / 8–10 (4–5p) | **Krytyczna** | Inni mogą Cię oskarżyć |
+| 4–5 (3p) / 4–6 (4–5p) | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 6–10 (3p) / 7–10 (4–5p) | **Krytyczna** | Inni mogą Cię oskarżyć |
 
 ---
 
@@ -48,7 +48,7 @@
 
 ## Werdykt (5 bulletów)
 
-1. Cel w Krytycznej (≥7 w 3p, ≥8 w 4–5p).
+1. Cel w Krytycznej (≥6 w 3p, ≥7 w 4–5p).
 2. Oskarżyciel ogłasza (1× przeciw temu graczowi / Erę).
 3. Głosowanie **jawne**: Skazać / Uniewinnić (bez oskarżonego).
 4. Remis → Uniewinnienie.
@@ -60,11 +60,11 @@
 
 | Frakcja | Cel |
 | :--- | :--- |
-| Święte Oficjum | Stosy (2@3p / 3@4p / 5@5p) lub Skazania Stołu (2@3p / 3@4p / 4@5p) |
+| Święte Oficjum | Stosy (3@3p / 3@4p / 4@5p) lub Skazania Stołu (2@3p / 3@4p / 4@5p) |
 | Cienie Al-Andalus | 2 Relikwie + ścieżka (Era 6@3p / 5@4–5p) |
-| Korona & Borgiowie | 2 Dekrety + ≥1 Hak (Era 6@3p / 5@4–5p); 4p+: też 1 Dekret + 2 Haki (Era 6) |
-| Kabała z Toledo | Fragmenty (2@3p / 3@4p / 2@5p) + Herezja 3–7 (Era 7@3p / 6@4–5p) |
-| Gildia Cieni | 2 Upadki (3 bez Oficjum lub w 5p) |
+| Korona & Borgiowie | 2 Dekrety + ≥1 Hak (Era 5); 4p+: też 1 Dekret + 2 Haki (Era 6) |
+| Kabała z Toledo | 3 Fragmenty + Herezja 3–8 (Era 7@3p / 6@4–5p) |
+| Gildia Cieni | 2 Upadki (3 bez Oficjum) |
 
 **Limit:** 8 Er → najbliższy celowi; remis → najniższa Herezja.
 
@@ -73,7 +73,7 @@
 ## Limity anti-AP
 
 - **1** nasłanie / **1** Hak / **1** Przesłuchanie na gracza na Erę
-- Autodafé max **co 2 Ery**
+- Autodafé max **co 3 Ery**
 - Karty / Erę: **2**
 
 ---

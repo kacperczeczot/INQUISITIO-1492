@@ -9,16 +9,16 @@ system:
     4p: 5
     5p: 6
   max_eras: 9
-  autodafe_cooldown: 2
+  autodafe_cooldown: 3
   cards_per_era: 2
   accusation_threshold:
-    3p: 7
-    4p: 8
-    5p: 8
+    3p: 6
+    4p: 7
+    5p: 7
 victory:
   swiete_oficjum:
     stacks:
-      3p: 2
+      3p: 3
       4p: 3
       5p: 4
     condemns:
@@ -41,7 +41,7 @@ victory:
       4p: 1
       5p: 1
     era:
-      3p: 6
+      3p: 5
       4p: 5
       5p: 5
     alt_path:
@@ -51,9 +51,9 @@ victory:
       era: 6
   kabala_toledo:
     fragments:
-      3p: 2
+      3p: 3
       4p: 3
-      5p: 2
+      5p: 3
     heresy_band:
     - 3
     - 8
@@ -169,7 +169,7 @@ cards:
     heresy: 2
     autodafe: true
     action: autodafe
-    breaks_rule: Autodafé / 2 Ery
+    breaks_rule: Autodafé / 3 Ery
     tags:
     - signature
     - autodafe
@@ -617,13 +617,13 @@ heresy_zones:
   observed:
     3p:
     - 4
-    - 6
+    - 5
     4p_plus:
     - 4
-    - 7
+    - 6
   critical:
-    3p: 7
-    4p_plus: 8
+    3p: 6
+    4p_plus: 7
 telemetry_norms:
   game_length_eras:
   - 5.0

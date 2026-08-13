@@ -37,10 +37,10 @@ tools/          # Generator PnP, katalog kart
 
 | Frakcja | Cel |
 | :--- | :--- |
-| **Święte Oficjum** | 3 Stosy **lub** skazania Werdyktem (2@≤3p / 3@4–5p) |
-| **Cienie Al-Andalus** | 2 Relikwie ewakuowane + ścieżka (Podwójny / cichy exit / szlak) |
-| **Korona & Borgiowie** | 2 Dekrety + ≥1 Hak (Era 7@3p / 6@4–5p); 5p też 1 Dekret+2 Haki od Ery 6 |
-| **Kabała z Toledo** | 3 Fragmenty + Herezja 4–6 (Era 7@3p / 6@4p / 5@5p) |
+| **Święte Oficjum** | 3 Stosy **lub** skazania Werdyktem (2@3p / 3@4p / 4@5p) |
+| **Cienie Al-Andalus** | 2 Relikwie + ścieżka (Podwójny / cichy exit / szlak / Era 6@3p / 5@4–5p) |
+| **Korona & Borgiowie** | 2 Dekrety + ≥0 Haków (Era 5); ≥1 Hak (4–5p); 4p+ też 1 Dekret+2 Haki od Ery 6 |
+| **Kabała z Toledo** | 3 Fragmenty + Herezja 3–8 (Era 7@3p / 6@4–5p) |
 | **Gildia Cieni** | 2 upadki (3 bez Oficjum) |
 
 Szczegóły: [`game/factions/`](game/factions/) · [`docs/rules/ksiega.md`](docs/rules/ksiega.md).

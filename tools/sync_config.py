@@ -47,17 +47,24 @@ def _condemns_text(cfg: dict) -> str:
 def _relics_text(cfg: dict) -> str:
     r = cfg["victory"]["cienie_al_andalus"]["relics"]
     p = cfg["victory"]["cienie_al_andalus"]["path_era"]
-    return f"**{r} Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era {p['3p']}+ przy 3p / Era {p['4p']}+ przy 4–5p)"
+    return (
+        f"**{r} Relikwie** + ścieżka "
+        f"(Podwójny / cichy exit / szlak morski / Era {p['3p']}+ przy 3p / Era {p['4p']}+ przy 4–5p)"
+    )
 
 
 def _korona_text(cfg: dict) -> str:
     kb = cfg["victory"]["korona_borgiowie"]
-    d3, d4 = kb["decrees"]["3p"], kb["decrees"]["4p"]
-    e3, e4 = kb["era"]["3p"], kb["era"]["4p"]
+    d3 = kb["decrees"]["3p"]
+    e3, e4, e5 = kb["era"]["3p"], kb["era"]["4p"], kb["era"]["5p"]
     h3, h4 = kb["hooks"]["3p"], kb["hooks"]["4p"]
     alt = kb["alt_path"]
+    if e3 == e4 == e5:
+        era = f"od Ery **{e3}**"
+    else:
+        era = f"od Ery **{e3}**@3p / **{e4}**@4–5p"
     return (
-        f"**{d3}** Dekrety (od Ery **{e3}**@3p / **{e4}**@4–5p z ≥{h4} Hakiem); "
+        f"**{d3}** Dekrety ({era}; 3p ≥{h3} Haków / 4–5p ≥{h4} Hak); "
         f"na **4–5p** też {alt['decrees']} Dekret + {alt['hooks']} Haki od Ery {alt['era']}"
     )
 
@@ -67,15 +74,22 @@ def _kabala_text(cfg: dict) -> str:
     f3, f4, f5 = kt["fragments"]["3p"], kt["fragments"]["4p"], kt["fragments"]["5p"]
     e3, e4 = kt["era"]["3p"], kt["era"]["4p"]
     hb = kt["heresy_band"]
+    if f3 == f4 == f5:
+        frags = f"**{f3} Fragmenty**"
+    else:
+        frags = f"**{f3}**@3p / **{f4}**@4p / **{f5}**@5p Fragmenty"
     return (
-        f"**{f4} Fragmenty** (**{f3}** przy 3p i 5p) + Herezja **{hb[0]}–{hb[1]}** "
+        f"{frags} + Herezja **{hb[0]}–{hb[1]}** "
         f"(od Ery **{e3}**@3p / **{e4}**@4–5p)"
     )
 
 
 def _gildia_text(cfg: dict) -> str:
     gc = cfg["victory"]["gildia_cieni"]["falls"]
-    return f"**{gc['default']} upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **{gc['no_oficjum']}** gdy brak Oficjum"
+    return (
+        f"**{gc['default']} upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); "
+        f"**{gc['no_oficjum']}** gdy brak Oficjum"
+    )
 
 
 def _victory_table(cfg: dict) -> str:
@@ -212,6 +226,10 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
         text
     )
 
+    cd = cfg["system"]["autodafe_cooldown"]
+    text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
+    text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
+
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/teach-sheet.md"]
 
@@ -242,6 +260,11 @@ def sync_hierarchia(cfg: dict) -> list[str]:
     text = re.sub(
         r"- \*\*Próg Oskarżenia na Dworze:\*\* `.*?`",
         f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t['3p']} (3p) / ≥ {t['4p']} (4–5p)`",
+        text
+    )
+    text = re.sub(
+        r"- \*\*Cooldown Autodafé Inkwizytora:\*\* Max `co \d+ Ery`",
+        f"- **Cooldown Autodafé Inkwizytora:** Max `co {s['autodafe_cooldown']} Ery`",
         text
     )
 

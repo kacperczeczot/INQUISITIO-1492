@@ -6,7 +6,7 @@
 
 | Parametr | 3p | 4–5p |
 | :--- | :--- | :--- |
-| Próg Krytycznej (Oskarżenie) | **7** | **8** |
+| Próg Krytycznej (Oskarżenie) | **6** | **7** |
 | Strefa Obserwowana | **4–6** | **4–7** |
 | Strefa Krytyczna | **7–10** | **8–10** |
 | Karty w Fazie II (Plan) | **2** rundy zagrań / Erę | **2** rundy zagrań / Erę |
@@ -112,6 +112,6 @@ Używaj Warstwy **C** dopiero po gate’ach A/B przy stole.
 2. Komponenty: [`../game/components/inventory.md`](../game/components/inventory.md), [`../game/components/print-3d.md`](../game/components/print-3d.md)
 3. Talie wg warstwy + (C) Talia Czasu 8
 4. Żetony: Herezja, złoto, Relikwie, Fragmenty, Haki, Podwójni, Stosy, Upadek, Dekret, Inkwizytor
-5. Sprawdź próg oskarżenia (**7** w 3p, **8** w 4–5p) oraz warstwę A/B/C — zapisz w notatce sesji
+5. Sprawdź próg oskarżenia (**6** w 3p, **7** w 4–5p) oraz warstwę A/B/C — zapisz w notatce sesji
 6. Wybierz skład z tej strony
 7. Po grze: [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md) (UX: downtime, AP, emocja Werdyktu)

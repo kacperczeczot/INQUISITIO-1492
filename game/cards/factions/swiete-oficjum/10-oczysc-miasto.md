@@ -10,9 +10,10 @@ tags:
 - signature
 - autodafe
 - heresy
-effect: 'Łamie regułę „Autodafé / 2 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli
+effect: 'Łamie regułę „Autodafé / 3 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli
   Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos.'
 heresy_text: Autodafé z rozkazu trybunału pali strach, nie tylko drewno.
 lore: Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.
 breaks_rule: true
 ---
+

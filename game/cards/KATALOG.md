@@ -188,7 +188,7 @@ Kart: **10**
 | `cost_gold` | 4 |
 | `heresy` | 2 |
 | `heresy_text` | Autodafé z rozkazu trybunału pali strach, nie tylko drewno. |
-| `effect` | Łamie regułę „Autodafé / 2 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos. |
+| `effect` | Łamie regułę „Autodafé / 3 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos. |
 | `lore` | Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika. |
 | `tags` | signature, autodafe, heresy |
 | `status` | prototyp |

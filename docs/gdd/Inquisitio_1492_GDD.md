@@ -52,10 +52,10 @@ Cele wymagają **brudnych rąk** (Herezja, silniki), nie czystego zbieractwa.
 
 | Frakcja | Fantazja | Wygrana (C) |
 | :--- | :--- | :--- |
-| **Święte Oficjum** | Terror prawa Bożego | 3 Stosy **lub** skazania (2@≤3p / 3@4–5p) |
-| **Cienie Al-Andalus** | Stealth, Relikwie | 2 Relikwie + ścieżka (Podwójny / cichy exit / szlak) |
-| **Korona & Borgiowie** | Dekrety, pieczęć | 2 Dekrety + ≥1 Hak (Era 7@3p / 6@4–5p); 5p też 1+2 Haki |
-| **Kabała z Toledo** | Kodeks, sweet spot | 3 Fragmenty + Herezja 4–6 (Era wg liczby graczy) |
+| **Święte Oficjum** | Terror prawa Bożego | 3 Stosy **lub** skazania (2@3p / 3@4p / 4@5p) |
+| **Cienie Al-Andalus** | Stealth, Relikwie | 2 Relikwie + ścieżka |
+| **Korona & Borgiowie** | Dekrety, pieczęć | 2 Dekrety + 0 Haków (Era 5@3p) / +1 Hak (Era 5@4–5p); 4p+ też 1+2 Haki |
+| **Kabała z Toledo** | Kodeks, sweet spot | 3 Fragmenty + Herezja 3–8 (Era 7@3p / 6@4–5p) |
 | **Gildia Cieni** | Szantaż, upadek | 2 upadki (3 bez Oficjum) |
 
 Opisy: [`../../game/factions/`](../../game/factions/).
@@ -65,7 +65,7 @@ Opisy: [`../../game/factions/`](../../game/factions/).
 ## 5. Przebieg Ery
 
 1. **Start** — reset limitów anti-AP; ewentualny dobór.
-2. **Inkwizytor** — Patrol (0–1 lokacji) lub Autodafé (max co 2 Ery).
+2. **Inkwizytor** — Patrol (0–1 lokacji) lub Autodafé (max co 3 Ery).
 3. **Plan / Intryga** — naprzemiennie zakryte karty pod lokacje + ruch Agentów; Haki wymuszają (B+).
 4. **Odkrycie** — lokacje 1→5; efekty; Herezja rośnie.
 5. **Lochy** — Przesłuchania (B+).
@@ -80,7 +80,7 @@ Tor Herezji, figurka Inkwizytora, żeton Hak (1 typ), znacznik Podwójny na Agen
 
 → [`../../game/components/inventory.md`](../../game/components/inventory.md)
 
-**Anti-AP (twarde):** 1 wymuszenie Haka / 1 Przesłuchanie / 1 nasłanie Inkwizytora na gracza na Erę; Autodafé max co 2 Ery.
+**Anti-AP (twarde):** 1 wymuszenie Haka / 1 Przesłuchanie / 1 nasłanie Inkwizytora na gracza na Erę; Autodafé max co 3 Ery.
 
 ---
 

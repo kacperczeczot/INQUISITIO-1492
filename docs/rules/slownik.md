@@ -20,7 +20,7 @@ Stan Agenta w strefie Areszt lokacji **Lochy**. Agent nie porusza się i nie kon
 
 ## Autodafé (procedura)
 
-Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** → do **Aresztu w Lochach** (+1 Herezja, bez Stosu); w strefie **Obserwowanej / Krytycznej (≥4 Herezji)** → **spalenie na Stosie** (+1 Herezja, +1 Stos dla Oficjum). Relikwia w lokacji wraca do puli. Max **co 2 Ery** (bazowo).  
+Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** → do **Aresztu w Lochach** (+1 Herezja, bez Stosu); w strefie **Obserwowanej / Krytycznej (≥4 Herezji)** → **spalenie na Stosie** (+1 Herezja, +1 Stos dla Oficjum). Relikwia w lokacji wraca do puli. Max **co 3 Ery** (bazowo).  
 **Ogłoś Autodafé** → Stos przy rywalu ≥4 Herezji. **Wymuś Autodafé** (edykt) → **bez** Stosu.
 
 **Patrz także:** [Inkwizytor](#inkwizytor), [Stos](#stos) · [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md) · leksykon **Ogłoś** / **Wymuś**
@@ -37,7 +37,7 @@ Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** 
 
 ## Dekret
 
-Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: zwykle 2 Dekrety + ≥1 Hak (progi Er wg liczby graczy).
+Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: zwykle 2 Dekrety + Haki (od Ery 5; 3p ≥0 / 4–5p ≥1).
 
 **Patrz także:** [Zwycięstwo](#zwycięstwo), [Hak](#hak)
 
@@ -93,7 +93,7 @@ Znacznik / cel Kabały. Warunek: 3 Fragmenty + Herezja w strefie Obserwowanej (4
 
 ## Herezja
 
-Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–6 (3p) / 4–7 (4–5p), **Krytyczna** 7–10 (3p) / 8–10 (4–5p) (można oskarżyć). Źródła: karty, Hak ujawniony, Autodafé, Podwójny wykryty, Werdykt (uniewinnienie) itd.
+Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4–6 (4–5p), **Krytyczna** 6–10 (3p) / 7–10 (4–5p). **Oskarżenie** od Herezji ≥ **6** (3p) / ≥ **7** (4–5p). Źródła: karty, Hak ujawniony, Autodafé, Podwójny wykryty, Werdykt (uniewinnienie) itd.
 
 **Patrz także:** [Krytyczna](#krytyczna), [Oskarżenie](#oskarżenie) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 
@@ -125,7 +125,7 @@ Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **E.I:** nasłania
 
 ## Krytyczna
 
-Strefa Herezji **7–10 (3p)** lub **8–10 (4–5p)**. Inni gracze mogą **Rzucić Oskarżenie** przeciw Tobie (limit 1× przeciw temu graczowi / Erę).
+Strefa Herezji **6–10 (3p)** lub **7–10 (4–5p)** — tożsamy z progiem oskarżenia. Inni gracze mogą **Rzucić Oskarżenie** (limit 1× przeciw temu graczowi / Erę).
 
 **Patrz także:** [Herezja](#herezja), [Werdykt](#werdykt) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 
@@ -133,7 +133,7 @@ Strefa Herezji **7–10 (3p)** lub **8–10 (4–5p)**. Inni gracze mogą **Rzuc
 
 ## Limit / Erę
 
-Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **max 2** karty Akcji na gracza na Erę (z opcją pasa). Autodafé: max co 2 Ery.  
+Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **max 2** karty Akcji na gracza na Erę (z opcją pasa). Autodafé: max co 3 Ery.  
 **Maksymalnie** (np. max 2 Haki) = twardy cap posiadania, nie to samo co Limit / Erę.
 
 **Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Może / musi](#może--musi) · leksykon §2

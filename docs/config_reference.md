@@ -23,8 +23,8 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 | `agents_per_player` | `int` | `1 .. 5` | `3` | Liczba figurków agentów w puli gracza |
 | `hand_limit` | `int` | `3 .. 10` | `5` | Maksymalna liczba kart na ręce na koniec tury |
 | `max_eras` | `int` | `3 .. 12` | `8` | Limit Er (po osiągnięciu gra kończy się remisem / deadlockiem) |
-| `autodafe_cooldown` | `int` | `1 .. 4` | `2` | Co ile Er Inkwizytor ogłasza rutynowe Autodafé |
-| `accusation_threshold` | `dict` | `3p: 5..10`, `4p: 5..10`, `5p: 5..10` | `3p:7, 4p:8, 5p:8` | Próg Herezji wyzwalający Werdykt i Oskarżenie |
+| `autodafe_cooldown` | `int` | `1 .. 4` | `3` | Co ile Er Inkwizytor ogłasza rutynowe Autodafé |
+| `accusation_threshold` | `dict` | `3p: 5..10`, `4p: 5..10`, `5p: 5..10` | `3p:6, 4p:7, 5p:7` | Próg Herezji wyzwalający Werdykt i Oskarżenie |
 
 ---
 
@@ -40,7 +40,7 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
 | `relics` | `int` | `1 .. 3` | Liczba Relikwii wymagana do ewakuacji |
-| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Maksymalna Era na ukończenie ewakuacji bez wpadki w Autodafé |
+| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Minimalna Era na ukończenie ewakuacji bez ścieżki (szlak / Podwójny / cichy exit) |
 
 ### 3. Korona Borgiowie (`korona_borgiowie`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |

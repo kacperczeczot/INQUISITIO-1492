@@ -19,22 +19,22 @@ Aby uruchomić dowolny test, wywołaj z głównego katalogu repozytorium:
 sim/.venv/bin/python tools/sync_config.py
 
 # 1. Kompletny Raport Zbalansowania i Telemetrii (Standardowy test 16 setupów)
-sim/.venv/bin/python tools/sim/generate_report.py --games 500
+sim/.venv/bin/python tools/sim/generate_report.py --games 3000
 
 # 2. Audyt Poziomu 1 (Główne mechaniki systemowe)
-sim/.venv/bin/python tools/sim/audit_level1.py --games 300
+sim/.venv/bin/python tools/sim/audit_level1.py --games 3000
 
 # 3. Audyt Poziomu 2 (Progi i warunki zwycięstwa frakcji)
-sim/.venv/bin/python tools/sim/audit_level2.py --games 300
+sim/.venv/bin/python tools/sim/audit_level2.py --games 3000
 
 # 4. Audyt Poziomu 3 (Precyzyjny audyt parametrów kart per karta)
-sim/.venv/bin/python tools/sim/audit_level3.py --games 300
+sim/.venv/bin/python tools/sim/audit_level3.py --games 3000
 
 # 5. Audyt Poziomu 4 (Warianty niszowe i modyfikatory zasad)
-sim/.venv/bin/python tools/sim/audit_level4.py --games 300
+sim/.venv/bin/python tools/sim/audit_level4.py --games 3000
 
 # 6. Testy Stresu Ekonomicznego (Poverty Stress Test)
-sim/.venv/bin/python tools/sim/audit_stress_tests.py --games 150
+sim/.venv/bin/python tools/sim/audit_stress_tests.py --games 3000
 ```
 
 ---

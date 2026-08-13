@@ -7,13 +7,13 @@
 > **Źródło szczegółów** dla haseł [Werdykt](../../docs/rules/slownik.md#werdykt), [Oskarżenie](../../docs/rules/slownik.md#oskarżenie), [Stos](../../docs/rules/slownik.md#stos) w [`slownik.md`](../../docs/rules/slownik.md).  
 > **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.V) · [`poziom-herezji.md`](poziom-herezji.md) · [`haki.md`](haki.md)
 
-Gdy gracz jest w strefie **Krytycznej** (Herezja ≥ 8), inny gracz może **Rzucić Oskarżenie**.
+Gdy gracz jest w strefie **Krytycznej** (Herezja ≥ **6** w 3p / ≥ **7** w 4–5p), inny gracz może **Rzucić Oskarżenie**.
 
 To **głosowanie polityczne** — zdrada, kingmake, sojusz przeciw liderowi. Oskarżony broni się sojuszami i Hakami, nie automatyczną opłatą.
 
 ## Kiedy wolno oskarżyć
 
-- Cel ma Herezję ≥ progu (domyślnie **8**).
+- Cel ma Herezję ≥ progu (**6** w 3p, **7** w 4–5p).
 - Nie oskarżano tego gracza w tej Erze.
 - Oskarżyciel nie jest celem tego samego oskarżenia.
 

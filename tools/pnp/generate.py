@@ -31,8 +31,8 @@ FACTIONS = [
     # slug, name, goal, progress_label, progress_n, progress_icon
     ("swiete-oficjum", "Święte Oficjum", "2 Stosy@3p / 3 Stosy@4p / 5 Stosów@5p lub skazania Werdyktem", "Stosy", 3, "stack"),
     ("cienie-al-andalus", "Cienie Al-Andalus", "2 Relikwie + ścieżka (Era 6+ przy 3p / 5+ przy 4-5p)", "Relikwie", 2, "relic"),
-    ("korona-borgiowie", "Korona & Borgiowie", "2 Dekrety (od Ery 6@3p / 5@4-5p z ≥1 Hakiem); na 4-5p też 1 Dekret + 2 Haki", "Dekrety", 2, "decree"),
-    ("kabala-toledo", "Kabała z Toledo", "3 Fragmenty (2 przy 3p i 5p) + Herezja 3–7", "Fragmenty", 3, "fragment"),
+    ("korona-borgiowie", "Korona & Borgiowie", "2 Dekrety (od Ery 5; 3p ≥0 Haków / 4-5p ≥1 Hak); na 4-5p też 1 Dekret + 2 Haki", "Dekrety", 2, "decree"),
+    ("kabala-toledo", "Kabała z Toledo", "3 Fragmenty + Herezja 3–8", "Fragmenty", 3, "fragment"),
     ("gildia-cieni", "Gildia Cieni", "2 upadki (3 bez Oficjum)", "Upadki", 2, "fall"),
 ]
 
