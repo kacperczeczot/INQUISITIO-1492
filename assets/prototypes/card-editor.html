@@ -913,7 +913,14 @@ function computeEffectText(spec) {
     parts.push(`ŁAMIE REGUŁĘ: ${breaksRule}.`);
   }
 
-  // 2. Condition
+  // 2. Trigger & Condition Leads
+  const trigger = spec.trigger;
+  if (trigger === "rival_plays_heresy_gte_1") {
+    parts.push("Jeśli rywal zagrywa kartę z Herezją ≥ 1:");
+  } else if (trigger === "after_verdict_majority_revealed") {
+    parts.push("Podczas Werdyktu, po ujawnieniu większości:");
+  }
+
   if (condition === "relic_present") {
     parts.push("Jeśli w lokacji Twojego Agenta jest Relikwia:");
   } else if (condition === "has_double_agent") {
@@ -1077,23 +1084,17 @@ function handleAutoToggle() {
 }
 
 const ACTION_FIELDS_MAP = {
-  move_agent: ['card-agents'],
+  move_agent: ['card-agents', 'card-target-loc', 'card-condition'],
   gain_gold: ['card-gold', 'card-target-heresy'],
-  frame_rival: ['card-target-heresy', 'card-target-scope'],
+  frame_rival: ['card-target-heresy', 'card-target-scope', 'card-trigger'],
   send_inquisitor: ['card-target-loc', 'card-limit-inq'],
   arrest: ['card-target-loc', 'card-arrest-flag'],
   interrogate: ['card-target-loc', 'card-bonus-on-heresy', 'card-limit-int'],
-  creates_hook: ['card-condition', 'card-target-loc', 'card-verdict-weight', 'card-on-refusal', 'card-creates-hook-flag'],
+  creates_hook: ['card-condition', 'card-target-loc', 'card-verdict-weight', 'card-on-refusal', 'card-creates-hook-flag', 'card-penalty-heresy'],
   autodafe: ['card-breaks-rule'],
   evacuate_relic: ['card-max-relics', 'card-condition'],
-  free_agent: ['card-target-loc', 'card-agents'],
-  move_double_agent: ['card-condition'],
-  move_relic: ['card-target-loc'],
-  force_hook: ['card-decree', 'card-penalty-heresy'],
   check_victory: ['card-decree', 'card-condition', 'card-heresy-band', 'card-fallback-heresy'],
-  grant_fragment: ['card-condition'],
-  change_vote: ['card-trigger'],
-  mark_fall: ['card-condition', 'card-on-refusal']
+  grant_fragment: ['card-condition']
 };
 
 function updateActionFieldVisibility() {
