@@ -40,8 +40,8 @@ def build_level2_tests():
         ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania: -1 ({max(1,so.condemns['3p']-1)}@3p / {so.condemns['4p']-1}@4p / {so.condemns['5p']-1}@5p)", {"so_condemns_offset": -1}),
 
         # 3. Cienie Relikwie
-        ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: {caa.relics + 1} (+1)", {"caa_relics": caa.relics + 1}),
-        ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: {max(1, caa.relics - 1)} (-1)", {"caa_relics": max(1, caa.relics - 1)}),
+        ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: +1 ({caa.relics + 1})", {"caa_relics_offset": 1}),
+        ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: -1 ({max(1, caa.relics - 1)})", {"caa_relics_offset": -1}),
 
         # 4. Cienie Era Ścieżki
         ("L2_CAA_ERA_PLUS1", f"Cienie Era Ścieżki: +1 (Era {caa.path_era['3p']+1}@3p / Era {caa.path_era['4p']+1}@4-5p)", {"caa_era_offset": 1}),
@@ -52,12 +52,15 @@ def build_level2_tests():
         ("L2_KB_ERA_MINUS1", f"Korona Era Zwycięstwa: -1 (Era {kb.era['3p']-1}@3p / Era {kb.era['4p']-1}@4-5p)", {"kb_era_offset": -1}),
 
         # 6. Kabała Fragmenty Target
-        ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: +1 ({kt.fragments['3p']+1}@3p / {kt.fragments['4p']+1}@4p / {kt.fragments['5p']+1}@5p)", {"kt_fragments": kt.fragments['4p'] + 1, "kt_fragments_5p": kt.fragments['5p'] + 1}),
-        ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: -1 ({max(1,kt.fragments['3p']-1)}@3p / {kt.fragments['4p']-1}@4p / {max(1,kt.fragments['5p']-1)}@5p)", {"kt_fragments": max(1, kt.fragments['4p'] - 1), "kt_fragments_5p": max(1, kt.fragments['5p'] - 1)}),
+        ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: +1 ({kt.fragments['3p']+1}@3p / {kt.fragments['4p']+1}@4p / {kt.fragments['5p']+1}@5p)", {"kt_frags_offset": 1}),
+        ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: -1 ({max(1,kt.fragments['3p']-1)}@3p / {max(1,kt.fragments['4p']-1)}@4p / {max(1,kt.fragments['5p']-1)}@5p)", {"kt_frags_offset": -1}),
 
-        # 7. Kabała Pasmo Herezji
-        ("L2_KT_HERESY_NARROW", f"Kabała Pasmo Herezji: Zawężone {hb[0]+1}–{hb[1]-1} (-1 szerokość)", {"kt_heresy_band": (hb[0] + 1, hb[1] - 1)}),
-        ("L2_KT_HERESY_WIDE", f"Kabała Pasmo Herezji: Poszerzone {hb[0]-1}–{hb[1]+1} (+1 szerokość)", {"kt_heresy_band": (hb[0] - 1, hb[1] + 1)}),
+        # 7. Kabała Pasmo Herezji (Rozbite na progi Dolny i Górny)
+        ("L2_KT_HERESY_LOW_MINUS1", f"Kabała Herezja (Dolna Granica): -1 ({hb[0]-1}–{hb[1]})", {"kt_heresy_band": (hb[0] - 1, hb[1])}),
+        ("L2_KT_HERESY_LOW_PLUS1", f"Kabała Herezja (Dolna Granica): +1 ({hb[0]+1}–{hb[1]})", {"kt_heresy_band": (hb[0] + 1, hb[1])}),
+        ("L2_KT_HERESY_HIGH_PLUS1", f"Kabała Herezja (Górna Granica): +1 ({hb[0]}–{hb[1]+1})", {"kt_heresy_band": (hb[0], hb[1] + 1)}),
+        ("L2_KT_HERESY_HIGH_MINUS1", f"Kabała Herezja (Górna Granica): -1 ({hb[0]}–{hb[1]-1})", {"kt_heresy_band": (hb[0], hb[1] - 1)}),
+
 
         # 8. Gildia Upadki Target
         ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: +1 ({gc.falls.default + 1}@default / {gc.falls.no_oficjum + 1}@no-SO)", {"gc_falls_offset": 1}),

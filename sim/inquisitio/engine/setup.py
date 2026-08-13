@@ -151,24 +151,40 @@ def new_game(
     n_players = len(faction_list)
     sys = sys_overrides or {}
 
-    if "start_gold" in sys:
+    if "start_gold_offset" in sys:
+        start_gold = max(1, CONFIG.start_gold_for(n_players) + sys["start_gold_offset"])
+    elif "start_gold" in sys:
         start_gold = sys["start_gold"]
     else:
         start_gold = CONFIG.start_gold_for(n_players)
-    agents_count = sys.get("agents_per_player", CONFIG.system.agents_per_player)
-    if "hand_limit" in sys:
+
+    if "agents_offset" in sys:
+        agents_count = max(1, CONFIG.system.agents_per_player + sys["agents_offset"])
+    else:
+        agents_count = sys.get("agents_per_player", CONFIG.system.agents_per_player)
+
+    if "hand_limit_offset" in sys:
+        hand_limit = max(1, CONFIG.hand_limit_for(n_players) + sys["hand_limit_offset"])
+    elif "hand_limit" in sys:
         hand_limit = sys["hand_limit"]
     else:
         hand_limit = CONFIG.hand_limit_for(n_players)
-    max_eras = sys.get("max_eras", CONFIG.system.max_eras)
+
+    if "max_eras_offset" in sys:
+        max_eras = max(1, CONFIG.system.max_eras + sys["max_eras_offset"])
+    else:
+        max_eras = sys.get("max_eras", CONFIG.system.max_eras)
 
     # Threshold: sys_overrides > explicit param > CONFIG per player count
-    if "threshold" in sys:
+    if "threshold_offset" in sys:
+        final_threshold = max(1, CONFIG.threshold_for(n_players) + sys["threshold_offset"])
+    elif "threshold" in sys:
         final_threshold = sys["threshold"]
     elif threshold != 8:
         final_threshold = threshold
     else:
         final_threshold = CONFIG.threshold_for(n_players)
+
 
     rng = random.Random(seed)
     players_map: dict[FactionId, PlayerState] = {}

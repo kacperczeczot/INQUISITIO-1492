@@ -46,7 +46,7 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 or state.sea_route_open
                 or (n_players >= 4 and state.era >= base_era)
             )
-            relic_need = cfg_caa.relics
+            relic_need = max(1, cfg_caa.relics + ov.get("caa_relics_offset", 0))
             if "caa_relics" in ov:
                 relic_need = ov["caa_relics"]
             elif "caa_relics_5p" in ov and n_players >= 5:
@@ -86,11 +86,12 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
 
         elif fid == FactionId.KABALA_TOLEDO:
             cfg_kt = cfg_v.kabala_toledo
-            frag_need = cfg_kt.fragments[pc]
+            frag_need = max(1, cfg_kt.fragments[pc] + ov.get("kt_frags_offset", 0))
             if "kt_fragments" in ov:
                 frag_need = ov["kt_fragments"]
             elif "kt_fragments_5p" in ov and n_players >= 5:
                 frag_need = ov["kt_fragments_5p"]
+
 
             band = ov.get("kt_heresy_band", cfg_kt.heresy_band)
             h_low, h_high = band[0], band[1]

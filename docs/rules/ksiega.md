@@ -157,7 +157,7 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | Święte Oficjum | **2 Stosy**@3p / **3 Stosy**@4p / **4 Stosów**@5p **lub** skazania Werdyktem (**2** przy 3p, **3** przy 4p, **4** przy 5p) |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 6+ przy 3p / Era 5+ przy 4–5p) |
 | Korona | **2** Dekrety (od Ery **6**@3p / **5**@4–5p z ≥1 Hakiem); na **4–5p** też 1 Dekret + 2 Haki od Ery 6 |
-| Kabała | **3 Fragmenty** (**2** przy 3p i 5p) + Herezja **3–7** (od Ery **7**@3p / **6**@4–5p) |
+| Kabała | **3 Fragmenty** (**2** przy 3p i 5p) + Herezja **3–8** (od Ery **7**@3p / **6**@4–5p) |
 | Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 
 Sim teach (A/B): inne progi / tie-break — nie drukuj osobno; szczegóły w silniku.

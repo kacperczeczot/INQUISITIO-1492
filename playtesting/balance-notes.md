@@ -49,8 +49,9 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** `3p` = **2 Fragmenty** | `4p` = **3 Fragmenty** | `5p` = **2 Fragmenty**.
-- **Wymagane Pasmo Herezji:** **[3, 7]** (musi znajdować się w strefie Obserwowanej).
+- **Wymagane Pasmo Herezji:** **[3, 8]** (musi znajdować się w strefie Obserwowanej lub na progu Krytycznej).
 - **Minimalna Era Wygranej:** `3p` = **Era 7** | `4p` = **Era 6** | `5p` = **Era 6**.
+
 
 ### 5. Gildia Cieni
 - **Upadki Rywali (Falls):** **2 Upadki** (standard w 3p/4p) | **3 Upadki** (gdy brak Oficjum w grze lub w składzie 5p).
@@ -105,9 +106,10 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 ### 🟢 Patch v1.2 (2026-08-13) — Rekalibracja 5p & Asymetryczne Złoto Startowe
 - **Święte Oficjum (`5p Stosy`):** Obniżenie wymogu z 5 do **4 Stosy** w składzie 5-osobowym. 
   - *Efekt:* Wzrost wygranych Oficjum w 5p z 10.5% do **20.4%** (trafienie w idealny punkt 20.0%) i skok wyniku balansu 5p z **`🔴 0.0 pkt`** do **`🟢 52.9 pkt`**.
-- **Limit Kart na Ręce (`hand_limit`):** Wprowadzenie asymetrycznego limitu kart (`3p: 5` | `4p: 5` | `5p: 6`).
-  - *Efekt:* W 5p limit 6 kart dostarcza szeroki wybór opcji taktycznych w tłoku 15 agentów, wykręcając skok wyniku 5p aż do **`🟢 69.1 pkt`** (`+69.1 pkt` w L1).
+- **Kabała z Toledo (`heresy_band`):** Poszerzenie górnej granicy pasma z 7 do **8 (`[3, 8]`)**.
+  - *Efekt:* Podniesienie wyniku `Global Score` z 59.8 do **`🟢 63.9 pkt`** (`+4.1 pkt`) oraz `5p Score` do **`🟢 79.4 pkt`** (`+10.3 pkt`).
 - **Limit Er (`max_eras`):** Audyt L1 wykazał, że 9 Er obniża deadlocki o połowę (z 7.1% do 3.5%). Zachowano 8 Er w konfiguracji bazowej z notatką analityczną do rekalibracji bramek.
+
 
 ### 🟡 Patch v1.1 (2026-08-13) — Pakiet 5 Fal Optymalizacji Monte Carlo (5,000,000 Partii)
 - **Święte Oficjum:** `so-05` koszt reakcji = 0 zł.

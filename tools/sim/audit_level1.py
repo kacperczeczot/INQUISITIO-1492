@@ -20,26 +20,25 @@ from inquisitio.runner.scoring import (
 
 
 def build_level1_tests():
-    """Generate ±1 tests dynamically from current CONFIG values."""
+    """Generate ±1 tests dynamically as relative offsets from current CONFIG values."""
     s = CONFIG.system
-    base_threshold = s.accusation_threshold["4p"]
-    base_gold = CONFIG.start_gold_for(4)
-    base_hand_limit = CONFIG.hand_limit_for(4)
     return [
         ("L1_BAZA", "Baza (Bieżące parametry systemowe)", {}),
-        ("L1_THRESHOLD_PLUS1", f"Próg Oskarżenia (Herezja): {base_threshold + 1} (+1)", {"threshold": base_threshold + 1}),
-        ("L1_THRESHOLD_MINUS1", f"Próg Oskarżenia (Herezja): {base_threshold - 1} (-1)", {"threshold": base_threshold - 1}),
-        ("L1_MAX_ERAS_PLUS1", f"Maksymalny limit Er: {s.max_eras + 1} (+1)", {"max_eras": s.max_eras + 1}),
-        ("L1_MAX_ERAS_MINUS1", f"Maksymalny limit Er: {s.max_eras - 1} (-1)", {"max_eras": s.max_eras - 1}),
-        ("L1_START_GOLD_PLUS1", f"Złoto startowe: {base_gold + 1}zł (+1)", {"start_gold": base_gold + 1}),
-        ("L1_START_GOLD_MINUS1", f"Złoto startowe: {base_gold - 1}zł (-1)", {"start_gold": base_gold - 1}),
-        ("L1_AGENTS_PLUS1", f"Liczba agentów na gracza: {s.agents_per_player + 1} (+1)", {"agents_per_player": s.agents_per_player + 1}),
-        ("L1_AGENTS_MINUS1", f"Liczba agentów na gracza: {s.agents_per_player - 1} (-1)", {"agents_per_player": s.agents_per_player - 1}),
-        ("L1_HAND_LIMIT_PLUS1", f"Limit kart na ręce: {base_hand_limit + 1} (+1)", {"hand_limit": base_hand_limit + 1}),
-        ("L1_HAND_LIMIT_MINUS1", f"Limit kart na ręce: {base_hand_limit - 1} (-1)", {"hand_limit": base_hand_limit - 1}),
-        ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown + 1} Ery (+1)", {"autodafe_cooldown": s.autodafe_cooldown + 1}),
-        ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown - 1} Erę (-1)", {"autodafe_cooldown": s.autodafe_cooldown - 1}),
+        ("L1_THRESHOLD_PLUS1", "Próg Oskarżenia (Herezja): +1 od bazy", {"threshold_offset": 1}),
+        ("L1_THRESHOLD_MINUS1", "Próg Oskarżenia (Herezja): -1 od bazy", {"threshold_offset": -1}),
+        ("L1_MAX_ERAS_PLUS1", f"Maksymalny limit Er: {s.max_eras + 1} (+1)", {"max_eras_offset": 1}),
+        ("L1_MAX_ERAS_MINUS1", f"Maksymalny limit Er: {s.max_eras - 1} (-1)", {"max_eras_offset": -1}),
+        ("L1_START_GOLD_PLUS1", "Złoto startowe: +1zł od bazy", {"start_gold_offset": 1}),
+        ("L1_START_GOLD_MINUS1", "Złoto startowe: -1zł od bazy", {"start_gold_offset": -1}),
+        ("L1_AGENTS_PLUS1", f"Liczba agentów na gracza: {s.agents_per_player + 1} (+1)", {"agents_offset": 1}),
+        ("L1_AGENTS_MINUS1", f"Liczba agentów na gracza: {s.agents_per_player - 1} (-1)", {"agents_offset": -1}),
+        ("L1_HAND_LIMIT_PLUS1", "Limit kart na ręce: +1 od bazy", {"hand_limit_offset": 1}),
+        ("L1_HAND_LIMIT_MINUS1", "Limit kart na ręce: -1 od bazy", {"hand_limit_offset": -1}),
+        ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown + 1} Ery (+1)", {"cooldown_offset": 1}),
+        ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown - 1} Erę (-1)", {"cooldown_offset": -1}),
     ]
+
+
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Audit Level 1 System Parameters")
