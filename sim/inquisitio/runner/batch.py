@@ -19,7 +19,9 @@ class BatchSummary:
     threshold: int
     layer: str = "C"
     wins: dict[str, int] = field(default_factory=dict)
+    win_paths: dict[str, int] = field(default_factory=dict)
     autodafe_avg: float = 0.0
+
     accusations_avg: float = 0.0
     convictions_avg: float = 0.0
     hooks_avg: float = 0.0
@@ -61,7 +63,9 @@ def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict
 
     return {
         "winner": winner.value,
+        "win_path": getattr(state, "win_path", "unknown"),
         "eras": m.eras,
+
         "is_limit": m.eras >= state.max_eras,
         "autodafe": m.autodafe_count,
         "accusations": m.accusations,
@@ -98,6 +102,8 @@ def run_batch(
         setup_name = "3p-oficjum-alandalus-korona"
 
     wins: Counter[str] = Counter()
+    win_paths: Counter[str] = Counter()
+
     totals = dict(
         autodafe=0,
         accusations=0,
@@ -132,7 +138,9 @@ def run_batch(
 
         for res in game_results:
             wins[res["winner"]] += 1
+            win_paths[res["win_path"]] += 1
             eras_list.append(res["eras"])
+
             autodafe_list.append(res["autodafe"])
             accusations_list.append(res["accusations"])
             n_pl = len(SETUP_PRESETS[setup_name])
@@ -159,6 +167,8 @@ def run_batch(
         for i in range(games):
             res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer, win_overrides))
             wins[res["winner"]] += 1
+            win_paths[res["win_path"]] += 1
+
             eras_list.append(res["eras"])
             autodafe_list.append(res["autodafe"])
             accusations_list.append(res["accusations"])
@@ -193,7 +203,9 @@ def run_batch(
         threshold=threshold,
         layer=layer,
         wins=dict(wins),
+        win_paths=dict(win_paths),
         autodafe_avg=totals["autodafe"] / n,
+
         accusations_avg=totals["accusations"] / n,
         convictions_avg=totals["convictions"] / n,
         hooks_avg=totals["hooks"] / n,

@@ -11,7 +11,8 @@ def _pc(n: int) -> str:
     return f"{n}p"
 
 
-def check_winner(state: GameState, win_overrides: dict | None = None) -> FactionId | None:
+def check_winner_details(state: GameState, win_overrides: dict | None = None) -> tuple[FactionId, str] | None:
+    """Returns tuple of (winner_faction, win_path_id) or None."""
     ov = win_overrides or {}
     n_players = len(state.turn_order)
     pc = _pc(n_players)
@@ -34,29 +35,25 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
             condemn_need = max(1, base_condemn + ov.get("so_condemns_offset", 0))
             condemn_ok = (state.layer != "B" and len(pl.condemned_rivals) >= condemn_need)
 
-            if pl.stacks >= stack_need or condemn_ok:
-                return fid
+            if pl.stacks >= stack_need:
+                return (fid, "so_stacks")
+            elif condemn_ok:
+                return (fid, "so_condemns")
 
         elif fid == FactionId.CIENIE_AL_ANDALUS:
             cfg_caa = cfg_v.cienie_al_andalus
             base_era = cfg_caa.path_era[pc] + ov.get("caa_era_offset", 0)
-            path_ok = (
-                pl.path_via_double
-                or pl.avoided_autodafe
-                or state.sea_route_open
-                or (n_players >= 4 and state.era >= base_era)
-            )
             relic_need = max(1, cfg_caa.relics + ov.get("caa_relics_offset", 0))
             if "caa_relics" in ov:
                 relic_need = ov["caa_relics"]
             elif "caa_relics_5p" in ov and n_players >= 5:
                 relic_need = ov["caa_relics_5p"]
 
-            if state.layer == "A":
-                if pl.relics_evacuated >= relic_need and state.era >= 5:
-                    return fid
-            elif pl.relics_evacuated >= relic_need and (path_ok or n_players >= 5):
-                return fid
+            if pl.relics_evacuated >= relic_need:
+                if state.sea_route_open or pl.path_via_double or pl.avoided_autodafe:
+                    return (fid, "caa_sea_route")
+                elif state.era >= base_era or n_players >= 5:
+                    return (fid, "caa_era")
 
         elif fid == FactionId.KORONA_BORGIOWIE:
             cfg_kb = cfg_v.korona_borgiowie
@@ -71,7 +68,7 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 and hooks_ever >= hooks_need
                 and state.era >= base_era
             ):
-                return fid
+                return (fid, "kb_main")
 
             # Alternative path (4p+)
             alt = cfg_kb.alt_path
@@ -82,7 +79,7 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
                 and hooks_ever >= max(alt.hooks, hooks_need)
                 and state.era >= (alt.era + ov.get("kb_era_offset", 0))
             ):
-                return fid
+                return (fid, "kb_alt")
 
         elif fid == FactionId.KABALA_TOLEDO:
             cfg_kt = cfg_v.kabala_toledo
@@ -92,19 +89,13 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
             elif "kt_fragments_5p" in ov and n_players >= 5:
                 frag_need = ov["kt_fragments_5p"]
 
-
             band = ov.get("kt_heresy_band", cfg_kt.heresy_band)
             h_low, h_high = band[0], band[1]
             heresy_ok = (h_low <= pl.heresy <= h_high)
             base_era = cfg_kt.era[pc] + ov.get("kt_era_offset", 0)
 
-            if state.layer == "A":
-                pass
-            elif state.layer == "B":
-                if pl.fragments >= frag_need and heresy_ok and state.era >= max(1, base_era):
-                    return fid
-            elif pl.fragments >= frag_need and heresy_ok and state.era >= max(1, base_era):
-                return fid
+            if pl.fragments >= frag_need and heresy_ok and state.era >= max(1, base_era):
+                return (fid, "kt_codex")
 
         elif fid == FactionId.GILDIA_CIENI:
             cfg_gc = cfg_v.gildia_cieni
@@ -113,9 +104,20 @@ def check_winner(state: GameState, win_overrides: dict | None = None) -> Faction
             falls_need = max(1, base_falls + ov.get("gc_falls_offset", 0))
 
             if pl.falls >= falls_need:
-                return fid
+                return (fid, "gc_falls")
 
     return None
+
+
+def check_winner(state: GameState, win_overrides: dict | None = None) -> FactionId | None:
+    res = check_winner_details(state, win_overrides)
+    if res:
+        state.winner = res[0]
+        state.win_path = res[1]
+        return res[0]
+    return None
+
+
 
 
 def end_game_tiebreak(state: GameState) -> FactionId:

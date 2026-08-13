@@ -11,7 +11,8 @@ from inquisitio.engine.hooks import active_hook_targets, force_hook
 from inquisitio.engine.inquisitor import era_start_inquisitor
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.verdict import eligible_accused, run_verdict
-from inquisitio.engine.win import check_winner, end_game_tiebreak
+from inquisitio.engine.win import check_winner, check_winner_details, end_game_tiebreak
+
 
 
 def _draw(state: GameState, fid: FactionId, n: int = 1) -> None:
@@ -186,11 +187,13 @@ def play_era(
         resolve_time_edict(state, edict, rng)
         state.time_discard.append(edict)
 
-    w = check_winner(state, win_overrides)
-    if w:
-        state.winner = w
-        state.add_log(f"WINNER {w.value}")
-    return w
+    res = check_winner_details(state, win_overrides)
+    if res:
+        state.winner = res[0]
+        state.win_path = res[1]
+        state.add_log(f"WINNER {res[0].value} via {res[1]}")
+        return res[0]
+    return None
 
 
 def play_game(
@@ -209,6 +212,8 @@ def play_game(
     if state.winner:
         return state.winner
     state.winner = end_game_tiebreak(state)
+    state.win_path = "tiebreak"
     state.add_log(f"TIEBREAK WINNER {state.winner.value}")
     return state.winner
+
 
