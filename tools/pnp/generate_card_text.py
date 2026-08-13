@@ -227,12 +227,12 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
                 meta["effect"] = gen_text
                 if not dry_run:
                     clean_meta = {}
-                    for k in ["id", "name", "faction", "type", "layer", "cost"]:
+                    for k in ["id", "name", "faction", "type", "layer", "cost", "heresy"]:
                         if k in meta:
                             clean_meta[k] = meta[k]
-                    if meta.get("heresy"):
-                        clean_meta["heresy"] = meta["heresy"]
-                    if meta.get("tags"):
+                    if "tags" in cards_config.get(cid, {}):
+                        clean_meta["tags"] = cards_config[cid]["tags"]
+                    elif meta.get("tags"):
                         clean_meta["tags"] = meta["tags"]
                     if meta.get("effect"):
                         clean_meta["effect"] = meta["effect"]
