@@ -79,6 +79,8 @@ def format_card_text(cid: str, data: dict) -> str:
         elif gold and gold >= 2:
             noun = declension_pl(gold, "złoto", "złota", "złota")
             parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "frame_rival":
         tscope = data.get("target_scope")
         prefix = "Wskaż tego rywala:" if tscope == "triggering_rival" else "Wskaż rywala:"
@@ -155,12 +157,10 @@ def format_card_text(cid: str, data: dict) -> str:
             parts.append("zwycięstwo.")
     elif act == "grant_fragment":
         parts.append("Zyskaj Fragment.")
-    elif act == "grant_fragment_or_gold":
-        parts.append("Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.")
+        if condition == "agent_in_dungeon_or_tribunal":
+            parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.")
     elif act == "change_vote":
         parts.append("Zmień swój głos.")
-    elif act == "gain_gold_and_frame":
-        parts.append("Zyskaj złoto. Wskaż rywala: +1 Herezja.")
     elif act == "mark_fall":
         parts.append("Oznacz Upadek wobec tego rywala.")
 

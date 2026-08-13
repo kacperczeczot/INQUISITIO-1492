@@ -88,7 +88,7 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 | Wartość `action` | Powiązane parametry dedykowane | Opis komendy i generowana fraza leksykonu |
 | :--- | :--- | :--- |
 | `move_agent` | `agents` | Przemieszcza własnego agenta o N lokacji (`Przesuń swojego Agenta o N lokacji.`) |
-| `gain_gold` | `gold` | Pozyskuje N złota z banku (`Zyskaj N złota.`) |
+| `gain_gold` | `gold`, `target_heresy` | Pozyskuje N złota z banku (`Zyskaj N złota.`) oraz opcjonalnie wskaż rywala (+N Herezja) |
 | `frame_rival` | `target_heresy`, `target_scope` | Przydziela rywalowi +N Herezji (`Wskaż (tego) rywala: +N Herezja.`) |
 | `send_inquisitor` | `target_loc`, `inquisitor_send_limit` | Przesuwa Inkwizytora (`Przesuń Inkwizytora do lokacji ze swoim Agentem.`) |
 | `arrest` | `target_loc`, `arrest` | Aresztuje agenta rywala (`Aresztuj Agenta rywala w lokacji swojego Agenta.`) |
@@ -101,10 +101,8 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 | `move_relic` | `target_loc` | Przenosi Relikwię (`Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.`) |
 | `force_hook` | `decree`, `penalty_heresy` | Wymusza realizację Haka (`Wymuś spełnienie Haka. Odmowa: +N Herezja.`) |
 | `check_victory` | `decree`, `condition`, `target_heresy_band`, `fallback_heresy` | Sprawdza natychmiastowe zwycięstwo (Korony / Kabały z korektą Herezji) |
-| `grant_fragment` | *(brak)* | Pozyskuje Fragment Kodeksu (`Zyskaj Fragment.`) |
-| `grant_fragment_or_gold`| `condition` | Zyskuje Fragment lub złoto alternatywne |
+| `grant_fragment` | `condition` | Pozyskuje Fragment Kodeksu (`Zyskaj Fragment.`) oraz opcjonalnie złoto alternatywne |
 | `change_vote` | `trigger`, `vote_change_limit` | Zmienia głos w Trybunale (`Zmień swój głos.`) |
-| `gain_gold_and_frame` | `gold`, `target_heresy` | Zyskuje złoto oraz przydziela rywalowi +N Herezji |
 | `mark_fall` | `condition`, `on_refusal` | Oznacza Upadek rywala dla Gildii Cieni |
 
 ### 3. Filtry Lokacji (`target_loc`)

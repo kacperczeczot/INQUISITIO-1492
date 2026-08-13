@@ -429,7 +429,7 @@ cards:
     layer: A
     cost: 1
     grant_fragment: 1
-    action: grant_fragment_or_gold
+    action: grant_fragment
     condition: agent_in_dungeon_or_tribunal
     tags:
     - fragment
@@ -570,7 +570,7 @@ cards:
     cost: 1
     target_heresy: 1
     gold: 1
-    action: gain_gold_and_frame
+    action: gain_gold
     tags:
     - gold
     - heresy

@@ -636,14 +636,12 @@ pre.code-out {
           <option value="move_relic">Przesunięcie Relikwii</option>
           <option value="free_agent">Uwolnienie z Lochów</option>
           <option value="grant_fragment">Fragment Kodeksu</option>
-          <option value="grant_fragment_or_gold">Fragment lub Złoto</option>
           <option value="autodafe">Ogłoszenie Autodafé</option>
           <option value="move_double_agent">Ruch Podwójnego Agenta</option>
           <option value="change_vote">Zmiana Głosu w Werdykcie</option>
           <option value="mark_fall">Oznaczenie Upadku</option>
           <option value="force_hook">Wymuszenie Haka</option>
           <option value="check_victory">Sprawdzenie Zwycięstwa</option>
-          <option value="gain_gold_and_frame">Zatrute Złoto</option>
           <option value="custom">Ręczna edycja własna</option>
         </select>
       </div>
@@ -945,6 +943,7 @@ function computeEffectText(spec) {
     if (gold === 1) parts.push("Zyskaj złoto.");
     else if (gold && gold >= 2) parts.push(`Zyskaj ${gold} ${declensionPl(gold, "złoto", "złota", "złota")}.`);
     else parts.push("Zyskaj 2 złota.");
+    if (theresy) parts.push(`Wskaż rywala: +${theresy} Herezja.`);
   } else if (act === "frame_rival") {
     const prefix = spec.target_scope === "triggering_rival" ? "Wskaż tego rywala:" : "Wskaż rywala:";
     const h = theresy || 1;
@@ -997,12 +996,9 @@ function computeEffectText(spec) {
     }
   } else if (act === "grant_fragment") {
     parts.push("Zyskaj Fragment.");
-  } else if (act === "grant_fragment_or_gold") {
-    parts.push("Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
+    if (condition === "agent_in_dungeon_or_tribunal") parts.push("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
   } else if (act === "change_vote") {
     parts.push("Zmień swój głos.");
-  } else if (act === "gain_gold_and_frame") {
-    parts.push("Zyskaj złoto. Wskaż rywala: +1 Herezja.");
   } else if (act === "mark_fall") {
     parts.push("Oznacz Upadek wobec tego rywala.");
   }
@@ -1035,14 +1031,12 @@ function computeAutoTags(action, type, heresy) {
     case 'move_relic': tags.add('relic'); tags.add('move'); break;
     case 'free_agent': tags.add('move'); tags.add('arrest'); break;
     case 'grant_fragment': tags.add('fragment'); break;
-    case 'grant_fragment_or_gold': tags.add('fragment'); break;
     case 'autodafe': tags.add('autodafe'); break;
     case 'move_double_agent': tags.add('double'); break;
     case 'change_vote': tags.add('reaction'); break;
     case 'mark_fall': tags.add('fall'); break;
     case 'force_hook': tags.add('decree'); tags.add('hook'); break;
     case 'check_victory': tags.add('fragment'); break;
-    case 'gain_gold_and_frame': tags.add('gold'); tags.add('heresy'); break;
   }
   
   if (heresy > 0) tags.add('heresy');
@@ -1084,7 +1078,7 @@ function handleAutoToggle() {
 
 const ACTION_FIELDS_MAP = {
   move_agent: ['card-agents'],
-  gain_gold: ['card-gold'],
+  gain_gold: ['card-gold', 'card-target-heresy'],
   frame_rival: ['card-target-heresy', 'card-target-scope'],
   send_inquisitor: ['card-target-loc', 'card-limit-inq'],
   arrest: ['card-target-loc', 'card-arrest-flag'],
@@ -1097,10 +1091,8 @@ const ACTION_FIELDS_MAP = {
   move_relic: ['card-target-loc'],
   force_hook: ['card-decree', 'card-penalty-heresy'],
   check_victory: ['card-decree', 'card-condition', 'card-heresy-band', 'card-fallback-heresy'],
-  grant_fragment: [],
-  grant_fragment_or_gold: ['card-condition'],
+  grant_fragment: ['card-condition'],
   change_vote: ['card-trigger'],
-  gain_gold_and_frame: ['card-gold', 'card-target-heresy'],
   mark_fall: ['card-condition', 'card-on-refusal']
 };
 
