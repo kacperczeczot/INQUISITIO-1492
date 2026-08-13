@@ -5,7 +5,7 @@ id: kt-09
 name: Fragment Kodeksu
 faction: kabala-toledo
 type: akcja
-cost_gold: 2
+cost_gold: 1
 heresy: 1
 heresy_text: Pergamin Salomona brudzi palce i sumienie.
 layer: C

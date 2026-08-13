@@ -5,7 +5,7 @@ id: kt-03
 name: Zakazana Wiedza
 faction: kabala-toledo
 type: akcja
-cost_gold: 1
+cost_gold: 0
 heresy: 1
 heresy_text: Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu.
 layer: A

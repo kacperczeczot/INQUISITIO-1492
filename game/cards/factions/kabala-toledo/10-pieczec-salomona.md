@@ -5,7 +5,7 @@ id: kt-10
 name: Pieczęć Salomona
 faction: kabala-toledo
 type: signature
-cost_gold: 3
+cost_gold: 1
 heresy: 0
 layer: C
 tags:

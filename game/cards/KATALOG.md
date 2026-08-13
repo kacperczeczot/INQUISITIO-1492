@@ -276,7 +276,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. |
@@ -361,7 +361,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”:  Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
@@ -452,7 +452,7 @@ Kart: **10**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 3 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
@@ -594,7 +594,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu. |
 | `effect` | Zyskaj Fragment. |
@@ -696,7 +696,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
 | `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. |
@@ -713,7 +713,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 3 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Łamie regułę „Herezja tylko z karty”:  Jeśli masz 3 Fragmenty i Herezję 4–6: zwycięstwo.  Jeśli masz 3 Fragmenty bez Herezji 4–6: Ustaw swoją Herezję na 5. |

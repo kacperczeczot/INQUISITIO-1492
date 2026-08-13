@@ -5,7 +5,7 @@ id: caa-10
 name: Echo Alhambry
 faction: cienie-al-andalus
 type: signature
-cost_gold: 2
+cost_gold: 1
 heresy: 1
 heresy_text: Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.
 layer: C

@@ -5,7 +5,7 @@ id: caa-05
 name: Ukryty Kurier
 faction: cienie-al-andalus
 type: akcja
-cost_gold: 2
+cost_gold: 1
 heresy: 0
 layer: A
 tags:

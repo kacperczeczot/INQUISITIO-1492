@@ -5,7 +5,7 @@ id: kb-05
 name: List Żelazny
 faction: korona-borgiowie
 type: akcja
-cost_gold: 3
+cost_gold: 2
 heresy: 0
 layer: A
 tags:
