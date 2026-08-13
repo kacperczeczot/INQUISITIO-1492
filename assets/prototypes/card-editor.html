@@ -754,9 +754,10 @@ AVAILABLE_TAGS.forEach(tag => {
 
 function handleAutoToggle() {
   const isAuto = document.getElementById('auto-text-toggle').checked;
+  const actionSelect = document.getElementById('card-action');
   const effectTextarea = document.getElementById('card-effect');
   
-  if (isAuto) {
+  if (isAuto && actionSelect.value !== 'custom') {
     effectTextarea.setAttribute('readonly', 'readonly');
     effectTextarea.style.background = '#f2ece4';
   } else {
@@ -779,12 +780,14 @@ function updateLivePreview() {
   
   const effectTextarea = document.getElementById('card-effect');
 
-  // Auto compute effect text if toggle is ON
-  if (isAuto) {
-    const computedText = computeEffectText(action, cost, heresy);
-    if (computedText) {
-      effectTextarea.value = computedText;
-    }
+  // Handle custom vs auto action state
+  if (action === 'custom') {
+    effectTextarea.removeAttribute('readonly');
+    effectTextarea.style.background = '#ffffff';
+  } else if (isAuto) {
+    effectTextarea.setAttribute('readonly', 'readonly');
+    effectTextarea.style.background = '#f2ece4';
+    effectTextarea.value = computeEffectText(action, cost, heresy);
   }
   
   const effect = effectTextarea.value.trim();
