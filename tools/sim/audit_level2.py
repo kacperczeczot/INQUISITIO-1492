@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Script to run a +-1 Faction Victory Condition (Level 2) parameter audit with full telemetry (Min/Avg/Max) & Deltas."""
 import argparse
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 # Fix path to include sim directory
@@ -19,6 +21,10 @@ from inquisitio.runner.scoring import (
 )
 
 
+def _pc(sec, delta: int = 0) -> str:
+    return f"{sec['3p'] + delta}/{sec['4p'] + delta}/{sec['5p'] + delta}"
+
+
 def build_level2_tests():
     """Generate ±1 tests dynamically from current CONFIG victory conditions."""
     v = CONFIG.victory
@@ -30,47 +36,92 @@ def build_level2_tests():
     hb = kt.heresy_band
     return [
         ("L2_BAZA", "Baza (Bieżące warunki zwycięstwa)", {}),
-
-        # 1. Oficjum Stosy
-        ("L2_SO_STACKS_PLUS1", f"Oficjum Stosy: +1 ({so.stacks['3p']+1}@3p / {so.stacks['4p']+1}@4p / {so.stacks['5p']+1}@5p)", {"so_stacks_offset": 1}),
-        ("L2_SO_STACKS_MINUS1", f"Oficjum Stosy: -1 ({max(1,so.stacks['3p']-1)}@3p / {so.stacks['4p']-1}@4p / {so.stacks['5p']-1}@5p)", {"so_stacks_offset": -1}),
-
-        # 2. Oficjum Skazania
-        ("L2_SO_CONDEMNS_PLUS1", f"Oficjum Skazania: +1 ({so.condemns['3p']+1}@3p / {so.condemns['4p']+1}@4p / {so.condemns['5p']+1}@5p)", {"so_condemns_offset": 1}),
-        ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania: -1 ({max(1,so.condemns['3p']-1)}@3p / {so.condemns['4p']-1}@4p / {so.condemns['5p']-1}@5p)", {"so_condemns_offset": -1}),
-
-        # 3. Cienie Relikwie
-        ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: +1 ({caa.relics + 1})", {"caa_relics_offset": 1}),
-        ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: -1 ({max(1, caa.relics - 1)})", {"caa_relics_offset": -1}),
-
-        # 4. Cienie Era Ścieżki
-        ("L2_CAA_ERA_PLUS1", f"Cienie Era Ścieżki: +1 (Era {caa.path_era['3p']+1}@3p / Era {caa.path_era['4p']+1}@4-5p)", {"caa_era_offset": 1}),
-        ("L2_CAA_ERA_MINUS1", f"Cienie Era Ścieżki: -1 (Era {caa.path_era['3p']-1}@3p / Era {caa.path_era['4p']-1}@4-5p)", {"caa_era_offset": -1}),
-
-        # 5. Korona Era Zwycięstwa
-        ("L2_KB_ERA_PLUS1", f"Korona Era Zwycięstwa: +1 (Era {kb.era['3p']+1}@3p / Era {kb.era['4p']+1}@4-5p)", {"kb_era_offset": 1}),
-        ("L2_KB_ERA_MINUS1", f"Korona Era Zwycięstwa: -1 (Era {kb.era['3p']-1}@3p / Era {kb.era['4p']-1}@4-5p)", {"kb_era_offset": -1}),
-
-        # 6. Kabała Fragmenty Target
-        ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: +1 ({kt.fragments['3p']+1}@3p / {kt.fragments['4p']+1}@4p / {kt.fragments['5p']+1}@5p)", {"kt_frags_offset": 1}),
-        ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: -1 ({max(1,kt.fragments['3p']-1)}@3p / {max(1,kt.fragments['4p']-1)}@4p / {max(1,kt.fragments['5p']-1)}@5p)", {"kt_frags_offset": -1}),
-
-        # 7. Kabała Pasmo Herezji (Rozbite na progi Dolny i Górny)
-        ("L2_KT_HERESY_LOW_MINUS1", f"Kabała Herezja (Dolna Granica): -1 ({hb[0]-1}–{hb[1]})", {"kt_heresy_band": (hb[0] - 1, hb[1])}),
-        ("L2_KT_HERESY_LOW_PLUS1", f"Kabała Herezja (Dolna Granica): +1 ({hb[0]+1}–{hb[1]})", {"kt_heresy_band": (hb[0] + 1, hb[1])}),
-        ("L2_KT_HERESY_HIGH_PLUS1", f"Kabała Herezja (Górna Granica): +1 ({hb[0]}–{hb[1]+1})", {"kt_heresy_band": (hb[0], hb[1] + 1)}),
-        ("L2_KT_HERESY_HIGH_MINUS1", f"Kabała Herezja (Górna Granica): -1 ({hb[0]}–{hb[1]-1})", {"kt_heresy_band": (hb[0], hb[1] - 1)}),
-
-
-        # 8. Gildia Upadki Target
-        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: +1 ({gc.falls.default + 1}@default / {gc.falls.no_oficjum + 1}@no-SO)", {"gc_falls_offset": 1}),
-        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: -1 ({max(1, gc.falls.default - 1)}@default / {gc.falls.no_oficjum - 1}@no-SO)", {"gc_falls_offset": -1}),
+        ("L2_SO_STACKS_PLUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, 1)}", {"so_stacks_offset": 1}),
+        ("L2_SO_STACKS_MINUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -1)}", {"so_stacks_offset": -1}),
+        ("L2_SO_CONDEMNS_PLUS1", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, 1)}", {"so_condemns_offset": 1}),
+        ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, -1)}", {"so_condemns_offset": -1}),
+        ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: {caa.relics} → {caa.relics + 1}", {"caa_relics_offset": 1}),
+        ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: {caa.relics} → {caa.relics - 1}", {"caa_relics_offset": -1}),
+        ("L2_CAA_ERA_PLUS1", f"Cienie Era: {_pc(caa.path_era)} → {_pc(caa.path_era, 1)}", {"caa_era_offset": 1}),
+        ("L2_CAA_ERA_MINUS1", f"Cienie Era: {_pc(caa.path_era)} → {_pc(caa.path_era, -1)}", {"caa_era_offset": -1}),
+        ("L2_KB_ERA_PLUS1", f"Korona Era: {_pc(kb.era)} → {_pc(kb.era, 1)}", {"kb_era_offset": 1}),
+        ("L2_KB_ERA_MINUS1", f"Korona Era: {_pc(kb.era)} → {_pc(kb.era, -1)}", {"kb_era_offset": -1}),
+        ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
+        ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
+        ("L2_KT_HERESY_LOW_MINUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0] - 1}–{hb[1]}", {"kt_heresy_band": (hb[0] - 1, hb[1])}),
+        ("L2_KT_HERESY_LOW_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0] + 1}–{hb[1]}", {"kt_heresy_band": (hb[0] + 1, hb[1])}),
+        ("L2_KT_HERESY_HIGH_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] + 1}", {"kt_heresy_band": (hb[0], hb[1] + 1)}),
+        ("L2_KT_HERESY_HIGH_MINUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] - 1}", {"kt_heresy_band": (hb[0], hb[1] - 1)}),
+        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki (default/bez SO): {gc.falls.default}/{gc.falls.no_oficjum} → {gc.falls.default + 1}/{gc.falls.no_oficjum + 1}", {"gc_falls_offset": 1}),
+        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki (default/bez SO): {gc.falls.default}/{gc.falls.no_oficjum} → {gc.falls.default - 1}/{gc.falls.no_oficjum - 1}", {"gc_falls_offset": -1}),
     ]
+
+
+def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:
+    (rule_id, rule_name, rule_params), games_per_setup, seed, setups = task_args
+    t_rule = time.time()
+
+    summaries = []
+    for sname in setups:
+        summary = run_batch(
+            games=games_per_setup,
+            setup=sname,
+            seed=seed,
+            layer="C",
+            win_overrides=rule_params,
+        )
+        summaries.append(summary)
+
+    cat_scores = calculate_category_scores(summaries)
+    global_score = calculate_global_score(cat_scores)
+    dt = round(time.time() - t_rule, 2)
+
+    # Aggregate telemetry across all setups for this test
+    n_sum = len(summaries)
+    eras_avg = sum(s.eras_avg for s in summaries) / n_sum
+    eras_min = min(s.eras_min for s in summaries)
+    eras_max = max(s.eras_max for s in summaries)
+
+    deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
+    poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
+
+    autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
+    autodafe_min = min(s.autodafe_min for s in summaries)
+    autodafe_max = max(s.autodafe_max for s in summaries)
+
+    acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
+    acc_min = min(s.accusations_min for s in summaries)
+    acc_max = max(s.accusations_max for s in summaries)
+
+    gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
+    gold_min = min(s.gold_min for s in summaries)
+    gold_max = max(s.gold_max for s in summaries)
+
+    heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
+    heresy_min = min(s.heresy_min for s in summaries)
+    heresy_max = max(s.heresy_max for s in summaries)
+
+    return {
+        "id": rule_id,
+        "name": rule_name,
+        "global_score": global_score,
+        "cat_scores": cat_scores,
+        "dt": dt,
+        "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
+        "deadlock_pct": deadlock_pct,
+        "poverty_pct": poverty_pct,
+        "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
+        "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
+        "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
+        "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
+    }
+
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Audit Level 2 Victory Conditions")
     parser.add_argument("--games", type=int, default=300, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
+    parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
@@ -80,72 +131,25 @@ def main():
     print("========================================================")
     print("ROZPOCZYNAM PEŁNY AUDYT POZIOMU 2: WARUNKI ZWYCIĘSTWA I SKALOWANIE")
     print(f"Próba: {games_per_setup} gier × 16 setupów | Ziarno: {args.seed}")
-    print("========================================================\n")
+    print(f"Równoległe procesy: {args.workers}")
+    print("========================================================\n", flush=True)
 
     t0 = time.time()
+    level2_tests = build_level2_tests()
+    task_list = [(test, games_per_setup, args.seed, setups) for test in level2_tests]
     results = []
 
-    level2_tests = build_level2_tests()
-
-    for rule_id, rule_name, rule_params in level2_tests:
-        t_rule = time.time()
-
-        summaries = []
-        for sname in setups:
-            summary = run_batch(
-                games=games_per_setup,
-                setup=sname,
-                seed=args.seed,
-                layer="C",
-                win_overrides=rule_params,
-            )
-            summaries.append(summary)
-
-        cat_scores = calculate_category_scores(summaries)
-        global_score = calculate_global_score(cat_scores)
-        dt = round(time.time() - t_rule, 2)
-
-        # Aggregate telemetry across all setups for this test
-        n_sum = len(summaries)
-        eras_avg = sum(s.eras_avg for s in summaries) / n_sum
-        eras_min = min(s.eras_min for s in summaries)
-        eras_max = max(s.eras_max for s in summaries)
-
-        deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
-        poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
-
-        autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
-        autodafe_min = min(s.autodafe_min for s in summaries)
-        autodafe_max = max(s.autodafe_max for s in summaries)
-
-        acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
-        acc_min = min(s.accusations_min for s in summaries)
-        acc_max = max(s.accusations_max for s in summaries)
-
-        gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
-        gold_min = min(s.gold_min for s in summaries)
-        gold_max = max(s.gold_max for s in summaries)
-
-        heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
-        heresy_min = min(s.heresy_min for s in summaries)
-        heresy_max = max(s.heresy_max for s in summaries)
-
-        results.append({
-            "id": rule_id,
-            "name": rule_name,
-            "global_score": global_score,
-            "cat_scores": cat_scores,
-            "dt": dt,
-            "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
-            "deadlock_pct": deadlock_pct,
-            "poverty_pct": poverty_pct,
-            "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
-            "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
-            "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
-            "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
-        })
-
-        print(f"[{rule_id}] Global Score: {global_score:5.1f} pkt | Czas: {dt}s")
+    workers = min(args.workers, len(level2_tests))
+    if workers > 1:
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            for res in executor.map(_run_single_test_task, task_list):
+                results.append(res)
+                print(f"[{res['id']}] Global Score: {res['global_score']:5.1f} pkt | Czas: {res['dt']}s", flush=True)
+    else:
+        for task in task_list:
+            res = _run_single_test_task(task)
+            results.append(res)
+            print(f"[{res['id']}] Global Score: {res['global_score']:5.1f} pkt | Czas: {res['dt']}s", flush=True)
 
     elapsed = round(time.time() - t0, 2)
     base = results[0]

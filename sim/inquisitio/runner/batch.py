@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import random
+import multiprocessing
 from collections import Counter
 from dataclasses import dataclass, field
 from concurrent.futures import ProcessPoolExecutor
@@ -126,8 +127,8 @@ def run_batch(
     gold_list = []
     heresy_list = []
 
-    # Parallel Execution via ProcessPoolExecutor if games >= 100
-    if games >= 100:
+    # Parallel Execution via ProcessPoolExecutor if games >= 100 and in MainProcess
+    if games >= 100 and multiprocessing.current_process().name == "MainProcess":
         max_workers = min(os.cpu_count() or 4, 16)
         task_args = [
             (setup_name, seed + i * 17, threshold, layer, win_overrides)

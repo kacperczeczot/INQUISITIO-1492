@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Script to run a +-1 System Core (Level 1) parameter audit with full telemetry (Min/Avg/Max) & Deltas."""
 import argparse
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 # Fix path to include sim directory
@@ -19,107 +21,125 @@ from inquisitio.runner.scoring import (
 )
 
 
+def _pc(sec, delta: int = 0) -> str:
+    """3p/4p/5p snapshot, optional ±delta on each."""
+    return f"{sec['3p'] + delta}/{sec['4p'] + delta}/{sec['5p'] + delta}"
+
+
 def build_level1_tests():
     """Generate ±1 tests dynamically as relative offsets from current CONFIG values."""
     s = CONFIG.system
+    t, g, h = s.accusation_threshold, s.start_gold, s.hand_limit
     return [
         ("L1_BAZA", "Baza (Bieżące parametry systemowe)", {}),
-        ("L1_THRESHOLD_PLUS1", "Próg Oskarżenia (Herezja): +1 od bazy", {"threshold_offset": 1}),
-        ("L1_THRESHOLD_MINUS1", "Próg Oskarżenia (Herezja): -1 od bazy", {"threshold_offset": -1}),
-        ("L1_MAX_ERAS_PLUS1", f"Maksymalny limit Er: {s.max_eras + 1} (+1)", {"max_eras_offset": 1}),
-        ("L1_MAX_ERAS_MINUS1", f"Maksymalny limit Er: {s.max_eras - 1} (-1)", {"max_eras_offset": -1}),
-        ("L1_START_GOLD_PLUS1", "Złoto startowe: +1zł od bazy", {"start_gold_offset": 1}),
-        ("L1_START_GOLD_MINUS1", "Złoto startowe: -1zł od bazy", {"start_gold_offset": -1}),
-        ("L1_AGENTS_PLUS1", f"Liczba agentów na gracza: {s.agents_per_player + 1} (+1)", {"agents_offset": 1}),
-        ("L1_AGENTS_MINUS1", f"Liczba agentów na gracza: {s.agents_per_player - 1} (-1)", {"agents_offset": -1}),
-        ("L1_HAND_LIMIT_PLUS1", "Limit kart na ręce: +1 od bazy", {"hand_limit_offset": 1}),
-        ("L1_HAND_LIMIT_MINUS1", "Limit kart na ręce: -1 od bazy", {"hand_limit_offset": -1}),
-        ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown + 1} Ery (+1)", {"cooldown_offset": 1}),
-        ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: Co {s.autodafe_cooldown - 1} Erę (-1)", {"cooldown_offset": -1}),
+        ("L1_THRESHOLD_PLUS1", f"Próg Oskarżenia: {_pc(t)} → {_pc(t, 1)}", {"threshold_offset": 1}),
+        ("L1_THRESHOLD_MINUS1", f"Próg Oskarżenia: {_pc(t)} → {_pc(t, -1)}", {"threshold_offset": -1}),
+        ("L1_MAX_ERAS_PLUS1", f"Limit Er: {s.max_eras} → {s.max_eras + 1}", {"max_eras_offset": 1}),
+        ("L1_MAX_ERAS_MINUS1", f"Limit Er: {s.max_eras} → {s.max_eras - 1}", {"max_eras_offset": -1}),
+        ("L1_START_GOLD_PLUS1", f"Złoto startowe: {_pc(g)}zł → {_pc(g, 1)}zł", {"start_gold_offset": 1}),
+        ("L1_START_GOLD_MINUS1", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -1)}zł", {"start_gold_offset": -1}),
+        ("L1_AGENTS_PLUS1", f"Agenci: {s.agents_per_player} → {s.agents_per_player + 1}", {"agents_offset": 1}),
+        ("L1_AGENTS_MINUS1", f"Agenci: {s.agents_per_player} → {s.agents_per_player - 1}", {"agents_offset": -1}),
+        ("L1_HAND_LIMIT_PLUS1", f"Limit ręki: {_pc(h)} → {_pc(h, 1)}", {"hand_limit_offset": 1}),
+        ("L1_HAND_LIMIT_MINUS1", f"Limit ręki: {_pc(h)} → {_pc(h, -1)}", {"hand_limit_offset": -1}),
+        ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: {s.autodafe_cooldown} → {s.autodafe_cooldown + 1} Ery", {"cooldown_offset": 1}),
+        ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: {s.autodafe_cooldown} → {s.autodafe_cooldown - 1} Ery", {"cooldown_offset": -1}),
     ]
 
+
+def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:
+    (rule_id, rule_name, rule_params), games_per_setup, seed, setups = task_args
+    t_rule = time.time()
+
+    summaries = []
+    for sname in setups:
+        summary = run_batch(
+            games=games_per_setup,
+            setup=sname,
+            seed=seed,
+            layer="C",
+            win_overrides=rule_params,
+        )
+        summaries.append(summary)
+
+    cat_scores = calculate_category_scores(summaries)
+    global_score = calculate_global_score(cat_scores)
+    dt = round(time.time() - t_rule, 2)
+
+    # Aggregate telemetry across all setups for this test
+    n_sum = len(summaries)
+    eras_avg = sum(s.eras_avg for s in summaries) / n_sum
+    eras_min = min(s.eras_min for s in summaries)
+    eras_max = max(s.eras_max for s in summaries)
+
+    deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
+    poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
+
+    autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
+    autodafe_min = min(s.autodafe_min for s in summaries)
+    autodafe_max = max(s.autodafe_max for s in summaries)
+
+    acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
+    acc_min = min(s.accusations_min for s in summaries)
+    acc_max = max(s.accusations_max for s in summaries)
+
+    gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
+    gold_min = min(s.gold_min for s in summaries)
+    gold_max = max(s.gold_max for s in summaries)
+
+    heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
+    heresy_min = min(s.heresy_min for s in summaries)
+    heresy_max = max(s.heresy_max for s in summaries)
+
+    return {
+        "id": rule_id,
+        "name": rule_name,
+        "global_score": global_score,
+        "cat_scores": cat_scores,
+        "dt": dt,
+        "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
+        "deadlock_pct": deadlock_pct,
+        "poverty_pct": poverty_pct,
+        "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
+        "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
+        "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
+        "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
+    }
 
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Audit Level 1 System Parameters")
     parser.add_argument("--games", type=int, default=300, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
+    parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
     games_per_setup = args.games
     setups = sorted(SETUP_PRESETS.keys())
+    level1_tests = build_level1_tests()
 
     print("========================================================")
     print("ROZPOCZYNAM PEŁNY AUDYT POZIOMU 1: GŁÓWNE MECHANIKI SYSTEMOWE")
     print(f"Próba: {games_per_setup} gier × 16 setupów | Ziarno: {args.seed}")
-    print("========================================================\n")
+    print(f"Równoległe procesy: {args.workers}")
+    print("========================================================\n", flush=True)
 
     t0 = time.time()
+    task_list = [(test, games_per_setup, args.seed, setups) for test in level1_tests]
     results = []
-    level1_tests = build_level1_tests()
 
-    for rule_id, rule_name, rule_params in level1_tests:
-        t_rule = time.time()
-        threshold = rule_params.get("threshold", 8)
-
-        summaries = []
-        for sname in setups:
-            summary = run_batch(
-                games=games_per_setup,
-                setup=sname,
-                seed=args.seed,
-                layer="C",
-                threshold=threshold,
-                win_overrides=rule_params,
-            )
-            summaries.append(summary)
-
-        cat_scores = calculate_category_scores(summaries)
-        global_score = calculate_global_score(cat_scores)
-        dt = round(time.time() - t_rule, 2)
-
-        # Aggregate telemetry across all setups for this test
-        n_sum = len(summaries)
-        eras_avg = sum(s.eras_avg for s in summaries) / n_sum
-        eras_min = min(s.eras_min for s in summaries)
-        eras_max = max(s.eras_max for s in summaries)
-
-        deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
-        poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
-
-        autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
-        autodafe_min = min(s.autodafe_min for s in summaries)
-        autodafe_max = max(s.autodafe_max for s in summaries)
-
-        acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
-        acc_min = min(s.accusations_min for s in summaries)
-        acc_max = max(s.accusations_max for s in summaries)
-
-        gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
-        gold_min = min(s.gold_min for s in summaries)
-        gold_max = max(s.gold_max for s in summaries)
-
-        heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
-        heresy_min = min(s.heresy_min for s in summaries)
-        heresy_max = max(s.heresy_max for s in summaries)
-
-        results.append({
-            "id": rule_id,
-            "name": rule_name,
-            "global_score": global_score,
-            "cat_scores": cat_scores,
-            "dt": dt,
-            "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
-            "deadlock_pct": deadlock_pct,
-            "poverty_pct": poverty_pct,
-            "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
-            "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
-            "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
-            "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
-        })
-
-        print(f"[{rule_id}] Global Score: {global_score:5.1f} pkt | Czas: {dt}s")
+    workers = min(args.workers, len(level1_tests))
+    if workers > 1:
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            for idx, res in enumerate(executor.map(_run_single_test_task, task_list), 1):
+                results.append(res)
+                print(f"[{res['id']}] Global Score: {res['global_score']:5.1f} pkt | Czas: {res['dt']}s", flush=True)
+    else:
+        for idx, task in enumerate(task_list, 1):
+            res = _run_single_test_task(task)
+            results.append(res)
+            print(f"[{res['id']}] Global Score: {res['global_score']:5.1f} pkt | Czas: {res['dt']}s", flush=True)
 
     elapsed = round(time.time() - t0, 2)
     base = results[0]

@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Script to run a +-1 Niche Variants & Modifiers (Level 4) parameter audit with full telemetry (Min/Avg/Max) & Deltas."""
 import argparse
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 # Fix path to include sim directory
 SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
 sys.path.insert(0, str(SIM_DIR))
 
+from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS
 from inquisitio.runner.batch import run_batch
 from inquisitio.runner.scoring import (
@@ -17,29 +20,86 @@ from inquisitio.runner.scoring import (
     color_score,
 )
 
-LEVEL4_TESTS = [
-    ("L4_BAZA", "Baza (Bieżące warianty niszowe i zasady edyktów)", {}),
+def build_level4_tests():
+    nv = CONFIG.variants
+    return [
+        ("L4_BAZA", "Baza (Bieżące warianty niszowe i zasady edyktów)", {}),
+        ("L4_TIME_DECK_EVERY_ERA", f"Edykty Czasu: co {nv.time_deck_freq} Erę → co 1 Erę", {"time_deck_freq": 1}),
+        ("L4_TIME_DECK_EVERY_2ERAS", f"Edykty Czasu: co {nv.time_deck_freq} Erę → co 2 Ery", {"time_deck_freq": 2}),
+        ("L4_SEA_ROUTE_ERA4", f"Szlak Morski: Era {nv.sea_route_era} → Era 4", {"sea_route_era": 4}),
+        ("L4_SEA_ROUTE_ERA6", f"Szlak Morski: Era {nv.sea_route_era} → Era 6", {"sea_route_era": 6}),
+        ("L4_INQUISITOR_SPEED2", f"Inkwizytor Patrol: ruch {nv.inquisitor_speed} → 2", {"inquisitor_speed": 2}),
+        ("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {nv.inquisitor_speed} → 0", {"inquisitor_speed": 0}),
+        ("L4_VERDICT_SECRET", "Werdykt: jawny → tajny", {"verdict_secret": True}),
+    ]
 
-    # 1. Częstotliwość odkrywania Edyktów Czasu
-    ("L4_TIME_DECK_EVERY_ERA", "Edykty Czasu: Odkrywane co 1 Erę (+1 powszechność)", {"time_deck_freq": 1}),
-    ("L4_TIME_DECK_EVERY_2ERAS", "Edykty Czasu: Odkrywane co 2 Ery (-1 powszechność)", {"time_deck_freq": 2}),
 
-    # 2. Otwarcie Szlaku Morskiego dla Cieni
-    ("L4_SEA_ROUTE_ERA4", "Szlak Morski Cieni: Otwarcie w Erze 4 (-1 Era)", {"sea_route_era": 4}),
-    ("L4_SEA_ROUTE_ERA6", "Szlak Morski Cieni: Otwarcie w Erze 6 (+1 Era)", {"sea_route_era": 6}),
+LEVEL4_TESTS = build_level4_tests()
 
-    # 3. Ruch Inkwizytora (Patrol)
-    ("L4_INQUISITOR_SPEED2", "Inkwizytor Patrol: Ruch o 2 pola (+1 ruch)", {"inquisitor_speed": 2}),
-    ("L4_INQUISITOR_SPEED0", "Inkwizytor Patrol: Ruch o 0 pól (Stacjonarny)", {"inquisitor_speed": 0}),
+def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:
+    (rule_id, rule_name, rule_params), games_per_setup, seed, setups = task_args
+    t_rule = time.time()
 
-    # 4. Werdykt Stołu (Głosowanie tajne vs jawne)
-    ("L4_VERDICT_SECRET", "Werdykt Stołu: Wariant z tajnymi kartami głosów", {"verdict_secret": True}),
-]
+    summaries = []
+    for sname in setups:
+        summary = run_batch(
+            games=games_per_setup,
+            setup=sname,
+            seed=seed,
+            layer="C",
+            win_overrides=rule_params,
+        )
+        summaries.append(summary)
+
+    cat_scores = calculate_category_scores(summaries)
+    global_score = calculate_global_score(cat_scores)
+    dt = round(time.time() - t_rule, 2)
+
+    # Aggregate telemetry across all setups for this test
+    n_sum = len(summaries)
+    eras_avg = sum(s.eras_avg for s in summaries) / n_sum
+    eras_min = min(s.eras_min for s in summaries)
+    eras_max = max(s.eras_max for s in summaries)
+
+    deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
+    poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
+
+    autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
+    autodafe_min = min(s.autodafe_min for s in summaries)
+    autodafe_max = max(s.autodafe_max for s in summaries)
+
+    acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
+    acc_min = min(s.accusations_min for s in summaries)
+    acc_max = max(s.accusations_max for s in summaries)
+
+    gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
+    gold_min = min(s.gold_min for s in summaries)
+    gold_max = max(s.gold_max for s in summaries)
+
+    heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
+    heresy_min = min(s.heresy_min for s in summaries)
+    heresy_max = max(s.heresy_max for s in summaries)
+
+    return {
+        "id": rule_id,
+        "name": rule_name,
+        "global_score": global_score,
+        "cat_scores": cat_scores,
+        "dt": dt,
+        "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
+        "deadlock_pct": deadlock_pct,
+        "poverty_pct": poverty_pct,
+        "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
+        "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
+        "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
+        "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
+    }
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Audit Level 4 Niche Variants")
     parser.add_argument("--games", type=int, default=300, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
+    parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
@@ -49,70 +109,24 @@ def main():
     print("========================================================")
     print("ROZPOCZYNAM PEŁNY AUDYT POZIOMU 4: WARIANTY NISZOWE I MODYFIKATORY")
     print(f"Próba: {games_per_setup} gier × 16 setupów | Ziarno: {args.seed}")
-    print("========================================================\n")
+    print(f"Równoległe procesy: {args.workers}")
+    print("========================================================\n", flush=True)
 
     t0 = time.time()
+    task_list = [(test, games_per_setup, args.seed, setups) for test in LEVEL4_TESTS]
     results = []
 
-    for rule_id, rule_name, rule_params in LEVEL4_TESTS:
-        t_rule = time.time()
-
-        summaries = []
-        for sname in setups:
-            summary = run_batch(
-                games=games_per_setup,
-                setup=sname,
-                seed=args.seed,
-                layer="C",
-                win_overrides=rule_params,
-            )
-            summaries.append(summary)
-
-        cat_scores = calculate_category_scores(summaries)
-        global_score = calculate_global_score(cat_scores)
-        dt = round(time.time() - t_rule, 2)
-
-        # Aggregate telemetry across all setups for this test
-        n_sum = len(summaries)
-        eras_avg = sum(s.eras_avg for s in summaries) / n_sum
-        eras_min = min(s.eras_min for s in summaries)
-        eras_max = max(s.eras_max for s in summaries)
-
-        deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
-        poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
-
-        autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
-        autodafe_min = min(s.autodafe_min for s in summaries)
-        autodafe_max = max(s.autodafe_max for s in summaries)
-
-        acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
-        acc_min = min(s.accusations_min for s in summaries)
-        acc_max = max(s.accusations_max for s in summaries)
-
-        gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
-        gold_min = min(s.gold_min for s in summaries)
-        gold_max = max(s.gold_max for s in summaries)
-
-        heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
-        heresy_min = min(s.heresy_min for s in summaries)
-        heresy_max = max(s.heresy_max for s in summaries)
-
-        results.append({
-            "id": rule_id,
-            "name": rule_name,
-            "global_score": global_score,
-            "cat_scores": cat_scores,
-            "dt": dt,
-            "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
-            "deadlock_pct": deadlock_pct,
-            "poverty_pct": poverty_pct,
-            "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
-            "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
-            "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
-            "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
-        })
-
-        print(f"[{rule_id}] Global Score: {global_score:5.1f} pkt | Czas: {dt}s")
+    workers = min(args.workers, len(LEVEL4_TESTS))
+    if workers > 1:
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            for res in executor.map(_run_single_test_task, task_list):
+                results.append(res)
+                print(f"[{res['id']}] Global Score: {res['global_score']:5.1f} pkt | Czas: {res['dt']}s", flush=True)
+    else:
+        for task in task_list:
+            res = _run_single_test_task(task)
+            results.append(res)
+            print(f"[{res['id']}] Global Score: {res['global_score']:5.1f} pkt | Czas: {res['dt']}s", flush=True)
 
     elapsed = round(time.time() - t0, 2)
     base = results[0]

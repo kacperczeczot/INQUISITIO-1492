@@ -219,7 +219,11 @@ def new_game(
         rng_seed=seed,
         layer=layer,
         max_eras=max_eras,
-        autodafe_cooldown=sys.get("autodafe_cooldown", CONFIG.system.autodafe_cooldown),
+        autodafe_cooldown=(
+            max(0, CONFIG.system.autodafe_cooldown + sys["cooldown_offset"])
+            if "cooldown_offset" in sys
+            else sys.get("autodafe_cooldown", CONFIG.system.autodafe_cooldown)
+        ),
         sys_overrides=sys,
     )
     return state

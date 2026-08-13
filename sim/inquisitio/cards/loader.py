@@ -121,8 +121,12 @@ def _parse_md(path: Path) -> Card | None:
     return None
 
 
+_CACHE: dict[str, Card] | None = None
+_OVERRIDE_CACHE: dict[str, dict[str, Card]] = {}
+
+
 def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> dict[str, Card]:
-    global _CACHE
+    global _CACHE, _OVERRIDE_CACHE
     if _CACHE is None or force:
         cards: dict[str, Card] = {}
         for path in CARDS_ROOT.rglob("*.md"):
@@ -132,9 +136,15 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
             if c:
                 cards[c.id] = c
         _CACHE = cards
+        _OVERRIDE_CACHE.clear()
 
     if not card_overrides:
         return _CACHE
+
+    # Use cache for overridden cards dictionary
+    key = repr(sorted((k, tuple(sorted(v.items()))) for k, v in card_overrides.items()))
+    if key in _OVERRIDE_CACHE and not force:
+        return _OVERRIDE_CACHE[key]
 
     # Return deep copies with applied overrides
     import copy
@@ -149,6 +159,8 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
                         card.cost_gold = val
                     elif field_name == "cost_gold":
                         card.cost = val
+
+    _OVERRIDE_CACHE[key] = modified_cards
     return modified_cards
 
 

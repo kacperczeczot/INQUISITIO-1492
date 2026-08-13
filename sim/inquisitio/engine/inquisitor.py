@@ -53,12 +53,18 @@ def step_toward(src: str, dst: str) -> str:
 
 
 def move_inquisitor(state: GameState, rng: random.Random, toward: str | None = None) -> None:
-    cur = state.inquisitor_location
-    if toward and toward in LOCATION_INDEX:
-        state.inquisitor_location = step_toward(cur, toward)
-    else:
-        opts = [cur, *neighbors(cur)]
-        state.inquisitor_location = rng.choice(opts)
+    sys = state.sys_overrides or {}
+    speed = sys.get("inquisitor_speed", 1)
+    if speed == 0:
+        state.inquisitor_mode = InquisitorMode.PATROL
+        return
+    for _ in range(speed):
+        cur = state.inquisitor_location
+        if toward and toward in LOCATION_INDEX:
+            state.inquisitor_location = step_toward(cur, toward)
+        else:
+            opts = [cur, *neighbors(cur)]
+            state.inquisitor_location = rng.choice(opts)
     state.inquisitor_mode = InquisitorMode.PATROL
     state.add_log(f"Inquisitor patrol -> {state.inquisitor_location}")
 
