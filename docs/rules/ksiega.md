@@ -217,7 +217,7 @@ Zamrożone reguły (bez „ustal przy stole”):
 | Karty / Erę | **do 2** (zagranie lub pas) |
 | Talia Czasu | odkryj **1** edykt |
 | Patrol bez nasłania | najniższa Herezja; remis → 1. gracz |
-| Limit Er / remis | 8 Er; najbliższy cel, potem najniższa Herezja |
+| Limit Er / remis | 9 Er; najbliższy cel, potem najniższa Herezja |
 | Lokacje kluczowe Gildii | Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek |
 
 **Zasada Balansu:** próg oskarżenia wynosi **7** dla 3p oraz **8** dla 4–5p (zatwierdzone w raportach sim-reports).

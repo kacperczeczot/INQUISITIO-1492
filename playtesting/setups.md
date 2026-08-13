@@ -10,7 +10,7 @@
 | Strefa Obserwowana | **4–6** | **4–7** |
 | Strefa Krytyczna | **7–10** | **8–10** |
 | Karty w Fazie II (Plan) | **2** rundy zagrań / Erę | **2** rundy zagrań / Erę |
-| Limit Er | **8** | **8** |
+| Limit Er | **9** | **9** |
 | Relikwie | 1 w Lochach + **1** odkryta w puli | 1 w Lochach + **2** odkryte |
 | Fragmenty Kodeksu (pula) | **4** | **6** |
 | Złoto startowe | **3** | **3** |

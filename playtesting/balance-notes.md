@@ -19,7 +19,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Oskarżenia (Krytyczna Herezja)** | **7** | **8** | **8** | Na 3p niższy próg wymusza dynamikę Werdyktu przy pustszym stole; na 4–5p próg 8 zapobiega snowballowi Świętego Oficjum. |
 | **Strefy Herezji (Czysta / Obserw. / Kryt.)** | **0–3 / 4–6 / 7–10** | **0–3 / 4–7 / 8–10** | **0–3 / 4–7 / 8–10** | Poszerzenie strefy Obserwowanej (4–7) w 4-5p daje Kabałce przestrzeń na budowanie układów bez natychmiastowego oskarżenia. |
-| **Maksymalna Liczba Er** | **8** | **8** | **8** | Hard-cap zapobiegający przedłużaniu się gier. Audyt L1 wykazał, że 9 Er redukuje deadlocki o połowę (z 7.1% do 3.5%), lecz wymaga rekalibracji bramek warstw B/C. |
+| **Maksymalna Liczba Er** | **9** | **9** | **9** | Bezpiecznik wydłużony do 9 Er obniża deadlocki o połowę (z 7.1% do 3.5%) i podnosi Global Score do 67.3 pkt. |
 | **Cooldown Autodafé** | **2 Ery** | **2 Ery** | **2 Ery** | Zabezpieczenie przed seryjnym spalaniem agentów erę po erze. |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę + trickle +1 złota w 1. rundzie poprawiają płynność ekonomii. |
 | **Złoto Startowe** | **3 zł** | **3 zł** | **2 zł** | W 5p 2zł zwalnia wczesny rozmach Korony/Gildii i daje czas Oficjum/Kabale (skok wyniku 5p do 65.5 pkt); w 3–4p 3zł zapewnia płynność. |
@@ -112,7 +112,9 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
   - *Efekt:* W 5p limit 6 kart dostarcza szeroki wybór opcji taktycznych w tłoku 15 agentów na mapie.
 - **Kabała z Toledo (`heresy_band`):** Poszerzenie górnej granicy pasma z 7 do **8 (`[3, 8]`)**.
   - *Efekt:* Podniesienie wyniku `Global Score` z 59.8 do **`🟢 64.5 pkt`** (`+4.7 pkt`) oraz `5p Score` do **`🟢 79.4 pkt`** (`+10.3 pkt`).
-- **Limit Er (`max_eras`):** Audyt L1 wykazał, że 9 Er obniża deadlocki o połowę (z 7.1% do 3.5%). Zachowano 8 Er w konfiguracji bazowej z notatką analityczną do rekalibracji bramek.
+- **Limit Er (`max_eras`):** Podniesienie bezpiecznika z 8 do **9 Er**.
+  - *Efekt:* Redukcja patów o 50% (z 7.1% do 3.5%) i skok `Global Score` do **`🟢 67.3 pkt`** (`+0.8 pkt`).
+
 
 
 

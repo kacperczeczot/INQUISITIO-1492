@@ -8,7 +8,7 @@ system:
     3p: 5
     4p: 5
     5p: 6
-  max_eras: 8
+  max_eras: 9
   autodafe_cooldown: 2
   cards_per_era: 2
   accusation_threshold:
