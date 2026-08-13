@@ -15,6 +15,7 @@ from inquisitio.runner.batch import run_batch
 from inquisitio.runner.scoring import (
     calculate_category_scores,
     calculate_global_score,
+    color_score,
 )
 
 
@@ -151,7 +152,7 @@ def main():
         "# Raport Audytu Poziomu 2 (Warunki Zwycięstwa i Skalowanie)",
         "",
         f"**Przeanalizowano Wariantów:** {len(level2_tests)} | **Próba:** {games_per_setup} gier/setup | **Czas:** {elapsed}s",
-        f"**Wynik Bazy Poziomu 2 (Global):** `{base['global_score']:.1f} pkt` | 3p: `{base['cat_scores'].get('3p',0.0):.1f} pkt` | 4p: `{base['cat_scores'].get('4p',0.0):.1f} pkt` | 5p: `{base['cat_scores'].get('5p',0.0):.1f} pkt`",
+        f"**Wynik Bazy Poziomu 2 (Global):** `{color_score(base['global_score'])} pkt` | 3p: `{base['cat_scores'].get('3p',0.0):.1f} pkt` | 4p: `{base['cat_scores'].get('4p',0.0):.1f} pkt` | 5p: `{base['cat_scores'].get('5p',0.0):.1f} pkt`",
         "",
         "## 1. Tabela Wyników Balansu i Delty (Zmiany) dla Każdego Składu Graczy",
         "",
@@ -167,16 +168,19 @@ def main():
         b3 = base['cat_scores'].get('3p', 0.0)
         d3 = s3 - b3
         d3_str = f"+{d3:.1f}" if d3 > 0 else f"{d3:.1f}"
+        s3_fmt = f"⬆️ {s3:.1f}" if d3 > 0 else f"{s3:.1f}"
 
         s4 = r['cat_scores'].get('4p', 0.0)
         b4 = base['cat_scores'].get('4p', 0.0)
         d4 = s4 - b4
         d4_str = f"+{d4:.1f}" if d4 > 0 else f"{d4:.1f}"
+        s4_fmt = f"⬆️ {s4:.1f}" if d4 > 0 else f"{s4:.1f}"
 
         s5 = r['cat_scores'].get('5p', 0.0)
         b5 = base['cat_scores'].get('5p', 0.0)
         d5 = s5 - b5
         d5_str = f"+{d5:.1f}" if d5 > 0 else f"{d5:.1f}"
+        s5_fmt = f"⬆️ {s5:.1f}" if d5 > 0 else f"{s5:.1f}"
 
         if g_diff > 0.5:
             status = "🟢 POPRAWIA GLOBALNIE"
@@ -186,8 +190,10 @@ def main():
             status = "⚪ OPTYMALNY"
 
         report_lines.append(
-            f"| `{r['id']}` | {r['name']} | **{r['global_score']:5.1f}** | `{g_diff_str}` | {s3:.1f} | `{d3_str}` | {s4:.1f} | `{d4_str}` | {s5:.1f} | `{d5_str}` | {status} |"
+            f"| `{r['id']}` | {r['name']} | {color_score(r['global_score'], bold=True)} | `{g_diff_str}` | {s3_fmt} | `{d3_str}` | {s4_fmt} | `{d4_str}` | {s5_fmt} | `{d5_str}` | {status} |"
         )
+
+
 
     report_lines.extend([
         "",

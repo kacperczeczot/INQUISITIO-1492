@@ -62,3 +62,16 @@ def calculate_global_score(category_scores: dict[str, float]) -> float:
     if not valid_scores:
         return 0.0
     return round(sum(valid_scores) / len(valid_scores), 1)
+
+
+def color_score(val: float, bold: bool = False) -> str:
+    """Formats balance score with status icon (🟢 >=50.0, 🟡 25.0-49.9, 🔴 <25.0)."""
+    if val >= 50.0:
+        icon = "🟢"
+    elif val >= 25.0:
+        icon = "🟡"
+    else:
+        icon = "🔴"
+    val_str = f"**{val:5.1f}**" if bold else f"{val:.1f}"
+    return f"{icon} {val_str}"
+

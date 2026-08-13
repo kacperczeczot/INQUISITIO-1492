@@ -11,7 +11,7 @@ sys.path.insert(0, str(SIM_DIR))
 
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.batch import run_batch
-from inquisitio.runner.scoring import calculate_setup_score
+from inquisitio.runner.scoring import calculate_setup_score, color_score
 
 FACTION_NAMES = {
     FactionId.SWIETE_OFICJUM: "SO",
@@ -107,8 +107,10 @@ def main():
 
         eval_str = "🟢 ZBALANSOWANY" if d['score'] >= 50.0 else ("🟡 AKCEPTOWALNY" if d['score'] >= 25.0 else "🔴 ODCHYLONY")
         report_lines.append(
-            f"| `{d['setup']}` | {d['n_players']} | **{d['score']:5.1f}** | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
+            f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
         )
+
+
 
     report_lines.extend([
         "",

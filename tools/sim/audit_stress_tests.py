@@ -15,6 +15,7 @@ from inquisitio.runner.scoring import (
     calculate_setup_score,
     calculate_category_scores,
     calculate_global_score,
+    color_score,
 )
 
 def run_poverty_stress_test(games_per_setup, seed):
@@ -52,8 +53,9 @@ def run_poverty_stress_test(games_per_setup, seed):
         print(f"Startowe złoto {gold}zł -> Score: {global_score:5.1f} pkt | Pas Biedy: {poverty_pct:.1f}% | Czas: {dt}s")
 
         lines.append(
-            f"| {gold}zł | **{global_score:5.1f}** | {avg_eras:.2f} | {poverty_pct:.1f}% | {deadlock_pct:.1f}% |"
+            f"| {gold}zł | {color_score(global_score, bold=True)} | {avg_eras:.2f} | {poverty_pct:.1f}% | {deadlock_pct:.1f}% |"
         )
+
     return lines
 
 def main():
