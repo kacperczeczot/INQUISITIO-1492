@@ -132,8 +132,8 @@ Tor **0–10** na planszetce.
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpieczniej, słabsze akcje |
-| 4–6 | Obserwowana | Ryzyko; Kabała lubi ten pas |
-| 7–10 | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
+| 4–6@3p / 4–7@4–5p | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| ≥7@3p / ≥8@4–5p | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
 
 **Źródła:** `heresy` karty, `target_heresy`, ujawniony Hak, Autodafé, wykryty Podwójny, edykty.
 
@@ -156,9 +156,9 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | :--- | :--- |
 | Święte Oficjum | **2 Stosy**@3p / **3 Stosy**@4p / **5 Stosów**@5p **lub** skazania Werdyktem (**2** przy 3p, **3** przy 4p, **4** przy 5p) |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 6+ przy 3p / Era 5+ przy 4–5p) |
-| Korona | **2** Dekrety + ≥1 Hak (od Ery **6**@3p / **5**@4–5p); na **4–5p** też 1 Dekret + 2 Haki od Ery 5 |
-| Kabała | **3 Fragmenty** (**2** przy 5p) + Herezja **3–7** (od Ery **7**@3p / **6**@4–5p) |
-| Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum lub 5p |
+| Korona | **2** Dekrety (od Ery **6**@3p / **5**@4–5p z ≥1 Hakiem); na **4–5p** też 1 Dekret + 2 Haki od Ery 6 |
+| Kabała | **3 Fragmenty** (**2** przy 3p i 5p) + Herezja **3–7** (od Ery **7**@3p / **6**@4–5p) |
+| Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 
 Sim teach (A/B): inne progi / tie-break — nie drukuj osobno; szczegóły w silniku.
 
@@ -220,4 +220,4 @@ Zamrożone reguły (bez „ustal przy stole”):
 | Limit Er / remis | 8 Er; najbliższy cel, potem najniższa Herezja |
 | Lokacje kluczowe Gildii | Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek |
 
-**Otwarte do playtestu:** próg oskarżenia **7 vs 8** ([`../../playtesting/balance-notes.md`](../../playtesting/balance-notes.md)).
+**Zasada Balansu:** próg oskarżenia wynosi **7** dla 3p oraz **8** dla 4–5p (zatwierdzone w raportach sim-reports).

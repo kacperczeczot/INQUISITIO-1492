@@ -17,9 +17,9 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 - **Maksymalny limit Er:** `8 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
 - **Strefy i pasma Herezji:** 
   - **Czysta:** `0–3 Herezji`
-  - **Obserwowana:** `4–7 Herezji`
-  - **Krytyczna / Heretyk:** `8–10 Herezji`
-- **Próg Oskarżenia na Dworze:** `Herezja ≥ 8`
+  - **Obserwowana:** `4–6 Herezji (3p) / 4–7 (4–5p)`
+  - **Krytyczna / Heretyk:** `7–10 Herezji (3p) / 8–10 (4–5p)`
+- **Próg Oskarżenia na Dworze:** `Herezja ≥ 7 (3p) / ≥ 8 (4–5p)`
 - **Liczba Agentów per gracz:** `3 Agenci`
 - **Cooldown Autodafé Inkwizytora:** Max `co 2 Ery`
 
@@ -33,8 +33,8 @@ Specyficzne progi wygranej dostosowane do liczby graczy przy stole:
 | :--- | :--- | :--- | :--- |
 | **Święte Oficjum** | **2 Stosy** lub 2 Skazania | **3 Stosy** lub 3 Skazania | **5 Stosów** lub 4 Skazania |
 | **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 6+) | **2 Relikwie** + Ścieżka (Era 5+) | **2 Relikwie** + Ścieżka (Era 5+) |
-| **Korona & Borgiowie** | **2 Dekrety** + ≥1 Hak (Era 6+) | **2 Dekrety** + ≥1 Hak (Era 5+)<br>lub **1 Dekret + 2 Haki** | **2 Dekrety** + ≥1 Hak (Era 5+)<br>lub **1 Dekret + 2 Haki** |
-| **Kabała z Toledo** | **3 Fragmenty** + Pasmo 3–7 (Era 7+) | **3 Fragmenty** + Pasmo 3–7 (Era 6+) | **2 Fragmenty** + Pasmo 3–7 (Era 6+) |
+| **Korona & Borgiowie** | **2 Dekrety** + ≥0 Haków (Era 6+) | **2 Dekrety** + ≥1 Hak (Era 5+)<br>lub **1 Dekret + 2 Haki** | **2 Dekrety** + ≥1 Hak (Era 5+)<br>lub **1 Dekret + 2 Haki** |
+| **Kabała z Toledo** | **2 Fragmenty** + Pasmo 3–7 (Era 7+) | **3 Fragmenty** + Pasmo 3–7 (Era 6+) | **2 Fragmenty** + Pasmo 3–7 (Era 6+) |
 | **Gildia Cieni** | **2 Upadki** *(3 bez Oficjum)* | **2 Upadki** *(3 bez Oficjum)* | **3 Upadki** *(zawsze w 5p)* |
 
 ---

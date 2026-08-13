@@ -34,8 +34,8 @@
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpiecznie, zwykle słabiej |
-| 4–6 | Obserwowana | Ryzyko; Kabała lubi ten pas |
-| 7–10 | **Krytyczna** | Inni mogą Cię oskarżyć |
+| 4–6 (3p) / 4–7 (4–5p) | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 7–10 (3p) / 8–10 (4–5p) | **Krytyczna** | Inni mogą Cię oskarżyć |
 
 ---
 
@@ -48,7 +48,7 @@
 
 ## Werdykt (5 bulletów)
 
-1. Cel w Krytycznej (≥7).
+1. Cel w Krytycznej (≥7 w 3p, ≥8 w 4–5p).
 2. Oskarżyciel ogłasza (1× przeciw temu graczowi / Erę).
 3. Głosowanie **jawne**: Skazać / Uniewinnić (bez oskarżonego).
 4. Remis → Uniewinnienie.
@@ -60,11 +60,11 @@
 
 | Frakcja | Cel |
 | :--- | :--- |
-| Święte Oficjum | 3 Stosy lub skazania (2@≤3p / 3@4–5p) |
-| Cienie Al-Andalus | 2 Relikwie + ścieżka |
-| Korona & Borgiowie | 2 Dekrety + ≥1 Hak (Era 7@3p / 6@4–5p); 5p: też 1+2 Haki |
-| Kabała z Toledo | 3 Fragmenty + Herezja 4–6 (Era 7@3p / 6@4p / 5@5p) |
-| Gildia Cieni | 2 upadki (3 bez Oficjum) |
+| Święte Oficjum | Stosy (2@3p / 3@4p / 5@5p) lub Skazania Stołu (2@3p / 3@4p / 4@5p) |
+| Cienie Al-Andalus | 2 Relikwie + ścieżka (Era 6@3p / 5@4–5p) |
+| Korona & Borgiowie | 2 Dekrety + ≥1 Hak (Era 6@3p / 5@4–5p); 4p+: też 1 Dekret + 2 Haki (Era 6) |
+| Kabała z Toledo | Fragmenty (2@3p / 3@4p / 2@5p) + Herezja 3–7 (Era 7@3p / 6@4–5p) |
+| Gildia Cieni | 2 Upadki (3 bez Oficjum lub w 5p) |
 
 **Limit:** 8 Er → najbliższy celowi; remis → najniższa Herezja.
 

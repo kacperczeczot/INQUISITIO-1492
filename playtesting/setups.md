@@ -2,19 +2,21 @@
 
 ---
 
-## Parametry wspólne
+## Parametry wspólne (zsynchronizowane z `game_config.yaml`)
 
 | Parametr | 3p | 4–5p |
 | :--- | :--- | :--- |
-| Karty w Fazie II | **2** na gracza / Erę (opcja playtest: **3**) | **2** |
-| Limit Er | **6–8** | **8** |
+| Próg Krytycznej (Oskarżenie) | **7** | **8** |
+| Strefa Obserwowana | **4–6** | **4–7** |
+| Strefa Krytyczna | **7–10** | **8–10** |
+| Karty w Fazie II (Plan) | **2** rundy zagrań / Erę | **2** rundy zagrań / Erę |
+| Limit Er | **8** | **8** |
 | Relikwie | 1 w Lochach + **1** odkryta w puli | 1 w Lochach + **2** odkryte |
 | Fragmenty Kodeksu (pula) | **4** | **6** |
-| Próg Krytycznej | **7** (eksperyment: 8) | **7** (lub 8) |
 | Złoto startowe | **3** | **3** |
 | Agenci | **3** | **3** |
-| Ręka | **5** | **5** |
-| Inkwizytor | Start Trybunał, Patrol | j.w. |
+| Limit na ręce | **5** | **5** |
+| Inkwizytor | Start: Trybunał, Patrol | Start: Trybunał, Patrol |
 
 ### Karty wg warstwy PnP
 
@@ -110,6 +112,6 @@ Używaj Warstwy **C** dopiero po gate’ach A/B przy stole.
 2. Komponenty: [`../game/components/inventory.md`](../game/components/inventory.md), [`../game/components/print-3d.md`](../game/components/print-3d.md)
 3. Talie wg warstwy + (C) Talia Czasu 8
 4. Żetony: Herezja, złoto, Relikwie, Fragmenty, Haki, Podwójni, Stosy, Upadek, Dekret, Inkwizytor
-5. Ustal próg oskarżenia (**7** lub **8**) i warstwę A/B/C — zapisz w notatce sesji
+5. Sprawdź próg oskarżenia (**7** w 3p, **8** w 4–5p) oraz warstwę A/B/C — zapisz w notatce sesji
 6. Wybierz skład z tej strony
 7. Po grze: [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md) (UX: downtime, AP, emocja Werdyktu)

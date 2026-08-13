@@ -93,7 +93,7 @@ Znacznik / cel Kabały. Warunek: 3 Fragmenty + Herezja w strefie Obserwowanej (4
 
 ## Herezja
 
-Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–6, **Krytyczna** 7–10 (można oskarżyć). Źródła: karty, Hak ujawniony, Autodafé, Podwójny wykryty, Werdykt (uniewinnienie) itd.
+Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–6 (3p) / 4–7 (4–5p), **Krytyczna** 7–10 (3p) / 8–10 (4–5p) (można oskarżyć). Źródła: karty, Hak ujawniony, Autodafé, Podwójny wykryty, Werdykt (uniewinnienie) itd.
 
 **Patrz także:** [Krytyczna](#krytyczna), [Oskarżenie](#oskarżenie) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 
@@ -125,7 +125,7 @@ Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **E.I:** nasłania
 
 ## Krytyczna
 
-Strefa Herezji **7–10**. Inni gracze mogą **Rzucić Oskarżenie** przeciw Tobie (limit 1× przeciw temu graczowi / Erę).
+Strefa Herezji **7–10 (3p)** lub **8–10 (4–5p)**. Inni gracze mogą **Rzucić Oskarżenie** przeciw Tobie (limit 1× przeciw temu graczowi / Erę).
 
 **Patrz także:** [Herezja](#herezja), [Werdykt](#werdykt) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 

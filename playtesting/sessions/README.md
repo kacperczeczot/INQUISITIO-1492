@@ -23,7 +23,7 @@ Przykład: `2026-08-15-3p-oficjum.md`
 
 - [ ] Setup **3 / 4 / 5p** z [`../setups.md`](../setups.md)
 - [ ] Warstwa **C** (pełne mechaniki — domyślna sesja)
-- [ ] Próg oskarżenia (**7** default; **8** = eksperyment)
+- [ ] Próg oskarżenia (**7** w 3p, **8** w 4–5p)
 - [ ] PnP: [`../../assets/prototypes/`](../../assets/prototypes/)
 - [ ] Teach: [`../../docs/rules/teach-sheet.md`](../../docs/rules/teach-sheet.md) · księga: [`../../docs/rules/ksiega.md`](../../docs/rules/ksiega.md) · słownik: [`../../docs/rules/slownik.md`](../../docs/rules/slownik.md)
 
