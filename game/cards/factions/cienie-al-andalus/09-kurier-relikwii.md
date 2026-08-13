@@ -1,5 +1,3 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Cienie Al-Andalus](README.md)
-
 ---
 id: caa-09
 name: Kurier Relikwii

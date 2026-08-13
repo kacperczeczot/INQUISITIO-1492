@@ -1,5 +1,3 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Korona i Borgiowie](README.md)
-
 ---
 id: kb-05
 name: List Żelazny

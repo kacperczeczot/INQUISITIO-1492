@@ -1,5 +1,3 @@
-[Strona główna](../../../README.md) > [Gra](../../README.md) > [Karty](../README.md) > [Talia Czasu](README.md)
-
 ---
 id: time-06
 name: Spisek na Dworze

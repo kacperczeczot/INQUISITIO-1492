@@ -1,5 +1,3 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Gildia Cieni](README.md)
-
 ---
 id: gc-01
 name: Przekupiony Strażnik

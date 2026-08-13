@@ -1,5 +1,3 @@
-[Strona główna](../../../../README.md) > [Gra](../../../README.md) > [Karty](../../README.md) > [Frakcje](../README.md) > [Święte Oficjum](README.md)
-
 ---
 id: so-08
 name: Nasłanie Inkwizytora
