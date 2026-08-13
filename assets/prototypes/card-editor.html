@@ -83,11 +83,11 @@ header .nav-links a:hover {
 /* Main Grid Layout */
 .workspace {
   display: grid;
-  grid-template-columns: 380px 320px 1fr;
+  grid-template-columns: 520px 300px 1fr;
   gap: 1.5rem;
   padding: 1.5rem;
   flex: 1;
-  max-width: 1750px;
+  max-width: 1850px;
   margin: 0 auto;
   width: 100%;
 }
@@ -594,13 +594,18 @@ pre.code-out {
         <option value="interrogate">interrogate (Przesłuchanie)</option>
         <option value="creates_hook">creates_hook (Zysk Haka)</option>
         <option value="evacuate_relic">evacuate_relic (Ewakuacja Relikwii)</option>
+        <option value="move_relic">move_relic (Przesunięcie Relikwii)</option>
+        <option value="free_agent">free_agent (Uwolnienie z Lochów)</option>
         <option value="grant_fragment">grant_fragment (Fragment Kabały)</option>
+        <option value="grant_fragment_or_gold">grant_fragment_or_gold (Fragment lub Złoto)</option>
         <option value="autodafe">autodafe (Wywołaj Autodafé)</option>
         <option value="move_double_agent">move_double_agent (Ruch Podwójnego)</option>
         <option value="change_vote">change_vote (Fałszywy Świadek / Zmiana Głosu)</option>
         <option value="mark_fall">mark_fall (Oznaczenie Upadku)</option>
         <option value="force_hook">force_hook (Dekret Królewski / Wymuszenie Haka)</option>
         <option value="check_victory">check_victory (Sprawdź Zwycięstwo)</option>
+        <option value="check_victory_or_set_heresy">check_victory_or_set_heresy (Pieczęć Salomona)</option>
+        <option value="gain_gold_and_frame">gain_gold_and_frame (Zatrute Złoto)</option>
         <option value="custom">Ręczna edycja własna</option>
       </select>
     </div>
@@ -718,20 +723,30 @@ function computeEffectText(action, cost, heresy) {
       return 'Zyskaj 1 Hak na wybranego rywala.';
     case 'evacuate_relic':
       return 'Ewakuuj 1 Relikwię ze Szlaku Morskiego.';
+    case 'move_relic':
+      return 'Przesuń 1 Relikwię do sąsiedniej lokacji.';
+    case 'free_agent':
+      return 'Uwolnij swojego aresztowanego Agenta z Lochów.';
     case 'grant_fragment':
       return 'Zyskaj 1 Fragment Kabały z Lochów lub Archiwum.';
+    case 'grant_fragment_or_gold':
+      return 'Zyskaj 1 Fragment Kabały lub 2 złota.';
     case 'autodafe':
       return 'Wywołaj Autodafé. Przesuń Inkwizytora do lokacji z najwyższą Herezją. Co 2 Ery.';
     case 'move_double_agent':
       return 'Jeśli masz Podwójnego: Przesuń tego Podwójnego o 1 lokację.';
     case 'change_vote':
-      return 'Zmień głos w Trybunale po ujawnieniu większości.';
+      return 'Zmień głos w Trybunale po ujawnieniu większości. Limit: 1 / Erę.';
     case 'mark_fall':
       return 'Zaznacz Upadek wybranego Domu / Rywala.';
     case 'force_hook':
       return 'Wymuś przekazanie 1 Haka od rywala pod rygorem +3 Herezji.';
     case 'check_victory':
       return 'Sprawdź warunki zwycięstwa frakcji.';
+    case 'check_victory_or_set_heresy':
+      return 'Jeśli masz 3 Fragmenty: wygraj w strefie 4–6 Herezji (lub ustaw Herezję na 5).';
+    case 'gain_gold_and_frame':
+      return 'Zyskaj 1 złoto i Wskaż rywala: +1 Herezja.';
     default:
       return '';
   }
@@ -750,12 +765,17 @@ function computeAutoTags(action, type, heresy) {
     case 'interrogate': tags.add('interrogation'); break;
     case 'creates_hook': tags.add('hook'); break;
     case 'evacuate_relic': tags.add('relic'); break;
+    case 'move_relic': tags.add('relic'); tags.add('move'); break;
+    case 'free_agent': tags.add('move'); tags.add('arrest'); break;
     case 'grant_fragment': tags.add('fragment'); break;
+    case 'grant_fragment_or_gold': tags.add('fragment'); break;
     case 'autodafe': tags.add('autodafe'); break;
     case 'move_double_agent': tags.add('double'); break;
     case 'change_vote': tags.add('reaction'); break;
     case 'mark_fall': tags.add('fall'); break;
     case 'force_hook': tags.add('decree'); tags.add('hook'); break;
+    case 'check_victory_or_set_heresy': tags.add('fragment'); break;
+    case 'gain_gold_and_frame': tags.add('gold'); tags.add('heresy'); break;
   }
   
   if (heresy > 0) tags.add('heresy');
