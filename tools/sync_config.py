@@ -308,20 +308,6 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/teach-sheet.md"]
 
-    # Max eras
-    text = re.sub(
-        r"Limit: \d+ Er",
-        f"Limit: {cfg['system']['max_eras']} Er",
-        text
-    )
-
-    cd = cfg["system"]["autodafe_cooldown"]
-    text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
-    text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
-
-    path.write_text(text, encoding="utf-8")
-    return ["Zsynchronizowano docs/rules/teach-sheet.md"]
-
 
 def sync_hierarchia(cfg: dict) -> list[str]:
     """Sync hierarchia_balansowania.md with game_config.yaml."""
