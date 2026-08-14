@@ -9,8 +9,9 @@ heresy: 0
 tags:
 - reaction
 effect: 'Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. Limit:
-  bez Przesuń z karty / tę Erę.'
+  bez ruchu Agenta w tej Erze.'
 lore: Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.
 target_heresy: 1
 ---
+
 

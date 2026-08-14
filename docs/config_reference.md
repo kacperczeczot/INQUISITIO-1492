@@ -145,7 +145,7 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 | `kurier_limit` | `int` | `1` | `Limit: N / Erę.` | Ewakuacja Ukrytego Kuriera (`CAA-05`) |
 | `vote_change_limit` | `int` | `1` | `Limit: N / Erę.` | Zmiana głosu Fałszywego Świadka (`GC-05`) |
 | `limit_per_era` | `int` | `1` | `Limit: N / Erę.` | Standardowy limit użyć akcji na Erę |
-| `no_move_limit` | `bool` | `true` | `Limit: bez Przesuń z karty / tę Erę.` | Reakcja bez ruchu agenta (`SO-05`) |
+| `no_move_limit` | `bool` | `true` | `Limit: bez ruchu Agenta w tej Erze.` | Reakcja bez ruchu agenta (`SO-05`) |
 
 ---
 

@@ -103,7 +103,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. Limit: bez Przesuń z karty / tę Erę. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. Limit: bez ruchu Agenta w tej Erze. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |

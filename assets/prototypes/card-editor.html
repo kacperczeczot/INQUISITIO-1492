@@ -1826,7 +1826,7 @@ function computeEffectText(spec) {
     if (cid === "so-07") parts.push("Limit: 1 / gracza / Erę.");
     else parts.push("Limit: 1 / Erę.");
   } else if (spec.kurier_limit === 1 || spec.vote_change_limit === 1) parts.push("Limit: 1 / Erę.");
-  else if (spec.no_move_limit) parts.push("Limit: bez Przesuń z karty / tę Erę.");
+  else if (spec.no_move_limit) parts.push("Limit: bez ruchu Agenta w tej Erze.");
   else if (spec.limit_per_era === 1) parts.push("Limit: 1 / Erę.");
 
   return parts.join(" ").trim();
