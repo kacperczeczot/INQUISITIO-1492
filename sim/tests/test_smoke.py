@@ -225,3 +225,37 @@ def test_ssot_win_paths_match_yaml():
     assert heresy_zone(6, critical_min=6) == "krytyczna"
     assert heresy_zone(6, critical_min=7) == "obserwowana"
 
+
+def test_win_overrides_kt_era_kb_decrees_alt():
+    from inquisitio.engine.win import check_winner_details
+
+    st = new_game(setup="3p-oficjum-kabala-gildia", seed=1, layer="C")
+    kt = st.players[FactionId.KABALA_TOLEDO]
+    kt.fragments = 3
+    kt.heresy = 5
+    st.era = 7
+    assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
+    blocked = check_winner_details(st, {"kt_era_offset": 1})
+    assert blocked is None or blocked[0] != FactionId.KABALA_TOLEDO
+    st.era = 8
+    assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
+
+    st2 = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="C")
+    kb = st2.players[FactionId.KORONA_BORGIOWIE]
+    kb.decrees_played = 2
+    st2.era = 5
+    assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
+    blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
+    assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
+
+    st4 = new_game(setup="4p-core", seed=1, layer="C")
+    kb4 = st4.players[FactionId.KORONA_BORGIOWIE]
+    kb4.decrees_played = 1
+    kb4.hook_victims_ever = {FactionId.SWIETE_OFICJUM, FactionId.CIENIE_AL_ANDALUS}
+    st4.era = 6
+    assert check_winner_details(st4) == (FactionId.KORONA_BORGIOWIE, "kb_alt")
+    blocked = check_winner_details(st4, {"kb_alt_era_offset": 1})
+    assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
+    st4.era = 7
+    assert check_winner_details(st4, {"kb_alt_era_offset": 1}) == (FactionId.KORONA_BORGIOWIE, "kb_alt")
+

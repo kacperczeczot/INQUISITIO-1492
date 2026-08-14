@@ -59,8 +59,14 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             cfg_kb = cfg_v.korona_borgiowie
             hooks_ever = distinct_hook_victims_ever(state, fid)
             base_era = cfg_kb.era[pc] + ov.get("kb_era_offset", 0)
-            decrees_need = ov.get("kb_decrees_3p", cfg_kb.decrees[pc]) if n_players <= 3 else cfg_kb.decrees.get("4p", 2)
-            hooks_need = ov.get("kb_hooks", cfg_kb.hooks[pc])
+            if "kb_decrees_3p" in ov and n_players <= 3:
+                decrees_need = ov["kb_decrees_3p"]
+            else:
+                decrees_need = max(1, int(cfg_kb.decrees[pc]) + ov.get("kb_decrees_offset", 0))
+            if "kb_hooks" in ov:
+                hooks_need = ov["kb_hooks"]
+            else:
+                hooks_need = max(0, int(cfg_kb.hooks[pc]) + ov.get("kb_hooks_offset", 0))
 
             if (
                 state.layer == "C"
@@ -72,12 +78,16 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
 
             # Alternative path (4p+)
             alt = cfg_kb.alt_path
+            alt_min = alt.min_players + ov.get("kb_alt_min_players_offset", 0)
+            alt_decrees = max(1, alt.decrees + ov.get("kb_alt_decrees_offset", 0))
+            alt_hooks = max(0, alt.hooks + ov.get("kb_alt_hooks_offset", 0))
+            alt_era = alt.era + ov.get("kb_alt_era_offset", ov.get("kb_era_offset", 0))
             if (
                 state.layer == "C"
-                and n_players >= alt.min_players
-                and pl.decrees_played >= alt.decrees
-                and hooks_ever >= max(alt.hooks, hooks_need)
-                and state.era >= (alt.era + ov.get("kb_era_offset", 0))
+                and n_players >= alt_min
+                and pl.decrees_played >= alt_decrees
+                and hooks_ever >= max(alt_hooks, hooks_need)
+                and state.era >= alt_era
             ):
                 return (fid, "kb_alt")
 
@@ -101,9 +111,9 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             cfg_gc = cfg_v.gildia_cieni
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
             if state.layer == "B" or no_oficjum:
-                base_falls = cfg_gc.falls.no_oficjum
+                base_falls = cfg_gc.falls.no_oficjum + ov.get("gc_falls_no_oficjum_offset", 0)
             else:
-                base_falls = cfg_gc.falls.default
+                base_falls = cfg_gc.falls.default + ov.get("gc_falls_default_offset", 0)
             falls_need = max(1, base_falls + ov.get("gc_falls_offset", 0))
 
             if pl.falls >= falls_need:

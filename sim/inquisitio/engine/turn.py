@@ -120,7 +120,7 @@ def play_era(
                 p_acc = 0.5
             if rng.random() < p_acc:
                 run_verdict(state, fid, target, rng)
-        w = check_winner(state)
+        w = check_winner(state, win_overrides)
         if w:
             state.winner = w
             state.add_log(f"WINNER {w.value}")
