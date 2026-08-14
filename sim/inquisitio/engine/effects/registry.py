@@ -142,7 +142,14 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                 evacuated_n += 1
                 if via_double:
                     pl.path_via_double = True
-                if quiet or state.sea_route_open:
+                # BUG-1 FIX: only set avoided_autodafe when Inquisitor was
+                # actually nearby (at location or neighboring), meaning genuine
+                # danger was dodged. Sea route is its own bypass path.
+                if not quiet:
+                    # Inquisitor IS at this location — agent survived Autodafé
+                    pl.avoided_autodafe = True
+                elif loc in neighbors(state.inquisitor_location):
+                    # Inquisitor is one step away — narrow escape
                     pl.avoided_autodafe = True
         if state.sea_route_open and evacuated_n < 2:
             for loc in ("rynek", "gildia"):
@@ -153,7 +160,7 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                         break
                     state.relics_on_board[loc] -= 1
                     pl.relics_evacuated += 1
-                    pl.avoided_autodafe = True
+                    # Sea route bypass — no need to set avoided_autodafe
                     evacuated_n += 1
         if evacuated_n:
             state.add_log(
@@ -168,11 +175,8 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                 force_hook(state, fid, targets[0], comply=rng.random() < 0.5)
             else:
                 rival = _pick_rival(state, fid, rng)
-                # 5p: soft plant (floor); ≤4p: plant only if already had a Hak ever
-                if rival and (
-                    len(state.turn_order) >= 5
-                    or distinct_hook_victims_ever(state, fid) >= 1
-                ):
+                # Plant only if Korona already held a Hak on someone ever
+                if rival and distinct_hook_victims_ever(state, fid) >= 1:
                     grant_hook(state, fid, rival)
     elif card.id == "kt-10":
         # Finisher assist: +1 Fragment only when already on the path (≥1)
@@ -216,7 +220,7 @@ def _so_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
             pl.inquisitor_send_count += 1
             pl.used_inquisitor_send = True
     elif card.id == "so-10":
-        # Signature already paid generic costs above; do not re-apply (double heresy).
+        # apply_generic already paid heresy cost; now fire the Autodafé.
         resolve_autodafe(state, force=True)
 
 
@@ -300,7 +304,8 @@ def _kt_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
                 state.add_log(f"{fid.value} fragment (total={pl.fragments})")
         elif state.layer == "C":
             pc = f"{len(state.turn_order)}p"
-            cap = int(CONFIG.victory.kabala_toledo.fragments[pc])
+            raw_f = CONFIG.victory.kabala_toledo.fragments
+            cap = int(raw_f[pc]) if hasattr(raw_f, "__getitem__") and not isinstance(raw_f, (str, bytes)) else int(raw_f)
             if pl.fragments < cap and any(
                 ag.location in ("lochy", "trybunal") for ag in pl.agents
             ):

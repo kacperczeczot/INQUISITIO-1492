@@ -8,7 +8,7 @@ from inquisitio.config import CONFIG
 from inquisitio.engine.effects.registry import play_card, resolve_time_edict
 from inquisitio.engine.heresy import is_critical
 from inquisitio.engine.hooks import active_hook_targets, force_hook
-from inquisitio.engine.inquisitor import era_start_inquisitor
+from inquisitio.engine.inquisitor import era_start_inquisitor, neighbors
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.verdict import eligible_accused, run_verdict
 from inquisitio.engine.win import check_winner, check_winner_details, end_game_tiebreak
@@ -126,9 +126,11 @@ def play_era(
             state.add_log(f"WINNER {w.value}")
             return w
         _draw(state, fid, 1)
-        # hand size soft cap
+        # hand size soft cap — use config, not hardcoded 6
         pl = state.players[fid]
-        while len(pl.hand) > 6:
+        n_players = len(state.turn_order)
+        hl = sys.get("hand_limit", CONFIG.hand_limit_for(n_players))
+        while len(pl.hand) > hl:
             pl.discard.append(pl.hand.pop(0))
 
     # Cienie evacuate (B/C passive; A: second Relic after Kurier)
@@ -144,7 +146,7 @@ def play_era(
                 ):
                     state.relics_on_board[loc] -= 1
                     pl.relics_evacuated += 1
-                    pl.avoided_autodafe = True
+                    # Sea route is its own bypass — no need to set avoided_autodafe
                     evacuated = True
                     state.add_log(
                         f"cienie-al-andalus sea evacuate from {loc} "
@@ -173,7 +175,12 @@ def play_era(
                     break
                 state.relics_on_board[loc] -= 1
                 pl.relics_evacuated += 1
-                pl.avoided_autodafe = True
+                # BUG-1 FIX: only set avoided_autodafe if Inquisitor was
+                # actually nearby (neighboring location) — meaning Cienie
+                # genuinely dodged danger. Otherwise path_era must gate the win.
+                inq_neighbors = neighbors(state.inquisitor_location)
+                if loc in inq_neighbors:
+                    pl.avoided_autodafe = True
                 state.add_log(
                     f"cienie-al-andalus quiet harbor evacuate from {loc} "
                     f"(total={pl.relics_evacuated})"

@@ -70,6 +70,7 @@ class GameConfig:
         p = path or _CONFIG_PATH
         with open(p, encoding="utf-8") as f:
             self._raw: dict[str, Any] = yaml.safe_load(f)
+        self.version = str(self._raw.get("version", "v1.12"))
         self.system = _Section(self._raw["system"])
         self.victory = _Section(self._raw["victory"])
         self.economy = _Section(self._raw["economy"])
