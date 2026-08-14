@@ -1,4 +1,4 @@
-version: v0.22
+version: v0.23
 date: '2026-08-14'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -488,6 +488,7 @@ cards:
     action: move_agent
     tags:
     - move
+    heresy: 1
   gc-02:
     name: Czarny Rynek
     type: akcja

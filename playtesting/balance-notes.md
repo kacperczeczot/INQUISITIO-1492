@@ -83,16 +83,21 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📊 Stan zmierzony — 2026-08-14 (Szalony Audytor, seed 42, warstwa C)
 
-YAML po Patch v0.22 (Karta `caa-10` (Echo Alhambry): `cost` → `0`).
+YAML po Patch v0.23 (Karta `gc-01` (Przekupiony Strażnik): `heresy` → `1`).
 
-- **Global Game Balance Score:** **`94.4 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
-- **3p Avg Score:** **`88.0 / 100.0 pkt` 🟢**
-- **4p Avg Score:** **`95.9 / 100.0 pkt` 🟢**
-- **5p Avg Score:** **`99.3 / 100.0 pkt` 🟢**
+- **Global Game Balance Score:** **`94.7 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
+- **3p Avg Score:** **`86.2 / 100.0 pkt` 🟢**
+- **4p Avg Score:** **`98.4 / 100.0 pkt` 🟢**
+- **5p Avg Score:** **`99.4 / 100.0 pkt` 🟢**
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.23 (2026-08-14) — Karta `gc-01` (Przekupiony Strażnik): `heresy` → `1` (Zysk Δ +0.3 pkt)
+- **Wynik:** Global **`94.7`** | 3p **`86.2`** | 4p **`98.4`** | 5p **`99.4`**
+- **Modyfikacja (`L3_GC-01_HERESY_PLUS1`):** Karta `gc-01` (Przekupiony Strażnik): `heresy` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 94.4 do **`94.7 pkt`** (+0.3 pkt). Telemetria: Średnia Er 5.58, Deadlocks 4.0%, Pas Biedy 27.6%.
 
 ### 🟢 Patch v0.22 (2026-08-14) — Karta `caa-10` (Echo Alhambry): `cost` → `0` (Zysk Δ +1.5 pkt)
 - **Wynik:** Global **`94.4`** | 3p **`88.0`** | 4p **`95.9`** | 5p **`99.3`**
