@@ -11,3 +11,4 @@ Automatyczny rejestr wprowadzonych zmian balansu, podbić wersji i ewolucji punk
 | #2 | 2026-08-14 16:48 | `v0.25` → `v0.26` | **Kabała Toledo: Pasmo Herezji 3–8** (`L2_KT_HERESY_HIGH_PLUS1`) | 95.3 → **95.6** (`+0.3`) | 87.9 → 89.7 | 98.2 → 97.9 | 99.7 → 99.2 | 2.9% | 26.5% | 976.7s |
 | #3 | 2026-08-14 17:02 | `v0.26` → `v0.27` | **Limit Er: offset +1 (nowy: 10)** (`L1_MAX_ERAS_PLUS1`) | 95.6 → **96.1** (`+0.5`) | 89.7 → 91.3 | 97.9 → 97.9 | 99.2 → 99.2 | 1.1% | 26.5% | 867.0s |
 | #4 | 2026-08-14 17:17 | `v0.27` → `v0.28` | **Karta `kt-04` (Zwierciadło Herezji): `cost` → `0`** (`L3_KT-04_COST_MINUS1`) | 96.1 → **96.2** (`+0.1`) | 91.3 → 91.5 | 97.9 → 98.1 | 99.2 → 98.9 | 1.1% | 26.4% | 910.7s |
+| #3 | 2026-08-14 20:18 | `v0.28` → `v0.29` | **Karta `caa-01` (Przejście Podziemiami): `cost` → `0`** (`L3_CAA-01_COST_MINUS1`) | 96.2 → **96.5** (`+0.3`) | 91.5 → 91.7 | 98.1 → 98.3 | 98.9 → 99.4 | 1.1% | 26.1% | 939.6s |
