@@ -5,7 +5,7 @@
 # Korona & Borgiowie *(Ferdynand / Izabela)*
 
 **Styl:** Dekrety, pieczęć, przekupstwo, Haki na dworze.  
-**Cel:** **2 Dekrety** (od Ery **5**).
+**Cel:** **2 Dekrety** (od Ery **5**; *w 3p: od Ery 6*).
 
 ## Tożsamość przy stole
 

@@ -62,7 +62,7 @@
 | :--- | :--- |
 | Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery 5) |
-| Korona & Borgiowie | **2 Dekrety** (od Ery 5) |
+| Korona & Borgiowie | **2 Dekrety** (od Ery 5; w 3p: od Ery 6) |
 | Kabała z Toledo | **3 Fragmenty** + Herezja **3–7** od Ery 6 (w 3p: od Ery 7) |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 

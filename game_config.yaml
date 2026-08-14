@@ -1,4 +1,4 @@
-version: "v0.20"
+version: "v0.21"
 date: "2026-08-14"
 title: "INQUISITIO-1492 — Game Balance Configuration (SSOT)"
 system:
@@ -28,7 +28,10 @@ victory:
   korona_borgiowie:
     decrees: 2
     hooks: 0
-    era: 5
+    era:
+      3p: 6
+      4p: 5
+      5p: 5
   kabala_toledo:
     fragments: 3
     heresy_band:

@@ -83,16 +83,21 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📊 Stan zmierzony — 2026-08-14 (1000–4000 gier/setup, seed 42, warstwa C)
 
-YAML po Patch v0.20 (Czyste wartości skalarne: Limit ręki **5**, Skazania **2**, Cienie era **5**, CAA-03 koszt **0zł**, Korona **2 Dekrety @ Era 5**, Kabała **3 Fragi / Pasmo [3, 7]**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
+YAML po Patch v0.21 (Kanon 4p: Limit ręki **5**, Skazania **2**, Cienie era **5**, CAA-03 koszt **0zł**, Korona **2 Dekrety @ Era 5 (w 3p: Era 6)**, Kabała **3 Fragi / Pasmo [3, 7] @ Era 6 (w 3p: Era 7)**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
 
-- **Global Game Balance Score:** **`93.4 / 100.0 pkt` 🟢 (Historyczny rekord balansu!)**
-- **3p Avg Score:** **`86.3 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych.
-- **4p Avg Score:** **`94.7 / 100.0 pkt` 🟢** — 100% setupów 4p zbalansowanych (skok o +6.1 pkt do rekordowego poziomu!).
-- **5p Avg Score:** **`99.1 / 100.0 pkt` 🟢** — `5p-full` perfekcyjnie symetryczny.
+- **Global Game Balance Score:** **`94.1 / 100.0 pkt` 🟢 (Nowy historyczny rekord balansu!)**
+- **3p Avg Score:** **`89.2 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych (skok o +5.1 pkt).
+- **4p Avg Score:** **`94.7 / 100.0 pkt` 🟢** — 100% setupów 4p perfekcyjnie zbalansowanych.
+- **5p Avg Score:** **`99.1 / 100.0 pkt` 🟢** — `5p-full` idealnie symetryczny.
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.21 (2026-08-14) — Skalowanie Ery Korony dla 3p (Era 6 w 3p / Era 5 w 4–5p) & Zasada `+1 Era w 3p`
+- **Wynik:** Global **`94.1`** | 3p **`89.2`** | 4p **`94.7`** | 5p **`99.1`**
+- **Korona & Borgiowie (`era`):** Ustanowiono Kanon 4p na Erę 5, z modyfikatorem **Ery 6 dla składu 3p** (dokładnie jak Kabała z zasadą `+1 Era w 3p`).
+- **Efekt:** W 3p zlikwidowano przedwczesną dominację Dekretów w warunkach małego oporu stołu, dając szansę ucieczce Cieni i alchemii Kabały. Wynik 3p rośnie z 80.8 do **`89.2 pkt`**, stabilizując cały stół.
 
 ### 🟢 Patch v0.20 (2026-08-14) — Mobilność Bractwa (CAA-03 Cień na Rynku: koszt 1 → 0 zł) & Rekord 4p (94.7 pkt)
 - **Wynik (próba 2000 gier):** Global **`93.4`** | 3p **`86.3`** | 4p **`94.7`** | 5p **`99.1`**

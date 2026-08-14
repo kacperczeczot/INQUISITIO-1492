@@ -153,12 +153,16 @@ def _scaling_box(cfg: dict) -> str:
     so_s = v["swiete_oficjum"]["stacks"]
     so_s3 = so_s["3p"] if isinstance(so_s, dict) else so_s
 
+    kb_e = v["korona_borgiowie"]["era"]
+    kb_e3 = kb_e["3p"] if isinstance(kb_e, dict) else kb_e
+
     kt_e = v["kabala_toledo"]["era"]
     kt_e3 = kt_e["3p"] if isinstance(kt_e, dict) else kt_e
 
     return f"""> ### 👥 Modyfikacje dla 3 Graczy (3p):
 > - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t3-1}` / Krytyczna `≥{t3}`).
 > - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast 4).
+> - **Korona & Borgiowie:** Może wygrać od **`Ery {kb_e3}`** (zamiast 5).
 > - **Kabała z Toledo:** Może wygrać od **`Ery {kt_e3}`** (zamiast 6).
 >
 > ### 👥 Modyfikacje dla 5 Graczy (5p):
@@ -218,9 +222,29 @@ def sync_ksiega(cfg: dict) -> list[str]:
         r"(## 5\. Skalowanie Składu.*?\n\n)(?:>.*?\n)+",
         re.MULTILINE
     )
+    new_scaling = f"## 5. Skalowanie Składu (Warianty 3p i 5p)\n\n" + _scaling_box(cfg) + "\n"
     if scaling_pattern.search(text):
-        text = scaling_pattern.sub(f"## 5. Skalowanie Składu (Warianty 3p i 5p)\n\nKanonem rozgrywki jest **skład 4-osobowy**. Przy grze w innym gronie wprowadź wyłącznie poniższe modyfikacje:\n\n{_scaling_box(cfg)}\n\n", text)
-        changes.append("Ramka Skalowania Składu zaktualizowana")
+        text = scaling_pattern.sub(new_scaling, text)
+        changes.append("Sekcja 5 (Skalowanie Składu) zaktualizowana")
+
+    # Inline system replacements
+    cd = cfg["system"]["autodafe_cooldown"]
+    text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
+    text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
+
+    # Threshold text
+    text = re.sub(
+        r"\*\*Zasada Balansu:\*\* bazowy próg oskarżenia wynosi.*?\.",
+        _balance_rule(cfg),
+        text
+    )
+
+    # Parametry systemowe
+    text = re.sub(
+        r"\*\*Parametry systemowe \(Kanon 4p\):\*\*.*?(?=\n\n|\Z)",
+        _system_summary(cfg),
+        text
+    )
 
     # Replace setup section values
     gold_pattern = re.compile(r"Złoto startowe: .*? na gracza\.")
@@ -235,10 +259,6 @@ def sync_ksiega(cfg: dict) -> list[str]:
     # Replace "Limit Er" in freeze table
     limit_er_pattern = re.compile(r"\*\*Limit Er: \d+\.\*\*")
     text = limit_er_pattern.sub(f"**Limit Er: {cfg['system']['max_eras']}.**", text)
-
-    # Replace autodafe cooldown
-    autodafe_pattern = re.compile(r"max \*\*co \d+ Ery\*\*")
-    text = autodafe_pattern.sub(f"max **co {cfg['system']['autodafe_cooldown']} Ery**", text)
 
     # Replace cards per era
     cards_pattern = re.compile(r"\*\*do \d+\*\* \(zagranie lub pas\)")
@@ -261,7 +281,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 
     # Replace heresy zones
     text = re.sub(
-        r"\| 4–5 \(3p\) / 4–6 \(4–5p\) \| Obserwowana \|.*?\n\| 6–10 \(3p\) / 7–10 \(4–5p\) \| \*\*Krytyczna\*\* \|.*?\n",
+        r"\| 4–6 \(w 3p: 4–5\) \| Obserwowana \|.*?\n\| 7–10 \(w 3p: ≥6, w 5p: ≥8\) \| \*\*Krytyczna\*\* \|.*?\n",
         f"| 4–6 (w 3p: 4–5) | Obserwowana | Ryzyko; Kabała lubi ten pas |\n| 7–10 (w 3p: ≥6, w 5p: ≥8) | **Krytyczna** | Inni mogą Cię oskarżyć |\n",
         text
     )
@@ -273,20 +293,17 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
         text
     )
 
-    # Max eras
-    text = re.sub(
-        r"Limit: \d+ Er",
-        f"Limit: {cfg['system']['max_eras']} Er",
-        text
-    )
-
     cd = cfg["system"]["autodafe_cooldown"]
     text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
     text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
 
     # Victory table
     v = cfg.get("victory", {})
-    kb_era = v.get("korona_borgiowie", {}).get("era", 5)
+    kb_e = v.get("korona_borgiowie", {}).get("era", 5)
+    kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
+    kb_3p = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
+    kb_teach_text = f"**2 Dekrety** (od Ery {kb_4p}; w 3p: od Ery {kb_3p})" if kb_4p != kb_3p else f"**2 Dekrety** (od Ery {kb_4p})"
+
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
     kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 7])
 
@@ -303,7 +320,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 | :--- | :--- |
 | Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
-| Korona & Borgiowie | **2 Dekrety** (od Ery {kb_era}) |
+| Korona & Borgiowie | {kb_teach_text} |
 | Kabała z Toledo | **3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** od Ery 6 (w 3p: od Ery 7) |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 """
@@ -378,7 +395,11 @@ def sync_readme(cfg: dict) -> list[str]:
         return []
     text = path.read_text(encoding="utf-8")
     v = cfg.get("victory", {})
-    kb_era = v.get("korona_borgiowie", {}).get("era", 5)
+    kb_e = v.get("korona_borgiowie", {}).get("era", 5)
+    kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
+    kb_3p = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
+    kb_readme_text = f"**2 Dekrety** (od Ery {kb_4p}; *w 3p: od Ery {kb_3p}*)" if kb_4p != kb_3p else f"**2 Dekrety** (od Ery {kb_4p})"
+
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
     kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 7])
 
@@ -398,7 +419,7 @@ def sync_readme(cfg: dict) -> list[str]:
 | :--- | :--- |
 | **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: 3 Stosy)* |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
-| **Korona & Borgiowie** | **2 Dekrety** (od Ery {kb_era}) |
+| **Korona & Borgiowie** | {kb_readme_text} |
 | **Kabała z Toledo** | **3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery 6; *w 3p: od Ery 7*) |
 | **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
 """
