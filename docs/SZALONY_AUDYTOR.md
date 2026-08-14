@@ -8,9 +8,9 @@
 
 1. **Badanie przestrzeni zmian:** Generuje ponad 200 potencjalnych modyfikacji (Poziomy 1–4: mechaniki systemowe, warunki zwycięstwa, parametry wszystkich 50 kart, warianty edyktów).
 2. **Krok 1 (Solidny Przesiew):** Symulacja **1 000 partii / setup** (16 000 partii per wariant) wyłania TOP 5 najbardziej obiecujących kandydatów.
-3. **Krok 2 (Precyzyjna Weryfikacja Grand Monte Carlo):** Wybrani liderzy są sprawdzani dużą próbą **3 000 partii / setup** (48 000 partii per test) w symulacji parowanej (*Common Random Numbers*) w celu całkowitego wyeliminowania szumu losowego.
+3. **Krok 2 (Precyzyjna Weryfikacja Ultra Monte Carlo):** Wybrani liderzy są sprawdzani dużą próbą **5 000 partii / setup** (80 000 partii per test) w symulacji parowanej (*Common Random Numbers*) w celu całkowitego wyeliminowania szumu losowego.
 4. **Twarde Bezpieczniki:** Kandydat jest akceptowany TYLKO wtedy, gdy:
-   - Na próbie 3 000 gier osiąga realny zysk punktowy: `Δ Global Score >= +0.10 pkt`,
+   - Na próbie 5 000 gier osiąga realny zysk punktowy: `Δ Global Score >= +0.10 pkt`,
    - Nie narusza norm telemetrii (Deadlocks < 16%, Pas Biedy < 35%, średnia liczba er: 4.2–7.8).
 5. **Aplikacja zmiany i wersjonowanie:** 
    - Wprowadza zwycięski parametr do `game_config.yaml`.
@@ -73,7 +73,7 @@ sim/.venv/bin/python tools/sim/szalony_audytor.py --dry-run
 | Flaga | Domyślnie | Opis |
 | :--- | :---: | :--- |
 | `--fast-games <int>` | `1000` | Liczba gier/setup w kroku przesiewu (16 000 partii na wariant). |
-| `--confirm-games <int>`| `3000` | Liczba gier/setup w kroku weryfikacji Grand (48 000 partii per test). |
+| `--confirm-games <int>`| `5000` | Liczba gier/setup w kroku weryfikacji Ultra (80 000 partii per test). |
 | `--min-delta <float>` | `0.1` | Minimalny zysk punktowy wymagany do zaakceptowania zmiany. |
 | `--hours <float>` | `None` | Maksymalny czas pracy w godzinach (np. `2.5`, `4.0`, `8.0`). |
 | `--max-iters <int>` | `None` | Limit liczby wprowadzonych ulepszeń. |

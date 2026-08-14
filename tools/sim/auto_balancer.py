@@ -709,7 +709,7 @@ def main():
     parser.add_argument("--mode", type=str, choices=["two-stage", "grand", "standard", "fast"], default="two-stage",
                         help="Tryb ewaluacji: two-stage (rekomendowany szybki przesiew + weryfikacja), grand (3k gier), standard (500), fast (250)")
     parser.add_argument("--fast-games", type=int, default=1000, help="Liczba gier/setup w kroku 1 przesiewu (dla two-stage)")
-    parser.add_argument("--confirm-games", type=int, default=3000, help="Liczba gier/setup w kroku 2 weryfikacji (dla two-stage)")
+    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier/setup w kroku 2 weryfikacji (dla two-stage)")
     parser.add_argument("--top-k", type=int, default=5, help="Liczba liderów weryfikowanych w kroku 2")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba iteracji optymalizatora")
