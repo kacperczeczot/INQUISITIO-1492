@@ -3,19 +3,28 @@
   "venvPath": "sim",
   "venv": ".venv",
   "extraPaths": [
-    "sim"
+    "sim",
+    "tools/sim"
   ],
   "executionEnvironments": [
     {
+      "root": "tools/sim",
+      "extraPaths": [
+        "sim",
+        "tools/sim"
+      ]
+    },
+    {
       "root": "tools/pnp",
       "extraPaths": [
-        "../../sim"
+        "sim",
+        "tools/pnp"
       ]
     },
     {
       "root": "sim",
       "extraPaths": [
-        "."
+        "sim"
       ]
     }
   ]
