@@ -15,7 +15,7 @@ Schemat pól: [`SCHEMA.md`](SCHEMA.md). Słownictwo `effect`: [`../mechanics/lek
 - [Korona & Borgiowie](#korona-borgiowie) (10)
 - [Kabała z Toledo](#kabala-toledo) (10)
 - [Gildia Cieni](#gildia-cieni) (10)
-- [Talia Czasu](#time) (8)
+- [Kronika Dziejów](#time) (8)
 
 <a id="swiete-oficjum"></a>
 
@@ -329,9 +329,9 @@ Kart: **10**
 | `layer` | B |
 | `cost_gold` | 1 |
 | `heresy` | 1 |
-| `heresy_text` | Podwójny agent zostawia ślad w rejestrze gości. |
-| `effect` | Jeśli masz Podwójnego: Przesuń tego Podwójnego o 1 lokację. |
-| `lore` | Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Podwójnego. |
+| `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
+| `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
+| `lore` | Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę. |
 | `tags` | double, heresy |
 | `status` | prototyp |
 
@@ -364,7 +364,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
-| `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
+| `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
 | `lore` | As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej. |
 | `tags` | signature, relic, heresy |
 | `status` | prototyp |
@@ -649,7 +649,7 @@ Kart: **10**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment. Limit: 1 / Erę. |
-| `lore` | Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Podwójnego. |
+| `lore` | Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Marionetki. |
 | `tags` | interrogation, fragment |
 | `status` | prototyp |
 
@@ -892,14 +892,14 @@ Kart: **10**
 | `cost_gold` | 4 |
 | `heresy` | 2 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
-| `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
+| `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
 | `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
 | `tags` | signature, fall, heresy |
 | `status` | prototyp |
 
 <a id="time"></a>
 
-## Talia Czasu
+## Kronika Dziejów
 
 Kart: **8**
 

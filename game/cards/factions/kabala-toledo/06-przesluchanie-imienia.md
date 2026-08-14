@@ -12,7 +12,7 @@ tags:
 effect: 'Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment. Limit:
   1 / Erę.'
 lore: 'Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej”
-  opcji Podwójnego.
+  opcji Marionetki.
 
   '
 ---

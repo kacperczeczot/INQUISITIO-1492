@@ -1,8 +1,8 @@
-[Strona główna](../../../README.md) > [Gra](../../README.md) > [Karty](../README.md) > [Talia Czasu](README.md)
+[Strona główna](../../../README.md) > [Gra](../../README.md) > [Karty](../README.md) > [Kronika Dziejów](README.md)
 
 ---
 
-# Talia Czasu
+# Kronika Dziejów
 
 8 kart edyktów i wydarzeń historycznych.
 

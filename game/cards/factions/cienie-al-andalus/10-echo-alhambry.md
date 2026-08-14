@@ -11,7 +11,7 @@ tags:
 - relic
 - heresy
 effect: 'Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora
-  w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji
+  w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji
   Twoich Agentów.'
 heresy_text: Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.
 lore: As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.
