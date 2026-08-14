@@ -208,7 +208,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
@@ -611,7 +611,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Zwierciadło odbija winę na obce imię w rejestrze familiariuszy. |
 | `effect` | Wskaż rywala: +1 Herezja. |

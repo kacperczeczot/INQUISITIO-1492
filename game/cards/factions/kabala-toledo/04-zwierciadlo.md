@@ -4,7 +4,7 @@ name: Zwierciadło Herezji
 faction: kabala-toledo
 type: akcja
 layer: A
-cost: 1
+cost: 0
 heresy: 0
 tags:
 - heresy
@@ -13,4 +13,5 @@ heresy_text: Zwierciadło odbija winę na obce imię w rejestrze familiariuszy.
 lore: Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.
 target_heresy: 1
 ---
+
 
