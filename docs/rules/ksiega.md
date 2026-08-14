@@ -33,9 +33,9 @@
 
 1. Rozłóż planszę (kolejność lokacji 1→5). Inkwizytor na **Trybunale**, stan **Patrol**.
 2. Każdy wybiera frakcję: talia, 3 Agenci, planszetka (Herezja = 0), cel zwycięstwa.
-3. Złoto startowe: **{'3p': 3, '4p': 3, '5p': 2}** na gracza.
+3. Złoto startowe: **3 zł** na gracza (w 5p: **2 zł**).
 4. Relikwie / Fragmenty według [`../../playtesting/setups.md`](../../playtesting/setups.md).
-5. Dobierz **{'3p': 5, '4p': 5, '5p': 6}** kart z talii 10 (C).
+5. Dobierz **5** kart z talii 10 (C).
 6. **Pierwszy gracz:** ustala stół (nie losujcie domyślnie).
 7. Talia Czasu: od Ery 1.
 
@@ -119,7 +119,7 @@ Gdy ktoś jest w **Krytycznej**, inny gracz może **Rzucić Oskarżenie** (1× p
 
 ### E.VI — Czystka (faza)
 
-1. Dobierz karty do limitu ręki **{'3p': 5, '4p': 5, '5p': 6}**.
+1. Dobierz karty do limitu ręki **5**.
 2. Odkryj **1** edykt z Talii Czasu (C) — obowiązuje następną Erę / natychmiast według tekstu.
 3. Przesuń znacznik 1. gracza.
 
@@ -132,8 +132,8 @@ Tor **0–10** na planszetce.
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpieczniej, słabsze akcje |
-| 4–5@3p / 4–6@4–5p | Obserwowana | Ryzyko; Kabała lubi ten pas |
-| ≥6@3p / ≥7@4–5p | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
+| 4–6 | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| ≥7 | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
 
 **Źródła:** `heresy` karty, `target_heresy`, ujawniony Hak, Autodafé, wykryty Podwójny, edykty.
 
@@ -148,27 +148,40 @@ Tor **0–10** na planszetce.
 
 ---
 
-## 4. Zwycięstwo
+## 4. Zwycięstwo (Kanon 4p)
 
 Natychmiast, gdy spełnisz warunek frakcji:
 
-| Frakcja | Warunek (C — stół) |
+| Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
-| Święte Oficjum | **3 Stosy**@3p / **4 Stosy**@4–5p **lub** skazania Werdyktem (**2 Skazania**) |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 5+) |
-| Korona | **2** Dekrety (od Ery **6**) |
-| Kabała | **3 Fragmenty** + Herezja **3–8** (od Ery **7**@3p / **6**@4–5p) |
-| Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
+| **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem |
+| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 5+) |
+| **Korona & Borgiowie** | **2 Dekrety** (od Ery **6**) |
+| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery **6**) |
+| **Gildia Cieni** | **2 Upadki** (Hak / Podwójny / Autodafé / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 
-Sim teach (A/B): inne progi / tie-break — nie drukuj osobno; szczegóły w silniku.
-
-**Limit Er: 8.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
+**Limit Er: 9.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
 
 → [Zwycięstwo](slownik.md#zwycięstwo)
 
 ---
 
-## 5. Limity anti-AP (zapamiętaj)
+## 5. Skalowanie Składu (Warianty 3p i 5p)
+
+Kanonem rozgrywki jest **skład 4-osobowy**. Przy grze w innym gronie wprowadź wyłącznie poniższe modyfikacje:
+
+> ### 👥 Modyfikacje dla 3 Graczy (3p):
+> - **Próg Oskarżenia (Krytyczna Herezja):** **`6`** (Strefy: Czysta `0–3` / Obserwowana `4–5` / Krytyczna `≥6`).
+> - **Święte Oficjum:** Wymaga **`3 Stosów`** (zamiast 4).
+> - **Kabała z Toledo:** Może wygrać od **`Ery 7`** (zamiast 6).
+>
+> ### 👥 Modyfikacje dla 5 Graczy (5p):
+> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`2 zł`** (zamiast 3 zł).
+> - **Próg Oskarżenia (Krytyczna Herezja):** **`8`** (Strefy: Czysta `0–3` / Obserwowana `4–7` / Krytyczna `≥8`).
+
+---
+
+## 6. Limity anti-AP (zapamiętaj)
 
 Na gracza na Erę: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie Inkwizytora.  
 Autodafé: max **co 3 Ery** (karta specjalna Oficjum może łamać — czytaj kartę).  

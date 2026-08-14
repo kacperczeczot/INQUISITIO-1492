@@ -11,7 +11,7 @@
 ## Setup (3–5 graczy)
 
 1. Plansza: 5 lokacji na **grafie** (ulice = sąsiedztwo). Inkwizytor na **Trybunale**, stan **Patrol**.
-2. Każdy: frakcja, talia (**warstwa C: 10 kart**; teach izolowany A: 5), 3 Agenci, planszetka (Herezja **0**), **3 złoto**.
+2. Każdy: frakcja, talia (**warstwa C: 10 kart**; teach izolowany A: 5), 3 Agenci, planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**) (w 5p: **2 zł**).
 3. Dobierz **5** kart. Relikwie/Fragmenty wg setupu. Talia Czasu na stole (C).
 4. **Pierwszy gracz:** ustala stół (nie losujcie).
 
@@ -34,8 +34,8 @@
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpiecznie, zwykle słabiej |
-| 4–5 (3p) / 4–6 (4–5p) | Obserwowana | Ryzyko; Kabała lubi ten pas |
-| 6–10 (3p) / 7–10 (4–5p) | **Krytyczna** | Inni mogą Cię oskarżyć |
+| 4–6 (w 3p: 4–5) | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 7–10 (w 3p: ≥6, w 5p: ≥8) | **Krytyczna** | Inni mogą Cię oskarżyć |
 
 ---
 
@@ -48,7 +48,7 @@
 
 ## Werdykt (5 bulletów)
 
-1. Cel w Krytycznej (≥6 w 3p, ≥7 w 4–5p).
+1. Cel w Krytycznej (≥7, w 3p: ≥6, w 5p: ≥8).
 2. Oskarżyciel ogłasza (1× przeciw temu graczowi / Erę).
 3. Głosowanie **jawne**: Skazać / Uniewinnić (bez oskarżonego).
 4. Remis → Uniewinnienie.
@@ -58,15 +58,15 @@
 
 ## Cele (one-liner)
 
-| Frakcja | Cel |
+| Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| Święte Oficjum | Stosy (3@3p / 3@4p / 4@5p) lub Skazania Stołu (2@3p / 3@4p / 4@5p) |
-| Cienie Al-Andalus | 2 Relikwie + ścieżka (Era 6@3p / 5@4–5p) |
-| Korona & Borgiowie | 2 Dekrety + ≥1 Hak (Era 5); 4p+: też 1 Dekret + 2 Haki (Era 6) |
-| Kabała z Toledo | 3 Fragmenty + Herezja 3–8 (Era 7@3p / 6@4–5p) |
-| Gildia Cieni | 2 Upadki (3 bez Oficjum) |
+| Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
+| Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery 5) |
+| Korona & Borgiowie | **2 Dekrety** (od Ery 6) |
+| Kabała z Toledo | **3 Fragmenty** + Herezja **3–8** od Ery 6 (w 3p: od Ery 7) |
+| Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 
-**Limit:** 8 Er → najbliższy celowi; remis → najniższa Herezja.
+**Limit:** 9 Er → najbliższy celowi; remis → najniższa Herezja.
 
 ---
 
