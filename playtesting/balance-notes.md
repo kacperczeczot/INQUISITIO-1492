@@ -98,6 +98,7 @@ YAML po Patch v0.30 (Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Kar
 - **Wynik:** Global **`94.8`** | 3p **`92.1`** | 4p **`93.5`** | 5p **`98.7`**
 - **Modyfikacja (`PAIR_caa-06_heresy+1__so-05_tgheresy+1`):** Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `2`.
 - **Efekt:** Naprawiono zapalny setup `3p-oficjum-alandalus-kabala` (wzrost z 65.4 do **`90.3 pkt`**, **+24.9 pkt** 🟢). Wzrost wyniku globalnego do **`94.8 pkt`**. Telemetria: Średnia Er 5.48, Deadlocks 1.2%, Pas Biedy 25.9%.
+- ℹ️ *Adnotacja metodologiczna:* Wynik `96.5 pkt` w v0.29 był mierzony na małej próbie (500 gier) przed pełnym wdrożeniem zaostrzonych norm i progresywnej krzywej kar Red Line. Po przeliczeniu bazy v0.29 na pełnej próbie rygorystycznej (5000 gier × 16 setupów = 80 000 partii), rzeczywista baza v0.29 wynosiła **`94.5 pkt`**. Patch v0.30 przyniósł zatem realny zysk globalny **+0.3 pkt** (94.5 → 94.8 pkt) oraz potężny skok w likwidacji outlierów.
 
 ### 🟢 Patch v0.29 (2026-08-14) — Karta `caa-01` (Przejście Podziemiami): `cost` → `0` (Zysk Δ +0.3 pkt)
 - **Wynik:** Global **`96.5`** | 3p **`91.7`** | 4p **`98.3`** | 5p **`99.4`**
