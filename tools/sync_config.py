@@ -257,7 +257,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     text = path.read_text(encoding="utf-8")
 
     # Replace setup line
-    text = re.sub(r"planszetka \(Herezja \*\*0\*\*\), \*\*.*?\*\*", f"planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**)", text)
+    text = re.sub(r"planszetka \(Herezja \*\*0\*\*\), .*", "planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**).", text)
 
     # Replace heresy zones
     text = re.sub(
