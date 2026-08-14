@@ -33,15 +33,15 @@ playtesting/    # Setupy, balans, sesje
 tools/          # Generator PnP, katalog kart
 ```
 
-## Frakcje (cele C)
+## Frakcje i Cele Zwycięstwa (Kanon 4p)
 
-| Frakcja | Cel |
+| Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| **Święte Oficjum** | 3 Stosy **lub** skazania Werdyktem (2@3p / 3@4p / 4@5p) |
-| **Cienie Al-Andalus** | 2 Relikwie + ścieżka (Podwójny / cichy exit / szlak / Era 6@3p / 5@4–5p) |
-| **Korona & Borgiowie** | 2 Dekrety + ≥0 Haków (Era 5); ≥1 Hak (4–5p); 4p+ też 1 Dekret+2 Haki od Ery 6 |
-| **Kabała z Toledo** | 3 Fragmenty + Herezja 3–8 (Era 7@3p / 6@4–5p) |
-| **Gildia Cieni** | 2 upadki (3 bez Oficjum) |
+| **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: 3 Stosy)* |
+| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery 5) |
+| **Korona & Borgiowie** | **2 Dekrety** (od Ery 6) |
+| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery 6; *w 3p: od Ery 7*) |
+| **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
 
 Szczegóły: [`game/factions/`](game/factions/) · [`docs/rules/ksiega.md`](docs/rules/ksiega.md).
 

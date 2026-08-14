@@ -385,6 +385,39 @@ def sync_setups(cfg: dict) -> list[str]:
     return ["Zsynchronizowano playtesting/setups.md"]
 
 
+def sync_readme(cfg: dict) -> list[str]:
+    """Sync README.md victory conditions table with game_config.yaml."""
+    path = PROJECT_ROOT / "README.md"
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    old_readme_vic = re.compile(
+        r"(## Frakcje.*?\n\n)"
+        r"(\| Frakcja \|.*?\n(?:\| :---.*?\n)?)"
+        r"(\| \*\*Święte Oficjum\*\* \|.*?\n)"
+        r"(\| \*\*Cienie Al-Andalus\*\* \|.*?\n)"
+        r"(\| \*\*Korona & Borgiowie\*\* \|.*?\n)"
+        r"(\| \*\*Kabała z Toledo\*\* \|.*?\n)"
+        r"(\| \*\*Gildia Cieni\*\* \|.*?\n)",
+        re.MULTILINE
+    )
+    new_readme_vic = f"""## Frakcje i Cele Zwycięstwa (Kanon 4p)
+
+| Frakcja | Cel (Kanon 4p) |
+| :--- | :--- |
+| **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: 3 Stosy)* |
+| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery 5) |
+| **Korona & Borgiowie** | **2 Dekrety** (od Ery 6) |
+| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery 6; *w 3p: od Ery 7*) |
+| **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
+"""
+    if old_readme_vic.search(text):
+        text = old_readme_vic.sub(new_readme_vic, text)
+        path.write_text(text, encoding="utf-8")
+        return ["Zsynchronizowano README.md"]
+    return []
+
+
 def sync_cards(cfg: dict) -> list[str]:
     """Sync card markdown files (parameters + effect text), KATALOG.md, and card-editor.html from game_config.yaml."""
     from tools.pnp.generate_card_text import sync_card_markdowns
@@ -436,6 +469,8 @@ def main():
 
     # Sync docs & cards
     print("📝 Synchronizuję dokumentację i pliki kart z game_config.yaml...")
+    for ch in sync_readme(cfg):
+        print(f"   ✅ {ch}")
     for ch in sync_ksiega(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_teach_sheet(cfg):
