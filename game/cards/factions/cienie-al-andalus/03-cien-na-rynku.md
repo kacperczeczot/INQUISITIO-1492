@@ -4,7 +4,7 @@ name: Cień na Rynku
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 1
+cost: 0
 heresy: 1
 tags:
 - move
@@ -15,3 +15,4 @@ heresy_text: Kupcy rozpoznają obce oblicze w tłumie na placu.
 lore: Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień.
 agents: 1
 ---
+

@@ -1,4 +1,4 @@
-version: "v0.19"
+version: "v0.20"
 date: "2026-08-14"
 title: "INQUISITIO-1492 — Game Balance Configuration (SSOT)"
 system:
@@ -173,7 +173,7 @@ cards:
     name: Cień na Rynku
     type: akcja
     layer: A
-    cost: 1
+    cost: 0
     heresy: 1
     agents: 1
     action: move_agent

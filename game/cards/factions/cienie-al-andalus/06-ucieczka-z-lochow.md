@@ -5,6 +5,7 @@ faction: cienie-al-andalus
 type: akcja
 layer: B
 cost: 2
+heresy: 0
 tags:
 - move
 - arrest
@@ -13,3 +14,4 @@ heresy_text: Klucz od strażnika, który nigdy nie służył Koronie.
 lore: Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą.
 agents: 1
 ---
+

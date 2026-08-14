@@ -5,6 +5,7 @@ faction: korona-borgiowie
 type: akcja
 layer: A
 cost: 1
+heresy: 0
 tags:
 - gold
 effect: Zyskaj 2 złota.
@@ -14,3 +15,4 @@ lore: 'Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — sta
   '
 gold: 2
 ---
+

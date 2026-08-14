@@ -5,6 +5,7 @@ faction: kabala-toledo
 type: akcja
 layer: B
 cost: 2
+heresy: 0
 tags:
 - interrogation
 - fragment
@@ -15,3 +16,4 @@ lore: 'Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „�
 
   '
 ---
+

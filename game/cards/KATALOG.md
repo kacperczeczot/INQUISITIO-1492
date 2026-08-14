@@ -242,7 +242,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | Kupcy rozpoznają obce oblicze w tłumie na placu. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
@@ -889,7 +889,7 @@ Kart: **10**
 | `faction` | gildia-cieni |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 3 |
+| `cost_gold` | 4 |
 | `heresy` | 2 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
 | `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |

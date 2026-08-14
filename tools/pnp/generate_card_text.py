@@ -224,18 +224,36 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
             if cid not in cards_config:
                 continue
 
-            gen_text = generate_card_effect_text(cid, cards_config[cid])
+            cfg_card = cards_config[cid]
+            gen_text = generate_card_effect_text(cid, cfg_card)
             curr_text = str(meta.get("effect") or "").strip()
 
-            if gen_text != curr_text:
+            cfg_cost = cfg_card.get("cost", meta.get("cost", 0))
+            cfg_heresy = cfg_card.get("heresy", meta.get("heresy", 0))
+            cfg_type = cfg_card.get("type", meta.get("type", "akcja"))
+            cfg_layer = cfg_card.get("layer", meta.get("layer", "A"))
+
+            param_changed = (
+                meta.get("cost") != cfg_cost
+                or meta.get("heresy") != cfg_heresy
+                or meta.get("type") != cfg_type
+                or meta.get("layer") != cfg_layer
+                or gen_text != curr_text
+            )
+
+            if param_changed:
+                meta["cost"] = cfg_cost
+                meta["heresy"] = cfg_heresy
+                meta["type"] = cfg_type
+                meta["layer"] = cfg_layer
                 meta["effect"] = gen_text
                 if not dry_run:
                     clean_meta = {}
                     for k in ["id", "name", "faction", "type", "layer", "cost", "heresy"]:
                         if k in meta:
                             clean_meta[k] = meta[k]
-                    if "tags" in cards_config.get(cid, {}):
-                        clean_meta["tags"] = cards_config[cid]["tags"]
+                    if "tags" in cfg_card:
+                        clean_meta["tags"] = cfg_card["tags"]
                     elif meta.get("tags"):
                         clean_meta["tags"] = meta["tags"]
                     if meta.get("effect"):
@@ -255,7 +273,7 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
                     new_yaml = yaml.dump(clean_meta, allow_unicode=True, sort_keys=False)
                     new_content = f"---\n{new_yaml}---\n" + "---".join(parts[2:])
                     path.write_text(new_content, encoding="utf-8")
-                updated_files.append(f"{cid}: {curr_text} -> {gen_text}")
+                updated_files.append(f"{cid} (cost:{meta.get('cost')}, heresy:{meta.get('heresy')}): {curr_text} -> {gen_text}")
         except Exception as e:
             print(f"Error processing {path}: {e}")
 

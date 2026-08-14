@@ -4,7 +4,7 @@ name: Upadek Domu
 faction: gildia-cieni
 type: signature
 layer: C
-cost: 3
+cost: 4
 heresy: 2
 tags:
 - signature
@@ -16,3 +16,4 @@ heresy_text: Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.
 lore: Egzekucja domu. Stół boi się trzymać ujawnione brudy.
 breaks_rule: true
 ---
+
