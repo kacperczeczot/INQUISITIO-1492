@@ -81,18 +81,23 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-14 (1000–4000 gier/setup, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-14 (Szalony Audytor, seed 42, warstwa C)
 
-YAML po Patch v0.21 (Kanon 4p: Limit ręki **5**, Skazania **2**, Cienie era **5**, CAA-03 koszt **0zł**, Korona **2 Dekrety @ Era 5 (w 3p: Era 6)**, Kabała **3 Fragi / Pasmo [3, 7] @ Era 6 (w 3p: Era 7)**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
+YAML po Patch v0.22 (Karta `caa-10` (Echo Alhambry): `cost` → `0`).
 
-- **Global Game Balance Score:** **`94.1 / 100.0 pkt` 🟢 (Historyczny rekord balansu!)**
-- **3p Avg Score:** **`89.2 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych (skok o +5.1 pkt).
-- **4p Avg Score:** **`94.7 / 100.0 pkt` 🟢** — 100% setupów 4p perfekcyjnie zbalansowanych.
-- **5p Avg Score:** **`99.1 / 100.0 pkt` 🟢** — `5p-full` idealnie symetryczny.
+- **Global Game Balance Score:** **`94.4 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
+- **3p Avg Score:** **`88.0 / 100.0 pkt` 🟢**
+- **4p Avg Score:** **`95.9 / 100.0 pkt` 🟢**
+- **5p Avg Score:** **`99.3 / 100.0 pkt` 🟢**
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.22 (2026-08-14) — Karta `caa-10` (Echo Alhambry): `cost` → `0` (Zysk Δ +1.5 pkt)
+- **Wynik:** Global **`94.4`** | 3p **`88.0`** | 4p **`95.9`** | 5p **`99.3`**
+- **Modyfikacja (`L3_CAA-10_COST_MINUS1`):** Karta `caa-10` (Echo Alhambry): `cost` → `0`.
+- **Efekt:** Wzrost wyniku globalnego z 92.9 do **`94.4 pkt`** (+1.5 pkt). Telemetria: Średnia Er 5.59, Deadlocks 4.1%, Pas Biedy 27.6%.
 
 ### 🟢 Patch v0.21 (2026-08-14) — Skalowanie Ery Korony dla 3p (Era 6 w 3p / Era 5 w 4–5p) & Zasada `+1 Era w 3p`
 - **Wynik:** Global **`94.1`** | 3p **`89.2`** | 4p **`94.7`** | 5p **`99.1`**

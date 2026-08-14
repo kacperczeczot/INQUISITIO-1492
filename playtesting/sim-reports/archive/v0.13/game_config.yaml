@@ -1,42 +1,63 @@
-version: v0.22
-date: '2026-08-14'
-title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
+version: "v0.13"
 system:
   start_gold:
     3p: 3
     4p: 3
     5p: 2
   agents_per_player: 3
-  hand_limit: 5
+  hand_limit:
+    3p: 5
+    4p: 5
+    5p: 5
   max_eras: 9
   autodafe_cooldown: 3
   cards_per_era: 2
   accusation_threshold:
     3p: 6
     4p: 7
-    5p: 8
+    5p: 7
 victory:
   swiete_oficjum:
     stacks:
       3p: 3
       4p: 4
       5p: 4
-    condemns: 2
+    condemns:
+      3p: 2
+      4p: 3
+      5p: 3
   cienie_al_andalus:
     relics: 2
-    path_era: 5
-  korona_borgiowie:
-    decrees: 2
-    hooks: 0
-    era:
-      3p: 6
+    path_era:
+      3p: 5
       4p: 5
       5p: 5
+  korona_borgiowie:
+    decrees:
+      3p: 2
+      4p: 2
+      5p: 2
+    hooks:
+      3p: 0
+      4p: 0
+      5p: 0
+    era:
+      3p: 6
+      4p: 6
+      5p: 6
+    alt_path:
+      min_players: 99
+      decrees: 2
+      hooks: 0
+      era: 6
   kabala_toledo:
-    fragments: 3
+    fragments:
+      3p: 3
+      4p: 3
+      5p: 3
     heresy_band:
     - 3
-    - 7
+    - 8
     era:
       3p: 7
       4p: 6
@@ -176,7 +197,7 @@ cards:
     name: Cień na Rynku
     type: akcja
     layer: A
-    cost: 0
+    cost: 1
     heresy: 1
     agents: 1
     action: move_agent
@@ -252,7 +273,7 @@ cards:
     name: Echo Alhambry
     type: signature
     layer: C
-    cost: 0
+    cost: 1
     heresy: 1
     evacuate_relic: 2
     action: evacuate_relic
@@ -576,7 +597,7 @@ cards:
     name: Upadek Domu
     type: signature
     layer: C
-    cost: 4
+    cost: 3
     heresy: 2
     mark_fall: true
     action: creates_hook
