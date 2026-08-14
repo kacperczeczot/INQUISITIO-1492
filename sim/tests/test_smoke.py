@@ -172,7 +172,7 @@ def test_cards_load():
     hot = cards["caa-03"]
     assert hot.heresy == 1 and hot.heresy_text and hot.lore
     clean = cards["gc-01"]
-    assert clean.heresy == 0 and clean.heresy_text and clean.lore
+    assert clean.heresy == 1 and clean.heresy_text and clean.lore
     assert "bez Herezji" not in clean.heresy_text.lower()
     for c in cards.values():
         assert c.effect, c.id

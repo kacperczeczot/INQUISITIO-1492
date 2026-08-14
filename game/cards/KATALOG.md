@@ -361,7 +361,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
@@ -737,7 +737,7 @@ Kart: **10**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż. |
@@ -787,7 +787,7 @@ Kart: **10**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | Donosiciel pamięta twarz i zapach srebra. |
 | `effect` | Załóż Hak na rywala. |

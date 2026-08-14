@@ -1,4 +1,4 @@
-version: v0.23
+version: v0.24
 date: '2026-08-14'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -511,7 +511,7 @@ cards:
     name: Informator
     type: akcja
     layer: A
-    cost: 1
+    cost: 0
     heresy: 1
     creates_hook: true
     action: creates_hook
