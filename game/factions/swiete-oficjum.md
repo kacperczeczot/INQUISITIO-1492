@@ -5,7 +5,7 @@
 # Święte Oficjum *(Torquemada)*
 
 **Styl:** Terror publiczny, Autodafé, kontrola Trybunału i Lochów.  
-**Cel:** **3 Stosy** **lub** skazania Werdyktem (**2**@≤3p / **3**@4–5p).
+**Cel:** **3 Stosy**@3p / **4 Stosy**@4–5p **lub** **2 Skazania Werdyktem** (wszystkie składy).
 
 ## Tożsamość przy stole
 

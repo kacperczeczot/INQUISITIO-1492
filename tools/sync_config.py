@@ -31,57 +31,57 @@ def load_config() -> dict:
 
 def _threshold_text(cfg: dict) -> str:
     t = cfg["system"]["accusation_threshold"]
-    return f"**{t['3p']}** dla 3p oraz **{t['4p']}** dla 4–5p"
+    if isinstance(t, dict):
+        return f"**{t['3p']}** dla 3p, **{t['4p']}** dla 4p, **{t['5p']}** dla 5p"
+    return f"**{t}**"
 
 
 def _stacks_text(cfg: dict) -> str:
     s = cfg["victory"]["swiete_oficjum"]["stacks"]
-    return f"**{s['3p']} Stosy**@3p / **{s['4p']} Stosy**@4p / **{s['5p']} Stosów**@5p"
+    if isinstance(s, dict):
+        return f"**{s['3p']} Stosy**@3p / **{s['4p']} Stosy**@4–5p"
+    return f"**{s} Stosy**"
 
 
 def _condemns_text(cfg: dict) -> str:
     c = cfg["victory"]["swiete_oficjum"]["condemns"]
-    return f"**{c['3p']}** przy 3p, **{c['4p']}** przy 4p, **{c['5p']}** przy 5p"
+    if isinstance(c, dict):
+        if c["3p"] == c["4p"] == c["5p"]:
+            return f"**{c['3p']}** Skazania"
+        return f"**{c['3p']}** przy 3p, **{c['4p']}** przy 4–5p"
+    return f"**{c} Skazania**"
 
 
 def _relics_text(cfg: dict) -> str:
     r = cfg["victory"]["cienie_al_andalus"]["relics"]
     p = cfg["victory"]["cienie_al_andalus"]["path_era"]
-    return (
-        f"**{r} Relikwie** + ścieżka "
-        f"(Podwójny / cichy exit / szlak morski / Era {p['3p']}+ przy 3p / Era {p['4p']}+ przy 4–5p)"
-    )
+    if isinstance(p, dict):
+        p_era = f"Era {p['3p']}+ przy 3p / Era {p['4p']}+ przy 4–5p" if p["3p"] != p["4p"] else f"Era {p['3p']}+"
+    else:
+        p_era = f"Era {p}+"
+    return f"**{r} Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / {p_era})"
 
 
 def _korona_text(cfg: dict) -> str:
     kb = cfg["victory"]["korona_borgiowie"]
-    d3 = kb["decrees"]["3p"]
-    e3, e4, e5 = kb["era"]["3p"], kb["era"]["4p"], kb["era"]["5p"]
-    h3, h4 = kb["hooks"]["3p"], kb["hooks"]["4p"]
-    alt = kb["alt_path"]
-    if e3 == e4 == e5:
-        era = f"od Ery **{e3}**"
-    else:
-        era = f"od Ery **{e3}**@3p / **{e4}**@4–5p"
-    return (
-        f"**{d3}** Dekrety ({era}; 3p ≥{h3} Haków / 4–5p ≥{h4} Hak); "
-        f"na **4–5p** też {alt['decrees']} Dekret + {alt['hooks']} Haki od Ery {alt['era']}"
-    )
+    d = kb["decrees"]
+    d_val = d["3p"] if isinstance(d, dict) else d
+    e = kb["era"]
+    e_val = e["3p"] if isinstance(e, dict) else e
+    return f"**{d_val}** Dekrety (od Ery **{e_val}**)"
 
 
 def _kabala_text(cfg: dict) -> str:
     kt = cfg["victory"]["kabala_toledo"]
-    f3, f4, f5 = kt["fragments"]["3p"], kt["fragments"]["4p"], kt["fragments"]["5p"]
-    e3, e4 = kt["era"]["3p"], kt["era"]["4p"]
-    hb = kt["heresy_band"]
-    if f3 == f4 == f5:
-        frags = f"**{f3} Fragmenty**"
+    f = kt["fragments"]
+    f_val = f["3p"] if isinstance(f, dict) else f
+    e = kt["era"]
+    if isinstance(e, dict):
+        e_text = f"od Ery **{e['3p']}**@3p / **{e['4p']}**@4–5p" if e["3p"] != e["4p"] else f"od Ery **{e['3p']}**"
     else:
-        frags = f"**{f3}**@3p / **{f4}**@4p / **{f5}**@5p Fragmenty"
-    return (
-        f"{frags} + Herezja **{hb[0]}–{hb[1]}** "
-        f"(od Ery **{e3}**@3p / **{e4}**@4–5p)"
-    )
+        e_text = f"od Ery **{e}**"
+    hb = kt["heresy_band"]
+    return f"**{f_val} Fragmenty** + Herezja **{hb[0]}–{hb[1]}** ({e_text})"
 
 
 def _gildia_text(cfg: dict) -> str:

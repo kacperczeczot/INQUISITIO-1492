@@ -154,9 +154,9 @@ Natychmiast, gdy spełnisz warunek frakcji:
 
 | Frakcja | Warunek (C — stół) |
 | :--- | :--- |
-| Święte Oficjum | **3 Stosy**@3p / **3 Stosy**@4p / **4 Stosów**@5p **lub** skazania Werdyktem (**2** przy 3p, **3** przy 4p, **4** przy 5p) |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 6+ przy 3p / Era 5+ przy 4–5p) |
-| Korona | **2** Dekrety (od Ery **5**; 3p ≥0 Haków / 4–5p ≥1 Hak); na **4–5p** też 1 Dekret + 2 Haki od Ery 6 |
+| Święte Oficjum | **3 Stosy**@3p / **4 Stosy**@4–5p **lub** skazania Werdyktem (**2 Skazania**) |
+| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 5+) |
+| Korona | **2** Dekrety (od Ery **6**) |
 | Kabała | **3 Fragmenty** + Herezja **3–8** (od Ery **7**@3p / **6**@4–5p) |
 | Gildia | **2 upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 
@@ -220,4 +220,4 @@ Zamrożone reguły (bez „ustal przy stole”):
 | Limit Er / remis | 9 Er; najbliższy cel, potem najniższa Herezja |
 | Lokacje kluczowe Gildii | Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek |
 
-**Zasada Balansu:** próg oskarżenia wynosi **6** dla 3p oraz **7** dla 4–5p (zatwierdzone w raportach sim-reports).
+**Zasada Balansu:** próg oskarżenia wynosi **6** dla 3p, **7** dla 4p, **8** dla 5p (zatwierdzone w raportach sim-reports).

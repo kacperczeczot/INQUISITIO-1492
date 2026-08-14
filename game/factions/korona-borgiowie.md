@@ -5,7 +5,7 @@
 # Korona & Borgiowie *(Ferdynand / Izabela)*
 
 **Styl:** Dekrety, pieczęć, przekupstwo, Haki na dworze.  
-**Cel:** **2 Dekrety + ≥0 Haków**@3p / **≥1 Hak**@4–5p (od Ery **5**). Na **4–5p** też: **1 Dekret + 2 Haki** od Ery 6.
+**Cel:** **2 Dekrety** (od Ery **6**).
 
 ## Tożsamość przy stole
 
@@ -19,7 +19,7 @@ Oficjalna władza świecka. Nie musisz krzyczeć Herezją — zmieniasz **prawo 
 
 ## Słabości
 
-- Cel dwuczłonowy (Dekrety + Haki) — wolniejszy start
+- Cel oparty na Dekretach — wymaga dojrzałej fazy gry (Era 6+)
 - Stół widzi Pieczęć z daleka
 - Autodafé na Pałacu boli wszystkich, także Ciebie
 
