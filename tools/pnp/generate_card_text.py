@@ -55,7 +55,7 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
     if condition == "relic_present":
         parts.append("Jeśli masz Agenta w lokacji z Relikwią:")
     elif condition == "has_double_agent":
-        parts.append("Jeśli masz Podwójnego:")
+        parts.append("Jeśli masz Marionetkę:")
     elif condition == "agent_in_dungeon_or_tribunal":
         parts.append("Jeśli masz Agenta w Lochach lub Trybunale:")
     elif condition == "fragments_eq_3":
@@ -63,11 +63,11 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
     elif condition == "active_hooks_gte_2":
         parts.append("Jeśli masz aktywne Haki na ≥ 2 graczach:")
     elif condition == "no_inquisitor_or_double_or_sea_route":
-        parts.append("Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty:")
+        parts.append("Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty:")
     elif condition == "has_fragment_and_agent_in_dungeon_or_tribunal":
         parts.append("Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale:")
     elif condition == "rival_has_hook_or_double_or_autodafe":
-        parts.append("Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej:")
+        parts.append("Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej:")
 
     # 3. Główne Zestawienie Komend Akcji
     act = data.get("action")
@@ -83,7 +83,7 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             else:
                 parts.append("Uwolnij swojego aresztowanego Agenta z Lochów.")
         elif condition == "has_double_agent":
-            parts.append("Przesuń tego Podwójnego o 1 lokację.")
+            parts.append("Przesuń Marionetkę o 1 lokację.")
         elif data.get("move_relic"):
             parts.append("Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.")
         elif agents == 1:

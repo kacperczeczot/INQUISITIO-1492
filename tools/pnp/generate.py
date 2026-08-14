@@ -44,7 +44,7 @@ LOCATIONS = [
     ("2", "Pałac", "Pałac Gubernatora", "Podatki / przekupstwo", 48, 16, "palac"),
     ("3", "Lochy", "Lochy & Podziemia", "Nadzór / areszt", 34, 82, "lochy"),
     ("4", "Rynek", "Rynek i Plac", "Handel / zamieszki", 84, 40, "rynek"),
-    ("5", "Gildia", "Gildia / Smogi", "Informatorzy / Relikwie", 76, 70, "gildia"),
+    ("5", "Gildia", "Gildia / Dzielnica Garbarzy", "Informatorzy / Relikwie", 76, 70, "gildia"),
 ]
 
 # Undirected edges as (slug_a, slug_b) — streets on PnP SVG
@@ -58,7 +58,7 @@ BOARD_EDGES = [
 ]
 
 # Robocze emotki (PnP / cut sheet) — docelowo pixel art per GDD
-# (płomień Herezji, hak, kaptur Podwójnego, krzyż Inkwizytora, Relikwia…)
+# (płomień Herezji, hak, marionetka, krzyż Inkwizytora, Relikwia…)
 # Złoto = CSS moneta (jak na kartach), nie emoji.
 ICON_SHORT = {
     "heresy": "🔥",
@@ -108,7 +108,7 @@ _ITALIC_TERMS_RE = re.compile(
     r"Przesłuchanie|"
     r"Werdykt(?:u|cie|em)?|"
     r"Hak(?:a|i|iem|owi)?|"
-    r"Podwójn(?:y|ego|emu|ym)|"
+    r"Marionetk(?:a|ę|i|ą|ce|ek)?|"
     r"Relikwi(?:a|ę|i)|"
     r"Fragment(?:y|ów)?|"
     r"Stos(?:u|y|ów)?|"
@@ -562,7 +562,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   border-radius: var(--token-r);
   box-sizing: border-box;
 }
-/* Talia Czasu = karty — osobny blok top-right, nie rozciąga pul żetonów */
+/* Kronika Dziejów = karty — osobny blok top-right, nie rozciąga pul żetonów */
 .time-deck {
   position: absolute;
   top: 0;
@@ -1447,7 +1447,7 @@ def render_board(layer: str) -> str:
     </div>
   </div>
   <div class="time-deck">
-    <div class="pool-title">Talia Czasu</div>
+    <div class="pool-title">Kronika Dziejów</div>
     <div class="pool-body" title="Karty edyktów 63×88 mm">
       <div class="time-card">
         <div class="card-slot" title="Talia (zakryta)"></div>
@@ -1571,12 +1571,12 @@ def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug
 def render_player_boards(layer: str) -> str:
     boards = []
     body_cls = "layer-a" if layer == "A" else "layer-c"
-    spent = _icon("spent", "Zużycie Ery")
+    spent = _icon("spent", "Piętno")
 
     def limit_well(label: str) -> str:
         return (
             f'<div class="pb-limit">'
-            f'<span class="pb-token" title="Połóż żeton Zużycie po akcji">{spent}</span>'
+            f'<span class="pb-token" title="Połóż żeton Piętna po akcji">{spent}</span>'
             f'<span class="pb-limit-lbl">{_escape(label)}</span>'
             f"</div>"
         )
@@ -1722,12 +1722,12 @@ def render_tokens(layer: str) -> str:
         ("fragment", "Fragment", 6),
         ("decree", "Dekret", 4),
         ("fall", "Upadek", 4),
-        ("spent", "Zużycie Ery", 15),
+        ("spent", "Piętno", 15),
     ]
     if layer in ("B", "C"):
         specs.extend([
             ("hook", "Hak", 10),
-            ("double", "Podwójny", 6),
+            ("double", "Marionetka", 6),
         ])
 
     # Split across A4 pages when groups exceed one sheet
@@ -1863,14 +1863,14 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
         path = out_dir / fn
         path.write_text(
             _page(
-                "Talia Czasu",
-                render_cards(time_cs, "Talia Czasu", layer, faction_slug="time"),
+                "Kronika Dziejów",
+                render_cards(time_cs, "Kronika Dziejów", layer, faction_slug="time"),
                 body_class=body_cls,
             ),
             encoding="utf-8",
         )
         written.append(path)
-        index_entries.append((fn, f"Talia Czasu ({len(time_cs)})"))
+        index_entries.append((fn, f"Kronika Dziejów ({len(time_cs)})"))
 
     for fn, title, renderer in [
         ("board.html", "Plansza", lambda: render_board(layer)),

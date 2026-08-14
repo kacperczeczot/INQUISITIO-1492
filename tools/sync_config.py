@@ -59,7 +59,7 @@ def _relics_text(cfg: dict) -> str:
         p_era = f"Era {p['3p']}+ przy 3p / Era {p['4p']}+ przy 4–5p" if p["3p"] != p["4p"] else f"Era {p['3p']}+"
     else:
         p_era = f"Era {p}+"
-    return f"**{r} Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / {p_era})"
+    return f"**{r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / {p_era})"
 
 
 def _korona_text(cfg: dict) -> str:
@@ -87,7 +87,7 @@ def _kabala_text(cfg: dict) -> str:
 def _gildia_text(cfg: dict) -> str:
     gc = cfg["victory"]["gildia_cieni"]["falls"]
     return (
-        f"**{gc['default']} upadki** (Hak / Podwójny / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); "
+        f"**{gc['default']} upadki** (Hak / Marionetka / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); "
         f"**{gc['no_oficjum']}** gdy brak Oficjum"
     )
 
@@ -120,10 +120,10 @@ def _victory_table(cfg: dict) -> str:
     return f"""| Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
 | **Święte Oficjum** | **{so_stacks} Stosy** (spaleni agenci) **lub {so_condemns} Skazania** Werdyktem |
-| **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era {caa_era}+) |
+| **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / Era {caa_era}+) |
 | **Korona & Borgiowie** | **{kb_dec} Dekrety** (od Ery **{kb_era}**) |
 | **Kabała z Toledo** | **{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery **{kt_era}**) |
-| **Gildia Cieni** | **{gc_f['default']} Upadki** (Hak / Podwójny / Autodafé / Werdykt na celu z Hakiem); **{gc_f['no_oficjum']}** gdy brak Oficjum |"""
+| **Gildia Cieni** | **{gc_f['default']} Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **{gc_f['no_oficjum']}** gdy brak Oficjum |"""
 
 
 def _heresy_table(cfg: dict) -> str:

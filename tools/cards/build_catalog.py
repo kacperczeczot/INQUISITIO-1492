@@ -18,7 +18,7 @@ FACTION_ORDER = [
     ("korona-borgiowie", "Korona & Borgiowie"),
     ("kabala-toledo", "Kabała z Toledo"),
     ("gildia-cieni", "Gildia Cieni"),
-    ("time", "Talia Czasu"),
+    ("time", "Kronika Dziejów"),
 ]
 
 DISPLAY_FIELDS = [
