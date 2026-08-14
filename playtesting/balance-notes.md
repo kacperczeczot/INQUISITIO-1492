@@ -50,7 +50,7 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3** (wszystkie składy).
-- **Wymagane Pasmo Herezji:** **[3, 8]** (musi znajdować się w strefie Obserwowanej lub na progu Krytycznej).
+- **Wymagane Pasmo Herezji:** **[3, 8]**.
 - **Minimalna Era Wygranej:** `3p` = **Era 7** | `4p` = **Era 6** | `5p` = **Era 6**.
 
 
@@ -85,26 +85,32 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-13 (3000 gier/setup, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-14 (2000 gier/setup, seed 42, warstwa C)
 
-`autodafe_cooldown` **3** + `stacks.3p` **3** + `accusation_threshold` **6 / 7 / 7**.
+YAML po v1.8–v1.11 (fragmenty **3/3/3**, Korona era **5/5/5**, pasmo **3–8**, próg **6/7/7**). Baza L1 = baza L2.
 
-- **Global Game Balance Score:** **`77.1 / 100.0 pkt`**
-- **3p Avg Score:** **`89.6 / 100.0 pkt`** — bez zer
-- **4p Avg Score:** **`44.7 / 100.0 pkt`** — zera `4p-no-cienie`, `4p-no-kabala` (SO ~37–39%)
-- **5p Avg Score:** **`96.9 / 100.0 pkt`**
+- **Global Game Balance Score:** **`75.8 / 100.0 pkt`**
+- **3p Avg Score:** **`85.1 / 100.0 pkt`** — bez zer
+- **4p Avg Score:** **`46.4 / 100.0 pkt`** — zera `4p-no-cienie`, `4p-no-kabala` (SO ~37–39%)
+- **5p Avg Score:** **`96.0 / 100.0 pkt`**
 
-`python tools/sim/measure_baseline.py --games 3000 --seed 42`
+`python tools/sim/audit_level2.py --games 2000 --seed 42`
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Patch Notes)
 
+### ⚪ Patch v1.11 (2026-08-13) — Kabała pasmo z powrotem 3–8
+- `victory.kabala_toledo.heresy_band` = **[3, 8]** (było [4, 8]). L2 4000 gier `KT_HERESY_LOW_MINUS1`: Global **70.2 → 71.9** (`+1.7`), 4p **+3.1**, 3p **+0.8**, 5p **+1.0**.
+
+### ⚪ Patch v1.10 (2026-08-13) — Kabała pasmo 4–8
+- `victory.kabala_toledo.heresy_band` = **[4, 8]** (było [3, 8]). L2 `KT_HERESY_LOW_PLUS1`: Global **+0.7**, 4p **+2.0**.
+
 ### ⚪ Patch v1.9 (2026-08-13) — Korona Era 5 / 5 / 5
-- `victory.korona_borgiowie.era` = **5 / 5 / 5** (było 6 / 5 / 5). Spłaszczenie do liczby 4p/5p. L2 `KB_ERA_PLUS1` ~0; `MINUS1` psuje 4p tylko przez zejście do 4. Alt-path nadal Era 6.
+- `victory.korona_borgiowie.era` = **5 / 5 / 5** (było 6 / 5 / 5). Spłaszczenie do liczby 4p/5p. L2 2000: `KB_ERA_PLUS1` (→6/6/6) Global **−21.3**; `MINUS1` (→4/4/4) **−2.7** (4p **+11.8**, 3p **−19.6**). Alt-path nadal Era 6.
 
 ### ⚪ Patch v1.8 (2026-08-13) — Kabała Fragmenty 3 / 3 / 3
-- `victory.kabala_toledo.fragments` = **3 / 3 / 3** (było 2 / 3 / 2). Spłaszczenie V-kształtu; 4p bez zmiany. L2 `FRAGS_PLUS1` (3/4/3) ~0 na score — pomiar 3000 jeszcze nie zrobiony.
+- `victory.kabala_toledo.fragments` = **3 / 3 / 3** (było 2 / 3 / 2). Spłaszczenie V-kształtu; 4p bez zmiany. L2 2000 gier, baza już **3/3/3**: Global **75.8**; `FRAGS_MINUS1` (→2/2/2) **−5.9** (4p **−18.5**); `FRAGS_PLUS1` (→4/4/4) **−27.7**.
 
 ### 🟢 Patch v1.7 (2026-08-13) — próg oskarżenia 6 / 7 / 7
 - `accusation_threshold` = **6 / 7 / 7** (było 6 / 8 / 8). Pomiar 3000: Global **77.1** (3p 89.6 / 4p 44.7 / 5p 96.9). 4p: zera `no-cienie` i `no-kabala`.

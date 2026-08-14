@@ -77,7 +77,7 @@ Karta nie rozpatruje efektu (np. brak Agenta / lokacji przy odkryciu). **Freeze:
 
 ## Fragment
 
-Znacznik / cel Kabały. Warunek: 3 Fragmenty + Herezja w strefie Obserwowanej (4–6), od wskazanej Ery.
+Znacznik / cel Kabały. Warunek: 3 Fragmenty + Herezja **3–8**, od wskazanej Ery.
 
 **Patrz także:** [Herezja](#herezja), [Zwycięstwo](#zwycięstwo)
 
