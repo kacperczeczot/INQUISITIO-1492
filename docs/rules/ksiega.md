@@ -166,10 +166,21 @@ Natychmiast, gdy spełnisz warunek frakcji:
 
 ---
 
-## 5. Skalowanie Składu (Warianty 3p i 5p)
+## 5. Skalowanie Składu (Warianty 2p, 3p i 5p)
 
 Kanonem rozgrywki jest **skład 4-osobowy**. Przy grze w innym gronie wprowadź wyłącznie poniższe modyfikacje:
 
+> ### 👥 Wariant 2-osobowy: „Wojna Cieni” (2x2p — Dual Control)
+> Dwóch graczy kontroluje łącznie **4 frakcje** (po 2 frakcje na gracza) z zachowaniem 100% kanonicznych talii i celów:
+> 1. **Snake Draft frakcji:** Gracz 1 wybiera 1. frakcję $\rightarrow$ Gracz 2 wybiera 2. i 3. frakcję $\rightarrow$ Gracz 1 dobiera 4. frakcję.
+> 2. **Separacja zasobów:** Złoto, karty na ręce, tor Herezji (0–10) i Haki są całkowicie niezależne dla każdej z 4 frakcji (nie wolno ich łączyć ani przekazywać między swoimi frakcjami).
+> 3. **Przebieg Fazy Planu (E.II):** Karty zagrywane są naprzemiennie frakcjami: A1 $\rightarrow$ B1 $\rightarrow$ A2 $\rightarrow$ B2 (po 2 rundy = 8 zakrytych kart na stole).
+> 4. **Brak auto-agresji:** Twoja frakcja nie może przesłuchiwać (E.IV) ani zakładać Haków na Twoją drugą frakcję.
+> 5. **Werdykt (E.V):** Oskarżona frakcja nie głosuje; głosują pozostałe 2 neutralne frakcje (jedna Gracza A, jedna Gracza B) + oskarżyciel. Do Skazania potrzebna jest przewaga (np. wymuszona Hakiem).
+> 6. **Długość gry:** Limit Er wynosi **12 Er** (Talia Czasu: 12 kart lub przetasowanie w Erze 10).
+> 7. **Podwójne Zwycięstwo:** Wygrywa gracz, którego **OBIE frakcje** jednocześnie spełnią swoje pełne cele kanoniczne.
+>    * *Tie-breaker po 12. Erze:* 1 zrealizowany cel + postęp 2. frakcji $\rightarrow$ niższa suma Herezji obu frakcji $\rightarrow$ wyższa łączna suma złota.
+>
 > ### 👥 Modyfikacje dla 3 Graczy (3p):
 > - **Próg Oskarżenia (Krytyczna Herezja):** **`6`** (Strefy: Czysta `0–3` / Obserwowana `4–5` / Krytyczna `≥6`).
 > - **Święte Oficjum:** Wymaga **`3 Stosów`** (zamiast 4).

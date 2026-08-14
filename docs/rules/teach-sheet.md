@@ -8,10 +8,10 @@
 
 ---
 
-## Setup (3–5 graczy)
+## Setup (2–5 graczy)
 
 1. Plansza: 5 lokacji na **grafie** (ulice = sąsiedztwo). Inkwizytor na **Trybunale**, stan **Patrol**.
-2. Każdy: frakcja, talia (**warstwa C: 10 kart**; teach izolowany A: 5), 3 Agenci, planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**).
+2. Frakcje: w 3–5p każdy wybiera 1 frakcję; w 2p każdy steruje 2 frakcjami (wariant 2x2p, patrz [`ksiega.md`](ksiega.md)). Talia (**warstwa C: 10 kart**), 3 Agenci, planszetka (Herezja **0**), **3 złoto** na frakcję (w 5p: **2 zł**).
 3. Dobierz **5** kart. Relikwie/Fragmenty wg setupu. Talia Czasu na stole (C).
 4. **Pierwszy gracz:** ustala stół (nie losujcie).
 
