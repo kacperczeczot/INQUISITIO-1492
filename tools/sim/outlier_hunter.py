@@ -161,7 +161,7 @@ def _run_full_16_setups_task(task_args: tuple[tuple[str, str, dict], int, int, l
     autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
     acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
 
-    min_setup_name = min(setup_scores, key=setup_scores.get)
+    min_setup_name = min(setup_scores, key=lambda k: setup_scores[k])
     min_setup_score = setup_scores[min_setup_name]
 
     return {
