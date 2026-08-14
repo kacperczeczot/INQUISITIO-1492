@@ -11,7 +11,8 @@ class CasualAgent:
     def choose_card(self, state: GameState, faction: FactionId, legal: list[str]) -> str | None:
         if not legal:
             return None
-        cards = load_all_cards()
+        sys = state.sys_overrides or {}
+        cards = load_all_cards(card_overrides=sys.get("card_overrides"))
         pl = state.players[faction]
 
         # Greedy choice: pick card with highest immediate raw stats, spend gold immediately

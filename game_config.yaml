@@ -1,4 +1,6 @@
-version: "v0.16"
+version: "v0.18"
+date: "2026-08-14"
+title: "INQUISITIO-1492 — Game Balance Configuration (SSOT)"
 system:
   start_gold:
     3p: 3
@@ -26,7 +28,7 @@ victory:
   korona_borgiowie:
     decrees: 2
     hooks: 0
-    era: 6
+    era: 5
   kabala_toledo:
     fragments: 3
     heresy_band:
@@ -571,7 +573,7 @@ cards:
     name: Upadek Domu
     type: signature
     layer: C
-    cost: 3
+    cost: 4
     heresy: 2
     mark_fall: true
     action: creates_hook

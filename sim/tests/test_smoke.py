@@ -243,10 +243,10 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     st2 = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="C")
     kb = st2.players[FactionId.KORONA_BORGIOWIE]
     kb.decrees_played = 2
-    st2.era = 6
+    st2.era = 5
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
-    st2.era = 5
+    st2.era = 4
     assert check_winner_details(st2) is None
 

@@ -41,8 +41,8 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 - **Ewakuacja Relikwii:** **2 Relikwie** (wszystkie składy).
 - **Wymóg Ścieżki / Ery:** Podwójny Agent / uniknięcie Autodafé / Szlak Morski lub minimalna Era: `3p` = **Era 5** | `4p` = **Era 5** | `5p` = **Era 5**.
 
-### 3. Korona & Borgiowie
-- **Dekrety Królewskie:** **2 Dekrety** od Ery **6** (wszystkie składy `3p`, `4p`, `5p`).
+### 4. Korona & Borgiowie
+- **Dekrety Królewskie:** **2 Dekrety** od Ery **5** (wszystkie składy `3p`, `4p`, `5p`).
 - **Haki:** Narzędzie taktyczne / brak wymogu do wygranej.
 
 ### 4. Kabała z Toledo
@@ -81,20 +81,28 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-14 (1000–3000 gier/setup, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-14 (1000–4000 gier/setup, seed 42, warstwa C)
 
-YAML po Patch v0.16 (Czyste wartości skalarne: Limit ręki **5**, Skazania **2**, Cienie era **5**, Korona **2 Dekrety @ Era 6**, Kabała **3 Fragi**, Próg oskarżenia **6 / 7 / 8**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
+YAML po Patch v0.18 (Czyste wartości skalarne: Limit ręki **5**, Skazania **2**, Cienie era **5**, Korona **2 Dekrety @ Era 5**, Kabała **3 Fragi**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
 
-- **Global Game Balance Score:** **`83.1 / 100.0 pkt` 🟢 (Perfekcyjna prostota & 0 zer!)**
-- **3p Avg Score:** **`90.4 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych (73.8–99.7 pkt).
-- **4p Avg Score:** **`73.3 / 100.0 pkt` 🟢** — 100% setupów 4p zbalansowanych (`4p-core`: 99.1 pkt, `4p-no-korona`: 72.9 pkt, `4p-no-cienie`: 52.1 pkt).
-- **5p Avg Score:** **`85.2 / 100.0 pkt` 🟢** — `5p-full` idealnie wyrównany (SO: 22.4%, CAA: 18.8%, KB: 15.4%, KT: 22.9%, GC: 20.5%).
-
-`python tools/sim/run_standard_audit.py`
+- **Global Game Balance Score:** **`89.7 / 100.0 pkt` 🟢 (Rekord balansu & stabilności!)**
+- **3p Avg Score:** **`86.2 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych.
+- **4p Avg Score:** **`84.1 / 100.0 pkt` 🟢** — 100% setupów 4p zbalansowanych (skok o +11.4 pkt).
+- **5p Avg Score:** **`98.9 / 100.0 pkt` 🟢** — `5p-full` praktycznie idealnie symetryczny (skok o +17.2 pkt).
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.18 (2026-08-14) — Korona Era Wygranej: 6 → 5 & Symetria z Cieniami
+- **Wynik (próba 4000 gier):** Global **`89.7`** | 3p **`86.2`** | 4p **`84.1`** | 5p **`98.9`**
+- **Korona & Borgiowie (`era`):** Zrównanie minimalnej Ery wygranej z Erą Cieni do **Ery 5** (było Era 6).
+- **Efekt:** Zlikwidowano sztuczną blokadę Korony w 4p i 5p. Skład 5p osiąga niemal perfekcyjny wynik **`98.9 pkt`** (+17.2 pkt), 4p skacze do **`84.1 pkt`** (+11.4 pkt).
+
+### 🟢 Patch v0.17 (2026-08-14) — Finisher Gildii Cieni (GC-10 Upadek Domu: koszt 3 → 4 zł)
+- **Wynik:** Global **`86.0`** | 3p **`87.9`** | 4p **`70.9`** | 5p **`99.2`**
+- **Gildia Cieni (`gc-10` Upadek Domu):** Podniesienie kosztu z 3 do **4 zł**.
+- **Efekt:** Opóźnienie przedwczesnego finishera Gildii o 1 turę, dające rywalom okno na reakcję i podnoszące jakość partii w 4p.
 
 ### 🟢 Patch v0.16 (2026-08-14) — Oczyszczenie Architektury SSOT (Płaskie Skalary Zamiast Słowników)
 - **Wynik:** Global **`83.1`** | 3p **`90.4`** | 4p **`73.3`** | 5p **`85.2`**

@@ -10,7 +10,8 @@ class ExpertAgent:
         self.rng = rng
 
     def choose_card(self, state: GameState, faction: FactionId, legal: list[str]) -> str | None:
-        cards = load_all_cards()
+        sys = state.sys_overrides or {}
+        cards = load_all_cards(card_overrides=sys.get("card_overrides"))
         pl = state.players[faction]
 
         # Tactical Pass Optimization

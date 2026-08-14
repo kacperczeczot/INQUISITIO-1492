@@ -14,7 +14,8 @@ class PoliticsAgent:
     def choose_card(self, state: GameState, faction: FactionId, legal: list[str]) -> str | None:
         if not legal:
             return None
-        cards = load_all_cards()
+        sys = state.sys_overrides or {}
+        cards = load_all_cards(card_overrides=sys.get("card_overrides"))
         pl = state.players[faction]
 
         # --- HEURYTYKA TAKTYCZNEGO PASA (Oszczędzanie złota na Karty Signature / Finishery) ---

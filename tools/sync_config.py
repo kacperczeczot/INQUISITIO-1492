@@ -391,6 +391,10 @@ def sync_readme(cfg: dict) -> list[str]:
     if not path.exists():
         return []
     text = path.read_text(encoding="utf-8")
+    v = cfg.get("victory", {})
+    kb_era = v.get("korona_borgiowie", {}).get("era", 5)
+    caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
+
     old_readme_vic = re.compile(
         r"(## Frakcje.*?\n\n)"
         r"(\| Frakcja \|.*?\n(?:\| :---.*?\n)?)"
@@ -406,8 +410,8 @@ def sync_readme(cfg: dict) -> list[str]:
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: 3 Stosy)* |
-| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery 5) |
-| **Korona & Borgiowie** | **2 Dekrety** (od Ery 6) |
+| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
+| **Korona & Borgiowie** | **2 Dekrety** (od Ery {kb_era}) |
 | **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery 6; *w 3p: od Ery 7*) |
 | **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
 """
