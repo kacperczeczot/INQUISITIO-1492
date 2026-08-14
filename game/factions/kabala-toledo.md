@@ -4,8 +4,8 @@
 
 # Kabała z Toledo *(Uczeni & Alchemicy)*
 
-**Styl:** Sweet spot Herezji [3, 8], Fragmenty Kodeksu, Imię, archiwum.  
-**Cel:** **3 Fragmenty** + Herezja **3–8** (od Ery **6**; *w 3p: od Ery 7*).
+**Styl:** Sweet spot Herezji [3, 7], Fragmenty Kodeksu, Imię, archiwum.  
+**Cel:** **3 Fragmenty** + Herezja **3–7** (od Ery **6**; *w 3p: od Ery 7*).
 
 ## Tożsamość przy stole
 

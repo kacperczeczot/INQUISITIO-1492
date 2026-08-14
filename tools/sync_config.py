@@ -288,6 +288,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     v = cfg.get("victory", {})
     kb_era = v.get("korona_borgiowie", {}).get("era", 5)
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
+    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 7])
 
     old_teach_vic = re.compile(
         r"(\| Frakcja \| Cel.*?\n(?:\| :---.*?\n)?)"
@@ -303,7 +304,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 | Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
 | Korona & Borgiowie | **2 Dekrety** (od Ery {kb_era}) |
-| Kabała z Toledo | **3 Fragmenty** + Herezja **3–8** od Ery 6 (w 3p: od Ery 7) |
+| Kabała z Toledo | **3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** od Ery 6 (w 3p: od Ery 7) |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 """
     if old_teach_vic.search(text):
@@ -358,18 +359,13 @@ def sync_setups(cfg: dict) -> list[str]:
         return []
     text = path.read_text(encoding="utf-8")
     s = cfg["system"]
+    sg = s["start_gold"]
+    cd = s["autodafe_cooldown"]
     t = s["accusation_threshold"]
 
-    text = re.sub(
-        r"\| Próg Krytycznej \(Oskarżenie\) \| \*\*\d+\*\* \| \*\*\d+\*\* \|",
-        f"| Próg Krytycznej (Oskarżenie) | **{t['3p']}** | **{t['4p']}** |",
-        text
-    )
-    text = re.sub(
-        r"\| Limit Er \| \*\*\d+\*\* \| \*\*\d+\*\* \|",
-        f"| Limit Er | **{s['max_eras']}** | **{s['max_eras']}** |",
-        text
-    )
+    text = re.sub(r"Startowe Złoto: \*\*.*?\*\*", f"Startowe Złoto: **{sg['3p']} zł** (3p) / **{sg['4p']} zł** (4p) / **{sg['5p']} zł** (5p)", text)
+    text = re.sub(r"Autodafé cooldown: \*\*co \d+ Ery\*\*", f"Autodafé cooldown: **co {cd} Ery**", text)
+    text = re.sub(r"Próg Oskarżenia na Dworze: \*\*.*?\*\*", f"Próg Oskarżenia na Dworze: **≥{t['3p']}** (3p) / **≥{t['4p']}** (4p) / **≥{t['5p']}** (5p)", text)
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano playtesting/setups.md"]
@@ -384,6 +380,7 @@ def sync_readme(cfg: dict) -> list[str]:
     v = cfg.get("victory", {})
     kb_era = v.get("korona_borgiowie", {}).get("era", 5)
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
+    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 7])
 
     old_readme_vic = re.compile(
         r"(## Frakcje.*?\n\n)"
@@ -402,7 +399,7 @@ def sync_readme(cfg: dict) -> list[str]:
 | **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: 3 Stosy)* |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
 | **Korona & Borgiowie** | **2 Dekrety** (od Ery {kb_era}) |
-| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery 6; *w 3p: od Ery 7*) |
+| **Kabała z Toledo** | **3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery 6; *w 3p: od Ery 7*) |
 | **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
 """
     if old_readme_vic.search(text):

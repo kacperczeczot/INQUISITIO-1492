@@ -47,7 +47,7 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3** (wszystkie składy).
-- **Wymagane Pasmo Herezji:** **[3, 8]**.
+- **Wymagane Pasmo Herezji:** **[3, 7]**.
 - **Minimalna Era Wygranej:** `3p` = **Era 7** | `4p` = **Era 6** | `5p` = **Era 6**.
 
 ### 5. Gildia Cieni
@@ -83,16 +83,21 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📊 Stan zmierzony — 2026-08-14 (1000–4000 gier/setup, seed 42, warstwa C)
 
-YAML po Patch v0.18 (Czyste wartości skalarne: Limit ręki **5**, Skazania **2**, Cienie era **5**, Korona **2 Dekrety @ Era 5**, Kabała **3 Fragi**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
+YAML po Patch v0.19 (Czyste wartości skalarne: Limit ręki **5**, Skazania **2**, Cienie era **5**, Korona **2 Dekrety @ Era 5**, Kabała **3 Fragi / Pasmo [3, 7]**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
 
-- **Global Game Balance Score:** **`89.7 / 100.0 pkt` 🟢 (Rekord balansu & stabilności!)**
-- **3p Avg Score:** **`86.2 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych.
-- **4p Avg Score:** **`84.1 / 100.0 pkt` 🟢** — 100% setupów 4p zbalansowanych (skok o +11.4 pkt).
-- **5p Avg Score:** **`98.9 / 100.0 pkt` 🟢** — `5p-full` praktycznie idealnie symetryczny (skok o +17.2 pkt).
+- **Global Game Balance Score:** **`91.7 / 100.0 pkt` 🟢 (Rekord balansu & stabilności!)**
+- **3p Avg Score:** **`87.1 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych.
+- **4p Avg Score:** **`88.6 / 100.0 pkt` 🟢** — 100% setupów 4p zbalansowanych (skok o +4.1 pkt).
+- **5p Avg Score:** **`99.3 / 100.0 pkt` 🟢** — `5p-full` idealnie symetryczny.
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.19 (2026-08-14) — Pasmo Herezji Kabały: [3, 7] & Balans 91.7 pkt
+- **Wynik (próba 3000 gier):** Global **`91.7`** | 3p **`87.1`** | 4p **`88.6`** | 5p **`99.3`**
+- **Kabała z Toledo (`heresy_band`):** Zawężenie górnej granicy pasma z 8 do **7 (`[3, 7]`)**.
+- **Efekt:** Wymuszenie na Kabale balansowania na granicy Strefy Obserwowanej (4–6) bez bezkarnego wchodzenia w Strefę Krytyczną (≥7). Wynik 4p rośnie z 84.5 do **`88.6 pkt`**, a globalny wynik osiąga rekordowe **`91.7 pkt`**.
 
 ### 🟢 Patch v0.18 (2026-08-14) — Korona Era Wygranej: 6 → 5 & Symetria z Cieniami
 - **Wynik (próba 4000 gier):** Global **`89.7`** | 3p **`86.2`** | 4p **`84.1`** | 5p **`98.9`**

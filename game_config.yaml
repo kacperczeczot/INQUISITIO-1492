@@ -1,4 +1,4 @@
-version: "v0.18"
+version: "v0.19"
 date: "2026-08-14"
 title: "INQUISITIO-1492 — Game Balance Configuration (SSOT)"
 system:
@@ -33,7 +33,7 @@ victory:
     fragments: 3
     heresy_band:
     - 3
-    - 8
+    - 7
     era:
       3p: 7
       4p: 6
