@@ -45,7 +45,3 @@ Figurki: familiariusze / inkwizytorzy. Czytelny kolor „światła”.
 | A | Patrol, złoto, Podejrzenie, **nasłanie Inkwizytora** (so-04), Wezwanie |
 | B | Areszt, przesłuchanie, nasłanie |
 | C | Świadek koronny, karta specjalna *Oczyść Miasto* |
-
-## Notatka designu
-
-Oficjum nie **jest** Inkwizytorem — **wpływa** na niego. Jeśli snowball Stosów zabija dramat, tnij częstotliwość Autodafé, nie wywalaj Werdyktu.
