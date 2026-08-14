@@ -4,7 +4,7 @@
 
 # Playtesting — balans (stan aktualny)
 
-Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Podwójni.  
+Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Marionetki.  
 **Werdykt fun = sesja ludzka** ([`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md)).  
 **Spłaszczanie:** unikamy skalowania 3p/4p/5p; jedna liczba, jeśli wynik jest lepszy, podobny albo tani ([hierarchia §0](../docs/rules/hierarchia_balansowania.md)).
 
@@ -22,7 +22,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | **Strefy Herezji (Czysta / Obserw. / Kryt.)** | **0–3 / 4–5 / 6–10** | **0–3 / 4–6 / 7–10** | **0–3 / 4–7 / 8–10** | Automatycznie powiązane: Krytyczna = próg oskarżenia (6@3p / 7@4p / 8@5p). |
 | **Maksymalna Liczba Er** | **9** | **9** | **9** | Bezpiecznik wydłużony do 9 Er obniża deadlocki do <3% i stabilizuje partię. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Cooldown co 3 Ery utrzymuje średnią częstotliwość ~1.0 czyszczenia/partię. |
-| **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę + trickle +1 złota w 1. rundzie zapewnia płynność ekonomii. |
+| **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę + dopływ +1 złota w 1. rundzie zapewnia płynność ekonomii. |
 | **Złoto Startowe** | **3 zł** | **3 zł** | **2 zł** | W 5p 2zł zapobiega przedwczesnemu sprintowi (10 akcji/Erę); w 3–4p 3zł zapewnia płynność. |
 | **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **5 Kart** | Zunifikowany limit 5 kart dla wszystkich składów graczy. |
 | **Otwarcie Szlaku Morskiego (Cienie)** | **Era 5** | **Era 5** | **Era 5** | Zunifikowany dostęp do szlaku morskiego od 5. Ery dla wszystkich składów. |
@@ -39,7 +39,7 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ### 2. Cienie Al-Andalus
 - **Ewakuacja Relikwii:** **2 Relikwie** (wszystkie składy).
-- **Wymóg Ścieżki / Ery:** Podwójny Agent / uniknięcie Autodafé / Szlak Morski lub minimalna Era: `3p` = **Era 5** | `4p` = **Era 5** | `5p` = **Era 5**.
+- **Wymóg Ścieżki / Ery:** Marionetka / uniknięcie Autodafé / Szlak Morski lub minimalna Era: `3p` = **Era 5** | `4p` = **Era 5** | `5p` = **Era 5**.
 
 ### 4. Korona & Borgiowie
 - **Dekrety Królewskie:** **2 Dekrety** od Ery **5** (wszystkie składy `3p`, `4p`, `5p`).

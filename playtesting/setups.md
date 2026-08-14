@@ -23,8 +23,8 @@
 | Warstwa | W talii gracza |
 | :--- | :--- |
 | **A** | Tylko `layer: A` (5 kart) — Inkwizytor + Werdykt |
-| **B** | A + B (bez Signature) |
-| **C** | Pełne 10 + Talia Czasu |
+| **B** | A + B (bez karty specjalnej) |
+| **C** | Pełne 10 + Kronika Dziejów |
 
 ---
 
@@ -77,7 +77,7 @@ Cel: czytelny stół (~60–90 min), dramat Werdyktu / Inkwizytora bez pełnego 
 ### Notatki 3p
 
 - Gildia i Kabała mają mniej celów — metryki Haków / wrabiania mogą być ostrzejsze.
-- Pierwsza sesja Warstwy A: preferuj **Oficjum + Cienie + Korona**.
+- Pierwsza sesja: preferuj **Oficjum + Cienie + Korona**.
 
 ---
 
@@ -101,8 +101,7 @@ Domyślnie pierwsza sesja 4p: **wyłącz Gildię**.
 
 ## 5 graczy
 
-Wszystkie frakcje. Pełny chaos Haków, Podwójnych i Werdyktów (~90+ min).  
-Używaj Warstwy **C** dopiero po gate’ach A/B przy stole.
+Wszystkie frakcje. Pełny chaos Haków, Marionetek i Werdyktów (~90+ min).
 
 ---
 
@@ -110,8 +109,8 @@ Używaj Warstwy **C** dopiero po gate’ach A/B przy stole.
 
 1. Wydruk / szkic: [`../game/board/locations.md`](../game/board/locations.md), [`../game/board/player-board.md`](../game/board/player-board.md)
 2. Komponenty: [`../game/components/inventory.md`](../game/components/inventory.md), [`../game/components/print-3d.md`](../game/components/print-3d.md)
-3. Talie wg warstwy + (C) Talia Czasu 8
-4. Żetony: Herezja, złoto, Relikwie, Fragmenty, Haki, Podwójni, Stosy, Upadek, Dekret, Inkwizytor
+3. Talie wg warstwy + (C) Kronika Dziejów 8
+4. Żetony: Herezja, złoto, Relikwie, Fragmenty, Haki, Marionetki, Stosy, Upadek, Dekret, Inkwizytor
 5. Sprawdź próg oskarżenia (**6** w 3p, **7** w 4–5p) oraz warstwę A/B/C — zapisz w notatce sesji
 6. Wybierz skład z tej strony
 7. Po grze: [`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md) (UX: downtime, AP, emocja Werdyktu)

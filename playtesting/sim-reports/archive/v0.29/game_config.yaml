@@ -95,7 +95,6 @@ cards:
     action: frame_rival
     target_scope: triggering_rival
     trigger: rival_plays_heresy_gte_1
-    no_move_limit: true
     tags:
     - reaction
   so-06:

@@ -26,7 +26,7 @@
 | Oskarżenie / Werdykt | | |
 | Autodafé | | |
 | Hak utworzony / wymuszony | | |
-| Podwójny | | |
+| Marionetka | | |
 | Signature zagrane | | |
 | Edykt Czasu | | |
 
