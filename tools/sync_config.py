@@ -285,6 +285,10 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
 
     # Victory table
+    v = cfg.get("victory", {})
+    kb_era = v.get("korona_borgiowie", {}).get("era", 5)
+    caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
+
     old_teach_vic = re.compile(
         r"(\| Frakcja \| Cel.*?\n(?:\| :---.*?\n)?)"
         r"(\| Święte Oficjum \|.*?\n)"
@@ -297,8 +301,8 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     new_teach_vic = f"""| Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery 5) |
-| Korona & Borgiowie | **2 Dekrety** (od Ery 6) |
+| Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
+| Korona & Borgiowie | **2 Dekrety** (od Ery {kb_era}) |
 | Kabała z Toledo | **3 Fragmenty** + Herezja **3–8** od Ery 6 (w 3p: od Ery 7) |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 """
