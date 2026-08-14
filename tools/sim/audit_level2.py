@@ -5,6 +5,7 @@ import os
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
 from pathlib import Path
 
 # Fix path to include sim directory
@@ -19,11 +20,22 @@ from inquisitio.runner.scoring import (
     calculate_global_score,
     color_score,
 )
-from inquisitio.runner.audit_facts import delta_status, score_pair
+from inquisitio.runner.audit_facts import (
+    delta_status,
+    score_pair,
+    save_and_archive_report,
+    split_and_sort_audit_results,
+)
 
 
 def _pc(sec, delta: int = 0) -> str:
-    return f"{sec['3p'] + delta}/{sec['4p'] + delta}/{sec['5p'] + delta}"
+    """3p/4p/5p snapshot or scalar, optional ±delta on each."""
+    if hasattr(sec, "__getitem__") and not isinstance(sec, (str, bytes)):
+        try:
+            return f"{sec['3p'] + delta}/{sec['4p'] + delta}/{sec['5p'] + delta}"
+        except (KeyError, TypeError):
+            pass
+    return str(int(sec) + delta)
 
 
 def build_level2_tests():
@@ -50,15 +62,6 @@ def build_level2_tests():
         ("L2_KB_DECREES_PLUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, 1)}", {"kb_decrees_offset": 1}),
         ("L2_KB_DECREES_MINUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
         ("L2_KB_HOOKS_PLUS1", f"Korona Haki: {_pc(kb.hooks)} → {_pc(kb.hooks, 1)}", {"kb_hooks_offset": 1}),
-        ("L2_KB_HOOKS_MINUS1", f"Korona Haki: {_pc(kb.hooks)} → {_pc(kb.hooks, -1)}", {"kb_hooks_offset": -1}),
-        ("L2_KB_ALT_DECREES_PLUS1", f"Korona Alt Dekrety: {kb.alt_path.decrees} → {kb.alt_path.decrees + 1}", {"kb_alt_decrees_offset": 1}),
-        ("L2_KB_ALT_DECREES_MINUS1", f"Korona Alt Dekrety: {kb.alt_path.decrees} → {kb.alt_path.decrees - 1}", {"kb_alt_decrees_offset": -1}),
-        ("L2_KB_ALT_HOOKS_PLUS1", f"Korona Alt Haki: {kb.alt_path.hooks} → {kb.alt_path.hooks + 1}", {"kb_alt_hooks_offset": 1}),
-        ("L2_KB_ALT_HOOKS_MINUS1", f"Korona Alt Haki: {kb.alt_path.hooks} → {kb.alt_path.hooks - 1}", {"kb_alt_hooks_offset": -1}),
-        ("L2_KB_ALT_ERA_PLUS1", f"Korona Alt Era: {kb.alt_path.era} → {kb.alt_path.era + 1}", {"kb_alt_era_offset": 1}),
-        ("L2_KB_ALT_ERA_MINUS1", f"Korona Alt Era: {kb.alt_path.era} → {kb.alt_path.era - 1}", {"kb_alt_era_offset": -1}),
-        ("L2_KB_ALT_MINP_PLUS1", f"Korona Alt min graczy: {kb.alt_path.min_players} → {kb.alt_path.min_players + 1}", {"kb_alt_min_players_offset": 1}),
-        ("L2_KB_ALT_MINP_MINUS1", f"Korona Alt min graczy: {kb.alt_path.min_players} → {kb.alt_path.min_players - 1}", {"kb_alt_min_players_offset": -1}),
         ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
         ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
         ("L2_KT_ERA_PLUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, 1)}", {"kt_era_offset": 1}),
@@ -172,21 +175,24 @@ def main():
 
     elapsed = round(time.time() - t0, 2)
     base = results[0]
+    positives, negatives = split_and_sort_audit_results(results, base)
 
     # Markdown Report Generation
     report_lines = [
-        "# Raport Audytu Poziomu 2 (Warunki Zwycięstwa i Skalowanie)",
+        f"# Raport Audytu Poziomu 2 (Warunki Zwycięstwa i Skalowanie) — Wersja Balansu: {CONFIG.version}",
         "",
-        f"**Przeanalizowano Wariantów:** {len(level2_tests)} | **Próba:** {games_per_setup} gier/setup | **Czas:** {elapsed}s",
+        f"**Wersja Balansu:** `{CONFIG.version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Przeanalizowano Wariantów:** {len(level2_tests)} | **Próba:** {games_per_setup} gier/setup | **Czas:** {elapsed}s",
         f"**Wynik Bazy Poziomu 2 (Global):** `{color_score(base['global_score'])} pkt` | 3p: `{base['cat_scores'].get('3p',0.0):.1f} pkt` | 4p: `{base['cat_scores'].get('4p',0.0):.1f} pkt` | 5p: `{base['cat_scores'].get('5p',0.0):.1f} pkt`",
         "",
         "## 1. Tabela Wyników Balansu i Delty (Zmiany) dla Każdego Składu Graczy",
+        "",
+        f"### 🌟 Warianty z Zyskiem (Dowolna kategoria > 0) — Posortowane wg Global Delta ({len(positives)})",
         "",
         "| ID | Warunek Zwycięstwa Poziomu 2 | Global (baza → test) | 3p (baza → test) | 4p (baza → test) | 5p (baza → test) | Status Balansu |",
         "| :---: | :--- | :---: | :---: | :---: | :---: | :---: |",
     ]
 
-    for r in results:
+    for r in positives:
         g_diff = r['global_score'] - base['global_score']
         report_lines.append(
             f"| `{r['id']}` | {r['name']} | {score_pair(base['global_score'], r['global_score'], colored=True)} | "
@@ -196,17 +202,30 @@ def main():
             f"{delta_status(g_diff)} |"
         )
 
+    if negatives:
+        report_lines.extend([
+            "",
+            f"<details>",
+            f"<summary><b>🔻 Pokaż pozostałe {len(negatives)} wariantów bez zysku (wszystkie delty ≤ 0)...</b></summary>",
+            "",
+            "| ID | Warunek Zwycięstwa Poziomu 2 | Global (baza → test) | 3p (baza → test) | 4p (baza → test) | 5p (baza → test) | Status Balansu |",
+            "| :---: | :--- | :---: | :---: | :---: | :---: | :---: |",
+        ])
+        for r in negatives:
+            g_diff = r['global_score'] - base['global_score']
+            report_lines.append(
+                f"| `{r['id']}` | {r['name']} | {score_pair(base['global_score'], r['global_score'], colored=True)} | "
+                f"{score_pair(base['cat_scores'].get('3p', 0.0), r['cat_scores'].get('3p', 0.0))} | "
+                f"{score_pair(base['cat_scores'].get('4p', 0.0), r['cat_scores'].get('4p', 0.0))} | "
+                f"{score_pair(base['cat_scores'].get('5p', 0.0), r['cat_scores'].get('5p', 0.0))} | "
+                f"{delta_status(g_diff)} |"
+            )
+        report_lines.extend([
+            "",
+            "</details>",
+        ])
 
-
-    report_lines.extend([
-        "",
-        "## 2. Pełna Tabela Telemetrii 5 Filarów z Zakresami (Min / Średnia / Max) i Zgodnością Norm",
-        "",
-        "| ID | Długość Gry (Ery) [Min–Max] | Deadlocks % (<15%) | Pas Biedy % (<30%) | Autodafé / Partię [Min–Max] | Oskarżenia / Partię [Min–Max] | Złoto End [Min–Max] | Herezja End [Min–Max] | Weryfikacja Norm Telemetrii |",
-        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
-    ])
-
-    for r in results:
+    def _telemetry_row(r):
         eras_str = f"{r['eras_avg']:.2f} Er ({r['eras_min']}–{r['eras_max']})"
         autodafe_str = f"{r['autodafe_avg']:.2f} ({r['autodafe_min']}–{r['autodafe_max']})"
         acc_str = f"{r['acc_avg']:.2f} ({r['acc_min']}–{r['acc_max']})"
@@ -224,9 +243,36 @@ def main():
         else:
             norm_status = "🔴 PRZEKROCZONE NORMY"
 
-        report_lines.append(
-            f"| `{r['id']}` | {eras_str} | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {autodafe_str} | {acc_str} | {gold_str} | {heresy_str} | {norm_status} |"
-        )
+        return f"| `{r['id']}` | {eras_str} | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {autodafe_str} | {acc_str} | {gold_str} | {heresy_str} | {norm_status} |"
+
+    report_lines.extend([
+        "",
+        "## 2. Pełna Tabela Telemetrii 5 Filarów z Zakresami (Min / Średnia / Max) i Zgodnością Norm",
+        "",
+        f"### 🌟 Telemetria Wariantów z Zyskiem ({len(positives)})",
+        "",
+        "| ID | Długość Gry (Ery) [Min–Max] | Deadlocks % (<15%) | Pas Biedy % (<30%) | Autodafé / Partię [Min–Max] | Oskarżenia / Partię [Min–Max] | Złoto End [Min–Max] | Herezja End [Min–Max] | Weryfikacja Norm Telemetrii |",
+        "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+    ])
+
+    for r in positives:
+        report_lines.append(_telemetry_row(r))
+
+    if negatives:
+        report_lines.extend([
+            "",
+            f"<details>",
+            f"<summary><b>🔻 Pokaż telemetrię pozostałych {len(negatives)} wariantów bez zysku...</b></summary>",
+            "",
+            "| ID | Długość Gry (Ery) [Min–Max] | Deadlocks % (<15%) | Pas Biedy % (<30%) | Autodafé / Partię [Min–Max] | Oskarżenia / Partię [Min–Max] | Złoto End [Min–Max] | Herezja End [Min–Max] | Weryfikacja Norm Telemetrii |",
+            "| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        ])
+        for r in negatives:
+            report_lines.append(_telemetry_row(r))
+        report_lines.extend([
+            "",
+            "</details>",
+        ])
 
     report_lines.extend([
         "",
@@ -239,18 +285,14 @@ def main():
         "- **⚖️ Oskarżenia na Dworze / Partię:** Optymalna częstotliwość procesów politycznych: **1.5 – 4.5** oskarżeń na grę.",
     ])
 
-    out_path = args.output
-    if not out_path:
-        out_path = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports" / "audyt_level2_raport.md"
-    else:
-        out_path = Path(out_path)
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(report_lines), encoding="utf-8")
+    out_path, archive_path = save_and_archive_report(report_lines, "audyt_level2_raport.md", args.output)
 
     print("========================================================")
     print(f"AUDYT POZIOMU 2 ZAKOŃCZONY W {elapsed}s!")
     print(f"Raport zapisano w: {out_path}")
+    if archive_path:
+        print(f"Zarchiwizowano w: {archive_path}")
+        print(f"Snapshot configu w: {archive_path.parent / 'game_config.yaml'}")
     print("========================================================")
 
 if __name__ == "__main__":
