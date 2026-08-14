@@ -81,18 +81,23 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-14 (Szalony Audytor, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-15 (Outlier Hunter 2D/3D, seed 42, warstwa C)
 
-YAML po Patch v0.29 (Karta `caa-01` (Przejście Podziemiami): `cost` → `0`).
+YAML po Patch v0.30 (Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `2`).
 
-- **Global Game Balance Score:** **`96.5 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
-- **3p Avg Score:** **`91.7 / 100.0 pkt` 🟢**
-- **4p Avg Score:** **`98.3 / 100.0 pkt` 🟢**
-- **5p Avg Score:** **`99.4 / 100.0 pkt` 🟢**
+- **Global Game Balance Score:** **`94.8 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
+- **3p Avg Score:** **`92.1 / 100.0 pkt` 🟢**
+- **4p Avg Score:** **`93.5 / 100.0 pkt` 🟢**
+- **5p Avg Score:** **`98.7 / 100.0 pkt` 🟢**
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.30 (2026-08-15) — Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `2` (Zysk Δ +0.3 pkt)
+- **Wynik:** Global **`94.8`** | 3p **`92.1`** | 4p **`93.5`** | 5p **`98.7`**
+- **Modyfikacja (`PAIR_caa-06_heresy+1__so-05_tgheresy+1`):** Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `2`.
+- **Efekt:** Naprawiono zapalny setup `3p-oficjum-alandalus-kabala` (wzrost z 65.4 do **`90.3 pkt`**, **+24.9 pkt** 🟢). Wzrost wyniku globalnego do **`94.8 pkt`**. Telemetria: Średnia Er 5.48, Deadlocks 1.2%, Pas Biedy 25.9%.
 
 ### 🟢 Patch v0.29 (2026-08-14) — Karta `caa-01` (Przejście Podziemiami): `cost` → `0` (Zysk Δ +0.3 pkt)
 - **Wynik:** Global **`96.5`** | 3p **`91.7`** | 4p **`98.3`** | 5p **`99.4`**
