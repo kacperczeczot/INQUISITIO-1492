@@ -513,9 +513,9 @@ class AutoBalancer:
             print(f"   Nowy Global Score:  {color_score(best_res['global_score'], bold=True)} pkt (Δ {delta_global:+5.2f} pkt)")
 
             # Check if improvement exceeds threshold
-            if delta_global <= self.args.min_delta:
+            if delta_global < self.args.min_delta:
                 print(f"\n🏆 OSIĄGNIĘTO LOKALNE OPTIMUM GLOBALNE!")
-                print(f"Żadna z {len(candidate_tests)} modyfikacji nie przynosi zysku > +{self.args.min_delta} pkt.")
+                print(f"Żadna z {len(candidate_tests)} modyfikacji nie przynosi zysku >= +{self.args.min_delta} pkt.")
                 print(f"Najwyższy dostępny zysk: {delta_global:+5.2f} pkt.")
                 break
 
@@ -593,21 +593,21 @@ class AutoBalancer:
         results = self._execute_pool(task_list)
 
         base_s1 = results[0]
-        # Filter strictly positive delta and safety
-        positives = []
+        # Collect all candidates that pass telemetry safety, sorted by delta in screening
+        safe_candidates = []
         for r in results[1:]:
             delta = r["global_score"] - base_s1["global_score"]
             is_safe, _ = passes_telemetry_safety(r)
-            if delta > self.args.min_delta and is_safe:
-                positives.append(r)
+            if is_safe:
+                safe_candidates.append(r)
 
-        positives.sort(key=lambda x: x["global_score"] - base_s1["global_score"], reverse=True)
+        safe_candidates.sort(key=lambda x: x["global_score"] - base_s1["global_score"], reverse=True)
 
-        if not positives:
-            print("Brak kandydatów przynoszących poprawę w przesiewie.")
+        if not safe_candidates:
+            print("Brak bezpiecznych kandydatów w przesiewie.")
             return None, base_s1, None, results
 
-        top_k = positives[: self.args.top_k]
+        top_k = safe_candidates[: self.args.top_k]
         print(f"\n--- [KROK 2/2: PRECYZYJNA WERYFIKACJA] Badam TOP {len(top_k)} liderów na próbie {stage2_games} gier/setup ---")
 
         # Map back to test tuples
@@ -713,7 +713,7 @@ def main():
     parser.add_argument("--top-k", type=int, default=20, help="Liczba liderów weryfikowanych w kroku 2")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba iteracji optymalizatora")
-    parser.add_argument("--min-delta", type=float, default=0.0, help="Minimalny zysk punktowy (delta global) wymagany do zapisu (domyślnie > 0.0)")
+    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy (delta global) wymagany do zapisu (domyślnie >= 0.05)")
     parser.add_argument("--level", type=str, choices=["all", "1", "2", "3", "4"], default="all", help="Filtruj poziomy testów")
     parser.add_argument("--param", type=str, default="all", help="Parametry kart dla Poziomu 3 (cost, heresy, target_heresy, gold, all)")
     parser.add_argument("--card", type=str, default=None, help="Ogranicz poziom 3 do konkretnej karty (np. so-04)")
