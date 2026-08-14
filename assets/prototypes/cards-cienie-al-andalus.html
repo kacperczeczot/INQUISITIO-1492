@@ -172,7 +172,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   border-radius: var(--token-r);
   box-sizing: border-box;
 }
-/* Talia Czasu = karty — osobny blok top-right, nie rozciąga pul żetonów */
+/* Kronika Dziejów = karty — osobny blok top-right, nie rozciąga pul żetonów */
 .time-deck {
   position: absolute;
   top: 0;
@@ -996,7 +996,7 @@ body.bw .card-proto {
       <div class="name">Przejście Podziemiami</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1028,7 +1028,7 @@ body.bw .card-proto {
       <div class="name">Cień na Rynku</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
+    <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
     <div class="heresy-caption">Kupcy rozpoznają obce oblicze w tłumie na placu.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1065,7 +1065,7 @@ body.bw .card-proto {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect">Jeśli masz Agenta w lokacji z Relikwią:<br><strong>Ewakuuj</strong> <em>Relikwię</em> z tej lokacji.</div>
+    <div class="card-effect"><div class="fx-block">Jeśli masz Agenta w lokacji z Relikwią:<br><strong>Ewakuuj</strong> <em>Relikwię</em> z tej lokacji.</div><div class="fx-block"><strong>Limit:</strong> 1 / Erę.</div></div>
     <div class="card-lore">Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar.</div>
   </div>
 </article>
@@ -1109,12 +1109,12 @@ body.bw .card-proto {
       <span class="type-badge type-akcja">Akcja</span>
     </div>
     <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
-    <div class="heresy-caption">Podwójny agent zostawia ślad w rejestrze gości.</div>
+    <div class="heresy-caption">Marionetka w obcych szeregach zostawia ślad w rejestrze gości.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect">Jeśli masz <em>Podwójnego</em>:<br><strong>Przesuń</strong> tego <em>Podwójnego</em> o 1 lokację.</div>
-    <div class="card-lore">Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Podwójnego.</div>
+    <div class="card-effect">Jeśli masz <em>Marionetkę</em>:<br><strong>Przesuń</strong> <em>Marionetkę</em> o 1 lokację.</div>
+    <div class="card-lore">Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę.</div>
   </div>
 </article>
 
@@ -1141,12 +1141,12 @@ body.bw .card-proto {
       <div class="name">Echo Alhambry</div>
       <span class="type-badge type-specjalna">Specjalna</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
+    <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
     <div class="heresy-caption">Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Relikwia</em> tylko ze Szlaku Morskiego”:</div><div class="fx-block">Jeśli nie ma <em>Inkwizytora</em> w lokacji lub masz <em>Podwójnego</em> lub Szlak jest otwarty:<br><strong>Ewakuuj</strong> do 2 <em>Relikwii</em> z lokacji Twoich Agentów.</div></div>
+    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Relikwia</em> tylko ze Szlaku Morskiego”: Jeśli nie ma <em>Inkwizytora</em> w lokacji lub masz <em>Marionetkę</em> lub Szlak jest otwarty: <strong>Ewakuuj</strong> do 2 <em>Relikwii</em> z lokacji Twoich Agentów.</div></div>
     <div class="card-lore">As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.</div>
   </div>
 </article>

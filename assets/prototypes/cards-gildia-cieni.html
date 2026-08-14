@@ -172,7 +172,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   border-radius: var(--token-r);
   box-sizing: border-box;
 }
-/* Talia Czasu = karty — osobny blok top-right, nie rozciąga pul żetonów */
+/* Kronika Dziejów = karty — osobny blok top-right, nie rozciąga pul żetonów */
 .time-deck {
   position: absolute;
   top: 0;
@@ -996,8 +996,8 @@ body.bw .card-proto {
       <div class="name">Przekupiony Strażnik</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
-    
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
+    <div class="heresy-caption">Strażnik zna cenę milczenia lepiej niż modlitwy.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
@@ -1044,7 +1044,7 @@ body.bw .card-proto {
       <div class="name">Informator</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
+    <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +1</span></div>
     <div class="heresy-caption">Donosiciel pamięta twarz i zapach srebra.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1141,12 +1141,12 @@ body.bw .card-proto {
       <div class="name">Upadek Domu</div>
       <span class="type-badge type-specjalna">Specjalna</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 3</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +2</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 4</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="badge-ico" aria-hidden="true">🔥</span> +2</span></div>
     <div class="heresy-caption">Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”:</div><div class="fx-block">Jeśli rywal ma ujawniony <em>Hak</em>, <em>Podwójnego</em> lub <em>Autodafé</em> w lokacji kluczowej:<br><strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
+    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”: Jeśli rywal ma ujawniony <em>Hak</em>, <em>Marionetkę</em> lub <em>Autodafé</em> w lokacji kluczowej: <strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
     <div class="card-lore">Egzekucja domu. Stół boi się trzymać ujawnione brudy.</div>
   </div>
 </article>

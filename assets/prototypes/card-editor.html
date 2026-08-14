@@ -1,956 +1,1040 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>INQUISITIO-1492 — Real-time Card Generator & Editor</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  /* Light Parchment Theme System */
-  --bg-light: #e4dad0;
-  --panel-bg: rgba(248, 243, 235, 0.95);
-  --panel-border: rgba(166, 124, 45, 0.45);
-  --gold: #9e7520;
-  --gold-glow: rgba(158, 117, 32, 0.2);
-  --blood: #7a1f1f;
-  --parch: #f4ead7;
-  --line: #2a1c12;
-  --text-main: #1a120c;
-  --text-muted: #5c4c3e;
-  
-  /* Print specs (locked PnP card size) */
-  --card-w: 63mm;
-  --card-h: 88mm;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INQUISITIO-1492 — Real-time Card Generator & Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      /* Light Parchment Theme System */
+      --bg-light: #e4dad0;
+      --panel-bg: rgba(248, 243, 235, 0.95);
+      --panel-border: rgba(166, 124, 45, 0.45);
+      --gold: #9e7520;
+      --gold-glow: rgba(158, 117, 32, 0.2);
+      --blood: #7a1f1f;
+      --parch: #f4ead7;
+      --line: #2a1c12;
+      --text-main: #1a120c;
+      --text-muted: #5c4c3e;
 
-* { box-sizing: border-box; }
+      /* Print specs (locked PnP card size) */
+      --card-w: 63mm;
+      --card-h: 88mm;
+    }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-light);
-  background-image: 
-    radial-gradient(circle at 10% 10%, rgba(122, 31, 31, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 90%, rgba(158, 117, 32, 0.1) 0%, transparent 40%);
-  color: var(--text-main);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-header {
-  background: rgba(244, 234, 215, 0.96);
-  border-bottom: 1px solid var(--panel-border);
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(42, 28, 18, 0.1);
-  z-index: 100;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(122, 31, 31, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(158, 117, 32, 0.1) 0%, transparent 40%);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-header .brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+    header {
+      background: rgba(244, 234, 215, 0.96);
+      border-bottom: 1px solid var(--panel-border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(42, 28, 18, 0.1);
+      z-index: 100;
+    }
 
-header h1 {
-  font-family: 'Cinzel', serif;
-  font-size: 1.35rem;
-  color: var(--blood);
-  margin: 0;
-  letter-spacing: 0.05em;
-}
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
 
-header .nav-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-left: 1.25rem;
-  transition: color 0.2s ease;
-}
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      color: var(--blood);
+      margin: 0;
+      letter-spacing: 0.05em;
+    }
 
-header .nav-links a:hover {
-  color: var(--blood);
-}
+    header .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-left: 1.25rem;
+      transition: color 0.2s ease;
+    }
 
-/* Main Grid Layout */
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(580px, 1.4fr) 300px 1fr;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  flex: 1;
-  max-width: 1920px;
-  margin: 0 auto;
-  width: 100%;
-}
+    header .nav-links a:hover {
+      color: var(--blood);
+    }
 
-@media (max-width: 1350px) {
-  .workspace {
-    grid-template-columns: 1fr 300px;
-  }
-  .code-panel {
-    grid-column: span 2;
-  }
-}
+    /* Main Grid Layout */
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(580px, 1.4fr) 300px 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      flex: 1;
+      max-width: 1920px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-@media (max-width: 900px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-  .preview-section, .code-panel {
-    grid-column: span 1;
-  }
-}
+    @media (max-width: 1350px) {
+      .workspace {
+        grid-template-columns: 1fr 300px;
+      }
 
-/* Glassmorphic Light Panel Base */
-.panel {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  box-shadow: 0 4px 20px rgba(42, 28, 18, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  height: max-content;
-}
+      .code-panel {
+        grid-column: span 2;
+      }
+    }
 
-.panel-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--blood);
-  margin: 0 0 0.4rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1.5px solid var(--panel-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+    @media (max-width: 900px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
 
-/* Toggle Switch Styling */
-.toggle-group {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(158, 117, 32, 0.1);
-  border: 1px solid rgba(158, 117, 32, 0.3);
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-}
+      .preview-section,
+      .code-panel {
+        grid-column: span 1;
+      }
+    }
 
-.toggle-label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
+    /* Glassmorphic Light Panel Base */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 20px rgba(42, 28, 18, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      height: max-content;
+    }
 
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-}
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--blood);
+      margin: 0 0 0.4rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1.5px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+    /* Toggle Switch Styling */
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(158, 117, 32, 0.1);
+      border: 1px solid rgba(158, 117, 32, 0.3);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+    }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #ccc;
-  transition: .3s;
-  border-radius: 24px;
-}
+    .toggle-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .3s;
-  border-radius: 50%;
-}
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
 
-input:checked + .slider {
-  background-color: var(--blood);
-}
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-input:checked + .slider:before {
-  transform: translateX(20px);
-}
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 24px;
+    }
 
-/* Form Controls */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.35rem;
-}
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
 
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.75rem;
-}
+    input:checked+.slider {
+      background-color: var(--blood);
+    }
 
-.form-row > .form-group {
-  flex: 1 1 150px;
-  min-width: 120px;
-}
+    input:checked+.slider:before {
+      transform: translateX(20px);
+    }
 
-.form-group-short {
-  flex: 0 0 110px !important;
-  min-width: 90px !important;
-}
+    /* Form Controls */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 0.35rem;
+    }
 
-.form-group-medium {
-  flex: 0 1 180px !important;
-  min-width: 140px !important;
-}
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0.75rem;
+    }
 
-.checkbox-item {
-  flex: 0 0 auto !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 0.4rem !important;
-  cursor: pointer;
-  user-select: none;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin: 0;
-  height: 38px;
-}
+    .form-row>.form-group {
+      flex: 1 1 150px;
+      min-width: 120px;
+    }
 
-.checkbox-item input {
-  width: auto !important;
-  accent-color: var(--blood);
-}
+    .form-group-short {
+      flex: 0 0 110px !important;
+      min-width: 90px !important;
+    }
 
-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-  height: 1.1rem;
-  margin-bottom: 0.15rem;
-}
+    .form-group-medium {
+      flex: 0 1 180px !important;
+      min-width: 140px !important;
+    }
 
-input[type="text"],
-input[type="number"],
-select {
-  background: #ffffff;
-  border: 1px solid rgba(42, 28, 18, 0.3);
-  border-radius: 6px;
-  color: var(--text-main);
-  padding: 0 0.65rem;
-  height: 38px;
-  box-sizing: border-box;
-  font-size: 0.88rem;
-  font-family: inherit;
-  transition: all 0.2s ease;
-  width: 100%;
-}
+    .checkbox-item {
+      flex: 0 0 auto !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 0.4rem !important;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin: 0;
+      height: 38px;
+    }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--blood);
-  box-shadow: 0 0 6px rgba(122, 31, 31, 0.2);
-}
+    .checkbox-item input {
+      width: auto !important;
+      accent-color: var(--blood);
+    }
 
-textarea {
-  resize: vertical;
-  min-height: 60px;
-}
+    label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+      height: 1.1rem;
+      margin-bottom: 0.15rem;
+    }
 
-/* Tags Grid */
-.tags-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.35rem;
-  max-height: 150px;
-  overflow-y: auto;
-  background: #ffffff;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid rgba(42, 28, 18, 0.25);
-}
+    input[type="text"],
+    input[type="number"],
+    select {
+      background: #ffffff;
+      border: 1px solid rgba(42, 28, 18, 0.3);
+      border-radius: 6px;
+      color: var(--text-main);
+      padding: 0 0.65rem;
+      height: 38px;
+      box-sizing: border-box;
+      font-size: 0.88rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
 
-.tag-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-  user-select: none;
-}
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--blood);
+      box-shadow: 0 0 6px rgba(122, 31, 31, 0.2);
+    }
 
-.tag-checkbox input {
-  accent-color: var(--blood);
-}
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
 
-/* Live Card Preview Section */
-.preview-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
+    /* Tags Grid */
+    .tags-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.35rem;
+      max-height: 150px;
+      overflow-y: auto;
+      background: #ffffff;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(42, 28, 18, 0.25);
+    }
 
-.card-wrapper {
-  perspective: 1000px;
-  padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 12px;
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 6px 18px rgba(42, 28, 18, 0.08);
-}
+    .tag-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+    }
 
-/* Card Visual CSS (Direct match with PnP CSS) */
-.card-proto {
-  position: relative;
-  width: var(--card-w);
-  height: var(--card-h);
-  border: 0.5mm solid var(--line);
-  background: var(--parch);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  color: var(--line);
-  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-}
+    .tag-checkbox input {
+      accent-color: var(--blood);
+    }
 
-.card-proto::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 1.4mm;
-  background: var(--faction-edge, var(--blood));
-  z-index: 2;
-}
+    /* Live Card Preview Section */
+    .preview-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
 
-.card-proto .hdr {
-  padding: 2mm 2.5mm 1.2mm 3.2mm;
-  border-bottom: 0.35mm solid var(--line);
-  background: rgba(255,255,255,0.35);
-  flex-shrink: 0;
-}
+    .card-wrapper {
+      perspective: 1000px;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 6px 18px rgba(42, 28, 18, 0.08);
+    }
 
-.card-proto .hdr-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.5mm;
-}
+    /* Card Visual CSS (Direct match with PnP CSS) */
+    .card-proto {
+      position: relative;
+      width: var(--card-w);
+      height: var(--card-h);
+      border: 0.5mm solid var(--line);
+      background: var(--parch);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      color: var(--line);
+      font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    }
 
-.card-proto .name {
-  font-size: 12pt;
-  font-weight: bold;
-  color: var(--blood);
-  line-height: 1.15;
-  flex: 1 1 auto;
-}
+    .card-proto::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1.4mm;
+      background: var(--faction-edge, var(--blood));
+      z-index: 2;
+    }
 
-.card-proto .type-badge {
-  flex: 0 0 auto;
-  font-size: 6.5pt;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 1mm;
-  padding: 0.4mm 1.1mm;
-  border: 0.25mm solid rgba(42,28,18,0.45);
-  background: rgba(255,255,255,0.65);
-}
+    .card-proto .hdr {
+      padding: 2mm 2.5mm 1.2mm 3.2mm;
+      border-bottom: 0.35mm solid var(--line);
+      background: rgba(255, 255, 255, 0.35);
+      flex-shrink: 0;
+    }
 
-.card-proto .type-badge.type-akcja { background: rgba(255,255,255,0.8); }
-.card-proto .type-badge.type-reakcja { background: #d8e4ee; color: #1a3348; }
-.card-proto .type-badge.type-signature { background: #f0dfa8; color: #5c4010; }
+    .card-proto .hdr-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5mm;
+    }
 
-.card-proto .stat-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1mm;
-  margin-top: 1.2mm;
-}
+    .card-proto .name {
+      font-size: 12pt;
+      font-weight: bold;
+      color: var(--blood);
+      line-height: 1.15;
+      flex: 1 1 auto;
+    }
 
-.card-proto .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6mm;
-  font-size: 7.5pt;
-  font-weight: bold;
-  padding: 0.55mm 1.4mm;
-  border-radius: 1.2mm;
-  border: 0.25mm solid rgba(42,28,18,0.4);
-  background: rgba(255,255,255,0.75);
-}
+    .card-proto .type-badge {
+      flex: 0 0 auto;
+      font-size: 6.5pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 1mm;
+      padding: 0.4mm 1.1mm;
+      border: 0.25mm solid rgba(42, 28, 18, 0.45);
+      background: rgba(255, 255, 255, 0.65);
+    }
 
-.coin {
-  display: inline-block;
-  width: 3.4mm; height: 3.4mm;
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #fff6c8 0%, #e8c84a 38%, #c9a227 72%, #8a6a14 100%);
-  border: 0.35mm solid #6a5210;
-}
+    .card-proto .type-badge.type-akcja {
+      background: rgba(255, 255, 255, 0.8);
+    }
 
-.card-proto .badge-gold { background: #f0dfa8; color: #5c4010; }
-.card-proto .badge-heresy-hot { background: #6e1818; color: #fff8f4; border-color: #3a0c0c; }
+    .card-proto .type-badge.type-reakcja {
+      background: #d8e4ee;
+      color: #1a3348;
+    }
 
-.card-art {
-  flex: 0 0 12mm;
-  height: 12mm;
-  border-bottom: 0.35mm solid var(--line);
-  background: repeating-linear-gradient(-45deg, transparent, transparent 2mm, rgba(42,28,18,0.04) 2mm, rgba(42,28,18,0.04) 4mm);
-  box-shadow: inset 0 0 0 0.25mm dashed rgba(42,28,18,0.35);
-}
+    .card-proto .type-badge.type-signature {
+      background: #f0dfa8;
+      color: #5c4010;
+    }
 
-.card-main {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  padding: 2mm 2.5mm 2.2mm 3.2mm;
-}
+    .card-proto .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1mm;
+      margin-top: 1.2mm;
+    }
 
-.card-effect {
-  flex: 1 1 auto;
-  font-size: 10.5pt;
-  line-height: 1.3;
-}
+    .card-proto .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6mm;
+      font-size: 7.5pt;
+      font-weight: bold;
+      padding: 0.55mm 1.4mm;
+      border-radius: 1.2mm;
+      border: 0.25mm solid rgba(42, 28, 18, 0.4);
+      background: rgba(255, 255, 255, 0.75);
+    }
 
-.card-lore {
-  margin-top: auto;
-  padding-top: 1.5mm;
-  border-top: 0.3mm solid rgba(42, 28, 18, 0.28);
-  font-size: 8.5pt;
-  font-style: italic;
-  opacity: 0.8;
-}
+    .coin {
+      display: inline-block;
+      width: 3.4mm;
+      height: 3.4mm;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, #fff6c8 0%, #e8c84a 38%, #c9a227 72%, #8a6a14 100%);
+      border: 0.35mm solid #6a5210;
+    }
 
-.card-proto .heresy-caption {
-  margin-top: 0.8mm;
-  font-size: 7.5pt;
-  line-height: 1.25;
-  color: #6e1818;
-  font-weight: 600;
-}
+    .card-proto .badge-gold {
+      background: #f0dfa8;
+      color: #5c4010;
+    }
 
-/* Faction Color Tints */
-.card-proto.faction-swiete-oficjum { background: #f1ddd6; --faction-edge: #7a1f1f; }
-.card-proto.faction-swiete-oficjum .name { color: #7a1f1f; }
-.card-proto.faction-cienie-al-andalus { background: #dde8e2; --faction-edge: #1e4d3a; }
-.card-proto.faction-cienie-al-andalus .name { color: #1e4d3a; }
-.card-proto.faction-korona-borgiowie { background: #f2e6c8; --faction-edge: #8a6420; }
-.card-proto.faction-korona-borgiowie .name { color: #8a6420; }
-.card-proto.faction-kabala-toledo { background: #e6dde8; --faction-edge: #4a2d5c; }
-.card-proto.faction-kabala-toledo .name { color: #4a2d5c; }
-.card-proto.faction-gildia-cieni { background: #e5dfd2; --faction-edge: #4a3c28; }
-.card-proto.faction-gildia-cieni .name { color: #4a3c28; }
-.card-proto.faction-time { background: #e8e2d4; --faction-edge: #3a2e1c; }
-.card-proto.faction-time .name { color: #3a2e1c; }
+    .card-proto .badge-heresy-hot {
+      background: #6e1818;
+      color: #fff8f4;
+      border-color: #3a0c0c;
+    }
 
-/* Code Output Panels */
-.code-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
+    .card-art {
+      flex: 0 0 12mm;
+      height: 12mm;
+      border-bottom: 0.35mm solid var(--line);
+      background: repeating-linear-gradient(-45deg, transparent, transparent 2mm, rgba(42, 28, 18, 0.04) 2mm, rgba(42, 28, 18, 0.04) 4mm);
+      box-shadow: inset 0 0 0 0.25mm dashed rgba(42, 28, 18, 0.35);
+    }
 
-.code-block-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--blood);
-  margin-bottom: 0.35rem;
-}
+    .card-main {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      padding: 2mm 2.5mm 2.2mm 3.2mm;
+    }
 
-.btn-copy {
-  background: var(--blood);
-  border: 1px solid var(--blood);
-  color: #ffffff;
-  padding: 0.25rem 0.65rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+    .card-effect {
+      flex: 1 1 auto;
+      font-size: 10.5pt;
+      line-height: 1.3;
+    }
 
-.btn-copy:hover {
-  background: #5a1616;
-}
+    .card-lore {
+      margin-top: auto;
+      padding-top: 1.5mm;
+      border-top: 0.3mm solid rgba(42, 28, 18, 0.28);
+      font-size: 8.5pt;
+      font-style: italic;
+      opacity: 0.8;
+    }
 
-pre.code-out {
-  background: #1a120c;
-  border: 1px solid rgba(42, 28, 18, 0.4);
-  border-radius: 6px;
-  padding: 0.75rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.83rem;
-  color: #a8e6cf;
-  white-space: pre-wrap;
-  word-break: break-all;
-  margin: 0;
-  max-height: 230px;
-  overflow-y: auto;
-}
+    .card-proto .heresy-caption {
+      margin-top: 0.8mm;
+      font-size: 7.5pt;
+      line-height: 1.25;
+      color: #6e1818;
+      font-weight: 600;
+    }
 
-/* Toast Notification */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background: var(--blood);
-  color: #ffffff;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  font-weight: 600;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  transform: translateY(100px);
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+    /* Faction Color Tints */
+    .card-proto.faction-swiete-oficjum {
+      background: #f1ddd6;
+      --faction-edge: #7a1f1f;
+    }
 
-.toast.show {
-  transform: translateY(0);
-  opacity: 1;
-}
-</style>
+    .card-proto.faction-swiete-oficjum .name {
+      color: #7a1f1f;
+    }
+
+    .card-proto.faction-cienie-al-andalus {
+      background: #dde8e2;
+      --faction-edge: #1e4d3a;
+    }
+
+    .card-proto.faction-cienie-al-andalus .name {
+      color: #1e4d3a;
+    }
+
+    .card-proto.faction-korona-borgiowie {
+      background: #f2e6c8;
+      --faction-edge: #8a6420;
+    }
+
+    .card-proto.faction-korona-borgiowie .name {
+      color: #8a6420;
+    }
+
+    .card-proto.faction-kabala-toledo {
+      background: #e6dde8;
+      --faction-edge: #4a2d5c;
+    }
+
+    .card-proto.faction-kabala-toledo .name {
+      color: #4a2d5c;
+    }
+
+    .card-proto.faction-gildia-cieni {
+      background: #e5dfd2;
+      --faction-edge: #4a3c28;
+    }
+
+    .card-proto.faction-gildia-cieni .name {
+      color: #4a3c28;
+    }
+
+    .card-proto.faction-time {
+      background: #e8e2d4;
+      --faction-edge: #3a2e1c;
+    }
+
+    .card-proto.faction-time .name {
+      color: #3a2e1c;
+    }
+
+    /* Code Output Panels */
+    .code-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--blood);
+      margin-bottom: 0.35rem;
+    }
+
+    .btn-copy {
+      background: var(--blood);
+      border: 1px solid var(--blood);
+      color: #ffffff;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-copy:hover {
+      background: #5a1616;
+    }
+
+    pre.code-out {
+      background: #1a120c;
+      border: 1px solid rgba(42, 28, 18, 0.4);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.83rem;
+      color: #a8e6cf;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 0;
+      max-height: 230px;
+      overflow-y: auto;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--blood);
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="brand">
-    <h1>INQUISITIO-1492 — Generator Kart (Jasny Motyw)</h1>
-  </div>
-  <div class="nav-links">
-    <a href="index.html">← Indeks Prototypów</a>
-    <a href="player-boards.html">Planszetki</a>
-    <a href="verdict.html">Werdykt</a>
-  </div>
-</header>
-
-<div class="workspace">
-  
-  <!-- LEFT: Form Controls -->
-  <div class="panel">
-    <div class="panel-title">
-      <span>Edycja Parametrów</span>
-      <span style="font-size: 0.75rem; color: var(--text-muted)">Single Source Sync</span>
+  <header>
+    <div class="brand">
+      <h1>INQUISITIO-1492 — Generator Kart (Jasny Motyw)</h1>
     </div>
-
-    <!-- Card selector dropdown to load existing cards -->
-    <div class="form-group" style="background: rgba(138, 28, 28, 0.06); padding: 0.75rem 0.9rem; border-radius: 6px; border: 1.5px solid var(--blood); margin-bottom: 0.9rem;">
-      <label for="card-selector" style="font-weight: 700; color: var(--blood); font-size: 0.85rem;">📂 Wczytaj istniejącą kartę do edycji (50 kart):</label>
-      <select id="card-selector" onchange="loadSelectedCard(this.value)" style="font-weight: 600; font-size: 0.9rem; margin-top: 0.3rem;">
-        <option value="">-- Wybierz kartę z talii / Stwórz nową --</option>
-        <optgroup label="Święte Oficjum (SO)">
-          <option value="so-01">SO-01: Patrol Familiariuszy (Akcja)</option>
-          <option value="so-02">SO-02: Skarbiec Trybunału (Akcja)</option>
-          <option value="so-03">SO-03: Podejrzenie (Akcja)</option>
-          <option value="so-04">SO-04: Publiczne Ostrzeżenie (Akcja)</option>
-          <option value="so-05">SO-05: Wezwanie do Trybunału (Reakcja)</option>
-          <option value="so-06">SO-06: Areszt Trybunalski (Akcja)</option>
-          <option value="so-07">SO-07: Przesłuchanie Oficjum (Akcja)</option>
-          <option value="so-08">SO-08: Nasłanie Inkwizytora (Akcja)</option>
-          <option value="so-09">SO-09: Świadek Koronny (Akcja)</option>
-          <option value="so-10">SO-10: Oczyść Miasto (Signature)</option>
-        </optgroup>
-        <optgroup label="Cienie Al-Andalus (CAA)">
-          <option value="caa-01">CAA-01: Przejście Podziemiami (Akcja)</option>
-          <option value="caa-02">CAA-02: Złoto z Kryjówki (Akcja)</option>
-          <option value="caa-03">CAA-03: Cień na Rynku (Akcja)</option>
-          <option value="caa-04">CAA-04: Fałszywy Trop (Akcja)</option>
-          <option value="caa-05">CAA-05: Ukryty Kurier (Akcja)</option>
-          <option value="caa-06">CAA-06: Ucieczka z Lochów (Akcja)</option>
-          <option value="caa-07">CAA-07: Szantaż Bractwa (Akcja)</option>
-          <option value="caa-08">CAA-08: Kaptur Nocy (Akcja)</option>
-          <option value="caa-09">CAA-09: Kurier Relikwii (Akcja)</option>
-          <option value="caa-10">CAA-10: Echo Alhambry (Signature)</option>
-        </optgroup>
-        <optgroup label="Korona Borgiowie (KB)">
-          <option value="kb-01">KB-01: Rozkaz Dworu (Akcja)</option>
-          <option value="kb-02">KB-02: Pobór Podatków (Akcja)</option>
-          <option value="kb-03">KB-03: Plotka Dworska (Akcja)</option>
-          <option value="kb-04">KB-04: Faworyt Dworu (Akcja)</option>
-          <option value="kb-05">KB-05: List Żelazny (Akcja)</option>
-          <option value="kb-06">KB-06: Areszt Królewski (Akcja)</option>
-          <option value="kb-07">KB-07: Szantaż Pieczęcią (Akcja)</option>
-          <option value="kb-08">KB-08: Przekupstwo Sędziego (Akcja)</option>
-          <option value="kb-09">KB-09: Dekret Królewski (Signature)</option>
-          <option value="kb-10">KB-10: Pieczęć Korony (Signature)</option>
-        </optgroup>
-        <optgroup label="Kabała z Toledo (KT)">
-          <option value="kt-01">KT-01: Rytuał Przejścia (Akcja)</option>
-          <option value="kt-02">KT-02: Transmutacja Złota (Akcja)</option>
-          <option value="kt-03">KT-03: Zakazana Wiedza (Akcja)</option>
-          <option value="kt-04">KT-04: Zwierciadło Herezji (Akcja)</option>
-          <option value="kt-05">KT-05: Wskazówka Cyklu (Akcja)</option>
-          <option value="kt-06">KT-06: Przesłuchanie Imienia (Akcja)</option>
-          <option value="kt-07">KT-07: Archiwum Ukryte (Akcja)</option>
-          <option value="kt-08">KT-08: Areszt Wiedzy (Akcja)</option>
-          <option value="kt-09">KT-09: Fragment Kodeksu (Akcja)</option>
-          <option value="kt-10">KT-10: Pieczęć Salomona (Signature)</option>
-        </optgroup>
-        <optgroup label="Gildia Cieni (GC)">
-          <option value="gc-01">GC-01: Przekupiony Strażnik (Akcja)</option>
-          <option value="gc-02">GC-02: Czarny Rynek (Akcja)</option>
-          <option value="gc-03">GC-03: Podrzucenie Księgi (Akcja)</option>
-          <option value="gc-04">GC-04: Informator (Akcja)</option>
-          <option value="gc-05">GC-05: Fałszywy Świadek (Reakcja)</option>
-          <option value="gc-06">GC-06: Szantaż (Akcja)</option>
-          <option value="gc-07">GC-07: Skrytobójstwo (Akcja)</option>
-          <option value="gc-08">GC-08: Zatrute Złoto (Akcja)</option>
-          <option value="gc-09">GC-09: Lista Dłużników (Akcja)</option>
-          <option value="gc-10">GC-10: Upadek Domu (Signature)</option>
-        </optgroup>
-      </select>
+    <div class="nav-links">
+      <a href="index.html">← Indeks Prototypów</a>
+      <a href="player-boards.html">Planszetki</a>
+      <a href="verdict.html">Werdykt</a>
     </div>
+  </header>
 
-    <!-- Auto-generation Toggle Switch -->
-    <div class="toggle-group">
-      <span class="toggle-label">Auto-generacja tekstu efektu</span>
-      <label class="switch">
-        <input type="checkbox" id="auto-text-toggle" checked onchange="handleAutoToggle()">
-        <span class="slider"></span>
-      </label>
-    </div>
+  <div class="workspace">
 
-    <div class="form-row">
-      <div class="form-group form-group-short">
-        <label for="card-id">ID Karty</label>
-        <input type="text" id="card-id" value="so-08" placeholder="so-08"/>
+    <!-- LEFT: Form Controls -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>Edycja Parametrów</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted)">Single Source Sync</span>
       </div>
-      <div class="form-group form-group-medium">
-        <label for="card-faction">Frakcja</label>
-        <select id="card-faction">
-          <option value="swiete-oficjum" selected>Święte Oficjum</option>
-          <option value="cienie-al-andalus">Cienie Al-Andalus</option>
-          <option value="korona-borgiowie">Korona Borgiowie</option>
-          <option value="kabala-toledo">Kabała z Toledo</option>
-          <option value="gildia-cieni">Gildia Cieni</option>
-          <option value="time">Talia Czasu</option>
-        </select>
-      </div>
-      <div class="form-group form-group-medium">
-        <label for="card-type">Typ Karty</label>
-        <select id="card-type">
-          <option value="akcja" selected>Akcja</option>
-          <option value="reakcja">Reakcja</option>
-          <option value="signature">Specjalna (Signature)</option>
-        </select>
-      </div>
-    </div>
 
-    <div class="form-row">
-      <div class="form-group" style="flex: 1 1 200px;">
-        <label for="card-name">Nazwa Karty</label>
-        <input type="text" id="card-name" value="Nasłanie Inkwizytora" placeholder="Nazwa karty..."/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-layer">Warstwa</label>
-        <select id="card-layer">
-          <option value="A">Warstwa A</option>
-          <option value="B" selected>Warstwa B</option>
-          <option value="C">Warstwa C</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group form-group-short">
-        <label for="card-cost">Koszt</label>
-        <input type="number" id="card-cost" value="2" min="0" max="5"/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-heresy">Herezja 🔥</label>
-        <input type="number" id="card-heresy" value="1" min="0" max="3"/>
-      </div>
-      <div class="form-group" style="flex: 1 1 180px;">
-        <label for="card-action">Akcja Mechaniczna</label>
-        <select id="card-action">
-          <option value="send_inquisitor" selected>Nasłanie Inkwizytora</option>
-          <option value="move_agent">Ruch Agenta</option>
-          <option value="gain_gold">Zysk Złota</option>
-          <option value="frame_rival">Wskazanie Rywala (+🔥)</option>
-          <option value="arrest">Aresztowanie Agenta</option>
-          <option value="interrogate">Przesłuchanie Agenta</option>
-          <option value="creates_hook">Założenie Haka</option>
-          <option value="evacuate_relic">Ewakuacja Relikwii</option>
-          <option value="move_relic">Przesunięcie Relikwii</option>
-          <option value="free_agent">Uwolnienie z Lochów</option>
-          <option value="grant_fragment">Fragment Kodeksu</option>
-          <option value="autodafe">Ogłoszenie Autodafé</option>
-          <option value="move_double_agent">Ruch Podwójnego Agenta</option>
-          <option value="change_vote">Zmiana Głosu w Werdykcie</option>
-          <option value="mark_fall">Oznaczenie Upadku</option>
-          <option value="force_hook">Wymuszenie Haka</option>
-          <option value="check_victory">Sprawdzenie Zwycięstwa</option>
-          <option value="custom">Ręczna edycja własna</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Advanced Parameters Section Header -->
-    <div style="font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--blood); margin-top: 0.4rem; padding-top: 0.6rem; border-top: 1.5px dashed var(--panel-border); display: flex; align-items: center; justify-content: space-between;">
-      <span>Parametry Dedykowane Akcji</span>
-      <label style="font-size: 0.72rem; font-weight: 600; text-transform: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem;">
-        <input type="checkbox" id="show-all-fields-toggle" onchange="updateLivePreview()">
-        Pokaż wszystkie pola
-      </label>
-    </div>
-
-    <!-- Single Unified Flex-Wrap Container for all Advanced Parameters -->
-    <div class="form-row adv-fields-container">
-      <div class="form-group form-group-medium">
-        <label for="card-target-loc">Strefa Celu</label>
-        <select id="card-target-loc">
-          <option value="" selected>Brak (Domyślna)</option>
-          <option value="same_location">Lokacja własnego Agenta</option>
-          <option value="agent_location">W stronę własnego Agenta</option>
-          <option value="neighbor_location">Sąsiednia lokacja</option>
-          <option value="dungeon">Lochy</option>
-          <option value="palace_or_same_location">Pałac lub lokacja Agenta</option>
-          <option value="dungeon_or_tribunal">Lochy lub Trybunał</option>
-          <option value="guild_or_market">Gildia lub Rynek</option>
+      <!-- Card selector dropdown to load existing cards -->
+      <div class="form-group"
+        style="background: rgba(138, 28, 28, 0.06); padding: 0.75rem 0.9rem; border-radius: 6px; border: 1.5px solid var(--blood); margin-bottom: 0.9rem;">
+        <label for="card-selector" style="font-weight: 700; color: var(--blood); font-size: 0.85rem;">📂 Wczytaj
+          istniejącą kartę do edycji (50 kart):</label>
+        <select id="card-selector" onchange="loadSelectedCard(this.value)"
+          style="font-weight: 600; font-size: 0.9rem; margin-top: 0.3rem;">
+          <option value="">-- Wybierz kartę z talii / Stwórz nową --</option>
+          <optgroup label="Święte Oficjum (SO)">
+            <option value="so-01">SO-01: Patrol Familiariuszy (Akcja)</option>
+            <option value="so-02">SO-02: Skarbiec Trybunału (Akcja)</option>
+            <option value="so-03">SO-03: Podejrzenie (Akcja)</option>
+            <option value="so-04">SO-04: Publiczne Ostrzeżenie (Akcja)</option>
+            <option value="so-05">SO-05: Wezwanie do Trybunału (Reakcja)</option>
+            <option value="so-06">SO-06: Areszt Trybunalski (Akcja)</option>
+            <option value="so-07">SO-07: Przesłuchanie Oficjum (Akcja)</option>
+            <option value="so-08">SO-08: Nasłanie Inkwizytora (Akcja)</option>
+            <option value="so-09">SO-09: Świadek Koronny (Akcja)</option>
+            <option value="so-10">SO-10: Oczyść Miasto (Signature)</option>
+          </optgroup>
+          <optgroup label="Cienie Al-Andalus (CAA)">
+            <option value="caa-01">CAA-01: Przejście Podziemiami (Akcja)</option>
+            <option value="caa-02">CAA-02: Złoto z Kryjówki (Akcja)</option>
+            <option value="caa-03">CAA-03: Cień na Rynku (Akcja)</option>
+            <option value="caa-04">CAA-04: Fałszywy Trop (Akcja)</option>
+            <option value="caa-05">CAA-05: Ukryty Kurier (Akcja)</option>
+            <option value="caa-06">CAA-06: Ucieczka z Lochów (Akcja)</option>
+            <option value="caa-07">CAA-07: Szantaż Bractwa (Akcja)</option>
+            <option value="caa-08">CAA-08: Kaptur Nocy (Akcja)</option>
+            <option value="caa-09">CAA-09: Kurier Relikwii (Akcja)</option>
+            <option value="caa-10">CAA-10: Echo Alhambry (Signature)</option>
+          </optgroup>
+          <optgroup label="Korona Borgiowie (KB)">
+            <option value="kb-01">KB-01: Rozkaz Dworu (Akcja)</option>
+            <option value="kb-02">KB-02: Pobór Podatków (Akcja)</option>
+            <option value="kb-03">KB-03: Plotka Dworska (Akcja)</option>
+            <option value="kb-04">KB-04: Faworyt Dworu (Akcja)</option>
+            <option value="kb-05">KB-05: List Żelazny (Akcja)</option>
+            <option value="kb-06">KB-06: Areszt Królewski (Akcja)</option>
+            <option value="kb-07">KB-07: Szantaż Pieczęcią (Akcja)</option>
+            <option value="kb-08">KB-08: Przekupstwo Sędziego (Akcja)</option>
+            <option value="kb-09">KB-09: Dekret Królewski (Signature)</option>
+            <option value="kb-10">KB-10: Pieczęć Korony (Signature)</option>
+          </optgroup>
+          <optgroup label="Kabała z Toledo (KT)">
+            <option value="kt-01">KT-01: Rytuał Przejścia (Akcja)</option>
+            <option value="kt-02">KT-02: Transmutacja Złota (Akcja)</option>
+            <option value="kt-03">KT-03: Zakazana Wiedza (Akcja)</option>
+            <option value="kt-04">KT-04: Zwierciadło Herezji (Akcja)</option>
+            <option value="kt-05">KT-05: Wskazówka Cyklu (Akcja)</option>
+            <option value="kt-06">KT-06: Przesłuchanie Imienia (Akcja)</option>
+            <option value="kt-07">KT-07: Archiwum Ukryte (Akcja)</option>
+            <option value="kt-08">KT-08: Areszt Wiedzy (Akcja)</option>
+            <option value="kt-09">KT-09: Fragment Kodeksu (Akcja)</option>
+            <option value="kt-10">KT-10: Pieczęć Salomona (Signature)</option>
+          </optgroup>
+          <optgroup label="Gildia Cieni (GC)">
+            <option value="gc-01">GC-01: Przekupiony Strażnik (Akcja)</option>
+            <option value="gc-02">GC-02: Czarny Rynek (Akcja)</option>
+            <option value="gc-03">GC-03: Podrzucenie Księgi (Akcja)</option>
+            <option value="gc-04">GC-04: Informator (Akcja)</option>
+            <option value="gc-05">GC-05: Fałszywy Świadek (Reakcja)</option>
+            <option value="gc-06">GC-06: Szantaż (Akcja)</option>
+            <option value="gc-07">GC-07: Skrytobójstwo (Akcja)</option>
+            <option value="gc-08">GC-08: Zatrute Złoto (Akcja)</option>
+            <option value="gc-09">GC-09: Lista Dłużników (Akcja)</option>
+            <option value="gc-10">GC-10: Upadek Domu (Signature)</option>
+          </optgroup>
         </select>
       </div>
 
-      <div class="form-group form-group-medium">
-        <label for="card-target-scope">Zakres Celu</label>
-        <select id="card-target-scope">
-          <option value="" selected>Dowolny rywal</option>
-          <option value="free_rival">Dowolny rywal</option>
-          <option value="triggering_rival">Rywal wyzwalający</option>
-        </select>
+      <!-- Auto-generation Toggle Switch -->
+      <div class="toggle-group">
+        <span class="toggle-label">Auto-generacja tekstu efektu</span>
+        <label class="switch">
+          <input type="checkbox" id="auto-text-toggle" checked onchange="handleAutoToggle()">
+          <span class="slider"></span>
+        </label>
       </div>
 
-      <div class="form-group form-group-short">
-        <label for="card-target-heresy">Herezja Rywala (+🔥)</label>
-        <input type="number" id="card-target-heresy" value="" min="0" max="5" placeholder="0"/>
-      </div>
-
-      <div class="form-group form-group-short">
-        <label for="card-gold">Zysk Złota</label>
-        <input type="number" id="card-gold" value="" min="0" max="10" placeholder="0"/>
-      </div>
-
-      <div class="form-group form-group-short">
-        <label for="card-agents">Ruchy Agentów</label>
-        <input type="number" id="card-agents" value="" min="0" max="5" placeholder="0"/>
-      </div>
-
-      <div class="form-group form-group-medium">
-        <label for="card-condition">Warunek Aktywacji</label>
-        <select id="card-condition">
-          <option value="" selected>Brak warunku</option>
-          <option value="relic_present">Relikwia w lokacji Agenta</option>
-          <option value="has_double_agent">Posiadanie Podwójnego Agenta</option>
-          <option value="agent_in_dungeon_or_tribunal">Agent w Lochach lub Trybunale</option>
-          <option value="fragments_eq_3">Posiadanie 3 Fragmentów</option>
-          <option value="active_hooks_gte_2">Aktywne Haki na ≥ 2 graczach</option>
-          <option value="no_inquisitor_or_double_or_sea_route">Brak Inkwizytora / Podwójny / Szlak otwarty</option>
-          <option value="has_fragment_and_agent_in_dungeon_or_tribunal">≥1 Fragment i Agent w Lochach/Trybunale</option>
-          <option value="rival_has_hook_or_double_or_autodafe">Rywal ma Hak / Podwójnego / Autodafé</option>
-          <option value="rival_in_dungeon_or_inquisitor">Agent w Lochach lub u Inkwizytora</option>
-          <option value="heresy_gte_4">Herezja rywala ≥ 4</option>
-        </select>
-      </div>
-
-      <div class="form-group form-group-medium">
-        <label for="card-trigger">Trigger Reakcji</label>
-        <select id="card-trigger">
-          <option value="" selected>Brak wyzwalacza</option>
-          <option value="rival_plays_heresy_gte_1">Gdy rywal zagrywa kartę z Herezją ≥ 1</option>
-          <option value="after_verdict_majority_revealed">Po ujawnieniu większości Werdyktu</option>
-        </select>
-      </div>
-
-      <div class="form-group form-group-medium">
-        <label for="card-breaks-rule">Baner Zniesienia Reguły</label>
-        <input type="text" id="card-breaks-rule" value="" placeholder="np. Autodafé z ręki co 2 Ery"/>
-      </div>
-
-      <label class="form-group checkbox-item" id="group-arrest-flag">
-        <input type="checkbox" id="card-arrest-flag">
-        <span>Aresztowanie Agenta</span>
-      </label>
-      <label class="form-group checkbox-item" id="group-creates-hook-flag">
-        <input type="checkbox" id="card-creates-hook-flag">
-        <span>Założenie Haka</span>
-      </label>
-
-      <div class="form-group form-group-short">
-        <label for="card-decree">Dekret Królewski</label>
-        <input type="number" id="card-decree" value="" min="0" max="3" placeholder="0"/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-verdict-weight">Waga Głosu</label>
-        <input type="number" id="card-verdict-weight" value="" min="1" max="3" placeholder="1"/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-max-relics">Max Relikwii</label>
-        <input type="number" id="card-max-relics" value="" min="1" max="2" placeholder="1"/>
-      </div>
-
-      <div class="form-group form-group-medium">
-        <label for="card-on-refusal">Odmowa Haka</label>
-        <select id="card-on-refusal">
-          <option value="" selected>Brak (Odmowa ze złota)</option>
-          <option value="mark_fall">Oznacz Upadek Domu</option>
-        </select>
-      </div>
-      <div class="form-group form-group-medium">
-        <label for="card-bonus-on-heresy">Bonus za Herezję</label>
-        <select id="card-bonus-on-heresy">
-          <option value="" selected>Brak</option>
-          <option value="grant_fragment">Fragment Kodeksu</option>
-        </select>
-      </div>
-
-      <div class="form-group form-group-short">
-        <label for="card-penalty-heresy">Kara Herezji za Odmowę</label>
-        <input type="number" id="card-penalty-heresy" value="" min="1" max="5" placeholder="3"/>
-      </div>
-      <div class="form-group form-group-medium">
-        <label for="card-heresy-band">Pasmo Herezji Kabały</label>
-        <input type="text" id="card-heresy-band" value="" placeholder="4, 6"/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-fallback-heresy">Korekta Herezji</label>
-        <input type="number" id="card-fallback-heresy" value="" min="1" max="10" placeholder="5"/>
-      </div>
-
-      <div class="form-group form-group-short">
-        <label for="card-limit-inq">Limit Nasłania Inkwizytora</label>
-        <input type="number" id="card-limit-inq" value="" min="0" max="1" placeholder="0"/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-limit-int">Limit Przesłuchania</label>
-        <input type="number" id="card-limit-int" value="" min="0" max="1" placeholder="0"/>
-      </div>
-      <div class="form-group form-group-short">
-        <label for="card-limit-era">Limit na Erę</label>
-        <input type="number" id="card-limit-era" value="" min="0" max="1" placeholder="0"/>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Dostępne Tagi (PnP / Filtry)</label>
-      <div class="tags-grid" id="tags-container">
-        <!-- Tag Checkboxes generated by JS -->
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="card-effect">Instrukcja Akcji (Effect)</label>
-      <textarea id="card-effect" placeholder="Tekst wyliczony automatycznie...">Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.</textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="card-heresy-text">Klimat Herezji (Gdy 🔥 > 0)</label>
-      <input type="text" id="card-heresy-text" value="Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze." placeholder="Powód fabularny herezji..."/>
-    </div>
-
-    <div class="form-group">
-      <label for="card-lore">Klimat Przy Stole (Lore)</label>
-      <textarea id="card-lore" placeholder="Szept przy stole...">Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.</textarea>
-    </div>
-  </div>
-
-  <!-- CENTER: Real-time PnP Card Preview -->
-  <div class="preview-section">
-    <div class="panel-title" style="width: 100%; text-align: center;">
-      <span>Podgląd PnP w Czasie Rzeczywistym</span>
-    </div>
-    
-    <div class="card-wrapper">
-      <div class="card-proto faction-swiete-oficjum" id="card-preview">
-        <div class="hdr">
-          <div class="hdr-top">
-            <div class="name" id="prev-name">Nasłanie Inkwizytora</div>
-            <div class="type-badge type-akcja" id="prev-type">AKCJA</div>
-          </div>
-          <div class="stat-row" id="prev-stats">
-            <span class="badge badge-gold" id="prev-cost-badge"><span class="coin"></span><span id="prev-cost">2</span></span>
-            <span class="badge badge-heresy-hot" id="prev-heresy-badge">🔥 +<span id="prev-heresy">1</span></span>
-          </div>
-          <div class="heresy-caption" id="prev-heresy-text">
-            Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.
-          </div>
+      <div class="form-row">
+        <div class="form-group form-group-short">
+          <label for="card-id">ID Karty</label>
+          <input type="text" id="card-id" value="so-08" placeholder="so-08" />
         </div>
-        <div class="card-art"></div>
-        <div class="card-main">
-          <div class="card-effect" id="prev-effect">
-            Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.
-          </div>
-          <div class="card-lore" id="prev-lore">
-            Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
-          </div>
+        <div class="form-group form-group-medium">
+          <label for="card-faction">Frakcja</label>
+          <select id="card-faction">
+            <option value="swiete-oficjum" selected>Święte Oficjum</option>
+            <option value="cienie-al-andalus">Cienie Al-Andalus</option>
+            <option value="korona-borgiowie">Korona Borgiowie</option>
+            <option value="kabala-toledo">Kabała z Toledo</option>
+            <option value="gildia-cieni">Gildia Cieni</option>
+            <option value="time">Kronika Dziejów</option>
+          </select>
+        </div>
+        <div class="form-group form-group-medium">
+          <label for="card-type">Typ Karty</label>
+          <select id="card-type">
+            <option value="akcja" selected>Akcja</option>
+            <option value="reakcja">Reakcja</option>
+            <option value="signature">Specjalna</option>
+          </select>
         </div>
       </div>
-    </div>
-    <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
-      Dokładny wymiar druku PnP: <strong>63 × 88 mm</strong>
-    </div>
-  </div>
 
-  <!-- RIGHT: Generated Code Snippets -->
-  <div class="panel code-panel">
-    <div class="panel-title">
-      <span>Kod Generatora (Single Source)</span>
-    </div>
-
-    <div>
-      <div class="code-block-header">
-        <span>Fragment wpisu do `game_config.yaml`:</span>
-        <button class="btn-copy" onclick="copyCode('yaml-output')">Kopiuj YAML</button>
-      </div>
-      <pre class="code-out" id="yaml-output"></pre>
-    </div>
-
-    <div>
-      <div class="code-block-header">
-        <span>Treść pliku Markdown (`game/cards/.../*.md`):</span>
-        <div style="display: flex; gap: 0.4rem;">
-          <button class="btn-copy" onclick="downloadCardMarkdown()">Pobierz .md</button>
-          <button class="btn-copy" onclick="copyCode('md-output')">Kopiuj Markdown</button>
+      <div class="form-row">
+        <div class="form-group" style="flex: 1 1 200px;">
+          <label for="card-name">Nazwa Karty</label>
+          <input type="text" id="card-name" value="Nasłanie Inkwizytora" placeholder="Nazwa karty..." />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-layer">Warstwa</label>
+          <select id="card-layer">
+            <option value="A">Warstwa A</option>
+            <option value="B" selected>Warstwa B</option>
+            <option value="C">Warstwa C</option>
+          </select>
         </div>
       </div>
-      <pre class="code-out" id="md-output" style="max-height: 270px;"></pre>
+
+      <div class="form-row">
+        <div class="form-group form-group-short">
+          <label for="card-cost">Koszt</label>
+          <input type="number" id="card-cost" value="2" min="0" max="5" />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-heresy">Herezja 🔥</label>
+          <input type="number" id="card-heresy" value="1" min="0" max="3" />
+        </div>
+        <div class="form-group" style="flex: 1 1 180px;">
+          <label for="card-action">Akcja Mechaniczna</label>
+          <select id="card-action">
+            <option value="send_inquisitor" selected>Nasłanie Inkwizytora</option>
+            <option value="move_agent">Ruch Agenta</option>
+            <option value="gain_gold">Zysk Złota</option>
+            <option value="frame_rival">Wskazanie Rywala (+🔥)</option>
+            <option value="arrest">Aresztowanie Agenta</option>
+            <option value="interrogate">Przesłuchanie Agenta</option>
+            <option value="creates_hook">Założenie Haka</option>
+            <option value="evacuate_relic">Ewakuacja Relikwii</option>
+            <option value="move_relic">Przesunięcie Relikwii</option>
+            <option value="free_agent">Uwolnienie z Lochów</option>
+            <option value="grant_fragment">Fragment Kodeksu</option>
+            <option value="autodafe">Ogłoszenie Autodafé</option>
+            <option value="move_double_agent">Ruch Marionetki</option>
+            <option value="change_vote">Zmiana Głosu w Werdykcie</option>
+            <option value="mark_fall">Oznaczenie Upadku</option>
+            <option value="force_hook">Wymuszenie Haka</option>
+            <option value="check_victory">Sprawdzenie Zwycięstwa</option>
+            <option value="custom">Ręczna edycja własna</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Advanced Parameters Section Header -->
+      <div
+        style="font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 700; color: var(--blood); margin-top: 0.4rem; padding-top: 0.6rem; border-top: 1.5px dashed var(--panel-border); display: flex; align-items: center; justify-content: space-between;">
+        <span>Parametry Dedykowane Akcji</span>
+        <label
+          style="font-size: 0.72rem; font-weight: 600; text-transform: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem;">
+          <input type="checkbox" id="show-all-fields-toggle" onchange="updateLivePreview()">
+          Pokaż wszystkie pola
+        </label>
+      </div>
+
+      <!-- Single Unified Flex-Wrap Container for all Advanced Parameters -->
+      <div class="form-row adv-fields-container">
+        <div class="form-group form-group-medium">
+          <label for="card-target-loc">Strefa Celu</label>
+          <select id="card-target-loc">
+            <option value="" selected>Brak (Domyślna)</option>
+            <option value="same_location">Lokacja własnego Agenta</option>
+            <option value="agent_location">W stronę własnego Agenta</option>
+            <option value="neighbor_location">Sąsiednia lokacja</option>
+            <option value="dungeon">Lochy</option>
+            <option value="palace_or_same_location">Pałac lub lokacja Agenta</option>
+            <option value="dungeon_or_tribunal">Lochy lub Trybunał</option>
+            <option value="guild_or_market">Gildia lub Rynek</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-medium">
+          <label for="card-target-scope">Zakres Celu</label>
+          <select id="card-target-scope">
+            <option value="" selected>Dowolny rywal</option>
+            <option value="free_rival">Dowolny rywal</option>
+            <option value="triggering_rival">Rywal wyzwalający</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-short">
+          <label for="card-target-heresy">Herezja Rywala (+🔥)</label>
+          <input type="number" id="card-target-heresy" value="" min="0" max="5" placeholder="0" />
+        </div>
+
+        <div class="form-group form-group-short">
+          <label for="card-gold">Zysk Złota</label>
+          <input type="number" id="card-gold" value="" min="0" max="10" placeholder="0" />
+        </div>
+
+        <div class="form-group form-group-short">
+          <label for="card-agents">Ruchy Agentów</label>
+          <input type="number" id="card-agents" value="" min="0" max="5" placeholder="0" />
+        </div>
+
+        <div class="form-group form-group-medium">
+          <label for="card-condition">Warunek Aktywacji</label>
+          <select id="card-condition">
+            <option value="" selected>Brak warunku</option>
+            <option value="relic_present">Relikwia w lokacji Agenta</option>
+            <option value="has_double_agent">Posiadanie Marionetki</option>
+            <option value="agent_in_dungeon_or_tribunal">Agent w Lochach lub Trybunale</option>
+            <option value="fragments_eq_3">Posiadanie 3 Fragmentów</option>
+            <option value="active_hooks_gte_2">Aktywne Haki na ≥ 2 graczach</option>
+            <option value="no_inquisitor_or_double_or_sea_route">Brak Inkwizytora / Marionetka / Szlak otwarty</option>
+            <option value="has_fragment_and_agent_in_dungeon_or_tribunal">≥1 Fragment i Agent w Lochach/Trybunale
+            </option>
+            <option value="rival_has_hook_or_double_or_autodafe">Rywal ma Hak / Marionetkę / Autodafé</option>
+            <option value="rival_in_dungeon_or_inquisitor">Agent w Lochach lub u Inkwizytora</option>
+            <option value="heresy_gte_4">Herezja rywala ≥ 4</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-medium">
+          <label for="card-trigger">Trigger Reakcji</label>
+          <select id="card-trigger">
+            <option value="" selected>Brak wyzwalacza</option>
+            <option value="rival_plays_heresy_gte_1">Gdy rywal zagrywa kartę z Herezją ≥ 1</option>
+            <option value="after_verdict_majority_revealed">Po ujawnieniu większości Werdyktu</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-medium">
+          <label for="card-breaks-rule">Baner Zniesienia Reguły</label>
+          <input type="text" id="card-breaks-rule" value="" placeholder="np. Autodafé z ręki co 2 Ery" />
+        </div>
+
+        <label class="form-group checkbox-item" id="group-arrest-flag">
+          <input type="checkbox" id="card-arrest-flag">
+          <span>Aresztowanie Agenta</span>
+        </label>
+        <label class="form-group checkbox-item" id="group-creates-hook-flag">
+          <input type="checkbox" id="card-creates-hook-flag">
+          <span>Założenie Haka</span>
+        </label>
+
+        <div class="form-group form-group-short">
+          <label for="card-decree">Dekret Królewski</label>
+          <input type="number" id="card-decree" value="" min="0" max="3" placeholder="0" />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-verdict-weight">Waga Głosu</label>
+          <input type="number" id="card-verdict-weight" value="" min="1" max="3" placeholder="1" />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-max-relics">Max Relikwii</label>
+          <input type="number" id="card-max-relics" value="" min="1" max="2" placeholder="1" />
+        </div>
+
+        <div class="form-group form-group-medium">
+          <label for="card-on-refusal">Odmowa Haka</label>
+          <select id="card-on-refusal">
+            <option value="" selected>Brak (Odmowa ze złota)</option>
+            <option value="mark_fall">Oznacz Upadek Domu</option>
+          </select>
+        </div>
+        <div class="form-group form-group-medium">
+          <label for="card-bonus-on-heresy">Bonus za Herezję</label>
+          <select id="card-bonus-on-heresy">
+            <option value="" selected>Brak</option>
+            <option value="grant_fragment">Fragment Kodeksu</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-short">
+          <label for="card-penalty-heresy">Kara Herezji za Odmowę</label>
+          <input type="number" id="card-penalty-heresy" value="" min="1" max="5" placeholder="3" />
+        </div>
+        <div class="form-group form-group-medium">
+          <label for="card-heresy-band">Pasmo Herezji Kabały</label>
+          <input type="text" id="card-heresy-band" value="" placeholder="4, 6" />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-fallback-heresy">Korekta Herezji</label>
+          <input type="number" id="card-fallback-heresy" value="" min="1" max="10" placeholder="5" />
+        </div>
+
+        <div class="form-group form-group-short">
+          <label for="card-limit-inq">Limit Nasłania Inkwizytora</label>
+          <input type="number" id="card-limit-inq" value="" min="0" max="1" placeholder="0" />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-limit-int">Limit Przesłuchania</label>
+          <input type="number" id="card-limit-int" value="" min="0" max="1" placeholder="0" />
+        </div>
+        <div class="form-group form-group-short">
+          <label for="card-limit-era">Limit na Erę</label>
+          <input type="number" id="card-limit-era" value="" min="0" max="1" placeholder="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Dostępne Tagi (PnP / Filtry)</label>
+        <div class="tags-grid" id="tags-container">
+          <!-- Tag Checkboxes generated by JS -->
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="card-effect">Instrukcja Akcji (Effect)</label>
+        <textarea id="card-effect"
+          placeholder="Tekst wyliczony automatycznie...">Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="card-heresy-text">Klimat Herezji (Gdy 🔥 > 0)</label>
+        <input type="text" id="card-heresy-text"
+          value="Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze."
+          placeholder="Powód fabularny herezji..." />
+      </div>
+
+      <div class="form-group">
+        <label for="card-lore">Klimat Przy Stole (Lore)</label>
+        <textarea id="card-lore"
+          placeholder="Szept przy stole...">Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.</textarea>
+      </div>
     </div>
+
+    <!-- CENTER: Real-time PnP Card Preview -->
+    <div class="preview-section">
+      <div class="panel-title" style="width: 100%; text-align: center;">
+        <span>Podgląd PnP w Czasie Rzeczywistym</span>
+      </div>
+
+      <div class="card-wrapper">
+        <div class="card-proto faction-swiete-oficjum" id="card-preview">
+          <div class="hdr">
+            <div class="hdr-top">
+              <div class="name" id="prev-name">Nasłanie Inkwizytora</div>
+              <div class="type-badge type-akcja" id="prev-type">AKCJA</div>
+            </div>
+            <div class="stat-row" id="prev-stats">
+              <span class="badge badge-gold" id="prev-cost-badge"><span class="coin"></span><span
+                  id="prev-cost">2</span></span>
+              <span class="badge badge-heresy-hot" id="prev-heresy-badge">🔥 +<span id="prev-heresy">1</span></span>
+            </div>
+            <div class="heresy-caption" id="prev-heresy-text">
+              Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.
+            </div>
+          </div>
+          <div class="card-art"></div>
+          <div class="card-main">
+            <div class="card-effect" id="prev-effect">
+              Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę.
+            </div>
+            <div class="card-lore" id="prev-lore">
+              Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+        Dokładny wymiar druku PnP: <strong>63 × 88 mm</strong>
+      </div>
+    </div>
+
+    <!-- RIGHT: Generated Code Snippets -->
+    <div class="panel code-panel">
+      <div class="panel-title">
+        <span>Kod Generatora (Single Source)</span>
+      </div>
+
+      <div>
+        <div class="code-block-header">
+          <span>Fragment wpisu do `game_config.yaml`:</span>
+          <button class="btn-copy" onclick="copyCode('yaml-output')">Kopiuj YAML</button>
+        </div>
+        <pre class="code-out" id="yaml-output"></pre>
+      </div>
+
+      <div>
+        <div class="code-block-header">
+          <span>Treść pliku Markdown (`game/cards/.../*.md`):</span>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="btn-copy" onclick="downloadCardMarkdown()">Pobierz .md</button>
+            <button class="btn-copy" onclick="copyCode('md-output')">Kopiuj Markdown</button>
+          </div>
+        </div>
+        <pre class="code-out" id="md-output" style="max-height: 270px;"></pre>
+      </div>
+    </div>
+
   </div>
 
-</div>
+  <div class="toast" id="toast">Skopiowano do schowka!</div>
 
-<div class="toast" id="toast">Skopiowano do schowka!</div>
-
-<script>
-const CARDS_DATABASE = {
+  <script>
+    const CARDS_DATABASE = {
   "so-01": {
     "name": "Patrol Familiariuszy",
     "type": "akcja",
@@ -1202,8 +1286,8 @@ const CARDS_DATABASE = {
       "double",
       "heresy"
     ],
-    "heresy_text": "Podwójny agent zostawia ślad w rejestrze gości.",
-    "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Podwójnego."
+    "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
+    "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
   },
   "caa-09": {
     "name": "Kurier Relikwii",
@@ -1464,7 +1548,7 @@ const CARDS_DATABASE = {
       "interrogation",
       "fragment"
     ],
-    "lore": "Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Podwójnego.
+    "lore": "Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Marionetki.
 "
   },
   "kt-07": {
@@ -1674,523 +1758,524 @@ const CARDS_DATABASE = {
   }
 };
 
-const AVAILABLE_TAGS = [
-  'move', 'gold', 'heresy', 'relic', 'inquisitor', 'hook', 
-  'decree', 'verdict', 'fragment', 'interrogation', 'autodafe', 
-  'double', 'fall', 'reaction', 'signature', 'edict'
-];
+    const AVAILABLE_TAGS = [
+      'move', 'gold', 'heresy', 'relic', 'inquisitor', 'hook',
+      'decree', 'verdict', 'fragment', 'interrogation', 'autodafe',
+      'double', 'fall', 'reaction', 'signature', 'edict'
+    ];
 
-function declensionPl(n, s1, s2, s3) {
-  if (n === 1) return s1;
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return s2;
-  return s3;
-}
-
-// Exact 1:1 Port of Python generate_card_effect_text from tools/pnp/generate_card_text.py
-function computeEffectText(spec) {
-  const parts = [];
-  const cid = spec.id;
-  const act = spec.action;
-  const tloc = spec.target_loc;
-  const gold = spec.gold;
-  const agents = spec.agents;
-  const theresy = spec.target_heresy;
-  const condition = spec.condition;
-  const trigger = spec.trigger;
-  const breaksRule = spec.breaks_rule;
-
-  // 1. Breaks rule banner
-  if (breaksRule) {
-    parts.push(`ŁAMIE REGUŁĘ: ${breaksRule}.`);
-  }
-
-  // 2. Trigger & Condition Leads
-  if (trigger === "rival_plays_heresy_gte_1") {
-    parts.push("Jeśli rywal zagrywa kartę z Herezją ≥ 1:");
-  } else if (trigger === "after_verdict_majority_revealed") {
-    parts.push("Podczas Werdyktu, po ujawnieniu większości:");
-  }
-
-  if (condition === "relic_present") {
-    parts.push("Jeśli w lokacji Twojego Agenta jest Relikwia:");
-  } else if (condition === "has_double_agent") {
-    parts.push("Jeśli masz Podwójnego:");
-  } else if (condition === "heresy_gte_4") {
-    parts.push("Jeśli rywal ma Herezję ≥ 4:");
-  } else if (condition === "agent_in_dungeon_or_tribunal") {
-    parts.push("Jeśli masz Agenta w Lochach lub Trybunale:");
-  } else if (condition === "fragments_eq_3") {
-    parts.push("Jeśli masz 3 Fragmenty");
-  } else if (condition === "active_hooks_gte_2") {
-    parts.push("Jeśli masz aktywne Haki na ≥ 2 graczach:");
-  } else if (condition === "no_inquisitor_or_double_or_sea_route") {
-    parts.push("Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty:");
-  } else if (condition === "has_fragment_and_agent_in_dungeon_or_tribunal") {
-    parts.push("Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale:");
-  } else if (condition === "rival_has_hook_or_double_or_autodafe") {
-    parts.push("Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej:");
-  }
-
-  // 3. Main Action Commands
-  if (act === "move_agent") {
-    if (tloc === "dungeon") {
-      if (agents === 1) parts.push("Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację.");
-      else parts.push("Uwolnij swojego aresztowanego Agenta z Lochów.");
-    } else if (condition === "has_double_agent") {
-      parts.push("Przesuń tego Podwójnego o 1 lokację.");
-    } else if (tloc === "neighbor_location") {
-      parts.push("Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.");
-    } else if (agents === 1) {
-      parts.push("Przesuń swojego Agenta o 1 lokację.");
-    } else if (agents && agents > 1) {
-      parts.push(`Przesuń swojego Agenta o ${agents} ${declensionPl(agents, "lokację", "lokacje", "lokacji")}.`);
-    } else {
-      parts.push("Przesuń swojego Agenta o 1 lokację.");
-    }
-  } else if (act === "gain_gold") {
-    if (gold === 1) parts.push("Zyskaj złoto.");
-    else if (gold && gold >= 2) parts.push(`Zyskaj ${gold} ${declensionPl(gold, "złoto", "złota", "złota")}.`);
-    else parts.push("Zyskaj 2 złota.");
-    if (theresy) parts.push(`Wskaż rywala: +${theresy} Herezja.`);
-  } else if (act === "frame_rival") {
-    if (trigger === "after_verdict_majority_revealed") {
-      parts.push("Zmień swój głos.");
-    } else {
-      const prefix = spec.target_scope === "triggering_rival" ? "Wskaż tego rywala:" : "Wskaż rywala:";
-      const h = theresy || 1;
-      parts.push(`${prefix} +${h} Herezja.`);
-    }
-  } else if (act === "send_inquisitor") {
-    if (tloc === "agent_location") parts.push("Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta.");
-    else if (tloc === "same_location") parts.push("Przesuń Inkwizytora do lokacji ze swoim Agentem.");
-    else parts.push("Przesuń Inkwizytora.");
-  } else if (act === "arrest") {
-    if (tloc === "same_location") parts.push("Aresztuj Agenta rywala w lokacji swojego Agenta.");
-    else if (tloc === "palace_or_same_location") parts.push("Aresztuj Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.");
-    else if (tloc === "dungeon_or_tribunal") parts.push("Aresztuj Agenta rywala w Lochach lub w Trybunale.");
-    else if (tloc === "guild_or_market") parts.push("Aresztuj Agenta rywala w Gildii lub na Rynku.");
-    else parts.push("Aresztuj Agenta rywala.");
-  } else if (act === "interrogate") {
-    if (tloc === "dungeon") parts.push("Wykonaj Przesłuchanie na aresztowanego Agenta rywala.");
-    else if (spec.bonus_on_heresy === "grant_fragment") parts.push("Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment.");
-    else parts.push("Wykonaj Przesłuchanie.");
-  } else if (act === "creates_hook") {
-    if (condition === "rival_has_hook_or_double_or_autodafe") {
-      parts.push("Oznacz Upadek wobec tego rywala.");
-    } else if (spec.penalty_heresy) {
-      const pen = spec.penalty_heresy || 3;
-      parts.push(`Wymuś spełnienie Haka. Odmowa: +${pen} Herezja.`);
-    } else if (condition === "rival_in_dungeon_or_inquisitor") {
-      parts.push("Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.");
-    } else if (condition === "heresy_gte_4") {
-      parts.push("Załóż Hak na rywala z Herezją ≥ 4.");
-    } else if (tloc === "neighbor_location") {
-      parts.push("Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta.");
-    } else if (spec.verdict_weight === 2) {
-      parts.push("W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala.");
-    } else if (agents === 1) {
-      parts.push("Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala.");
-    } else {
-      parts.push("Załóż Hak na rywala.");
+    function declensionPl(n, s1, s2, s3) {
+      if (n === 1) return s1;
+      const mod10 = n % 10;
+      const mod100 = n % 100;
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return s2;
+      return s3;
     }
 
-    if (spec.on_refusal === "mark_fall") parts.push("Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala.");
-  } else if (act === "autodafe") {
-    parts.push("Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos.");
-  } else if (act === "evacuate_relic") {
-    if (spec.max_relics === 2) parts.push("Ewakuuj do 2 Relikwii z lokacji Twoich Agentów.");
-    else parts.push("Ewakuuj Relikwię z tej lokacji.");
-  } else if (act === "check_victory") {
-    if (spec.target_heresy_band && spec.fallback_heresy) {
-      const band = spec.target_heresy_band;
-      const fb = spec.fallback_heresy;
-      parts.push(`i Herezję ${band[0]}–${band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji ${band[0]}–${band[1]}: Ustaw swoją Herezję na ${fb}.`);
-    } else {
-      parts.push("zwycięstwo.");
+    // Exact 1:1 Port of Python generate_card_effect_text from tools/pnp/generate_card_text.py
+    function computeEffectText(spec) {
+      const parts = [];
+      const cid = spec.id;
+      const act = spec.action;
+      const tloc = spec.target_loc;
+      const gold = spec.gold;
+      const agents = spec.agents;
+      const theresy = spec.target_heresy;
+      const condition = spec.condition;
+      const trigger = spec.trigger;
+      const breaksRule = spec.breaks_rule;
+
+      // 1. Breaks rule banner
+      if (breaksRule) {
+        parts.push(`ŁAMIE REGUŁĘ: ${breaksRule}.`);
+      }
+
+      // 2. Trigger & Condition Leads
+      if (trigger === "rival_plays_heresy_gte_1") {
+        parts.push("Jeśli rywal zagrywa kartę z Herezją ≥ 1:");
+      } else if (trigger === "after_verdict_majority_revealed") {
+        parts.push("Podczas Werdyktu, po ujawnieniu większości:");
+      }
+
+      if (condition === "relic_present") {
+        parts.push("Jeśli w lokacji Twojego Agenta jest Relikwia:");
+      } else if (condition === "has_double_agent") {
+        parts.push("Jeśli masz Marionetkę:");
+      } else if (condition === "heresy_gte_4") {
+        parts.push("Jeśli rywal ma Herezję ≥ 4:");
+      } else if (condition === "agent_in_dungeon_or_tribunal") {
+        parts.push("Jeśli masz Agenta w Lochach lub Trybunale:");
+      } else if (condition === "fragments_eq_3") {
+        parts.push("Jeśli masz 3 Fragmenty");
+      } else if (condition === "active_hooks_gte_2") {
+        parts.push("Jeśli masz aktywne Haki na ≥ 2 graczach:");
+      } else if (condition === "no_inquisitor_or_double_or_sea_route") {
+        parts.push("Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty:");
+      } else if (condition === "has_fragment_and_agent_in_dungeon_or_tribunal") {
+        parts.push("Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale:");
+      } else if (condition === "rival_has_hook_or_double_or_autodafe") {
+        parts.push("Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej:");
+      }
+
+      // 3. Main Action Commands
+      if (act === "move_agent") {
+        if (tloc === "dungeon") {
+          if (agents === 1) parts.push("Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację.");
+          else parts.push("Uwolnij swojego aresztowanego Agenta z Lochów.");
+        } else if (condition === "has_double_agent") {
+          parts.push("Przesuń Marionetkę o 1 lokację.");
+        } else if (tloc === "neighbor_location") {
+          parts.push("Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.");
+        } else if (agents === 1) {
+          parts.push("Przesuń swojego Agenta o 1 lokację.");
+        } else if (agents && agents > 1) {
+          parts.push(`Przesuń swojego Agenta o ${agents} ${declensionPl(agents, "lokację", "lokacje", "lokacji")}.`);
+        } else {
+          parts.push("Przesuń swojego Agenta o 1 lokację.");
+        }
+      } else if (act === "gain_gold") {
+        if (gold === 1) parts.push("Zyskaj złoto.");
+        else if (gold && gold >= 2) parts.push(`Zyskaj ${gold} ${declensionPl(gold, "złoto", "złota", "złota")}.`);
+        else parts.push("Zyskaj 2 złota.");
+        if (theresy) parts.push(`Wskaż rywala: +${theresy} Herezja.`);
+      } else if (act === "frame_rival") {
+        if (trigger === "after_verdict_majority_revealed") {
+          parts.push("Zmień swój głos.");
+        } else {
+          const prefix = spec.target_scope === "triggering_rival" ? "Wskaż tego rywala:" : "Wskaż rywala:";
+          const h = theresy || 1;
+          parts.push(`${prefix} +${h} Herezja.`);
+        }
+      } else if (act === "send_inquisitor") {
+        if (tloc === "agent_location") parts.push("Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta.");
+        else if (tloc === "same_location") parts.push("Przesuń Inkwizytora do lokacji ze swoim Agentem.");
+        else parts.push("Przesuń Inkwizytora.");
+      } else if (act === "arrest") {
+        if (tloc === "same_location") parts.push("Aresztuj Agenta rywala w lokacji swojego Agenta.");
+        else if (tloc === "palace_or_same_location") parts.push("Aresztuj Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.");
+        else if (tloc === "dungeon_or_tribunal") parts.push("Aresztuj Agenta rywala w Lochach lub w Trybunale.");
+        else if (tloc === "guild_or_market") parts.push("Aresztuj Agenta rywala w Gildii lub na Rynku.");
+        else parts.push("Aresztuj Agenta rywala.");
+      } else if (act === "interrogate") {
+        if (tloc === "dungeon") parts.push("Wykonaj Przesłuchanie na aresztowanego Agenta rywala.");
+        else if (spec.bonus_on_heresy === "grant_fragment") parts.push("Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment.");
+        else parts.push("Wykonaj Przesłuchanie.");
+      } else if (act === "creates_hook") {
+        if (condition === "rival_has_hook_or_double_or_autodafe") {
+          parts.push("Oznacz Upadek wobec tego rywala.");
+        } else if (spec.penalty_heresy) {
+          const pen = spec.penalty_heresy || 3;
+          parts.push(`Wymuś spełnienie Haka. Odmowa: +${pen} Herezja.`);
+        } else if (condition === "rival_in_dungeon_or_inquisitor") {
+          parts.push("Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.");
+        } else if (condition === "heresy_gte_4") {
+          parts.push("Załóż Hak na rywala z Herezją ≥ 4.");
+        } else if (tloc === "neighbor_location") {
+          parts.push("Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta.");
+        } else if (spec.verdict_weight === 2) {
+          parts.push("W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala.");
+        } else if (agents === 1) {
+          parts.push("Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala.");
+        } else {
+          parts.push("Załóż Hak na rywala.");
+        }
+
+        if (spec.on_refusal === "mark_fall") parts.push("Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala.");
+      } else if (act === "autodafe") {
+        parts.push("Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos.");
+      } else if (act === "evacuate_relic") {
+        if (spec.max_relics === 2) parts.push("Ewakuuj do 2 Relikwii z lokacji Twoich Agentów.");
+        else parts.push("Ewakuuj Relikwię z tej lokacji.");
+      } else if (act === "check_victory") {
+        if (spec.target_heresy_band && spec.fallback_heresy) {
+          const band = spec.target_heresy_band;
+          const fb = spec.fallback_heresy;
+          parts.push(`i Herezję ${band[0]}–${band[1]}: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji ${band[0]}–${band[1]}: Ustaw swoją Herezję na ${fb}.`);
+        } else {
+          parts.push("zwycięstwo.");
+        }
+      } else if (act === "grant_fragment") {
+        parts.push("Zyskaj Fragment.");
+        if (condition === "agent_in_dungeon_or_tribunal") parts.push("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
+      }
+
+      // 4. Anti-AP limits
+      if (spec.inquisitor_send_limit === 1) parts.push("Limit: 1 nasłanie / gracza / Erę.");
+      else if (spec.interrogate_limit === 1) {
+        if (cid === "so-07") parts.push("Limit: 1 / gracza / Erę.");
+        else parts.push("Limit: 1 / Erę.");
+      } else if (spec.kurier_limit === 1 || spec.vote_change_limit === 1) parts.push("Limit: 1 / Erę.");
+      else if (spec.limit_per_era === 1) parts.push("Limit: 1 / Erę.");
+
+      return parts.join(" ").trim();
     }
-  } else if (act === "grant_fragment") {
-    parts.push("Zyskaj Fragment.");
-    if (condition === "agent_in_dungeon_or_tribunal") parts.push("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
-  }
 
-  // 4. Anti-AP limits
-  if (spec.inquisitor_send_limit === 1) parts.push("Limit: 1 nasłanie / gracza / Erę.");
-  else if (spec.interrogate_limit === 1) {
-    if (cid === "so-07") parts.push("Limit: 1 / gracza / Erę.");
-    else parts.push("Limit: 1 / Erę.");
-  } else if (spec.kurier_limit === 1 || spec.vote_change_limit === 1) parts.push("Limit: 1 / Erę.");
-  else if (spec.limit_per_era === 1) parts.push("Limit: 1 / Erę.");
+    // Auto Derive Tags based on Action, Type, and Heresy
+    function computeAutoTags(action, type, heresy) {
+      const tags = new Set();
 
-  return parts.join(" ").trim();
-}
+      switch (action) {
+        case 'move_agent': tags.add('move'); break;
+        case 'gain_gold': tags.add('gold'); break;
+        case 'frame_rival': tags.add('heresy'); break;
+        case 'send_inquisitor': tags.add('inquisitor'); break;
+        case 'arrest': tags.add('arrest'); break;
+        case 'interrogate': tags.add('interrogation'); break;
+        case 'creates_hook': tags.add('hook'); break;
+        case 'evacuate_relic': tags.add('relic'); break;
+        case 'move_relic': tags.add('relic'); tags.add('move'); break;
+        case 'free_agent': tags.add('move'); tags.add('arrest'); break;
+        case 'grant_fragment': tags.add('fragment'); break;
+        case 'autodafe': tags.add('autodafe'); break;
+        case 'move_double_agent': tags.add('double'); break;
+        case 'change_vote': tags.add('reaction'); break;
+        case 'mark_fall': tags.add('fall'); break;
+        case 'force_hook': tags.add('decree'); tags.add('hook'); break;
+        case 'check_victory': tags.add('fragment'); break;
+      }
 
-// Auto Derive Tags based on Action, Type, and Heresy
-function computeAutoTags(action, type, heresy) {
-  const tags = new Set();
-  
-  switch (action) {
-    case 'move_agent': tags.add('move'); break;
-    case 'gain_gold': tags.add('gold'); break;
-    case 'frame_rival': tags.add('heresy'); break;
-    case 'send_inquisitor': tags.add('inquisitor'); break;
-    case 'arrest': tags.add('arrest'); break;
-    case 'interrogate': tags.add('interrogation'); break;
-    case 'creates_hook': tags.add('hook'); break;
-    case 'evacuate_relic': tags.add('relic'); break;
-    case 'move_relic': tags.add('relic'); tags.add('move'); break;
-    case 'free_agent': tags.add('move'); tags.add('arrest'); break;
-    case 'grant_fragment': tags.add('fragment'); break;
-    case 'autodafe': tags.add('autodafe'); break;
-    case 'move_double_agent': tags.add('double'); break;
-    case 'change_vote': tags.add('reaction'); break;
-    case 'mark_fall': tags.add('fall'); break;
-    case 'force_hook': tags.add('decree'); tags.add('hook'); break;
-    case 'check_victory': tags.add('fragment'); break;
-  }
-  
-  if (heresy > 0) tags.add('heresy');
-  if (type === 'signature') tags.add('signature');
-  if (type === 'reakcja') tags.add('reaction');
-  
-  return Array.from(tags);
-}
+      if (heresy > 0) tags.add('heresy');
+      if (type === 'signature') tags.add('signature');
+      if (type === 'reakcja') tags.add('reaction');
 
-// Populate Tags Checkboxes
-const tagsContainer = document.getElementById('tags-container');
-AVAILABLE_TAGS.forEach(tag => {
-  const label = document.createElement('label');
-  label.className = 'tag-checkbox';
-  
-  const defaultChecked = ['inquisitor', 'heresy'].includes(tag);
-  
-  label.innerHTML = `
+      return Array.from(tags);
+    }
+
+    // Populate Tags Checkboxes
+    const tagsContainer = document.getElementById('tags-container');
+    AVAILABLE_TAGS.forEach(tag => {
+      const label = document.createElement('label');
+      label.className = 'tag-checkbox';
+
+      const defaultChecked = ['inquisitor', 'heresy'].includes(tag);
+
+      label.innerHTML = `
     <input type="checkbox" value="${tag}" ${defaultChecked ? 'checked' : ''} onchange="updateLivePreview()">
     <span>${tag}</span>
   `;
-  tagsContainer.appendChild(label);
-});
-
-function handleAutoToggle() {
-  const isAuto = document.getElementById('auto-text-toggle').checked;
-  const actionSelect = document.getElementById('card-action');
-  const effectTextarea = document.getElementById('card-effect');
-  
-  if (isAuto && actionSelect.value !== 'custom') {
-    effectTextarea.setAttribute('readonly', 'readonly');
-    effectTextarea.style.background = '#f2ece4';
-  } else {
-    effectTextarea.removeAttribute('readonly');
-    effectTextarea.style.background = '#ffffff';
-  }
-  updateLivePreview();
-}
-
-const ACTION_FIELDS_MAP = {
-  move_agent: ['card-agents', 'card-target-loc', 'card-condition'],
-  gain_gold: ['card-gold', 'card-target-heresy'],
-  frame_rival: ['card-target-heresy', 'card-target-scope', 'card-trigger'],
-  send_inquisitor: ['card-target-loc', 'card-limit-inq'],
-  arrest: ['card-target-loc', 'card-arrest-flag'],
-  interrogate: ['card-target-loc', 'card-bonus-on-heresy', 'card-limit-int'],
-  creates_hook: ['card-condition', 'card-target-loc', 'card-verdict-weight', 'card-on-refusal', 'card-creates-hook-flag', 'card-penalty-heresy'],
-  autodafe: ['card-breaks-rule'],
-  evacuate_relic: ['card-max-relics', 'card-condition'],
-  check_victory: ['card-decree', 'card-condition', 'card-heresy-band', 'card-fallback-heresy'],
-  grant_fragment: ['card-condition']
-};
-
-function updateActionFieldVisibility() {
-  const action = document.getElementById('card-action').value;
-  const showAll = document.getElementById('show-all-fields-toggle')?.checked || action === 'custom';
-  const allowedFields = ACTION_FIELDS_MAP[action] || [];
-
-  const allAdvFields = [
-    'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents',
-    'card-condition', 'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
-    'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal',
-    'card-bonus-on-heresy', 'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy',
-    'card-limit-inq', 'card-limit-int', 'card-limit-era'
-  ];
-
-  allAdvFields.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const parentGroup = el.closest('.form-group');
-    if (!parentGroup) return;
-
-    const hasVal = el.type === 'checkbox' ? el.checked : Boolean(el.value.trim());
-    if (showAll || allowedFields.includes(id) || hasVal) {
-      parentGroup.style.display = '';
-    } else {
-      parentGroup.style.display = 'none';
-    }
-  });
-
-  // Hide empty .form-row containers when all child form-groups inside are hidden
-  document.querySelectorAll('.panel .form-row').forEach(row => {
-    const groups = Array.from(row.querySelectorAll('.form-group'));
-    if (groups.length > 0) {
-      const anyVisible = groups.some(g => g.style.display !== 'none');
-      row.style.display = anyVisible ? '' : 'none';
-    }
-  });
-}
-
-function updateLivePreview() {
-  updateActionFieldVisibility();
-
-  const isAuto = document.getElementById('auto-text-toggle').checked;
-  const cid = document.getElementById('card-id').value.trim();
-  const faction = document.getElementById('card-faction').value;
-  const name = document.getElementById('card-name').value.trim();
-  const type = document.getElementById('card-type').value;
-  const layer = document.getElementById('card-layer').value;
-  const cost = parseInt(document.getElementById('card-cost').value) || 0;
-  const heresy = parseInt(document.getElementById('card-heresy').value) || 0;
-  const action = document.getElementById('card-action').value;
-
-  // Read all advanced mechanical parameters
-  const target_loc = document.getElementById('card-target-loc').value || undefined;
-  const target_scope = document.getElementById('card-target-scope').value || undefined;
-  const target_heresy = parseInt(document.getElementById('card-target-heresy').value) || undefined;
-  const gold = parseInt(document.getElementById('card-gold').value) || undefined;
-  const agents = parseInt(document.getElementById('card-agents').value) || undefined;
-  const condition = document.getElementById('card-condition').value || undefined;
-  const trigger = document.getElementById('card-trigger').value || undefined;
-  const breaks_rule = document.getElementById('card-breaks-rule').value.trim() || undefined;
-  const arrest = document.getElementById('card-arrest-flag').checked || undefined;
-  const creates_hook = document.getElementById('card-creates-hook-flag').checked || undefined;
-  const spec = {
-    id: cid, action, cost, heresy, target_loc, target_scope, target_heresy, gold, agents,
-    condition, trigger, breaks_rule, arrest, creates_hook, decree,
-    verdict_weight, max_relics, on_refusal, bonus_on_heresy, penalty_heresy,
-    target_heresy_band, fallback_heresy, inquisitor_send_limit, interrogate_limit, limit_per_era
-  };
-
-  const effectTextarea = document.getElementById('card-effect');
-
-  // Handle custom vs auto action & tag state
-  if (action === 'custom') {
-    effectTextarea.removeAttribute('readonly');
-    effectTextarea.style.background = '#ffffff';
-  } else if (isAuto) {
-    effectTextarea.setAttribute('readonly', 'readonly');
-    effectTextarea.style.background = '#f2ece4';
-    effectTextarea.value = computeEffectText(spec);
-    
-    // Auto-derive & sync tags
-    const autoTags = computeAutoTags(action, type, heresy);
-    document.querySelectorAll('#tags-container input[type="checkbox"]').forEach(cb => {
-      cb.checked = autoTags.includes(cb.value);
+      tagsContainer.appendChild(label);
     });
-  }
-  
-  const effect = effectTextarea.value.trim();
-  const heresyText = document.getElementById('card-heresy-text').value.trim();
-  const lore = document.getElementById('card-lore').value.trim();
 
-  // Get Selected Tags
-  const selectedTags = Array.from(document.querySelectorAll('#tags-container input:checked')).map(cb => cb.value);
+    function handleAutoToggle() {
+      const isAuto = document.getElementById('auto-text-toggle').checked;
+      const actionSelect = document.getElementById('card-action');
+      const effectTextarea = document.getElementById('card-effect');
 
-  // Update Visual PnP Card Preview
-  const preview = document.getElementById('card-preview');
-  preview.className = `card-proto faction-${faction}`;
-  
-  document.getElementById('prev-name').textContent = name || 'Bez nazwy';
-  
-  const typeBadge = document.getElementById('prev-type');
-  typeBadge.textContent = type.toUpperCase();
-  typeBadge.className = `type-badge type-${type}`;
+      if (isAuto && actionSelect.value !== 'custom') {
+        effectTextarea.setAttribute('readonly', 'readonly');
+        effectTextarea.style.background = '#f2ece4';
+      } else {
+        effectTextarea.removeAttribute('readonly');
+        effectTextarea.style.background = '#ffffff';
+      }
+      updateLivePreview();
+    }
 
-  const costBadge = document.getElementById('prev-cost-badge');
-  if (cost > 0) {
-    costBadge.style.display = 'inline-flex';
-    document.getElementById('prev-cost').textContent = cost;
-  } else {
-    costBadge.style.display = 'none';
-  }
+    const ACTION_FIELDS_MAP = {
+      move_agent: ['card-agents', 'card-target-loc', 'card-condition'],
+      gain_gold: ['card-gold', 'card-target-heresy'],
+      frame_rival: ['card-target-heresy', 'card-target-scope', 'card-trigger'],
+      send_inquisitor: ['card-target-loc', 'card-limit-inq'],
+      arrest: ['card-target-loc', 'card-arrest-flag'],
+      interrogate: ['card-target-loc', 'card-bonus-on-heresy', 'card-limit-int'],
+      creates_hook: ['card-condition', 'card-target-loc', 'card-verdict-weight', 'card-on-refusal', 'card-creates-hook-flag', 'card-penalty-heresy'],
+      autodafe: ['card-breaks-rule'],
+      evacuate_relic: ['card-max-relics', 'card-condition'],
+      check_victory: ['card-decree', 'card-condition', 'card-heresy-band', 'card-fallback-heresy'],
+      grant_fragment: ['card-condition']
+    };
 
-  const heresyBadge = document.getElementById('prev-heresy-badge');
-  if (heresy > 0) {
-    heresyBadge.style.display = 'inline-flex';
-    document.getElementById('prev-heresy').textContent = heresy;
-  } else {
-    heresyBadge.style.display = 'none';
-  }
+    function updateActionFieldVisibility() {
+      const action = document.getElementById('card-action').value;
+      const showAll = document.getElementById('show-all-fields-toggle')?.checked || action === 'custom';
+      const allowedFields = ACTION_FIELDS_MAP[action] || [];
 
-  document.getElementById('prev-effect').innerHTML = effect.replace(/\n/g, '<br>') || '<em>Brak treści reguły...</em>';
-  
-  const hTextEl = document.getElementById('prev-heresy-text');
-  if (heresy > 0 && heresyText) {
-    hTextEl.style.display = 'block';
-    hTextEl.textContent = heresyText;
-  } else {
-    hTextEl.style.display = 'none';
-  }
+      const allAdvFields = [
+        'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents',
+        'card-condition', 'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
+        'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal',
+        'card-bonus-on-heresy', 'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy',
+        'card-limit-inq', 'card-limit-int', 'card-limit-era'
+      ];
 
-  document.getElementById('prev-lore').textContent = lore;
+      allAdvFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const parentGroup = el.closest('.form-group');
+        if (!parentGroup) return;
 
-  // Generate YAML Snippet for game_config.yaml
-  let yamlStr = `  ${cid}:\n`;
-  yamlStr += `    name: "${name}"\n`;
-  yamlStr += `    type: ${type}\n`;
-  yamlStr += `    layer: ${layer}\n`;
-  yamlStr += `    cost: ${cost}\n`;
-  if (heresy > 0) yamlStr += `    heresy: ${heresy}\n`;
-  if (action !== 'custom') yamlStr += `    action: ${action}\n`;
-  
-  if (target_loc) yamlStr += `    target_loc: ${target_loc}\n`;
-  if (target_scope) yamlStr += `    target_scope: ${target_scope}\n`;
-  if (target_heresy) yamlStr += `    target_heresy: ${target_heresy}\n`;
-  if (gold) yamlStr += `    gold: ${gold}\n`;
-  if (agents) yamlStr += `    agents: ${agents}\n`;
-  if (condition) yamlStr += `    condition: ${condition}\n`;
-  if (trigger) yamlStr += `    trigger: ${trigger}\n`;
-  if (breaks_rule) yamlStr += `    breaks_rule: "${breaks_rule}"\n`;
-  if (arrest) yamlStr += `    arrest: true\n`;
-  if (creates_hook) yamlStr += `    creates_hook: true\n`;
-  if (decree) yamlStr += `    decree: ${decree}\n`;
-  if (verdict_weight) yamlStr += `    verdict_weight: ${verdict_weight}\n`;
-  if (max_relics) yamlStr += `    max_relics: ${max_relics}\n`;
-  if (on_refusal) yamlStr += `    on_refusal: ${on_refusal}\n`;
-  if (bonus_on_heresy) yamlStr += `    bonus_on_heresy: ${bonus_on_heresy}\n`;
-  if (penalty_heresy) yamlStr += `    penalty_heresy: ${penalty_heresy}\n`;
-  if (target_heresy_band) yamlStr += `    target_heresy_band: [${target_heresy_band.join(', ')}]\n`;
-  if (fallback_heresy) yamlStr += `    fallback_heresy: ${fallback_heresy}\n`;
-  if (inquisitor_send_limit) yamlStr += `    inquisitor_send_limit: ${inquisitor_send_limit}\n`;
-  if (interrogate_limit) yamlStr += `    interrogate_limit: ${interrogate_limit}\n`;
-  if (limit_per_era) yamlStr += `    limit_per_era: ${limit_per_era}\n`;
+        const hasVal = el.type === 'checkbox' ? el.checked : Boolean(el.value.trim());
+        if (showAll || allowedFields.includes(id) || hasVal) {
+          parentGroup.style.display = '';
+        } else {
+          parentGroup.style.display = 'none';
+        }
+      });
 
-  if (selectedTags.length > 0) {
-    yamlStr += `    tags:\n`;
-    selectedTags.forEach(t => { yamlStr += `    - ${t}\n`; });
-  }
+      // Hide empty .form-row containers when all child form-groups inside are hidden
+      document.querySelectorAll('.panel .form-row').forEach(row => {
+        const groups = Array.from(row.querySelectorAll('.form-group'));
+        if (groups.length > 0) {
+          const anyVisible = groups.some(g => g.style.display !== 'none');
+          row.style.display = anyVisible ? '' : 'none';
+        }
+      });
+    }
 
-  document.getElementById('yaml-output').textContent = yamlStr;
+    function updateLivePreview() {
+      updateActionFieldVisibility();
 
-  // Generate Markdown File Snippet for game/cards/.../*.md
-  let mdStr = `---\n`;
-  mdStr += `id: ${cid}\n`;
-  mdStr += `name: ${name}\n`;
-  mdStr += `faction: ${faction}\n`;
-  mdStr += `type: ${type}\n`;
-  mdStr += `layer: ${layer}\n`;
-  mdStr += `cost: ${cost}\n`;
-  if (heresy > 0) mdStr += `heresy: ${heresy}\n`;
-  if (selectedTags.length > 0) {
-    mdStr += `tags:\n`;
-    selectedTags.forEach(t => { mdStr += `- ${t}\n`; });
-  }
-  mdStr += `effect: '${effect}'\n`;
-  if (heresy > 0 && heresyText) mdStr += `heresy_text: ${heresyText}\n`;
-  if (lore) mdStr += `lore: ${lore}\n`;
-  mdStr += `---\n`;
+      const isAuto = document.getElementById('auto-text-toggle').checked;
+      const cid = document.getElementById('card-id').value.trim();
+      const faction = document.getElementById('card-faction').value;
+      const name = document.getElementById('card-name').value.trim();
+      const type = document.getElementById('card-type').value;
+      const layer = document.getElementById('card-layer').value;
+      const cost = parseInt(document.getElementById('card-cost').value) || 0;
+      const heresy = parseInt(document.getElementById('card-heresy').value) || 0;
+      const action = document.getElementById('card-action').value;
 
-  document.getElementById('md-output').textContent = mdStr;
-}
+      // Read all advanced mechanical parameters
+      const target_loc = document.getElementById('card-target-loc').value || undefined;
+      const target_scope = document.getElementById('card-target-scope').value || undefined;
+      const target_heresy = parseInt(document.getElementById('card-target-heresy').value) || undefined;
+      const gold = parseInt(document.getElementById('card-gold').value) || undefined;
+      const agents = parseInt(document.getElementById('card-agents').value) || undefined;
+      const condition = document.getElementById('card-condition').value || undefined;
+      const trigger = document.getElementById('card-trigger').value || undefined;
+      const breaks_rule = document.getElementById('card-breaks-rule').value.trim() || undefined;
+      const arrest = document.getElementById('card-arrest-flag').checked || undefined;
+      const creates_hook = document.getElementById('card-creates-hook-flag').checked || undefined;
+      const spec = {
+        id: cid, action, cost, heresy, target_loc, target_scope, target_heresy, gold, agents,
+        condition, trigger, breaks_rule, arrest, creates_hook, decree,
+        verdict_weight, max_relics, on_refusal, bonus_on_heresy, penalty_heresy,
+        target_heresy_band, fallback_heresy, inquisitor_send_limit, interrogate_limit, limit_per_era
+      };
 
-function copyCode(elementId) {
-  const text = document.getElementById(elementId).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const toast = document.getElementById('toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  });
-}
+      const effectTextarea = document.getElementById('card-effect');
 
-function loadSelectedCard(cid) {
-  if (!cid || !CARDS_DATABASE[cid]) return;
-  const card = CARDS_DATABASE[cid];
+      // Handle custom vs auto action & tag state
+      if (action === 'custom') {
+        effectTextarea.removeAttribute('readonly');
+        effectTextarea.style.background = '#ffffff';
+      } else if (isAuto) {
+        effectTextarea.setAttribute('readonly', 'readonly');
+        effectTextarea.style.background = '#f2ece4';
+        effectTextarea.value = computeEffectText(spec);
 
-  document.getElementById('card-id').value = cid;
-  
-  // Determine faction from ID prefix
-  let faction = 'swiete-oficjum';
-  if (cid.startsWith('caa')) faction = 'cienie-al-andalus';
-  else if (cid.startsWith('kb')) faction = 'korona-borgiowie';
-  else if (cid.startsWith('kt')) faction = 'kabala-toledo';
-  else if (cid.startsWith('gc')) faction = 'gildia-cieni';
-  document.getElementById('card-faction').value = faction;
+        // Auto-derive & sync tags
+        const autoTags = computeAutoTags(action, type, heresy);
+        document.querySelectorAll('#tags-container input[type="checkbox"]').forEach(cb => {
+          cb.checked = autoTags.includes(cb.value);
+        });
+      }
 
-  document.getElementById('card-name').value = card.name || '';
-  document.getElementById('card-type').value = card.type || 'akcja';
-  document.getElementById('card-layer').value = card.layer || 'A';
-  document.getElementById('card-cost').value = card.cost !== undefined ? card.cost : 0;
-  document.getElementById('card-heresy').value = card.heresy !== undefined ? card.heresy : 0;
-  document.getElementById('card-action').value = card.action || 'custom';
+      const effect = effectTextarea.value.trim();
+      const heresyText = document.getElementById('card-heresy-text').value.trim();
+      const lore = document.getElementById('card-lore').value.trim();
 
-  // Advanced mechanical fields
-  document.getElementById('card-target-loc').value = card.target_loc || '';
-  document.getElementById('card-target-scope').value = card.target_scope || '';
-  document.getElementById('card-target-heresy').value = card.target_heresy !== undefined ? card.target_heresy : '';
-  document.getElementById('card-gold').value = card.gold !== undefined ? card.gold : '';
-  document.getElementById('card-agents').value = card.agents !== undefined ? card.agents : '';
-  document.getElementById('card-condition').value = card.condition || '';
-  document.getElementById('card-trigger').value = card.trigger || '';
-  document.getElementById('card-breaks-rule').value = card.breaks_rule || '';
+      // Get Selected Tags
+      const selectedTags = Array.from(document.querySelectorAll('#tags-container input:checked')).map(cb => cb.value);
 
-  document.getElementById('card-arrest-flag').checked = Boolean(card.arrest);
-  document.getElementById('card-creates-hook-flag').checked = Boolean(card.creates_hook);
+      // Update Visual PnP Card Preview
+      const preview = document.getElementById('card-preview');
+      preview.className = `card-proto faction-${faction}`;
 
-  document.getElementById('card-decree').value = card.decree !== undefined ? card.decree : '';
-  document.getElementById('card-verdict-weight').value = card.verdict_weight !== undefined ? card.verdict_weight : '';
-  document.getElementById('card-max-relics').value = card.max_relics !== undefined ? card.max_relics : '';
-  document.getElementById('card-on-refusal').value = card.on_refusal || '';
-  document.getElementById('card-bonus-on-heresy').value = card.bonus_on_heresy || '';
-  document.getElementById('card-penalty-heresy').value = card.penalty_heresy !== undefined ? card.penalty_heresy : '';
-  document.getElementById('card-heresy-band').value = card.target_heresy_band ? card.target_heresy_band.join(', ') : '';
-  document.getElementById('card-fallback-heresy').value = card.fallback_heresy !== undefined ? card.fallback_heresy : '';
-  document.getElementById('card-limit-inq').value = card.inquisitor_send_limit !== undefined ? card.inquisitor_send_limit : '';
-  document.getElementById('card-limit-int').value = card.interrogate_limit !== undefined ? card.interrogate_limit : '';
-  document.getElementById('card-limit-era').value = card.limit_per_era !== undefined ? card.limit_per_era : '';
+      document.getElementById('prev-name').textContent = name || 'Bez nazwy';
 
-  document.getElementById('card-heresy-text').value = card.heresy_text || '';
-  document.getElementById('card-lore').value = card.lore || '';
+      const typeBadge = document.getElementById('prev-type');
+      typeBadge.textContent = type.toUpperCase();
+      typeBadge.className = `type-badge type-${type}`;
 
-  // Tags
-  const tags = card.tags || [];
-  document.querySelectorAll('#tags-container input[type="checkbox"]').forEach(cb => {
-    cb.checked = tags.includes(cb.value);
-  });
+      const costBadge = document.getElementById('prev-cost-badge');
+      if (cost > 0) {
+        costBadge.style.display = 'inline-flex';
+        document.getElementById('prev-cost').textContent = cost;
+      } else {
+        costBadge.style.display = 'none';
+      }
 
-  updateLivePreview();
-}
+      const heresyBadge = document.getElementById('prev-heresy-badge');
+      if (heresy > 0) {
+        heresyBadge.style.display = 'inline-flex';
+        document.getElementById('prev-heresy').textContent = heresy;
+      } else {
+        heresyBadge.style.display = 'none';
+      }
 
-function downloadCardMarkdown() {
-  const cid = document.getElementById('card-id').value.trim() || 'karta';
-  const name = document.getElementById('card-name').value.trim() || 'karta';
-  const filename = `${cid}-${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '')}.md`;
-  const content = document.getElementById('md-output').textContent;
-  const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+      document.getElementById('prev-effect').innerHTML = effect.replace(/\n/g, '<br>') || '<em>Brak treści reguły...</em>';
 
-// Event Listeners for live real-time update
-[
-  'card-id', 'card-faction', 'card-name', 'card-type', 'card-layer', 'card-cost', 'card-heresy', 'card-action',
-  'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents', 'card-condition',
-  'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
-  'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal', 'card-bonus-on-heresy',
-  'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy', 'card-limit-inq', 'card-limit-int',
-  'card-limit-era', 'card-effect', 'card-heresy-text', 'card-lore'
-].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.addEventListener('input', updateLivePreview);
-    el.addEventListener('change', updateLivePreview);
-  }
-});
+      const hTextEl = document.getElementById('prev-heresy-text');
+      if (heresy > 0 && heresyText) {
+        hTextEl.style.display = 'block';
+        hTextEl.textContent = heresyText;
+      } else {
+        hTextEl.style.display = 'none';
+      }
 
-// Initialize on page load
-handleAutoToggle();
-updateLivePreview();
-</script>
+      document.getElementById('prev-lore').textContent = lore;
+
+      // Generate YAML Snippet for game_config.yaml
+      let yamlStr = `  ${cid}:\n`;
+      yamlStr += `    name: "${name}"\n`;
+      yamlStr += `    type: ${type}\n`;
+      yamlStr += `    layer: ${layer}\n`;
+      yamlStr += `    cost: ${cost}\n`;
+      if (heresy > 0) yamlStr += `    heresy: ${heresy}\n`;
+      if (action !== 'custom') yamlStr += `    action: ${action}\n`;
+
+      if (target_loc) yamlStr += `    target_loc: ${target_loc}\n`;
+      if (target_scope) yamlStr += `    target_scope: ${target_scope}\n`;
+      if (target_heresy) yamlStr += `    target_heresy: ${target_heresy}\n`;
+      if (gold) yamlStr += `    gold: ${gold}\n`;
+      if (agents) yamlStr += `    agents: ${agents}\n`;
+      if (condition) yamlStr += `    condition: ${condition}\n`;
+      if (trigger) yamlStr += `    trigger: ${trigger}\n`;
+      if (breaks_rule) yamlStr += `    breaks_rule: "${breaks_rule}"\n`;
+      if (arrest) yamlStr += `    arrest: true\n`;
+      if (creates_hook) yamlStr += `    creates_hook: true\n`;
+      if (decree) yamlStr += `    decree: ${decree}\n`;
+      if (verdict_weight) yamlStr += `    verdict_weight: ${verdict_weight}\n`;
+      if (max_relics) yamlStr += `    max_relics: ${max_relics}\n`;
+      if (on_refusal) yamlStr += `    on_refusal: ${on_refusal}\n`;
+      if (bonus_on_heresy) yamlStr += `    bonus_on_heresy: ${bonus_on_heresy}\n`;
+      if (penalty_heresy) yamlStr += `    penalty_heresy: ${penalty_heresy}\n`;
+      if (target_heresy_band) yamlStr += `    target_heresy_band: [${target_heresy_band.join(', ')}]\n`;
+      if (fallback_heresy) yamlStr += `    fallback_heresy: ${fallback_heresy}\n`;
+      if (inquisitor_send_limit) yamlStr += `    inquisitor_send_limit: ${inquisitor_send_limit}\n`;
+      if (interrogate_limit) yamlStr += `    interrogate_limit: ${interrogate_limit}\n`;
+      if (limit_per_era) yamlStr += `    limit_per_era: ${limit_per_era}\n`;
+
+      if (selectedTags.length > 0) {
+        yamlStr += `    tags:\n`;
+        selectedTags.forEach(t => { yamlStr += `    - ${t}\n`; });
+      }
+
+      document.getElementById('yaml-output').textContent = yamlStr;
+
+      // Generate Markdown File Snippet for game/cards/.../*.md
+      let mdStr = `---\n`;
+      mdStr += `id: ${cid}\n`;
+      mdStr += `name: ${name}\n`;
+      mdStr += `faction: ${faction}\n`;
+      mdStr += `type: ${type}\n`;
+      mdStr += `layer: ${layer}\n`;
+      mdStr += `cost: ${cost}\n`;
+      if (heresy > 0) mdStr += `heresy: ${heresy}\n`;
+      if (selectedTags.length > 0) {
+        mdStr += `tags:\n`;
+        selectedTags.forEach(t => { mdStr += `- ${t}\n`; });
+      }
+      mdStr += `effect: '${effect}'\n`;
+      if (heresy > 0 && heresyText) mdStr += `heresy_text: ${heresyText}\n`;
+      if (lore) mdStr += `lore: ${lore}\n`;
+      mdStr += `---\n`;
+
+      document.getElementById('md-output').textContent = mdStr;
+    }
+
+    function copyCode(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+
+    function loadSelectedCard(cid) {
+      if (!cid || !CARDS_DATABASE[cid]) return;
+      const card = CARDS_DATABASE[cid];
+
+      document.getElementById('card-id').value = cid;
+
+      // Determine faction from ID prefix
+      let faction = 'swiete-oficjum';
+      if (cid.startsWith('caa')) faction = 'cienie-al-andalus';
+      else if (cid.startsWith('kb')) faction = 'korona-borgiowie';
+      else if (cid.startsWith('kt')) faction = 'kabala-toledo';
+      else if (cid.startsWith('gc')) faction = 'gildia-cieni';
+      document.getElementById('card-faction').value = faction;
+
+      document.getElementById('card-name').value = card.name || '';
+      document.getElementById('card-type').value = card.type || 'akcja';
+      document.getElementById('card-layer').value = card.layer || 'A';
+      document.getElementById('card-cost').value = card.cost !== undefined ? card.cost : 0;
+      document.getElementById('card-heresy').value = card.heresy !== undefined ? card.heresy : 0;
+      document.getElementById('card-action').value = card.action || 'custom';
+
+      // Advanced mechanical fields
+      document.getElementById('card-target-loc').value = card.target_loc || '';
+      document.getElementById('card-target-scope').value = card.target_scope || '';
+      document.getElementById('card-target-heresy').value = card.target_heresy !== undefined ? card.target_heresy : '';
+      document.getElementById('card-gold').value = card.gold !== undefined ? card.gold : '';
+      document.getElementById('card-agents').value = card.agents !== undefined ? card.agents : '';
+      document.getElementById('card-condition').value = card.condition || '';
+      document.getElementById('card-trigger').value = card.trigger || '';
+      document.getElementById('card-breaks-rule').value = card.breaks_rule || '';
+
+      document.getElementById('card-arrest-flag').checked = Boolean(card.arrest);
+      document.getElementById('card-creates-hook-flag').checked = Boolean(card.creates_hook);
+
+      document.getElementById('card-decree').value = card.decree !== undefined ? card.decree : '';
+      document.getElementById('card-verdict-weight').value = card.verdict_weight !== undefined ? card.verdict_weight : '';
+      document.getElementById('card-max-relics').value = card.max_relics !== undefined ? card.max_relics : '';
+      document.getElementById('card-on-refusal').value = card.on_refusal || '';
+      document.getElementById('card-bonus-on-heresy').value = card.bonus_on_heresy || '';
+      document.getElementById('card-penalty-heresy').value = card.penalty_heresy !== undefined ? card.penalty_heresy : '';
+      document.getElementById('card-heresy-band').value = card.target_heresy_band ? card.target_heresy_band.join(', ') : '';
+      document.getElementById('card-fallback-heresy').value = card.fallback_heresy !== undefined ? card.fallback_heresy : '';
+      document.getElementById('card-limit-inq').value = card.inquisitor_send_limit !== undefined ? card.inquisitor_send_limit : '';
+      document.getElementById('card-limit-int').value = card.interrogate_limit !== undefined ? card.interrogate_limit : '';
+      document.getElementById('card-limit-era').value = card.limit_per_era !== undefined ? card.limit_per_era : '';
+
+      document.getElementById('card-heresy-text').value = card.heresy_text || '';
+      document.getElementById('card-lore').value = card.lore || '';
+
+      // Tags
+      const tags = card.tags || [];
+      document.querySelectorAll('#tags-container input[type="checkbox"]').forEach(cb => {
+        cb.checked = tags.includes(cb.value);
+      });
+
+      updateLivePreview();
+    }
+
+    function downloadCardMarkdown() {
+      const cid = document.getElementById('card-id').value.trim() || 'karta';
+      const name = document.getElementById('card-name').value.trim() || 'karta';
+      const filename = `${cid}-${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '')}.md`;
+      const content = document.getElementById('md-output').textContent;
+      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Event Listeners for live real-time update
+    [
+      'card-id', 'card-faction', 'card-name', 'card-type', 'card-layer', 'card-cost', 'card-heresy', 'card-action',
+      'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents', 'card-condition',
+      'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
+      'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal', 'card-bonus-on-heresy',
+      'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy', 'card-limit-inq', 'card-limit-int',
+      'card-limit-era', 'card-effect', 'card-heresy-text', 'card-lore'
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateLivePreview);
+        el.addEventListener('change', updateLivePreview);
+      }
+    });
+
+    // Initialize on page load
+    handleAutoToggle();
+    updateLivePreview();
+  </script>
 </body>
+
 </html>
