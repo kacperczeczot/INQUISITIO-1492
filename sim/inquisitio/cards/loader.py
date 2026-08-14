@@ -135,6 +135,26 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
             c = _parse_md(path)
             if c:
                 cards[c.id] = c
+
+        # Overlay parameters from CONFIG.cards (Single Source of Truth)
+        try:
+            from inquisitio.config import CONFIG
+            if hasattr(CONFIG, "cards"):
+                raw_cards = CONFIG.cards.raw() if hasattr(CONFIG.cards, "raw") else CONFIG.cards
+                if isinstance(raw_cards, dict):
+                    for cid, c_data in raw_cards.items():
+                        if cid in cards and isinstance(c_data, dict):
+                            card = cards[cid]
+                            for k, v in c_data.items():
+                                if hasattr(card, k):
+                                    setattr(card, k, v)
+                                    if k == "cost":
+                                        card.cost_gold = v
+                                    elif k == "cost_gold":
+                                        card.cost = v
+        except Exception:
+            pass
+
         _CACHE = cards
         _OVERRIDE_CACHE.clear()
 

@@ -113,6 +113,11 @@ class GameConfig:
     def reload(self, path: Path | None = None) -> None:
         """Re-read the YAML file (useful after editing)."""
         self.__init__(path)  # type: ignore[misc]
+        try:
+            from inquisitio.cards.loader import load_all_cards
+            load_all_cards(force=True)
+        except Exception:
+            pass
 
 
 # ── Module-level singleton ──────────────────────────────────────────

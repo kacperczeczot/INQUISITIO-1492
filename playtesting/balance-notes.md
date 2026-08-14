@@ -85,7 +85,7 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 YAML po Patch v0.21 (Kanon 4p: Limit ręki **5**, Skazania **2**, Cienie era **5**, CAA-03 koszt **0zł**, Korona **2 Dekrety @ Era 5 (w 3p: Era 6)**, Kabała **3 Fragi / Pasmo [3, 7] @ Era 6 (w 3p: Era 7)**, Próg oskarżenia **6 / 7 / 8**, GC-10 koszt **4zł**, Oficjum stosy **3/4/4**, złoto **3/3/2**).
 
-- **Global Game Balance Score:** **`94.1 / 100.0 pkt` 🟢 (Nowy historyczny rekord balansu!)**
+- **Global Game Balance Score:** **`94.1 / 100.0 pkt` 🟢 (Historyczny rekord balansu!)**
 - **3p Avg Score:** **`89.2 / 100.0 pkt` 🟢** — 100% setupów 3p zbalansowanych (skok o +5.1 pkt).
 - **4p Avg Score:** **`94.7 / 100.0 pkt` 🟢** — 100% setupów 4p perfekcyjnie zbalansowanych.
 - **5p Avg Score:** **`99.1 / 100.0 pkt` 🟢** — `5p-full` idealnie symetryczny.
