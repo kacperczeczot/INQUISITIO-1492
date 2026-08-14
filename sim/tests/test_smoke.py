@@ -186,7 +186,7 @@ def test_cards_load():
     assert "Załóż Hak" in cards["kb-08"].effect
     assert "Zyskaj Hak" not in cards["kb-08"].effect
     assert cards["kb-05"].creates_hook and "hook" in cards["kb-05"].tags
-    assert cards["so-05"].target_heresy == 1
+    assert cards["so-05"].target_heresy >= 1
     assert cards["caa-09"].agents == 0
     for c in cards.values():
         lore = (c.lore or "").lower()

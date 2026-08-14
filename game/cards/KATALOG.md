@@ -103,7 +103,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +2 Herezja. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -294,7 +294,7 @@ Kart: **10**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 2 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
 | `effect` | Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację. |
 | `lore` | Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą. |

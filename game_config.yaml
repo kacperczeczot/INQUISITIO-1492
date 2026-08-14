@@ -1,5 +1,5 @@
-version: v0.29
-date: '2026-08-14'
+version: v0.30
+date: '2026-08-15'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold:
@@ -91,7 +91,7 @@ cards:
     type: reakcja
     layer: A
     cost: 0
-    target_heresy: 1
+    target_heresy: 2
     action: frame_rival
     target_scope: triggering_rival
     trigger: rival_plays_heresy_gte_1
@@ -215,6 +215,7 @@ cards:
     tags:
     - move
     - arrest
+    heresy: 1
   caa-07:
     name: Szantaż Bractwa
     type: akcja
