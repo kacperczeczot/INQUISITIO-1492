@@ -83,16 +83,36 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📊 Stan zmierzony — 2026-08-14 (Szalony Audytor, seed 42, warstwa C)
 
-YAML po Patch v0.24 (Karta `gc-04` (Informator): `cost` → `0`).
+YAML po Patch v0.28 (Karta `kt-04` (Zwierciadło Herezji): `cost` → `0`).
 
-- **Global Game Balance Score:** **`95.2 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
-- **3p Avg Score:** **`87.8 / 100.0 pkt` 🟢**
+- **Global Game Balance Score:** **`96.2 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
+- **3p Avg Score:** **`91.5 / 100.0 pkt` 🟢**
 - **4p Avg Score:** **`98.1 / 100.0 pkt` 🟢**
-- **5p Avg Score:** **`99.7 / 100.0 pkt` 🟢**
+- **5p Avg Score:** **`98.9 / 100.0 pkt` 🟢**
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.28 (2026-08-14) — Karta `kt-04` (Zwierciadło Herezji): `cost` → `0` (Zysk Δ +0.1 pkt)
+- **Wynik:** Global **`96.2`** | 3p **`91.5`** | 4p **`98.1`** | 5p **`98.9`**
+- **Modyfikacja (`L3_KT-04_COST_MINUS1`):** Karta `kt-04` (Zwierciadło Herezji): `cost` → `0`.
+- **Efekt:** Wzrost wyniku globalnego z 96.1 do **`96.2 pkt`** (+0.1 pkt). Telemetria: Średnia Er 5.52, Deadlocks 1.1%, Pas Biedy 26.4%.
+
+### 🟢 Patch v0.27 (2026-08-14) — Limit Er: offset +1 (nowy: 10) (Zysk Δ +0.5 pkt)
+- **Wynik:** Global **`96.1`** | 3p **`91.3`** | 4p **`97.9`** | 5p **`99.2`**
+- **Modyfikacja (`L1_MAX_ERAS_PLUS1`):** Limit Er: offset +1 (nowy: 10).
+- **Efekt:** Wzrost wyniku globalnego z 95.6 do **`96.1 pkt`** (+0.5 pkt). Telemetria: Średnia Er 5.52, Deadlocks 1.1%, Pas Biedy 26.5%.
+
+### 🟢 Patch v0.26 (2026-08-14) — Kabała Toledo: Pasmo Herezji 3–8 (Zysk Δ +0.3 pkt)
+- **Wynik:** Global **`95.6`** | 3p **`89.7`** | 4p **`97.9`** | 5p **`99.2`**
+- **Modyfikacja (`L2_KT_HERESY_HIGH_PLUS1`):** Kabała Toledo: Pasmo Herezji 3–8.
+- **Efekt:** Wzrost wyniku globalnego z 95.3 do **`95.6 pkt`** (+0.3 pkt). Telemetria: Średnia Er 5.51, Deadlocks 2.9%, Pas Biedy 26.5%.
+
+### 🟢 Patch v0.25 (2026-08-14) — Karta `kt-03` (Zakazana Wiedza): `gold` → `1` (Zysk Δ +0.1 pkt)
+- **Wynik:** Global **`95.3`** | 3p **`87.9`** | 4p **`98.2`** | 5p **`99.7`**
+- **Modyfikacja (`L3_KT-03_GOLD_PLUS1`):** Karta `kt-03` (Zakazana Wiedza): `gold` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 95.2 do **`95.3 pkt`** (+0.1 pkt). Telemetria: Średnia Er 5.54, Deadlocks 3.8%, Pas Biedy 26.6%.
 
 ### 🟢 Patch v0.24 (2026-08-14) — Karta `gc-04` (Informator): `cost` → `0` (Zysk Δ +0.5 pkt)
 - **Wynik:** Global **`95.2`** | 3p **`87.8`** | 4p **`98.1`** | 5p **`99.7`**

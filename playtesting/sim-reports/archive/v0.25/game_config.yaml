@@ -1,4 +1,4 @@
-version: v0.28
+version: v0.25
 date: '2026-08-14'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -8,7 +8,7 @@ system:
     5p: 2
   agents_per_player: 3
   hand_limit: 5
-  max_eras: 10
+  max_eras: 9
   autodafe_cooldown: 3
   cards_per_era: 2
   accusation_threshold:
@@ -36,7 +36,7 @@ victory:
     fragments: 3
     heresy_band:
     - 3
-    - 8
+    - 7
     era:
       3p: 7
       4p: 6
@@ -405,7 +405,7 @@ cards:
     name: Zwierciadło Herezji
     type: akcja
     layer: A
-    cost: 0
+    cost: 1
     target_heresy: 1
     action: frame_rival
     tags:
