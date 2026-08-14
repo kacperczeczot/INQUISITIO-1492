@@ -7,8 +7,8 @@
 ## 🎯 Co Szalony Audytor Robi w Każdej Iteracji?
 
 1. **Badanie przestrzeni zmian:** Generuje ponad 200 potencjalnych modyfikacji (Poziomy 1–4: mechaniki systemowe, warunki zwycięstwa, parametry wszystkich 50 kart, warianty edyktów).
-2. **Krok 1 (Solidny Przesiew):** Symulacja **1 000 partii / setup** (16 000 partii per wariant) wyłania TOP 5 najbardziej obiecujących kandydatów.
-3. **Krok 2 (Precyzyjna Weryfikacja Ultra Monte Carlo):** Wybrani liderzy są sprawdzani dużą próbą **5 000 partii / setup** (80 000 partii per test) w symulacji parowanej (*Common Random Numbers*) w celu całkowitego wyeliminowania szumu losowego.
+2. **Krok 1 (Solidny Przesiew):** Symulacja **1 000 partii / setup** (16 000 partii per wariant) wyłania **TOP 20** najbardziej obiecujących kandydatów.
+3. **Krok 2 (Precyzyjna Weryfikacja Ultra Monte Carlo):** Wybrani liderzy (**TOP 20**) są sprawdzani dużą próbą **5 000 partii / setup** (80 000 partii per test) w symulacji parowanej (*Common Random Numbers*) w celu całkowitego wyeliminowania szumu losowego.
 4. **Twarde Bezpieczniki:** Kandydat jest akceptowany TYLKO wtedy, gdy:
    - Na próbie 5 000 gier osiąga realny zysk punktowy: `Δ Global Score >= +0.10 pkt`,
    - Nie narusza norm telemetrii (Deadlocks < 16%, Pas Biedy < 35%, średnia liczba er: 4.2–7.8).
@@ -78,9 +78,9 @@ sim/.venv/bin/python tools/sim/szalony_audytor.py --dry-run
 | `--hours <float>` | `None` | Maksymalny czas pracy w godzinach (np. `2.5`, `4.0`, `8.0`). |
 | `--max-iters <int>` | `None` | Limit liczby wprowadzonych ulepszeń. |
 | `--mode` | `two-stage` | Tryb: `two-stage` (przesiew + Grand weryfikacja), `grand` (3k gier bezpośrednio), `standard` (500 gier). |
-| `--top-k <int>` | `5` | Ilu liderów z kroku 1 weryfikować w kroku 2. |
+| `--top-k <int>` | `20` | Ilu liderów z kroku 1 weryfikować w kroku 2. |
 | `--level` | `all` | Wybór poziomów do testowania: `all`, `1`, `2`, `3`, `4`. |
-| `--param` | `cost,heresy` | Parametry kart dla Poziomu 3: `cost,heresy`, `gold,target_heresy`, `all`. |
+| `--param` | `all` | Parametry kart dla Poziomu 3: `all` (koszt, herezja, złoto, cel herezji) lub podzbiory (`cost,heresy`, `gold`). |
 | `--full-audit-on-finish`| `False` | Po znalezieniu optimum generuje komplet 6 raportów symulacyjnych. |
 | `--workers <int>` | Liczba rdzeni CPU | Liczba równoległych procesów symulacji. |
 | `--dry-run` | `False` | Tryb symulacyjny (wypisuje najlepszą zmianę, nie dotyka plików). |

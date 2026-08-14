@@ -2,6 +2,7 @@
 Thumbs.db
 *.swp
 *~
+*.bak
 
 # Edytory / IDE
 .idea/
@@ -32,6 +33,4 @@ temp/
 *.pdf
 !docs/**/*.pdf
 
-# Raporty sim — generuj lokalnie; nie gromadzimy historii w repo
-playtesting/sim-reports/*
-!playtesting/sim-reports/README.md
+
