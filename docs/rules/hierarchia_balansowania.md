@@ -24,7 +24,7 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 
 - **Limit kart na ręce:** `5 kart`
 - **Ekonomia startowa:** `3 złote` na start · Przychód `+1 złoty` na początku tury w E.II
-- **Maksymalny limit Er:** `9 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
+- **Maksymalny limit Er:** `10 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
 - **Strefy i pasma Herezji:** 
   - **Czysta:** `0–3 Herezji`
   - **Obserwowana:** `4–5 Herezji (3p) / 4–6 (4–5p)`
