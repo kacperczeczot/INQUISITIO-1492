@@ -4,24 +4,20 @@
 
 ---
 
-## 🎯 Co Szalony Audytor Robi w Każdej Iteracji?
+## 🎯 Taktyka Działania: Kaskada Poziomowa (Hierarchical Waterfall Strategy)
 
-1. **Badanie przestrzeni zmian:** Generuje ponad 200 potencjalnych modyfikacji (Poziomy 1–4: mechaniki systemowe, warunki zwycięstwa, parametry wszystkich 50 kart, warianty edyktów).
-2. **Krok 1 (Solidny Przesiew):** Symulacja **1 000 partii / setup** (16 000 partii per wariant) wyłania **TOP 20** najbardziej obiecujących kandydatów.
-3. **Krok 2 (Precyzyjna Weryfikacja Ultra Monte Carlo):** Wybrani liderzy (**TOP 20**) są sprawdzani dużą próbą **5 000 partii / setup** (80 000 partii per test) w symulacji parowanej (*Common Random Numbers*) w celu całkowitego wyeliminowania szumu losowego.
-4. **Twarde Bezpieczniki:** Kandydat jest akceptowany TYLKO wtedy, gdy:
-   - Na próbie 5 000 gier osiąga realny zysk punktowy: `Δ Global Score >= +0.10 pkt`,
-   - Nie narusza norm telemetrii (Deadlocks < 16%, Pas Biedy < 35%, średnia liczba er: 4.2–7.8).
-5. **Aplikacja zmiany i wersjonowanie:** 
-   - Wprowadza zwycięski parametr do `game_config.yaml`.
-   - Podbija numer wersji (np. `v0.21` → `v0.22`).
-6. **📄 Automatyczna Dokumentacja i Raporty:**
-   - Tworzy katalog archiwum wersji: `playtesting/sim-reports/archive/{wersja}/` ze snapshotem `game_config.yaml`.
-   - Generuje szczegółowy raport danej iteracji: `raport_optymalizacji.md` (ranking kandydatów, delty, telemetria).
-   - Generuje pełny raport telemetrii i win shares 16 setupów: `raport_telemetrii.md`.
-   - Automatycznie dopisuje notatkę o nowym patchu do `playtesting/balance-notes.md`.
-   - Zapisuje wpis w dzienniku ewolucji `playtesting/sim-reports/auto_balancer_log.md`.
-7. **Kolejny cykl:** Pętla powtarza się z nową bazą, aż do osiągnięcia lokalnego optimum lub limitu czasu.
+Szalony Audytor optymalizuje grę w sposób **hierarchiczny (od makro-mechanik do mikro-parametrów)**:
+
+1. **Zawsze zaczyna od Poziomu 1 (L1 — Mechaniki Systemowe):** Bada ~12 wariantów **bezpośrednio na pełnej próbie 5 000 partii / setup** (bez potrzeby przesiewu).
+2. **Kaskadowe przejście:**
+   - Jeśli Poziom 1 przyniesie zysk $\ge +0.05$ pkt $\rightarrow$ wprowadza zmianę i **zostaje na L1**, badając go ponownie.
+   - Dopiero gdy Poziom 1 nie ma już żadnych ulepszeń $\rightarrow$ przechodzi do **Poziomu 2 (L2 — Warunki Zwycięstwa Frakcji)** (bezpośrednia próba 5 000 partii na ~28 wariantach).
+   - Jeśli Poziom 2 nie ma już ulepszeń $\rightarrow$ przechodzi do **Poziomu 3 (L3 — Parametry Wszystkich 50 Kart)** (tutaj działa **Szybki Przesiew 1000 partii $\rightarrow$ TOP 20 $\rightarrow$ Weryfikacja 5000 partii**).
+   - Jeśli Poziom 3 nie ma już ulepszeń $\rightarrow$ przechodzi do **Poziomu 4 (L4 — Warianty Niszowe i Edykty)** (bezpośrednia próba 5 000 partii na ~8 wariantach).
+3. **Zasada Resetu do Bazy L1:**
+   - **Za każdym razem, gdy na dowolnym wyższym poziomie (L2, L3 lub L4) zostanie wprowadzona zmiana, audytor natychmiast wraca do Poziomu 1** i sprawdza, czy nowe uwarunkowania nie odblokowały nowych ulepszeń systemowych!
+4. **Warunek Zakończenia (True Global Optimum):**
+   - Audytor kończy pracę dopiero wtedy, gdy sprawdzi kolejno L1 $\rightarrow$ L2 $\rightarrow$ L3 $\rightarrow$ L4 i **na żadnym z nich nie znajdzie ani jednej poprawy**.
 
 ---
 

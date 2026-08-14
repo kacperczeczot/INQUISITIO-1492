@@ -464,7 +464,24 @@ class AutoBalancer:
         setups = sorted(SETUP_PRESETS.keys())
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
 
-        while not self.stop_requested:
+        if self.args.level == "all":
+            tiers = ["1", "2", "3", "4"]
+        else:
+            tiers = [self.args.level]
+
+        tier_names = {
+            "1": "POZIOM 1 (Główne Mechaniki Systemowe)",
+            "2": "POZIOM 2 (Warunki Zwycięstwa i Skalowanie)",
+            "3": "POZIOM 3 (Parametry Kart: Koszt, Herezja, Złoto)",
+            "4": "POZIOM 4 (Warianty Niszowe i Edykty)",
+        }
+
+        tier_idx = 0
+
+        while not self.stop_requested and tier_idx < len(tiers):
+            current_tier = tiers[tier_idx]
+            current_tier_name = tier_names.get(current_tier, f"POZIOM {current_tier}")
+
             self.total_iterations += 1
             iter_start = time.time()
 
@@ -479,47 +496,50 @@ class AutoBalancer:
                 break
 
             print(f"\n{'='*71}")
-            print(f"▶ ITERACJA #{self.total_iterations} — Wersja: {CONFIG.version} | Czas łączny: {round((time.time() - self.start_time)/60, 1)} min")
+            print(f"▶ ITERACJA #{self.total_iterations} — Wersja: {CONFIG.version} | {current_tier_name}")
+            print(f"  Czas łączny sesji: {round((time.time() - self.start_time)/60, 1)} min")
             print(f"{'='*71}")
 
-            # 1. Generate all candidate tests for current config
+            # 1. Generate all candidate tests for current level
             candidate_tests = generate_candidate_tests(
-                level_filter=self.args.level,
+                level_filter=current_tier,
                 param_filter=self.args.param,
                 card_filter=self.args.card,
             )
-            print(f"Wygenerowano {len(candidate_tests)} wariantów testowych (Poziomy: {self.args.level}).")
+            print(f"Wygenerowano {len(candidate_tests)} wariantów testowych dla {current_tier_name}.")
 
-            # 2. Strategy Execution (Two-Stage or Direct)
-            if self.args.mode == "two-stage":
-                best_candidate, base_res, best_res, ranked_candidates = self._run_two_stage(candidate_tests, setups)
-            else:
-                games_per_setup = (
-                    3000 if self.args.mode == "grand"
-                    else (500 if self.args.mode == "standard" else 250)
+            # 2. Strategy Execution:
+            # - For small tiers (L1: ~12, L2: ~28, L4: ~8 tests): Direct Ultra evaluation on confirm_games (no screening needed!)
+            # - For large tiers (L3: ~200+ card tests): Two-stage screening (1000 games -> TOP 20 -> confirm_games)
+            if current_tier in ("1", "2", "4") or len(candidate_tests) <= self.args.top_k or self.args.mode != "two-stage":
+                games_per_setup = self.args.confirm_games if self.args.mode == "two-stage" else (
+                    3000 if self.args.mode == "grand" else (500 if self.args.mode == "standard" else 250)
                 )
                 best_candidate, base_res, best_res, ranked_candidates = self._run_direct_stage(candidate_tests, setups, games_per_setup)
+            else:
+                best_candidate, base_res, best_res, ranked_candidates = self._run_two_stage(candidate_tests, setups)
 
             if self.stop_requested:
                 break
 
-            if not best_candidate or best_res is None or base_res is None:
-                print("\n🏁 Brak kandydatów lub błąd ewaluacji. Kończę.")
-                break
+            delta_global = (best_res["global_score"] - base_res["global_score"]) if (best_res and base_res) else 0.0
 
-            delta_global = best_res["global_score"] - base_res["global_score"]
+            # 3. Check if improvement found in this tier
+            if not best_candidate or best_res is None or base_res is None or delta_global < self.args.min_delta:
+                print(f"\n⚪ {current_tier_name} optymalny — brak modyfikacji przynoszącej zysk >= +{self.args.min_delta} pkt.")
+                tier_idx += 1
+                if tier_idx < len(tiers):
+                    next_tier_name = tier_names.get(tiers[tier_idx], f"Poziom {tiers[tier_idx]}")
+                    print(f"➡️ Przechodzę kaskadowo do: {next_tier_name}...\n")
+                else:
+                    print(f"\n🏆 OSIĄGNIĘTO PEŁNE LOKALNE OPTIMUM GLOBALNE WE WSZYSTKICH POZIOMACH (L1 → L2 → L3 → L4)!")
+                continue
+
             print(f"\n📊 Wynik Bazy: {color_score(base_res['global_score'], bold=True)} pkt")
             print(f"🌟 Najlepszy kandydat: [{best_res['id']}] {best_res['name']}")
             print(f"   Nowy Global Score:  {color_score(best_res['global_score'], bold=True)} pkt (Δ {delta_global:+5.2f} pkt)")
 
-            # Check if improvement exceeds threshold
-            if delta_global < self.args.min_delta:
-                print(f"\n🏆 OSIĄGNIĘTO LOKALNE OPTIMUM GLOBALNE!")
-                print(f"Żadna z {len(candidate_tests)} modyfikacji nie przynosi zysku >= +{self.args.min_delta} pkt.")
-                print(f"Najwyższy dostępny zysk: {delta_global:+5.2f} pkt.")
-                break
-
-            # 3. Apply modification to game_config.yaml
+            # 4. Apply modification to game_config.yaml
             rule_id, rule_name, rule_params = best_candidate
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 raw_cfg = yaml.safe_load(f)
@@ -530,7 +550,7 @@ class AutoBalancer:
             if self.args.dry_run:
                 print(f"\n[DRY RUN] Zastosowano by zmianę: {change_desc}")
                 print(f"[DRY RUN] Podbito by wersję z {old_version} do nowej.")
-                break
+                tier_idx += 1
             else:
                 new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
                 iter_elapsed = round(time.time() - iter_start, 2)
@@ -539,7 +559,7 @@ class AutoBalancer:
                 print(f"   Wersja:       {old_version} → {new_version}")
                 print(f"   Zysk Balansu: {score_pair(base_res['global_score'], best_res['global_score'], colored=True)}")
 
-                # 4. Generate Reports & Documentation Automatically
+                # 5. Generate Reports & Documentation Automatically
                 print(f"\n📄 [DOKUMENTACJA] Generuję raporty i archiwum wersji {new_version}...")
                 
                 # A. Log entry in auto_balancer_log.md
@@ -576,6 +596,11 @@ class AutoBalancer:
                 # D. Update playtesting/balance-notes.md
                 update_balance_notes(old_version, new_version, change_desc, rule_id, base_res, best_res)
                 print(f"   ✔ Zaktualizowano notatki balansu: {BALANCE_NOTES_PATH.name}")
+
+                # CASCADE RESET: Always reset back to Level 1 after a successful change!
+                if tier_idx > 0:
+                    print(f"\n🔄 Zmiana wprowadzona na {current_tier_name}! Resetuję kaskadę i wracam do POZIOMU 1...\n")
+                tier_idx = 0
 
         # Optional full audit suite on finish
         if not self.args.dry_run and self.args.full_audit_on_finish and self.total_iterations > 0:
@@ -642,8 +667,8 @@ class AutoBalancer:
         return best_tuple, base_s2, best_res, verified_candidates
 
     def _run_direct_stage(self, tests: list[tuple[str, str, dict]], setups: list[str], games_per_setup: int):
-        """Single stage full evaluation."""
-        print(f"\n--- [PEŁNA EWALUACJA] Próba: {games_per_setup} gier/setup ({len(tests)} wariantów) ---")
+        """Single stage full evaluation on full sample size (used for L1, L2, L4)."""
+        print(f"\n--- [BEZPOŚREDNIA EWALUACJA ULTRA] Próba: {games_per_setup} gier/setup ({len(tests)} wariantów) ---")
         task_list = [(t, games_per_setup, self.args.seed, setups) for t in tests]
         results = self._execute_pool(task_list)
 
@@ -651,9 +676,13 @@ class AutoBalancer:
         candidates = []
         for r in results[1:]:
             delta = r["global_score"] - base_res["global_score"]
-            is_safe, _ = passes_telemetry_safety(r)
+            is_safe, safe_msg = passes_telemetry_safety(r)
             if is_safe and delta >= self.args.min_delta:
                 candidates.append(r)
+            elif not is_safe:
+                print(f"⚠️ Odrzucono kandydata [{r['id']}] z powodu telemetrii: {safe_msg}")
+            else:
+                print(f"⚪ Odrzucono kandydata [{r['id']}]: brak zysku na próbie {games_per_setup} gier (Δ {delta:+5.2f} pkt)")
 
         if not candidates:
             return None, base_res, None, results
