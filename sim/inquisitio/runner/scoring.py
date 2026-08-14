@@ -27,8 +27,8 @@ def calculate_setup_score(summary: BatchSummary) -> float:
             # Significant penalty for warning band (e.g. 11.8% vs 20.0% is 41% rel_dev)
             penalty = 120.0 * (rel_dev ** 1.5)
         else:
-            # Harsh Red Line violation penalty
-            penalty = 500.0 * rel_dev + 25.0
+            # Red Line violation — heavy progressive penalty (but not instant-zero)
+            penalty = 200.0 * (rel_dev ** 1.2) + 15.0
 
         total_penalty += penalty
 
@@ -65,11 +65,13 @@ def calculate_global_score(category_scores: dict[str, float]) -> float:
 
 
 def color_score(val: float, bold: bool = False) -> str:
-    """Formats balance score with status icon (🟢 >=50.0, 🟡 25.0-49.9, 🔴 <25.0)."""
-    if val >= 50.0:
+    """Formats balance score with status icon (🟢 >=90, 🟡 75-89.9, 🟠 60-74.9, 🔴 <60)."""
+    if val >= 90.0:
         icon = "🟢"
-    elif val >= 25.0:
+    elif val >= 75.0:
         icon = "🟡"
+    elif val >= 60.0:
+        icon = "🟠"
     else:
         icon = "🔴"
     val_str = f"**{val:5.1f}**" if bold else f"{val:.1f}"

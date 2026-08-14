@@ -60,11 +60,41 @@ def main():
         autodafe_avg = round(summary.autodafe_avg, 2)
         accusations_avg = round(summary.accusations_avg, 2)
 
-        eras_opt = "🟢" if (5.0 <= avg_eras <= 7.0) else "🔴"
-        deadlock_opt = "🟢" if (deadlock_pct <= 15.0) else "🔴"
-        poverty_opt = "🟢" if (poverty_pct <= 30.0) else "🔴"
-        autodafe_opt = "🟢" if (0.5 <= autodafe_avg <= 2.0) else "⚪"
-        acc_opt = "🟢" if (1.5 <= accusations_avg <= 4.5) else "⚪"
+        # 3-color telemetry zones: 🟢 strict norm, 🟡 warning band, 🔴 out of norm
+        if 5.0 <= avg_eras <= 6.5:
+            eras_opt = "🟢"
+        elif 4.5 <= avg_eras <= 7.0:
+            eras_opt = "🟡"
+        else:
+            eras_opt = "🔴"
+
+        if deadlock_pct <= 5.0:
+            deadlock_opt = "🟢"
+        elif deadlock_pct <= 10.0:
+            deadlock_opt = "🟡"
+        else:
+            deadlock_opt = "🔴"
+
+        if poverty_pct <= 28.0:
+            poverty_opt = "🟢"
+        elif poverty_pct <= 32.0:
+            poverty_opt = "🟡"
+        else:
+            poverty_opt = "🔴"
+
+        if 0.7 <= autodafe_avg <= 1.8:
+            autodafe_opt = "🟢"
+        elif 0.5 <= autodafe_avg <= 2.0:
+            autodafe_opt = "🟡"
+        else:
+            autodafe_opt = "🔴"
+
+        if 2.0 <= accusations_avg <= 4.5:
+            acc_opt = "🟢"
+        elif 1.5 <= accusations_avg <= 5.0:
+            acc_opt = "🟡"
+        else:
+            acc_opt = "🔴"
 
         setup_data.append({
             "setup": sname,
@@ -106,7 +136,14 @@ def main():
         kt_s = f"{d['shares'].get('KT', 0.0):.1f}%" if "KT" in d['shares'] else "-"
         gc_s = f"{d['shares'].get('GC', 0.0):.1f}%" if "GC" in d['shares'] else "-"
 
-        eval_str = "🟢 ZBALANSOWANY" if d['score'] >= 50.0 else ("🟡 AKCEPTOWALNY" if d['score'] >= 25.0 else "🔴 ODCHYLONY")
+        if d['score'] >= 90.0:
+            eval_str = "🟢 ZBALANSOWANY"
+        elif d['score'] >= 75.0:
+            eval_str = "🟡 AKCEPTOWALNY"
+        elif d['score'] >= 60.0:
+            eval_str = "🟠 WYMAGA UWAGI"
+        else:
+            eval_str = "🔴 ODCHYLONY"
         report_lines.append(
             f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
         )
@@ -127,16 +164,69 @@ def main():
             f"| `{d['setup']}` | {d['avg_eras']} {d['eras_opt']} | {d['deadlock_pct']}% {d['deadlock_opt']} | {d['poverty_pct']}% {d['poverty_opt']} | {d['autodafe_avg']} {d['autodafe_opt']} | {d['accusations_avg']} {d['acc_opt']} | {d['end_gold']}zł | {d['end_heresy']} | {status_icon} |"
         )
 
+    # --- Section 3: Faction Attention Report ---
+    faction_stats: dict[str, list[tuple[str, float, float]]] = {}
+    for d in setup_data:
+        ideal = d['ideal_share'] / 100.0
+        for fname, share_pct in d['shares'].items():
+            share = share_pct / 100.0
+            faction_stats.setdefault(fname, []).append((d['setup'], share, ideal))
+
     report_lines.extend([
         "",
-        "## 3. Legenda Wskaźników Telemetrii i Norm Balansowych",
+        "## 3. Frakcje Wymagające Uwagi",
+        "",
+    ])
+
+    faction_summary = []
+    for fname, entries in sorted(faction_stats.items()):
+        avg_share = sum(s for _, s, _ in entries) / len(entries)
+        worst_setup = max(entries, key=lambda e: abs(e[1] - e[2]))
+        worst_dev = worst_setup[1] - worst_setup[2]
+        worst_dev_pct = worst_dev * 100.0
+        if abs(worst_dev_pct) > 5.0:
+            status = "🟡 DOMINUJE" if worst_dev > 0 else "🟡 SŁABA"
+        elif abs(worst_dev_pct) > 8.0:
+            status = "🔴 SILNIE ZABURZONA"
+        else:
+            status = "🟢 OK"
+        faction_summary.append((fname, avg_share * 100, worst_setup[0], worst_dev_pct, status))
+
+    report_lines.append("| Frakcja | Śr. Win Share (wszystkie setupy) | Najgorszy Setup | Max Odchylenie od Ideału | Status |")
+    report_lines.append("| :--- | :---: | :--- | :---: | :--- |")
+    for fname, avg_s, ws_name, ws_dev, ws_status in sorted(faction_summary, key=lambda x: abs(x[3]), reverse=True):
+        dev_sign = f"+{ws_dev:.1f}%" if ws_dev > 0 else f"{ws_dev:.1f}%"
+        report_lines.append(f"| **{fname}** | {avg_s:.1f}% | `{ws_name}` | {dev_sign} | {ws_status} |")
+
+    weak_setups = [(d['setup'], d['score'], d['shares'], d['ideal_share']) for d in setup_data if d['score'] < 90.0]
+    if weak_setups:
+        report_lines.extend([
+            "",
+            "### Setupy poniżej Score 90 (wymagające poprawy):",
+            "",
+            "| Setup | Score | Główny problem |",
+            "| :--- | :---: | :--- |",
+        ])
+        for sname, score, shares, ideal in sorted(weak_setups, key=lambda x: x[1]):
+            max_dev_fname = max(shares, key=lambda f: abs(shares[f] - ideal))
+            dev = shares[max_dev_fname] - ideal
+            problem = f"{max_dev_fname} {'dominuje' if dev > 0 else 'za słaba'} ({shares[max_dev_fname]:.1f}% vs ideal {ideal:.1f}%)"
+            report_lines.append(f"| `{sname}` | {color_score(score, bold=True)} | {problem} |")
+    else:
+        report_lines.extend(["", "### ✅ Wszystkie setupy mają Score ≥ 90 — brak setupów wymagających poprawy."])
+
+    # --- Section 4: Legend ---
+    report_lines.extend([
+        "",
+        "## 4. Legenda Wskaźników Telemetrii i Norm Balansowych",
         "",
         "- **🎯 Punkt Idealny (Ideal Share):** 33.3% w 3p | 25.0% w 4p | 20.0% w 5p",
-        "- **⏱️ Średnia Er (Tempo Gry):** Normatyw: **5.0 – 7.0 Er** (oznaczono 🟢 / 🔴)",
-        "- **🔒 Remisy po 8 Erach (Deadlock %):** Dopuszczalne: **< 15.0%** (oznaczono 🟢 / 🔴)",
-        "- **💰 Pas Biedy (Poverty Rate %):** Dopuszczalne: **< 30.0%** tur spasionych z braku monety (oznaczono 🟢 / 🔴)",
-        "- **🔥 Autodafé / Partię (Aktywność Inkwizycji):** Optymalne: **0.5 – 2.0** na grę (oznaczono 🟢 / ⚪)",
-        "- **⚖️ Oskarżenia na Dworze / Partię:** Optymalne: **1.5 – 4.5** na grę (oznaczono 🟢 / ⚪)",
+        "- **⏱️ Średnia Er (Tempo Gry):** 🟢 **5.0 – 6.5 Er** | 🟡 4.5–5.0 / 6.5–7.0 | 🔴 poza zakresem",
+        "- **🔒 Remisy po Limicie Er (Deadlock %):** 🟢 **< 5.0%** | 🟡 5–10% | 🔴 > 10%",
+        "- **💰 Pas Biedy (Poverty Rate %):** 🟢 **< 28.0%** | 🟡 28–32% | 🔴 > 32%",
+        "- **🔥 Autodafé / Partię:** 🟢 **0.7 – 1.8** | 🟡 0.5–0.7 / 1.8–2.0 | 🔴 poza zakresem",
+        "- **⚖️ Oskarżenia / Partię:** 🟢 **2.0 – 4.5** | 🟡 1.5–2.0 / 4.5–5.0 | 🔴 poza zakresem",
+        "- **📊 Status Setupu:** 🟢 Score ≥ 90 | 🟡 ≥ 75 | 🟠 ≥ 60 | 🔴 < 60",
     ])
 
     out_path, archive_path = save_and_archive_report(report_lines, "raport_telemetrii.md", args.output)
