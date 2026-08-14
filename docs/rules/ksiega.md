@@ -1,4 +1,6 @@
-[Strona główna](../../README.md) > [Dokumentacja](../README.md) > [Zasady](README.md)
+# INQUISITIO-1492 — Księga Zasad
+
+> *„Toledo, Rok Pański 1492. Grenada upadła, a na starym moście Alcántara spotykają się ci, którzy wierzą w ogień, ci, którzy uciekają z relikwiami, mędrcy składający zakazany kodeks i królewscy poborcy. W tym mieście nikt nie jest bez winy — chodzi jedynie o to, kto spłonie pierwszy.”*
 
 ---
 

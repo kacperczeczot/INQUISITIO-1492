@@ -7,6 +7,14 @@
 **Styl:** Szantaż, podrzucanie, skrytobójstwo, Upadek frakcji.  
 **Cel:** **2 upadki** rywali (Hak / Podwójny / spalona lokacja kluczowa / Werdykt na celu z Hakiem). **3** upadki, gdy brak Oficjum. **Lokacje kluczowe:** Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek.
 
+## 📜 Tło Historyczne & Kultura (1492)
+
+*„Każdy w Toledo ma swoją cenę, a każdy grzech można sprzedać z zyskiem.”*
+
+Pod fasadą religijnego uniesienia i królewskich ceremonii, renesansowe miasta Kastylii tętniły brutalnym życiem półświatka (*hampa*). Opisane później przez Miguela de Cervantesa bractwa przestępcze (takie jak sewilska *Cofradía de Monipodio* czy miejskie związki *Germania*) były doskonale zorganizowanymi syndykatami, kontrolującymi szelmy, fałszerzy weksli, lichwiarzy, zbrojnych najemników i płatnych szpiegów.
+
+Toledo roku 1492 — ciasne, pełne zaułków i przeludnione zbiegami — było dla **Gildii Cieni** rajem. W świecie, gdzie sąsiad donosił na sąsiada, a każdy arystokrata bał się oskarżenia o nieczystość krwi, informacja i szantaż (**Haki**, `gc-04`) stały się twardszą walutą niż złoto. Gildia nie wierzy w dogmaty ani imperia — wierzy w ludzką słabość. Kupuje strażników miejskich (`gc-01`), podstawia fałszywych świadków i zarabia na upadku potężnych rodów i dostojników.
+
 ## Tożsamość przy stole
 
 Sprzedajesz strach wszystkim. Nie potrzebujesz Czystości — potrzebujesz, by inni **padli**. Elastyczne sojusze; jutro zdrada.
