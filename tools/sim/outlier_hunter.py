@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """INQUISITIO-1492 — OUTLIER HUNTER (Optymalizator Wielowymiarowy 2D/3D).
 
-Specjalistyczny optymalizator balansu stworzony do przełamywania plateau.
-Zamiast pojedynczych mutacji (1D), generuje i testuje:
-  1. Antagonistyczne Pary 2D (Nerf Dominanta + Buff Frakcji Deficytowej w danym setupie)
-  2. Wewnątrzfrakcyjne Pary Przesunięć (Rebalans talii frakcji)
-  3. Hybrydy Karta + Reguła Systemowa (L3 + L1/L2)
-  4. Wiązki Sukcesywne 3D (Top 2D + Mikro-korekta systemowa)
+Specjalistyczny, odporny na zakleszczenia optymalizator balansu dla fazy post-plateau.
+Wielopoziomowa strategia poszukiwań:
+  Poziom 1: Antagonistyczne Pary 2D (Nerf Dominanta + Buff Frakcji Deficytowej)
+  Poziom 2: Hybrydy Karta + Reguła Systemowa (L3 + L1/L2)
+  Poziom 3: Wewnątrzfrakcyjne Przesunięcia (Rebalans talii wewnątrz frakcji)
+  Poziom 4: Wiązki Sukcesywne 3D (Top 2D + Mikro-korekta systemowa)
+  Poziom 5: Globalny Skaner Wariancji (Wielofrakcyjne pary kompensacyjne)
 
-Algorytm działa w 2-etapowym sicie:
-  Etap 1: Przesiew na zapalnym setupie (min. 1000 gier)
-  Etap 2: Weryfikacja Ultra na wszystkich 16 setupach (min. 5000 gier, CRN)
+Algorytm 2-etapowego sita z adaptacyjną kolejką setupów:
+  - Jeśli zapalny setup A nie ma dopuszczalnej pary w Poziomie 1, automatycznie przechodzi
+    do setupu B, C, D lub rozszerza przestrzeń do Poziomów 2-5 (nigdy nie zatrzymuje się przedwcześnie).
+  - Etap 1: Przesiew lokalny (min. 1000 gier)
+  - Etap 2: Weryfikacja Ultra na wszystkich 16 setupach (min. 5000 gier, CRN)
 
 Pełna automatyzacja dokumentacji (identyczna jak w Szalonym Audytorze):
   - raport_telemetrii.md (oraz archiwum wersji)
@@ -315,7 +318,6 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
             f"| `{d['setup']}` | {d['avg_eras']} {d['eras_opt']} | {d['deadlock_pct']}% {d['deadlock_opt']} | {d['poverty_pct']}% {d['poverty_opt']} | {d['autodafe_avg']} {d['autodafe_opt']} | {d['accusations_avg']} {d['acc_opt']} | {d['end_gold']}zł | {d['end_heresy']} | {status_icon} |"
         )
 
-    # --- Section 3: Faction Attention Report ---
     faction_stats: dict[str, list[tuple[str, float, float]]] = {}
     for d in setup_data:
         ideal = d['ideal_share'] / 100.0
@@ -550,12 +552,13 @@ def merge_card_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -
     return (combined_id, combined_name, {"card_overrides": merged_overrides})
 
 
-def generate_antagonist_and_synergy_pairs(
+def generate_candidate_pool_for_strategy(
+    strategy_level: int,
     setup_name: str,
     shares: dict[str, float],
     ideal_share: float,
 ) -> list[tuple[str, str, dict]]:
-    """Generates focused 2D pairs based on the deviations of factions in this setup."""
+    """Generates focused candidate pools based on search strategy level."""
     factions = SETUP_PRESETS[setup_name]
     pairs: list[tuple[str, str, dict]] = []
 
@@ -580,47 +583,75 @@ def generate_antagonist_and_synergy_pairs(
         struggling_prefixes = [all_sorted[0]]
         dominant_prefixes = [all_sorted[-1]]
 
-    # 1. Antagonist Pairs: Nerf Dominant + Buff Struggling
-    for dom_pref, _ in dominant_prefixes:
-        dom_muts = generate_atomic_card_mutations(dom_pref)
-        dom_nerfs = [m for m in dom_muts if classify_card_mutation_intent(m) == "NERF"]
+    # LEVEL 1: Antagonist 2D Pairs (Nerf Dominant + Buff Deficit)
+    if strategy_level == 1:
+        for dom_pref, _ in dominant_prefixes:
+            dom_muts = generate_atomic_card_mutations(dom_pref)
+            dom_nerfs = [m for m in dom_muts if classify_card_mutation_intent(m) == "NERF"]
+
+            for strug_pref, _ in struggling_prefixes:
+                strug_muts = generate_atomic_card_mutations(strug_pref)
+                strug_buffs = [m for m in strug_muts if classify_card_mutation_intent(m) == "BUFF"]
+
+                for m_nerf in dom_nerfs:
+                    for m_buff in strug_buffs:
+                        pairs.append(merge_card_mutations(m_nerf, m_buff))
+
+    # LEVEL 2: Hybrid L3 Card + L1/L2 Rule Tweaks
+    elif strategy_level == 2:
+        l1_rules = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
+        l2_rules = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
+        sys_rules = l1_rules + l2_rules
+
+        for dom_pref, _ in dominant_prefixes:
+            dom_nerfs = [m for m in generate_atomic_card_mutations(dom_pref) if classify_card_mutation_intent(m) == "NERF"]
+            for m_nerf in dom_nerfs:
+                for s_rule in sys_rules:
+                    s_id, s_name, s_params = s_rule
+                    combined_id = f"HYBRID_{m_nerf[0]}__{s_id}"
+                    combined_name = f"{m_nerf[1]} + {s_name}"
+                    merged_params = copy.deepcopy(s_params)
+                    merged_params["card_overrides"] = copy.deepcopy(m_nerf[2])
+                    pairs.append((combined_id, combined_name, merged_params))
 
         for strug_pref, _ in struggling_prefixes:
-            strug_muts = generate_atomic_card_mutations(strug_pref)
-            strug_buffs = [m for m in strug_muts if classify_card_mutation_intent(m) == "BUFF"]
+            strug_buffs = [m for m in generate_atomic_card_mutations(strug_pref) if classify_card_mutation_intent(m) == "BUFF"]
+            for m_buff in strug_buffs:
+                for s_rule in sys_rules:
+                    s_id, s_name, s_params = s_rule
+                    combined_id = f"HYBRID_{m_buff[0]}__{s_id}"
+                    combined_name = f"{m_buff[1]} + {s_name}"
+                    merged_params = copy.deepcopy(s_params)
+                    merged_params["card_overrides"] = copy.deepcopy(m_buff[2])
+                    pairs.append((combined_id, combined_name, merged_params))
+
+    # LEVEL 3: Intra-Faction Shift Pairs (1 Buff + 1 Nerf in same faction)
+    elif strategy_level == 3:
+        for dom_pref, _ in dominant_prefixes:
+            dom_muts = generate_atomic_card_mutations(dom_pref)
+            dom_nerfs = [m for m in dom_muts if classify_card_mutation_intent(m) == "NERF"]
+            dom_buffs = [m for m in dom_muts if classify_card_mutation_intent(m) == "BUFF"]
 
             for m_nerf in dom_nerfs:
-                for m_buff in strug_buffs:
-                    pairs.append(merge_card_mutations(m_nerf, m_buff))
+                for m_buff in dom_buffs:
+                    cid1 = list(m_nerf[2].keys())[0]
+                    cid2 = list(m_buff[2].keys())[0]
+                    if cid1 != cid2:
+                        pairs.append(merge_card_mutations(m_nerf, m_buff))
 
-    # 2. Intra-Faction Shift Pairs: 1 Buff + 1 Nerf in Dominant faction
-    for dom_pref, _ in dominant_prefixes:
-        dom_muts = generate_atomic_card_mutations(dom_pref)
-        dom_nerfs = [m for m in dom_muts if classify_card_mutation_intent(m) == "NERF"]
-        dom_buffs = [m for m in dom_muts if classify_card_mutation_intent(m) == "BUFF"]
+    # LEVEL 4: Global Multi-Faction Variance Sweeper
+    elif strategy_level >= 4:
+        all_factions_in_setup = [FACTION_ID_TO_PREFIX[fid] for fid in factions]
+        all_muts = []
+        for pref in all_factions_in_setup:
+            all_muts.extend(generate_atomic_card_mutations(pref))
 
-        for m_nerf in dom_nerfs:
-            for m_buff in dom_buffs:
-                cid1 = list(m_nerf[2].keys())[0]
-                cid2 = list(m_buff[2].keys())[0]
+        for i in range(len(all_muts)):
+            for j in range(i + 1, min(len(all_muts), i + 25)):
+                cid1 = list(all_muts[i][2].keys())[0]
+                cid2 = list(all_muts[j][2].keys())[0]
                 if cid1 != cid2:
-                    pairs.append(merge_card_mutations(m_nerf, m_buff))
-
-    # 3. Hybrid Pairs: Card Nerf/Buff + System Rule (Level 1 / Level 2 tweaks)
-    l1_rules = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
-    l2_rules = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
-    sys_rules = l1_rules + l2_rules
-
-    for dom_pref, _ in dominant_prefixes:
-        dom_nerfs = [m for m in generate_atomic_card_mutations(dom_pref) if classify_card_mutation_intent(m) == "NERF"]
-        for m_nerf in dom_nerfs[:5]:
-            for s_rule in sys_rules[:6]:
-                s_id, s_name, s_params = s_rule
-                combined_id = f"HYBRID_{m_nerf[0]}__{s_id}"
-                combined_name = f"{m_nerf[1]} + {s_name}"
-                merged_params = copy.deepcopy(s_params)
-                merged_params["card_overrides"] = copy.deepcopy(m_nerf[2])
-                pairs.append((combined_id, combined_name, merged_params))
+                    pairs.append(merge_card_mutations(all_muts[i], all_muts[j]))
 
     seen = set()
     unique_pairs = []
@@ -713,6 +744,9 @@ class OutlierHunter:
         setups = sorted(SETUP_PRESETS.keys())
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
 
+        current_strategy_level = 1
+        attempted_setups_in_epoch: set[str] = set()
+
         while not self.stop_requested:
             # 1. Check time / iteration limit
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -725,7 +759,7 @@ class OutlierHunter:
 
             iter_start = time.time()
 
-            # 2. Run initial/current 16-setup baseline measurement
+            # 2. Run current 16-setup baseline measurement
             print(f"\n{'='*71}")
             print(f"🔍 [POMIAR BAZOWY] Diagnoza wszystkich 16 setupów (Próba: {self.args.confirm_games} gier/setup)...")
             base_task = ((("BASE", "Bieżący stan gry", {}), self.args.confirm_games, self.args.seed, setups),)
@@ -747,8 +781,27 @@ class OutlierHunter:
                 print("   Osiągnięto idealny stan balansu gry. Gratulacje!")
                 break
 
-            # Pick target setup (lowest scoring setup)
-            target_setup_name, target_setup_score = sorted_setups[0]
+            # Filter out setups already attempted in this strategy epoch
+            available_setups = [s for s in sorted_setups if s[0] not in attempted_setups_in_epoch]
+
+            if not available_setups:
+                # All setups attempted at current strategy level -> escalate strategy!
+                current_strategy_level += 1
+                attempted_setups_in_epoch.clear()
+                if current_strategy_level > 4:
+                    print("\n🏁 Sprawdzono wszystkie poziomy strategii (1-4). Resetuję cykl na poziom 1 z nową próbą...")
+                    current_strategy_level = 1
+                strategy_names = {
+                    1: "Poziom 1: Antagonistyczne Pary 2D (Nerf Dominanta + Buff Deficytu)",
+                    2: "Poziom 2: Hybrydy Karta + Reguła Systemowa (L3 + L1/L2)",
+                    3: "Poziom 3: Wewnątrzfrakcyjne Przesunięcia Stylu Gry",
+                    4: "Poziom 4: Globalny Skaner Wariancji",
+                }
+                print(f"\n🔄 ESKALACJA STRATEGII → {strategy_names.get(current_strategy_level, f'Poziom {current_strategy_level}')}...\n")
+                continue
+
+            # Pick next target setup
+            target_setup_name, target_setup_score = available_setups[0]
             factions = SETUP_PRESETS[target_setup_name]
             n_players = len(factions)
             ideal_share = 100.0 / n_players
@@ -760,10 +813,16 @@ class OutlierHunter:
             print(f"\n🎯 [CEL OPTYMALIZACJI] Zapalny setup: `{target_setup_name}` (Score: {color_score(target_setup_score, bold=True)} pkt)")
             shares_str = " | ".join([f"{f}: {s_diag['shares'].get(f, 0)}% (ideal {ideal_share:.1f}%)" for f in [FACTION_NAMES[fid] for fid in factions]])
             print(f"   Rozkład szans: {shares_str}")
+            print(f"   Aktywna strategia: Poziom {current_strategy_level}")
 
-            # 4. Generate Antagonist 2D & Hybrid Pairs for target setup
-            candidate_pairs = generate_antagonist_and_synergy_pairs(target_setup_name, s_diag["shares"], ideal_share)
-            print(f"   🧬 Wygenerowano {len(candidate_pairs)} ukierunkowanych par antagonistycznych/hybrydowych.")
+            # 4. Generate candidate pool for current strategy level
+            candidate_pairs = generate_candidate_pool_for_strategy(current_strategy_level, target_setup_name, s_diag["shares"], ideal_share)
+            print(f"   🧬 Wygenerowano {len(candidate_pairs)} kandydatów.")
+
+            if not candidate_pairs:
+                print(f"⚠️ Brak kandydatów dla `{target_setup_name}` w strategii #{current_strategy_level}. Przechodzę do kolejnego setupu...")
+                attempted_setups_in_epoch.add(target_setup_name)
+                continue
 
             # 5. ETAP 1: Szybki Przesiew na Target Setupie (min. 1000 gier)
             print(f"\n--- [ETAP 1/2: PRZESIEW LOKALNY] Testuję {len(candidate_pairs)} par na `{target_setup_name}` ({self.args.fast_games} gier) ---")
@@ -780,13 +839,9 @@ class OutlierHunter:
             promising_candidates.sort(key=lambda x: x[1], reverse=True)
 
             if not promising_candidates:
-                print(f"⚠️ Żadna para 2D nie przyniosła zysku na setupie `{target_setup_name}`. Sprawdzam kolejny setup...")
-                if len(sorted_setups) > 1 and sorted_setups[1][1] < 90.0:
-                    target_setup_name, target_setup_score = sorted_setups[1]
-                    continue
-                else:
-                    print("Brak dalszych kandydatów do poprawy w tej iteracji.")
-                    break
+                print(f"⚪ Żaden wariant nie przyniósł zysku na setupie `{target_setup_name}` w strategii #{current_strategy_level}. Przechodzę do kolejnego setupu...")
+                attempted_setups_in_epoch.add(target_setup_name)
+                continue
 
             top_candidates = promising_candidates[: self.args.top_k]
             print(f"\n--- [ETAP 2/2: WERYFIKACJA ULTRA (16 SETUPÓW)] Sprawdzam TOP {len(top_candidates)} liderów na pełnej próbie {self.args.confirm_games} gier/setup ---")
@@ -809,7 +864,7 @@ class OutlierHunter:
 
                 composite_gain = d_target + (d_global * 2.0)
 
-                print(f"   ▶ [{ver_res['id'][:35]}...] Target: {target_setup_score:.1f} → {new_target_score:.1f} (Δ {d_target:+5.1f}) | Global: {base_res['global_score']:.1f} → {ver_res['global_score']:.1f} (Δ {d_global:+5.2f}) | {safe_msg}")
+                print(f"   ▶ [{ver_res['id'][:38]}...] Target: {target_setup_score:.1f} → {new_target_score:.1f} (Δ {d_target:+5.1f}) | Global: {base_res['global_score']:.1f} → {ver_res['global_score']:.1f} (Δ {d_global:+5.2f}) | {safe_msg}")
 
                 if is_safe and d_target >= self.args.min_worst_delta and d_global >= self.args.min_global_delta:
                     if composite_gain > best_composite_gain:
@@ -818,8 +873,9 @@ class OutlierHunter:
                         best_ver_res = ver_res
 
             if not accepted_candidate or best_ver_res is None:
-                print(f"\n⚪ Brak pary, która poprawiłaby setup `{target_setup_name}` bez regresji w pozostałych setupach.")
-                break
+                print(f"\n⚪ Brak wariantu dla `{target_setup_name}` bez regresji w innych setupach w strategii #{current_strategy_level}. Przechodzę do kolejnego setupu...")
+                attempted_setups_in_epoch.add(target_setup_name)
+                continue
 
             # 6. Apply Accepted Modification to game_config.yaml
             self.total_iterations += 1
@@ -828,13 +884,13 @@ class OutlierHunter:
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 raw_cfg = yaml.safe_load(f)
 
-            old_version = raw_cfg.get("version", "v0.29")
+            old_version = raw_cfg.get("version", "v0.30")
             mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, rule_params)
 
             if self.args.dry_run:
                 print(f"\n[DRY RUN] Zaakceptowano by modyfikację: {change_desc}")
                 print(f"[DRY RUN] Nowy wynik setupu: {best_ver_res['setup_scores'][target_setup_name]:.1f} | Nowy Global: {best_ver_res['global_score']:.1f}")
-                break
+                attempted_setups_in_epoch.add(target_setup_name)
             else:
                 new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
                 iter_elapsed = round(time.time() - iter_start, 2)
@@ -848,7 +904,6 @@ class OutlierHunter:
                 # 7. GENERATE COMPLETE DOCUMENTATION SUITE
                 print(f"\n📄 [DOKUMENTACJA] Generuję pełny pakiet raportów i archiwum wersji {new_version}...")
 
-                # A. Log in outlier_hunter_log.md
                 log_outlier_iteration(
                     LOG_FILE_PATH,
                     self.total_iterations,
@@ -864,7 +919,6 @@ class OutlierHunter:
                     iter_elapsed,
                 )
 
-                # B. Save detailed optimization report for this iteration
                 opt_out, opt_arch = generate_and_save_optimization_report(
                     old_version,
                     new_version,
@@ -878,7 +932,6 @@ class OutlierHunter:
                 )
                 print(f"   ✔ Zapisano raport optymalizacji: {opt_out.name} (archiwum: {opt_arch})")
 
-                # C. Generate full telemetry & win shares report for new version
                 telem_out, telem_arch = generate_and_save_telemetry_report(
                     new_version,
                     games_per_setup=self.args.fast_games,
@@ -886,14 +939,16 @@ class OutlierHunter:
                 )
                 print(f"   ✔ Zaktualizowano raport telemetrii: {telem_out.name} (archiwum: {telem_arch})")
 
-                # D. Update playtesting/balance-notes.md
                 update_balance_notes(old_version, new_version, change_desc, rule_id, base_res, best_ver_res)
                 print(f"   ✔ Zaktualizowano notatki balansu: {BALANCE_NOTES_PATH.name}")
 
-                # E. Synchronize cards, catalog, and rules documentation
                 print("   🔄 Synchronizuję dokumentację kart i reguł...")
                 subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
                 print("   ✔ Zaktualizowano katalog kart, opisy markdown i card-editor.")
+
+                # Reset state after successful patch
+                attempted_setups_in_epoch.clear()
+                current_strategy_level = 1
 
         print(f"\n═══════════════════════════════════════════════════════════════════════")
         print(f"   OUTLIER HUNTER ZAKOŃCZYŁ SESJĘ. ŁĄCZNIE WPROWADZONO {self.total_iterations} PATCHY.")
@@ -915,7 +970,6 @@ def main():
 
     args = parser.parse_args()
 
-    # Enforce user requirements: no tests below 1000 games, final tests minimum 5000
     if args.fast_games < 1000:
         print("⚠️ Podwyższam fast-games do wymaganego minimum 1000 gier.")
         args.fast_games = 1000
