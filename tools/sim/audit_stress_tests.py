@@ -7,8 +7,8 @@ from pathlib import Path
 
 # Fix path to include sim directory
 SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
-sys.path.insert(0, str(SIM_DIR))
-
+from datetime import datetime
+from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS
 from inquisitio.runner.batch import run_batch
 from inquisitio.runner.scoring import (
@@ -17,6 +17,7 @@ from inquisitio.runner.scoring import (
     calculate_global_score,
     color_score,
 )
+from inquisitio.runner.audit_facts import save_and_archive_report
 
 def run_poverty_stress_test(games_per_setup, seed):
     print("--- 1. POVERTY STRESS TEST (Wpływ startowego złota na pas biedy i płynność) ---")
@@ -72,9 +73,9 @@ def main():
     print("========================================================\n")
 
     report_lines = [
-        "# Raport Testów Stresu Ekonomicznego i Odporności Systemowej",
+        f"# Raport Testów Stresu Ekonomicznego i Odporności Systemowej — Wersja Balansu: {CONFIG.version}",
         "",
-        f"**Próba:** {args.games} gier/setup | **Ziarno:** {args.seed}",
+        f"**Wersja Balansu:** `{CONFIG.version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Próba:** {args.games} gier/setup | **Ziarno:** {args.seed}",
         "",
     ]
 
@@ -87,19 +88,15 @@ def main():
         "- **Poverty Stress Test:** Pomaga określić punkt przegięcia, przy którym gospodarka gry staje się zbyt ciasna (wysoki Pas Biedy) lub zbyt luźna (nadmiar złota usuwający trudne wybory). Optymalne startowe złoto to 3zł.",
     ])
 
-    out_path = args.output
-    if not out_path:
-        out_path = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports" / "audyt_stress_raport.md"
-    else:
-        out_path = Path(out_path)
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(report_lines), encoding="utf-8")
+    out_path, archive_path = save_and_archive_report(report_lines, "audyt_stress_raport.md", args.output)
 
     elapsed = round(time.time() - t0, 2)
     print("\n========================================================")
     print(f"TESTY STRESU ZAKOŃCZONE W {elapsed}s!")
     print(f"Raport zapisano w: {out_path}")
+    if archive_path:
+        print(f"Zarchiwizowano w: {archive_path}")
+        print(f"Snapshot configu w: {archive_path.parent / 'game_config.yaml'}")
     print("========================================================")
 
 if __name__ == "__main__":

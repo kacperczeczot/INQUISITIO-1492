@@ -18,23 +18,31 @@ Aby uruchomić dowolny test, wywołaj z głównego katalogu repozytorium:
 # 0. Synchronizacja zmian po edycji game_config.yaml (odświeża zasady w ksiega.md)
 sim/.venv/bin/python tools/sync_config.py
 
-# 1. Kompletny Raport Zbalansowania i Telemetrii (Standardowy test 16 setupów)
-sim/.venv/bin/python tools/sim/generate_report.py --games 3000
+# ─── GŁÓWNE SKRYPTY PEŁNEGO AUDYTU (WSZYSTKIE 6 RAPORTÓW) ───
+# Standardowy pełny audyt (optymalna próba, niski szum, czas ~1.5 min):
+sim/.venv/bin/python tools/sim/run_standard_audit.py
+
+# Głęboki audyt walidacyjny / Release Gate (maksymalna próba, zero szumu, czas ~4 min):
+sim/.venv/bin/python tools/sim/run_deep_audit.py
+
+# ─── POJEDYNCZE MODUŁY AUDYTÓW ───
+# 1. Kompletny Raport Zbalansowania i Telemetrii (16 setupów)
+sim/.venv/bin/python tools/sim/generate_report.py --games 1000
 
 # 2. Audyt Poziomu 1 (Główne mechaniki systemowe)
-sim/.venv/bin/python tools/sim/audit_level1.py --games 3000
+sim/.venv/bin/python tools/sim/audit_level1.py --games 500
 
 # 3. Audyt Poziomu 2 (Progi i warunki zwycięstwa frakcji)
-sim/.venv/bin/python tools/sim/audit_level2.py --games 3000
+sim/.venv/bin/python tools/sim/audit_level2.py --games 500
 
 # 4. Audyt Poziomu 3 (Precyzyjny audyt parametrów kart per karta)
-sim/.venv/bin/python tools/sim/audit_level3.py --games 3000
+sim/.venv/bin/python tools/sim/audit_level3.py --games 300 --param cost,heresy
 
 # 5. Audyt Poziomu 4 (Warianty niszowe i modyfikatory zasad)
-sim/.venv/bin/python tools/sim/audit_level4.py --games 3000
+sim/.venv/bin/python tools/sim/audit_level4.py --games 1000
 
 # 6. Testy Stresu Ekonomicznego (Poverty Stress Test)
-sim/.venv/bin/python tools/sim/audit_stress_tests.py --games 3000
+sim/.venv/bin/python tools/sim/audit_stress_tests.py --games 500
 ```
 
 ---

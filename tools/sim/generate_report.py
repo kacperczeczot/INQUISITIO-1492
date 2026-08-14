@@ -7,11 +7,12 @@ from pathlib import Path
 
 # Fix path to include sim directory
 SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
-sys.path.insert(0, str(SIM_DIR))
-
+from datetime import datetime
+from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.batch import run_batch
 from inquisitio.runner.scoring import calculate_setup_score, color_score
+from inquisitio.runner.audit_facts import save_and_archive_report
 
 FACTION_NAMES = {
     FactionId.SWIETE_OFICJUM: "SO",
@@ -88,9 +89,9 @@ def main():
     elapsed = round(time.time() - t0, 2)
 
     report_lines = [
-        "# Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów",
+        f"# Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: {CONFIG.version}",
         "",
-        f"**Wielkość Próby:** {games_per_setup} gier/setup ({games_per_setup * 16} gier łącznie) | **Czas Symulacji:** {elapsed}s",
+        f"**Wersja Balansu:** `{CONFIG.version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Wielkość Próby:** {games_per_setup} gier/setup ({games_per_setup * 16} gier łącznie) | **Czas Symulacji:** {elapsed}s",
         "",
         "## 1. Tabela Szans Wygranych Frakcji (Win Share %) vs Punkt Idealny",
         "",
@@ -109,8 +110,6 @@ def main():
         report_lines.append(
             f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
         )
-
-
 
     report_lines.extend([
         "",
@@ -140,18 +139,14 @@ def main():
         "- **⚖️ Oskarżenia na Dworze / Partię:** Optymalne: **1.5 – 4.5** na grę (oznaczono 🟢 / ⚪)",
     ])
 
-    out_path = args.output
-    if not out_path:
-        out_path = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports" / "raport_telemetrii.md"
-    else:
-        out_path = Path(out_path)
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(report_lines), encoding="utf-8")
+    out_path, archive_path = save_and_archive_report(report_lines, "raport_telemetrii.md", args.output)
 
     print("========================================================")
     print(f"RAPORT TELEMETRII WYGENEROWANY W {elapsed}s!")
     print(f"Raport zapisano w: {out_path}")
+    if archive_path:
+        print(f"Zarchiwizowano w: {archive_path}")
+        print(f"Snapshot configu w: {archive_path.parent / 'game_config.yaml'}")
     print("========================================================")
 
 if __name__ == "__main__":
