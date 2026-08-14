@@ -64,7 +64,7 @@ Nowa komenda = osobna decyzja designerska + wpis w tej tabeli (nie synonim w tek
 
 | Etykieta | Forma kanoniczna |
 | :--- | :--- |
-| **Limit:** | `Limit: 1 / gracza / Erę.` · `Limit: 1 / Erę.` · `Limit: 1 nasłanie / gracza / Erę.` · `Limit: bez ruchu Agenta w tej Erze.` |
+| **Limit:** | `Limit: 1 / gracza / Erę.` · `Limit: 1 / Erę.` · `Limit: 1 nasłanie / gracza / Erę.` |
 | **Łamie regułę** | Zawsze Title Case: `Łamie regułę „…”:` (+ komendy §1). Po dekrecie: `DEKRET N — Łamie regułę „…”:` (nie małe `łamie`). Badge **Specjalna** — nie powtarzaj w `effect`. |
 | **DEKRET N** | CAPS; N ∈ {1, 2}: `DEKRET N — Łamie regułę „…”:` |
 | **EDYKT** · **EDYKT Ery.** | CAPS; lead Talii Czasu. **`EDYKT.`** = skutek trwały lub jednorazowy bez limitu Ery (`do końca gry`, natychmiastowe `Wymuś`/`Umieść`). **`EDYKT Ery.`** = skutek **tej Ery** (Herezja / ruch / Hak w oknie Ery). |
@@ -151,7 +151,6 @@ Nowe słowo funkcyjne = wpis tutaj, nie improwizacja na karcie.
 | S11 | `[Adresat]: [Komenda…].` | Edykt — adresat frakcji / warunkowy wykonuje komendę z §1; np. `Gracz Cieni: Przesuń…`. PnP: wiersz adresata + wiersz komendy (pogrubionej). Hak: `…: Załóż Hak na rywala.` |
 | S12 | `Remis: decyzja stołu.` | Edykt — remis Herezji / wyboru |
 | S13 | `W następnym Werdykcie Twój głos ma wagę N.` | Siła głosu (Korona) |
-| S14 | `Limit: bez ruchu Agenta w tej Erze.` | Anti-AP ruchu (np. po reakcji) |
 
 **Zakaz:** inne otwarcia zdań, synonimy komend, proza spoza szablonów. **Zakaz:** `Gdy` (zawsze `Jeśli`).
 

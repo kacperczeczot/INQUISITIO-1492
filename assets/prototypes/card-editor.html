@@ -803,10 +803,6 @@ pre.code-out {
         <input type="checkbox" id="card-creates-hook-flag">
         <span>Założenie Haka</span>
       </label>
-      <label class="form-group checkbox-item" id="group-no-move-limit">
-        <input type="checkbox" id="card-no-move-limit">
-        <span>Zakaz Ruchu w Reakcji</span>
-      </label>
 
       <div class="form-group form-group-short">
         <label for="card-decree">Dekret Królewski</label>
@@ -1017,7 +1013,6 @@ const CARDS_DATABASE = {
     "action": "frame_rival",
     "target_scope": "triggering_rival",
     "trigger": "rival_plays_heresy_gte_1",
-    "no_move_limit": true,
     "tags": [
       "reaction"
     ],
@@ -1826,7 +1821,6 @@ function computeEffectText(spec) {
     if (cid === "so-07") parts.push("Limit: 1 / gracza / Erę.");
     else parts.push("Limit: 1 / Erę.");
   } else if (spec.kurier_limit === 1 || spec.vote_change_limit === 1) parts.push("Limit: 1 / Erę.");
-  else if (spec.no_move_limit) parts.push("Limit: bez ruchu Agenta w tej Erze.");
   else if (spec.limit_per_era === 1) parts.push("Limit: 1 / Erę.");
 
   return parts.join(" ").trim();
@@ -1915,7 +1909,7 @@ function updateActionFieldVisibility() {
   const allAdvFields = [
     'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents',
     'card-condition', 'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
-    'card-no-move-limit', 'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal',
+    'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal',
     'card-bonus-on-heresy', 'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy',
     'card-limit-inq', 'card-limit-int', 'card-limit-era'
   ];
@@ -1968,28 +1962,9 @@ function updateLivePreview() {
   const breaks_rule = document.getElementById('card-breaks-rule').value.trim() || undefined;
   const arrest = document.getElementById('card-arrest-flag').checked || undefined;
   const creates_hook = document.getElementById('card-creates-hook-flag').checked || undefined;
-  const no_move_limit = document.getElementById('card-no-move-limit').checked || undefined;
-  const decree = parseInt(document.getElementById('card-decree').value) || undefined;
-  const verdict_weight = parseInt(document.getElementById('card-verdict-weight').value) || undefined;
-  const max_relics = parseInt(document.getElementById('card-max-relics').value) || undefined;
-  const on_refusal = document.getElementById('card-on-refusal').value || undefined;
-  const bonus_on_heresy = document.getElementById('card-bonus-on-heresy').value || undefined;
-  const penalty_heresy = parseInt(document.getElementById('card-penalty-heresy').value) || undefined;
-  const fallback_heresy = parseInt(document.getElementById('card-fallback-heresy').value) || undefined;
-  const inquisitor_send_limit = parseInt(document.getElementById('card-limit-inq').value) || undefined;
-  const interrogate_limit = parseInt(document.getElementById('card-limit-int').value) || undefined;
-  const limit_per_era = parseInt(document.getElementById('card-limit-era').value) || undefined;
-
-  let target_heresy_band = undefined;
-  const bandVal = document.getElementById('card-heresy-band').value.trim();
-  if (bandVal) {
-    const parsed = bandVal.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
-    if (parsed.length >= 2) target_heresy_band = parsed;
-  }
-
   const spec = {
     id: cid, action, cost, heresy, target_loc, target_scope, target_heresy, gold, agents,
-    condition, trigger, breaks_rule, arrest, creates_hook, no_move_limit, decree,
+    condition, trigger, breaks_rule, arrest, creates_hook, decree,
     verdict_weight, max_relics, on_refusal, bonus_on_heresy, penalty_heresy,
     target_heresy_band, fallback_heresy, inquisitor_send_limit, interrogate_limit, limit_per_era
   };
@@ -2076,7 +2051,6 @@ function updateLivePreview() {
   if (breaks_rule) yamlStr += `    breaks_rule: "${breaks_rule}"\n`;
   if (arrest) yamlStr += `    arrest: true\n`;
   if (creates_hook) yamlStr += `    creates_hook: true\n`;
-  if (no_move_limit) yamlStr += `    no_move_limit: true\n`;
   if (decree) yamlStr += `    decree: ${decree}\n`;
   if (verdict_weight) yamlStr += `    verdict_weight: ${verdict_weight}\n`;
   if (max_relics) yamlStr += `    max_relics: ${max_relics}\n`;
@@ -2159,7 +2133,6 @@ function loadSelectedCard(cid) {
 
   document.getElementById('card-arrest-flag').checked = Boolean(card.arrest);
   document.getElementById('card-creates-hook-flag').checked = Boolean(card.creates_hook);
-  document.getElementById('card-no-move-limit').checked = Boolean(card.no_move_limit);
 
   document.getElementById('card-decree').value = card.decree !== undefined ? card.decree : '';
   document.getElementById('card-verdict-weight').value = card.verdict_weight !== undefined ? card.verdict_weight : '';
@@ -2203,7 +2176,7 @@ function downloadCardMarkdown() {
 [
   'card-id', 'card-faction', 'card-name', 'card-type', 'card-layer', 'card-cost', 'card-heresy', 'card-action',
   'card-target-loc', 'card-target-scope', 'card-target-heresy', 'card-gold', 'card-agents', 'card-condition',
-  'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag', 'card-no-move-limit',
+  'card-trigger', 'card-breaks-rule', 'card-arrest-flag', 'card-creates-hook-flag',
   'card-decree', 'card-verdict-weight', 'card-max-relics', 'card-on-refusal', 'card-bonus-on-heresy',
   'card-penalty-heresy', 'card-heresy-band', 'card-fallback-heresy', 'card-limit-inq', 'card-limit-int',
   'card-limit-era', 'card-effect', 'card-heresy-text', 'card-lore'

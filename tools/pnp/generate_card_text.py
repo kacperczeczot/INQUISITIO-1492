@@ -182,7 +182,6 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
     kur_lim = data.get("kurier_limit")
     vote_lim = data.get("vote_change_limit")
     lim_era = data.get("limit_per_era")
-    no_move_lim = data.get("no_move_limit")
 
     if inq_lim == 1:
         parts.append("Limit: 1 nasłanie / gracza / Erę.")
@@ -193,8 +192,6 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             parts.append("Limit: 1 / Erę.")
     elif kur_lim == 1 or vote_lim == 1:
         parts.append("Limit: 1 / Erę.")
-    if data.get("no_move_limit"):
-        parts.append("Limit: bez ruchu Agenta w tej Erze.")
     elif lim_era == 1:
         parts.append("Limit: 1 / Erę.")
 
