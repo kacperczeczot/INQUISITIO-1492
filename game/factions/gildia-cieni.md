@@ -5,7 +5,7 @@
 # Gildia Cieni *(Świat przestępczy)*
 
 **Styl:** Szantaż, podrzucanie, skrytobójstwo, Upadek frakcji.  
-**Cel:** **2 upadki** rywali (Hak / Podwójny / spalona lokacja kluczowa / Werdykt na celu z Hakiem). **3** upadki, gdy brak Oficjum. **Lokacje kluczowe:** Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek.
+**Cel:** **2 upadki** rywali (Hak / Marionetka / spalona lokacja kluczowa / Werdykt na celu z Hakiem). **3** upadki, gdy brak Oficjum. **Lokacje kluczowe:** Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek.
 
 ## 📜 Tło Historyczne & Kultura (1492)
 

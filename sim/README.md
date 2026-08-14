@@ -51,7 +51,7 @@ pytest tests/test_smoke.py tests/test_balance.py -v
 | :--- | :--- |
 | Autodafé / oskarżenia / skazania | Terror publiczny |
 | Haki utworzone / wymuszone | Władza prywatna |
-| Podwójni | Lochy |
+| Marionetki | Lochy |
 | Deadlocki / legal moves | Zdrowie reguł |
 | Długość (Ery) | Tempo |
 | Wins | Informacyjnie — sukces produktu mierzy stół |
@@ -72,7 +72,7 @@ Nie są pełnym blfem ludzkim. Orientacyjne intenty:
 | Frakcja | Intent |
 | :--- | :--- |
 | Święte Oficjum | Nasłanie, Autodafé, Stosy, oskarżenia |
-| Cienie Al-Andalus | Relikwie, unik Autodafé, Podwójni |
+| Cienie Al-Andalus | Relikwie, unik Autodafé, Marionetki |
 | Korona | Haki, Dekrety, złoto |
 | Kabała | Sweet spot Herezji 4–6, Fragmenty |
 | Gildia | Wrabianie, Haki, Upadek |

@@ -16,9 +16,9 @@ Figurka **Wielkiego Inkwizytora** stoi w jednej lokacji (Patrol / Autodafé).
 | :---: | :--- | :--- | :--- |
 | 1 | **Trybunał Inkwizycji** | Czystość wiary, poparcie Kościoła | Procesy, konfiskaty, wymuszanie zeznań |
 | 2 | **Pałac Gubernatora** | Podatki, dekrety miejskie | Przekupstwo, fałszerstwa akt, zmiana prawa |
-| 3 | **Lochy & Podziemia** | Nadzór, publiczne przesłuchania | Areszt, Podwójni, tajne egzekucje |
+| 3 | **Lochy & Podziemia** | Nadzór, publiczne przesłuchania | Areszt, Marionetki, tajne egzekucje |
 | 4 | **Rynek i Plac Publiczny** | Handel, najemnicy, nastroje ludu | Zamieszki, herezja publiczna, samosądy |
-| 5 | **Dzielnica Smogów / Gildia** | Unikalne dobra, informatorzy | Skrytobójstwa, szantaż, handel Relikwiami |
+| 5 | **Dzielnica Garbarzy / Gildia** | Unikalne dobra, informatorzy | Skrytobójstwa, szantaż, handel Relikwiami |
 
 ## Kolejność rozpatrywania (Faza III)
 
@@ -35,7 +35,7 @@ To **nie** jest graf ruchu — tylko kolejność odkrywania kart.
 ## Relikwie i szlaki
 
 - Relikwie transportowane między lokacjami (karty / zasady).
-- Talia Czasu może otwierać krypty lub **Szlak Morski** (ewakuacja poza planszę).
+- Kronika Dziejów może otwierać krypty lub **Szlak Morski** (ewakuacja poza planszę).
 
 ## Sąsiedztwo (ruch o 1 lokację = 1 krawędź)
 
@@ -74,10 +74,10 @@ Diagram gry, nie mapa miasta. W każdym węźle: **stos ≤3 kart** 63×88 mm (j
 - Areszt (Lochy): **Ø 20 mm** (okrągłe — na Agentów)
 - Żetony (Relikwia, Stos, Fragment, Hak, Złoto, Herezja, …) + pule: **20×20 mm**, lekko zaokrąglone rogi
 - Karty w lokacji: **stos ≤3** na slocie **63×88 mm**
-- **Talia Czasu:** karty edyktów (talia + aktywny Edykt Ery) — nie żetony
+- **Kronika Dziejów:** karty edyktów (talia + aktywny Edykt Ery) — nie żetony
 
 ```
-  [Relikwie · Stosy · Fragmenty]     [Talia Czasu: talia | edykt]
+  [Relikwie · Stosy · Fragmenty]     [Kronika Dziejów: talia | edykt]
                     ● Inkwizytor (na lokacji)
 
                       (2) PAŁAC
@@ -98,7 +98,7 @@ Diagram gry, nie mapa miasta. W każdym węźle: **stos ≤3 kart** 63×88 mm (j
 
 | Element | Co kłaść |
 | :--- | :--- |
-| Agenci ○ | Pionki frakcji (+ nakładka Podwójny jeśli aktywna) |
+| Agenci ○ | Pionki frakcji (+ nakładka Marionetka jeśli aktywna) |
 | Relikwia [ ] | Żeton Relikwii w lokacji |
 | Karty zakryte ▭ | Zagrane w Fazie II, odkrywane w Fazie III |
 | Areszt ○ (Lochy) | Agenci uwięzieni przed Przesłuchaniem |

@@ -40,7 +40,7 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
 | `relics` | `int` | `1 .. 3` | Liczba Relikwii wymagana do ewakuacji |
-| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Minimalna Era na ukończenie ewakuacji bez ścieżki (szlak / Podwójny / cichy exit) |
+| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Minimalna Era na ukończenie ewakuacji bez ścieżki (szlak / Marionetka / cichy exit) |
 
 ### 3. Korona Borgiowie (`korona_borgiowie`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
@@ -87,7 +87,7 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 
 | Wartość `action` | Powiązane parametry dedykowane | Opis komendy i generowana fraza leksykonu |
 | :--- | :--- | :--- |
-| `move_agent` | `agents`, `free_agent`, `move_relic`, `target_loc`, `condition` | Przemieszcza agenta (własnego, Podwójnego, uwolnienie z Lochów lub ruch Relikwii) |
+| `move_agent` | `agents`, `free_agent`, `move_relic`, `target_loc`, `condition` | Przemieszcza agenta (własnego, Marionetkę, uwolnienie z Lochów lub ruch Relikwii) |
 | `gain_gold` | `gold`, `target_heresy` | Pozyskuje N złota z banku (`Zyskaj N złota.`) oraz opcjonalnie wskaż rywala (+N Herezja) |
 | `frame_rival` | `target_heresy`, `target_scope`, `change_vote` | Przydziela rywalowi +N Herezji (`Wskaż rywala: +N Herezja.`) lub zmienia głos w Werdykcie |
 | `send_inquisitor` | `target_loc`, `inquisitor_send_limit` | Przesuwa Inkwizytora (`Przesuń Inkwizytora do lokacji ze swoim Agentem.`) |
@@ -116,13 +116,13 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 | Wartość klucza | Typ | Tłumaczenie gramatyczne w Leksykonie |
 | :--- | :--- | :--- |
 | `relic_present` | `condition` | `Jeśli masz Agenta w lokacji z Relikwią:` |
-| `has_double_agent` | `condition` | `Jeśli masz Podwójnego:` |
+| `has_double_agent` | `condition` | `Jeśli masz Marionetkę:` |
 | `agent_in_dungeon_or_tribunal` | `condition` | `Jeśli masz Agenta w Lochach lub Trybunale:` |
 | `fragments_eq_3` | `condition` | `Jeśli masz 3 Fragmenty` |
 | `active_hooks_gte_2` | `condition` | `Jeśli masz aktywne Haki na ≥ 2 graczach:` |
-| `no_inquisitor_or_double_or_sea_route` | `condition` | `Jeśli nie ma Inkwizytora w lokacji lub masz Podwójnego lub Szlak jest otwarty:` |
+| `no_inquisitor_or_double_or_sea_route` | `condition` | `Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty:` |
 | `has_fragment_and_agent_in_dungeon_or_tribunal` | `condition` | `Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale:` |
-| `rival_has_hook_or_double_or_autodafe` | `condition` | `Jeśli rywal ma ujawniony Hak, Podwójnego lub Autodafé w lokacji kluczowej:` |
+| `rival_has_hook_or_double_or_autodafe` | `condition` | `Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej:` |
 | `rival_in_dungeon_or_inquisitor` | `condition` | `…z Agentem w Lochach lub w lokacji Inkwizytora.` |
 | `heresy_gte_4` | `condition` | `…z Herezją ≥ 4.` |
 | `rival_plays_heresy_gte_1` | `trigger` | `Jeśli rywal zagrywa kartę z Herezją ≥ 1:` |

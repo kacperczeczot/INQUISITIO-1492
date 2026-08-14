@@ -65,7 +65,7 @@ Strefy Herezji: **bez** `margin-top: auto` — przyklejone pod tor 0–10.
 
 ### Świadomie poza matą
 
-Pozycja Agenta = plansza/Areszt/Stos · ofiara Haka = na żetonie · Podwójny = nakładka na bazie · zero pól do pisania.
+Pozycja Agenta = plansza/Areszt/Stos · ofiara Haka = na żetonie · Marionetka = nakładka na bazie · zero pól do pisania.
 
 ---
 

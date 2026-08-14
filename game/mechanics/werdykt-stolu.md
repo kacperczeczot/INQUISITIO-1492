@@ -35,7 +35,7 @@ Powód narracyjny (Agent w lokacji, Autodafé, plotka) pomaga przy stole, ale w 
 ## Polityka
 
 - Haki (B+) mogą wymusić głos przed krokiem 3.
-- Podwójni: kontroler rusza ciałem; **nie** oddaje dodatkowego głosu przy Werdykcie.
+- Marionetki: kontroler rusza ciałem; **nie** oddaje dodatkowego głosu przy Werdykcie.
 - Oficjum wygrywa Stosami; reszta stołu może celowo uniewinniać, by ciąć snowball.
 
 ## Warstwa A

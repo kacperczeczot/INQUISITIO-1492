@@ -34,11 +34,11 @@ Silueta: mitra / krzyż / płaszcz. Czytelna z daleka na planszy A2.
 
 Wymagania: wysokość ~25–35 mm, baza okrągła z kolorem frakcji, **5 wyraźnie różnych siluet**.
 
-### Nakładki Podwójny Agent
+### Nakładki Marionetka
 
-| Element | Ilość | Uwagi |
+| Model | Sztuk | Wymiary / Uwagi |
 | :--- | ---: | :--- |
-| Pierścień / klips na bazę Agenta | **8** | Oznacza Podwójnego; zdejmowalny; nie zasłania koloru frakcji |
+| Pierścień / klips na bazę Agenta | **8** | Oznacza Marionetkę; zdejmowalny; nie zasłania koloru frakcji |
 
 ### Znaczniki Herezji (płomienie)
 
@@ -61,7 +61,7 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 | Stos / Autodafé | **4** | płomień + stos / krzyż inkwizycji |
 | Upadek frakcji (Gildia) | **4** | czarna pieczęć / zbita tarcza |
 | Dekret (Korona) | **4** | pieczęć / pergamin (postęp karty specjalnej) |
-| Zużycie Ery | **15** | mały kafelek ✕ — limit Nasłanie / Hak / Przesłuchanie |
+| Piętno | **15** | mały kafelek ✕ — limit Nasłanie / Hak / Przesłuchanie |
 | Stan Inkwizytora | **2** | małe kafle: Patrol / Autodafé (jeśli nie na bazie figurki) |
 
 ---
@@ -82,7 +82,7 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 
 - Plansza 5 lokacji (**A2** lub 4×A4)
 - Planszetki gracza ×5 (Tor Herezji)
-- Karty frakcji (10 × 5) + Talia Czasu (8+)
+- Karty frakcji (10 × 5) + Kronika Dziejów (8+)
 - Teach sheet / cele zwycięstwa
 
 ---
@@ -93,7 +93,7 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 | :--- | ---: |
 | Wielki Inkwizytor | 1 |
 | Agenci | 15 (+5 opcjonalnie) |
-| Nakładki Podwójny | 8 |
+| Nakładki Marionetka | 8 |
 | Herezja | 5 |
 | Haki | 12 |
 | Relikwie | 8 |
@@ -109,7 +109,7 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 
 Tylko frakcje przy stole (np. Oficjum + Al-Andalus + Korona):
 
-- Inkwizytor **1**, Agenci **9**, Podwójny **4**, Herezja **3**
+- Inkwizytor **1**, Agenci **9**, Marionetka **4**, Herezja **3**
 - Haki **8**, Relikwie **5–6**, Fragmenty **4**, Złoto **25**, Stosy **2**, Upadek **2**, Dekret **2**
 
 ---

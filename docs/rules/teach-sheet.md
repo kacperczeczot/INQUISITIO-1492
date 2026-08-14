@@ -12,7 +12,7 @@
 
 1. Plansza: 5 lokacji na **grafie** (ulice = sąsiedztwo). Inkwizytor na **Trybunale**, stan **Patrol**.
 2. Frakcje: w 3–5p każdy wybiera 1 frakcję; w 2p każdy steruje 2 frakcjami (wariant 2x2p, patrz [`ksiega.md`](ksiega.md)). Talia (**warstwa C: 10 kart**), 3 Agenci, planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**).
-3. Dobierz **5** kart. Relikwie/Fragmenty wg setupu. Talia Czasu na stole (C).
+3. Dobierz **5** kart. Relikwie/Fragmenty wg setupu. Kronika Dziejów na stole (C).
 4. **Pierwszy gracz:** ustala stół (nie losujcie).
 
 ---
@@ -80,8 +80,8 @@
 
 ## Dodatek B (na 1. sesji C — włączone)
 
-- **Lochy:** Przesłuchanie → Podwójny **lub** Hak **lub** +2 Herezja.
-- **Podwójny:** raz/Erę ruch o 1 jak swoim Agentem (bez głosu Werdyktu).
+- **Lochy:** Przesłuchanie → Marionetka **lub** Hak **lub** +2 Herezja.
+- **Marionetka:** raz/Erę ruch o 1 jak swoim Agentem (bez głosu Werdyktu).
 - **Hak:** wymuszenie żądania albo ofiara +2 Herezja (Hak znika).
 
 ---
@@ -89,5 +89,5 @@
 ## Dodatek C (1. sesja fizyczna)
 
 - Talia **10** kart/frakcję (w tym karta specjalna — czytaj kartę; łamie wskazaną regułę).
-- Koniec Ery: odkryj **1** edykt Talii Czasu.
-- Cele frakcji w pełnej postaci (Haki / Podwójni / ścieżki Relikwii — wg karty frakcji).
+- Koniec Ery: odkryj **1** edykt Kroniki Dziejów.
+- Cele frakcji w pełnej postaci (Haki / Marionetki / ścieżki Relikwii — wg karty frakcji).

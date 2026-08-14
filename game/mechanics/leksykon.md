@@ -20,7 +20,7 @@ Cel: krótki tekst jak instrukcja, nie proza.
 1. **Lead:** każde zdanie-akcja zaczyna się od **komendy §1** albo **etykiety §2** (ew. po bloku `Jeśli …:`).
 2. **Casing:** komendy i `Łamie regułę` = **Title Case** zawsze (także po `—` / `:`). Bannery talii = **CAPS:** `EDYKT.` / `EDYKT Ery.` / `DEKRET N`. Anti-AP i kara = Title + `:` → `Limit:` / `Odmowa:`.
 3. **Bez zbędnego `1`:** przy liczbie pojedynczej nie pisz cyfry (`Załóż Hak`, `Aresztuj Agenta`, `Zyskaj Fragment`). Cyfra tylko gdy N ≠ 1 albo to dystans/limit (`o 1 lokację`, `Limit: 1 / Erę`, `+1 Herezja`, `≥1 Fragment`).
-4. **Akcent typograficzny (PnP):** **pogrubienie** = komendy §1 + lead etykiet; *kursywa* = pojęcia mechaniczne ze słownika (zamknięta lista w generatorze: Autodafé, Przesłuchanie, Werdykt, Hak, Podwójny, Relikwia, Fragment, Stos, Inkwizytor, Szlak Morski, Nasłanie, Upadek, Herezja…). Nie kursywuj Agent / Lokacja / złoto.
+4. **Akcent typograficzny (PnP):** **pogrubienie** = komendy §1 + lead etykiet; *kursywa* = pojęcia mechaniczne ze słownika (zamknięta lista w generatorze: Autodafé, Przesłuchanie, Werdykt, Hak, Marionetka, Relikwia, Fragment, Stos, Inkwizytor, Szlak Morski, Nasłanie, Upadek, Herezja…). Nie kursywuj Agent / Lokacja / złoto.
 5. **Zero prozy:** zakaz zdań wyjaśniających, teach A/B/C, „musisz mieć…”, „ten pożar nie…”. Smak → `lore` / `heresy_text`.
 6. **Łańcuch / bloki:** warunek = `Jeśli …:` + linia komendy. Osobne informacje (akcja vs warunek vs `Limit:`) = **pusta linia** między blokami — PnP rysuje separator.
 
@@ -67,7 +67,7 @@ Nowa komenda = osobna decyzja designerska + wpis w tej tabeli (nie synonim w tek
 | **Limit:** | `Limit: 1 / gracza / Erę.` · `Limit: 1 / Erę.` · `Limit: 1 nasłanie / gracza / Erę.` |
 | **Łamie regułę** | Zawsze Title Case: `Łamie regułę „…”:` (+ komendy §1). Po dekrecie: `DEKRET N — Łamie regułę „…”:` (nie małe `łamie`). Badge **Specjalna** — nie powtarzaj w `effect`. |
 | **DEKRET N** | CAPS; N ∈ {1, 2}: `DEKRET N — Łamie regułę „…”:` |
-| **EDYKT** · **EDYKT Ery.** | CAPS; lead Talii Czasu. **`EDYKT.`** = skutek trwały lub jednorazowy bez limitu Ery (`do końca gry`, natychmiastowe `Wymuś`/`Umieść`). **`EDYKT Ery.`** = skutek **tej Ery** (Herezja / ruch / Hak w oknie Ery). |
+| **EDYKT** · **EDYKT Ery.** | CAPS; lead Kroniki Dziejów. **`EDYKT.`** = skutek trwały lub jednorazowy bez limitu Ery (`do końca gry`, natychmiastowe `Wymuś`/`Umieść`). **`EDYKT Ery.`** = skutek **tej Ery** (Herezja / ruch / Hak w oknie Ery). |
 | **Odmowa:** | Po **Wymuś** spełnienie Haka: `Odmowa: +N Herezja.` |
 | **zwycięstwo** | Token końcowy (mała litera): `…: zwycięstwo.` |
 
@@ -91,7 +91,7 @@ Wyłącznie te terminy (odmiana dozwolona: Agenta, Lokacji, Herezję, złota, Ha
 | Era | |
 | Werdykt | [`werdykt-stolu.md`](werdykt-stolu.md) |
 | Autodafé | |
-| Podwójny | |
+| Marionetka | |
 | Areszt | Strefa w Lochach |
 | Lochy | |
 | Dekret | |
@@ -145,7 +145,7 @@ Nowe słowo funkcyjne = wpis tutaj, nie improwizacja na karcie.
 | S5 | *(zarezerwowane — używaj S4; słowo warunku tylko **Jeśli**)* | — |
 | S6 | `Podczas Werdyktu, po ujawnieniu większości:` + nowa linia `[Komenda…].` | Okno Werdyktu |
 | S7 | `Łamie regułę „…”:` + nowe linie (S1 / S4) · `DEKRET N — Łamie regułę „…”:` + nowe linie | Karta specjalna (badge **Specjalna**; bez powtórzenia typu w tekście) |
-| S8 | `EDYKT.` / `EDYKT Ery.` + linie S1–S4 / S9–S12 | Talia Czasu |
+| S8 | `EDYKT.` / `EDYKT Ery.` + linie S1–S4 / S9–S12 | Kronika Dziejów |
 | S9 | `[Cel]: +N Herezja.` | Edykt / zbiorowa Herezja (bez **Wskaż**); np. `Każdy gracz z Agentem na Rynku: +1 Herezja.` |
 | S10 | `Odmowa: +N Herezja.` | Kara Haka (§2) |
 | S11 | `[Adresat]: [Komenda…].` | Edykt — adresat frakcji / warunkowy wykonuje komendę z §1; np. `Gracz Cieni: Przesuń…`. PnP: wiersz adresata + wiersz komendy (pogrubionej). Hak: `…: Załóż Hak na rywala.` |

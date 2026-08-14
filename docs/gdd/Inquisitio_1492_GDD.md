@@ -8,7 +8,7 @@
 
 > Oficjalna historia 1492 to zasłona. Pod Toledo i Alhambrą leżą *Fragmenty Przedwiecznego Kodeksu*. Inkwizycja nie poluje na heretyków — poluje na Relikwie.
 
-**Prawo gry:** kto kontroluje ciała (Agentów / Podwójnych) i tajemnice (Haki), ten kontroluje stół. Inkwizytor to broń publiczna do nasyłania — Oficjum ma łatwiejszy dostęp, nigdy pełną własność.
+**Prawo gry:** kto kontroluje ciała (Agentów / Marionetki) i tajemnice (Haki), ten kontroluje stół. Inkwizytor to broń publiczna do nasyłania — Oficjum ma łatwiejszy dostęp, nigdy pełną własność.
 
 Sim filtruje deadlocki; dramat mierzy sesja ludzka.
 
@@ -20,7 +20,7 @@ Sim filtruje deadlocki; dramat mierzy sesja ludzka.
 | :--- | :--- |
 | **Poziom Herezji** (ikona) | Tor 0–10; Czysta / Obserwowana / Krytyczna. Moc kosztuje spalenie publiczne. Krytyczna → Oskarżenie → Werdykt. |
 | **Wielki Inkwizytor** | Figurka NPC: Patrol i Autodafé. Spala lokacje; gracze manewrują lub nasyłają go na siebie. |
-| **Lochy / Podwójni** | Areszt → jedno Przesłuchanie: Podwójny, Hak albo +Herezja. Zaufanie do liczby Agentów pęka. |
+| **Lochy / Marionetki** | Areszt → jedno Przesłuchanie: Marionetka, Hak albo +Herezja. Zaufanie do liczby Agentów pęka. |
 | **Haki** | Jeden typ żetonu. Wymuszenie żądania albo ujawnienie (+Herezja). Prywatna władza strachu. |
 | **Karty specjalne** | Asymetria łamiąca reguły (warstwa C) — rzadkie, czytelne, bolesne. |
 
@@ -36,9 +36,9 @@ Pięć lokacji na **grafie miasta** (cykl + cięciwa Lochy–Pałac). Każda ma 
 | :---: | :--- | :--- | :--- |
 | 1 | Trybunał | Poparcie Kościoła | Procesy, konfiskaty |
 | 2 | Pałac | Dekrety, podatki | Przekupstwo, fałszerstwa |
-| 3 | Lochy | Nadzór jawny | Areszt, Podwójni, egzekucje |
+| 3 | Lochy | Nadzór jawny | Areszt, Marionetki, egzekucje |
 | 4 | Rynek | Handel, nastroje | Herezja publiczna, zamieszki |
-| 5 | Gildia / Smogi | Informatorzy | Szantaż, handel Relikwiami |
+| 5 | Gildia / Dzielnica Garbarzy | Informatorzy | Szantaż, handel Relikwiami |
 
 Inkwizytor stoi w jednej lokacji. Agenci / Patrol poruszają się o **1 krawędź** grafu (chyba że karta specjalna łamie regułę).
 
@@ -76,7 +76,7 @@ Opisy: [`../../game/factions/`](../../game/factions/).
 
 ## 6. Komponenty
 
-Tor Herezji, figurka Inkwizytora, żeton Hak (1 typ), znacznik Podwójny na Agentach, Relikwie/Fragmenty/Stosy, złoto (koszty kart).
+Tor Herezji, figurka Inkwizytora, żeton Hak (1 typ), znacznik Marionetka na Agentach, Relikwie/Fragmenty/Stosy, złoto (koszty kart).
 
 → [`../../game/components/inventory.md`](../../game/components/inventory.md)
 
@@ -98,4 +98,4 @@ Szczegóły cyklu wydawniczego: [`../roadmap.md`](../roadmap.md).
 
 ## 8. Estetyka
 
-Pixel art w duchu *Blasphemous* / ciężkiego historycznego horroru instytucjonalnego. Ikony: płomień Herezji, hak, kaptur Podwójnego, krzyż Inkwizytora, Relikwia. Final art dopiero po freeze tekstów.
+Pixel art w duchu *Blasphemous* / ciężkiego historycznego horroru instytucjonalnego. Ikony: płomień Herezji, hak, marionetka, krzyż Inkwizytora, Relikwia. Final art dopiero po freeze tekstów.

@@ -37,8 +37,8 @@ GDD: [`../gdd/Inquisitio_1492_GDD.md`](../gdd/Inquisitio_1492_GDD.md) · Roadmap
 
 | Warstwa | Co jest w grze | Czego nie ma |
 | :--- | :--- | :--- |
-| **A** | Herezja, Inkwizytor, Werdykt, 5 prostych kart | Haki, Podwójni, karta specjalna |
+| **A** | Herezja, Inkwizytor, Werdykt, 5 prostych kart | Haki, Marionetki, karta specjalna |
 | **B** | + Lochy, Haki, karty narzędzi | karta specjalna |
-| **C** | Pełne 10 + karta specjalna + Talia Czasu | — |
+| **C** | Pełne 10 + karta specjalna + Kronika Dziejów | — |
 
 Pierwsza sesja fizyczna = **warstwa C**. A/B w sim = teach / izolacja, nie osobny PnP.

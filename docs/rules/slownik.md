@@ -6,7 +6,7 @@
 
 Figurka frakcji na planszy (3 / gracza). Porusza się o max 1 krawędź grafu na turę Planu (chyba że karta mówi inaczej). Kontroluje lokacje, wchodzi w Autodafé, areszt i Werdykt.
 
-**Patrz także:** [Lokacja](#lokacja), [Podwójny](#podwójny), [Areszt](#areszt)
+**Patrz także:** [Lokacja](#lokacja), [Marionetka](#marionetka), [Areszt](#areszt)
 
 ---
 
@@ -29,9 +29,9 @@ Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** 
 
 ## Czystka (faza)
 
-**E.VI:** dobór do ręki 5; odkryj 1 edykt Talii Czasu; przesuń 1. gracza.
+**E.VI:** dobór do ręki 5; odkryj 1 edykt Kroniki Dziejów; przesuń 1. gracza.
 
-**Patrz także:** [Talia Czasu](#talia-czasu), [Era](#era) · [`ksiega.md`](ksiega.md)
+**Patrz także:** [Kronika Dziejów](#kronika-dziejów), [Era](#era) · [`ksiega.md`](ksiega.md)
 
 ---
 
@@ -45,9 +45,9 @@ Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: zwykle 2 Dekrety + 
 
 ## Edykt
 
-Karta Talii Czasu lub efekt zmieniający prawo Ery. Odkrywany w **E.VI** (1 / Erę). Tekst edyktu obowiązuje według karty.
+Karta Kroniki Dziejów lub efekt zmieniający prawo Ery. Odkrywany w **E.VI** (1 / Erę). Tekst edyktu obowiązuje według karty.
 
-**Patrz także:** [Talia Czasu](#talia-czasu), [Edykt karty](#edykt-karty)
+**Patrz także:** [Kronika Dziejów](#kronika-dziejów), [Edykt karty](#edykt-karty)
 
 ---
 
@@ -67,9 +67,9 @@ Jedna pełna pętla wydarzeń ramowych **E.0–E.VI**. Limit gry: **8** Er (pote
 
 ---
 
-## Fizzle
+## Fiasko
 
-Karta nie rozpatruje efektu (np. brak Agenta / lokacji przy odkryciu). **Freeze:** fizzle **bez** Herezji, chyba że tekst karty mówi inaczej.
+Karta nie rozpatruje efektu (np. brak Agenta / lokacji przy odkryciu). Zgodnie z **kanonem reguł**: fiasko karty następuje **bez** przydzielania Herezji, chyba że tekst karty mówi inaczej.
 
 **Patrz także:** [Inicjacja karty](#inicjacja-karty), [Odkrycie](#odkrycie)
 
@@ -93,7 +93,7 @@ Znacznik / cel Kabały. Warunek: 3 Fragmenty + Herezja **3–8**, od wskazanej E
 
 ## Herezja
 
-Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4–6 (4–5p), **Krytyczna** 6–10 (3p) / 7–10 (4–5p). **Oskarżenie** od Herezji ≥ **6** (3p) / ≥ **7** (4–5p). Źródła: karty, Hak ujawniony, Autodafé, Podwójny wykryty, Werdykt (uniewinnienie) itd.
+Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4–6 (4–5p), **Krytyczna** 6–10 (3p) / 7–10 (4–5p). **Oskarżenie** od Herezji ≥ **6** (3p) / ≥ **7** (4–5p). Źródła: karty, Hak ujawniony, Autodafé, Marionetka wykryta, Werdykt (uniewinnienie) itd.
 
 **Patrz także:** [Krytyczna](#krytyczna), [Oskarżenie](#oskarżenie) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 
@@ -103,7 +103,7 @@ Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4�
 
 **Suplement I:** deklaracja → koszty (płać przy zagraniu) → efekt (przy odkryciu lub wg tekstu). Język efektu → leksykon.
 
-**Patrz także:** [Fizzle](#fizzle), [Limit / Erę](#limit--erę) · [`ksiega.md`](ksiega.md) · [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md)
+**Patrz także:** [Fiasko](#fiasko), [Limit / Erę](#limit--erę) · [`ksiega.md`](ksiega.md) · [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md)
 
 ---
 
@@ -176,7 +176,7 @@ Raz na gracza na Erę: wskaż kierunek / lokację dla Inkwizytora. Konflikt nas�
 
 **E.III:** lokacje 1→5 — odkryj karty od 1. gracza, efekty, Herezja, areszty, konflikty kontroli.
 
-**Patrz także:** [Fizzle](#fizzle), [Inicjacja karty](#inicjacja-karty) · [`ksiega.md`](ksiega.md)
+**Patrz także:** [Fiasko](#fiasko), [Inicjacja karty](#inicjacja-karty) · [`ksiega.md`](ksiega.md)
 
 ---
 
@@ -196,9 +196,9 @@ Akcja gracza w **E.V** przeciw celowi w Krytycznej (1× przeciw temu graczowi / 
 
 ---
 
-## Podwójny
+## Marionetka
 
-Znacznik na Agentcie po Przesłuchaniu. Raz / Erę kontroler rusza nim o 1 jak swoim; **bez** dodatkowego głosu Werdyktu. Wykrycie → właściciel +2 Herezja, znacznik znika.
+Znacznik na Agencie po Przesłuchaniu. Raz / Erę kontroler rusza nim o 1 jak swoim; **bez** dodatkowego głosu Werdyktu. Wykrycie → właściciel +2 Herezja, znacznik znika.
 
 **Patrz także:** [Przesłuchanie](#przesłuchanie), [Agent](#agent) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
 
@@ -206,7 +206,7 @@ Znacznik na Agentcie po Przesłuchaniu. Raz / Erę kontroler rusza nim o 1 jak s
 
 ## Przesłuchanie (procedura)
 
-1 / gracza / Erę w **E.IV**. Dostęp: Agent w Lochach lub karta. Wybór na aresztowanym rywalu: Podwójny **lub** Hak **lub** +2 Herezja właścicielowi.
+1 / gracza / Erę w **E.IV**. Dostęp: Agent w Lochach lub karta. Wybór na aresztowanym rywalu: Marionetka **lub** Hak **lub** +2 Herezja właścicielowi.
 
 **Patrz także:** [Lochy](#lochy), [Hak](#hak) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
 
@@ -244,9 +244,9 @@ Typ karty trzymanej w ręce; zagranie w [oknie reakcji](#okno-reakcji) przy waru
 
 ---
 
-## Talia Czasu
+## Kronika Dziejów
 
-Talia edyktów (≥8). W **E.VI** odkryj **1** edykt. Zmienia prawo Ery / natychmiast wg tekstu.
+Talia edyktów i wydarzeń (≥8). W **E.VI** odkryj **1** edykt. Zmienia prawo Ery / natychmiast wg tekstu.
 
 **Patrz także:** [Edykt](#edykt), [Czystka](#czystka)
 
@@ -294,7 +294,7 @@ Prawo Trybunału (hierarchia dokumentów) · Edykt karty · Zasada delty · Wyro
 
 ## Złoto
 
-Waluta kosztów kart i łapówek. Start **3**; trickle **+1** na początek swojej tury w E.II. Płatność **przy zagraniu** (freeze).
+Waluta kosztów kart i łapówek. Start **3** (w 5p: **2**); dopływ złota **+1** na początek swojej tury w E.II. Płatność **przy zagraniu** (kanon reguł).
 
 **Patrz także:** [Inicjacja karty](#inicjacja-karty) · [`ksiega.md`](ksiega.md)
 

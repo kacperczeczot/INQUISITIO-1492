@@ -16,7 +16,7 @@ Zasady: [`../../docs/rules/ksiega.md`](../../docs/rules/ksiega.md) · hub: [`../
 | Żetony Relikwii | 6–8 | Mat + złocenia |
 | Znaczniki Herezji (płomienie) | 5 | 1 na gracza na Torze Herezji |
 | Żetony Hak | 12 | **Jeden typ** |
-| Nakładki Podwójny | 8 | Na bazę Agenta |
+| Nakładki Marionetka | 8 | Na bazę Agenta |
 | Znaczniki złota | ~40 | Koszty kart |
 | Fragmenty Kodeksu | 6 | Kabała |
 | Stosy / Autodafé | 4 | Oficjum / świat |
@@ -40,7 +40,7 @@ Na frakcję:
 
 | Talia | Ilość kart |
 | :--- | ---: |
-| Talia Czasu (edykty) | 8+ |
+| Kronika Dziejów (edykty) | 8+ |
 
 ## Papier (PnP, nie 3D)
 
@@ -49,7 +49,7 @@ Na frakcję:
 | Plansza | 1 |
 | Planszetki | do 5 |
 | Karty frakcji | 50 |
-| Talia Czasu | 8+ |
+| Kronika Dziejów | 8+ |
 | Teach sheet | 1–2 strony |
 
 ## Estetyka

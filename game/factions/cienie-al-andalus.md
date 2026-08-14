@@ -5,7 +5,7 @@
 # Cienie Al-Andalus *(Bractwo)*
 
 **Styl:** Ukryte ruchy, Relikwie, poświęcenie, unikanie Autodafé.  
-**Cel:** Ewakuować **2 Relikwie**; ścieżka przez **Podwójnego**, cichy exit (bez Autodafé na wyjściu) **albo** szlak morski (edykt Czasu).
+**Cel:** Ewakuować **2 Relikwie**; ścieżka przez **Marionetkę**, cichy exit (bez Autodafé na wyjściu) **albo** szlak morski (edykt Czasu).
 
 ## 📜 Tło Historyczne & Kultura (1492)
 
@@ -17,7 +17,7 @@ Frakcja **Cieni Al-Andalus** to tajne bractwo zrzeszające andaluzyjskich uczony
 
 ## Tożsamość przy stole
 
-Oficjalnie — cień. Nie wygrywasz krzykiem na Werdykcie; wygrywasz, gdy Relikwia znika, zanim ktoś zauważy. Blf lokacji i Podwójni to Twoja krew.
+Oficjalnie — cień. Nie wygrywasz krzykiem na Werdykcie; wygrywasz, gdy Relikwia znika, zanim ktoś zauważy. Blf lokacji i Marionetki to Twoja krew.
 
 ## Mocne strony
 

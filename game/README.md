@@ -11,7 +11,7 @@ Wszystkie elementy gry: plansza, karty, frakcje, mechaniki, komponenty.
 | Sekcja | Opis |
 |:---|:---|
 | [Plansza](board/README.md) | Lokacje, plansza gracza |
-| [Karty](cards/README.md) | Talii frakcji, Talia Czasu, schemat, katalog |
+| [Karty](cards/README.md) | Talie frakcji, Kronika Dziejów, schemat, katalog |
 | [Frakcje](factions/README.md) | Opisy frakcji, cele, tożsamość |
 | [Mechaniki](mechanics/README.md) | Haki, Lochy, Herezja, Werdykt, Inkwizytor |
 | [Komponenty](components/README.md) | Inwentarz, druk 3D |

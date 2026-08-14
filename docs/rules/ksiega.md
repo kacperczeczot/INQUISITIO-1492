@@ -20,12 +20,12 @@
 | Plansza 5 lokacji | 1 | Graf sąsiedztwa + slot Inkwizytora + Areszt w Lochach |
 | Planszetka gracza | 1 / gracza | Tor Herezji 0–10, cel frakcji, złoto |
 | Talia frakcji | 10 kart / frakcja | Pełna talia C na stole |
-| Agenci | 3 / gracza | Kolor frakcji; nakładka **Podwójny** |
+| Agenci | 3 / gracza | Kolor frakcji; nakładka **Marionetka** |
 | Wielki Inkwizytor | 1 figurka | Stany: Patrol / Autodafé |
 | Żetony Hak | ~10 | **Jeden typ** |
 | Relikwie / Fragmenty / Stosy | wg setupu | Cele narracyjne |
 | Złoto | pula | Koszty kart, łapówki |
-| Talia Czasu | ≥8 | Edykty |
+| Kronika Dziejów | ≥8 | Edykty |
 
 → [`../../game/components/inventory.md`](../../game/components/inventory.md)
 
@@ -39,7 +39,7 @@
 4. Relikwie / Fragmenty według [`../../playtesting/setups.md`](../../playtesting/setups.md).
 5. Dobierz **5** kart z talii 10 (C).
 6. **Pierwszy gracz:** ustala stół (nie losujcie domyślnie).
-7. Talia Czasu: od Ery 1.
+7. Kronika Dziejów: od Ery 1.
 
 **Brak.** Gra jest na 3–5 graczy.
 
@@ -77,9 +77,9 @@ Wydarzenia ramowe są **obowiązkowe**. **Okno reakcji** — opcjonalne karty ty
 
 Zaczynając od 1. gracza, każdy wykonuje naprzemiennie **2 tury**. W swojej turze zagrywasz **zakrytą** kartę Akcji (płacąc jej koszt) **albo pasujesz**:
 
-1. **E.II.1** Na początek swojej tury: otrzymaj **+1 złoto** (trickle).
+1. **E.II.1** Na początek swojej tury: otrzymaj **+1 złoto** (dopływ złota).
 2. **E.II.2** Zagraj **zakrytą** kartę Akcji pod wybraną lokacją (**płać złoto przy zagraniu**). → [Inicjacja karty](#suplement-i--inicjacja-karty--zdolności)
-3. Zastosuj wymagania `location` / `agents` jeśli karta wymaga Agenta w lokacji (sprawdzane przy odkryciu; jeśli brak — karta **fizzle bez Herezji**, chyba że tekst karty mówi inaczej).
+3. Zastosuj wymagania `location` / `agents` jeśli karta wymaga Agenta w lokacji (sprawdzane przy odkryciu; jeśli brak — karta **ponosi fiasko bez Herezji**, chyba że tekst karty mówi inaczej).
 4. Opcjonalnie: wystaw lub przesuń **1 Agenta** o max 1 lokację (chyba że karta mówi inaczej).
 5. **(B+)** Przed lub po swoim zagraniu możesz wykonać **Wymuszenie Haka (procedura)** (1 / Erę) — ofiara spełnia żądanie albo +2 Herezja.
 
@@ -101,7 +101,7 @@ Od lokacji **1 → 5**:
 
 **Przesłuchanie (procedura)** — 1 / gracza / Erę. Dostęp: Agent w Lochach **lub** karta dająca dostęp. Wybierz aresztowanego Agenta rywala:
 
-1. **Podwójny** — znacznik na figurce; raz na Erę możesz ruszyć tym Agentem o 1 jak swoim (należy kolorem do właściciela; **bez** dodatkowego głosu przy Werdykcie). Wykrycie (karta / Inkwizytor w lokacji z Podwójnym): właściciel **+2 Herezja**, znacznik znika.
+1. **Marionetka** — znacznik na figurce; raz na Erę możesz ruszyć tym Agentem o 1 jak swoim (należy kolorem do właściciela; **bez** dodatkowego głosu przy Werdykcie). Wykrycie (karta / Inkwizytor w lokacji z Marionetką): właściciel **+2 Herezja**, znacznik znika.
 2. **Hak** — bierzesz żeton Haka na właściciela.
 3. **+2 Herezja** właścicielowi zamiast (1) lub (2).
 
@@ -137,16 +137,16 @@ Tor **0–10** na planszetce.
 | 4–6 | Obserwowana | Ryzyko; Kabała lubi ten pas |
 | ≥7 | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
 
-**Źródła:** `heresy` karty, `target_heresy`, ujawniony Hak, Autodafé, wykryty Podwójny, edykty.
+**Źródła:** `heresy` karty, `target_heresy`, ujawniony Hak, Autodafé, wykryta Marionetka, edykty.
 
 → [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md) · [Herezja](slownik.md#herezja)
 
 ---
 
-## 3. Karty specjalne i Talia Czasu
+## 3. Karty specjalne i Kronika Dziejów
 
 - Pełna talia **10** kart / frakcję, w tym karta specjalna (`breaks_rule: true`) — czytaj kartę; łamie wskazaną regułę raz.
-- Na końcu Ery (E.VI): odkryj **1** edykt z Talii Czasu.
+- Na końcu Ery (E.VI): odkryj **1** edykt z Kroniki Dziejów.
 
 ---
 
@@ -157,10 +157,10 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
 | **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem |
-| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Podwójny / cichy exit / szlak morski / Era 5+) |
+| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / Era 5+) |
 | **Korona & Borgiowie** | **2 Dekrety** (od Ery **5**) |
 | **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery **6**) |
-| **Gildia Cieni** | **2 Upadki** (Hak / Podwójny / Autodafé / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
+| **Gildia Cieni** | **2 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 
 **Limit Er: 10.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
 
@@ -179,7 +179,7 @@ Kanonem rozgrywki jest **skład 4-osobowy**. Przy grze w innym gronie wprowadź 
 > 3. **Przebieg Fazy Planu (E.II):** Karty zagrywane są naprzemiennie frakcjami: A1 $\rightarrow$ B1 $\rightarrow$ A2 $\rightarrow$ B2 (po 2 rundy = 8 zakrytych kart na stole).
 > 4. **Brak auto-agresji:** Twoja frakcja nie może przesłuchiwać (E.IV) ani zakładać Haków na Twoją drugą frakcję.
 > 5. **Werdykt (E.V):** Oskarżona frakcja nie głosuje; głosują pozostałe 2 neutralne frakcje (jedna Gracza A, jedna Gracza B) + oskarżyciel. Do Skazania potrzebna jest przewaga (np. wymuszona Hakiem).
-> 6. **Długość gry:** Limit Er wynosi **12 Er** (Talia Czasu: 12 kart lub przetasowanie w Erze 10).
+> 6. **Długość gry:** Limit Er wynosi **12 Er** (Kronika Dziejów: 12 kart lub przetasowanie w Erze 10).
 > 7. **Podwójne Zwycięstwo:** Wygrywa gracz, którego **OBIE frakcje** jednocześnie spełnią swoje pełne cele kanoniczne.
 >    * *Tie-breaker po 12. Erze:* 1 zrealizowany cel + postęp 2. frakcji $\rightarrow$ niższa suma Herezji obu frakcji $\rightarrow$ wyższa łączna suma złota.
 >
@@ -207,10 +207,10 @@ Karty / Erę: **2**.
 Przy zagraniu karty Akcji (E.II) lub gdy tekst każe „inicjuj”:
 
 1. **Deklaracja** — wskaż kartę i lokację (lub cel wg tekstu).
-2. **Koszty** — zapłać złoto / inne koszty **przy zagraniu** (freeze).
+2. **Koszty** — zapłać złoto / inne koszty **przy zagraniu** (kanon reguł).
 3. **Efekt** — przy odkryciu (E.III) lub natychmiast, jeśli karta mówi inaczej; język efektu: [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md).
 
-Jeśli wymagania `location` / `agents` nie są spełnione przy rozpatrzeniu → **fizzle** bez Herezji (chyba że karta mówi inaczej).
+Jeśli wymagania `location` / `agents` nie są spełnione przy rozpatrzeniu → **fiasko** bez Herezji (chyba że karta mówi inaczej).
 
 ---
 
@@ -228,20 +228,20 @@ Kanon pól: [`../../game/cards/SCHEMA.md`](../../game/cards/SCHEMA.md).
 
 ---
 
-## 6. Freeze prototypu (offline)
+## 6. Prawomocność reguł (Kanon stołu)
 
-Zamrożone reguły (bez „ustal przy stole”):
+Prawomocne reguły kanoniczne:
 
-| Reguła | Freeze |
+| Reguła | Kanon |
 | :--- | :--- |
 | Płatność złota | przy zagraniu |
-| Trickle złota | **+1** na początek swojej tury (E.II) |
-| Fizzle (brak lokacji/agentów) | bez Herezji |
+| Dopływ złota | **+1** na początek swojej tury (E.II) |
+| Fiasko (brak lokacji/agentów) | bez Herezji |
 | Relikwia przy Autodafé | wraca do puli |
 | Werdykt | głosowanie **jawne** (na 4–5p Stos dla Oficjum tylko gdy Oficjum oskarżało) |
-| Podwójny | tylko ruch (bez głosu) |
+| Marionetka | tylko ruch (bez głosu) |
 | Karty / Erę | **do 2** (zagranie lub pas) |
-| Talia Czasu | odkryj **1** edykt |
+| Kronika Dziejów | odkryj **1** edykt |
 | Patrol bez nasłania | najniższa Herezja; remis → 1. gracz |
 | Limit Er / remis | 9 Er; najbliższy cel, potem najniższa Herezja |
 | Lokacje kluczowe Gildii | Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek |
