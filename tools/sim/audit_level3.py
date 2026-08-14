@@ -21,6 +21,7 @@ from inquisitio.runner.scoring import (
     calculate_global_score,
     color_score,
 )
+from inquisitio.runner.audit_facts import delta_status, score_pair
 
 FACTION_NAMES = {
     "so": ("Święte Oficjum", "swiete-oficjum"),
@@ -192,41 +193,18 @@ def main():
         "",
         "## 1. Tabela Wyników Balansu i Delty (Zmiany) dla Każdego Składu Graczy",
         "",
-        "| ID | Testowany Parametr Karty | Global Score | Delta Global | 3p Score | Delta 3p | 4p Score | Delta 4p | 5p Score | Delta 5p | Status Balansu |",
-        "| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        "| ID | Testowany Parametr Karty | Global (baza → test) | 3p (baza → test) | 4p (baza → test) | 5p (baza → test) | Status Balansu |",
+        "| :---: | :--- | :---: | :---: | :---: | :---: | :---: |",
     ]
 
     for r in results:
         g_diff = r['global_score'] - base['global_score']
-        g_diff_str = f"+{g_diff:.1f}" if g_diff > 0 else f"{g_diff:.1f}"
-
-        s3 = r['cat_scores'].get('3p', 0.0)
-        b3 = base['cat_scores'].get('3p', 0.0)
-        d3 = s3 - b3
-        d3_str = f"+{d3:.1f}" if d3 > 0 else f"{d3:.1f}"
-        s3_fmt = f"⬆️ {s3:.1f}" if d3 > 0 else f"{s3:.1f}"
-
-        s4 = r['cat_scores'].get('4p', 0.0)
-        b4 = base['cat_scores'].get('4p', 0.0)
-        d4 = s4 - b4
-        d4_str = f"+{d4:.1f}" if d4 > 0 else f"{d4:.1f}"
-        s4_fmt = f"⬆️ {s4:.1f}" if d4 > 0 else f"{s4:.1f}"
-
-        s5 = r['cat_scores'].get('5p', 0.0)
-        b5 = base['cat_scores'].get('5p', 0.0)
-        d5 = s5 - b5
-        d5_str = f"+{d5:.1f}" if d5 > 0 else f"{d5:.1f}"
-        s5_fmt = f"⬆️ {s5:.1f}" if d5 > 0 else f"{s5:.1f}"
-
-        if g_diff > 0.5:
-            status = "🟢 POPRAWIA GLOBALNIE"
-        elif g_diff < -0.5:
-            status = "🔴 POGARSZA GLOBALNIE"
-        else:
-            status = "⚪ OPTYMALNY"
-
         report_lines.append(
-            f"| `{r['id']}` | {r['name']} | {color_score(r['global_score'], bold=True)} | `{g_diff_str}` | {s3_fmt} | `{d3_str}` | {s4_fmt} | `{d4_str}` | {s5_fmt} | `{d5_str}` | {status} |"
+            f"| `{r['id']}` | {r['name']} | {score_pair(base['global_score'], r['global_score'], colored=True)} | "
+            f"{score_pair(base['cat_scores'].get('3p', 0.0), r['cat_scores'].get('3p', 0.0))} | "
+            f"{score_pair(base['cat_scores'].get('4p', 0.0), r['cat_scores'].get('4p', 0.0))} | "
+            f"{score_pair(base['cat_scores'].get('5p', 0.0), r['cat_scores'].get('5p', 0.0))} | "
+            f"{delta_status(g_diff)} |"
         )
 
 

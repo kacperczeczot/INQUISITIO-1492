@@ -19,6 +19,7 @@ from inquisitio.runner.scoring import (
     calculate_global_score,
     color_score,
 )
+from inquisitio.runner.audit_facts import delta_status, score_pair
 
 
 def _pc(sec, delta: int = 0) -> str:
@@ -46,14 +47,32 @@ def build_level2_tests():
         ("L2_CAA_ERA_MINUS1", f"Cienie Era: {_pc(caa.path_era)} → {_pc(caa.path_era, -1)}", {"caa_era_offset": -1}),
         ("L2_KB_ERA_PLUS1", f"Korona Era: {_pc(kb.era)} → {_pc(kb.era, 1)}", {"kb_era_offset": 1}),
         ("L2_KB_ERA_MINUS1", f"Korona Era: {_pc(kb.era)} → {_pc(kb.era, -1)}", {"kb_era_offset": -1}),
+        ("L2_KB_DECREES_PLUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, 1)}", {"kb_decrees_offset": 1}),
+        ("L2_KB_DECREES_MINUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
+        ("L2_KB_HOOKS_PLUS1", f"Korona Haki: {_pc(kb.hooks)} → {_pc(kb.hooks, 1)}", {"kb_hooks_offset": 1}),
+        ("L2_KB_HOOKS_MINUS1", f"Korona Haki: {_pc(kb.hooks)} → {_pc(kb.hooks, -1)}", {"kb_hooks_offset": -1}),
+        ("L2_KB_ALT_DECREES_PLUS1", f"Korona Alt Dekrety: {kb.alt_path.decrees} → {kb.alt_path.decrees + 1}", {"kb_alt_decrees_offset": 1}),
+        ("L2_KB_ALT_DECREES_MINUS1", f"Korona Alt Dekrety: {kb.alt_path.decrees} → {kb.alt_path.decrees - 1}", {"kb_alt_decrees_offset": -1}),
+        ("L2_KB_ALT_HOOKS_PLUS1", f"Korona Alt Haki: {kb.alt_path.hooks} → {kb.alt_path.hooks + 1}", {"kb_alt_hooks_offset": 1}),
+        ("L2_KB_ALT_HOOKS_MINUS1", f"Korona Alt Haki: {kb.alt_path.hooks} → {kb.alt_path.hooks - 1}", {"kb_alt_hooks_offset": -1}),
+        ("L2_KB_ALT_ERA_PLUS1", f"Korona Alt Era: {kb.alt_path.era} → {kb.alt_path.era + 1}", {"kb_alt_era_offset": 1}),
+        ("L2_KB_ALT_ERA_MINUS1", f"Korona Alt Era: {kb.alt_path.era} → {kb.alt_path.era - 1}", {"kb_alt_era_offset": -1}),
+        ("L2_KB_ALT_MINP_PLUS1", f"Korona Alt min graczy: {kb.alt_path.min_players} → {kb.alt_path.min_players + 1}", {"kb_alt_min_players_offset": 1}),
+        ("L2_KB_ALT_MINP_MINUS1", f"Korona Alt min graczy: {kb.alt_path.min_players} → {kb.alt_path.min_players - 1}", {"kb_alt_min_players_offset": -1}),
         ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
         ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
+        ("L2_KT_ERA_PLUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, 1)}", {"kt_era_offset": 1}),
+        ("L2_KT_ERA_MINUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, -1)}", {"kt_era_offset": -1}),
         ("L2_KT_HERESY_LOW_MINUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0] - 1}–{hb[1]}", {"kt_heresy_band": (hb[0] - 1, hb[1])}),
         ("L2_KT_HERESY_LOW_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0] + 1}–{hb[1]}", {"kt_heresy_band": (hb[0] + 1, hb[1])}),
         ("L2_KT_HERESY_HIGH_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] + 1}", {"kt_heresy_band": (hb[0], hb[1] + 1)}),
         ("L2_KT_HERESY_HIGH_MINUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] - 1}", {"kt_heresy_band": (hb[0], hb[1] - 1)}),
         ("L2_GC_FALLS_PLUS1", f"Gildia Upadki (default/bez SO): {gc.falls.default}/{gc.falls.no_oficjum} → {gc.falls.default + 1}/{gc.falls.no_oficjum + 1}", {"gc_falls_offset": 1}),
         ("L2_GC_FALLS_MINUS1", f"Gildia Upadki (default/bez SO): {gc.falls.default}/{gc.falls.no_oficjum} → {gc.falls.default - 1}/{gc.falls.no_oficjum - 1}", {"gc_falls_offset": -1}),
+        ("L2_GC_FALLS_DEFAULT_PLUS1", f"Gildia Upadki (z Oficjum): {gc.falls.default} → {gc.falls.default + 1}", {"gc_falls_default_offset": 1}),
+        ("L2_GC_FALLS_DEFAULT_MINUS1", f"Gildia Upadki (z Oficjum): {gc.falls.default} → {gc.falls.default - 1}", {"gc_falls_default_offset": -1}),
+        ("L2_GC_FALLS_NO_SO_PLUS1", f"Gildia Upadki (bez Oficjum): {gc.falls.no_oficjum} → {gc.falls.no_oficjum + 1}", {"gc_falls_no_oficjum_offset": 1}),
+        ("L2_GC_FALLS_NO_SO_MINUS1", f"Gildia Upadki (bez Oficjum): {gc.falls.no_oficjum} → {gc.falls.no_oficjum - 1}", {"gc_falls_no_oficjum_offset": -1}),
     ]
 
 
@@ -163,41 +182,18 @@ def main():
         "",
         "## 1. Tabela Wyników Balansu i Delty (Zmiany) dla Każdego Składu Graczy",
         "",
-        "| ID | Warunek Zwycięstwa Poziomu 2 | Global Score | Delta Global | 3p Score | Delta 3p | 4p Score | Delta 4p | 5p Score | Delta 5p | Status Balansu |",
-        "| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+        "| ID | Warunek Zwycięstwa Poziomu 2 | Global (baza → test) | 3p (baza → test) | 4p (baza → test) | 5p (baza → test) | Status Balansu |",
+        "| :---: | :--- | :---: | :---: | :---: | :---: | :---: |",
     ]
 
     for r in results:
         g_diff = r['global_score'] - base['global_score']
-        g_diff_str = f"+{g_diff:.1f}" if g_diff > 0 else f"{g_diff:.1f}"
-
-        s3 = r['cat_scores'].get('3p', 0.0)
-        b3 = base['cat_scores'].get('3p', 0.0)
-        d3 = s3 - b3
-        d3_str = f"+{d3:.1f}" if d3 > 0 else f"{d3:.1f}"
-        s3_fmt = f"⬆️ {s3:.1f}" if d3 > 0 else f"{s3:.1f}"
-
-        s4 = r['cat_scores'].get('4p', 0.0)
-        b4 = base['cat_scores'].get('4p', 0.0)
-        d4 = s4 - b4
-        d4_str = f"+{d4:.1f}" if d4 > 0 else f"{d4:.1f}"
-        s4_fmt = f"⬆️ {s4:.1f}" if d4 > 0 else f"{s4:.1f}"
-
-        s5 = r['cat_scores'].get('5p', 0.0)
-        b5 = base['cat_scores'].get('5p', 0.0)
-        d5 = s5 - b5
-        d5_str = f"+{d5:.1f}" if d5 > 0 else f"{d5:.1f}"
-        s5_fmt = f"⬆️ {s5:.1f}" if d5 > 0 else f"{s5:.1f}"
-
-        if g_diff > 0.5:
-            status = "🟢 POPRAWIA GLOBALNIE"
-        elif g_diff < -0.5:
-            status = "🔴 POGARSZA GLOBALNIE"
-        else:
-            status = "⚪ OPTYMALNY"
-
         report_lines.append(
-            f"| `{r['id']}` | {r['name']} | {color_score(r['global_score'], bold=True)} | `{g_diff_str}` | {s3_fmt} | `{d3_str}` | {s4_fmt} | `{d4_str}` | {s5_fmt} | `{d5_str}` | {status} |"
+            f"| `{r['id']}` | {r['name']} | {score_pair(base['global_score'], r['global_score'], colored=True)} | "
+            f"{score_pair(base['cat_scores'].get('3p', 0.0), r['cat_scores'].get('3p', 0.0))} | "
+            f"{score_pair(base['cat_scores'].get('4p', 0.0), r['cat_scores'].get('4p', 0.0))} | "
+            f"{score_pair(base['cat_scores'].get('5p', 0.0), r['cat_scores'].get('5p', 0.0))} | "
+            f"{delta_status(g_diff)} |"
         )
 
 
