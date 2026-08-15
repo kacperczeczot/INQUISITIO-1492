@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
-"""INQUISITIO-1492 — SZALONY AUDYTOR / AUTONOMOUS BALANCE OPTIMIZER.
+"""INQUISITIO-1492 — SZALONY AUDYTOR / PROGRESSIVE BEAM BALANCE OPTIMIZER.
 
-Autonomously explores the parameter space (Levels 1–4), finds the single best
-balance improvement (highest delta global), applies the change to game_config.yaml,
-bumps the version, archives snapshots, generates full reports & documentation,
-updates playtesting/balance-notes.md and repeats in a continuous hill-climbing loop
-until a global optimum is reached or time limit expires.
+Autonomiczny optymalizator balansu oparty na Progresywnym Przeszukiwaniu Wiązkowym (Progressive Beam Search).
+Działa jednocześnie na wszystkich poziomach gry (L1 Rdzeń + L2 Zwycięstwa + L3 Karty + L4 Warianty):
+  1. Faza 1 (1D): Przesiew wszystkich atomowych modyfikacji L1–L4 (min. 1000 gier) -> TOP 12 Finalistów (min. 5000 gier CRN).
+  2. Jeśli brak dodatniej delty -> wybiera TOP 8 kandydatów i wchodzi w Fazę 2 (Wiązki 2D: TOP 8 x Wszystkie mechaniki L1-L4).
+  3. Jeśli brak dodatniej delty w Fazie 2 -> wybiera TOP 8 par i wchodzi w Fazę 3 (Wiązki 3D / Trójki).
+  4. Schodzi rekurencyjnie bez limitu faz, dopóki nie przełamie plateau.
+  5. Po znalezieniu zyskownej kombinacji (1D, 2D, 3D...) wdraża Patch, aktualizuje raporty i resetuje wiązkę do Fazy 1.
+
+Pełna automatyzacja dokumentacji:
+  - raport_telemetrii.md (oraz archiwum wersji)
+  - raport_optymalizacji.md (oraz archiwum wersji)
+  - playtesting/balance-notes.md (wpisy Patch Notes + Stan Zmierzony)
+  - auto_balancer_log.md
+  - Pełna synchronizacja kart, katalogu i księgi zasad (sync_config.py)
 """
 from __future__ import annotations
 
@@ -32,6 +41,7 @@ for p in (TOOLS_SIM_DIR, SIM_DIR):
         sys.path.insert(0, str(p))
 
 import yaml
+from inquisitio.cards.loader import load_all_cards
 from inquisitio.config import CONFIG, _CONFIG_PATH
 from inquisitio.config_updater import apply_mutation_to_config, save_config_and_bump_version
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
@@ -63,12 +73,25 @@ FACTION_NAMES = {
 }
 
 
+def passes_telemetry_safety(res: dict) -> tuple[bool, str]:
+    """Verify that candidate results stay within safety margins."""
+    if res.get("deadlock_pct", 0) > 5.0:
+        return False, f"Deadlock {res['deadlock_pct']:.1f}% > 5.0%"
+    if res.get("poverty_pct", 0) > 30.0:
+        return False, f"Pas Biedy {res['poverty_pct']:.1f}% > 30.0%"
+    eras = res.get("eras_avg", 5.5)
+    if eras < 4.5 or eras > 7.0:
+        return False, f"Śr. Er {eras:.2f} poza zakresem [4.5, 7.0]"
+    return True, "OK"
+
+
 def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:
     """Execute a single candidate rule across all setups."""
     (rule_id, rule_name, rule_params), games_per_setup, seed, setups = task_args
     t_rule = time.time()
 
     summaries = []
+    setup_scores = {}
     for sname in setups:
         summary = run_batch(
             games=games_per_setup,
@@ -78,6 +101,7 @@ def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list
             win_overrides=rule_params,
         )
         summaries.append(summary)
+        setup_scores[sname] = calculate_setup_score(summary)
 
     cat_scores = calculate_category_scores(summaries)
     global_score = calculate_global_score(cat_scores)
@@ -92,20 +116,11 @@ def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list
     poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
 
     autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
-    autodafe_min = min(s.autodafe_min for s in summaries)
-    autodafe_max = max(s.autodafe_max for s in summaries)
-
     acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
-    acc_min = min(s.accusations_min for s in summaries)
-    acc_max = max(s.accusations_max for s in summaries)
-
     gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
-    gold_min = min(s.gold_min for s in summaries)
-    gold_max = max(s.gold_max for s in summaries)
 
-    heresy_avg = sum(s.avg_heresy_end for s in summaries) / n_sum
-    heresy_min = min(s.heresy_min for s in summaries)
-    heresy_max = max(s.heresy_max for s in summaries)
+    min_setup_name = min(setup_scores, key=lambda k: setup_scores[k])
+    min_setup_score = setup_scores[min_setup_name]
 
     return {
         "id": rule_id,
@@ -113,56 +128,80 @@ def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list
         "params": rule_params,
         "global_score": global_score,
         "cat_scores": cat_scores,
+        "setup_scores": setup_scores,
+        "min_setup": (min_setup_name, min_setup_score),
         "dt": dt,
         "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
         "deadlock_pct": deadlock_pct,
         "poverty_pct": poverty_pct,
-        "autodafe_avg": autodafe_avg, "autodafe_min": autodafe_min, "autodafe_max": autodafe_max,
-        "acc_avg": acc_avg, "acc_min": acc_min, "acc_max": acc_max,
-        "gold_avg": gold_avg, "gold_min": gold_min, "gold_max": gold_max,
-        "heresy_avg": heresy_avg, "heresy_min": heresy_min, "heresy_max": heresy_max,
+        "autodafe_avg": autodafe_avg,
+        "acc_avg": acc_avg,
+        "gold_avg": gold_avg,
     }
 
 
-def generate_candidate_tests(
-    level_filter: str = "all",
-    param_filter: str = "cost,heresy",
-    card_filter: str | None = None,
-) -> list[tuple[str, str, dict]]:
-    """Build all candidate tests from levels 1 to 4."""
-    tests = [("BAZA", "Baza (Bieżący stan gry)", {})]
+def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
+    """Builds the full pool of atomic candidates across L1, L2, L3, and L4."""
+    tests = []
 
-    if level_filter in ("all", "1"):
-        l1 = audit_level1.build_level1_tests()
-        tests.extend([t for t in l1 if t[0] != "L1_BAZA"])
+    # Level 1 (Core System Parameters)
+    l1 = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
+    tests.extend(l1)
 
-    if level_filter in ("all", "2"):
-        l2 = audit_level2.build_level2_tests()
-        tests.extend([t for t in l2 if t[0] != "L2_BAZA"])
+    # Level 2 (Faction Victory Conditions)
+    l2 = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
+    tests.extend(l2)
 
-    if level_filter in ("all", "3"):
-        l3 = audit_level3.build_level3_tests(param_filter=param_filter, card_filter=card_filter)
-        tests.extend([t for t in l3 if t[0] != "L3_BAZA"])
+    # Level 3 (Card Parameters: cost, heresy, gold, target_heresy)
+    l3 = [t for t in audit_level3.build_level3_tests(param_filter="cost,heresy,gold,target_heresy") if t[0] != "L3_BAZA"]
+    tests.extend(l3)
 
-    if level_filter in ("all", "4"):
-        l4 = audit_level4.build_level4_tests()
-        tests.extend([t for t in l4 if t[0] != "L4_BAZA"])
+    # Level 4 (Niche Variants & Edicts)
+    l4 = [t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"]
+    tests.extend(l4)
 
     return tests
 
 
-def passes_telemetry_safety(res: dict) -> tuple[bool, str]:
-    """Verify that a candidate does not violate critical telemetry norms."""
-    if res["deadlock_pct"] > 5.0:
-        return False, f"Deadlock {res['deadlock_pct']:.1f}% > 5%"
-    if res["poverty_pct"] > 30.0:
-        return False, f"Pas Biedy {res['poverty_pct']:.1f}% > 30%"
-    if res["eras_avg"] < 4.5 or res["eras_avg"] > 7.0:
-        return False, f"Śr. Er {res['eras_avg']:.2f} poza zakresem [4.5, 7.0]"
-    return True, "OK"
+def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tuple[str, str, dict] | None:
+    """Merges two mutations into a composite mutation (e.g. 2D pair or 3D triple)."""
+    id1, name1, p1 = m1
+    id2, name2, p2 = m2
+
+    # Check for direct conflicts on atomic keys
+    keys1 = set(p1.keys()) - {"card_overrides"}
+    keys2 = set(p2.keys()) - {"card_overrides"}
+    if keys1 & keys2:
+        return None  # Direct conflict on same system parameter
+
+    # Check for conflicts on same card parameters
+    cards1 = p1.get("card_overrides", {})
+    cards2 = p2.get("card_overrides", {})
+    for cid, c_dict in cards2.items():
+        if cid in cards1:
+            if set(c_dict.keys()) & set(cards1[cid].keys()):
+                return None  # Conflict on same card parameter
+
+    combined_id = f"{id1}__{id2}"
+    combined_name = f"{name1} + {name2}"
+
+    merged_params = copy.deepcopy(p1)
+    for k, v in p2.items():
+        if k != "card_overrides":
+            merged_params[k] = v
+        else:
+            if "card_overrides" not in merged_params:
+                merged_params["card_overrides"] = {}
+            for cid, c_dict in v.items():
+                if cid in merged_params["card_overrides"]:
+                    merged_params["card_overrides"][cid].update(c_dict)
+                else:
+                    merged_params["card_overrides"][cid] = copy.deepcopy(c_dict)
+
+    return (combined_id, combined_name, merged_params)
 
 
-def generate_and_save_telemetry_report(version: str, games_per_setup: int = 500, seed: int = 42) -> tuple[Path, Path | None]:
+def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000, seed: int = 42) -> tuple[Path, Path | None]:
     """Generates and archives raport_telemetrii.md for the given version."""
     setups = sorted(SETUP_PRESETS.keys())
     t0 = time.time()
@@ -188,41 +227,11 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 500,
         autodafe_avg = round(summary.autodafe_avg, 2)
         accusations_avg = round(summary.accusations_avg, 2)
 
-        # 3-color telemetry zones: 🟢 strict norm, 🟡 warning band, 🔴 out of norm
-        if 5.0 <= avg_eras <= 6.5:
-            eras_opt = "🟢"
-        elif 4.5 <= avg_eras <= 7.0:
-            eras_opt = "🟡"
-        else:
-            eras_opt = "🔴"
-
-        if deadlock_pct <= 5.0:
-            deadlock_opt = "🟢"
-        elif deadlock_pct <= 10.0:
-            deadlock_opt = "🟡"
-        else:
-            deadlock_opt = "🔴"
-
-        if poverty_pct <= 28.0:
-            poverty_opt = "🟢"
-        elif poverty_pct <= 32.0:
-            poverty_opt = "🟡"
-        else:
-            poverty_opt = "🔴"
-
-        if 0.7 <= autodafe_avg <= 1.8:
-            autodafe_opt = "🟢"
-        elif 0.5 <= autodafe_avg <= 2.0:
-            autodafe_opt = "🟡"
-        else:
-            autodafe_opt = "🔴"
-
-        if 2.0 <= accusations_avg <= 4.5:
-            acc_opt = "🟢"
-        elif 1.5 <= accusations_avg <= 5.0:
-            acc_opt = "🟡"
-        else:
-            acc_opt = "🔴"
+        eras_opt = "🟢" if 5.0 <= avg_eras <= 6.5 else ("🟡" if 4.5 <= avg_eras <= 7.0 else "🔴")
+        deadlock_opt = "🟢" if deadlock_pct <= 5.0 else ("🟡" if deadlock_pct <= 10.0 else "🔴")
+        poverty_opt = "🟢" if poverty_pct <= 28.0 else ("🟡" if poverty_pct <= 32.0 else "🔴")
+        autodafe_opt = "🟢" if 0.7 <= autodafe_avg <= 1.8 else ("🟡" if 0.5 <= autodafe_avg <= 2.0 else "🔴")
+        acc_opt = "🟢" if 2.0 <= accusations_avg <= 4.5 else ("🟡" if 1.5 <= accusations_avg <= 5.0 else "🔴")
 
         setup_data.append({
             "setup": sname,
@@ -264,14 +273,7 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 500,
         kt_s = f"{d['shares'].get('KT', 0.0):.1f}%" if "KT" in d['shares'] else "-"
         gc_s = f"{d['shares'].get('GC', 0.0):.1f}%" if "GC" in d['shares'] else "-"
 
-        if d['score'] >= 90.0:
-            eval_str = "🟢 ZBALANSOWANY"
-        elif d['score'] >= 75.0:
-            eval_str = "🟡 AKCEPTOWALNY"
-        elif d['score'] >= 60.0:
-            eval_str = "🟠 WYMAGA UWAGI"
-        else:
-            eval_str = "🔴 ODCHYLONY"
+        eval_str = "🟢 ZBALANSOWANY" if d['score'] >= 90.0 else ("🟡 AKCEPTOWALNY" if d['score'] >= 75.0 else ("🟠 WYMAGA UWAGI" if d['score'] >= 60.0 else "🔴 ODCHYLONY"))
         report_lines.append(
             f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
         )
@@ -287,80 +289,9 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 500,
     for d in setup_data:
         all_ok = (d['eras_opt'] == "🟢" and d['deadlock_opt'] == "🟢" and d['poverty_opt'] == "🟢")
         status_icon = "🟢 OPTYMALNA" if all_ok else "⚠️ WARTOŚCI BRZEGOWE"
-
         report_lines.append(
             f"| `{d['setup']}` | {d['avg_eras']} {d['eras_opt']} | {d['deadlock_pct']}% {d['deadlock_opt']} | {d['poverty_pct']}% {d['poverty_opt']} | {d['autodafe_avg']} {d['autodafe_opt']} | {d['accusations_avg']} {d['acc_opt']} | {d['end_gold']}zł | {d['end_heresy']} | {status_icon} |"
         )
-
-    # --- Section 3: Faction Attention Report ---
-    # Compute per-faction average win shares across all setups
-    faction_stats: dict[str, list[tuple[str, float, float]]] = {}  # faction -> [(setup, share, ideal)]
-    for d in setup_data:
-        ideal = d['ideal_share'] / 100.0
-        for fname, share_pct in d['shares'].items():
-            share = share_pct / 100.0
-            faction_stats.setdefault(fname, []).append((d['setup'], share, ideal))
-
-    report_lines.extend([
-        "",
-        "## 3. Frakcje Wymagające Uwagi",
-        "",
-    ])
-
-    # Per-faction summary
-    faction_summary = []
-    for fname, entries in sorted(faction_stats.items()):
-        avg_share = sum(s for _, s, _ in entries) / len(entries)
-        avg_ideal = sum(i for _, _, i in entries) / len(entries)
-        worst_setup = max(entries, key=lambda e: abs(e[1] - e[2]))
-        worst_dev = worst_setup[1] - worst_setup[2]
-        worst_dev_pct = worst_dev * 100.0
-        if abs(worst_dev_pct) > 5.0:
-            status = "🟡 DOMINUJE" if worst_dev > 0 else "🟡 SŁABA"
-        elif abs(worst_dev_pct) > 8.0:
-            status = "🔴 SILNIE ZABURZONA"
-        else:
-            status = "🟢 OK"
-        faction_summary.append((fname, avg_share * 100, worst_setup[0], worst_dev_pct, status))
-
-    report_lines.append("| Frakcja | Śr. Win Share (wszystkie setupy) | Najgorszy Setup | Max Odchylenie od Ideału | Status |")
-    report_lines.append("| :--- | :---: | :--- | :---: | :--- |")
-    for fname, avg_s, ws_name, ws_dev, ws_status in sorted(faction_summary, key=lambda x: abs(x[3]), reverse=True):
-        dev_sign = f"+{ws_dev:.1f}%" if ws_dev > 0 else f"{ws_dev:.1f}%"
-        report_lines.append(f"| **{fname}** | {avg_s:.1f}% | `{ws_name}` | {dev_sign} | {ws_status} |")
-
-    # Setups below 90
-    weak_setups = [(d['setup'], d['score'], d['shares'], d['ideal_share']) for d in setup_data if d['score'] < 90.0]
-    if weak_setups:
-        report_lines.extend([
-            "",
-            "### Setupy poniżej Score 90 (wymagające poprawy):",
-            "",
-            "| Setup | Score | Główny problem |",
-            "| :--- | :---: | :--- |",
-        ])
-        for sname, score, shares, ideal in sorted(weak_setups, key=lambda x: x[1]):
-            # Find most deviated faction
-            max_dev_fname = max(shares, key=lambda f: abs(shares[f] - ideal))
-            dev = shares[max_dev_fname] - ideal
-            problem = f"{max_dev_fname} {'dominuje' if dev > 0 else 'za słaba'} ({shares[max_dev_fname]:.1f}% vs ideal {ideal:.1f}%)"
-            report_lines.append(f"| `{sname}` | {color_score(score, bold=True)} | {problem} |")
-    else:
-        report_lines.extend(["", "### ✅ Wszystkie setupy mają Score ≥ 90 — brak setupów wymagających poprawy."])
-
-    # --- Section 4: Legend ---
-    report_lines.extend([
-        "",
-        "## 4. Legenda Wskaźników Telemetrii i Norm Balansowych",
-        "",
-        "- **🎯 Punkt Idealny (Ideal Share):** 33.3% w 3p | 25.0% w 4p | 20.0% w 5p",
-        "- **⏱️ Średnia Er (Tempo Gry):** 🟢 **5.0 – 6.5 Er** | 🟡 4.5–5.0 / 6.5–7.0 | 🔴 poza zakresem",
-        "- **🔒 Remisy po Limicie Er (Deadlock %):** 🟢 **< 5.0%** | 🟡 5–10% | 🔴 > 10%",
-        "- **💰 Pas Biedy (Poverty Rate %):** 🟢 **< 28.0%** | 🟡 28–32% | 🔴 > 32%",
-        "- **🔥 Autodafé / Partię:** 🟢 **0.7 – 1.8** | 🟡 0.5–0.7 / 1.8–2.0 | 🔴 poza zakresem",
-        "- **⚖️ Oskarżenia / Partię:** 🟢 **2.0 – 4.5** | 🟡 1.5–2.0 / 4.5–5.0 | 🔴 poza zakresem",
-        "- **📊 Status Setupu:** 🟢 Score ≥ 90 | 🟡 ≥ 75 | 🟠 ≥ 60 | 🔴 < 60",
-    ])
 
     return save_and_archive_report(report_lines, "raport_telemetrii.md")
 
@@ -369,6 +300,7 @@ def generate_and_save_optimization_report(
     old_version: str,
     new_version: str,
     iteration: int,
+    phase: int,
     base_res: dict,
     best_res: dict,
     all_ranked_candidates: list[dict],
@@ -381,13 +313,13 @@ def generate_and_save_optimization_report(
     delta_str = f"+{d_glob:.1f}" if d_glob > 0 else f"{d_glob:.1f}"
 
     lines = [
-        f"# Raport Optymalizacji Balansu (Szalony Audytor) — Wersja {new_version} (Iteracja #{iteration})",
+        f"# Raport Optymalizacji Balansu (Szalony Audytor — Progressive Beam) — Wersja {new_version} (Iteracja #{iteration}, Faza {phase}D)",
         "",
         f"**Wersja Poprzednia:** `{old_version}` (`{base_res['global_score']:.1f} pkt`) → **Nowa Wersja:** `{new_version}` (`{best_res['global_score']:.1f} pkt`)",
         f"**Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Czas Trwania Iteracji:** {elapsed_iter:.1f}s | **Zysk Global:** `{delta_str} pkt`",
         "",
         "## 1. Wprowadzona Zmiana i Wynik Balansu",
-        f"- **Wybrany Wariant:** `{rule_id}` — **{best_res['name']}**",
+        f"- **Wybrany Wariant ({phase}D):** `{rule_id}` — **{best_res['name']}**",
         f"- **Opis Modyfikacji:** {change_desc}",
         f"- **Global Game Balance Score:** {score_pair(base_res['global_score'], best_res['global_score'], colored=True)} pkt",
         f"- **Rozbicie Składów Graczy:**",
@@ -395,13 +327,13 @@ def generate_and_save_optimization_report(
         f"  - **4p:** {score_pair(base_res['cat_scores'].get('4p',0), best_res['cat_scores'].get('4p',0))} pkt",
         f"  - **5p:** {score_pair(base_res['cat_scores'].get('5p',0), best_res['cat_scores'].get('5p',0))} pkt",
         f"- **Kluczowa Telemetria Silnika:**",
-        f"  - **Średnia Długość Gry:** `{best_res['eras_avg']:.2f} Er` (zakres: {best_res['eras_min']}–{best_res['eras_max']})",
-        f"  - **Deadlocki (Limit 8/9 Er):** `{best_res['deadlock_pct']:.1f}%` (norma: <15%)",
-        f"  - **Pas Biedy (Wymuszony brak monety):** `{best_res['poverty_pct']:.1f}%` (norma: <30%)",
+        f"  - **Średnia Długość Gry:** `{best_res['eras_avg']:.2f} Er`",
+        f"  - **Deadlocki (Limit Er):** `{best_res['deadlock_pct']:.1f}%` (norma: <5%)",
+        f"  - **Pas Biedy (Złoto):** `{best_res['poverty_pct']:.1f}%` (norma: <30%)",
         f"  - **Autodafé / partię:** `{best_res['autodafe_avg']:.2f}`",
         f"  - **Oskarżenia / partię:** `{best_res['acc_avg']:.2f}`",
         "",
-        "## 2. Ranking Przebadanych Kandydatów w tej Iteracji",
+        "## 2. Ranking Przebadanych Kandydatów w tej Iteracji (TOP Finaliści)",
         "",
         "| Poz. | ID Wariantu | Nazwa / Opis | Global (baza → test) | 3p | 4p | 5p | Deadlocks % | Pas Biedy % | Status |",
         "| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
@@ -436,7 +368,6 @@ def update_balance_notes(
     d_glob = best_res["global_score"] - base_res["global_score"]
     delta_str = f"+{d_glob:.1f}" if d_glob > 0 else f"{d_glob:.1f}"
 
-    # Build new patch note block
     patch_note_block = (
         f"### 🟢 Patch {new_version} ({today}) — {change_desc} (Zysk Δ {delta_str} pkt)\n"
         f"- **Wynik:** Global **`{best_res['global_score']:.1f}`** | 3p **`{best_res['cat_scores'].get('3p',0.0):.1f}`** | 4p **`{best_res['cat_scores'].get('4p',0.0):.1f}`** | 5p **`{best_res['cat_scores'].get('5p',0.0):.1f}`**\n"
@@ -444,15 +375,13 @@ def update_balance_notes(
         f"- **Efekt:** Wzrost wyniku globalnego z {base_res['global_score']:.1f} do **`{best_res['global_score']:.1f} pkt`** ({delta_str} pkt). Telemetria: Średnia Er {best_res['eras_avg']:.2f}, Deadlocks {best_res['deadlock_pct']:.1f}%, Pas Biedy {best_res['poverty_pct']:.1f}%.\n\n"
     )
 
-    # Insert below heading: ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
     history_heading = "## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)\n\n"
     if history_heading in content:
         content = content.replace(history_heading, history_heading + patch_note_block, 1)
 
-    # Update ## 📊 Stan zmierzony block
     measured_pattern = r"(## 📊 Stan zmierzony — [^\n]+\n\nYAML po Patch [^\n]+\n\n- \*\*Global Game Balance Score:\*\* [^\n]+\n- \*\*3p Avg Score:\*\* [^\n]+\n- \*\*4p Avg Score:\*\* [^\n]+\n- \*\*5p Avg Score:\*\* [^\n]+)"
     new_measured_block = (
-        f"## 📊 Stan zmierzony — {today} (Szalony Audytor, seed 42, warstwa C)\n\n"
+        f"## 📊 Stan zmierzony — {today} (Szalony Audytor Progressive Beam, seed 42, warstwa C)\n\n"
         f"YAML po Patch {new_version} ({change_desc}).\n\n"
         f"- **Global Game Balance Score:** **`{best_res['global_score']:.1f} / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**\n"
         f"- **3p Avg Score:** **`{best_res['cat_scores'].get('3p',0.0):.1f} / 100.0 pkt` 🟢**\n"
@@ -465,9 +394,10 @@ def update_balance_notes(
     BALANCE_NOTES_PATH.write_text(content, encoding="utf-8")
 
 
-def log_iteration_to_markdown(
+def log_auto_balancer_iteration(
     log_path: Path,
     iteration: int,
+    phase: int,
     old_version: str,
     new_version: str,
     desc: str,
@@ -476,18 +406,18 @@ def log_iteration_to_markdown(
     best_res: dict,
     elapsed_iter: float,
 ):
-    """Appends an iteration record to auto_balancer_log.md."""
+    """Appends an iteration entry to auto_balancer_log.md."""
     log_path.parent.mkdir(parents=True, exist_ok=True)
     if not log_path.exists():
-        header = [
-            "# Dziennik Ewolucji Balansu — Szalony Audytor (Auto-Balancer)",
+        headers = [
+            "# Dziennik Optymalizacji Szalony Audytor (Progressive Beam Search)",
             "",
-            "Automatyczny rejestr wprowadzonych zmian balansu, podbić wersji i ewolucji punktacji globalnej.",
+            "Rejestr wdrożonych patchów i postępów w kierunku globalnego optimum 100%.",
             "",
-            "| Iteracja | Data i Czas | Wersja | Modyfikacja | Global Score | 3p | 4p | 5p | Deadlock % | Pas Biedy % | Czas |",
-            "| :---: | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+            "| Iteracja | Faza | Data i Czas | Wersja | Wprowadzona Zmiana / Wiązka | Global Score | 3p | 4p | 5p | Deadlocks % | Pas Biedy % | Czas |",
+            "| :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
         ]
-        log_path.write_text("\n".join(header) + "\n", encoding="utf-8")
+        log_path.write_text("\n".join(headers) + "\n", encoding="utf-8")
 
     d_glob = best_res["global_score"] - base_res["global_score"]
     delta_str = f"+{d_glob:.1f}" if d_glob > 0 else f"{d_glob:.1f}"
@@ -498,7 +428,7 @@ def log_iteration_to_markdown(
     p5_col = f"{base_res['cat_scores'].get('5p',0):.1f} → {best_res['cat_scores'].get('5p',0):.1f}"
 
     row = (
-        f"| #{iteration} | {datetime.now().strftime('%Y-%m-%d %H:%M')} | `{old_version}` → `{new_version}` | "
+        f"| #{iteration} | {phase}D | {datetime.now().strftime('%Y-%m-%d %H:%M')} | `{old_version}` → `{new_version}` | "
         f"**{desc}** (`{rule_id}`) | {score_col} | {p3_col} | {p4_col} | {p5_col} | "
         f"{best_res['deadlock_pct']:.1f}% | {best_res['poverty_pct']:.1f}% | {elapsed_iter:.1f}s |"
     )
@@ -507,347 +437,245 @@ def log_iteration_to_markdown(
         f.write(row + "\n")
 
 
-def run_full_suite_audit(games: int = 500, seed: int = 42):
-    """Runs all audit levels and saves full suite reports for the final optimum version."""
-    print("\n═══════════════════════════════════════════════════════════════════════")
-    print(f"  GENEROWANIE PEŁNEGO PAKIETU 6 RAPORTÓW AUDYTU DLA WERSJI {CONFIG.version}  ")
-    print("═══════════════════════════════════════════════════════════════════════")
-    pipeline = [
-        ("Telemetria i Win Shares", TOOLS_SIM_DIR / "generate_report.py", ["--games", str(games), "--seed", str(seed)]),
-        ("Poziom 1 (Mechaniki Systemowe)", TOOLS_SIM_DIR / "audit_level1.py", ["--games", str(games), "--seed", str(seed)]),
-        ("Poziom 2 (Warunki Zwycięstwa)", TOOLS_SIM_DIR / "audit_level2.py", ["--games", str(games), "--seed", str(seed)]),
-        ("Poziom 3 (Parametry Kart)", TOOLS_SIM_DIR / "audit_level3.py", ["--games", str(max(150, games // 2)), "--param", "cost,heresy", "--seed", str(seed)]),
-        ("Poziom 4 (Warianty Niszowe)", TOOLS_SIM_DIR / "audit_level4.py", ["--games", str(games), "--seed", str(seed)]),
-        ("Testy Stresu Ekonomicznego", TOOLS_SIM_DIR / "audit_stress_tests.py", ["--games", str(games), "--seed", str(seed)]),
-    ]
-    for idx, (name, script_path, default_args) in enumerate(pipeline, 1):
-        print(f"▶ [{idx}/{len(pipeline)}] Generuję: {name}...")
-        subprocess.run([sys.executable, str(script_path)] + default_args)
-
-
-class AutoBalancer:
+class ProgressiveBeamAutoBalancer:
     def __init__(self, args: argparse.Namespace):
         self.args = args
         self.stop_requested = False
         self.total_iterations = 0
         self.start_time = time.time()
         self.initial_version = CONFIG.version
-        self.initial_score = 0.0
-
-        # Handle SIGINT (Ctrl+C) gracefully
         signal.signal(signal.SIGINT, self._handle_sigint)
 
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
         self.stop_requested = True
 
+    def _execute_pool(self, task_func, task_list: list) -> list[dict]:
+        workers = min(self.args.workers, len(task_list))
+        if workers <= 1:
+            return [task_func(t) for t in task_list]
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            return list(executor.map(task_func, task_list))
+
     def run(self):
         print("═══════════════════════════════════════════════════════════════════════")
-        print("    INQUISITIO-1492 — SZALONY AUDYTOR / AUTONOMOUS BALANCE OPTIMIZER   ")
-        print("    Wielopoziomowa pętla optymalizacji balansu (Greedy Hill-Climbing)  ")
+        print("  INQUISITIO-1492 — SZALONY AUDYTOR (Progressive Beam Search 1D/2D/3D)  ")
+        print("  Wielopoziomowa optymalizacja balansu (L1 + L2 + L3 + L4 jednocześnie) ")
         print("═══════════════════════════════════════════════════════════════════════")
-        print(f"Bieżąca wersja bazowa: {CONFIG.version}")
-        print(f"Tryb działania:        {self.args.mode.upper()}")
-        print(f"Maksymalny czas:       {self.args.hours if self.args.hours else 'Brak (do odwołania)'} godz.")
-        print(f"Maksymalnie iteracji:  {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
-        print(f"Minimalna delta zysku: +{self.args.min_delta} pkt")
-        print(f"Poziomy testowe:       {self.args.level.upper()}")
-        print(f"Wątki procesora:       {self.args.workers}")
-        print(f"Lokalizacja logów:     {LOG_FILE_PATH}")
+        print(f"Bieżąca wersja bazowa:  {CONFIG.version}")
+        print(f"Maksymalny czas sesji:  {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
+        print(f"Maksymalnie patchów:    {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
+        print(f"Przesiew (Etap 1):      {self.args.fast_games} gier/setup (min. 1000)")
+        print(f"Weryfikacja (Etap 2):   {self.args.confirm_games} gier/setup (min. 5000, 16 setupów)")
+        print(f"Liczba Finalistów:      TOP {self.args.top_k} (badanych w Etapie 2)")
+        print(f"Szerokość Wiązki:       K = {self.args.beam_width} (kwalifikowanych do kolejnej fazy)")
+        print(f"Wątki procesora:        {self.args.workers}")
+        print(f"Dziennik operacji:      {LOG_FILE_PATH}")
         print("═══════════════════════════════════════════════════════════════════════\n")
 
         setups = sorted(SETUP_PRESETS.keys())
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
 
-        if self.args.level == "all":
-            tiers = ["1", "2", "3", "4"]
-        else:
-            tiers = [self.args.level]
+        current_phase = 1
+        beam_seeds: list[tuple[str, str, dict]] = []
 
-        tier_names = {
-            "1": "POZIOM 1 (Główne Mechaniki Systemowe)",
-            "2": "POZIOM 2 (Warunki Zwycięstwa i Skalowanie)",
-            "3": "POZIOM 3 (Parametry Kart: Koszt, Herezja, Złoto)",
-            "4": "POZIOM 4 (Warianty Niszowe i Edykty)",
-        }
+        while not self.stop_requested:
+            # 1. Check time / iteration limit
+            if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
+                print(f"\n⏱️ Osiągnięto limit czasu sesji ({self.args.hours}h). Kończę pracę.")
+                break
 
-        tier_idx = 0
+            if self.args.max_iters and self.total_iterations >= self.args.max_iters:
+                print(f"\n🔢 Osiągnięto maksymalną liczbę udanych patchów ({self.args.max_iters}). Kończę pracę.")
+                break
 
-        while not self.stop_requested and tier_idx < len(tiers):
-            current_tier = tiers[tier_idx]
-            current_tier_name = tier_names.get(current_tier, f"POZIOM {current_tier}")
-
-            self.total_iterations += 1
             iter_start = time.time()
 
-            # Check time limit
-            if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
-                print(f"\n⏱️ Osiągnięto limit czasu ({self.args.hours}h). Zatrzymuję pętlę.")
-                break
-
-            # Check iteration limit
-            if self.args.max_iters and self.total_iterations > self.args.max_iters:
-                print(f"\n🔢 Osiągnięto maksymalną liczbę iteracji ({self.args.max_iters}). Zatrzymuję pętlę.")
-                break
-
+            # 2. Run current 16-setup baseline measurement
             print(f"\n{'='*71}")
-            print(f"▶ ITERACJA #{self.total_iterations} — Wersja: {CONFIG.version} | {current_tier_name}")
-            print(f"  Czas łączny sesji: {round((time.time() - self.start_time)/60, 1)} min")
-            print(f"{'='*71}")
+            print(f"🔍 [POMIAR BAZOWY] Diagnoza 16 setupów (Próba: {self.args.confirm_games} gier/setup)...")
+            base_task = ((("BASE", "Bieżący stan gry", {}), self.args.confirm_games, self.args.seed, setups),)
+            base_res = self._execute_pool(_run_single_test_task, [base_task[0]])[0]
 
-            # 1. Generate all candidate tests for current level
-            candidate_tests = generate_candidate_tests(
-                level_filter=current_tier,
-                param_filter=self.args.param,
-                card_filter=self.args.card,
-            )
-            print(f"Wygenerowano {len(candidate_tests)} wariantów testowych dla {current_tier_name}.")
+            print(f"   📊 Global Balance Score: {color_score(base_res['global_score'], bold=True)} pkt")
+            print(f"   🎯 3p: {base_res['cat_scores'].get('3p',0):.1f} | 4p: {base_res['cat_scores'].get('4p',0):.1f} | 5p: {base_res['cat_scores'].get('5p',0):.1f} pkt")
+            print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
 
-            # 2. Strategy Execution:
-            # - For small tiers (L1: ~12, L2: ~28, L4: ~8 tests): Direct Ultra evaluation on confirm_games (no screening needed!)
-            # - For large tiers (L3: ~200+ card tests): Two-stage screening (1000 games -> TOP 20 -> confirm_games)
-            if current_tier in ("1", "2", "4") or len(candidate_tests) <= self.args.top_k or self.args.mode != "two-stage":
-                games_per_setup = self.args.confirm_games if self.args.mode == "two-stage" else (
-                    3000 if self.args.mode == "grand" else (500 if self.args.mode == "standard" else 250)
-                )
-                best_candidate, base_res, best_res, ranked_candidates = self._run_direct_stage(candidate_tests, setups, games_per_setup)
+            # 3. Generate candidate pool for current phase
+            atomic_pool = generate_all_atomic_candidates()
+
+            if current_phase == 1 or not beam_seeds:
+                print(f"\n🌐 [FAZA 1D] Generuję pełną pulę atomową wszystkich poziomów L1–L4...")
+                candidate_pool = atomic_pool
             else:
-                best_candidate, base_res, best_res, ranked_candidates = self._run_two_stage(candidate_tests, setups)
+                print(f"\n🌐 [FAZA {current_phase}D] Generuję wiązki {current_phase}D (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} atomowych mechanik)...")
+                composite_pool = []
+                for seed_mut in beam_seeds:
+                    for atomic_mut in atomic_pool:
+                        merged = merge_mutations(seed_mut, atomic_mut)
+                        if merged:
+                            composite_pool.append(merged)
 
-            if self.stop_requested:
-                break
+                # Deduplicate by ID
+                seen_ids = set()
+                candidate_pool = []
+                for c in composite_pool:
+                    if c[0] not in seen_ids:
+                        seen_ids.add(c[0])
+                        candidate_pool.append(c)
 
-            delta_global = (best_res["global_score"] - base_res["global_score"]) if (best_res and base_res) else 0.0
+            print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów w Fazie {current_phase}D.")
 
-            # 3. Check if improvement found in this tier
-            if not best_candidate or best_res is None or base_res is None or delta_global < self.args.min_delta:
-                print(f"\n⚪ {current_tier_name} optymalny — brak modyfikacji przynoszącej zysk >= +{self.args.min_delta} pkt.")
-                tier_idx += 1
-                if tier_idx < len(tiers):
-                    next_tier_name = tier_names.get(tiers[tier_idx], f"Poziom {tiers[tier_idx]}")
-                    print(f"➡️ Przechodzę kaskadowo do: {next_tier_name}...\n")
+            # 4. ETAP 1: Przesiew (min. 1000 gier/setup na wszystkich 16 setupach)
+            print(f"\n--- [ETAP 1/2: PRZESIEW GLOBALNY] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup) ---")
+            stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
+            stage1_results = self._execute_pool(_run_single_test_task, stage1_tasks)
+
+            # Sort by global score descending
+            stage1_results.sort(key=lambda r: r["global_score"], reverse=True)
+
+            # Pick TOP N finalists for Stage 2
+            cand_dict = {c[0]: c for c in candidate_pool}
+            finalist_results = stage1_results[: self.args.top_k]
+            finalist_candidates = [cand_dict[r["id"]] for r in finalist_results]
+
+            print(f"\n--- [ETAP 2/2: WERYFIKACJA ULTRA] Sprawdzam TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup) ---")
+            stage2_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
+            stage2_results = self._execute_pool(_run_single_test_task, stage2_tasks)
+
+            # Rank verified finalists
+            stage2_results.sort(key=lambda r: r["global_score"], reverse=True)
+
+            for idx, r in enumerate(stage2_results, 1):
+                d_g = r["global_score"] - base_res["global_score"]
+                is_safe, msg = passes_telemetry_safety(r)
+                sign = f"+{d_g:.2f}" if d_g > 0 else f"{d_g:.2f}"
+                print(f"   #{idx:2d} [{r['id'][:42]}...] Global: {base_res['global_score']:.1f} → {r['global_score']:.1f} (Δ {sign}) | {msg}")
+
+            # Check if any finalist has real positive gain
+            accepted_candidate = None
+            best_ver_res = None
+
+            for ver_res in stage2_results:
+                d_global = ver_res["global_score"] - base_res["global_score"]
+                is_safe, safe_msg = passes_telemetry_safety(ver_res)
+
+                if is_safe and d_global >= self.args.min_delta:
+                    accepted_candidate = cand_dict[ver_res["id"]]
+                    best_ver_res = ver_res
+                    break
+
+            # 5. Handle Outcome
+            if accepted_candidate and best_ver_res is not None:
+                # SUCCESS: Apply Patch!
+                self.total_iterations += 1
+                rule_id, rule_name, rule_params = accepted_candidate
+
+                with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
+                    raw_cfg = yaml.safe_load(f)
+
+                old_version = raw_cfg.get("version", "v0.32")
+                mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, rule_params)
+
+                if self.args.dry_run:
+                    print(f"\n[DRY RUN] Zaakceptowano by modyfikację {current_phase}D: {change_desc}")
+                    current_phase += 1
                 else:
-                    print(f"\n🏆 OSIĄGNIĘTO PEŁNE LOKALNE OPTIMUM GLOBALNE WE WSZYSTKICH POZIOMACH (L1 → L2 → L3 → L4)!")
-                continue
+                    new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
+                    iter_elapsed = round(time.time() - iter_start, 2)
 
-            print(f"\n📊 Wynik Bazy: {color_score(base_res['global_score'], bold=True)} pkt")
-            print(f"🌟 Najlepszy kandydat: [{best_res['id']}] {best_res['name']}")
-            print(f"   Nowy Global Score:  {color_score(best_res['global_score'], bold=True)} pkt (Δ {delta_global:+5.2f} pkt)")
+                    print(f"\n🎉 [ZAAKCEPTOWANO PATCH #{self.total_iterations} — FAZA {current_phase}D]")
+                    print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
+                    print(f"   Modyfikacja:   {change_desc}")
+                    print(f"   Global Score:  {base_res['global_score']:.1f} → **{best_ver_res['global_score']:.1f} pkt** (Δ {best_ver_res['global_score'] - base_res['global_score']:+.2f} pkt)")
 
-            # 4. Apply modification to game_config.yaml
-            rule_id, rule_name, rule_params = best_candidate
-            with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
-                raw_cfg = yaml.safe_load(f)
+                    # Full Documentation Suite
+                    print(f"\n📄 [DOKUMENTACJA] Generuję raporty i archiwum wersji {new_version}...")
 
-            old_version = raw_cfg.get("version", "v0.19")
-            mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, rule_params)
+                    log_auto_balancer_iteration(
+                        LOG_FILE_PATH,
+                        self.total_iterations,
+                        current_phase,
+                        old_version,
+                        new_version,
+                        change_desc,
+                        rule_id,
+                        base_res,
+                        best_ver_res,
+                        iter_elapsed,
+                    )
 
-            if self.args.dry_run:
-                print(f"\n[DRY RUN] Zastosowano by zmianę: {change_desc}")
-                print(f"[DRY RUN] Podbito by wersję z {old_version} do nowej.")
-                tier_idx += 1
+                    opt_out, opt_arch = generate_and_save_optimization_report(
+                        old_version,
+                        new_version,
+                        self.total_iterations,
+                        current_phase,
+                        base_res,
+                        best_ver_res,
+                        stage2_results,
+                        change_desc,
+                        rule_id,
+                        iter_elapsed,
+                    )
+                    print(f"   ✔ Zapisano raport optymalizacji: {opt_out.name} (archiwum: {opt_arch})")
+
+                    telem_out, telem_arch = generate_and_save_telemetry_report(
+                        new_version,
+                        games_per_setup=self.args.fast_games,
+                        seed=self.args.seed,
+                    )
+                    print(f"   ✔ Zaktualizowano raport telemetrii: {telem_out.name} (archiwum: {telem_arch})")
+
+                    update_balance_notes(old_version, new_version, change_desc, rule_id, base_res, best_ver_res)
+                    print(f"   ✔ Zaktualizowano notatki balansu: {BALANCE_NOTES_PATH.name}")
+
+                    print("   🔄 Synchronizuję dokumentację kart i reguł...")
+                    subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
+                    print("   ✔ Zaktualizowano katalog kart, opisy markdown i card-editor.")
+
+                    # RESET BEAM TO PHASE 1 AFTER SUCCESS
+                    current_phase = 1
+                    beam_seeds.clear()
+
             else:
-                new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
-                iter_elapsed = round(time.time() - iter_start, 2)
-                print(f"\n✅ ZAPISANO ZMIANĘ DO: {saved_path.name}")
-                print(f"   Opis zmiany:  {change_desc}")
-                print(f"   Wersja:       {old_version} → {new_version}")
-                print(f"   Zysk Balansu: {score_pair(base_res['global_score'], best_res['global_score'], colored=True)}")
-
-                # 5. Generate Reports & Documentation Automatically
-                print(f"\n📄 [DOKUMENTACJA] Generuję raporty i archiwum wersji {new_version}...")
+                # NO POSITIVE GAIN IN CURRENT PHASE -> ESCALATE TO PHASE D+1!
+                print(f"\n⚪ Brak wariantu z dodatnim zyskiem (Δ ≥ +{self.args.min_delta} pkt) w Fazie {current_phase}D.")
                 
-                # A. Log entry in auto_balancer_log.md
-                log_iteration_to_markdown(
-                    LOG_FILE_PATH,
-                    self.total_iterations,
-                    old_version,
-                    new_version,
-                    change_desc,
-                    rule_id,
-                    base_res,
-                    best_res,
-                    iter_elapsed,
-                )
+                # Pick TOP K beam seeds from Stage 2 results to expand in next phase
+                top_beam_results = stage2_results[: self.args.beam_width]
+                beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
 
-                # B. Save detailed optimization report for this iteration
-                opt_out, opt_arch = generate_and_save_optimization_report(
-                    old_version,
-                    new_version,
-                    self.total_iterations,
-                    base_res,
-                    best_res,
-                    ranked_candidates,
-                    change_desc,
-                    rule_id,
-                    iter_elapsed,
-                )
-                print(f"   ✔ Zapisano raport optymalizacji: {opt_out.name} (archiwum: {opt_arch})")
+                current_phase += 1
+                print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
-                # C. Generate full telemetry & win shares report for new version
-                telem_out, telem_arch = generate_and_save_telemetry_report(new_version, games_per_setup=self.args.fast_games * 2, seed=self.args.seed)
-                print(f"   ✔ Zaktualizowano raport telemetrii: {telem_out.name} (archiwum: {telem_arch})")
-
-                # D. Update playtesting/balance-notes.md
-                update_balance_notes(old_version, new_version, change_desc, rule_id, base_res, best_res)
-                print(f"   ✔ Zaktualizowano notatki balansu: {BALANCE_NOTES_PATH.name}")
-
-                # CASCADE RESET: Always reset back to Level 1 after a successful change!
-                if tier_idx > 0:
-                    print(f"\n🔄 Zmiana wprowadzona na {current_tier_name}! Resetuję kaskadę i wracam do POZIOMU 1...\n")
-                tier_idx = 0
-
-        # Optional full audit suite on finish
-        if not self.args.dry_run and self.args.full_audit_on_finish and self.total_iterations > 0:
-            run_full_suite_audit(games=self.args.confirm_games, seed=self.args.seed)
-
-        self._print_final_summary()
-
-    def _run_two_stage(self, tests: list[tuple[str, str, dict]], setups: list[str]):
-        """Stage 1: Fast screening (e.g. 250 games). Stage 2: Deep verification (1500 games) for top 5."""
-        stage1_games = self.args.fast_games
-        stage2_games = self.args.confirm_games
-
-        print(f"\n--- [KROK 1/2: SZYBKI PRZESIEW] Próba: {stage1_games} gier/setup ({len(tests)} wariantów) ---")
-        task_list = [(t, stage1_games, self.args.seed, setups) for t in tests]
-        results = self._execute_pool(task_list)
-
-        base_s1 = results[0]
-        # Collect all candidates that pass telemetry safety, sorted by delta in screening
-        safe_candidates = []
-        for r in results[1:]:
-            delta = r["global_score"] - base_s1["global_score"]
-            is_safe, _ = passes_telemetry_safety(r)
-            if is_safe:
-                safe_candidates.append(r)
-
-        safe_candidates.sort(key=lambda x: x["global_score"] - base_s1["global_score"], reverse=True)
-
-        if not safe_candidates:
-            print("Brak bezpiecznych kandydatów w przesiewie.")
-            return None, base_s1, None, results
-
-        top_k = safe_candidates[: self.args.top_k]
-        print(f"\n--- [KROK 2/2: PRECYZYJNA WERYFIKACJA] Badam TOP {len(top_k)} liderów na próbie {stage2_games} gier/setup ---")
-
-        # Map back to test tuples
-        test_dict = {t[0]: t for t in tests}
-        verify_tests = [tests[0]] + [test_dict[r["id"]] for r in top_k]
-
-        # Use Common Random Numbers (CRN) paired seed to eliminate external variance
-        verify_tasks = [(t, stage2_games, self.args.seed, setups) for t in verify_tests]
-        verified_results = self._execute_pool(verify_tasks)
-
-        base_s2 = verified_results[0]
-        verified_candidates = []
-
-        for r in verified_results[1:]:
-            delta = r["global_score"] - base_s2["global_score"]
-            is_safe, safe_msg = passes_telemetry_safety(r)
-            if is_safe and delta >= self.args.min_delta:
-                verified_candidates.append(r)
-            elif not is_safe:
-                print(f"⚠️ Odrzucono kandydata [{r['id']}] z powodu telemetrii: {safe_msg}")
-            else:
-                print(f"⚪ Odrzucono kandydata [{r['id']}] po weryfikacji: brak zysku na dużej próbie (Δ {delta:+5.2f} pkt)")
-
-        if not verified_candidates:
-            print("Żaden z liderów nie przeszedł pomyślnie weryfikacji i testów bezpieczeństwa.")
-            return None, base_s2, None, verified_results
-
-        verified_candidates.sort(key=lambda x: x["global_score"] - base_s2["global_score"], reverse=True)
-        best_res = verified_candidates[0]
-        best_tuple = test_dict[best_res["id"]]
-
-        return best_tuple, base_s2, best_res, verified_candidates
-
-    def _run_direct_stage(self, tests: list[tuple[str, str, dict]], setups: list[str], games_per_setup: int):
-        """Single stage full evaluation on full sample size (used for L1, L2, L4)."""
-        print(f"\n--- [BEZPOŚREDNIA EWALUACJA ULTRA] Próba: {games_per_setup} gier/setup ({len(tests)} wariantów) ---")
-        task_list = [(t, games_per_setup, self.args.seed, setups) for t in tests]
-        results = self._execute_pool(task_list)
-
-        base_res = results[0]
-        candidates = []
-        for r in results[1:]:
-            delta = r["global_score"] - base_res["global_score"]
-            is_safe, safe_msg = passes_telemetry_safety(r)
-            if is_safe and delta >= self.args.min_delta:
-                candidates.append(r)
-            elif not is_safe:
-                print(f"⚠️ Odrzucono kandydata [{r['id']}] z powodu telemetrii: {safe_msg}")
-            else:
-                print(f"⚪ Odrzucono kandydata [{r['id']}]: brak zysku na próbie {games_per_setup} gier (Δ {delta:+5.2f} pkt)")
-
-        if not candidates:
-            return None, base_res, None, results
-
-        candidates.sort(key=lambda x: x["global_score"] - base_res["global_score"], reverse=True)
-        best_res = candidates[0]
-        test_dict = {t[0]: t for t in tests}
-        best_tuple = test_dict[best_res["id"]]
-
-        return best_tuple, base_res, best_res, candidates
-
-    def _execute_pool(self, task_list: list) -> list[dict]:
-        """Execute tasks using ProcessPoolExecutor with live counter."""
-        results = []
-        n_tasks = len(task_list)
-        workers = min(self.args.workers, n_tasks)
-
-        if workers > 1:
-            with ProcessPoolExecutor(max_workers=workers) as executor:
-                for idx, res in enumerate(executor.map(_run_single_test_task, task_list), 1):
-                    results.append(res)
-                    if idx % 10 == 0 or idx == n_tasks or idx == 1:
-                        print(f"[{idx:3d}/{n_tasks:3d}] Postęp | Ostatni: {res['id']:<28} Score: {res['global_score']:5.1f} pkt", flush=True)
-        else:
-            for idx, task in enumerate(task_list, 1):
-                res = _run_single_test_task(task)
-                results.append(res)
-                if idx % 10 == 0 or idx == n_tasks or idx == 1:
-                    print(f"[{idx:3d}/{n_tasks:3d}] Postęp | Ostatni: {res['id']:<28} Score: {res['global_score']:5.1f} pkt", flush=True)
-
-        return results
-
-    def _print_final_summary(self):
-        total_time = round((time.time() - self.start_time) / 60, 1)
-        print("\n" + "═" * 71)
-        print("        PODSUMOWANIE DZIAŁANIA SZALONEGO AUDYTORA")
-        print("═" * 71)
-        print(f"Łączny czas sesji:    {total_time} min ({round(total_time/60, 2)} h)")
-        print(f"Wykonanych iteracji:  {self.total_iterations}")
-        print(f"Wersja początkowa:    {self.initial_version}")
-        print(f"Wersja końcowa:       {CONFIG.version}")
-        print(f"Dziennik ewolucji:    {LOG_FILE_PATH}")
-        print(f"Notatki balansu:      {BALANCE_NOTES_PATH}")
-        print(f"Katalog archiwum:     {REPORTS_DIR / 'archive' / CONFIG.version}")
-        print("═" * 71)
+        print(f"\n═══════════════════════════════════════════════════════════════════════")
+        print(f"   SZALONY AUDYTOR ZAKOŃCZYŁ SESJĘ. ŁĄCZNIE WPROWADZONO {self.total_iterations} PATCHY.")
+        print(f"═══════════════════════════════════════════════════════════════════════\n")
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="INQUISITIO-1492 — Szalony Audytor / Autonomous Balance Optimizer",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument("--mode", type=str, choices=["two-stage", "grand", "standard", "fast"], default="two-stage",
-                        help="Tryb ewaluacji: two-stage (rekomendowany szybki przesiew + weryfikacja), grand (3k gier), standard (500), fast (250)")
-    parser.add_argument("--fast-games", type=int, default=1000, help="Liczba gier/setup w kroku 1 przesiewu (dla two-stage)")
-    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier/setup w kroku 2 weryfikacji (dla two-stage)")
-    parser.add_argument("--top-k", type=int, default=20, help="Liczba liderów weryfikowanych w kroku 2")
-    parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
-    parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba iteracji optymalizatora")
-    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy (delta global) wymagany do zapisu (domyślnie >= 0.05)")
-    parser.add_argument("--level", type=str, choices=["all", "1", "2", "3", "4"], default="all", help="Filtruj poziomy testów")
-    parser.add_argument("--param", type=str, default="all", help="Parametry kart dla Poziomu 3 (cost, heresy, target_heresy, gold, all)")
-    parser.add_argument("--card", type=str, default=None, help="Ogranicz poziom 3 do konkretnej karty (np. so-04)")
-    parser.add_argument("--seed", type=int, default=42, help="Początkowe ziarno RNG")
-    parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Liczba równoległych procesów CPU")
-    parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisu zmian do game_config.yaml")
-    parser.add_argument("--full-audit-on-finish", action="store_true", help="Uruchom pełny pakiet 6 raportów po zakończeniu pracy optymalizatora")
+    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Szalony Audytor — Progressive Beam Search Optimizer")
+    parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 8.0 na noc)")
+    parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
+    parser.add_argument("--fast-games", type=int, default=1000, help="Liczba gier w Etapie 1 (przesiew, min. 1000)")
+    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 2 (weryfikacja 16 setupów, min. 5000)")
+    parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 2 (domyślnie: 12)")
+    parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do kolejnej fazy wiązek (domyślnie: 8)")
+    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk globalny wymagany do wdrożenia patcha (pkt)")
+    parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
+    parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
+    parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
 
     args = parser.parse_args()
-    auditor = AutoBalancer(args)
+
+    if args.fast_games < 1000:
+        print("⚠️ Podwyższam fast-games do wymaganego minimum 1000 gier.")
+        args.fast_games = 1000
+    if args.confirm_games < 5000:
+        print("⚠️ Podwyższam confirm-games do wymaganego minimum 5000 gier.")
+        args.confirm_games = 5000
+
+    auditor = ProgressiveBeamAutoBalancer(args)
     auditor.run()
 
 
