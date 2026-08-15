@@ -450,12 +450,51 @@ class ProgressiveBeamAutoBalancer:
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
         self.stop_requested = True
 
-    def _execute_pool(self, task_func, task_list: list) -> list[dict]:
-        workers = min(self.args.workers, len(task_list))
+    def _execute_pool(self, task_func, task_list: list, label: str = "Testy") -> list[dict]:
+        total = len(task_list)
+        if total == 0:
+            return []
+
+        workers = min(self.args.workers, total)
         if workers <= 1:
-            return [task_func(t) for t in task_list]
+            results = []
+            t0 = time.time()
+            for idx, t in enumerate(task_list, 1):
+                res = task_func(t)
+                results.append(res)
+                elapsed = time.time() - t0
+                rate = idx / elapsed if elapsed > 0 else 0
+                eta_s = (total - idx) / rate if rate > 0 else 0
+                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<8s}")
+                sys.stdout.flush()
+            sys.stdout.write("\n")
+            return results
+
+        results = []
+        t0 = time.time()
         with ProcessPoolExecutor(max_workers=workers) as executor:
-            return list(executor.map(task_func, task_list))
+            from concurrent.futures import as_completed
+            future_to_task = {executor.submit(task_func, t): t for t in task_list}
+            best_so_far = None
+
+            for idx, future in enumerate(as_completed(future_to_task), 1):
+                res = future.result()
+                results.append(res)
+                if best_so_far is None or res["global_score"] > best_so_far["global_score"]:
+                    best_so_far = res
+
+                elapsed = time.time() - t0
+                rate = idx / elapsed if elapsed > 0 else 0
+                eta_s = (total - idx) / rate if rate > 0 else 0
+                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
+                lead_id = best_so_far['id'][:26] if best_so_far else "-"
+                lead_sc = f"{best_so_far['global_score']:.1f}" if best_so_far else "-"
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<7s} | Lider: {lead_id} ({lead_sc} pkt)  ")
+                sys.stdout.flush()
+
+        sys.stdout.write(f"\n   ✔ Ukończono {total} zadań w {round(time.time() - t0, 1)}s.\n")
+        return results
 
     def run(self):
         print("═══════════════════════════════════════════════════════════════════════")
@@ -495,7 +534,7 @@ class ProgressiveBeamAutoBalancer:
             print(f"\n{'='*71}")
             print(f"🔍 [POMIAR BAZOWY] Diagnoza 16 setupów (Próba: {self.args.confirm_games} gier/setup)...")
             base_task = ((("BASE", "Bieżący stan gry", {}), self.args.confirm_games, self.args.seed, setups),)
-            base_res = self._execute_pool(_run_single_test_task, [base_task[0]])[0]
+            base_res = self._execute_pool(_run_single_test_task, [base_task[0]], label="Baza 16 Setupów")[0]
 
             print(f"   📊 Global Balance Score: {color_score(base_res['global_score'], bold=True)} pkt")
             print(f"   🎯 3p: {base_res['cat_scores'].get('3p',0):.1f} | 4p: {base_res['cat_scores'].get('4p',0):.1f} | 5p: {base_res['cat_scores'].get('5p',0):.1f} pkt")
@@ -529,7 +568,7 @@ class ProgressiveBeamAutoBalancer:
             # 4. ETAP 1: Przesiew (min. 1000 gier/setup na wszystkich 16 setupach)
             print(f"\n--- [ETAP 1/2: PRZESIEW GLOBALNY] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup) ---")
             stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
-            stage1_results = self._execute_pool(_run_single_test_task, stage1_tasks)
+            stage1_results = self._execute_pool(_run_single_test_task, stage1_tasks, label=f"Przesiew {current_phase}D")
 
             # Sort by global score descending
             stage1_results.sort(key=lambda r: r["global_score"], reverse=True)
@@ -541,7 +580,7 @@ class ProgressiveBeamAutoBalancer:
 
             print(f"\n--- [ETAP 2/2: WERYFIKACJA ULTRA] Sprawdzam TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup) ---")
             stage2_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
-            stage2_results = self._execute_pool(_run_single_test_task, stage2_tasks)
+            stage2_results = self._execute_pool(_run_single_test_task, stage2_tasks, label=f"Weryfikacja {current_phase}D")
 
             # Rank verified finalists
             stage2_results.sort(key=lambda r: r["global_score"], reverse=True)
