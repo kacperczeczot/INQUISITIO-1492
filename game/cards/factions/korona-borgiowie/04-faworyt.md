@@ -4,7 +4,7 @@ name: Faworyt Dworu
 faction: korona-borgiowie
 type: akcja
 layer: A
-cost: 1
+cost: 2
 heresy: 1
 tags:
 - hook
@@ -16,3 +16,4 @@ lore: Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.
 agents: 1
 creates_hook: true
 ---
+

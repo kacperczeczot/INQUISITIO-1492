@@ -66,7 +66,7 @@ Kart: **10**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
 | `effect` | Wskaż rywala: +1 Herezja. |
@@ -151,8 +151,8 @@ Kart: **10**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
-| `heresy` | 1 |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze. |
 | `effect` | Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę. |
 | `lore` | Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne. |
@@ -435,7 +435,7 @@ Kart: **10**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Faworyzm dworu budzi zazdrość kortegan i biskupów. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala. |
@@ -469,7 +469,7 @@ Kart: **10**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Królewski areszt ma precedens starszy niż bulla papieska. |
 | `effect` | Aresztuj Agenta rywala w Pałacu lub w lokacji ze swoim Agentem. |
@@ -754,7 +754,7 @@ Kart: **10**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. |
 | `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
