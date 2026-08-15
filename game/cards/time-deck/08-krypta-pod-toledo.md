@@ -1,22 +1,13 @@
 ---
 id: time-08
-name: Krypta pod Toledo
+name: Święte Przymierze
 faction: time
 type: wydarzenie
 layer: C
 cost: 0
 tags:
 - edict
-- relic
-effect: 'EDYKT.
-
-  Umieść Relikwię w Lochach.
-
-
-  Jeśli pierwszy Agent jest w Lochach w następnej Erze:
-
-  Przenieś Relikwię do tego Agenta.
-
-  '
-lore: Wyścig do Lochów. Cienie vs Oficjum — kto pierwszy, ten bierze.
+- verdict
+effect: "EDYKT Ery. W tej Erze: Faza Dworu zostaje zawieszona (brak możliwości rzucenia Oskarżenia)."
+lore: "Tymczasowy rozejm polityczny na szczytach władzy zamraża publiczne procesy i egzekucje."
 ---

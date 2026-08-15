@@ -1,14 +1,14 @@
 ---
 id: time-05
-name: Auto-da-fé Toledo
+name: Gorączka Donosów
 faction: time
 type: wydarzenie
 layer: C
 cost: 0
 tags:
 - edict
-- autodafe
-effect: EDYKT. Wymuś Autodafé w lokacji Inkwizytora.
-lore: Nagły pożar. Figury przy Inkwizytorze dostają paniki; strach bez darmowego Stosu
-  dla Oficjum.
+- heresy
+- verdict
+effect: "EDYKT Ery. W tej Erze: Próg Krytycznej Herezji (oskarżenia na Dworze) jest obniżony o 1."
+lore: "Paranoja w Toledo sięga zenitu. Wystarczy cień podejrzenia, by stanąć przed trybunałem sądu."
 ---

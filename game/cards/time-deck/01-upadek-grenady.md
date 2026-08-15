@@ -1,15 +1,14 @@
 ---
 id: time-01
-name: Upadek Grenady
+name: Kapitulacja Grenady
 faction: time
 type: wydarzenie
 layer: C
 cost: 0
 tags:
 - edict
-effect: 'EDYKT Ery. Każdy gracz z Agentem na Rynku: +1 Herezja.'
-lore: 'Obecność kosztuje reputację. Wszyscy uciekają z Rynku albo świadomie biorą
-  Herezję za handel. Panika ekonomiczna.
-
-  '
+- gold
+- inquisitor
+effect: "Każdy gracz z Agentem w Pałacu zyskuje +1 złoto. Przesuń Inkwizytora o 1 krok w stronę Trybunału."
+lore: "Świętowanie na Dworze. Korona nagradza dyplomatów, a Inkwizytor powraca do centrum władzy kościelnej."
 ---

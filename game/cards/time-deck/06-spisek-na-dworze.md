@@ -1,18 +1,13 @@
 ---
 id: time-06
-name: Spisek na Dworze
+name: Nocna Obława
 faction: time
 type: wydarzenie
 layer: C
 cost: 0
 tags:
 - edict
-- hook
-effect: 'EDYKT Ery. Gracz Korony lub Gildii z najniższą Herezją: Załóż Hak na rywala.
-  Remis: decyzja stołu.
-
-  '
-lore: Nagły szantaż dla „najczystszej” Korony/Gildii. Reszta negocjuje, kto dostanie
-  Hak.
-creates_hook: true
+- inquisitor
+effect: "Przesuń Inkwizytora do lokacji z największą liczbą Agentów. Przy remisie wybiera Pierwszy Gracz."
+lore: "Straż i inkwizytorzy uderzają w najludniejsze zgromadzenie w mieście, siejąc postrach."
 ---

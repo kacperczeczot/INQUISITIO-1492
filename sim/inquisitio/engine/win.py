@@ -69,13 +69,16 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
         elif fid == FactionId.KORONA_BORGIOWIE:
             cfg_kb = cfg_v.korona_borgiowie
             hooks_ever = distinct_hook_victims_ever(state, fid)
-            base_era = _val(cfg_kb.era, pc) + ov.get("kb_era_offset", 0)
+            if "kb_era" in ov:
+                base_era = _val(ov["kb_era"], pc)
+            else:
+                base_era = _val(cfg_kb.era, pc) + ov.get("kb_era_offset", 0)
             if "kb_decrees_3p" in ov and n_players <= 3:
                 decrees_need = ov["kb_decrees_3p"]
             else:
                 decrees_need = max(1, _val(cfg_kb.decrees, pc) + ov.get("kb_decrees_offset", 0))
             if "kb_hooks" in ov:
-                hooks_need = ov["kb_hooks"]
+                hooks_need = _val(ov["kb_hooks"], pc)
             else:
                 hooks_need = max(0, _val(cfg_kb.hooks, pc) + ov.get("kb_hooks_offset", 0))
 
@@ -91,14 +94,17 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             cfg_kt = cfg_v.kabala_toledo
             frag_need = max(1, _val(cfg_kt.fragments, pc) + ov.get("kt_frags_offset", 0))
             if "kt_fragments" in ov:
-                frag_need = ov["kt_fragments"]
+                frag_need = _val(ov["kt_fragments"], pc)
             elif "kt_fragments_5p" in ov and n_players >= 5:
-                frag_need = ov["kt_fragments_5p"]
+                frag_need = _val(ov["kt_fragments_5p"], pc)
 
             band = ov.get("kt_heresy_band", cfg_kt.heresy_band)
             h_low, h_high = band[0], band[1]
             heresy_ok = (h_low <= pl.heresy <= h_high)
-            base_era = _val(cfg_kt.era, pc) + ov.get("kt_era_offset", 0)
+            if "kt_era" in ov:
+                base_era = _val(ov["kt_era"], pc)
+            else:
+                base_era = _val(cfg_kt.era, pc) + ov.get("kt_era_offset", 0)
 
             if pl.fragments >= frag_need and heresy_ok and state.era >= max(1, base_era):
                 return (fid, "kt_codex")

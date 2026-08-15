@@ -1,13 +1,14 @@
 ---
 id: time-07
-name: Niepokój na Rynku
+name: Bunt w Lochach
 faction: time
 type: wydarzenie
 layer: C
 cost: 0
 tags:
 - edict
-- inquisitor
-effect: EDYKT Ery. Przesuń Inkwizytora o 1 lokację do Rynku.
-lore: Rynek staje się strefą śmierci Autodafé. Kupcy i Cienie uciekają.
+- dungeon
+- relic
+effect: "Uwolnij 1 uwięzionego Agenta do Gildii. Jeśli w Lochach nie ma uwięzionych Agentów: Umieść Relikwię w Lochach."
+lore: "Zamieszki w kazamatach otwierają drogę ucieczki dla więźnia lub ujawniają ukrytą w murach relikwię."
 ---

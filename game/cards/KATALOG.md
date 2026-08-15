@@ -4,7 +4,7 @@
 > Źródło: pojedyncze pliki w `game/cards/factions/` i `game/cards/time-deck/`.
 > Odśwież: `python3 tools/cards/build_catalog.py`
 
-Łącznie kart: **58**
+Łącznie kart: **60**
 
 Schemat pól: [`SCHEMA.md`](SCHEMA.md). Słownictwo `effect`: [`../mechanics/leksykon.md`](../mechanics/leksykon.md).
 
@@ -15,7 +15,7 @@ Schemat pól: [`SCHEMA.md`](SCHEMA.md). Słownictwo `effect`: [`../mechanics/lek
 - [Korona & Borgiowie](#korona-borgiowie) (10)
 - [Kabała z Toledo](#kabala-toledo) (10)
 - [Gildia Cieni](#gildia-cieni) (10)
-- [Kronika Dziejów](#time) (8)
+- [Kronika Dziejów](#time) (10)
 
 <a id="swiete-oficjum"></a>
 
@@ -901,140 +901,174 @@ Kart: **10**
 
 ## Kronika Dziejów
 
-Kart: **8**
+Kart: **10**
 
-### `time-01` — Upadek Grenady
+### `time-01` — Kapitulacja Grenady
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-01 |
-| `name` | Upadek Grenady |
+| `name` | Kapitulacja Grenady |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT Ery. Każdy gracz z Agentem na Rynku: +1 Herezja. |
-| `lore` | Obecność kosztuje reputację. Wszyscy uciekają z Rynku albo świadomie biorą Herezję za handel. Panika ekonomiczna. |
-| `tags` | edict |
+| `effect` | Każdy gracz z Agentem w Pałacu zyskuje +1 złoto. Przesuń Inkwizytora o 1 krok w stronę Trybunału. |
+| `lore` | Świętowanie na Dworze. Korona nagradza dyplomatów, a Inkwizytor powraca do centrum władzy kościelnej. |
+| `tags` | edict, gold, inquisitor |
 | `status` | prototyp |
 
-### `time-02` — Edykt z Alhambry
+### `time-02` — Godzina Policyjna
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-02 |
-| `name` | Edykt z Alhambry |
+| `name` | Godzina Policyjna |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT Ery. Gracz Cieni: Przesuń swojego Agenta o 1 lokację. Każdy inny gracz z Agentem w Gildii: +1 Herezja. |
-| `lore` | Cienie dostają darmowy krok ewakuacji; reszta unika Gildii albo płaci. |
-| `tags` | edict |
+| `effect` | EDYKT Ery. W tej Erze: Każde zagranie karty pod Rynek lub Gildię kosztuje +1 złoto dodatkowo. |
+| `lore` | Straż miejska blokuje plebejskie zaułki. Ukryte operacje i handel stają się znacznie kosztowniejsze. |
+| `tags` | edict, gold, tax |
 | `status` | prototyp |
 
-### `time-03` — Flota Kolumba
+### `time-03` — Flota Odkrywców
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-03 |
-| `name` | Flota Kolumba |
+| `name` | Flota Odkrywców |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT. Otwórz Szlak Morski do końca gry. |
-| `lore` | Przełom gry o Relikwie. Cienie przyspieszają; Oficjum musi zamykać Rynek i Gildię. |
-| `tags` | edict, relic |
+| `effect` | Otwórz Szlak Morski. Każdy gracz z Agentem na Rynku lub w Gildii zyskuje +1 złoto. |
+| `lore` | Wyprawa za ocean otwiera szlak ucieczki, a portowe rynki i warsztaty zalewa fala nowych zleceń. |
+| `tags` | edict, sea_route, gold |
 | `status` | prototyp |
 
-### `time-04` — Archiwa Alhambry
+### `time-04` — Rewizja w Dzielnicach
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-04 |
-| `name` | Archiwa Alhambry |
+| `name` | Rewizja w Dzielnicach |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT Ery.  Jeśli Kabała ma Agenta w Trybunale lub Lochach: Zyskaj Fragment. |
-| `lore` | Kabała ustawia Agenta z wyprzedzeniem; stół widzi darmowy Fragment albo nic. |
-| `tags` | edict, fragment |
+| `effect` | Gracz o najwyższej Herezji: +1 Herezja. Gracz o najniższej Herezji: Zyskuje +1 złoto. |
+| `lore` | Inkwizycja zaostrza śledztwa wobec najbardziej podejrzanych, sowicie nagradzając lojalnych mieszczan. |
+| `tags` | edict, heresy, gold |
 | `status` | prototyp |
 
-### `time-05` — Auto-da-fé Toledo
+### `time-05` — Gorączka Donosów
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-05 |
-| `name` | Auto-da-fé Toledo |
+| `name` | Gorączka Donosów |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT. Wymuś Autodafé w lokacji Inkwizytora. |
-| `lore` | Nagły pożar. Figury przy Inkwizytorze dostają paniki; strach bez darmowego Stosu dla Oficjum. |
-| `tags` | edict, autodafe |
+| `effect` | EDYKT Ery. W tej Erze: Próg Krytycznej Herezji (oskarżenia na Dworze) jest obniżony o 1. |
+| `lore` | Paranoja w Toledo sięga zenitu. Wystarczy cień podejrzenia, by stanąć przed trybunałem sądu. |
+| `tags` | edict, heresy, verdict |
 | `status` | prototyp |
 
-### `time-06` — Spisek na Dworze
+### `time-06` — Nocna Obława
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-06 |
-| `name` | Spisek na Dworze |
+| `name` | Nocna Obława |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT Ery. Gracz Korony lub Gildii z najniższą Herezją: Załóż Hak na rywala. Remis: decyzja stołu. |
-| `lore` | Nagły szantaż dla „najczystszej” Korony/Gildii. Reszta negocjuje, kto dostanie Hak. |
-| `tags` | edict, hook |
+| `effect` | Przesuń Inkwizytora do lokacji z największą liczbą Agentów. Przy remisie wybiera Pierwszy Gracz. |
+| `lore` | Straż i inkwizytorzy uderzają w najludniejsze zgromadzenie w mieście, siejąc postrach. |
+| `tags` | edict, inquisitor |
 | `status` | prototyp |
 
-### `time-07` — Niepokój na Rynku
+### `time-07` — Bunt w Lochach
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-07 |
-| `name` | Niepokój na Rynku |
+| `name` | Bunt w Lochach |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT Ery. Przesuń Inkwizytora o 1 lokację do Rynku. |
-| `lore` | Rynek staje się strefą śmierci Autodafé. Kupcy i Cienie uciekają. |
-| `tags` | edict, inquisitor |
+| `effect` | Uwolnij 1 uwięzionego Agenta do Gildii. Jeśli w Lochach nie ma uwięzionych Agentów: Umieść Relikwię w Lochach. |
+| `lore` | Zamieszki w kazamatach otwierają drogę ucieczki dla więźnia lub ujawniają ukrytą w murach relikwię. |
+| `tags` | edict, dungeon, relic |
 | `status` | prototyp |
 
-### `time-08` — Krypta pod Toledo
+### `time-08` — Święte Przymierze
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | time-08 |
-| `name` | Krypta pod Toledo |
+| `name` | Święte Przymierze |
 | `faction` | time |
 | `type` | wydarzenie |
 | `layer` | C |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | EDYKT. Umieść Relikwię w Lochach.  Jeśli pierwszy Agent jest w Lochach w następnej Erze: Przenieś Relikwię do tego Agenta. |
-| `lore` | Wyścig do Lochów. Cienie vs Oficjum — kto pierwszy, ten bierze. |
-| `tags` | edict, relic |
+| `effect` | EDYKT Ery. W tej Erze: Faza Dworu zostaje zawieszona (brak możliwości rzucenia Oskarżenia). |
+| `lore` | Tymczasowy rozejm polityczny na szczytach władzy zamraża publiczne procesy i egzekucje. |
+| `tags` | edict, verdict |
+| `status` | prototyp |
+
+### `time-09` — Jarmark Królewski
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | time-09 |
+| `name` | Jarmark Królewski |
+| `faction` | time |
+| `type` | wydarzenie |
+| `layer` | C |
+| `cost_gold` | 0 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | EDYKT Ery. W tej Erze: Akcja Gospodarcza na Rynku przynosi +2 złote zamiast +1 zł. |
+| `lore` | Królewski przywilej targowy ściąga kupców z całej Kastylii, napędzając miejski handel. |
+| `tags` | edict, gold, market |
+| `status` | prototyp |
+
+### `time-10` — Amnestia Biskupia
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | time-10 |
+| `name` | Amnestia Biskupia |
+| `faction` | time |
+| `type` | wydarzenie |
+| `layer` | C |
+| `cost_gold` | 0 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Każdy gracz w Strefie Obserwowanej (4–6 Herezji) zmniejsza swoją Herezję o 1. |
+| `lore` | Biskup ogłasza wielki jubileusz i powszechne rozgrzeszenie, dając wytchnienie podejrzanym. |
+| `tags` | edict, heresy |
 | `status` | prototyp |

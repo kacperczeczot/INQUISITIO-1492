@@ -240,9 +240,11 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     st.era = 8
     assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
 
+    from inquisitio.engine.hooks import grant_hook
     st2 = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="C")
     kb = st2.players[FactionId.KORONA_BORGIOWIE]
     kb.decrees_played = 2
+    grant_hook(st2, FactionId.KORONA_BORGIOWIE, FactionId.SWIETE_OFICJUM)
     st2.era = 6
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})

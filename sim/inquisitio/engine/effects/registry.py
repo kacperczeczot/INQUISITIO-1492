@@ -364,7 +364,8 @@ def play_card(state: GameState, fid: FactionId, card_id: str, rng: random.Random
     sys = state.sys_overrides or {}
     card_cost_offset = sys.get("card_cost_offset", CONFIG.economy.card_cost_offset)
     sig_offset = sys.get("sig_cost_offset", CONFIG.economy.sig_cost_offset) if (card.breaks_rule or card.type == "signature") else 0
-    cost = max(0, card.cost + card_cost_offset + sig_offset)
+    curfew_cost = 1 if (state.active_time_edict == "time-02" and card.location in ("rynek", "gildia")) else 0
+    cost = max(0, card.cost + card_cost_offset + sig_offset + curfew_cost)
     if pl.gold < cost:
         return False
     gold_before = pl.gold
@@ -389,47 +390,91 @@ def resolve_time_edict(state: GameState, card_id: str, rng: random.Random) -> No
     if not card:
         return
     state.add_log(f"Time edict {card_id} ({card.name})")
+    
     if card.id == "time-01":
+        # Kapitulacja Grenady: +1 gold for agents in palac, Inquisitor moves toward trybunal
         for fid, pl in state.players.items():
-            if any(ag.location == "rynek" for ag in pl.agents):
-                add_heresy(state, fid, 1, reason="time-01")
+            if any(ag.location == "palac" and not ag.arrested for ag in pl.agents):
+                pl.gold += 1
+                state.add_log(f"{fid.value} +1 gold from palac celebration")
+        from inquisitio.engine.inquisitor import move_inquisitor
+        move_inquisitor(state, rng, toward="trybunal")
+        
     elif card.id == "time-02":
-        if FactionId.CIENIE_AL_ANDALUS in state.players:
-            _move_agent(state, FactionId.CIENIE_AL_ANDALUS, rng, 1)
-        for fid, pl in state.players.items():
-            if fid == FactionId.CIENIE_AL_ANDALUS:
-                continue
-            if any(ag.location == "gildia" for ag in pl.agents):
-                add_heresy(state, fid, 1, reason="time-02")
+        # Godzina Policyjna: curfew active for this era (+1 gold under rynek & gildia)
+        state.active_time_edict = "time-02"
+        state.add_log("Edict: Curfew active (+1 gold for cards under Rynek/Gildia this era)")
+        
     elif card.id == "time-03":
+        # Flota Odkrywców: opens sea route + +1 gold for agents in rynek or gildia
         state.sea_route_open = True
         state.add_log("Sea route open")
+        for fid, pl in state.players.items():
+            if any(ag.location in ("rynek", "gildia") and not ag.arrested for ag in pl.agents):
+                pl.gold += 1
+                state.add_log(f"{fid.value} +1 gold from harbor trade")
+                
     elif card.id == "time-04":
-        if FactionId.KABALA_TOLEDO in state.players:
-            pl = state.players[FactionId.KABALA_TOLEDO]
-            if any(ag.location in ("trybunal", "lochy") for ag in pl.agents):
-                pl.fragments += 1
-                state.add_log(f"kabala-toledo fragment (total={pl.fragments})")
+        # Rewizja w Dzielnicach: highest heresy +1 heresy, lowest heresy +1 gold
+        if state.players:
+            max_h = max(pl.heresy for pl in state.players.values())
+            min_h = min(pl.heresy for pl in state.players.values())
+            for fid, pl in state.players.items():
+                if pl.heresy == max_h:
+                    add_heresy(state, fid, 1, reason="time-04 (highest heresy)")
+                if pl.heresy == min_h:
+                    pl.gold += 1
+                    state.add_log(f"{fid.value} +1 gold from time-04 (lowest heresy)")
+                    
     elif card.id == "time-05":
-        # Drama fire without free Oficjum Stos (stack still via so-10 / claimed Autodafé)
-        resolve_autodafe(state, force=True, award_stack=False)
+        # Gorączka Donosów: threshold -1 for this era
+        state.active_time_edict = "time-05"
+        state.add_log("Edict: Denunciation fever active (accusation threshold -1 this era)")
+        
     elif card.id == "time-06":
-        candidates = [
-            f
-            for f in (FactionId.KORONA_BORGIOWIE, FactionId.GILDIA_CIENI)
-            if f in state.players
-        ]
-        if candidates:
-            candidates.sort(key=lambda f: state.players[f].heresy)
-            holder = candidates[0]
-            rivals = [x for x in state.turn_order if x != holder]
-            if rivals:
-                grant_hook(state, holder, rng.choice(rivals))
+        # Nocna Obława: move Inquisitor to location with most agents
+        loc_counts: dict[str, int] = {}
+        for pl in state.players.values():
+            for ag in pl.agents:
+                if not ag.arrested and ag.location:
+                    loc_counts[ag.location] = loc_counts.get(ag.location, 0) + 1
+        if loc_counts:
+            max_c = max(loc_counts.values())
+            top_locs = [l for l, c in loc_counts.items() if c == max_c]
+            chosen_loc = top_locs[0] if len(top_locs) == 1 else rng.choice(top_locs)
+            from inquisitio.engine.inquisitor import move_inquisitor
+            move_inquisitor(state, rng, toward=chosen_loc)
+            state.add_log(f"Night raid: Inquisitor moved toward {chosen_loc}")
+            
     elif card.id == "time-07":
-        # move toward rynek
-        from inquisitio.engine.inquisitor import move_inquisitor
-
-        move_inquisitor(state, rng, toward="rynek")
+        # Bunt w Lochach: free 1 prisoner to gildia, or place relic if empty
+        arrested_agents = []
+        for fid, pl in state.players.items():
+            for ag in pl.agents:
+                if ag.arrested or ag.location == "lochy":
+                    arrested_agents.append((fid, ag))
+        if arrested_agents:
+            fid, ag = rng.choice(arrested_agents)
+            ag.arrested = False
+            ag.location = "gildia"
+            state.add_log(f"{fid.value} agent freed from lochy to gildia")
+        else:
+            state.relics_on_board["lochy"] = state.relics_on_board.get("lochy", 0) + 1
+            state.add_log("Relic placed in lochy (empty dungeon)")
+            
     elif card.id == "time-08":
-        state.relics_on_board["lochy"] = state.relics_on_board.get("lochy", 0) + 1
-        state.add_log("Relic placed in lochy")
+        # Święte Przymierze: verdicts suspended for this era
+        state.active_time_edict = "time-08"
+        state.add_log("Edict: Holy Alliance active (Verdicts suspended this era)")
+        
+    elif card.id == "time-09":
+        # Jarmark Królewski: market bonus for this era
+        state.active_time_edict = "time-09"
+        state.add_log("Edict: Royal Market active (+2 gold from economic action)")
+        
+    elif card.id == "time-10":
+        # Amnestia Biskupia: reduce heresy by 1 for players in observed zone (4-6)
+        for fid, pl in state.players.items():
+            if 4 <= pl.heresy <= 6:
+                add_heresy(state, fid, -1, reason="time-10 (episcopal amnesty)")
+

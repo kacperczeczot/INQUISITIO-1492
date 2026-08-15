@@ -113,6 +113,7 @@ class GameState:
     relics_on_board: dict[str, int] = field(default_factory=dict)
     time_deck: list[str] = field(default_factory=list)
     time_discard: list[str] = field(default_factory=list)
+    active_time_edict: str | None = None
     winner: FactionId | None = None
     win_path: str | None = None
     metrics: DramaMetrics = field(default_factory=DramaMetrics)

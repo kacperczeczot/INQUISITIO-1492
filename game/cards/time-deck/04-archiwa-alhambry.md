@@ -1,20 +1,14 @@
 ---
 id: time-04
-name: Archiwa Alhambry
+name: Rewizja w Dzielnicach
 faction: time
 type: wydarzenie
 layer: C
 cost: 0
 tags:
 - edict
-- fragment
-effect: 'EDYKT Ery.
-
-
-  Jeśli Kabała ma Agenta w Trybunale lub Lochach:
-
-  Zyskaj Fragment.
-
-  '
-lore: Kabała ustawia Agenta z wyprzedzeniem; stół widzi darmowy Fragment albo nic.
+- heresy
+- gold
+effect: "Gracz o najwyższej Herezji: +1 Herezja. Gracz o najniższej Herezji: Zyskuje +1 złoto."
+lore: "Inkwizycja zaostrza śledztwa wobec najbardziej podejrzanych, sowicie nagradzając lojalnych mieszczan."
 ---
