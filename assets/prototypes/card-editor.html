@@ -27,6 +27,12 @@
       /* Print specs (locked PnP card size) */
       --card-w: 63mm;
       --card-h: 88mm;
+      --card-trim-w: 63mm;
+      --card-trim-h: 88mm;
+      --card-bleed: 2.5mm;
+      --card-gross-w: 68mm;
+      --card-gross-h: 93mm;
+      --card-safe-pad: 3mm;
     }
 
     * {
@@ -336,6 +342,52 @@
       border-radius: 12px;
       border: 1px solid var(--panel-border);
       box-shadow: 0 6px 18px rgba(42, 28, 18, 0.08);
+      position: relative;
+    }
+
+    .card-wrapper.mode-bleed .card-proto {
+      width: var(--card-gross-w);
+      height: var(--card-gross-h);
+      border: calc(1.5mm + var(--card-bleed)) solid var(--faction-edge, var(--blood));
+      padding: 0;
+    }
+
+    .card-wrapper.mode-bleed .card-proto::before {
+      inset: 0.6mm;
+    }
+
+    .safe-zone-overlay {
+      display: none;
+      position: absolute;
+      top: calc(1.25rem + var(--card-bleed) + var(--card-safe-pad));
+      left: calc(1.25rem + var(--card-bleed) + var(--card-safe-pad));
+      width: calc(var(--card-trim-w) - 2 * var(--card-safe-pad));
+      height: calc(var(--card-trim-h) - 2 * var(--card-safe-pad));
+      border: 0.4mm dashed rgba(0, 120, 255, 0.75);
+      pointer-events: none;
+      z-index: 50;
+      box-sizing: border-box;
+    }
+
+    .card-wrapper.mode-safe .safe-zone-overlay {
+      display: block;
+    }
+
+    .trim-line-overlay {
+      display: none;
+      position: absolute;
+      top: calc(1.25rem + var(--card-bleed));
+      left: calc(1.25rem + var(--card-bleed));
+      width: var(--card-trim-w);
+      height: var(--card-trim-h);
+      border: 0.35mm dashed rgba(200, 30, 30, 0.7);
+      pointer-events: none;
+      z-index: 45;
+      box-sizing: border-box;
+    }
+
+    .card-wrapper.mode-bleed .trim-line-overlay {
+      display: block;
     }
 
     /* Card Visual CSS (Direct match with PnP CSS) */
@@ -343,7 +395,7 @@
       position: relative;
       width: var(--card-w);
       height: var(--card-h);
-      border: 0.5mm solid var(--line);
+      border: 1.5mm solid var(--faction-edge, var(--blood));
       background: var(--parch);
       display: flex;
       flex-direction: column;
@@ -351,24 +403,27 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
       color: var(--line);
       font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      transition: width 0.2s ease, height 0.2s ease;
+      box-sizing: border-box;
     }
 
+    /* Renaissance inner hairline frame */
     .card-proto::before {
       content: "";
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 1.4mm;
-      background: var(--faction-edge, var(--blood));
+      inset: 0.6mm;
+      border: 0.25mm solid rgba(166, 124, 45, 0.5);
+      pointer-events: none;
       z-index: 2;
     }
 
     .card-proto .hdr {
-      padding: 2mm 2.5mm 1.2mm 3.2mm;
+      padding: 1.6mm 2mm 1.2mm 2mm;
       border-bottom: 0.35mm solid var(--line);
-      background: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.32);
       flex-shrink: 0;
+      position: relative;
+      z-index: 3;
     }
 
     .card-proto .hdr-top {
@@ -478,6 +533,22 @@
       font-size: 8.5pt;
       font-style: italic;
       opacity: 0.8;
+    }
+
+    .card-footer-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 0.8mm;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 5.5pt;
+      color: #7a6e60;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      user-select: none;
+      opacity: 0.75;
+      line-height: 1;
     }
 
     .card-proto .heresy-caption {
@@ -622,6 +693,7 @@
     </div>
     <div class="nav-links">
       <a href="index.html">← Indeks Prototypów</a>
+      <a href="cards-all-print.html" style="font-weight: 700; color: var(--blood);">🖨️ Druk Kart (Bleed PDF)</a>
       <a href="player-boards.html">Planszetki</a>
       <a href="verdict.html">Werdykt</a>
     </div>
@@ -971,7 +1043,22 @@
         <span>Podgląd PnP w Czasie Rzeczywistym</span>
       </div>
 
+      <!-- Bleed / Safe Zone selector -->
+      <div
+        style="display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%; margin-bottom: -0.25rem;">
+        <label for="editor-view-mode" style="font-size: 0.82rem; font-weight: 700; color: var(--blood);">Tryb
+          DTP:</label>
+        <select id="editor-view-mode" onchange="setEditorPreviewMode(this.value)"
+          style="font-size: 0.82rem; font-weight: 600; padding: 4px 10px; border-radius: 6px; border: 1.5px solid var(--panel-border); background: #fff; color: var(--text-main); cursor: pointer;">
+          <option value="trim">Netto (63 × 88 mm)</option>
+          <option value="bleed">Spad / Bleed +2.5 mm (68 × 93 mm)</option>
+          <option value="safe">Strefa Bezpieczna (Safe Zone 3 mm)</option>
+        </select>
+      </div>
+
       <div class="card-wrapper">
+        <div class="trim-line-overlay" title="Linia cięcia netto (63 × 88 mm)"></div>
+        <div class="safe-zone-overlay" title="Strefa bezpieczna (margines 3 mm)"></div>
         <div class="card-proto faction-swiete-oficjum" id="card-preview">
           <div class="hdr">
             <div class="hdr-top">
@@ -994,6 +1081,10 @@
             </div>
             <div class="card-lore" id="prev-lore">
               Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
+            </div>
+            <div class="card-footer-meta">
+              <span id="prev-meta-id">SO-08</span>
+              <span id="prev-meta-ver">v0.35</span>
             </div>
           </div>
         </div>
@@ -1035,730 +1126,729 @@
 
   <script>
     const CARDS_DATABASE = {
-  "so-01": {
-    "name": "Patrol Familiariuszy",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "agents": 1,
-    "action": "move_agent",
-    "tags": [
-      "move"
-    ],
-    "heresy_text": "Familiariusze obchodzą miasto pod szyldem porządku i prawa.",
-    "lore": "Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt."
-  },
-  "so-02": {
-    "name": "Skarbiec Trybunału",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "gold": 2,
-    "action": "gain_gold",
-    "tags": [
-      "gold"
-    ],
-    "heresy_text": "Konfiskata majątku skazańców to prawny obowiązek trybunału.",
-    "lore": "Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie."
-  },
-  "so-03": {
-    "name": "Podejrzenie",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 2,
-    "target_heresy": 1,
-    "action": "frame_rival",
-    "tags": [
-      "heresy"
-    ],
-    "heresy_text": "Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.",
-    "lore": "Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie."
-  },
-  "so-04": {
-    "name": "Publiczne Ostrzeżenie",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "action": "send_inquisitor",
-    "target_loc": "agent_location",
-    "inquisitor_send_limit": 1,
-    "tags": [
-      "inquisitor"
-    ],
-    "heresy_text": "Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.",
-    "lore": "Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel."
-  },
-  "so-05": {
-    "name": "Wezwanie do Trybunału",
-    "type": "reakcja",
-    "layer": "A",
-    "cost": 0,
-    "target_heresy": 2,
-    "action": "frame_rival",
-    "target_scope": "triggering_rival",
-    "trigger": "rival_plays_heresy_gte_1",
-    "tags": [
-      "reaction"
-    ],
-    "lore": "Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję."
-  },
-  "so-06": {
-    "name": "Areszt Trybunalski",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "arrest": true,
-    "action": "arrest",
-    "target_loc": "same_location",
-    "tags": [
-      "arrest"
-    ],
-    "heresy_text": "Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie.",
-    "lore": "Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem."
-  },
-  "so-07": {
-    "name": "Przesłuchanie Oficjum",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "interrogate": true,
-    "action": "interrogate",
-    "target_loc": "dungeon",
-    "interrogate_limit": 1,
-    "tags": [
-      "interrogation"
-    ],
-    "lore": "Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję."
-  },
-  "so-08": {
-    "name": "Nasłanie Inkwizytora",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 1,
-    "heresy": 0,
-    "action": "send_inquisitor",
-    "target_loc": "same_location",
-    "inquisitor_send_limit": 1,
-    "tags": [
-      "inquisitor",
-      "heresy"
-    ],
-    "heresy_text": "Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.",
-    "lore": "Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne."
-  },
-  "so-09": {
-    "name": "Świadek Koronny",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "condition": "rival_in_dungeon_or_inquisitor",
-    "tags": [
-      "hook"
-    ],
-    "lore": "Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie."
-  },
-  "so-10": {
-    "name": "Oczyść Miasto",
-    "type": "signature",
-    "layer": "C",
-    "cost": 4,
-    "heresy": 2,
-    "autodafe": true,
-    "action": "autodafe",
-    "breaks_rule": "Autodafé / 3 Ery",
-    "tags": [
-      "signature",
-      "autodafe",
-      "heresy"
-    ],
-    "heresy_text": "Autodafé z rozkazu trybunału pali strach, nie tylko drewno.",
-    "lore": "Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika."
-  },
-  "caa-01": {
-    "name": "Przejście Podziemiami",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 0,
-    "agents": 1,
-    "action": "move_agent",
-    "tags": [
-      "move"
-    ],
-    "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
-    "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
-  },
-  "caa-02": {
-    "name": "Złoto z Kryjówki",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "gold": 2,
-    "action": "gain_gold",
-    "tags": [
-      "gold"
-    ],
-    "lore": "Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację."
-  },
-  "caa-03": {
-    "name": "Cień na Rynku",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 0,
-    "heresy": 1,
-    "agents": 1,
-    "action": "move_agent",
-    "tags": [
-      "move",
-      "relic",
-      "heresy"
-    ],
-    "heresy_text": "Kupcy rozpoznają obce oblicze w tłumie na placu.",
-    "lore": "Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień."
-  },
-  "caa-04": {
-    "name": "Fałszywy Trop",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "target_heresy": 1,
-    "action": "frame_rival",
-    "tags": [
-      "heresy"
-    ],
-    "heresy_text": "Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce.",
-    "lore": "Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę."
-  },
-  "caa-05": {
-    "name": "Ukryty Kurier",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "evacuate_relic": 1,
-    "action": "evacuate_relic",
-    "condition": "relic_present",
-    "kurier_limit": 1,
-    "tags": [
-      "relic"
-    ],
-    "lore": "Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar."
-  },
-  "caa-06": {
-    "name": "Ucieczka z Lochów",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "agents": 1,
-    "free_agent": true,
-    "action": "move_agent",
-    "target_loc": "dungeon",
-    "tags": [
-      "move",
-      "arrest"
-    ],
-    "heresy": 1,
-    "heresy_text": "Klucz od strażnika, który nigdy nie służył Koronie.",
-    "lore": "Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą."
-  },
-  "caa-07": {
-    "name": "Szantaż Bractwa",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "target_loc": "neighbor_location",
-    "tags": [
-      "hook"
-    ],
-    "heresy_text": "Bractwo zna imiona sąsiadów lepiej niż proboszczowie.",
-    "lore": "Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni."
-  },
-  "caa-08": {
-    "name": "Kaptur Nocy",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 1,
-    "heresy": 1,
-    "action": "move_agent",
-    "condition": "has_double_agent",
-    "tags": [
-      "double",
-      "heresy"
-    ],
-    "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
-    "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
-  },
-  "caa-09": {
-    "name": "Kurier Relikwii",
-    "type": "akcja",
-    "layer": "C",
-    "cost": 2,
-    "move_relic": true,
-    "action": "move_agent",
-    "target_loc": "neighbor_location",
-    "tags": [
-      "relic",
-      "move"
-    ],
-    "lore": "Bluff kierunku Relikwii jest połową gry Cieni."
-  },
-  "caa-10": {
-    "name": "Echo Alhambry",
-    "type": "signature",
-    "layer": "C",
-    "cost": 0,
-    "heresy": 1,
-    "evacuate_relic": 2,
-    "action": "evacuate_relic",
-    "max_relics": 2,
-    "condition": "no_inquisitor_or_double_or_sea_route",
-    "breaks_rule": "Relikwia tylko ze Szlaku Morskiego",
-    "tags": [
-      "signature",
-      "relic",
-      "heresy"
-    ],
-    "heresy_text": "Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.",
-    "lore": "As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej."
-  },
-  "kb-01": {
-    "name": "Rozkaz Dworu",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "agents": 1,
-    "action": "move_agent",
-    "tags": [
-      "move"
-    ],
-    "heresy_text": "Królewski nakaz wiąże bez pytania biskupów o zgodę.",
-    "lore": "Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu."
-  },
-  "kb-02": {
-    "name": "Pobór Podatków",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "gold": 2,
-    "action": "gain_gold",
-    "tags": [
-      "gold"
-    ],
-    "lore": "Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną.
-"
-  },
-  "kb-03": {
-    "name": "Plotka Dworska",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "target_heresy": 1,
-    "action": "frame_rival",
-    "tags": [
-      "heresy"
-    ],
-    "heresy_text": "Szept z sali tronowej dociera do familiariusza szybciej niż msza.",
-    "lore": "Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4)."
-  },
-  "kb-04": {
-    "name": "Faworyt Dworu",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 2,
-    "heresy": 1,
-    "agents": 1,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "tags": [
-      "hook",
-      "move",
-      "heresy"
-    ],
-    "heresy_text": "Faworyzm dworu budzi zazdrość kortegan i biskupów.",
-    "lore": "Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret."
-  },
-  "kb-05": {
-    "name": "List Żelazny",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 2,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "tags": [
-      "decree",
-      "hook"
-    ],
-    "lore": "List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji."
-  },
-  "kb-06": {
-    "name": "Areszt Królewski",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 1,
-    "arrest": true,
-    "action": "arrest",
-    "target_loc": "palace_or_same_location",
-    "tags": [
-      "arrest"
-    ],
-    "heresy_text": "Królewski areszt ma precedens starszy niż bulla papieska.",
-    "lore": "Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba aresztu."
-  },
-  "kb-07": {
-    "name": "Szantaż Pieczęcią",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "condition": "heresy_gte_4",
-    "tags": [
-      "hook"
-    ],
-    "lore": "Korona poluje na już brudnych. Dwa Haki zaczynają się tu."
-  },
-  "kb-08": {
-    "name": "Przekupstwo Sędziego",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 3,
-    "creates_hook": true,
-    "verdict_weight": 2,
-    "action": "creates_hook",
-    "tags": [
-      "verdict"
-    ],
-    "lore": "Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone."
-  },
-  "kb-09": {
-    "name": "Dekret Królewski",
-    "type": "signature",
-    "layer": "C",
-    "cost": 3,
-    "heresy": 1,
-    "decree": 1,
-    "penalty_heresy": 3,
-    "action": "creates_hook",
-    "breaks_rule": "1 wymuszenie Haka / gracza / Erę",
-    "tags": [
-      "signature",
-      "decree",
-      "heresy"
-    ],
-    "heresy_text": "Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.",
-    "lore": "Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru."
-  },
-  "kb-10": {
-    "name": "Pieczęć Korony",
-    "type": "signature",
-    "layer": "C",
-    "cost": 2,
-    "heresy": 2,
-    "decree": 2,
-    "action": "check_victory",
-    "condition": "active_hooks_gte_2",
-    "breaks_rule": "zwycięstwo tylko po Erze",
-    "tags": [
-      "signature",
-      "decree",
-      "heresy"
-    ],
-    "heresy_text": "Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.",
-    "lore": "Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie."
-  },
-  "kt-01": {
-    "name": "Rytuał Przejścia",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "agents": 1,
-    "action": "move_agent",
-    "tags": [
-      "move"
-    ],
-    "heresy_text": "Symboliczne przejście przez próg nie budzi alarmu familiariuszy.",
-    "lore": "Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę."
-  },
-  "kt-02": {
-    "name": "Transmutacja Złota",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "gold": 2,
-    "action": "gain_gold",
-    "tags": [
-      "gold"
-    ],
-    "lore": "Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku."
-  },
-  "kt-03": {
-    "name": "Zakazana Wiedza",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 0,
-    "heresy": 1,
-    "grant_fragment": 1,
-    "action": "grant_fragment",
-    "tags": [
-      "fragment",
-      "heresy"
-    ],
-    "gold": 1,
-    "heresy_text": "Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu.",
-    "lore": "Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną."
-  },
-  "kt-04": {
-    "name": "Zwierciadło Herezji",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 0,
-    "target_heresy": 1,
-    "action": "frame_rival",
-    "tags": [
-      "heresy"
-    ],
-    "heresy_text": "Zwierciadło odbija winę na obce imię w rejestrze familiariuszy.",
-    "lore": "Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr."
-  },
-  "kt-05": {
-    "name": "Wskazówka Cyklu",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "grant_fragment": 1,
-    "action": "grant_fragment",
-    "condition": "agent_in_dungeon_or_tribunal",
-    "tags": [
-      "fragment"
-    ],
-    "lore": "Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale."
-  },
-  "kt-06": {
-    "name": "Przesłuchanie Imienia",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "interrogate": true,
-    "grant_fragment": 1,
-    "interrogate_limit": 1,
-    "action": "interrogate",
-    "bonus_on_heresy": "grant_fragment",
-    "tags": [
-      "interrogation",
-      "fragment"
-    ],
-    "lore": "Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Marionetki.
-"
-  },
-  "kt-07": {
-    "name": "Archiwum Ukryte",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 1,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "condition": "heresy_gte_4",
-    "tags": [
-      "hook"
-    ],
-    "lore": "Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze."
-  },
-  "kt-08": {
-    "name": "Areszt Wiedzy",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "arrest": true,
-    "action": "arrest",
-    "target_loc": "dungeon_or_tribunal",
-    "tags": [
-      "arrest"
-    ],
-    "heresy_text": "Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał.",
-    "lore": "Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem."
-  },
-  "kt-09": {
-    "name": "Fragment Kodeksu",
-    "type": "akcja",
-    "layer": "C",
-    "cost": 1,
-    "heresy": 1,
-    "grant_fragment": 1,
-    "action": "grant_fragment",
-    "condition": "has_fragment_and_agent_in_dungeon_or_tribunal",
-    "tags": [
-      "fragment",
-      "heresy"
-    ],
-    "heresy_text": "Pergamin Salomona brudzi palce i sumienie.",
-    "lore": "Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko."
-  },
-  "kt-10": {
-    "name": "Pieczęć Salomona",
-    "type": "signature",
-    "layer": "C",
-    "cost": 1,
-    "action": "check_victory",
-    "condition": "fragments_eq_3",
-    "target_heresy_band": [
-      4,
-      6
-    ],
-    "fallback_heresy": 5,
-    "breaks_rule": "Herezja tylko z karty",
-    "tags": [
-      "signature",
-      "fragment"
-    ],
-    "lore": "Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6."
-  },
-  "gc-01": {
-    "name": "Przekupiony Strażnik",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "agents": 1,
-    "action": "move_agent",
-    "tags": [
-      "move"
-    ],
-    "heresy": 1,
-    "heresy_text": "Strażnik zna cenę milczenia lepiej niż modlitwy.",
-    "lore": "Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż."
-  },
-  "gc-02": {
-    "name": "Czarny Rynek",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "gold": 2,
-    "action": "gain_gold",
-    "tags": [
-      "gold"
-    ],
-    "heresy": 1,
-    "lore": "Handel spod lady — stół czuje, że Gildia ma gotówkę na brud."
-  },
-  "gc-03": {
-    "name": "Podrzucenie Księgi",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 1,
-    "target_heresy": 1,
-    "action": "frame_rival",
-    "tags": [
-      "heresy"
-    ],
-    "heresy_text": "Zakazana księga ląduje w cudzej komnacie o świcie.",
-    "lore": "Klasyczny frame: zakazana księga ląduje w cudzej komnacie."
-  },
-  "gc-04": {
-    "name": "Informator",
-    "type": "akcja",
-    "layer": "A",
-    "cost": 0,
-    "heresy": 1,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "tags": [
-      "hook",
-      "heresy"
-    ],
-    "heresy_text": "Donosiciel pamięta twarz i zapach srebra.",
-    "lore": "Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę."
-  },
-  "gc-05": {
-    "name": "Fałszywy Świadek",
-    "type": "reakcja",
-    "layer": "A",
-    "cost": 0,
-    "change_vote": true,
-    "vote_change_limit": 1,
-    "action": "frame_rival",
-    "trigger": "after_verdict_majority_revealed",
-    "tags": [
-      "reaction"
-    ],
-    "lore": "Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole."
-  },
-  "gc-06": {
-    "name": "Szantaż",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "creates_hook": true,
-    "action": "creates_hook",
-    "tags": [
-      "hook"
-    ],
-    "lore": "Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek."
-  },
-  "gc-07": {
-    "name": "Skrytobójstwo",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 2,
-    "heresy": 1,
-    "arrest": true,
-    "action": "arrest",
-    "target_loc": "guild_or_market",
-    "tags": [
-      "arrest",
-      "heresy"
-    ],
-    "heresy_text": "Ciało w kanałach Gildii mówi więcej niż świadek na rynku.",
-    "lore": "Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami."
-  },
-  "gc-08": {
-    "name": "Zatrute Złoto",
-    "type": "akcja",
-    "layer": "B",
-    "cost": 1,
-    "target_heresy": 1,
-    "gold": 1,
-    "action": "gain_gold",
-    "tags": [
-      "gold",
-      "heresy"
-    ],
-    "lore": "Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej."
-  },
-  "gc-09": {
-    "name": "Lista Dłużników",
-    "type": "akcja",
-    "layer": "C",
-    "cost": 2,
-    "creates_hook": true,
-    "mark_fall": true,
-    "action": "creates_hook",
-    "on_refusal": "mark_fall",
-    "tags": [
-      "hook",
-      "fall"
-    ],
-    "lore": "Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole."
-  },
-  "gc-10": {
-    "name": "Upadek Domu",
-    "type": "signature",
-    "layer": "C",
-    "cost": 4,
-    "heresy": 2,
-    "mark_fall": true,
-    "action": "creates_hook",
-    "condition": "rival_has_hook_or_double_or_autodafe",
-    "breaks_rule": "Upadek tylko z odmowy Haka",
-    "tags": [
-      "signature",
-      "fall",
-      "heresy"
-    ],
-    "heresy_text": "Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.",
-    "lore": "Egzekucja domu. Stół boi się trzymać ujawnione brudy."
-  }
-};
+      "so-01": {
+        "name": "Patrol Familiariuszy",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "agents": 1,
+        "action": "move_agent",
+        "tags": [
+          "move"
+        ],
+        "heresy_text": "Familiariusze obchodzą miasto pod szyldem porządku i prawa.",
+        "lore": "Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt."
+      },
+      "so-02": {
+        "name": "Skarbiec Trybunału",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "gold": 2,
+        "action": "gain_gold",
+        "tags": [
+          "gold"
+        ],
+        "heresy_text": "Konfiskata majątku skazańców to prawny obowiązek trybunału.",
+        "lore": "Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie."
+      },
+      "so-03": {
+        "name": "Podejrzenie",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 2,
+        "target_heresy": 1,
+        "action": "frame_rival",
+        "tags": [
+          "heresy"
+        ],
+        "heresy_text": "Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.",
+        "lore": "Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie."
+      },
+      "so-04": {
+        "name": "Publiczne Ostrzeżenie",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "action": "send_inquisitor",
+        "target_loc": "agent_location",
+        "inquisitor_send_limit": 1,
+        "tags": [
+          "inquisitor"
+        ],
+        "heresy_text": "Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.",
+        "lore": "Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel."
+      },
+      "so-05": {
+        "name": "Wezwanie do Trybunału",
+        "type": "reakcja",
+        "layer": "A",
+        "cost": 0,
+        "target_heresy": 2,
+        "action": "frame_rival",
+        "target_scope": "triggering_rival",
+        "trigger": "rival_plays_heresy_gte_1",
+        "tags": [
+          "reaction"
+        ],
+        "lore": "Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję."
+      },
+      "so-06": {
+        "name": "Areszt Trybunalski",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "arrest": true,
+        "action": "arrest",
+        "target_loc": "same_location",
+        "tags": [
+          "arrest"
+        ],
+        "heresy_text": "Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie.",
+        "lore": "Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem."
+      },
+      "so-07": {
+        "name": "Przesłuchanie Oficjum",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "interrogate": true,
+        "action": "interrogate",
+        "target_loc": "dungeon",
+        "interrogate_limit": 1,
+        "tags": [
+          "interrogation"
+        ],
+        "lore": "Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję."
+      },
+      "so-08": {
+        "name": "Nasłanie Inkwizytora",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 1,
+        "heresy": 0,
+        "action": "send_inquisitor",
+        "target_loc": "same_location",
+        "inquisitor_send_limit": 1,
+        "tags": [
+          "inquisitor",
+          "heresy"
+        ],
+        "heresy_text": "Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.",
+        "lore": "Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne."
+      },
+      "so-09": {
+        "name": "Świadek Koronny",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "condition": "rival_in_dungeon_or_inquisitor",
+        "tags": [
+          "hook"
+        ],
+        "lore": "Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie."
+      },
+      "so-10": {
+        "name": "Oczyść Miasto",
+        "type": "signature",
+        "layer": "C",
+        "cost": 4,
+        "heresy": 2,
+        "autodafe": true,
+        "action": "autodafe",
+        "breaks_rule": "Autodafé / 3 Ery",
+        "tags": [
+          "signature",
+          "autodafe",
+          "heresy"
+        ],
+        "heresy_text": "Autodafé z rozkazu trybunału pali strach, nie tylko drewno.",
+        "lore": "Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika."
+      },
+      "caa-01": {
+        "name": "Przejście Podziemiami",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 0,
+        "agents": 1,
+        "action": "move_agent",
+        "tags": [
+          "move"
+        ],
+        "gold": 1,
+        "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
+        "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
+      },
+      "caa-02": {
+        "name": "Złoto z Kryjówki",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "gold": 2,
+        "action": "gain_gold",
+        "tags": [
+          "gold"
+        ],
+        "lore": "Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację."
+      },
+      "caa-03": {
+        "name": "Cień na Rynku",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 0,
+        "heresy": 1,
+        "agents": 1,
+        "action": "move_agent",
+        "tags": [
+          "move",
+          "relic",
+          "heresy"
+        ],
+        "heresy_text": "Kupcy rozpoznają obce oblicze w tłumie na placu.",
+        "lore": "Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień."
+      },
+      "caa-04": {
+        "name": "Fałszywy Trop",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "target_heresy": 1,
+        "action": "frame_rival",
+        "tags": [
+          "heresy"
+        ],
+        "heresy_text": "Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce.",
+        "lore": "Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę."
+      },
+      "caa-05": {
+        "name": "Ukryty Kurier",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "evacuate_relic": 1,
+        "action": "evacuate_relic",
+        "condition": "relic_present",
+        "kurier_limit": 1,
+        "tags": [
+          "relic"
+        ],
+        "lore": "Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar."
+      },
+      "caa-06": {
+        "name": "Ucieczka z Lochów",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "agents": 1,
+        "free_agent": true,
+        "action": "move_agent",
+        "target_loc": "dungeon",
+        "tags": [
+          "move",
+          "arrest"
+        ],
+        "heresy": 1,
+        "heresy_text": "Klucz od strażnika, który nigdy nie służył Koronie.",
+        "lore": "Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą."
+      },
+      "caa-07": {
+        "name": "Szantaż Bractwa",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "target_loc": "neighbor_location",
+        "tags": [
+          "hook"
+        ],
+        "heresy_text": "Bractwo zna imiona sąsiadów lepiej niż proboszczowie.",
+        "lore": "Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni."
+      },
+      "caa-08": {
+        "name": "Kaptur Nocy",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "heresy": 1,
+        "action": "move_agent",
+        "condition": "has_double_agent",
+        "tags": [
+          "double",
+          "heresy"
+        ],
+        "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
+        "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
+      },
+      "caa-09": {
+        "name": "Kurier Relikwii",
+        "type": "akcja",
+        "layer": "C",
+        "cost": 2,
+        "move_relic": true,
+        "action": "move_agent",
+        "target_loc": "neighbor_location",
+        "tags": [
+          "relic",
+          "move"
+        ],
+        "lore": "Bluff kierunku Relikwii jest połową gry Cieni."
+      },
+      "caa-10": {
+        "name": "Echo Alhambry",
+        "type": "signature",
+        "layer": "C",
+        "cost": 0,
+        "heresy": 1,
+        "evacuate_relic": 2,
+        "action": "evacuate_relic",
+        "max_relics": 2,
+        "condition": "no_inquisitor_or_double_or_sea_route",
+        "breaks_rule": "Relikwia tylko ze Szlaku Morskiego",
+        "tags": [
+          "signature",
+          "relic",
+          "heresy"
+        ],
+        "heresy_text": "Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.",
+        "lore": "As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej."
+      },
+      "kb-01": {
+        "name": "Rozkaz Dworu",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "agents": 1,
+        "action": "move_agent",
+        "tags": [
+          "move"
+        ],
+        "heresy_text": "Królewski nakaz wiąże bez pytania biskupów o zgodę.",
+        "lore": "Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu."
+      },
+      "kb-02": {
+        "name": "Pobór Podatków",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "gold": 2,
+        "action": "gain_gold",
+        "tags": [
+          "gold"
+        ],
+        "lore": "Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną."
+      },
+      "kb-03": {
+        "name": "Plotka Dworska",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "target_heresy": 1,
+        "action": "frame_rival",
+        "tags": [
+          "heresy"
+        ],
+        "heresy_text": "Szept z sali tronowej dociera do familiariusza szybciej niż msza.",
+        "lore": "Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4)."
+      },
+      "kb-04": {
+        "name": "Faworyt Dworu",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 2,
+        "heresy": 1,
+        "agents": 1,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "tags": [
+          "hook",
+          "move",
+          "heresy"
+        ],
+        "heresy_text": "Faworyzm dworu budzi zazdrość kortegan i biskupów.",
+        "lore": "Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret."
+      },
+      "kb-05": {
+        "name": "List Żelazny",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 2,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "tags": [
+          "decree",
+          "hook"
+        ],
+        "lore": "List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji."
+      },
+      "kb-06": {
+        "name": "Areszt Królewski",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 1,
+        "arrest": true,
+        "action": "arrest",
+        "target_loc": "palace_or_same_location",
+        "tags": [
+          "arrest"
+        ],
+        "heresy_text": "Królewski areszt ma precedens starszy niż bulla papieska.",
+        "lore": "Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba aresztu."
+      },
+      "kb-07": {
+        "name": "Szantaż Pieczęcią",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "condition": "heresy_gte_4",
+        "tags": [
+          "hook"
+        ],
+        "lore": "Korona poluje na już brudnych. Dwa Haki zaczynają się tu."
+      },
+      "kb-08": {
+        "name": "Przekupstwo Sędziego",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 3,
+        "creates_hook": true,
+        "verdict_weight": 2,
+        "action": "creates_hook",
+        "tags": [
+          "verdict"
+        ],
+        "lore": "Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone."
+      },
+      "kb-09": {
+        "name": "Dekret Królewski",
+        "type": "signature",
+        "layer": "C",
+        "cost": 3,
+        "heresy": 1,
+        "decree": 1,
+        "penalty_heresy": 3,
+        "action": "creates_hook",
+        "breaks_rule": "1 wymuszenie Haka / gracza / Erę",
+        "tags": [
+          "signature",
+          "decree",
+          "heresy"
+        ],
+        "heresy_text": "Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.",
+        "lore": "Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru."
+      },
+      "kb-10": {
+        "name": "Pieczęć Korony",
+        "type": "signature",
+        "layer": "C",
+        "cost": 2,
+        "heresy": 2,
+        "decree": 2,
+        "action": "check_victory",
+        "condition": "active_hooks_gte_2",
+        "breaks_rule": "zwycięstwo tylko po Erze",
+        "tags": [
+          "signature",
+          "decree",
+          "heresy"
+        ],
+        "heresy_text": "Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.",
+        "lore": "Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie."
+      },
+      "kt-01": {
+        "name": "Rytuał Przejścia",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "agents": 1,
+        "action": "move_agent",
+        "tags": [
+          "move"
+        ],
+        "heresy_text": "Symboliczne przejście przez próg nie budzi alarmu familiariuszy.",
+        "lore": "Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę."
+      },
+      "kt-02": {
+        "name": "Transmutacja Złota",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "gold": 2,
+        "action": "gain_gold",
+        "tags": [
+          "gold"
+        ],
+        "lore": "Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku."
+      },
+      "kt-03": {
+        "name": "Zakazana Wiedza",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 0,
+        "heresy": 1,
+        "grant_fragment": 1,
+        "action": "grant_fragment",
+        "tags": [
+          "fragment",
+          "heresy"
+        ],
+        "gold": 1,
+        "heresy_text": "Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu.",
+        "lore": "Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną."
+      },
+      "kt-04": {
+        "name": "Zwierciadło Herezji",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 0,
+        "target_heresy": 1,
+        "action": "frame_rival",
+        "tags": [
+          "heresy"
+        ],
+        "heresy_text": "Zwierciadło odbija winę na obce imię w rejestrze familiariuszy.",
+        "lore": "Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr."
+      },
+      "kt-05": {
+        "name": "Wskazówka Cyklu",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "grant_fragment": 1,
+        "action": "grant_fragment",
+        "condition": "agent_in_dungeon_or_tribunal",
+        "tags": [
+          "fragment"
+        ],
+        "lore": "Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale."
+      },
+      "kt-06": {
+        "name": "Przesłuchanie Imienia",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "interrogate": true,
+        "grant_fragment": 1,
+        "interrogate_limit": 1,
+        "action": "interrogate",
+        "bonus_on_heresy": "grant_fragment",
+        "tags": [
+          "interrogation",
+          "fragment"
+        ],
+        "lore": "Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Marionetki."
+      },
+      "kt-07": {
+        "name": "Archiwum Ukryte",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 1,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "condition": "heresy_gte_4",
+        "tags": [
+          "hook"
+        ],
+        "lore": "Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze."
+      },
+      "kt-08": {
+        "name": "Areszt Wiedzy",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "arrest": true,
+        "action": "arrest",
+        "target_loc": "dungeon_or_tribunal",
+        "tags": [
+          "arrest"
+        ],
+        "heresy_text": "Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał.",
+        "lore": "Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem."
+      },
+      "kt-09": {
+        "name": "Fragment Kodeksu",
+        "type": "akcja",
+        "layer": "C",
+        "cost": 1,
+        "heresy": 1,
+        "grant_fragment": 1,
+        "action": "grant_fragment",
+        "condition": "has_fragment_and_agent_in_dungeon_or_tribunal",
+        "tags": [
+          "fragment",
+          "heresy"
+        ],
+        "heresy_text": "Pergamin Salomona brudzi palce i sumienie.",
+        "lore": "Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko."
+      },
+      "kt-10": {
+        "name": "Pieczęć Salomona",
+        "type": "signature",
+        "layer": "C",
+        "cost": 1,
+        "action": "check_victory",
+        "condition": "fragments_eq_3",
+        "target_heresy_band": [
+          4,
+          6
+        ],
+        "fallback_heresy": 5,
+        "breaks_rule": "Herezja tylko z karty",
+        "tags": [
+          "signature",
+          "fragment"
+        ],
+        "lore": "Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6."
+      },
+      "gc-01": {
+        "name": "Przekupiony Strażnik",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "agents": 1,
+        "action": "move_agent",
+        "tags": [
+          "move"
+        ],
+        "heresy": 1,
+        "heresy_text": "Strażnik zna cenę milczenia lepiej niż modlitwy.",
+        "lore": "Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż."
+      },
+      "gc-02": {
+        "name": "Czarny Rynek",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "gold": 2,
+        "action": "gain_gold",
+        "tags": [
+          "gold"
+        ],
+        "heresy": 1,
+        "lore": "Handel spod lady — stół czuje, że Gildia ma gotówkę na brud."
+      },
+      "gc-03": {
+        "name": "Podrzucenie Księgi",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 1,
+        "target_heresy": 1,
+        "action": "frame_rival",
+        "tags": [
+          "heresy"
+        ],
+        "heresy_text": "Zakazana księga ląduje w cudzej komnacie o świcie.",
+        "lore": "Klasyczny frame: zakazana księga ląduje w cudzej komnacie."
+      },
+      "gc-04": {
+        "name": "Informator",
+        "type": "akcja",
+        "layer": "A",
+        "cost": 0,
+        "heresy": 1,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "tags": [
+          "hook",
+          "heresy"
+        ],
+        "heresy_text": "Donosiciel pamięta twarz i zapach srebra.",
+        "lore": "Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę."
+      },
+      "gc-05": {
+        "name": "Fałszywy Świadek",
+        "type": "reakcja",
+        "layer": "A",
+        "cost": 0,
+        "change_vote": true,
+        "vote_change_limit": 1,
+        "action": "frame_rival",
+        "trigger": "after_verdict_majority_revealed",
+        "tags": [
+          "reaction"
+        ],
+        "lore": "Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole."
+      },
+      "gc-06": {
+        "name": "Szantaż",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "creates_hook": true,
+        "action": "creates_hook",
+        "tags": [
+          "hook"
+        ],
+        "lore": "Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek."
+      },
+      "gc-07": {
+        "name": "Skrytobójstwo",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 2,
+        "heresy": 1,
+        "arrest": true,
+        "action": "arrest",
+        "target_loc": "guild_or_market",
+        "tags": [
+          "arrest",
+          "heresy"
+        ],
+        "heresy_text": "Ciało w kanałach Gildii mówi więcej niż świadek na rynku.",
+        "lore": "Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami."
+      },
+      "gc-08": {
+        "name": "Zatrute Złoto",
+        "type": "akcja",
+        "layer": "B",
+        "cost": 1,
+        "target_heresy": 1,
+        "gold": 1,
+        "action": "gain_gold",
+        "tags": [
+          "gold",
+          "heresy"
+        ],
+        "lore": "Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej."
+      },
+      "gc-09": {
+        "name": "Lista Dłużników",
+        "type": "akcja",
+        "layer": "C",
+        "cost": 2,
+        "creates_hook": true,
+        "mark_fall": true,
+        "action": "creates_hook",
+        "on_refusal": "mark_fall",
+        "tags": [
+          "hook",
+          "fall"
+        ],
+        "lore": "Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole."
+      },
+      "gc-10": {
+        "name": "Upadek Domu",
+        "type": "signature",
+        "layer": "C",
+        "cost": 4,
+        "heresy": 2,
+        "mark_fall": true,
+        "action": "creates_hook",
+        "condition": "rival_has_hook_or_double_or_autodafe",
+        "breaks_rule": "Upadek tylko z odmowy Haka",
+        "tags": [
+          "signature",
+          "fall",
+          "heresy"
+        ],
+        "heresy_text": "Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.",
+        "lore": "Egzekucja domu. Stół boi się trzymać ujawnione brudy."
+      }
+    };
 
     const AVAILABLE_TAGS = [
       'move', 'gold', 'heresy', 'relic', 'inquisitor', 'hook',
@@ -1836,7 +1926,7 @@
           parts.push("Przesuń swojego Agenta o 1 lokację.");
         }
       } else if (act === "gain_gold") {
-        if (gold === 1) parts.push("Zyskaj złoto.");
+        if (gold === 1) parts.push("Zyskaj 1 złoto.");
         else if (gold && gold >= 2) parts.push(`Zyskaj ${gold} ${declensionPl(gold, "złoto", "złota", "złota")}.`);
         else parts.push("Zyskaj 2 złota.");
         if (theresy) parts.push(`Wskaż rywala: +${theresy} Herezja.`);
@@ -1898,7 +1988,7 @@
         }
       } else if (act === "grant_fragment") {
         parts.push("Zyskaj Fragment.");
-        if (condition === "agent_in_dungeon_or_tribunal") parts.push("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.");
+        if (condition === "agent_in_dungeon_or_tribunal") parts.push("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto.");
       }
 
       // 4. Anti-AP limits
@@ -2117,6 +2207,8 @@
       }
 
       document.getElementById('prev-lore').textContent = lore;
+      document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
+      document.getElementById('prev-meta-ver').textContent = 'v0.35';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;
@@ -2273,6 +2365,17 @@
         el.addEventListener('change', updateLivePreview);
       }
     });
+
+    function setEditorPreviewMode(mode) {
+      const wrapper = document.querySelector('.card-wrapper');
+      if (!wrapper) return;
+      wrapper.classList.remove('mode-bleed', 'mode-safe');
+      if (mode === 'bleed') {
+        wrapper.classList.add('mode-bleed');
+      } else if (mode === 'safe') {
+        wrapper.classList.add('mode-bleed', 'mode-safe');
+      }
+    }
 
     // Initialize on page load
     handleAutoToggle();

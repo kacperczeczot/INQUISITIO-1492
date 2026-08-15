@@ -23,18 +23,83 @@ if str(SIM_ROOT) not in sys.path:
 
 from inquisitio.cards.loader import Card, cards_for_faction, load_all_cards  # noqa: E402
 
+import yaml
+
 # ---------------------------------------------------------------------------
 # Data
 # ---------------------------------------------------------------------------
 
-FACTIONS = [
-    # slug, name, goal, progress_label, progress_n, progress_icon
-    ("swiete-oficjum", "Święte Oficjum", "2 Stosy@3p / 3 Stosy@4p / 5 Stosów@5p lub skazania Werdyktem", "Stosy", 3, "stack"),
-    ("cienie-al-andalus", "Cienie Al-Andalus", "2 Relikwie + ścieżka (Era 6+ przy 3p / 5+ przy 4-5p)", "Relikwie", 2, "relic"),
-    ("korona-borgiowie", "Korona & Borgiowie", "2 Dekrety (od Ery 5; 3p ≥0 Haków / 4-5p ≥1 Hak); na 4-5p też 1 Dekret + 2 Haki", "Dekrety", 2, "decree"),
-    ("kabala-toledo", "Kabała z Toledo", "3 Fragmenty + Herezja 3–8", "Fragmenty", 3, "fragment"),
-    ("gildia-cieni", "Gildia Cieni", "2 upadki (3 bez Oficjum)", "Upadki", 2, "fall"),
-]
+def load_game_config() -> dict:
+    cfg_path = REPO_ROOT / "game_config.yaml"
+    if cfg_path.is_file():
+        with open(cfg_path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f)
+    return {}
+
+
+def get_factions_data(cfg: dict | None = None) -> list[tuple[str, str, str, str, str, int, str]]:
+    """Returns list of (slug, name, goal_4p, note, progress_label, progress_n, progress_icon)."""
+    if cfg is None:
+        cfg = load_game_config()
+
+    v = cfg.get("victory", {})
+
+    # 1. Święte Oficjum
+    so_v = v.get("swiete_oficjum", {})
+    so_stacks = so_v.get("stacks", {})
+    so_s4 = so_stacks.get("4p", 4) if isinstance(so_stacks, dict) else so_stacks
+    so_s3 = so_stacks.get("3p", 3) if isinstance(so_stacks, dict) else so_stacks
+    so_cond = so_v.get("condemns", 2)
+    so_goal = f"{so_s4} Stosy lub {so_cond} Skazania Werdyktem"
+    so_note = f"*w 3p: {so_s3} Stosy" if so_s3 != so_s4 else ""
+
+    # 2. Cienie Al-Andalus
+    caa_v = v.get("cienie_al_andalus", {})
+    caa_r = caa_v.get("relics", 2)
+    caa_p = caa_v.get("path_era", 5)
+    caa_p4 = caa_p.get("4p", 5) if isinstance(caa_p, dict) else caa_p
+    caa_p3 = caa_p.get("3p", 5) if isinstance(caa_p, dict) else caa_p
+    caa_goal = f"{caa_r} Relikwie + ścieżka (od Ery {caa_p4})"
+    caa_note = f"*w 3p: od Ery {caa_p3}" if caa_p3 != caa_p4 else ""
+
+    # 3. Korona & Borgiowie
+    kb_v = v.get("korona_borgiowie", {})
+    kb_d = kb_v.get("decrees", 2)
+    kb_d4 = kb_d.get("4p", 2) if isinstance(kb_d, dict) else kb_d
+    kb_e = kb_v.get("era", {})
+    kb_e4 = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
+    kb_e3 = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
+    kb_goal = f"{kb_d4} Dekrety (od Ery {kb_e4})"
+    kb_note = f"*w 3p: od Ery {kb_e3}" if kb_e3 != kb_e4 else ""
+
+    # 4. Kabała z Toledo
+    kt_v = v.get("kabala_toledo", {})
+    kt_f = kt_v.get("fragments", 3)
+    kt_f4 = kt_f.get("4p", 3) if isinstance(kt_f, dict) else kt_f
+    kt_hb = kt_v.get("heresy_band", [3, 8])
+    kt_e = kt_v.get("era", {})
+    kt_e4 = kt_e.get("4p", 6) if isinstance(kt_e, dict) else 6
+    kt_e3 = kt_e.get("3p", 7) if isinstance(kt_e, dict) else 7
+    kt_goal = f"{kt_f4} Fragmenty + Herezja {kt_hb[0]}–{kt_hb[1]} (od Ery {kt_e4})"
+    kt_note = f"*w 3p: od Ery {kt_e3}" if kt_e3 != kt_e4 else ""
+
+    # 5. Gildia Cieni
+    gc_v = v.get("gildia_cieni", {})
+    gc_falls = gc_v.get("falls", {})
+    gc_def = gc_falls.get("default", 2) if isinstance(gc_falls, dict) else gc_falls
+    gc_no_so = gc_falls.get("no_oficjum", 3) if isinstance(gc_falls, dict) else 3
+    gc_goal = f"{gc_def} Upadki"
+    gc_note = f"*{gc_no_so} gdy brak Oficjum w grze" if gc_no_so != gc_def else ""
+
+    return [
+        ("swiete-oficjum", "Święte Oficjum", so_goal, so_note, "Stosy", so_s4, "stack"),
+        ("cienie-al-andalus", "Cienie Al-Andalus", caa_goal, caa_note, "Relikwie", caa_r, "relic"),
+        ("korona-borgiowie", "Korona & Borgiowie", kb_goal, kb_note, "Dekrety", kb_d4, "decree"),
+        ("kabala-toledo", "Kabała z Toledo", kt_goal, kt_note, "Fragmenty", kt_f4, "fragment"),
+        ("gildia-cieni", "Gildia Cieni", gc_goal, gc_note, "Upadki", gc_def, "fall"),
+    ]
+
+FACTIONS = get_factions_data()
 
 # Board graph: cycle + Lochy–Pałac chord. Phase III order = num only.
 # Positions: % of board-play (center of node). Clear of top pools + top-right time deck.
@@ -405,6 +470,12 @@ def _css() -> str:
   /* locked print sizes */
   --card-w: 63mm;
   --card-h: 88mm;
+  --card-trim-w: 63mm;
+  --card-trim-h: 88mm;
+  --card-bleed: 2.5mm;
+  --card-gross-w: 68mm;
+  --card-gross-h: 93mm;
+  --card-safe-pad: 3mm;
   --board-w: 420mm;
   --board-h: 594mm;
   --page-a4-w: 210mm;
@@ -705,25 +776,29 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   width: var(--card-w); height: var(--card-h);
   min-width: var(--card-w); max-width: var(--card-w);
   min-height: var(--card-h); max-height: var(--card-h);
-  border: 0.5mm solid var(--line);
+  border: 1.5mm solid var(--faction-edge, var(--blood));
   background: var(--parch);
   display: flex; flex-direction: column;
   overflow: visible;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
+/* Renaissance inner hairline frame on all 4 sides */
 .card-proto::before {
   content: "";
   position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 1.4mm;
-  background: var(--faction-edge, var(--blood));
+  inset: 0.6mm;
+  border: 0.25mm solid rgba(166, 124, 45, 0.5);
+  pointer-events: none;
   z-index: 2;
 }
 .card-proto .hdr {
-  padding: 2mm 2.5mm 1.2mm 3.2mm;
+  padding: 1.6mm 2mm 1.2mm 2mm;
   border-bottom: 0.35mm solid var(--line);
-  background: rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.32);
   flex-shrink: 0;
+  position: relative;
+  z-index: 3;
 }
 .card-proto .hdr-top {
   display: flex;
@@ -738,6 +813,21 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   line-height: 1.15;
   flex: 1 1 auto;
   min-width: 0;
+}
+.card-footer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.6mm;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 5pt;
+  color: #7a6e60;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  user-select: none;
+  opacity: 0.75;
+  line-height: 1;
 }
 .card-proto .name.name-long {
   font-size: 10.5pt;
@@ -1015,6 +1105,13 @@ body.bw .card-proto {
   flex: 0 0 auto;
   overflow: hidden;
 }
+.pb-goal-note {
+  font-size: 11pt;
+  font-weight: normal;
+  color: #4a3c28;
+  margin-left: 2mm;
+  display: inline-block;
+}
 .pb-heresy {
   grid-row: 2;
   overflow: hidden;
@@ -1030,6 +1127,13 @@ body.bw .card-proto {
   color: var(--blood);
   margin: 0;
   line-height: 1;
+}
+.pb-heresy-note {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #555;
+  margin-left: 2mm;
+  display: inline-block;
 }
 .heresy-track {
   display: flex;
@@ -1078,7 +1182,7 @@ body.bw .card-proto {
   overflow: hidden;
 }
 .pb-body.layer-a {
-  grid-template-columns: 70mm minmax(0, 1fr) 36mm 72mm;
+  grid-template-columns: 70mm minmax(0, 1fr) 36mm auto;
   grid-template-rows: minmax(0, 1fr);
   grid-template-areas: "agents gold limits progress";
 }
@@ -1097,7 +1201,7 @@ body.bw .card-proto {
   grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Haki: 2×20 + pad */
 }
 .pb-row-bot {
-  grid-template-columns: minmax(0, 1fr) 72mm; /* Postęp: do 3×20 */
+  grid-template-columns: minmax(0, 1fr) auto; /* Postęp: auto width pod liczbę żetonów */
 }
 .pb-box {
   box-sizing: border-box;
@@ -1337,6 +1441,266 @@ body.bw .card-proto {
 .teach-page { font-size: 10pt; line-height: 1.35; }
 .teach-page ul, .teach-page ol { margin: 2mm 0 2mm 5mm; }
 .teach-page p { margin: 1.5mm 0; }
+/* ===== CARDS MASTER PRINT SHEET (FULL BLEED & CROP MARKS) ===== */
+.page-a4.cards-master-sheet {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  min-width: 210mm; max-width: 210mm;
+  min-height: 297mm; max-height: 297mm;
+  padding: 0;
+  margin: 0 auto 8mm auto;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: none;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.sheet-meta-header {
+  font-size: 7pt;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 2mm 0;
+  display: flex;
+  justify-content: space-between;
+  width: 204mm;
+  flex-shrink: 0;
+}
+.cards-print-grid {
+  display: grid;
+  grid-template-columns: repeat(3, var(--card-gross-w));
+  grid-template-rows: repeat(3, var(--card-gross-h));
+  gap: 0;
+  width: 204mm;
+  height: 279mm;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Card with full bleed: 68x93mm (Netto 63x88mm + 2.5mm Bleed all around) */
+.card-proto.card-print-cell {
+  position: relative;
+  width: var(--card-gross-w);
+  height: var(--card-gross-h);
+  min-width: var(--card-gross-w); max-width: var(--card-gross-w);
+  min-height: var(--card-gross-h); max-height: var(--card-gross-h);
+  box-sizing: border-box;
+  overflow: hidden;
+  border: none;
+  background: var(--faction-edge, var(--blood)); /* Full bleed of faction color to gross edge */
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--card-bleed) + 1.5mm); /* 2.5mm bleed + 1.5mm border = 4.0mm inset */
+  box-shadow: none;
+}
+.card-proto.card-print-cell::before {
+  display: none !important; /* No side stripe */
+}
+
+/* Inner parchment canvas inside the faction frame */
+.card-proto.card-print-cell .card-inner-flow,
+.card-proto.card-print-cell .card-back-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--parch, #f4ead7);
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0.25mm solid rgba(166, 124, 45, 0.55); /* Subtle inner gold hairline */
+}
+
+/* Header */
+.card-proto.card-print-cell .hdr {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.6mm 2.2mm 1.2mm 2.2mm;
+  background: rgba(255, 255, 255, 0.35);
+  border-bottom: 0.35mm solid var(--line);
+}
+
+.card-proto.card-print-cell .card-art {
+  margin: 1.5mm 2mm 1mm 2mm;
+  position: relative;
+  z-index: 5;
+}
+
+.card-proto.card-print-cell .card-main {
+  padding: 1mm 2.2mm 1.8mm 2.2mm;
+  position: relative;
+  z-index: 5;
+}
+
+/* Corner Crop Marks (marking the 63x88mm trim line through the faction bleed) */
+.crop-mark {
+  position: absolute;
+  pointer-events: none;
+  z-index: 35;
+  background: #ffffff; /* White hairlines clearly visible on faction color */
+  box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.8);
+}
+.crop-tl-h { top: var(--card-bleed); left: 0; width: var(--card-bleed); height: 0.25mm; }
+.crop-tl-v { top: 0; left: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+
+.crop-tr-h { top: var(--card-bleed); right: 0; width: var(--card-bleed); height: 0.25mm; }
+.crop-tr-v { top: 0; right: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+
+.crop-bl-h { bottom: var(--card-bleed); left: 0; width: var(--card-bleed); height: 0.25mm; }
+.crop-bl-v { bottom: 0; left: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+
+.crop-br-h { bottom: var(--card-bleed); right: 0; width: var(--card-bleed); height: 0.25mm; }
+.crop-br-v { bottom: 0; right: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+
+/* Safe Zone Guide (DTP inspection mode: 3mm inside trim line) */
+.safe-zone-guide {
+  display: none;
+  position: absolute;
+  top: calc(var(--card-bleed) + var(--card-safe-pad));
+  left: calc(var(--card-bleed) + var(--card-safe-pad));
+  width: calc(var(--card-trim-w) - 2 * var(--card-safe-pad));
+  height: calc(var(--card-trim-h) - 2 * var(--card-safe-pad));
+  border: 0.3mm dashed rgba(0, 120, 255, 0.9);
+  pointer-events: none;
+  z-index: 40;
+  box-sizing: border-box;
+}
+body.mode-safe .safe-zone-guide {
+  display: block;
+}
+
+/* Mode trim: preview without bleed (Netto 63x88mm with 1.5mm faction border) */
+body.mode-trim .card-proto.card-print-cell {
+  width: var(--card-trim-w);
+  height: var(--card-trim-h);
+  min-width: var(--card-trim-w); max-width: var(--card-trim-w);
+  min-height: var(--card-trim-h); max-height: var(--card-trim-h);
+  padding: 1.5mm;
+  margin: 1.5mm;
+}
+body.mode-trim .cards-print-grid {
+  grid-template-columns: repeat(3, var(--card-trim-w));
+  grid-template-rows: repeat(3, var(--card-trim-h));
+  gap: 3mm;
+}
+body.mode-trim .crop-mark { display: none; }
+
+/* Light Ink-Saver Card Backs with Full Bleed Faction Border */
+.card-proto.card-print-cell.card-back-cell {
+  background: var(--back-accent, var(--faction-edge, var(--blood))) !important;
+  color: var(--ink, #1a120c);
+  border: none;
+  position: relative;
+  padding: calc(var(--card-bleed) + 1.5mm);
+}
+.card-proto.card-print-cell.card-back-cell .card-back-content {
+  align-items: center;
+  justify-content: space-around;
+  padding: 4mm 3mm;
+}
+
+.card-back-title {
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: 10pt;
+  letter-spacing: 0.14em;
+  color: var(--back-accent, #7a1f1f);
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  z-index: 5;
+}
+.card-back-crest {
+  font-size: 32pt;
+  line-height: 1;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+.card-back-brand {
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: 7.5pt;
+  letter-spacing: 0.22em;
+  color: #5c4c3e;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+/* Print Toolbar UI */
+.print-toolbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(244, 234, 215, 0.97);
+  border-bottom: 1.5px solid #a67c2d;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  padding: 8px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: -8mm -8mm 6mm -8mm;
+}
+.tb-brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: #7a1f1f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tb-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.tb-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: #2a1c12;
+}
+.tb-select, .tb-btn {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #a67c2d;
+  background: #fff;
+  color: #1a120c;
+  cursor: pointer;
+}
+.tb-btn-primary {
+  background: #7a1f1f;
+  color: #fff;
+  border-color: #521313;
+  font-weight: 600;
+}
+.tb-btn-primary:hover {
+  background: #922525;
+}
+.tb-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
 @page {
   size: A4 portrait;
   margin: 0;
@@ -1346,8 +1710,8 @@ body.bw .card-proto {
   margin: 0;
 }
 @media print {
-  body { background: white; padding: 0; margin: 0; }
-  .nav { display: none; }
+  body { background: white !important; padding: 0 !important; margin: 0 !important; }
+  .nav, .print-toolbar { display: none !important; }
   .sheet { page-break-after: always; margin: 0; }
   .page-a4 {
     width: 210mm; height: 297mm;
@@ -1359,13 +1723,16 @@ body.bw .card-proto {
     padding: 4mm;
     box-sizing: border-box;
   }
+  .page-a4.cards-master-sheet {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .card-back-sheet.duplex-hidden {
+    display: none !important;
+  }
   .card-proto {
     overflow: hidden;
-    box-shadow:
-      -0.8mm -0.8mm 0 0 #000,
-      0.8mm -0.8mm 0 0 #000,
-      -0.8mm 0.8mm 0 0 #000,
-      0.8mm 0.8mm 0 0 #000;
+    box-shadow: none;
   }
   .card-effect { overflow: hidden; }
   .board-stack {
@@ -1504,7 +1871,7 @@ def render_board(layer: str) -> str:
 # Cards — effect / heresy(+text) / lore  (no table_note on PnP)
 # ---------------------------------------------------------------------------
 
-def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug: str = "") -> str:
+def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug: str = "", version: str = "v0.35") -> str:
     fac = _escape(faction_slug or "time")
     items = []
     for c in cards:
@@ -1546,6 +1913,7 @@ def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug
   <div class="card-main">
     <div class="card-effect">{_format_effect_html(effect)}</div>
     {lore_html}
+    <div class="card-footer-meta"><span>{_escape(c.id.upper())}</span><span>{_escape(version)}</span></div>
   </div>
 </article>
 """)
@@ -1565,10 +1933,258 @@ def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug
 
 
 # ---------------------------------------------------------------------------
+# All Cards Master Print Deck — Bleed + Crop Marks + Duplex Backs
+# ---------------------------------------------------------------------------
+
+FACTION_BACK_INFO: dict[str, tuple[str, str, str]] = {
+    "swiete-oficjum": ("Święte Oficjum", "✝️", "#7a1f1f"),
+    "cienie-al-andalus": ("Cienie Al-Andalus", "💎", "#1e4d3a"),
+    "korona-borgiowie": ("Korona & Borgia", "👑", "#8a6420"),
+    "kabala-toledo": ("Kabała z Toledo", "📜", "#4a2d5c"),
+    "gildia-cieni": ("Gildia Cieni", "🗡️", "#4a3c28"),
+    "time": ("Kronika Dziejów", "⏳", "#3a2e1c"),
+}
+
+
+def render_card_print_cell(c: Card, faction_slug: str, version: str = "v0.35") -> str:
+    fac = _escape(faction_slug or "time")
+    effect = (c.effect or "").strip()
+    heresy_text = (getattr(c, "heresy_text", None) or "").strip()
+    lore = (c.lore or "").strip()
+    cost = int(getattr(c, "cost_gold", None) or c.cost or 0)
+    heresy = c.heresy or 0
+    badges = _gold_badge(cost) + _heresy_badge(heresy)
+    type_label = getattr(c, "type_label", None) or c.type
+    type_cls = _type_badge_class(c.type)
+    name_cls = "name name-long" if len(c.name or "") > 28 else "name"
+    caption_html = ""
+    if heresy != 0 and heresy_text:
+        caption_html = f'<div class="heresy-caption">{_escape(heresy_text)}</div>'
+    lore_html = f'<div class="card-lore">{_escape(lore)}</div>' if lore else ""
+    stats_html = f'<div class="stat-row">{badges}</div>' if badges else ""
+
+    return f"""
+<article class="card-proto card-print-cell faction-{fac}" data-faction="{fac}">
+  <div class="crop-mark crop-tl-h"></div><div class="crop-mark crop-tl-v"></div>
+  <div class="crop-mark crop-tr-h"></div><div class="crop-mark crop-tr-v"></div>
+  <div class="crop-mark crop-bl-h"></div><div class="crop-mark crop-bl-v"></div>
+  <div class="crop-mark crop-br-h"></div><div class="crop-mark crop-br-v"></div>
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="{name_cls}">{_escape(c.name)}</div>
+        <span class="type-badge {type_cls}">{_escape(type_label)}</span>
+      </div>
+      {stats_html}
+      {caption_html}
+    </div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect">{_format_effect_html(effect)}</div>
+      {lore_html}
+      <div class="card-footer-meta"><span>{_escape(c.id.upper())}</span><span>{_escape(version)}</span></div>
+    </div>
+  </div>
+</article>
+"""
+
+
+def render_card_back_cell(faction_slug: str) -> str:
+    fac = faction_slug or "time"
+    title, crest, accent = FACTION_BACK_INFO.get(
+        fac, ("INQUISITIO 1492", "⚔️", "#7a1f1f")
+    )
+    return f"""
+<div class="card-proto card-print-cell card-back-cell faction-{fac}" data-faction="{fac}">
+  <div class="crop-mark crop-tl-h"></div><div class="crop-mark crop-tl-v"></div>
+  <div class="crop-mark crop-tr-h"></div><div class="crop-mark crop-tr-v"></div>
+  <div class="crop-mark crop-bl-h"></div><div class="crop-mark crop-bl-v"></div>
+  <div class="crop-mark crop-br-h"></div><div class="crop-mark crop-br-v"></div>
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-back-content" style="--back-accent: {accent};">
+    <div class="card-back-title">{_escape(title)}</div>
+    <div class="card-back-crest">{crest}</div>
+    <div class="card-back-brand">INQUISITIO 1492</div>
+  </div>
+</div>
+"""
+
+
+def render_all_cards_print(layer: str) -> str:
+    all_cards: list[tuple[Card, str, str]] = []
+    for slug, label, *_ in FACTIONS:
+        cs = cards_for_faction(slug, max_layer=layer)
+        if layer == "A":
+            cs = [c for c in cs if c.layer == "A"]
+        for c in cs:
+            all_cards.append((c, slug, label))
+
+    if layer in ("B", "C"):
+        time_cs = cards_for_faction("time", max_layer="C")
+        for c in time_cs:
+            all_cards.append((c, "time", "Kronika Dziejów"))
+
+    per_page = 9
+    total_cards = len(all_cards)
+    total_sheets = (total_cards + per_page - 1) // per_page
+
+    toolbar_html = """
+<div class="print-toolbar" role="region" aria-label="Narzędzia druku PnP">
+  <div class="tb-brand">
+    <span>⚔️ <strong>INQUISITIO 1492</strong> — Arkusz Drukarski Kart (Bleed & Crop Marks)</span>
+  </div>
+  <div class="tb-controls">
+    <button class="tb-btn tb-btn-primary" onclick="window.print()" title="Otwórz okno drukowania / Zapisz do PDF (Ctrl+P)">
+      🖨️ Drukuj / PDF
+    </button>
+    <div class="tb-group">
+      <label for="view-mode-sel">Widok:</label>
+      <select id="view-mode-sel" class="tb-select" onchange="updateViewMode(this.value)">
+        <option value="bleed">Spad + Znaczniki cięcia (Bleed 2.5 mm)</option>
+        <option value="trim">Podgląd po docięciu (Netto 63×88 mm)</option>
+        <option value="safe">Inspekcja DTP (Strefa Bezpieczna 3 mm)</option>
+      </select>
+    </div>
+    <div class="tb-group">
+      <label for="faction-filter-sel">Frakcja:</label>
+      <select id="faction-filter-sel" class="tb-select" onchange="filterFaction(this.value)">
+        <option value="all">Wszystkie talie (56 kart)</option>
+        <option value="swiete-oficjum">Święte Oficjum (10)</option>
+        <option value="cienie-al-andalus">Cienie Al-Andalus (10)</option>
+        <option value="korona-borgiowie">Korona & Borgiowie (10)</option>
+        <option value="kabala-toledo">Kabała z Toledo (10)</option>
+        <option value="gildia-cieni">Gildia Cieni (10)</option>
+        <option value="time">Kronika Dziejów (6)</option>
+      </select>
+    </div>
+    <div class="tb-group">
+      <label class="tb-checkbox-label">
+        <input type="checkbox" id="duplex-toggle" onchange="toggleDuplex(this.checked)" checked>
+        <span>Rewersy (Druk dwustronny)</span>
+      </label>
+    </div>
+  </div>
+</div>
+"""
+
+    cfg = load_game_config()
+    version = cfg.get("version", "v0.35")
+
+    pages_html: list[str] = [toolbar_html]
+
+    for page_idx in range(total_sheets):
+        start = page_idx * per_page
+        chunk = all_cards[start : start + per_page]
+
+        # Front cells
+        front_cells: list[str] = []
+        for c, fac, _label in chunk:
+            front_cells.append(render_card_print_cell(c, fac, version=version))
+
+        # Pad to 9 cells if last page is incomplete
+        while len(front_cells) < 9:
+            front_cells.append('<div class="card-proto card-print-cell empty-cell" style="background:transparent;border:none;"></div>')
+
+        card_range = f"{start + 1}–{min(start + per_page, total_cards)}"
+        front_sheet_html = f"""
+<div class="page-a4 cards-master-sheet card-front-sheet" data-page-mm="210x297">
+  <div class="sheet-meta-header">
+    <span>INQUISITIO 1492 · Arkusz Kart {page_idx + 1}/{total_sheets} (Awersy {card_range})</span>
+    <span>Wymiar: 63×88 mm · Spad: +2.5 mm (Brutto 68×93 mm) · Pasery narożne</span>
+  </div>
+  <div class="cards-print-grid">
+    {"".join(front_cells)}
+  </div>
+</div>
+"""
+        pages_html.append(front_sheet_html)
+
+        # Back cells with horizontally mirrored columns for accurate duplex alignment
+        # Row 0: [2, 1, 0], Row 1: [5, 4, 3], Row 2: [8, 7, 6]
+        back_chunk_facs = [fac for _c, fac, _label in chunk]
+        while len(back_chunk_facs) < 9:
+            back_chunk_facs.append("")
+
+        mirrored_back_cells: list[str] = []
+        for row in range(3):
+            for col in range(2, -1, -1):
+                idx = row * 3 + col
+                f_slug = back_chunk_facs[idx]
+                if f_slug:
+                    mirrored_back_cells.append(render_card_back_cell(f_slug))
+                else:
+                    mirrored_back_cells.append('<div class="card-proto card-print-cell empty-cell" style="background:transparent;border:none;"></div>')
+
+        back_sheet_html = f"""
+<div class="page-a4 cards-master-sheet card-back-sheet" data-page-mm="210x297">
+  <div class="sheet-meta-header">
+    <span>INQUISITIO 1492 · Rewersy Kart {page_idx + 1}/{total_sheets} (Lustrzane pod dupleks)</span>
+    <span>Druk obustronny: obrót wzdłuż długiej krawędzi (Flip on long edge)</span>
+  </div>
+  <div class="cards-print-grid">
+    {"".join(mirrored_back_cells)}
+  </div>
+</div>
+"""
+        pages_html.append(back_sheet_html)
+
+    script_html = """
+<script>
+function updateViewMode(mode) {
+  document.body.classList.remove('mode-bleed', 'mode-trim', 'mode-safe');
+  if (mode === 'trim') {
+    document.body.classList.add('mode-trim');
+  } else if (mode === 'safe') {
+    document.body.classList.add('mode-safe');
+  } else {
+    document.body.classList.add('mode-bleed');
+  }
+}
+
+function filterFaction(f) {
+  document.querySelectorAll('.card-print-cell:not(.empty-cell)').forEach(el => {
+    if (f === 'all' || el.dataset.faction === f) {
+      el.style.opacity = '1';
+      el.style.pointerEvents = 'auto';
+    } else {
+      el.style.opacity = '0.12';
+      el.style.pointerEvents = 'none';
+    }
+  });
+}
+
+function toggleDuplex(show) {
+  document.querySelectorAll('.card-back-sheet').forEach(el => {
+    if (show) {
+      el.classList.remove('duplex-hidden');
+      el.style.display = 'flex';
+    } else {
+      el.classList.add('duplex-hidden');
+      el.style.display = 'none';
+    }
+  });
+}
+
+// Initial setup on load
+document.addEventListener('DOMContentLoaded', () => {
+  updateViewMode(document.getElementById('view-mode-sel').value);
+  toggleDuplex(document.getElementById('duplex-toggle').checked);
+});
+</script>
+"""
+    pages_html.append(script_html)
+    return "\n".join(pages_html)
+
+
+
+# ---------------------------------------------------------------------------
 # Player boards — physical mat (½ A4), slots for components
 # ---------------------------------------------------------------------------
 
 def render_player_boards(layer: str) -> str:
+    cfg = load_game_config()
+    factions_data = get_factions_data(cfg)
     boards = []
     body_cls = "layer-a" if layer == "A" else "layer-c"
     spent = _icon("spent", "Piętno")
@@ -1581,9 +2197,13 @@ def render_player_boards(layer: str) -> str:
             f"</div>"
         )
 
-    for slug, name, goal, progress_label, progress_n, progress_icon in FACTIONS:
+    t_4p = cfg.get("system", {}).get("accusation_threshold", {}).get("4p", 7)
+    t_3p = cfg.get("system", {}).get("accusation_threshold", {}).get("3p", 6)
+    t_5p = cfg.get("system", {}).get("accusation_threshold", {}).get("5p", 8)
+
+    for slug, name, goal, note, progress_label, progress_n, progress_icon in factions_data:
         pips = "".join(
-            f'<span class="heresy-pip {"z1" if i <= 3 else "z2" if i <= 6 else "z2-3" if i == 7 else "z3"}">{i}</span>'
+            f'<span class="heresy-pip {"z1" if i <= 3 else "z2" if i < t_4p else "z3"}">{i}</span>'
             for i in range(11)
         )
         agents = "".join('<span class="agent-slot" title="Agent Ø20 mm"></span>' for _ in range(3))
@@ -1654,20 +2274,24 @@ def render_player_boards(layer: str) -> str:
   </div>
 """
 
+        goal_html = f"<strong>Cel:</strong> {_escape(goal)}"
+        if note:
+            goal_html += f' <span class="pb-goal-note">({_escape(note)})</span>'
+
         boards.append(f"""
 <div class="player-stack faction-{_escape(slug)}" data-player-mm="210x148" data-faction="{_escape(slug)}">
   <div class="player-ui">
     <header class="pb-head">
       <h2>{_escape(name)}</h2>
-      <p class="pb-goal"><strong>Cel:</strong> {_escape(goal)}</p>
+      <p class="pb-goal">{goal_html}</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja</div>
+      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥{t_3p}, 5p ≥{t_5p})</span></div>
       <div class="heresy-track">{pips}</div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–3</span>
-        <span class="hz-z2">Obserw. 4–6 (4–7@4p+)</span>
-        <span class="hz-z3">Krytyczna ≥7@3p (≥8@4p+)</span>
+        <span class="hz-z2">Obserw. 4–{t_4p - 1}</span>
+        <span class="hz-z3">Krytyczna ≥{t_4p}*</span>
       </div>
     </section>
     {body}
@@ -1840,7 +2464,24 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
     index_entries: list[tuple[str, str]] = []
     body_cls = "bw" if bw else ""
 
-    for slug, label, _goal, _pl, _pn, _pi in FACTIONS:
+    # Master all-cards printable deck (Bleed + Crop Marks + Duplex Backs)
+    all_cards_fn = "cards-all-print.html"
+    all_cards_path = out_dir / all_cards_fn
+    all_cards_path.write_text(
+        _page(
+            "Wszystkie Karty — Druk PDF (Spady / Bleed & Crop Marks)",
+            render_all_cards_print(layer),
+            body_class=f"{body_cls} mode-bleed",
+        ),
+        encoding="utf-8",
+    )
+    written.append(all_cards_path)
+    index_entries.append((all_cards_fn, "🖨️ Wszystkie Karty — Druk PDF (Spady / Bleed & Crop Marks)"))
+
+    cfg = load_game_config()
+    version = cfg.get("version", "v0.35")
+
+    for slug, label, *_ in FACTIONS:
         cards = cards_for_faction(slug, max_layer=layer)
         if layer == "A":
             cards = [c for c in cards if c.layer == "A"]
@@ -1849,7 +2490,7 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
         path.write_text(
             _page(
                 f"Karty {label}",
-                render_cards(cards, label, layer, faction_slug=slug),
+                render_cards(cards, label, layer, faction_slug=slug, version=version),
                 body_class=body_cls,
             ),
             encoding="utf-8",
@@ -1864,7 +2505,7 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
         path.write_text(
             _page(
                 "Kronika Dziejów",
-                render_cards(time_cs, "Kronika Dziejów", layer, faction_slug="time"),
+                render_cards(time_cs, "Kronika Dziejów", layer, faction_slug="time", version=version),
                 body_class=body_cls,
             ),
             encoding="utf-8",
@@ -1892,6 +2533,8 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
         path.write_text(_page("Teach", "<p>Brak teach-sheet.md</p>"), encoding="utf-8")
     written.append(path)
     index_entries.append((fn, "Teach sheet"))
+    if (out_dir / "card-editor.html").exists():
+        index_entries.append(("card-editor.html", "🛠️ Interaktywny Generator & Podgląd Kart (Live Editor)"))
 
     index_path = out_dir / "index.html"
     index_path.write_text(render_index(layer, index_entries), encoding="utf-8")
@@ -1933,10 +2576,10 @@ def main(argv: list[str] | None = None) -> int:
         help="Desaturacja kart (grayscale) pod druk Xerox",
     )
     args = p.parse_args(argv)
-    out = args.out
+    out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     # Jedna aktualna wersja w assets/prototypes/ — usuń legacy layer-A/B/C
-    if out.resolve() == (REPO_ROOT / "assets" / "prototypes").resolve():
+    if out == (REPO_ROOT / "assets" / "prototypes").resolve():
         for legacy in sorted(out.glob("layer-*")):
             if legacy.is_dir():
                 shutil.rmtree(legacy)
