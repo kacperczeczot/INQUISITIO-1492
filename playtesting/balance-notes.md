@@ -83,16 +83,31 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📊 Stan zmierzony — 2026-08-15 (Outlier Hunter 2D/3D, seed 42, warstwa C)
 
-YAML po Patch v0.30 (Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `2`).
+YAML po Patch v0.33 (Karta `so-03` (Podejrzenie): `cost` → `2` + Karta `so-08` (Nasłanie Inkwizytora): `cost` → `1`).
 
-- **Global Game Balance Score:** **`94.8 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
-- **3p Avg Score:** **`92.1 / 100.0 pkt` 🟢**
-- **4p Avg Score:** **`93.5 / 100.0 pkt` 🟢**
-- **5p Avg Score:** **`98.7 / 100.0 pkt` 🟢**
+- **Global Game Balance Score:** **`97.2 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
+- **3p Avg Score:** **`93.4 / 100.0 pkt` 🟢**
+- **4p Avg Score:** **`98.9 / 100.0 pkt` 🟢**
+- **5p Avg Score:** **`99.4 / 100.0 pkt` 🟢**
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.33 (2026-08-15) — Karta `so-03` (Podejrzenie): `cost` → `2` + Karta `so-08` (Nasłanie Inkwizytora): `cost` → `1` (Zysk Δ +0.5 pkt)
+- **Wynik:** Global **`97.2`** | 3p **`93.4`** | 4p **`98.9`** | 5p **`99.4`**
+- **Modyfikacja (`PAIR_so-03_cost+1__so-08_cost-1`):** Karta `so-03` (Podejrzenie): `cost` → `2` + Karta `so-08` (Nasłanie Inkwizytora): `cost` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 96.7 do **`97.2 pkt`** (+0.5 pkt). Telemetria: Średnia Er 5.56, Deadlocks 1.3%, Pas Biedy 26.2%.
+
+### 🟢 Patch v0.32 (2026-08-15) — Karta `gc-02` (Czarny Rynek): `heresy` → `1` + Karta `so-08` (Nasłanie Inkwizytora): `heresy` → `0` (Zysk Δ +0.4 pkt)
+- **Wynik:** Global **`96.7`** | 3p **`91.9`** | 4p **`98.8`** | 5p **`99.5`**
+- **Modyfikacja (`PAIR_gc-02_heresy+1__so-08_heresy-1`):** Karta `gc-02` (Czarny Rynek): `heresy` → `1` + Karta `so-08` (Nasłanie Inkwizytora): `heresy` → `0`.
+- **Efekt:** Wzrost wyniku globalnego z 96.3 do **`96.7 pkt`** (+0.4 pkt). Telemetria: Średnia Er 5.55, Deadlocks 1.3%, Pas Biedy 26.2%.
+
+### 🟢 Patch v0.31 (2026-08-15) — Karta `kb-04` (Faworyt Dworu): `cost` → `2` + Karta `kb-06` (Areszt Królewski): `cost` → `1` (Zysk Δ +1.5 pkt)
+- **Wynik:** Global **`96.3`** | 3p **`94.3`** | 4p **`95.1`** | 5p **`99.6`**
+- **Modyfikacja (`PAIR_kb-04_cost+1__kb-06_cost-1`):** Karta `kb-04` (Faworyt Dworu): `cost` → `2` + Karta `kb-06` (Areszt Królewski): `cost` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 94.8 do **`96.3 pkt`** (+1.5 pkt). Telemetria: Średnia Er 5.53, Deadlocks 1.1%, Pas Biedy 26.1%.
 
 ### 🟢 Patch v0.30 (2026-08-15) — Karta `caa-06` (Ucieczka z Lochów): `heresy` → `1` + Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `2` (Zysk Δ +0.3 pkt)
 - **Wynik:** Global **`94.8`** | 3p **`92.1`** | 4p **`93.5`** | 5p **`98.7`**
