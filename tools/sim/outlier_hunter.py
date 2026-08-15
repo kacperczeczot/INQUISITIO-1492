@@ -776,13 +776,11 @@ class OutlierHunter:
             for sname, score in sorted_setups[:5]:
                 print(f"   • `{sname}`: {color_score(score, bold=True)} pkt")
 
-            if not weak_setups and base_res["global_score"] >= 98.0:
-                print(f"\n🏆 WSZYSTKIE 16 SETUPÓW OSIĄGNĘŁY SCORE ≥ 90, A GLOBAL WYNOSI {base_res['global_score']:.1f} pkt!")
-                print("   Osiągnięto idealny stan balansu gry. Gratulacje!")
-                break
+            if not weak_setups:
+                print(f"🌟 Wszystkie 16 setupów ma Score ≥ 90 (Global: {base_res['global_score']:.1f} pkt)! Kontynuuję mikrostrojenie najsłabszych układów ku 99+...")
 
-            # STRICT OUTLIER FILTER: If there are weak setups (< 90), ONLY test weak setups!
-            # Never waste time testing setups that are already green (>= 90).
+            # STRICT OUTLIER FILTER: If there are weak setups (< 90), focus ONLY on them.
+            # If all are >= 90, continuously optimize the relatively weakest setups (ascending order).
             candidate_queue = weak_setups if weak_setups else sorted_setups
             available_setups = [s for s in candidate_queue if s[0] not in attempted_setups_in_epoch]
 
