@@ -777,11 +777,11 @@ class OutlierHunter:
                 print(f"   • `{sname}`: {color_score(score, bold=True)} pkt")
 
             if not weak_setups:
-                print(f"🌟 Wszystkie 16 setupów ma Score ≥ 90 (Global: {base_res['global_score']:.1f} pkt)! Kontynuuję mikrostrojenie najsłabszych układów ku 99+...")
+                print(f"🌟 Wszystkie 16 setupów ma Score ≥ 90 (Global: {base_res['global_score']:.1f} pkt)! Kontynuuję mikrostrojenie TOP {self.args.top_worst} najsłabszych układów ku 99+...")
 
-            # STRICT OUTLIER FILTER: If there are weak setups (< 90), focus ONLY on them.
-            # If all are >= 90, continuously optimize the relatively weakest setups (ascending order).
-            candidate_queue = weak_setups if weak_setups else sorted_setups
+            # STRICT OUTLIER FILTER: ONLY ever focus on the TOP N worst setups in the game.
+            # Never waste time testing setups outside the top-worst window.
+            candidate_queue = sorted_setups[: self.args.top_worst]
             available_setups = [s for s in candidate_queue if s[0] not in attempted_setups_in_epoch]
 
             if not available_setups:
@@ -966,6 +966,7 @@ def main():
     parser.add_argument("--min-worst-delta", type=float, default=1.0, help="Minimalny zysk na zapalnym setupie (pkt)")
     parser.add_argument("--min-global-delta", type=float, default=-0.1, help="Maksymalny dopuszczalny spadek globalny (zabezpieczenie przed regresją)")
     parser.add_argument("--top-k", type=int, default=8, help="Liczba najlepszych par sprawdzanych w Etapie 2")
+    parser.add_argument("--top-worst", type=int, default=3, help="Liczba najsłabszych setupów, na których wyłącznie skupia się optymalizator (domyślnie: 3)")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
 
     args = parser.parse_args()
