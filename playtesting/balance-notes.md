@@ -81,18 +81,28 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-15 (Outlier Hunter 2D/3D, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-15 (Szalony Audytor Progressive Beam, seed 42, warstwa C)
 
-YAML po Patch v0.33 (Karta `so-03` (Podejrzenie): `cost` → `2` + Karta `so-08` (Nasłanie Inkwizytora): `cost` → `1`).
+YAML po Patch v0.35 (Karta `caa-08` (Kaptur Nocy): `cost` → `2`).
 
-- **Global Game Balance Score:** **`97.2 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
-- **3p Avg Score:** **`93.4 / 100.0 pkt` 🟢**
-- **4p Avg Score:** **`98.9 / 100.0 pkt` 🟢**
-- **5p Avg Score:** **`99.4 / 100.0 pkt` 🟢**
+- **Global Game Balance Score:** **`97.7 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
+- **3p Avg Score:** **`94.5 / 100.0 pkt` 🟢**
+- **4p Avg Score:** **`99.0 / 100.0 pkt` 🟢**
+- **5p Avg Score:** **`99.5 / 100.0 pkt` 🟢**
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.35 (2026-08-15) — Karta `caa-08` (Kaptur Nocy): `cost` → `2` (Zysk Δ +0.2 pkt)
+- **Wynik:** Global **`97.7`** | 3p **`94.5`** | 4p **`99.0`** | 5p **`99.5`**
+- **Modyfikacja (`L3_CAA-08_COST_PLUS1`):** Karta `caa-08` (Kaptur Nocy): `cost` → `2`.
+- **Efekt:** Wzrost wyniku globalnego z 97.5 do **`97.7 pkt`** (+0.2 pkt). Telemetria: Średnia Er 5.56, Deadlocks 1.3%, Pas Biedy 26.2%.
+
+### 🟢 Patch v0.34 (2026-08-15) — Karta `caa-01` (Przejście Podziemiami): `gold` → `1` (Zysk Δ +0.3 pkt)
+- **Wynik:** Global **`97.5`** | 3p **`93.8`** | 4p **`99.1`** | 5p **`99.6`**
+- **Modyfikacja (`L3_CAA-01_GOLD_PLUS1`):** Karta `caa-01` (Przejście Podziemiami): `gold` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 97.2 do **`97.5 pkt`** (+0.3 pkt). Telemetria: Średnia Er 5.55, Deadlocks 1.3%, Pas Biedy 26.1%.
 
 ### 🟢 Patch v0.33 (2026-08-15) — Karta `so-03` (Podejrzenie): `cost` → `2` + Karta `so-08` (Nasłanie Inkwizytora): `cost` → `1` (Zysk Δ +0.5 pkt)
 - **Wynik:** Global **`97.2`** | 3p **`93.4`** | 4p **`98.9`** | 5p **`99.4`**

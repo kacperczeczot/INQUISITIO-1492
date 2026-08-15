@@ -6,11 +6,12 @@ Narzędzie analityczne do badania wkładu każdego pojedynczego elementu gry w b
      - Wpływ na Win Share frakcji (czy frakcja bez niej wygrywa, czy przegrywa)
      - Wpływ na Global Balance Score (czy karta destabilizuje stół, czy stabilizuje)
      - Wpływ na tempo partii (Średnia Er) i wskaźnik deadlocków
-  2. Klasyfikacja Kart:
+  2. Klasyfikacja Kart (Matryca 2D):
      - 👑 FILAR FRAKCJI (Core Keystone): Kluczowy motor napędowy wygranych frakcji
-     - ⚖️ ZBALANSOWANE NARZĘDZIE (Utility): Zdrowe, elastyczne narzędzie taktyczne
-     - 💤 MARTWA KARTA (Dead Weight): Zerowy wpływ na grę (kandydat do wzmocnienia/reworku)
+     - ⚓ KOTWICA STOŁU (Balance Anchor): Bezpiecznik chroniący przed dominacją frakcji
      - ⚠️ KARTA TOKSYCZNA (Disruptor): Karta, której usunięcie poprawia balans stołu
+     - 💤 MARTWA KARTA (Dead Weight): Zerowy wpływ na grę (kandydat do wzmocnienia/reworku)
+     - ⚖️ ZBALANSOWANE NARZĘDZIE (Utility): Zdrowe, elastyczne narzędzie taktyczne
   3. Ablacja Mechanik Systemowych (System Ablation):
      - Wpływ Kroniki Dziejów (Talia Czasu), Cooldownu Autodafé, Złota Startowego itp.
 
@@ -143,19 +144,67 @@ def classify_card_impact(
     delta_faction_share: float,
     delta_global_score: float,
     card_id: str,
-) -> tuple[str, str]:
-    """Classifies a card's strategic role in the game based on ablation deltas.
-    Note: delta_faction_share = (base_share - ablated_share).
-    If positive -> removing card hurt the faction -> card was a driver of victory.
+) -> dict[str, str]:
+    """Classifies a card's strategic role using a symmetrical 3x3 matrix.
+    
+    Axes:
+      1. Global Ecosystem Axis (Δ Global Score = ablated_score - base_score):
+         - DESTABILIZER (Δ ≥ +1.0 pkt): Card presence harms table balance; removal improves it.
+         - BALANCED     (-5.0 < Δ < +1.0 pkt): Card has moderate/healthy impact on table balance.
+         - CRITICAL     (Δ ≤ -5.0 pkt): Card is foundational; removal collapses table balance.
+         
+      2. Local Faction Axis (Δ Faction Share = base_share - ablated_share):
+         - BRAKE        (Δ ≤ -2.0%): Defensive/diluting card; removal increases faction winrate.
+         - TACTICAL     (-2.0% < Δ < +2.5%): Neutral/situational tactical tool.
+         - KEYSTONE     (Δ ≥ +2.5%): Victory engine; removal drops faction winrate.
     """
-    if delta_faction_share >= 3.0:
-        return "👑 FILAR FRAKCJI", "Kluczowa dla wygranej; usunięcie drastycznie osłabia frakcję."
-    elif delta_global_score >= 1.5 or delta_faction_share <= -2.5:
-        return "⚠️ TOKSYCZNA / DESTABILIZUJĄCA", "Usunięcie poprawia ogólny balans stołu lub redukuje toksyczną dominację."
-    elif abs(delta_faction_share) <= 0.6 and abs(delta_global_score) <= 0.5:
-        return "💤 MARTWA KARTA", "Zerowy wpływ na wynik; grana bardzo rzadko (kandydat do wzmocnienia)."
+    # 1. Faction Axis (Subgroup)
+    if delta_faction_share <= -2.0:
+        sub_id = "BRAKE"
+        sub_tag = "🛑 Hamulec Tempa"
+    elif delta_faction_share >= 2.5:
+        sub_id = "KEYSTONE"
+        sub_tag = "👑 Motor Wygranych"
     else:
-        return "⚖️ ZBALANSOWANE NARZĘDZIE", "Zdrowe narzędzie sytuacyjne o umiarkowanym wpływie."
+        sub_id = "TACTICAL"
+        sub_tag = "⚪ Narzędzie Taktyczne"
+
+    # 2. Ecosystem Axis (Main Group)
+    if delta_global_score >= 1.0:
+        group_id = "DESTABILIZER"
+        group_name = "⚠️ I. Destabilizatory Stołu"
+        if sub_id == "BRAKE":
+            role_name = "⚠️🛑 Toksyczny Balast"
+        elif sub_id == "KEYSTONE":
+            role_name = "⚠️👑 Toksyczny Dominator"
+        else:
+            role_name = "⚠️⚪ Toksyczny Zgrzyt"
+    elif delta_global_score <= -5.0:
+        group_id = "CRITICAL"
+        group_name = "⚓ III. Krytyczne dla Balansu Stołu"
+        if sub_id == "BRAKE":
+            role_name = "⚓🛑 Kotwica Stołu (Bezpiecznik)"
+        elif sub_id == "KEYSTONE":
+            role_name = "⚓👑 Filar Frakcji i Stołu"
+        else:
+            role_name = "⚓⚪ Zwornik Różnorodności"
+    else:
+        group_id = "BALANCED"
+        group_name = "⚖️ II. Neutralne / Zbalansowane"
+        if sub_id == "BRAKE":
+            role_name = "⚖️🛑 Zdrowy Hamulec"
+        elif sub_id == "KEYSTONE":
+            role_name = "⚖️👑 Lokalny Silnik Frakcji"
+        else:
+            role_name = "⚖️⚪ Zrównoważone Narzędzie"
+
+    return {
+        "group_id": group_id,
+        "group_name": group_name,
+        "sub_id": sub_id,
+        "sub_tag": sub_tag,
+        "role_name": role_name,
+    }
 
 
 def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers: int = 8) -> Path:
@@ -182,23 +231,35 @@ def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers
     print(f"   ✔ Win Shares Frakcji: " + " | ".join([f"{f}: {s:.1f}%" for f, s in sorted(base_res['faction_win_shares'].items())]))
     print(f"   ✔ Telemetria: Średnia Er {base_res['eras_avg']:.2f}, Deadlocki {base_res['deadlock_pct']:.1f}%, Pas Biedy {base_res['poverty_pct']:.1f}%\n")
 
-    # 2. PER-CARD ABLATION TASKS
-    print(f"🧬 [2/3] Generowanie i badanie ablacyjne 50 kart frakcji...")
+    # 2. PER-CARD ABLATION TASKS (FACTION CARDS)
+    print(f"🧬 [2/4] Generowanie i badanie ablacyjne 50 kart frakcji...")
     card_tasks = []
+    time_card_tasks = []
+    
     for cid, c in sorted(cards.items()):
         if cid.startswith("time-"):
-            continue
-        task_name = f"BEZ {cid.upper()} ({c.name})"
-        sys_overrides = {"disabled_cards": [cid]}
-        card_tasks.append((cid, task_name, sys_overrides, games_per_setup, seed, setups))
+            task_name = f"BEZ {cid.upper()} ({c.name})"
+            sys_overrides = {"disabled_cards": [cid]}
+            time_card_tasks.append((cid, task_name, sys_overrides, games_per_setup, seed, setups))
+        else:
+            task_name = f"BEZ {cid.upper()} ({c.name})"
+            sys_overrides = {"disabled_cards": [cid]}
+            card_tasks.append((cid, task_name, sys_overrides, games_per_setup, seed, setups))
 
     with ProcessPoolExecutor(max_workers=min(workers, len(card_tasks))) as executor:
         card_results = list(executor.map(_run_ablation_task, card_tasks))
 
-    print(f"   ✔ Zbadano ablacyjnie {len(card_results)} kart.\n")
+    print(f"   ✔ Zbadano ablacyjnie {len(card_results)} kart frakcji.")
 
-    # 3. SYSTEM MECHANICS & VICTORY PATH ABLATION (Turning complete subsystems ON/OFF)
-    print("⚙️ [3/3] Badanie czysto ablacyjne podsystemów i ścieżek zwycięstwa (Ablation Scenarios)...")
+    # 3. TIME DECK PER-EVENT ABLATION TASKS
+    print(f"⏳ [3/4] Generowanie i badanie ablacyjne {len(time_card_tasks)} kart Talii Czasu (Kroniki Dziejów)...")
+    with ProcessPoolExecutor(max_workers=min(workers, len(time_card_tasks))) as executor:
+        time_card_results = list(executor.map(_run_ablation_task, time_card_tasks))
+
+    print(f"   ✔ Zbadano ablacyjnie {len(time_card_results)} kart Talii Czasu.\n")
+
+    # 4. SYSTEM MECHANICS & VICTORY PATH ABLATION (Turning complete subsystems ON/OFF)
+    print("⚙️ [4/4] Badanie czysto ablacyjne podsystemów i ścieżek zwycięstwa (Ablation Scenarios)...")
 
     ablation_scenarios = [
         # --- PODSYSTEMY GLOBALNE ---
@@ -231,8 +292,8 @@ def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers
 
     print(f"   ✔ Zbadano ablacyjnie {len(sys_results)} kluczowych podsystemów i ścieżek gry.\n")
 
-    # 4. ANALYZE AND FORMAT REPORT
-    print("📄 Generowanie i formatowanie raportu użyteczności...")
+    # 5. ANALYZE AND FORMAT REPORT
+    print("📄 Generowanie i formatowanie 5-warstwowego raportu użyteczności...")
     total_elapsed = round(time.time() - t_start, 1)
 
     analyzed_cards = []
@@ -251,7 +312,7 @@ def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers
         d_global = round(r["global_score"] - base_res["global_score"], 2)
         d_eras = round(r["eras_avg"] - base_res["eras_avg"], 2)
         
-        category, desc = classify_card_impact(d_share, d_global, cid)
+        cinfo = classify_card_impact(d_share, d_global, cid)
 
         analyzed_cards.append({
             "id": cid,
@@ -268,100 +329,157 @@ def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers
             "eras_avg": r["eras_avg"],
             "d_eras": d_eras,
             "deadlock_pct": r["deadlock_pct"],
-            "category": category,
-            "desc": desc,
+            "group_id": cinfo["group_id"],
+            "group_name": cinfo["group_name"],
+            "sub_id": cinfo["sub_id"],
+            "sub_tag": cinfo["sub_tag"],
+            "role_name": cinfo["role_name"],
         })
 
-    # Sortings for special categories
-    core_cards = sorted([c for c in analyzed_cards if "FILAR" in c["category"]], key=lambda x: x["d_share"], reverse=True)
-    dead_cards = sorted([c for c in analyzed_cards if "MARTWA" in c["category"]], key=lambda x: abs(x["d_share"]))
-    disruptive_cards = sorted([c for c in analyzed_cards if "TOKSYCZNA" in c["category"]], key=lambda x: x["d_global"], reverse=True)
+    # Analyzed Time Cards
+    analyzed_time_cards = []
+    for r in time_card_results:
+        cid = r["id"]
+        c = cards.get(cid)
+        d_global = round(r["global_score"] - base_res["global_score"], 2)
+        d_eras = round(r["eras_avg"] - base_res["eras_avg"], 2)
+        
+        if d_global >= 1.0:
+            t_status = "⚠️ Destabilizuje (usunięcie poprawia stół)"
+        elif d_global <= -3.0:
+            t_status = "⚓ Filar stabilności (niezbędna w Kronice)"
+        else:
+            t_status = "⚖️ Zrównoważone wydarzenie"
+
+        analyzed_time_cards.append({
+            "id": cid,
+            "name": c.name if c else cid,
+            "effect": c.effect if c else "",
+            "global_score": r["global_score"],
+            "d_global": d_global,
+            "eras_avg": r["eras_avg"],
+            "d_eras": d_eras,
+            "deadlock_pct": r["deadlock_pct"],
+            "status": t_status,
+        })
+
+    # Group counts for 3x3 Matrix
+    matrix_counts: dict[tuple[str, str], int] = {}
+    for g_id in ["DESTABILIZER", "BALANCED", "CRITICAL"]:
+        for s_id in ["BRAKE", "TACTICAL", "KEYSTONE"]:
+            matrix_counts[(g_id, s_id)] = sum(1 for c in analyzed_cards if c["group_id"] == g_id and c["sub_id"] == s_id)
+
+    # Topology Analysis from Baseline
+    setups_3p = [s for s in setups if s.startswith("3p-")]
+    setups_4p = [s for s in setups if s.startswith("4p-")]
+    setups_5p = [s for s in setups if s.startswith("5p-")]
+
+    score_3p = sum(base_res["setup_scores"][s] for s in setups_3p) / len(setups_3p) if setups_3p else 0
+    score_4p = sum(base_res["setup_scores"][s] for s in setups_4p) / len(setups_4p) if setups_4p else 0
+    score_5p = sum(base_res["setup_scores"][s] for s in setups_5p) / len(setups_5p) if setups_5p else 0
 
     today_str = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     lines = [
-        f"# Raport Użyteczności i Wpływu Elementów Gry (Ablation & Impact Audit) — Wersja: {CONFIG.version}",
+        f"# Raport Użyteczności i Wpływu Elementów Gry (5-Warstwowy Audyt Ablacyjny) — Wersja: {CONFIG.version}",
         "",
         f"**Wersja Gry:** `{CONFIG.version}` | **Data:** {today_str} | **Próba:** {games_per_setup} gier/setup ({games_per_setup * 16} gier/test) | **Czas Analizy:** {total_elapsed}s",
         "",
-        "Raport przedstawia wyniki badania ablacyjnego (**Feature Importance / Ablation Study**).",
-        "Dla każdego elementu zbadano zachowanie ekosystemu gry **po jego całkowitym wyłączeniu**.",
+        "Kompleksowy audyt badania wkładu poszczególnych elementów gry w balans ekosystemu (**Leave-One-Out Feature Importance**).",
+        "Analiza obejmuje 5 komplementarnych warstw architektury mechanicznej *INQUISITIO-1492*.",
         "",
         "---",
         "",
-        "## 1. Podsumowanie Wniosków Strategicznych",
+        "## 1. 🏛️ Architektura 5 Warstw Badania Ablacyjnego",
         "",
-        f"- **👑 Liczba Filarów Frakcji (Kluczowe Karty Wygranych):** `{len(core_cards)}` kart",
-        f"- **💤 Liczba Martwych Kart (Kandydaci do Wzmocnienia / Reworku):** `{len(dead_cards)}` kart",
-        f"- **⚠️ Liczba Kart Destabilizujących (Kandydaci do Osłabienia):** `{len(disruptive_cards)}` kart",
-        f"- **⚖️ Liczba Zbalansowanych Narzędzi Taktycznych:** `{len(analyzed_cards) - len(core_cards) - len(dead_cards) - len(disruptive_cards)}` kart",
+        "| Warstwa Architektury | Badany Zakres Elementów | Liczba Testów | Kluczowy Wskaźnik |",
+        "| :--- | :--- | :---: | :--- |",
+        "| **Warstwa I: Karty Frakcyjne** | 50 kart akcji, reakcji i permanentów (po 10 na frakcję) | `50` | Matryca 3x3 (Filar vs Kotwica vs Destabilizator) |",
+        "| **Warstwa II: Kronika Dziejów** | 8 kart wydarzeń z Talii Czasu | `8` | Wpływ na tempo partii i stabilność metagry |",
+        "| **Warstwa III: Mechaniki Silnika** | Inkwizytor, Autodafé, Limit ręki, Złoto startowe | `6` | Odporność rdzenia na skrajne modyfikatory |",
+        "| **Warstwa IV: Ścieżki Zwycięstwa** | Bramki frakcyjne (Haki KB, Pasmo KT, Szlak CAA, Stosy SO) | `7` | Krytyczność asymetrycznych warunków wygranej |",
+        "| **Warstwa V: Skalowanie Stołu** | Formaty 3-osobowe, 4-osobowe i 5-osobowe (16 setupów) | `16` | Symetria i brak dominacji przy różnej liczbie graczy |",
         "",
         "---",
         "",
-        "## 2. 👑 Filary Frakcji (Najważniejsze Karty Napędzające Wygraną)",
+        "## 2. 🃏 Warstwa I — Karty Frakcyjne (Symetryczna Matryca 3x3)",
         "",
-        "Karty, których wyłączenie drastycznie obniża szanse na zwycięstwo danej frakcji ($\Delta \text{Win Share} \ge +3.0\%$):",
+        "Wszystkie 50 kart frakcji sklasyfikowano na przecięciu dwóch ortogonalnych osi:",
+        "- **Oś Globalna (Stół):** Wpływ wyłączenia karty na ogólny stan balansu gry ($\\Delta \\text{Global Score}$).",
+        "- **Oś Lokalna (Frakcja):** Wpływ wyłączenia karty na szanse zwycięstwa danej frakcji ($\\Delta \\text{Faction Share}$).",
         "",
-        "| Karta | Frakcja | Koszt / Herezja | Win Share (Baza → Bez Karty) | Spadek Szans ($\Delta$) | Global Score po Usunięciu | Rola i Diagnoza |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+        "| Grupa Ekosystemu \\ Profil Frakcji | 🛑 Hamulec Tempa (Δ ≤ -2.0%) | ⚪ Narzędzie Taktyczne (Neutralne) | 👑 Motor Wygranych (Δ ≥ +2.5%) | ŁĄCZNIE |",
+        "| :--- | :---: | :---: | :---: | :---: |",
+        f"| **⚠️ I. Destabilizatory Stołu** (Δ Global ≥ +1.0 pkt) | `{matrix_counts[('DESTABILIZER', 'BRAKE')]}` *(Toksyczny Balast)* | `{matrix_counts[('DESTABILIZER', 'TACTICAL')]}` *(Toksyczny Zgrzyt)* | `{matrix_counts[('DESTABILIZER', 'KEYSTONE')]}` *(Toksyczny Dominator)* | **`{sum(matrix_counts[('DESTABILIZER', s)] for s in ['BRAKE', 'TACTICAL', 'KEYSTONE'])}`** |",
+        f"| **⚖️ II. Zbalansowane dla Stołu** (-5.0 < Δ < +1.0 pkt) | `{matrix_counts[('BALANCED', 'BRAKE')]}` *(Zdrowy Hamulec)* | `{matrix_counts[('BALANCED', 'TACTICAL')]}` *(Zrównoważone Narzędzie)* | `{matrix_counts[('BALANCED', 'KEYSTONE')]}` *(Lokalny Silnik)* | **`{sum(matrix_counts[('BALANCED', s)] for s in ['BRAKE', 'TACTICAL', 'KEYSTONE'])}`** |",
+        f"| **⚓ III. Krytyczne dla Balansu** (Δ Global ≤ -5.0 pkt) | `{matrix_counts[('CRITICAL', 'BRAKE')]}` *(Kotwica Stołu)* | `{matrix_counts[('CRITICAL', 'TACTICAL')]}` *(Zwornik Różnorodności)* | `{matrix_counts[('CRITICAL', 'KEYSTONE')]}` *(Filar Frakcji i Stołu)* | **`{sum(matrix_counts[('CRITICAL', s)] for s in ['BRAKE', 'TACTICAL', 'KEYSTONE'])}`** |",
+        f"| **ŁĄCZNIE** | **`{sum(matrix_counts[(g, 'BRAKE')] for g in ['DESTABILIZER', 'BALANCED', 'CRITICAL'])}`** | **`{sum(matrix_counts[(g, 'TACTICAL')] for g in ['DESTABILIZER', 'BALANCED', 'CRITICAL'])}`** | **`{sum(matrix_counts[(g, 'KEYSTONE')] for g in ['DESTABILIZER', 'BALANCED', 'CRITICAL'])}`** | **50 kart** |",
+        "",
+        "### 2.1. ⚠️ Destabilizatory Ekosystemu (Kandydaci do Osłabienia / Reworku)",
+        "Karty, których wyłączenie **podnosi** ogólny wynik balansu gry ($\\Delta \\text{Global} \\ge +1.0$ pkt):",
+        "",
+        "| Karta | Frakcja | Koszt / Herezja | Podgrupa 3x3 | Global Score (Baza → Bez) | Zysk Balansu ($\\Delta$) | Win Share Frakcji |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
     ]
 
-    for c in core_cards:
-        ds_str = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
+    destab_cards = sorted([c for c in analyzed_cards if c["group_id"] == "DESTABILIZER"], key=lambda x: x["d_global"], reverse=True)
+    if destab_cards:
+        for c in destab_cards:
+            lines.append(
+                f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
+                f"{c['role_name']} | {base_res['global_score']:.1f} → **{c['global_score']:.1f} pkt** | "
+                f"**`+{c['d_global']:.1f} pkt`** 🟢 | {c['base_share']:.1f}% → {c['ablated_share']:.1f}% (`{c['d_share']:+.1f}%`) |"
+            )
+    else:
+        lines.append("| — | — | — | — | — | — | — |")
+        lines.append("| *Brak kart destabilizujących ekosystem.* |")
+
+    lines.extend([
+        "",
+        "### 2.2. ⚓ Karty Krytyczne dla Balansu Stołu (Filary i Kotwice)",
+        "Karty, których wyłączenie **drastycznie załamuje** równowagę gry ($\\Delta \\text{Global} \\le -5.0$ pkt):",
+        "",
+        "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 3x3 | Win Share Frakcji (Baza → Bez) | Wpływ na Frakcję ($\\Delta$) | Global Score po Wyłączeniu |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
+    ])
+
+    crit_cards = sorted([c for c in analyzed_cards if c["group_id"] == "CRITICAL"], key=lambda x: (x["sub_id"] != "KEYSTONE", x["sub_id"] != "BRAKE", x["d_global"]))
+    for c in crit_cards:
+        if c["sub_id"] == "KEYSTONE":
+            ds_fmt = f"**`-{c['d_share']:.1f}%`** 🔻"
+        elif c["sub_id"] == "BRAKE":
+            ds_fmt = f"**`+{abs(c['d_share']):.1f}%`** 🚀"
+        else:
+            ds_fmt = f"`{c['d_share']:+.1f}%`"
+
         lines.append(
             f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
-            f"{c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | **`{ds_str}`** 🔻 | {c['global_score']:.1f} pkt | {c['desc']} |"
+            f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
+            f"{ds_fmt} | {base_res['global_score']:.1f} → **{c['global_score']:.1f} pkt** (`{c['d_global']:.1f}`) |"
         )
 
     lines.extend([
         "",
-        "---",
+        "### 2.3. ⚖️ Karty Zbalansowane i Narzędzia Taktyczne",
+        "Karty o stabilnym, neutralnym wpływie na stół ($-5.0 < \\Delta \\text{Global} < +1.0$ pkt):",
         "",
-        "## 3. 💤 Martwe Karty (Kandydaci do Wzmocnienia lub Reworku)",
-        "",
-        "Karty, których usunięcie z gry nie wywołuje niemal żadnego mierzalnego efektu ($|\Delta \text{Win Share}| \le 0.6\%$). Są rzadko zagrywane lub ich efekt jest zbyt słaby:",
-        "",
-        "| Karta | Frakcja | Koszt / Herezja | Win Share (Baza → Bez Karty) | Wpływ ($\Delta$) | Status Rekomendacji |",
-        "| :--- | :---: | :---: | :---: | :---: | :--- |",
+        "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 3x3 | Win Share Frakcji (Baza → Bez) | $\\Delta$ Frakcji | Global Score po Wyłączeniu |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
     ])
 
-    if dead_cards:
-        for c in dead_cards:
-            lines.append(
-                f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
-                f"{c['base_share']:.1f}% → {c['ablated_share']:.1f}% | `{c['d_share']:+.1f}%` | ⚠️ Wymaga obniżenia kosztu, dodania złota lub wzmocnienia efektu |"
-            )
-    else:
-        lines.append("| — | — | — | — | — | ✅ Brak całkowicie martwych kart w talii! |")
+    bal_cards = sorted([c for c in analyzed_cards if c["group_id"] == "BALANCED"], key=lambda x: abs(x["d_share"]), reverse=True)
+    for c in bal_cards:
+        lines.append(
+            f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
+            f"{c['role_name']} | {c['base_share']:.1f}% → {c['ablated_share']:.1f}% | "
+            f"`{c['d_share']:+.1f}%` | {c['global_score']:.1f} pkt (`{c['d_global']:+.1f}`) |"
+        )
 
     lines.extend([
         "",
-        "---",
+        "### 2.4. 📋 Pełny Wykaz Ablacji Wszystkich 50 Kart Frakcji",
         "",
-        "## 4. ⚠️ Karty Destabilizujące / Toksyczne",
-        "",
-        "Karty, których wyłączenie z talii **podnosi ogólny wynik zbalansowania gry** ($\Delta \text{Global} > +1.0$ pkt):",
-        "",
-        "| Karta | Frakcja | Koszt / Herezja | Global Score (Baza → Bez Karty) | Zysk Balansu ($\Delta$) | Diagnoza |",
-        "| :--- | :---: | :---: | :---: | :---: | :--- |",
-    ])
-
-    if disruptive_cards:
-        for c in disruptive_cards:
-            lines.append(
-                f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
-                f"{base_res['global_score']:.1f} → **{c['global_score']:.1f} pkt** | **`{c['d_global']:+.1f} pkt`** 🟢 | {c['desc']} |"
-            )
-    else:
-        lines.append("| — | — | — | — | — | ✅ Brak toksycznych kart psujących balans stołu! |")
-
-    lines.extend([
-        "",
-        "---",
-        "",
-        "## 5. 📋 Pełna Tabela Ablacji Wszystkich 50 Kart Frakcji",
-        "",
-        "| ID | Nazwa Karty | Frakcja | Koszt | Herezja | Faction Win Share | $\Delta$ Frakcji | Global Score | $\Delta$ Global | Śr. Er | Deadlock % | Kategoria Roli |",
+        "| ID | Nazwa Karty | Frakcja | Koszt | Herezja | Faction Win Share | $\\Delta$ Frakcji | Global Score | $\\Delta$ Global | Śr. Er | Deadlock % | Rola w Matrycy 3x3 |",
         "| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
     ])
 
@@ -371,63 +489,132 @@ def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers
         lines.append(
             f"| `{c['id']}` | **{c['name']}** | {c['faction_name']} | {c['cost']} | {c['heresy']} | "
             f"{c['base_share']:.1f}% → {c['ablated_share']:.1f}% | `{ds_sign}` | "
-            f"{c['global_score']:.1f} | `{dg_sign}` | {c['eras_avg']:.2f} | {c['deadlock_pct']:.1f}% | {c['category']} |"
+            f"{c['global_score']:.1f} | `{dg_sign}` | {c['eras_avg']:.2f} | {c['deadlock_pct']:.1f}% | {c['role_name']} |"
         )
 
     lines.extend([
         "",
         "---",
         "",
-        "## 6. ⚙️ Ablacja Podsystemów i Ścieżek Zwycięstwa (Mechanics Ablation)",
+        "## 3. ⏳ Warstwa II — Kronika Dziejów (Ablacja 8 Kart Wydarzeń Czasu)",
         "",
-        "Badanie odporności gry na całkowite wyłączenie poszczególnych podsystemów, zasad lub ścieżek wygranej.",
+        "Badanie wpływu wyłączenia każdej pojedynczej karty z **Talii Czasu** na tempo gry, poziom deadlocków i ogólny balans:",
+        "",
+        "| ID | Karta Wydarzenia | Global Score | $\\Delta$ Global | Średnia Er | Deadlock % | Status Roli w Kronice |",
+        "| :--- | :--- | :---: | :---: | :---: | :---: | :--- |",
     ])
 
-    for cat_name in ["Globalne Podsystemy", "Ścieżki Zwycięstwa"]:
-        cat_results = [r for r in sys_results if sys_categories.get(r["id"]) == cat_name]
-        if not cat_results:
-            continue
-
-        lines.extend([
-            "",
-            f"### {cat_name}",
-            "",
-            "| Badany Scenariusz Ablacji | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Ekosystem Gry |",
-            "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
-        ])
-
-        for r in cat_results:
-            dg = r["global_score"] - base_res["global_score"]
-            dg_str = f"+{dg:.1f}" if dg > 0 else f"{dg:.1f}"
-            
-            if dg >= 1.0:
-                diag = "🟢 Zysk balansu — mechanika w obecnej formie obciążała stół"
-            elif dg <= -15.0:
-                diag = "🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry"
-            elif dg <= -5.0:
-                diag = "🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność"
-            else:
-                diag = "⚪ Wpływ neutralny / mechanika opcjonalna"
-
-            lines.append(
-                f"| **{r['name']}** | {score_pair(base_res['global_score'], r['global_score'], colored=True)} | "
-                f"`{dg_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
-            )
+    for tc in analyzed_time_cards:
+        dg_str = f"+{tc['d_global']:.1f}" if tc['d_global'] > 0 else f"{tc['d_global']:.1f}"
+        lines.append(
+            f"| `{tc['id']}` | **{tc['name']}** | {score_pair(base_res['global_score'], tc['global_score'], colored=True)} | "
+            f"`{dg_str} pkt` | {tc['eras_avg']:.2f} Er | {tc['deadlock_pct']:.1f}% | {tc['status']} |"
+        )
 
     lines.extend([
         "",
         "---",
         "",
-        "## 7. Metodologia Badania",
+        "## 4. ⚙️ Warstwa III — Globalne Mechaniki i Parametry Silnika",
         "",
-        "- **Ablacja Pojedynczego Elementu (Leave-One-Out):** Każdy test usuwa dokładnie 1 kartę lub zmienia 1 mechanikę bazową.",
-        "- **Wpływ na Frakcję ($\Delta$ Win Share):** Różnica $WS_{\text{baza}} - WS_{\text{bez\_karty}}$. Dodatnia wartość oznacza, że karta napędzała wygrane frakcji.",
-        "- **Wpływ na Balans Gry ($\Delta$ Global):** Zmiana wyniku globalnego po usunięciu elementu.",
-        "- **Rygor Próby:** Każdy wariant jest testowany na pełnym pakiecie 16 setupów (min. 1000 gier/setup = 16 000 partii na kartę).",
+        "Badanie odporności gry na wyłączenie lub skrajne przestawienie bazowych parametrów silnika:",
+        "",
+        "| Badany Podsystem / Parametr | Global Score | $\\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Silnik |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ])
+
+    global_sys_results = [r for r in sys_results if sys_categories.get(r["id"]) == "Globalne Podsystemy"]
+    for r in global_sys_results:
+        dg = r["global_score"] - base_res["global_score"]
+        dg_str = f"+{dg:.1f}" if dg > 0 else f"{dg:.1f}"
+        if dg >= 1.0:
+            diag = "🟢 Zysk balansu — mechanika w obecnej formie obciąża stół"
+        elif dg <= -15.0:
+            diag = "🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry"
+        elif dg <= -5.0:
+            diag = "🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność"
+        else:
+            diag = "⚪ Wpływ neutralny / mechanika stabilna"
+
+        lines.append(
+            f"| **{r['name']}** | {score_pair(base_res['global_score'], r['global_score'], colored=True)} | "
+            f"`{dg_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
+        )
+
+    lines.extend([
+        "",
+        "---",
+        "",
+        "## 5. ⚔️ Warstwa IV — Asymetryczne Ścieżki Zwycięstwa (Victory Paths)",
+        "",
+        "Badanie krytyczności i elastyczności unikalnych bramek zwycięstwa (*Victory Gating*) dla każdej frakcji:",
+        "",
+        "| Badana Ścieżka / Bramka Wygranej | Global Score | $\\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza Ścieżki Zwycięstwa |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ])
+
+    vp_results = [r for r in sys_results if sys_categories.get(r["id"]) == "Ścieżki Zwycięstwa"]
+    for r in vp_results:
+        dg = r["global_score"] - base_res["global_score"]
+        dg_str = f"+{dg:.1f}" if dg > 0 else f"{dg:.1f}"
+        if dg >= 1.0:
+            diag = "🟢 Zysk balansu — ścieżka w obecnej formie zaburza równowagę"
+        elif dg <= -15.0:
+            diag = "🔴 Krytyczna ścieżka — frakcja nie posiada alternatywnego motoru"
+        elif dg <= -5.0:
+            diag = "🟠 Istotna ścieżka — jej brak zauważalnie ubożeje przestrzeń decyzyjną"
+        else:
+            diag = "⚪ Ścieżka alternatywna / opcjonalna"
+
+        lines.append(
+            f"| **{r['name']}** | {score_pair(base_res['global_score'], r['global_score'], colored=True)} | "
+            f"`{dg_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
+        )
+
+    lines.extend([
+        "",
+        "---",
+        "",
+        "## 6. 👥 Warstwa V — Skalowalność i Odporność Topologii Stołu (3P / 4P / 5P)",
+        "",
+        "Zestawienie stabilności ekosystemu gry w zależności od formatu liczby graczy i obecności poszczególnych frakcji:",
+        "",
+        "### 6.1. Balans w Podziale na Formaty Liczby Graczy",
+        "",
+        "| Format Gry | Liczba Badanych Setupów | Średni Global Score | Średnia Długość (Er) | Stan Balansu Formatu |",
+        "| :--- | :---: | :---: | :---: | :--- |",
+        f"| **Format 3-osobowy (3P)** | 10 setupów | **`{score_3p:.1f} pkt`** | {base_res['eras_avg']:.2f} Er | {'🟢 Bardzo wysoki' if score_3p >= 90 else '🟡 Umiarkowany'} |",
+        f"| **Format 4-osobowy (4P)** | 5 setupów | **`{score_4p:.1f} pkt`** | {base_res['eras_avg']:.2f} Er | {'🟢 Bardzo wysoki' if score_4p >= 90 else '🟡 Umiarkowany'} |",
+        f"| **Format 5-osobowy (5P - Pełny Stół)** | 1 setup (`5p-full`) | **`{score_5p:.1f} pkt`** | {base_res['eras_avg']:.2f} Er | {'🟢 Bardzo wysoki' if score_5p >= 90 else '🟡 Umiarkowany'} |",
+        "",
+        "### 6.2. Odporność Stołu na Nieobecność Konkretnej Frakcji (Formaty 4P)",
+        "",
+        "| Nieobecna Frakcja | Setup Testowy | Global Score | Diagnoza Wpływu Braku Frakcji na Stół |",
+        "| :--- | :--- | :---: | :--- |",
+        f"| **Bez Gildii Cieni** | `4p-core` | **`{base_res['setup_scores'].get('4p-core', 0.0):.1f} pkt`** | Stół klasyczny (czysta walka religijno-polityczna) |",
+        f"| **Bez Kabały z Toledo** | `4p-no-kabala` | **`{base_res['setup_scores'].get('4p-no-kabala', 0.0):.1f} pkt`** | Brak presji okultystycznej i manipulacji czasem |",
+        f"| **Bez Korony i Borgiów** | `4p-no-korona` | **`{base_res['setup_scores'].get('4p-no-korona', 0.0):.1f} pkt`** | Brak presji podatkowej i aresztów królewskich |",
+        f"| **Bez Cieni Al-Andalus** | `4p-no-cienie` | **`{base_res['setup_scores'].get('4p-no-cienie', 0.0):.1f} pkt`** | Brak szlaków morskich i ucieczek podziemiami |",
+        f"| **Bez Świętego Oficjum** | `4p-no-oficjum` | **`{base_res['setup_scores'].get('4p-no-oficjum', 0.0):.1f} pkt`** | Brak presji stosów i bezpośredniego Inkwizytora |",
+        "",
+        "---",
+        "",
+        "## 7. 📐 Metodologia Badania i Matryca Klasyfikacji 3x3",
+        "",
+        "Raport opiera się na **dwuwymiarowej przestrzeni metryk ablacyjnych (Leave-One-Out)**:",
+        "",
+        "1. **OŚ LOKALNA — Wpływ na Frakcję ($\\Delta \\text{Faction Share} = WS_{\\text{baza}} - WS_{\\text{bez\\_karty}}$):**",
+        "   - Wartość dodatnia ($> 0$): Usunięcie karty osłabia frakcję $\\rightarrow$ Karta jest **motorem zwycięstwa (Filar)**.",
+        "   - Wartość ujemna ($< 0$): Usunięcie karty podnosi winrate frakcji $\\rightarrow$ Karta jest **hamulcem tempa / kartą defensywną**.",
+        "2. **OŚ GLOBALNA — Wpływ na Ekosystem ($\\Delta \\text{Global Score} = GS_{\\text{bez\\_karty}} - GS_{\\text{baza}}$):**",
+        "   - Wartość dodatnia ($> 0$): Usunięcie karty poprawia balans stołu $\\rightarrow$ Karta była **toksyczna / destabilizująca**.",
+        "   - Wartość ujemna ($< 0$): Usunięcie karty załamuje balans stołu $\\rightarrow$ Karta jest **stabilizatorem / kotwicą stołu**.",
+        "",
+        "- **Rygor Próby:** Każdy element badany jest na pełnym pakiecie 16 setupów (min. 1000 partii / setup = min. 16 000 partii na wariant).",
     ])
 
     report_path, arch_path = save_and_archive_report(lines, "raport_uzytecznosci_i_wplywu.md")
-    print(f"\n✅ RAPORT WYGENEROWANY POMYŚLNIE!")
+    print(f"\n✅ 5-WARSTWOWY RAPORT WYGENEROWANY POMYŚLNIE!")
     print(f"   Raport:    {report_path}")
     print(f"   Archiwum:  {arch_path}\n")
     return report_path
@@ -449,3 +636,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
