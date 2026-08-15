@@ -158,7 +158,7 @@ def classify_card_impact(
         return "⚖️ ZBALANSOWANE NARZĘDZIE", "Zdrowe narzędzie sytuacyjne o umiarkowanym wpływie."
 
 
-def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers: int = 8) -> Path:
+def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers: int = 8) -> Path:
     """Executes the complete ablation & impact audit suite across cards and system mechanics."""
     t_start = time.time()
     setups = sorted(SETUP_PRESETS.keys())
@@ -434,14 +434,14 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 Feature & Card Impact Audit (Ablation Study)")
-    parser.add_argument("--games", type=int, default=1000, help="Liczba gier na setup (domyślnie: 1000, min. 1000)")
+    parser.add_argument("--games", type=int, default=5000, help="Liczba gier na setup (domyślnie: 5000, min. 1000)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba wątków równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno losowe (CRN)")
 
     args = parser.parse_args()
-    if args.games < 500:
-        print("⚠️ Zwiększam próbę do minimum 500 gier.")
-        args.games = 500
+    if args.games < 1000:
+        print("⚠️ Podwyższam próbę do wymaganego minimum 1000 gier.")
+        args.games = 1000
 
     run_full_ablation_audit(games_per_setup=args.games, seed=args.seed, workers=args.workers)
 
