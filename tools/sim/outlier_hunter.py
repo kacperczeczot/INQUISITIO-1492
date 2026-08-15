@@ -768,7 +768,7 @@ class OutlierHunter:
             print(f"   📊 Global Balance Score: {color_score(base_res['global_score'], bold=True)} pkt")
             print(f"   🎯 3p: {base_res['cat_scores'].get('3p',0):.1f} | 4p: {base_res['cat_scores'].get('4p',0):.1f} | 5p: {base_res['cat_scores'].get('5p',0):.1f} pkt")
 
-            # 3. Find and rank outlier setups
+            # 3. Find and rank outlier setups (< 90 pts are strict blockers)
             sorted_setups = sorted(base_res["setup_scores"].items(), key=lambda x: x[1])
             weak_setups = [s for s in sorted_setups if s[1] < 90.0]
 
@@ -781,15 +781,17 @@ class OutlierHunter:
                 print("   Osiągnięto idealny stan balansu gry. Gratulacje!")
                 break
 
-            # Filter out setups already attempted in this strategy epoch
-            available_setups = [s for s in sorted_setups if s[0] not in attempted_setups_in_epoch]
+            # STRICT OUTLIER FILTER: If there are weak setups (< 90), ONLY test weak setups!
+            # Never waste time testing setups that are already green (>= 90).
+            candidate_queue = weak_setups if weak_setups else sorted_setups
+            available_setups = [s for s in candidate_queue if s[0] not in attempted_setups_in_epoch]
 
             if not available_setups:
-                # All setups attempted at current strategy level -> escalate strategy!
+                # All target setups failed at current strategy level -> escalate strategy depth-first!
                 current_strategy_level += 1
                 attempted_setups_in_epoch.clear()
                 if current_strategy_level > 4:
-                    print("\n🏁 Sprawdzono wszystkie poziomy strategii (1-4). Resetuję cykl na poziom 1 z nową próbą...")
+                    print("\n🏁 Sprawdzono wszystkie poziomy strategii (1-4) dla zapalnych setupów. Resetuję cykl...")
                     current_strategy_level = 1
                 strategy_names = {
                     1: "Poziom 1: Antagonistyczne Pary 2D (Nerf Dominanta + Buff Deficytu)",
@@ -797,10 +799,10 @@ class OutlierHunter:
                     3: "Poziom 3: Wewnątrzfrakcyjne Przesunięcia Stylu Gry",
                     4: "Poziom 4: Globalny Skaner Wariancji",
                 }
-                print(f"\n🔄 ESKALACJA STRATEGII → {strategy_names.get(current_strategy_level, f'Poziom {current_strategy_level}')}...\n")
+                print(f"\n🔄 ESKALACJA STRATEGII DLA OUTLIERÓW → {strategy_names.get(current_strategy_level, f'Poziom {current_strategy_level}')}...\n")
                 continue
 
-            # Pick next target setup
+            # Pick target setup (lowest scoring available setup)
             target_setup_name, target_setup_score = available_setups[0]
             factions = SETUP_PRESETS[target_setup_name]
             n_players = len(factions)
@@ -839,7 +841,7 @@ class OutlierHunter:
             promising_candidates.sort(key=lambda x: x[1], reverse=True)
 
             if not promising_candidates:
-                print(f"⚪ Żaden wariant nie przyniósł zysku na setupie `{target_setup_name}` w strategii #{current_strategy_level}. Przechodzę do kolejnego setupu...")
+                print(f"⚪ Żaden wariant nie przyniósł zysku na setupie `{target_setup_name}` w strategii #{current_strategy_level}. Przechodzę do kolejnego zapalnego setupu...")
                 attempted_setups_in_epoch.add(target_setup_name)
                 continue
 
