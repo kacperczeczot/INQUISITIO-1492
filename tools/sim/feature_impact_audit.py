@@ -197,23 +197,47 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
 
     print(f"   ✔ Zbadano ablacyjnie {len(card_results)} kart.\n")
 
-    # 3. SYSTEM MECHANICS ABLATION TASKS
-    print("⚙️ [3/3] Badanie ablacyjne kluczowych mechanik systemowych...")
-    sys_tasks = [
-        ("SYS_NO_TIME_DECK", "Gra bez Kroniki Dziejów (Talia Czasu OFF)", {"no_time_deck": True}, games_per_setup, seed, setups),
-        ("SYS_NO_COOLDOWN", "Autodafé bez Cooldownu (możliwość co turę)", {"cooldown_offset": -3}, games_per_setup, seed, setups),
-        ("SYS_SLOW_COOLDOWN", "Autodafé rzadsze (co 4 Ery)", {"cooldown_offset": 1}, games_per_setup, seed, setups),
-        ("SYS_START_GOLD_1", "Startowe Złoto zredukowane (-2 zł)", {"start_gold_offset": -2}, games_per_setup, seed, setups),
-        ("SYS_START_GOLD_PLUS", "Startowe Złoto zwiększone (+1 zł)", {"start_gold_offset": 1}, games_per_setup, seed, setups),
-        ("SYS_THRESHOLD_PLUS1", "Próg Oskarżenia podwyższony (+1)", {"threshold_offset": 1}, games_per_setup, seed, setups),
-        ("SYS_THRESHOLD_MINUS1", "Próg Oskarżenia obniżony (-1)", {"threshold_offset": -1}, games_per_setup, seed, setups),
-        ("SYS_HAND_LIMIT_4", "Limit Ręki zredukowany do 4 kart", {"hand_limit_offset": -1}, games_per_setup, seed, setups),
+    # 3. SYSTEM MECHANICS ABLATION TASKS (L1 Core, L2 Victory Conditions, L4 Dynamics & Variants)
+    print("⚙️ [3/3] Badanie ablacyjne mechanik systemowych (L1 Rdzeń, L2 Zwycięstwa, L4 Warianty)...")
+    
+    import audit_level1
+    import audit_level2
+    import audit_level4
+
+    l1_raw = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
+    l2_raw = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
+    l4_raw = [t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"]
+
+    # Extra extreme ablation scenarios
+    extra_ablations = [
+        ("SYS_NO_TIME_DECK", "Gra bez Kroniki Dziejów (Talia Czasu OFF)", {"no_time_deck": True}, "L4"),
+        ("SYS_NO_COOLDOWN", "Autodafé bez Cooldownu (możliwość co turę)", {"cooldown_offset": -3}, "L1"),
+        ("SYS_START_GOLD_1", "Startowe Złoto zredukowane (-2 zł)", {"start_gold_offset": -2}, "L1"),
     ]
+
+    sys_tasks = []
+    sys_categories: dict[str, str] = {}
+
+    for t in l1_raw:
+        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
+        sys_categories[t[0]] = "L1 — Rdzeń Systemu i Silnik Gry"
+
+    for t in l2_raw:
+        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
+        sys_categories[t[0]] = "L2 — Warunki Zwycięstwa Frakcji"
+
+    for t in l4_raw:
+        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
+        sys_categories[t[0]] = "L4 — Warianty Niszowe, Edykty i Plansza"
+
+    for t in extra_ablations:
+        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
+        sys_categories[t[0]] = f"{t[3]} — Ekstremalna Ablacja"
 
     with ProcessPoolExecutor(max_workers=min(workers, len(sys_tasks))) as executor:
         sys_results = list(executor.map(_run_ablation_task, sys_tasks))
 
-    print(f"   ✔ Zbadano ablacyjnie {len(sys_results)} mechanik systemowych.\n")
+    print(f"   ✔ Zbadano ablacyjnie {len(sys_results)} mechanik i wariantów systemowych.\n")
 
     # 4. ANALYZE AND FORMAT REPORT
     print("📄 Generowanie i formatowanie raportu użyteczności...")
@@ -363,32 +387,39 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
         "",
         "## 6. ⚙️ Wpływ Mechanik Systemowych i Reguł Gry (Ablacja Systemu)",
         "",
-        "| Badany Wariant Mechaniki | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Wnioski i Znaczenie dla Gry |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+        "Analiza wrażliwości ekosystemu gry na modyfikacje parametrów bazowych L1, warunków zwycięstwa L2 oraz dynamiki planszy L4.",
     ])
 
-    for r in sys_results:
-        dg = r["global_score"] - base_res["global_score"]
-        dg_str = f"+{dg:.1f}" if dg > 0 else f"{dg:.1f}"
-        
-        # Diagnostics
-        if "TIME_DECK" in r["id"]:
-            diag = "Weryfikacja losowości Kroniki Dziejów (edyktów)"
-        elif "COOLDOWN" in r["id"]:
-            diag = "Wpływ częstotliwości czyszczenia stołu przez Inkwizycję"
-        elif "GOLD" in r["id"]:
-            diag = "Odporność gospodarki gry na ubóstwo i tempo startowe"
-        elif "THRESHOLD" in r["id"]:
-            diag = "Czułość progu oskarżenia na dynamikę aresztowań"
-        elif "HAND_LIMIT" in r["id"]:
-            diag = "Wpływ limitu kart na ręce na decyzyjność graczy"
-        else:
-            diag = "Wariant systemowy"
+    for cat_name in ["L1 — Rdzeń Systemu i Silnik Gry", "L2 — Warunki Zwycięstwa Frakcji", "L4 — Warianty Niszowe, Edykty i Plansza", "L1 — Ekstremalna Ablacja", "L4 — Ekstremalna Ablacja"]:
+        cat_results = [r for r in sys_results if sys_categories.get(r["id"]) == cat_name]
+        if not cat_results:
+            continue
 
-        lines.append(
-            f"| **{r['name']}** | {score_pair(base_res['global_score'], r['global_score'], colored=True)} | "
-            f"`{dg_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
-        )
+        lines.extend([
+            "",
+            f"### {cat_name}",
+            "",
+            "| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |",
+            "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+        ])
+
+        for r in cat_results:
+            dg = r["global_score"] - base_res["global_score"]
+            dg_str = f"+{dg:.1f}" if dg > 0 else f"{dg:.1f}"
+            
+            if dg >= 1.0:
+                diag = "🟢 Zysk balansu — parametr warto rozważyć do trwałej adaptacji"
+            elif dg <= -5.0:
+                diag = "🔴 Silna destabilizacja gry — kluczowy filar stabilności"
+            elif dg <= -1.0:
+                diag = "🟠 Umiarkowany spadek zbalansowania"
+            else:
+                diag = "⚪ Wpływ neutralny / zrównoważony"
+
+            lines.append(
+                f"| **{r['name']}** | {score_pair(base_res['global_score'], r['global_score'], colored=True)} | "
+                f"`{dg_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
+            )
 
     lines.extend([
         "",
