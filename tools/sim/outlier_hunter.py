@@ -597,11 +597,20 @@ def generate_candidate_pool_for_strategy(
                     for m_buff in strug_buffs:
                         pairs.append(merge_card_mutations(m_nerf, m_buff))
 
-    # LEVEL 2: Hybrid L3 Card + L1/L2 Rule Tweaks
+    # LEVEL 2: Hybrid L3 Card + L1/L2 Rule Tweaks (Targeting ~400-500 focused combinations for 15-min budget)
     elif strategy_level == 2:
         l1_rules = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
         l2_rules = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
-        sys_rules = l1_rules + l2_rules
+
+        # Filter L2 victory rules only for factions present in this setup
+        setup_prefixes = set(FACTION_ID_TO_PREFIX[fid] for fid in factions)
+        relevant_l2 = []
+        for r in l2_rules:
+            r_id = r[0].lower()
+            if any(pref in r_id for pref in setup_prefixes):
+                relevant_l2.append(r)
+
+        sys_rules = l1_rules + relevant_l2
 
         for dom_pref, _ in dominant_prefixes:
             dom_nerfs = [m for m in generate_atomic_card_mutations(dom_pref) if classify_card_mutation_intent(m) == "NERF"]
