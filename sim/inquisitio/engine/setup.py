@@ -187,10 +187,11 @@ def new_game(
 
 
     rng = random.Random(seed)
+    disabled = set(sys.get("disabled_cards", []))
     players_map: dict[FactionId, PlayerState] = {}
     for fid in faction_list:
         deck_cards = cards_for_faction(fid.value, max_layer=layer)
-        ids = [c.id for c in deck_cards]
+        ids = [c.id for c in deck_cards if c.id not in disabled]
         rng.shuffle(ids)
         hand = ids[:hand_limit]
         deck = ids[hand_limit:]
@@ -207,8 +208,11 @@ def new_game(
     relics["gildia"] = 1
     relics["trybunal"] = 1
 
-    tdeck = [c.id for c in time_cards(max_layer=layer)]
-    rng.shuffle(tdeck)
+    if sys.get("no_time_deck"):
+        tdeck = []
+    else:
+        tdeck = [c.id for c in time_cards(max_layer=layer) if c.id not in disabled]
+        rng.shuffle(tdeck)
 
     state = GameState(
         players=players_map,
