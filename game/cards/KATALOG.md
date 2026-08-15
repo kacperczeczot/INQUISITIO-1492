@@ -327,7 +327,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
@@ -631,7 +631,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto. |
+| `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto. |
 | `lore` | Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale. |
 | `tags` | fragment |
 | `status` | prototyp |
@@ -858,7 +858,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj złoto. Wskaż rywala: +1 Herezja. |
+| `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |
 | `tags` | gold, heresy |
 | `status` | prototyp |

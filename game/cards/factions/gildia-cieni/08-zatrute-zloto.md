@@ -9,7 +9,7 @@ heresy: 0
 tags:
 - gold
 - heresy
-effect: 'Zyskaj złoto. Wskaż rywala: +1 Herezja.'
+effect: 'Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.'
 lore: Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.
 target_heresy: 1
 gold: 1

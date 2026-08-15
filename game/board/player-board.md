@@ -51,13 +51,13 @@ Strefy Herezji: **bez** `margin-top: auto` — przyklejone pod tor 0–10.
 | Złoto | tacka | stos monet |
 | Haki (B+) | 2×□ | max 2 aktywne |
 | Limity Ery | 1–3×□12 | żeton Zużycie |
-| Postęp | 2–3×□ | żetony celu frakcji |
+| Postęp | 2–4×□ | żetony celu frakcji |
 
 ### Postęp
 
 | Frakcja | n | Żeton |
 | :--- | ---: | :--- |
-| Oficjum | 3 | Stos |
+| Oficjum | 4 | Stos |
 | Cienie | 2 | Relikwia |
 | Korona | 2 | Dekret |
 | Kabała | 3 | Fragment |
@@ -76,13 +76,13 @@ Pozycja Agenta = plansza/Areszt/Stos · ofiara Haka = na żetonie · Marionetka 
 │ FRAKCJA                                                 │
 │ Cel: …                                                  │  auto
 ├─────────────────────────────────────────────────────────┤
-│ HEREZJA                                                 │
+│ HEREZJA (*próg oskarżenia: 3p ≥6, 5p ≥8)                │
 │ [0]…[10]                                                │
-│ Czysta 0–3 | Obserwowana 4–7 | Krytyczna 8–10           │  28 mm
+│ Czysta 0–3 | Obserwowana 4–6 | Krytyczna ≥7*            │  28 mm
 ├──────────┬────────────────────────────┬─────────────────┤
 │ AGENCI   │ ZŁOTO (tacka)              │ HAKI            │
 │ ○ ○ ○    │                            │ □ □             │  ~1fr
 ├──────────┴──────────────┬─────────────┴─────────────────┤
-│ LIMITY  □ Nasłanie …    │ POSTĘP  □ □ (□)               │  ~1fr
+│ LIMITY  □ Nasłanie …    │ POSTĘP  □ □ (□ □)             │  ~1fr
 └─────────────────────────┴───────────────────────────────┘
 ```

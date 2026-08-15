@@ -19,7 +19,7 @@ Cel: krótki tekst jak instrukcja, nie proza.
 
 1. **Lead:** każde zdanie-akcja zaczyna się od **komendy §1** albo **etykiety §2** (ew. po bloku `Jeśli …:`).
 2. **Casing:** komendy i `Łamie regułę` = **Title Case** zawsze (także po `—` / `:`). Bannery talii = **CAPS:** `EDYKT.` / `EDYKT Ery.` / `DEKRET N`. Anti-AP i kara = Title + `:` → `Limit:` / `Odmowa:`.
-3. **Bez zbędnego `1`:** przy liczbie pojedynczej nie pisz cyfry (`Załóż Hak`, `Aresztuj Agenta`, `Zyskaj Fragment`). Cyfra tylko gdy N ≠ 1 albo to dystans/limit (`o 1 lokację`, `Limit: 1 / Erę`, `+1 Herezja`, `≥1 Fragment`).
+3. **Bez zbędnego `1`:** przy liczbie pojedynczej nie pisz cyfry (`Załóż Hak`, `Aresztuj Agenta`, `Zyskaj Fragment`). Cyfra tylko gdy N ≠ 1 albo to dystans/limit/miano (`o 1 lokację`, `Limit: 1 / Erę`, `+1 Herezja`, `≥1 Fragment`, wyjątek: `Zyskaj 1 złoto` dla jednoznaczności ilości zasobu).
 4. **Akcent typograficzny (PnP):** **pogrubienie** = komendy §1 + lead etykiet; *kursywa* = pojęcia mechaniczne ze słownika (zamknięta lista w generatorze: Autodafé, Przesłuchanie, Werdykt, Hak, Marionetka, Relikwia, Fragment, Stos, Inkwizytor, Szlak Morski, Nasłanie, Upadek, Herezja…). Nie kursywuj Agent / Lokacja / złoto.
 5. **Zero prozy:** zakaz zdań wyjaśniających, teach A/B/C, „musisz mieć…”, „ten pożar nie…”. Smak → `lore` / `heresy_text`.
 6. **Łańcuch / bloki:** warunek = `Jeśli …:` + linia komendy. Osobne informacje (akcja vs warunek vs `Limit:`) = **pusta linia** między blokami — PnP rysuje separator.
@@ -40,7 +40,7 @@ Jedyny dozwolony lead instrukcji (po ewentualnym szablonie z §5). Forma: **Titl
 | Komenda | Znaczenie | Forma kanoniczna |
 | :--- | :--- | :--- |
 | **Przesuń** | Ruch figurki | `Przesuń swojego Agenta o 1 lokację.` · `Przesuń Inkwizytora do lokacji X.` |
-| **Zyskaj** | +Złoto / +Fragment / +Stos | `Zyskaj N złota.` · `Zyskaj Fragment.` · `Zyskaj Stos.` |
+| **Zyskaj** | +Złoto / +Fragment / +Stos | `Zyskaj 1 złoto.` / `Zyskaj N złota.` · `Zyskaj Fragment.` · `Zyskaj Stos.` |
 | **Załóż** | Żeton Hak z banku gry | `Załóż Hak na rywala.` = wolny cel (wybór dowolnego rywala). Z filtrem: `Załóż Hak na rywala z Herezją ≥ 4.` · `Załóż Hak na rywala z Agentem w…`. **Nie** kradzież Haka rywala. **Zakaz** synonimów: `dowolnego` / `wybranego` / `wskazanego` / `na gracza` (przy Hakach). |
 | **Wskaż** | Cel + Herezja na rywala | `Wskaż rywala: +N Herezja.` |
 | **Aresztuj** | Agent → Areszt w Lochach | `Aresztuj Agenta rywala [warunek lokacji].` |
