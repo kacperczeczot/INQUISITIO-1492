@@ -239,8 +239,9 @@ def run_full_ablation_audit(games_per_setup: int = 5000, seed: int = 42, workers
     for r in card_results:
         cid = r["id"]
         c = cards.get(cid)
-        pref = cid.split("-")[0]
-        fname = FACTION_NAMES.get(PREFIX_TO_FACTION_ID.get(pref))
+        pref = cid.split("-")[0].lower()
+        fid = PREFIX_TO_FACTION_ID.get(pref)
+        fname = FACTION_NAMES.get(fid, pref.upper()) if fid else pref.upper()
         
         base_share = base_res["faction_win_shares"].get(fname, 0.0)
         ablated_share = r["faction_win_shares"].get(fname, 0.0)
