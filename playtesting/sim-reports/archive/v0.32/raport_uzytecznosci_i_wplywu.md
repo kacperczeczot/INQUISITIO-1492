@@ -1,6 +1,6 @@
 # Raport Użyteczności i Wpływu Elementów Gry (Ablation & Impact Audit) — Wersja: v0.32
 
-**Wersja Gry:** `v0.32` | **Data:** 2026-08-15 08:35 | **Próba:** 500 gier/setup (8000 gier/test) | **Czas Analizy:** 206.0s
+**Wersja Gry:** `v0.32` | **Data:** 2026-08-15 08:39 | **Próba:** 500 gier/setup (8000 gier/test) | **Czas Analizy:** 142.4s
 
 Raport przedstawia wyniki badania ablacyjnego (**Feature Importance / Ablation Study**).
 Dla każdego elementu zbadano zachowanie ekosystemu gry **po jego całkowitym wyłączeniu**.
@@ -136,83 +136,32 @@ Karty, których wyłączenie z talii **podnosi ogólny wynik zbalansowania gry**
 
 ---
 
-## 6. ⚙️ Wpływ Mechanik Systemowych i Reguł Gry (Ablacja Systemu)
+## 6. ⚙️ Ablacja Podsystemów i Ścieżek Zwycięstwa (Mechanics Ablation)
 
-Analiza wrażliwości ekosystemu gry na modyfikacje parametrów bazowych L1, warunków zwycięstwa L2 oraz dynamiki planszy L4.
+Badanie odporności gry na całkowite wyłączenie poszczególnych podsystemów, zasad lub ścieżek wygranej.
 
-### L1 — Rdzeń Systemu i Silnik Gry
+### Globalne Podsystemy
 
-| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |
+| Badany Scenariusz Ablacji | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Ekosystem Gry |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Próg Oskarżenia: 6/7/8 → 7/8/9** | 86.2 → 🟠 ** 67.9** (`-18.3`) | `-18.3 pkt` | 5.72 Er | 1.4% | 26.9% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Próg Oskarżenia: 6/7/8 → 5/6/7** | 86.2 → 🟠 ** 74.9** (`-11.3`) | `-11.3 pkt` | 5.43 Er | 1.1% | 25.9% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Limit Er: 10 → 11** | 86.2 → 🟡 ** 86.1** (`-0.1`) | `-0.1 pkt` | 5.57 Er | 0.4% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-| **Limit Er: 10 → 9** | 86.2 → 🟡 ** 85.6** (`-0.6`) | `-0.6 pkt` | 5.55 Er | 2.9% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-| **Złoto startowe: 3/3/2zł → 4/4/3zł** | 86.2 → 🟠 ** 72.6** (`-13.6`) | `-13.6 pkt` | 5.42 Er | 1.1% | 24.3% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Złoto startowe: 3/3/2zł → 2/2/1zł** | 86.2 → 🔴 ** 44.5** (`-41.7`) | `-41.7 pkt` | 5.87 Er | 1.8% | 27.3% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Agenci: 3 → 4** | 86.2 → 🟡 ** 83.8** (`-2.4`) | `-2.4 pkt` | 5.52 Er | 1.0% | 26.2% | 🟠 Umiarkowany spadek zbalansowania |
-| **Agenci: 3 → 2** | 86.2 → 🟠 ** 64.3** (`-21.9`) | `-21.9 pkt` | 5.76 Er | 2.0% | 27.0% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Limit ręki: 5 → 6** | 86.2 → 🔴 ** 57.4** (`-28.8`) | `-28.8 pkt` | 5.36 Er | 0.8% | 21.2% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Limit ręki: 5 → 4** | 86.2 → 🟠 ** 64.8** (`-21.4`) | `-21.4 pkt` | 5.84 Er | 2.2% | 32.8% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Cooldown Autodafé: 3 → 4 Ery** | 86.2 → 🟢 ** 90.1** (`⬆️ +3.9`) | `+3.9 pkt` | 5.57 Er | 1.2% | 26.3% | 🟢 Zysk balansu — parametr warto rozważyć do trwałej adaptacji |
-| **Cooldown Autodafé: 3 → 2 Ery** | 86.2 → 🟡 ** 87.0** (`⬆️ +0.8`) | `+0.8 pkt` | 5.55 Er | 1.2% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
+| **Talia Czasu (Kronika Dziejów): Całkowite WYŁĄCZENIE** | 86.2 → 🟠 ** 66.8** (`-19.4`) | `-19.4 pkt` | 5.93 Er | 2.9% | 27.5% | 🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry |
+| **Autodafé: Całkowite WYŁĄCZENIE (brak kary śmierci)** | 86.2 → 🔴 ** 28.0** (`-58.2`) | `-58.2 pkt` | 5.75 Er | 2.3% | 26.9% | 🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry |
+| **Cooldown Autodafé: WYŁĄCZENIE (Autodafé co turę)** | 86.2 → 🟡 ** 83.8** (`-2.4`) | `-2.4 pkt` | 5.53 Er | 1.1% | 26.2% | ⚪ Wpływ neutralny / mechanika opcjonalna |
+| **Ruch Inkwizytora: WYŁĄCZENIE (Inkwizytor stoi w miejscu)** | 86.2 → 🟡 ** 76.7** (`-9.5`) | `-9.5 pkt` | 5.37 Er | 0.8% | 25.6% | 🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność |
+| **Złoto Startowe: WYŁĄCZENIE (Start z 0 zł)** | 86.2 → 🔴 ** 18.8** (`-67.4`) | `-67.4 pkt` | 6.15 Er | 3.4% | 30.5% | 🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry |
+| **Limit Ręki: Redukcja do 4 kart (Presja dociągu)** | 86.2 → 🟠 ** 64.8** (`-21.4`) | `-21.4 pkt` | 5.84 Er | 2.2% | 32.8% | 🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry |
 
-### L2 — Warunki Zwycięstwa Frakcji
+### Ścieżki Zwycięstwa
 
-| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |
+| Badany Scenariusz Ablacji | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Ekosystem Gry |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Oficjum Stosy: 3/4/4 → 4/5/5** | 86.2 → 🔴 ** 58.8** (`-27.4`) | `-27.4 pkt` | 5.66 Er | 1.5% | 26.6% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Oficjum Stosy: 3/4/4 → 2/3/3** | 86.2 → 🔴 ** 35.9** (`-50.3`) | `-50.3 pkt` | 5.36 Er | 0.8% | 25.6% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Oficjum Skazania: 2 → 3** | 86.2 → 🟡 ** 76.0** (`-10.2`) | `-10.2 pkt` | 5.61 Er | 1.3% | 26.5% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Oficjum Skazania: 2 → 1** | 86.2 → 🔴 ** 25.9** (`-60.3`) | `-60.3 pkt` | 4.63 Er | 0.6% | 22.4% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Cienie Relikwie: 2 → 3** | 86.2 → 🔴 ** 25.6** (`-60.6`) | `-60.6 pkt` | 5.92 Er | 1.9% | 27.4% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Cienie Relikwie: 2 → 1** | 86.2 → 🔴 ** 25.6** (`-60.6`) | `-60.6 pkt` | 4.02 Er | 0.5% | 21.3% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Cienie Era: 5 → 6** | 86.2 → 🟡 ** 87.8** (`⬆️ +1.6`) | `+1.6 pkt` | 5.58 Er | 1.2% | 26.4% | 🟢 Zysk balansu — parametr warto rozważyć do trwałej adaptacji |
-| **Cienie Era: 5 → 4** | 86.2 → 🟡 ** 86.7** (`⬆️ +0.5`) | `+0.5 pkt` | 5.56 Er | 1.2% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-| **Korona Era: 6/5/5 → 7/6/6** | 86.2 → 🟠 ** 60.2** (`-26.0`) | `-26.0 pkt` | 5.69 Er | 1.2% | 26.8% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Korona Era: 6/5/5 → 5/4/4** | 86.2 → 🟡 ** 83.0** (`-3.2`) | `-3.2 pkt` | 5.45 Er | 1.2% | 25.9% | 🟠 Umiarkowany spadek zbalansowania |
-| **Korona Dekrety: 2 → 3** | 86.2 → 🔴 ** 24.3** (`-61.9`) | `-61.9 pkt` | 5.77 Er | 2.5% | 27.0% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Korona Dekrety: 2 → 1** | 86.2 → 🔴 ** 24.3** (`-61.9`) | `-61.9 pkt` | 5.24 Er | 0.3% | 25.1% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Korona Haki: 0 → 1** | 86.2 → 🔴 ** 42.4** (`-43.8`) | `-43.8 pkt` | 5.63 Er | 1.3% | 26.6% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Kabała Fragmenty: 3 → 4** | 86.2 → 🟠 ** 74.3** (`-11.9`) | `-11.9 pkt` | 5.65 Er | 1.6% | 26.6% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Kabała Fragmenty: 3 → 2** | 86.2 → 🟡 ** 76.7** (`-9.5`) | `-9.5 pkt` | 5.53 Er | 1.1% | 26.2% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Kabała Era: 7/6/6 → 8/7/7** | 86.2 → 🔴 ** 50.8** (`-35.4`) | `-35.4 pkt` | 5.73 Er | 1.4% | 26.9% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Kabała Era: 7/6/6 → 6/5/5** | 86.2 → 🔴 ** 34.2** (`-52.0`) | `-52.0 pkt` | 5.37 Er | 1.0% | 25.5% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Kabała Pasmo: 3–8 → 2–8** | 86.2 → 🟡 ** 86.4** (`⬆️ +0.2`) | `+0.2 pkt` | 5.56 Er | 1.2% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-| **Kabała Pasmo: 3–8 → 4–8** | 86.2 → 🟡 ** 86.6** (`⬆️ +0.4`) | `+0.4 pkt` | 5.58 Er | 1.2% | 26.4% | ⚪ Wpływ neutralny / zrównoważony |
-| **Kabała Pasmo: 3–8 → 3–9** | 86.2 → 🟡 ** 86.1** (`-0.1`) | `-0.1 pkt` | 5.55 Er | 1.0% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-| **Kabała Pasmo: 3–8 → 3–7** | 86.2 → 🟡 ** 87.1** (`⬆️ +0.9`) | `+0.9 pkt` | 5.60 Er | 1.6% | 26.4% | ⚪ Wpływ neutralny / zrównoważony |
-| **Gildia Upadki (default/bez SO): 2/3 → 3/4** | 86.2 → 🔴 ** 27.4** (`-58.8`) | `-58.8 pkt` | 5.79 Er | 1.6% | 27.0% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Gildia Upadki (default/bez SO): 2/3 → 1/2** | 86.2 → 🔴 ** 24.2** (`-62.0`) | `-62.0 pkt` | 4.96 Er | 0.8% | 24.7% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Gildia Upadki (z Oficjum): 2 → 3** | 86.2 → 🔴 ** 45.2** (`-41.0`) | `-41.0 pkt` | 5.71 Er | 1.3% | 26.7% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Gildia Upadki (z Oficjum): 2 → 1** | 86.2 → 🔴 ** 45.2** (`-41.0`) | `-41.0 pkt` | 5.09 Er | 1.0% | 25.2% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Gildia Upadki (bez Oficjum): 3 → 4** | 86.2 → 🟠 ** 74.3** (`-11.9`) | `-11.9 pkt` | 5.65 Er | 1.5% | 26.6% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Gildia Upadki (bez Oficjum): 3 → 2** | 86.2 → 🟠 ** 72.2** (`-14.0`) | `-14.0 pkt` | 5.43 Er | 1.0% | 25.9% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-
-### L4 — Warianty Niszowe, Edykty i Plansza
-
-| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Edykty Czasu: co 1 Erę → co 1 Erę** | 🟡 ** 86.2** | `0.0 pkt` | 5.57 Er | 1.2% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-| **Edykty Czasu: co 1 Erę → co 2 Ery** | 86.2 → 🟡 ** 81.9** (`-4.3`) | `-4.3 pkt` | 5.76 Er | 1.7% | 27.0% | 🟠 Umiarkowany spadek zbalansowania |
-| **Szlak Morski: Era 5 → Era 4** | 86.2 → 🟡 ** 87.6** (`⬆️ +1.4`) | `+1.4 pkt` | 5.55 Er | 1.2% | 26.3% | 🟢 Zysk balansu — parametr warto rozważyć do trwałej adaptacji |
-| **Szlak Morski: Era 5 → Era 6** | 86.2 → 🟡 ** 82.7** (`-3.5`) | `-3.5 pkt` | 5.58 Er | 1.2% | 26.4% | 🟠 Umiarkowany spadek zbalansowania |
-| **Inkwizytor Patrol: ruch 1 → 2** | 86.2 → 🟢 ** 91.7** (`⬆️ +5.5`) | `+5.5 pkt` | 5.59 Er | 1.2% | 26.4% | 🟢 Zysk balansu — parametr warto rozważyć do trwałej adaptacji |
-| **Inkwizytor Patrol: ruch 1 → 0** | 86.2 → 🟡 ** 76.7** (`-9.5`) | `-9.5 pkt` | 5.37 Er | 0.8% | 25.6% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-| **Werdykt: jawny → tajny** | 🟡 ** 86.2** | `0.0 pkt` | 5.57 Er | 1.2% | 26.3% | ⚪ Wpływ neutralny / zrównoważony |
-
-### L1 — Ekstremalna Ablacja
-
-| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Autodafé bez Cooldownu (możliwość co turę)** | 86.2 → 🟡 ** 83.8** (`-2.4`) | `-2.4 pkt` | 5.53 Er | 1.1% | 26.2% | 🟠 Umiarkowany spadek zbalansowania |
-| **Startowe Złoto zredukowane (-2 zł)** | 86.2 → 🔴 ** 18.8** (`-67.4`) | `-67.4 pkt` | 6.15 Er | 3.4% | 30.5% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
-
-### L4 — Ekstremalna Ablacja
-
-| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Gra bez Kroniki Dziejów (Talia Czasu OFF)** | 86.2 → 🟠 ** 66.8** (`-19.4`) | `-19.4 pkt` | 5.93 Er | 2.9% | 27.5% | 🔴 Silna destabilizacja gry — kluczowy filar stabilności |
+| **Święte Oficjum: Wyłączenie Skazań (Wygrana TYLKO przez Stosy)** | 86.2 → 🟡 ** 75.9** (`-10.3`) | `-10.3 pkt` | 5.61 Er | 1.3% | 26.5% | 🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność |
+| **Święte Oficjum: Wyłączenie Stosów (Wygrana TYLKO przez Skazania)** | 86.2 → 🔴 ** 25.9** (`-60.3`) | `-60.3 pkt` | 5.75 Er | 2.3% | 26.9% | 🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry |
+| **Cienie Al-Andalus: Wyłączenie Szlaku Morskiego (Tylko Ląd)** | 86.2 → 🟡 ** 82.6** (`-3.6`) | `-3.6 pkt` | 5.58 Er | 1.2% | 26.4% | ⚪ Wpływ neutralny / mechanika opcjonalna |
+| **Cienie Al-Andalus: Szlak Morski Otwarty od Ery 1** | 86.2 → 🟡 ** 79.4** (`-6.8`) | `-6.8 pkt` | 5.51 Er | 1.2% | 26.2% | 🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność |
+| **Korona & Borgiowie: Wyłączenie Wymogu Haków (Tylko Dekrety)** | 🟡 ** 86.2** | `0.0 pkt` | 5.57 Er | 1.2% | 26.3% | ⚪ Wpływ neutralny / mechanika opcjonalna |
+| **Kabała z Toledo: Wyłączenie Pasma Herezji (Bezpieczna Iluminacja)** | 86.2 → 🟡 ** 81.7** (`-4.5`) | `-4.5 pkt` | 5.54 Er | 0.9% | 26.2% | ⚪ Wpływ neutralny / mechanika opcjonalna |
+| **Gildia Cieni: Wyłączenie Modyfikatora 'Bez Oficjum' (Stały próg upadków)** | 86.2 → 🟠 ** 72.2** (`-14.0`) | `-14.0 pkt` | 5.43 Er | 1.0% | 25.9% | 🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność |
 
 ---
 

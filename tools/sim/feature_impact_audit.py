@@ -197,47 +197,39 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
 
     print(f"   ✔ Zbadano ablacyjnie {len(card_results)} kart.\n")
 
-    # 3. SYSTEM MECHANICS ABLATION TASKS (L1 Core, L2 Victory Conditions, L4 Dynamics & Variants)
-    print("⚙️ [3/3] Badanie ablacyjne mechanik systemowych (L1 Rdzeń, L2 Zwycięstwa, L4 Warianty)...")
-    
-    import audit_level1
-    import audit_level2
-    import audit_level4
+    # 3. SYSTEM MECHANICS & VICTORY PATH ABLATION (Turning complete subsystems ON/OFF)
+    print("⚙️ [3/3] Badanie czysto ablacyjne podsystemów i ścieżek zwycięstwa (Ablation Scenarios)...")
 
-    l1_raw = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
-    l2_raw = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
-    l4_raw = [t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"]
+    ablation_scenarios = [
+        # --- PODSYSTEMY GLOBALNE ---
+        ("ABL_TIME_DECK_OFF", "Talia Czasu (Kronika Dziejów): Całkowite WYŁĄCZENIE", {"no_time_deck": True}, "Globalne Podsystemy"),
+        ("ABL_AUTODAFE_OFF", "Autodafé: Całkowite WYŁĄCZENIE (brak kary śmierci)", {"so_stacks_offset": 99, "cooldown_offset": 99}, "Globalne Podsystemy"),
+        ("ABL_AUTODAFE_NO_COOLDOWN", "Cooldown Autodafé: WYŁĄCZENIE (Autodafé co turę)", {"cooldown_offset": -3}, "Globalne Podsystemy"),
+        ("ABL_INQUISITOR_FREEZE", "Ruch Inkwizytora: WYŁĄCZENIE (Inkwizytor stoi w miejscu)", {"inquisitor_speed": 0}, "Globalne Podsystemy"),
+        ("ABL_START_GOLD_ZERO", "Złoto Startowe: WYŁĄCZENIE (Start z 0 zł)", {"start_gold_offset": -3}, "Globalne Podsystemy"),
+        ("ABL_HAND_LIMIT_LOW", "Limit Ręki: Redukcja do 4 kart (Presja dociągu)", {"hand_limit_offset": -1}, "Globalne Podsystemy"),
 
-    # Extra extreme ablation scenarios
-    extra_ablations = [
-        ("SYS_NO_TIME_DECK", "Gra bez Kroniki Dziejów (Talia Czasu OFF)", {"no_time_deck": True}, "L4"),
-        ("SYS_NO_COOLDOWN", "Autodafé bez Cooldownu (możliwość co turę)", {"cooldown_offset": -3}, "L1"),
-        ("SYS_START_GOLD_1", "Startowe Złoto zredukowane (-2 zł)", {"start_gold_offset": -2}, "L1"),
+        # --- ABLACJA ŚCIEŻEK ZWYCIĘSTWA (VICTORY PATHS) ---
+        ("ABL_SO_ONLY_STACKS", "Święte Oficjum: Wyłączenie Skazań (Wygrana TYLKO przez Stosy)", {"so_condemns_offset": 99}, "Ścieżki Zwycięstwa"),
+        ("ABL_SO_ONLY_CONDEMNS", "Święte Oficjum: Wyłączenie Stosów (Wygrana TYLKO przez Skazania)", {"so_stacks_offset": 99}, "Ścieżki Zwycięstwa"),
+        ("ABL_CAA_NO_SEA_ROUTE", "Cienie Al-Andalus: Wyłączenie Szlaku Morskiego (Tylko Ląd)", {"sea_route_era": 99}, "Ścieżki Zwycięstwa"),
+        ("ABL_CAA_EARLY_SEA_ROUTE", "Cienie Al-Andalus: Szlak Morski Otwarty od Ery 1", {"sea_route_era": 1}, "Ścieżki Zwycięstwa"),
+        ("ABL_KB_NO_HOOK_GATE", "Korona & Borgiowie: Wyłączenie Wymogu Haków (Tylko Dekrety)", {"kb_hooks": 0}, "Ścieżki Zwycięstwa"),
+        ("ABL_KT_NO_HERESY_GATE", "Kabała z Toledo: Wyłączenie Pasma Herezji (Bezpieczna Iluminacja)", {"kt_heresy_band": (0, 99)}, "Ścieżki Zwycięstwa"),
+        ("ABL_GC_STATIC_FALLS", "Gildia Cieni: Wyłączenie Modyfikatora 'Bez Oficjum' (Stały próg upadków)", {"gc_falls_no_oficjum_offset": -1}, "Ścieżki Zwycięstwa"),
     ]
 
     sys_tasks = []
     sys_categories: dict[str, str] = {}
 
-    for t in l1_raw:
-        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
-        sys_categories[t[0]] = "L1 — Rdzeń Systemu i Silnik Gry"
-
-    for t in l2_raw:
-        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
-        sys_categories[t[0]] = "L2 — Warunki Zwycięstwa Frakcji"
-
-    for t in l4_raw:
-        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
-        sys_categories[t[0]] = "L4 — Warianty Niszowe, Edykty i Plansza"
-
-    for t in extra_ablations:
-        sys_tasks.append((t[0], t[1], t[2], games_per_setup, seed, setups))
-        sys_categories[t[0]] = f"{t[3]} — Ekstremalna Ablacja"
+    for s_id, s_name, s_params, s_cat in ablation_scenarios:
+        sys_tasks.append((s_id, s_name, s_params, games_per_setup, seed, setups))
+        sys_categories[s_id] = s_cat
 
     with ProcessPoolExecutor(max_workers=min(workers, len(sys_tasks))) as executor:
         sys_results = list(executor.map(_run_ablation_task, sys_tasks))
 
-    print(f"   ✔ Zbadano ablacyjnie {len(sys_results)} mechanik i wariantów systemowych.\n")
+    print(f"   ✔ Zbadano ablacyjnie {len(sys_results)} kluczowych podsystemów i ścieżek gry.\n")
 
     # 4. ANALYZE AND FORMAT REPORT
     print("📄 Generowanie i formatowanie raportu użyteczności...")
@@ -385,12 +377,12 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
         "",
         "---",
         "",
-        "## 6. ⚙️ Wpływ Mechanik Systemowych i Reguł Gry (Ablacja Systemu)",
+        "## 6. ⚙️ Ablacja Podsystemów i Ścieżek Zwycięstwa (Mechanics Ablation)",
         "",
-        "Analiza wrażliwości ekosystemu gry na modyfikacje parametrów bazowych L1, warunków zwycięstwa L2 oraz dynamiki planszy L4.",
+        "Badanie odporności gry na całkowite wyłączenie poszczególnych podsystemów, zasad lub ścieżek wygranej.",
     ])
 
-    for cat_name in ["L1 — Rdzeń Systemu i Silnik Gry", "L2 — Warunki Zwycięstwa Frakcji", "L4 — Warianty Niszowe, Edykty i Plansza", "L1 — Ekstremalna Ablacja", "L4 — Ekstremalna Ablacja"]:
+    for cat_name in ["Globalne Podsystemy", "Ścieżki Zwycięstwa"]:
         cat_results = [r for r in sys_results if sys_categories.get(r["id"]) == cat_name]
         if not cat_results:
             continue
@@ -399,7 +391,7 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
             "",
             f"### {cat_name}",
             "",
-            "| Badany Wariant / Parametr | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Balans |",
+            "| Badany Scenariusz Ablacji | Global Score | $\Delta$ Global | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Ekosystem Gry |",
             "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
         ])
 
@@ -408,13 +400,13 @@ def run_full_ablation_audit(games_per_setup: int = 1000, seed: int = 42, workers
             dg_str = f"+{dg:.1f}" if dg > 0 else f"{dg:.1f}"
             
             if dg >= 1.0:
-                diag = "🟢 Zysk balansu — parametr warto rozważyć do trwałej adaptacji"
+                diag = "🟢 Zysk balansu — mechanika w obecnej formie obciążała stół"
+            elif dg <= -15.0:
+                diag = "🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla gry"
             elif dg <= -5.0:
-                diag = "🔴 Silna destabilizacja gry — kluczowy filar stabilności"
-            elif dg <= -1.0:
-                diag = "🟠 Umiarkowany spadek zbalansowania"
+                diag = "🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność"
             else:
-                diag = "⚪ Wpływ neutralny / zrównoważony"
+                diag = "⚪ Wpływ neutralny / mechanika opcjonalna"
 
             lines.append(
                 f"| **{r['name']}** | {score_pair(base_res['global_score'], r['global_score'], colored=True)} | "
