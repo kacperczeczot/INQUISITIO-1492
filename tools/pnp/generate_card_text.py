@@ -95,7 +95,7 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             parts.append("Przesuń swojego Agenta o 1 lokację.")
     elif act == "gain_gold":
         if gold == 1:
-            parts.append("Zyskaj złoto.")
+            parts.append("Zyskaj 1 złoto.")
         elif gold and gold >= 2:
             noun = declension_pl(gold, "złoto", "złota", "złota")
             parts.append(f"Zyskaj {gold} {noun}.")
@@ -174,7 +174,7 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
     elif act == "grant_fragment":
         parts.append("Zyskaj Fragment.")
         if condition == "agent_in_dungeon_or_tribunal":
-            parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.")
+            parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto.")
 
     # 4. Zwroty Limitów Anti-AP
     inq_lim = data.get("inquisitor_send_limit")

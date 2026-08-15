@@ -86,7 +86,7 @@ def format_card_text(cid: str, data: dict) -> str:
             parts.append("Przesuń swojego Agenta o 1 lokację.")
     elif act == "gain_gold":
         if gold == 1:
-            parts.append("Zyskaj złoto.")
+            parts.append("Zyskaj 1 złoto.")
         elif gold and gold >= 2:
             noun = declension_pl(gold, "złoto", "złota", "złota")
             parts.append(f"Zyskaj {gold} {noun}.")
@@ -165,7 +165,7 @@ def format_card_text(cid: str, data: dict) -> str:
     elif act == "grant_fragment":
         parts.append("Zyskaj Fragment.")
         if condition == "agent_in_dungeon_or_tribunal":
-            parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj złoto.")
+            parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto.")
     elif act == "mark_fall":
         parts.append("Oznacz Upadek wobec tego rywala.")
 
