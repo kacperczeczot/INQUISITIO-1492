@@ -23,7 +23,7 @@ Dozwolone wyjątki to tożsamość stołu, nie liczba krzeseł: np. Gildia **3 u
 Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 
 - **Limit kart na ręce:** `5 kart`
-- **Ekonomia startowa:** `3 złote` na start · Przychód `+1 złoty` na początku tury w E.II
+- **Ekonomia:** `3 złote` na start (w 5p: `2 złote`) · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)
 - **Maksymalny limit Er:** `10 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
 - **Strefy i pasma Herezji:** 
   - **Czysta:** `0–3 Herezji`

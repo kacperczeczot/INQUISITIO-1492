@@ -17,15 +17,11 @@
 
 ---
 
-## Przebieg Ery (skrót A)
+## Przebieg Ery (3 Fazy)
 
-1. **Inkwizytor** — nasłanie (opcjonalnie, 1×/gracz/Erę) → ruch 0–1 lokacji → ewentualne Autodafé (max co 3 Ery).
-2. **Plan** — na początek tury **+1 złoto**; każdy zagrywa **2** zakryte karty pod lokacje (**płać przy zagraniu**); opcjonalnie ruch Agenta o 1.
-3. **Odkrycie** — lokacje 1→5: efekty, Herezja, areszty (jeśli karta).
-4. **Dwór** — jeśli ktoś w Krytycznej: oskarżenie → Werdykt.
-5. **Czystka** — dobór do 5; przesuń 1. gracza.
-
-*(Pełne E.0–E.VI, w tym Lochy: [`ksiega.md`](ksiega.md).)*
+1. **Faza I: Intryga** — 2 rundy naprzemiennie: Zagraj zakrytą kartę pod lokację (płać koszt) **LUB** Akcja Gospodarcza (+1 zł); opcjonalnie ruch Agenta o 1 / Hak.
+2. **Faza II: Sąd** — 1. Patrol Inkwizytora (0–1) i Autodafé $\rightarrow$ 2. Odkrycie kart (1→5) $\rightarrow$ 3. Lochy (przesłuchania) $\rightarrow$ 4. Dwór (Werdykt stołu przy Krytycznej).
+3. **Faza III: Kronika & Czystka** — Sprawdź cele zwycięstwa $\rightarrow$ Dobierz karty do limitu **5** + Odbierz dochód **+1 złoto** $\rightarrow$ Odkryj **1 kartę Kroniki Dziejów** (prawo na kolejną Erę) $\rightarrow$ Przesuń 1. gracza.
 
 ---
 

@@ -5,7 +5,7 @@
 # Wielki Inkwizytor
 
 > **Źródło szczegółów** dla haseł [Inkwizytor](../../docs/rules/slownik.md#inkwizytor), [Autodafé](../../docs/rules/slownik.md#autodafé), [Nasłanie](../../docs/rules/slownik.md#nasłanie) w [`slownik.md`](../../docs/rules/slownik.md).  
-> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.I) · [`poziom-herezji.md`](poziom-herezji.md) · [`../board/locations.md`](../board/locations.md)
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (Faza II: Sąd) · [`poziom-herezji.md`](poziom-herezji.md) · [`../board/locations.md`](../board/locations.md)
 
 NPC na planszy — **broń publiczna**. Spala **lokacje**; gracze manewrują wokół niego albo nasyłają go na siebie nawzajem. Święte Oficjum ma łatwiejszy dostęp do nasłań, **nigdy** 100% własności.
 
@@ -20,7 +20,7 @@ NPC na planszy — **broń publiczna**. Spala **lokacje**; gracze manewrują wok
 
 > **Obława** nie jest trzecim żetonem stanu — to efekt karty / Talii Czasu / „miękkie” Autodafé opisane tekstem.
 
-## Faza I — procedura
+## Procedura Wkroczenia Inkwizytora (Faza II, Krok 1)
 
 1. **Reset / sprawdź** czy Autodafé jest dostępne (min. 2 pełne Ery od ostatniego, chyba że karta specjalna łamie).
 2. **Nasłania:** każdy gracz może raz na Erę ogłosić nasłanie (karta, Hak, reguła Oficjum). Konflikt: Oficjum wygrywa; potem 1. gracz; potem najniższa Herezja.

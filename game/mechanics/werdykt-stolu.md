@@ -5,7 +5,7 @@
 # Werdykt stołu
 
 > **Źródło szczegółów** dla haseł [Werdykt](../../docs/rules/slownik.md#werdykt), [Oskarżenie](../../docs/rules/slownik.md#oskarżenie), [Stos](../../docs/rules/slownik.md#stos) w [`slownik.md`](../../docs/rules/slownik.md).  
-> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.V) · [`poziom-herezji.md`](poziom-herezji.md) · [`haki.md`](haki.md)
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (Faza II: Sąd) · [`poziom-herezji.md`](poziom-herezji.md) · [`haki.md`](haki.md)
 
 Gdy gracz jest w strefie **Krytycznej** (Herezja ≥ **6** w 3p / ≥ **7** w 4–5p), inny gracz może **Rzucić Oskarżenie**.
 

@@ -5,7 +5,7 @@
 # Haki
 
 > **Źródło szczegółów** dla haseł [Hak](../../docs/rules/slownik.md#hak), [Wymuszenie](../../docs/rules/slownik.md#wymuszenie) w [`slownik.md`](../../docs/rules/slownik.md).  
-> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.II) · [`lochy-przesluchania.md`](lochy-przesluchania.md) · [`werdykt-stolu.md`](werdykt-stolu.md)
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (Faza I: Intryga) · [`lochy-przesluchania.md`](lochy-przesluchania.md) · [`werdykt-stolu.md`](werdykt-stolu.md)
 
 **Warstwa B.** Twarda waluta strachu — **jeden typ żetonu**.
 

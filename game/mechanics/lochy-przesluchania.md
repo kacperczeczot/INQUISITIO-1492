@@ -5,7 +5,7 @@
 # Lochy i Przesłuchania
 
 > **Źródło szczegółów** dla haseł [Lochy](../../docs/rules/slownik.md#lochy), [Przesłuchanie](../../docs/rules/slownik.md#przesłuchanie), [Marionetka](../../docs/rules/slownik.md#marionetka), [Areszt](../../docs/rules/slownik.md#areszt) w [`slownik.md`](../../docs/rules/slownik.md).  
-> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (E.IV) · [`haki.md`](haki.md) · [`poziom-herezji.md`](poziom-herezji.md)
+> **Patrz także:** [`ksiega.md`](../../docs/rules/ksiega.md) (Faza II: Sąd) · [`haki.md`](haki.md) · [`poziom-herezji.md`](poziom-herezji.md)
 
 **Warstwa B.** Władza nad ciałami: areszt nie kończy się „wykupem za złoto”. Kończy się **złamaniem**, **Hakiem** albo publiczną Herezją.
 

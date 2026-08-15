@@ -29,9 +29,9 @@ Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** 
 
 ## Czystka (faza)
 
-**E.VI:** dobór do ręki 5; odkryj 1 edykt Kroniki Dziejów; przesuń 1. gracza.
+**Faza III (Kronika & Czystka):** Sprawdzenie natychmiastowych celów zwycięstwa; **Uzupełnienie:** dobór kart do limitu 5 + pobranie dochodu **+1 złoto** z banku; odkrycie karty Kroniki Dziejów; przesuń znacznik 1. gracza.
 
-**Patrz także:** [Kronika Dziejów](#kronika-dziejów), [Era](#era) · [`ksiega.md`](ksiega.md)
+**Patrz także:** [Zwycięstwo](#zwycięstwo), [Era](#era), [Złoto](#złoto) · [`ksiega.md`](ksiega.md)
 
 ---
 
@@ -45,7 +45,7 @@ Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: zwykle 2 Dekrety + 
 
 ## Edykt
 
-Karta Kroniki Dziejów lub efekt zmieniający prawo Ery. Odkrywany w **E.VI** (1 / Erę). Tekst edyktu obowiązuje według karty.
+Karta Kroniki Dziejów lub efekt zmieniający prawo Ery. Odkrywany w **Fazie III (Kronika)** (1 / Erę jako prawo na kolejną rundę). Tekst edyktu obowiązuje w danej Erze według karty.
 
 **Patrz także:** [Kronika Dziejów](#kronika-dziejów), [Edykt karty](#edykt-karty)
 
@@ -61,7 +61,7 @@ Karta Kroniki Dziejów lub efekt zmieniający prawo Ery. Odkrywany w **E.VI** (1
 
 ## Era
 
-Jedna pełna pętla wydarzeń ramowych **E.0–E.VI**. Limit gry: **8** Er (potem remis postępu → najbliższy celowi, potem najniższa Herezja).
+Jedna pełna runda składająca się z **3 Faz** (I Intryga, II Sąd, III Kronika & Czystka). Limit gry: **10** Er (potem remis postępu → najbliższy celowi, potem najniższa Herezja).
 
 **Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Zwycięstwo](#zwycięstwo) · [`ksiega.md`](ksiega.md)
 
@@ -101,7 +101,7 @@ Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4�
 
 ## Inicjacja karty
 
-**Suplement I:** deklaracja → koszty (płać przy zagraniu) → efekt (przy odkryciu lub wg tekstu). Język efektu → leksykon.
+**Suplement I:** deklaracja → koszty (płać przy zagraniu) → efekt (przy odkryciu w Fazie II lub wg tekstu). Język efektu → leksykon.
 
 **Patrz także:** [Fiasko](#fiasko), [Limit / Erę](#limit--erę) · [`ksiega.md`](ksiega.md) · [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md)
 
@@ -109,7 +109,7 @@ Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4�
 
 ## Inkwizytor
 
-Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **E.I:** nasłania → ruch 0–1 → ewentualne Autodafé. Bez nasłania ruch wybiera gracz z najniższą Herezją (remis → 1. gracz).
+Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **Fazie II (Sąd):** nasłania → ruch 0–1 → ewentualne Autodafé. Bez nasłania ruch wybiera gracz z najniższą Herezją (remis → 1. gracz).
 
 **Patrz także:** [Nasłanie](#nasłanie), [Autodafé](#autodafé) · [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md)
 
@@ -117,7 +117,7 @@ Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **E.I:** nasłania
 
 ## Karty (typy)
 
-**Akcja** — zakryta pod lokacją w E.II. **Reakcja** — okno reakcji przy warunku. **Specjalna** — często `Łamie regułę`. Anatomia: SCHEMA; komendy: leksykon (Title Case; `EDYKT`/`DEKRET` = CAPS; zero prozy w `effect`).
+**Akcja** — zagrywana zakryta pod lokacją w Fazie I (Intryga). **Reakcja** — okno reakcji przy warunku. **Specjalna** — często `Łamie regułę`. Anatomia: SCHEMA; komendy: leksykon (Title Case; `EDYKT`/`DEKRET` = CAPS; zero prozy w `effect`).
 
 **Patrz także:** [Okno reakcji](#okno-reakcji), [Edykt karty](#edykt-karty) · [`../../game/cards/SCHEMA.md`](../../game/cards/SCHEMA.md) · [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md)
 
@@ -125,7 +125,7 @@ Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **E.I:** nasłania
 
 ## Krytyczna
 
-Strefa Herezji **6–10 (3p)** lub **7–10 (4–5p)** — tożsamy z progiem oskarżenia. Inni gracze mogą **Rzucić Oskarżenie** (limit 1× przeciw temu graczowi / Erę).
+Strefa Herezji **6–10 (3p)** lub **7–10 (4–5p)** — tożsamy z progiem oskarżenia. Inni gracze mogą **Rzucić Oskarżenie** w Fazie II (limit 1× przeciw temu graczowi / Erę).
 
 **Patrz także:** [Herezja](#herezja), [Werdykt](#werdykt) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 
@@ -133,7 +133,7 @@ Strefa Herezji **6–10 (3p)** lub **7–10 (4–5p)** — tożsamy z progiem os
 
 ## Limit / Erę
 
-Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **max 2** karty Akcji na gracza na Erę (z opcją pasa). Autodafé: max co 3 Ery.  
+Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **max 2** akcje na gracza na Erę (zagranie karty lub Akcja Gospodarcza). Autodafé: max co 3 Ery.  
 **Maksymalnie** (np. max 2 Haki) = twardy cap posiadania, nie to samo co Limit / Erę.
 
 **Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Może / musi](#może--musi) · leksykon §2
@@ -150,7 +150,7 @@ Jedno z 5 miejsc na grafie (Trybunał → … → Gildia). Kolejność odkrywani
 
 ## Lochy
 
-Lokacja #3 + faza **E.IV**. Tu Areszt i **Przesłuchanie (procedura)**.
+Lokacja #3. Tu znajduje się strefa Aresztu oraz przeprowadzana jest procedura **Przesłuchania** w Fazie II (Sąd).
 
 **Patrz także:** [Areszt](#areszt), [Przesłuchanie](#przesłuchanie) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
 
@@ -158,7 +158,7 @@ Lokacja #3 + faza **E.IV**. Tu Areszt i **Przesłuchanie (procedura)**.
 
 ## Może / musi
 
-**Może** = opcjonalne (np. nasłanie, ruch Agenta, Autodafé jeśli wolno). Kroki **wydarzeń ramowych** E.* są obowiązkowe, o ile tekst nie mówi „opcjonalne”. Konflikt „czy muszę?” bez zapisu → [Wyrok surowy](#wyrok-surowy).
+**Może** = opcjonalne (np. nasłanie, ruch Agenta, Autodafé jeśli wolno). Kroki **wydarzeń ramowych** 3 Faz są obowiązkowe, o ile tekst nie mówi „opcjonalne”. Konflikt „czy muszę?” bez zapisu → [Wyrok surowy](#wyrok-surowy).
 
 **Patrz także:** [Okno reakcji](#okno-reakcji), [Limit / Erę](#limit--erę)
 
@@ -172,9 +172,9 @@ Raz na gracza na Erę: wskaż kierunek / lokację dla Inkwizytora. Konflikt nas�
 
 ---
 
-## Odkrycie (faza)
+## Odkrycie (krok Fazy II)
 
-**E.III:** lokacje 1→5 — odkryj karty od 1. gracza, efekty, Herezja, areszty, konflikty kontroli.
+**Faza II (Krok 2):** lokacje 1→5 — odkryj karty od 1. gracza, rozpatrz efekty, Herezję, areszty i konflikty kontroli.
 
 **Patrz także:** [Fiasko](#fiasko), [Inicjacja karty](#inicjacja-karty) · [`ksiega.md`](ksiega.md)
 
@@ -182,7 +182,7 @@ Raz na gracza na Erę: wskaż kierunek / lokację dla Inkwizytora. Konflikt nas�
 
 ## Okno reakcji
 
-Moment poza kolejką Planu, gdy warunek karty **Reakcja** jest spełniony. Opcjonalne; nie zastępuje wydarzeń ramowych.
+Moment poza kolejką Fazy Intrygi, gdy warunek karty **Reakcja** jest spełniony. Opcjonalne; nie zastępuje wydarzeń ramowych.
 
 **Patrz także:** [Karty (typy)](#karty-typy), [Wydarzenie ramowe](#wydarzenie-ramowe)
 
@@ -190,7 +190,7 @@ Moment poza kolejką Planu, gdy warunek karty **Reakcja** jest spełniony. Opcjo
 
 ## Oskarżenie
 
-Akcja gracza w **E.V** przeciw celowi w Krytycznej (1× przeciw temu graczowi / Erę). Uruchamia **Werdykt (procedura)**.
+Akcja gracza w **Fazie II (Dwór)** przeciw celowi w Krytycznej (1× przeciw temu graczowi / Erę). Uruchamia **Werdykt (procedura)**.
 
 **Patrz także:** [Krytyczna](#krytyczna), [Werdykt](#werdykt) · [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
 
@@ -206,7 +206,7 @@ Znacznik na Agencie po Przesłuchaniu. Raz / Erę kontroler rusza nim o 1 jak sw
 
 ## Przesłuchanie (procedura)
 
-1 / gracza / Erę w **E.IV**. Dostęp: Agent w Lochach lub karta. Wybór na aresztowanym rywalu: Marionetka **lub** Hak **lub** +2 Herezja właścicielowi.
+1 / gracza / Erę w **Fazie II (Lochy)**. Dostęp: Agent w Lochach lub karta. Wybór na aresztowanym rywalu: Marionetka **lub** Hak **lub** +2 Herezja właścicielowi.
 
 **Patrz także:** [Lochy](#lochy), [Hak](#hak) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
 
@@ -246,9 +246,9 @@ Typ karty trzymanej w ręce; zagranie w [oknie reakcji](#okno-reakcji) przy waru
 
 ## Kronika Dziejów
 
-Talia edyktów i wydarzeń (≥8). W **E.VI** odkryj **1** edykt. Zmienia prawo Ery / natychmiast wg tekstu.
+Talia 10 edyktów i wydarzeń miejskich (Toledo 1492). W **Fazie III (Kronika)** odkryj **1** kartę jako zwiastun prawa na nadchodzącą Erę.
 
-**Patrz także:** [Edykt](#edykt), [Czystka](#czystka)
+**Patrz także:** [Edykt](#edykt), [Faza III](#faza-iii)
 
 ---
 
@@ -270,7 +270,7 @@ Zużyj Hak (1 / gracza / Erę): ogłoś żądanie z listy; ofiara spełnia **alb
 
 ## Wydarzenie ramowe
 
-Obowiązkowy krok Ery **E.0–E.VI** (Start, Inkwizytor, Plan, Odkrycie, Lochy, Dwór, Czystka). Osobno od opcjonalnego [okna reakcji](#okno-reakcji).
+Obowiązkowy krok Ery w strukturze **3 Faz** (I Intryga, II Sąd, III Kronika & Czystka). Osobno od opcjonalnego [okna reakcji](#okno-reakcji).
 
 **Patrz także:** [Era](#era) · [`ksiega.md`](ksiega.md)
 
@@ -294,9 +294,9 @@ Prawo Trybunału (hierarchia dokumentów) · Edykt karty · Zasada delty · Wyro
 
 ## Złoto
 
-Waluta kosztów kart i łapówek. Start **3** (w 5p: **2**); dopływ złota **+1** na początek swojej tury w E.II. Płatność **przy zagraniu** (kanon reguł).
+Waluta kosztów kart i łapówek. Start **3** (w 5p: **2**); dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga). Płatność **przy zagraniu** (kanon reguł).
 
-**Patrz także:** [Inicjacja karty](#inicjacja-karty) · [`ksiega.md`](ksiega.md)
+**Patrz także:** [Inicjacja karty](#inicjacja-karty), [Czystka](#czystka) · [`ksiega.md`](ksiega.md)
 
 ---
 

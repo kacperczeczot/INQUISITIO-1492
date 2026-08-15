@@ -23,7 +23,7 @@
 | Plik | Rola |
 | :--- | :--- |
 | [`teach-sheet.md`](teach-sheet.md) | Nauka przy stole (1–2 strony) — **nie jest księgą** |
-| [`ksiega.md`](ksiega.md) | Kompletna księga: komponenty, setup, E.0–E.VI, zwycięstwo, freeze, suplementy-lite |
+| [`ksiega.md`](ksiega.md) | Kompletna księga: komponenty, setup, 3 Fazy Ery, zwycięstwo, freeze, suplementy-lite |
 | [`slownik.md`](slownik.md) | Słowniczek A–Z — **pierwszy lookup** przy stole |
 | [`../../game/mechanics/`](../../game/mechanics/) | Głębokie procedury pod hasła słownika |
 | [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md) | Zamknięty język `effect` na kartach |

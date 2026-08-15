@@ -8,10 +8,15 @@ from inquisitio.engine.state import FactionId, GameState
 
 
 def eligible_accused(state: GameState) -> list[FactionId]:
+    if state.active_time_edict == "time-08":
+        return []
+    threshold = state.accusation_threshold
+    if state.active_time_edict == "time-05":
+        threshold = max(1, threshold - 1)
     return [
         fid
         for fid, pl in state.players.items()
-        if is_critical(pl, state.accusation_threshold)
+        if is_critical(pl, threshold)
     ]
 
 
@@ -34,12 +39,16 @@ def run_verdict(
     so_near_win = bool(
         so and (so.stacks >= 2 or len(so.condemned_rivals) >= 1)
     )
+    sys = state.sys_overrides or {}
+    secret_verdict = sys.get("verdict_secret", False)
     for fid in state.turn_order:
         if fid == accused:
             continue
         accused_h = state.players[accused].heresy
         # Table politics: cut Oficjum snowball; pile on Oficjum when they lead
-        if accused == FactionId.SWIETE_OFICJUM and so_near_win:
+        if secret_verdict:
+            prefer_burn = accused_h >= 7 or rng.random() < 0.40
+        elif accused == FactionId.SWIETE_OFICJUM and so_near_win:
             prefer_burn = accused_h >= 7 or rng.random() < 0.65
         elif so_near_win and accused != FactionId.SWIETE_OFICJUM:
             prefer_burn = accused_h >= 9 or rng.random() < 0.22

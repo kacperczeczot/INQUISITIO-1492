@@ -45,85 +45,69 @@
 
 ---
 
-## Suplement II — Przebieg Ery (E.0–E.VI)
+## Suplement II — Przebieg Ery (3 Fazy)
 
-Wydarzenia ramowe są **obowiązkowe**. **Okno reakcji** — opcjonalne karty typu Reakcja przy spełnionym warunku (poza kolejką).
+Każda Era w Toledo składa się z 3 następujących po sobie Faz:
 
-| Krok | Nazwa (faza) | Co się dzieje |
+| Faza | Nazwa | Co się dzieje przy stole |
 | :---: | :--- | :--- |
-| **E.0** | Start Ery | Reset limitów anti-AP (Hak / Przesłuchanie / Nasłanie) |
-| **E.I** | Inkwizytor | Patrol 0–1 lokacji **lub** Autodafé (jeśli wolno) |
-| **E.II** | Plan / Intryga | Naprzemiennie: zakryta karta pod lokacją + opcjonalny ruch Agenta; Haki (B+) |
-| **E.III** | Odkrycie | Lokacje 1→5: odkryj karty, efekty, Herezja |
-| **E.IV** | Lochy | Przesłuchania aresztowanych (B+) |
-| **E.V** | Dwór | Oskarżenia przy Krytycznej → Werdykt |
-| **E.VI** | Czystka | Dobór do 5; edykt Talii Czasu (C); przesuń 1. gracza |
+| **I** | **Intryga** | 2 rundy naprzemiennie: Zagraj zakrytą kartę pod lokację (płać koszt) **LUB** Akcja Gospodarcza (+1 zł); ruch Agenta o 1 / Hak |
+| **II** | **Sąd** | 1. Wkroczenie Inkwizytora (Patrol/Autodafé) → 2. Odkrycie kart (1→5) → 3. Lochy → 4. Dwór (Werdykt) |
+| **III** | **Kronika & Czystka** | Sprawdzenie zwycięstwa → **Uzupełnienie:** Dobierz karty do limitu **5** + Dochód **+1 złoto** → **Edykt Dziejów** na kolejną Erę → przesuń 1. gracza |
 
-### E.I — Inkwizytor (faza)
+---
 
-1. **Nasłanie (opcjonalne):** raz na gracza na Erę możesz wskazać kierunek / lokację docelową według reguł frakcji i kart. **Oficjum** ma stałą przewagę: przy konflikcie nasłań wygrywa Oficjum (chyba że karta specjalna mówi inaczej).
-2. **Patrol:** Inkwizytor przesuwa się o **0 lub 1** lokację wzdłuż **krawędzi grafu** (domyślnie jeden krok po najkrótszej ścieżce w stronę nasłania; **bez nasłania** — gracz z **najniższą Herezją** wybiera; remis → **1. gracz**).
-   * **Połączenia miejskie (graf):**  
-     * `1 Trybunał` ↔ `2 Pałac`, `3 Lochy`  
-     * `2 Pałac` ↔ `1 Trybunał`, `3 Lochy`, `4 Rynek`  
-     * `3 Lochy` ↔ `1 Trybunał`, `2 Pałac`, `5 Gildia`  
-     * `4 Rynek` ↔ `2 Pałac`, `5 Gildia`  
-     * `5 Gildia` ↔ `3 Lochy`, `4 Rynek`
-3. **Autodafé (procedura)** (max **co 3 Ery**): jeśli **Ogłoś** — w lokacji Inkwizytora: każdy obecny Agent rywala w strefie **Czystej (0–3 Herezji)** → trafia do **Aresztu w Lochach** (+1 Herezja dla właściciela, bez Stosu); w strefie **Obserwowanej lub Krytycznej (≥4 Herezji)** → **spalony na Stosie** (+1 Herezja dla właściciela, **+1 Stos** dla Oficjum); Relikwia → pula. **Wymuś Autodafé** (edykt) = to samo **bez** Stosu.
+### Faza I: Intryga (Działania Graczy)
 
-→ [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md) · hasło: [Inkwizytor](slownik.md#inkwizytor), [Autodafé](slownik.md#autodafé)
+Zaczynając od 1. gracza, każdy wykonuje naprzemiennie **2 tury akcji** (Runda 1 i Runda 2). W swojej turze wybierasz jedną z dwóch opcji:
 
-### E.II — Plan / Intryga (faza)
+* **Opcja A (Zagraj Kartę):** Zagraj **zakrytą** kartę Akcji pod wybraną lokacją (**płać koszt złota przy zagraniu**). Opcjonalnie: wystaw lub przesuń **1 Agenta** o max 1 lokację.
+* **Opcja B (Akcja Gospodarcza / Zarobek):** Dobierz **+1 złoto** z banku. Opcjonalnie: wystaw lub przesuń **1 Agenta** o max 1 lokację.
 
-Zaczynając od 1. gracza, każdy wykonuje naprzemiennie **2 tury**. W swojej turze zagrywasz **zakrytą** kartę Akcji (płacąc jej koszt) **albo pasujesz**:
-
-1. **E.II.1** Na początek swojej tury: otrzymaj **+1 złoto** (dopływ złota).
-2. **E.II.2** Zagraj **zakrytą** kartę Akcji pod wybraną lokacją (**płać złoto przy zagraniu**). → [Inicjacja karty](#suplement-i--inicjacja-karty--zdolności)
-3. Zastosuj wymagania `location` / `agents` jeśli karta wymaga Agenta w lokacji (sprawdzane przy odkryciu; jeśli brak — karta **ponosi fiasko bez Herezji**, chyba że tekst karty mówi inaczej).
-4. Opcjonalnie: wystaw lub przesuń **1 Agenta** o max 1 lokację (chyba że karta mówi inaczej).
-5. **(B+)** Przed lub po swoim zagraniu możesz wykonać **Wymuszenie Haka (procedura)** (1 / Erę) — ofiara spełnia żądanie albo +2 Herezja.
-
-Karty **Reakcja** trzymaj w ręce — zagrywasz w **oknie reakcji** przy spełnionym warunku.  
-**Karta specjalna / permanent:** według tekstu karty (C).
+*(B+) Przed lub po swojej akcji możesz wykonać **Wymuszenie Haka (procedura)** (1 / Erę) — ofiara spełnia żądanie albo +2 Herezja.*  
+*Karty **Reakcja** trzymaj w ręce — zagrywasz w **oknie reakcji** przy spełnionym warunku.*
 
 → [Hak](slownik.md#hak) · [`../../game/mechanics/haki.md`](../../game/mechanics/haki.md)
 
-### E.III — Odkrycie (faza)
+### Faza II: Sąd (Rozstrzygnięcie i Konsekwencje)
 
-Od lokacji **1 → 5**:
+W Fazie Sądu rozliczamy skutki intryg w 4 krokach:
 
-1. Odkryj karty w kolejności od 1. gracza wokół stołu.
-2. Rozpatrz efekty; dodaj `heresy` zagrywającemu i `target_heresy` wskazanym.
-3. Areszty (`arrest`) → Agent do Lochów.
-4. Konflikty przestrzeni: więcej Agentów frakcji wygrywa „kontrolę” lokacji przy remisie efektów eliminacji; dalej niższa Herezja.
+#### 1. Wkroczenie Inkwizytora
+* **Nasłanie (opcjonalne):** raz na gracza na Erę możesz wskazać kierunek / lokację docelową według reguł frakcji i kart (przy konflikcie wygrywa Oficjum).
+* **Patrol:** Inkwizytor przesuwa się o **0 lub 1** lokację wzdłuż krawędzi grafu (domyślnie w stronę nasłania; bez nasłania — gracz z **najniższą Herezją** wybiera; remis → **1. gracz**).
+  * **Graf połączeń:** `1 Trybunał` ↔ `2 Pałac`, `3 Lochy` | `2 Pałac` ↔ `1 Trybunał`, `3 Lochy`, `4 Rynek` | `3 Lochy` ↔ `1 Trybunał`, `2 Pałac`, `5 Gildia` | `4 Rynek` ↔ `2 Pałac`, `5 Gildia` | `5 Gildia` ↔ `3 Lochy`, `4 Rynek`.
+* **Autodafé (procedura)** (max **co 3 Ery**): w lokacji Inkwizytora Agenci rywali w strefie Czystej (0–3) → Areszt w Lochach (+1 Herezja, bez Stosu); w strefie Obserwowanej/Krytycznej (≥4) → Stos (+1 Herezja, +1 Stos dla Oficjum); Relikwia → pula.
 
-### E.IV — Lochy (faza)
+→ [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md)
 
-**Przesłuchanie (procedura)** — 1 / gracza / Erę. Dostęp: Agent w Lochach **lub** karta dająca dostęp. Wybierz aresztowanego Agenta rywala:
+#### 2. Odkrycie kart (1 → 5)
+* Odkryj karty w kolejności od 1. gracza wokół stołu w lokacjach 1→5.
+* Rozpatrz efekty; dodaj `heresy` zagrywającemu i `target_heresy` wskazanym.
+* Areszty (`arrest`) → Agent do Lochów.
 
-1. **Marionetka** — znacznik na figurce; raz na Erę możesz ruszyć tym Agentem o 1 jak swoim (należy kolorem do właściciela; **bez** dodatkowego głosu przy Werdykcie). Wykrycie (karta / Inkwizytor w lokacji z Marionetką): właściciel **+2 Herezja**, znacznik znika.
-2. **Hak** — bierzesz żeton Haka na właściciela.
-3. **+2 Herezja** właścicielowi zamiast (1) lub (2).
+#### 3. Lochy (Przesłuchania)
+* **Przesłuchanie (procedura)** — 1 / gracza / Erę dla gracza z Agentem w Lochach. Wybierz uwięzionego Agenta rywala:
+  * **Marionetka:** znacznik na figurce (ruch o 1 jak swoim / bez głosu).
+  * **Hak:** żeton Haka na właściciela.
+  * **+2 Herezja** właścicielowi.
 
 → [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
 
-### E.V — Dwór (faza)
-
-Gdy ktoś jest w **Krytycznej**, inny gracz może **Rzucić Oskarżenie** (1× przeciw temu samemu graczowi / Erę) → **Werdykt (procedura)**:
-
-1. Oskarżyciel ogłasza cel.
-2. Każdy **poza oskarżonym** głosuje **jawnie**: Skazać / Uniewinnić.
-3. Remis → Uniewinnienie.
-4. **Skazanie:** 1 Agent oskarżonego → **Stos** (eliminacja) **lub** do Lochów +1 Herezja (wybór oskarżyciela; Oficjum zwykle wybiera Stos). Oficjum zapisuje Stos jeśli Agent spłonął.
-5. **Uniewinnienie:** oskarżyciel **+1 Herezja**.
+#### 4. Dwór (Oskarżenia i Werdykt)
+* Gracz może **Rzucić Oskarżenie** przeciwko rywalowi w **Strefie Krytycznej** (≥7 w 4p, ≥6 w 3p, ≥8 w 5p) → **Werdykt**:
+  * Jawne głosowanie stołu: Skazać / Uniewinnić (bez oskarżonego; remis = uniewinnienie).
+  * **Skazanie:** 1 Agent oskarżonego → Stos lub Lochy (+1 Herezja).
+  * **Uniewinnienie:** oskarżyciel +1 Herezja.
 
 → [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
 
-### E.VI — Czystka (faza)
+### Faza III: Kronika & Czystka (Koniec Ery)
 
-1. Dobierz karty do limitu ręki **5**.
-2. Odkryj **1** edykt z Talii Czasu (C) — obowiązuje następną Erę / natychmiast według tekstu.
-3. Przesuń znacznik 1. gracza.
+1. **Zwycięstwo:** Sprawdź natychmiastowe warunki zwycięstwa frakcji.
+2. **Uzupełnienie:** Dobierz karty do limitu ręki **5**.
+3. **Edykt Dziejów:** Odkryj wierzchnią kartę Kroniki Dziejów (nowe prawo / wydarzenie na nadchodzącą Erę).
+4. **Koniec rundy:** Przesuń znacznik 1. gracza & Odnów limity (1 nasłanie, 1 Hak, 1 Przesłuchanie).
 
 ---
 
@@ -146,7 +130,7 @@ Tor **0–10** na planszetce.
 ## 3. Karty specjalne i Kronika Dziejów
 
 - Pełna talia **10** kart / frakcję, w tym karta specjalna (`breaks_rule: true`) — czytaj kartę; łamie wskazaną regułę raz.
-- Na końcu Ery (E.VI): odkryj **1** edykt z Kroniki Dziejów.
+- Na początku Ery (Faza I: Kronika): odkryj **1** kartę z Kroniki Dziejów.
 
 ---
 
@@ -176,9 +160,9 @@ Kanonem rozgrywki jest **skład 4-osobowy**. Przy grze w innym gronie wprowadź 
 > Dwóch graczy kontroluje łącznie **4 frakcje** (po 2 frakcje na gracza) z zachowaniem 100% kanonicznych talii i celów:
 > 1. **Snake Draft frakcji:** Gracz 1 wybiera 1. frakcję $\rightarrow$ Gracz 2 wybiera 2. i 3. frakcję $\rightarrow$ Gracz 1 dobiera 4. frakcję.
 > 2. **Separacja zasobów:** Złoto, karty na ręce, tor Herezji (0–10) i Haki są całkowicie niezależne dla każdej z 4 frakcji (nie wolno ich łączyć ani przekazywać między swoimi frakcjami).
-> 3. **Przebieg Fazy Planu (E.II):** Karty zagrywane są naprzemiennie frakcjami: A1 $\rightarrow$ B1 $\rightarrow$ A2 $\rightarrow$ B2 (po 2 rundy = 8 zakrytych kart na stole).
-> 4. **Brak auto-agresji:** Twoja frakcja nie może przesłuchiwać (E.IV) ani zakładać Haków na Twoją drugą frakcję.
-> 5. **Werdykt (E.V):** Oskarżona frakcja nie głosuje; głosują pozostałe 2 neutralne frakcje (jedna Gracza A, jedna Gracza B) + oskarżyciel. Do Skazania potrzebna jest przewaga (np. wymuszona Hakiem).
+> 3. **Przebieg Fazy Intrygi (Faza I):** Karty zagrywane są naprzemiennie frakcjami: A1 $\rightarrow$ B1 $\rightarrow$ A2 $\rightarrow$ B2 (po 2 rundy = 8 zakrytych kart na stole).
+> 4. **Brak auto-agresji:** Twoja frakcja nie może przesłuchiwać (Faza II) ani zakładać Haków na Twoją drugą frakcję.
+> 5. **Werdykt (Faza II):** Oskarżona frakcja nie głosuje; głosują pozostałe 2 neutralne frakcje (jedna Gracza A, jedna Gracza B) + oskarżyciel. Do Skazania potrzebna jest przewaga (np. wymuszona Hakiem).
 > 6. **Długość gry:** Limit Er wynosi **12 Er** (Kronika Dziejów: 12 kart lub przetasowanie w Erze 10).
 > 7. **Podwójne Zwycięstwo:** Wygrywa gracz, którego **OBIE frakcje** jednocześnie spełnią swoje pełne cele kanoniczne.
 >    * *Tie-breaker po 12. Erze:* 1 zrealizowany cel + postęp 2. frakcji $\rightarrow$ niższa suma Herezji obu frakcji $\rightarrow$ wyższa łączna suma złota.
@@ -204,11 +188,11 @@ Karty / Erę: **2**.
 
 ## Suplement I — Inicjacja karty / zdolności
 
-Przy zagraniu karty Akcji (E.II) lub gdy tekst każe „inicjuj”:
+Przy zagraniu karty Akcji (Faza I) lub gdy tekst każe „inicjuj”:
 
 1. **Deklaracja** — wskaż kartę i lokację (lub cel wg tekstu).
 2. **Koszty** — zapłać złoto / inne koszty **przy zagraniu** (kanon reguł).
-3. **Efekt** — przy odkryciu (E.III) lub natychmiast, jeśli karta mówi inaczej; język efektu: [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md).
+3. **Efekt** — przy odkryciu (Faza II) lub natychmiast, jeśli karta mówi inaczej; język efektu: [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md).
 
 Jeśli wymagania `location` / `agents` nie są spełnione przy rozpatrzeniu → **fiasko** bez Herezji (chyba że karta mówi inaczej).
 
@@ -235,13 +219,13 @@ Prawomocne reguły kanoniczne:
 | Reguła | Kanon |
 | :--- | :--- |
 | Płatność złota | przy zagraniu |
-| Dopływ złota | **+1** na początek swojej tury (E.II) |
+| Dochód złota | **+1 zł** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł w Fazie I) |
 | Fiasko (brak lokacji/agentów) | bez Herezji |
 | Relikwia przy Autodafé | wraca do puli |
 | Werdykt | głosowanie **jawne** (na 4–5p Stos dla Oficjum tylko gdy Oficjum oskarżało) |
 | Marionetka | tylko ruch (bez głosu) |
-| Karty / Erę | **do 2** (zagranie lub pas) |
-| Kronika Dziejów | odkryj **1** edykt |
+| Karty / Erę | **do 2** (zagranie lub Akcja Gospodarcza) |
+| Kronika Dziejów | odkryj **1** kartę w Fazie III (nowe prawo na kolejną Erę) |
 | Patrol bez nasłania | najniższa Herezja; remis → 1. gracz |
 | Limit Er / remis | 9 Er; najbliższy cel, potem najniższa Herezja |
 | Lokacje kluczowe Gildii | Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek |

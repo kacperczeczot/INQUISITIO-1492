@@ -53,7 +53,8 @@ def _legal_card_ids(state: GameState, fid: FactionId) -> list[str]:
         if c.type == "reakcja":
             continue
         sig_offset = sys.get("sig_cost_offset", CONFIG.economy.sig_cost_offset) if (c.breaks_rule or c.type == "signature") else 0
-        cost = max(0, c.cost + card_cost_offset + sig_offset)
+        curfew_cost = 1 if (state.active_time_edict == "time-02" and c.location in ("rynek", "gildia")) else 0
+        cost = max(0, c.cost + card_cost_offset + sig_offset + curfew_cost)
         if pl.gold >= cost:
             legal.append(cid)
     return legal
@@ -65,20 +66,18 @@ def play_era(
     agent_choose,
     win_overrides: dict | None = None,
 ) -> FactionId | None:
-    """One era. agent_choose(state, fid, legal_ids) -> card_id | None."""
+    """One era — 3 Phases: I Intryga, II Sąd, III Kronika."""
     sys = state.sys_overrides or {}
     state.metrics.eras += 1
     state.eras_since_autodafe += 1
     _reset_era_flags(state)
-    era_start_inquisitor(state, rng)
 
-    # Phase E.II — Plan / Intryga (2 rounds of card play or pass)
+    # ══════════════════════════════════════════════════════════════
+    # FAZA I: INTRYGA (Działania graczy — 2 rundy zagrań)
+    # ══════════════════════════════════════════════════════════════
     for round_num in range(2):
         for fid in state.turn_order:
             pl = state.players[fid]
-            if round_num == 0:
-                pl.gold += 1
-                state.add_log(f"{fid.value} gold trickle +1 (now {pl.gold})")
             legal = _legal_card_ids(state, fid)
             state.metrics.legal_moves_sampled += len(legal)
             if not legal:
@@ -91,6 +90,13 @@ def play_era(
                 else:
                     state.add_log(f"{fid.value} pass (savings)")
 
+    # ══════════════════════════════════════════════════════════════
+    # FAZA II: SĄD (Inkwizytor, Odkrycie, Lochy, Dwór)
+    # ══════════════════════════════════════════════════════════════
+    # 1. Wkroczenie Inkwizytora
+    era_start_inquisitor(state, rng)
+
+    # 2. Haki i Oskarżenia na Dworze (Werdykt)
     for fid in state.turn_order:
         # optional hook force (A teach has Haki on kb/gc cards)
         if state.layer in ("A", "B", "C"):
@@ -125,13 +131,6 @@ def play_era(
             state.winner = w
             state.add_log(f"WINNER {w.value}")
             return w
-        _draw(state, fid, 1)
-        # hand size soft cap — use config, not hardcoded 6
-        pl = state.players[fid]
-        n_players = len(state.turn_order)
-        hl = sys.get("hand_limit", CONFIG.hand_limit_for(n_players))
-        while len(pl.hand) > hl:
-            pl.discard.append(pl.hand.pop(0))
 
     # Cienie evacuate (B/C passive; A: second Relic after Kurier)
     if FactionId.CIENIE_AL_ANDALUS in state.players:
@@ -187,19 +186,35 @@ def play_era(
                 )
                 break
 
-    # time edict layer C
-    freq = sys.get("time_deck_freq", CONFIG.variants.time_deck_freq)
-    if state.layer == "C" and state.time_deck and (state.era % freq == 0):
-        edict = state.time_deck.pop()
-        resolve_time_edict(state, edict, rng)
-        state.time_discard.append(edict)
-
+    # ══════════════════════════════════════════════════════════════
+    # FAZA III: KRONIKA & CZYSTKA (Cele, Uzupełnienie, Edykt Czasu)
+    # ══════════════════════════════════════════════════════════════
     res = check_winner_details(state, win_overrides)
     if res:
         state.winner = res[0]
         state.win_path = res[1]
         state.add_log(f"WINNER {res[0].value} via {res[1]}")
         return res[0]
+
+    # 1. Uzupełnienie ręki do limitu i dochód +1 złoto
+    for fid in state.turn_order:
+        _draw(state, fid, 1)
+        pl = state.players[fid]
+        n_players = len(state.turn_order)
+        hl = sys.get("hand_limit", CONFIG.hand_limit_for(n_players))
+        while len(pl.hand) > hl:
+            pl.discard.append(pl.hand.pop(0))
+        pl.gold += 1
+        state.add_log(f"{fid.value} end of era upkeep: +1 gold (now {pl.gold})")
+
+    # 2. Odkrycie Edyktu Kroniki Dziejów (obowiązującego w nadchodzącej Erze)
+    freq = sys.get("time_deck_freq", CONFIG.variants.time_deck_freq)
+    if state.layer == "C" and state.time_deck and (state.era % freq == 0) and not sys.get("no_time_deck", False):
+        state.active_time_edict = None
+        edict = state.time_deck.pop()
+        resolve_time_edict(state, edict, rng)
+        state.time_discard.append(edict)
+
     return None
 
 
