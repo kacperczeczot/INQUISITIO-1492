@@ -95,6 +95,27 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+> [!IMPORTANT]
+> ### 📐 Kalibracja i Zaostrzenie Funkcji Scoringowej (`scoring.py`, 2026-08-16)
+> Wprowadzono rygorystyczną kalibrację kary za odchylenia od fair share wewnątrz *Target Band* (zmiana z łagodnej $40 \cdot \text{rel\_dev}^2$ na progresywną $120 \cdot \text{rel\_dev}^{1.4}$).
+> - **Cel:** Wynik **`98.0–100.0 pkt`** jest odtąd ściśle zarezerwowany wyłącznie dla chirurgicznego balansu o odchyleniach $\le \mathbf{0.5\text{ p.p.}}$ (np. 24.8% vs 25.2%).
+> - **Skutek:** Warianty o rozjeździe $1.5–2.0\text{ p.p.}$ (np. 23.4% vs 26.7%), które wcześniej otrzymywały zawyżone ~99.4 pkt, otrzymują teraz realne **`~90.0–92.0 pkt`**, co eliminuje martwą strefę optymalizatora i wymusza poszukiwanie perfekcyjnego spłaszczenia rozkładu.
+
+### 🟢 Patch v0.55 (2026-08-16) — Kanon 4P: Karta `caa-07` (Szantaż Bractwa): `cost` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`99.7`** → **`99.8 pkt`** | Global **`85.5`** | 3p **`59.6`** | 5p **`97.1`**
+- **Modyfikacja (`L3_CAA-07_COST_MINUS1`):** Karta `caa-07` (Szantaż Bractwa): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.48, Deadlocks 0.4%, Pas Biedy 25.3%.
+
+### 🟢 Patch v0.54 (2026-08-16) — Kanon 4P: Korona Borgiowie: Era zwycięstwa offset -1 (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`99.6`** → **`99.7 pkt`** | Global **`83.8`** | 3p **`65.9`** | 5p **`86.0`**
+- **Modyfikacja (`L2_KB_ERA_MINUS1`):** Korona Borgiowie: Era zwycięstwa offset -1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.48, Deadlocks 0.5%, Pas Biedy 25.4%.
+
+### 🟢 Patch v0.53 (2026-08-16) — Kanon 4P: Karta `gc-07` (Skrytobójstwo): `heresy` → `0` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`99.5`** → **`99.6 pkt`** | Global **`85.4`** | 3p **`73.2`** | 5p **`83.4`**
+- **Modyfikacja (`L3_GC-07_HERESY_MINUS1`):** Karta `gc-07` (Skrytobójstwo): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.53, Deadlocks 0.5%, Pas Biedy 25.6%.
+
 ### 🟢 Patch v0.52 (2026-08-16) — Karta `so-10` (Oczyść Miasto): `cost` → `5` (Kanon 4P: 99.5 pkt)
 - **Wynik:** Kanon 4P **`99.5 pkt`** 🟢 (`4p-core` 99.9, `4p-no-cienie` 99.4, `4p-no-kabala` 99.4, `4p-no-korona` 99.2, `4p-no-oficjum` 99.7) | 5p **`95.2 pkt`** 🟢 | 3p **`66.0 pkt`**
 - **Modyfikacja (`so-10`):** Karta `so-10` (Oczyść Miasto): `cost` → `5`.

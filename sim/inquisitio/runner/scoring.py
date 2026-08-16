@@ -21,14 +21,16 @@ def calculate_setup_score(summary: BatchSummary) -> float:
         in_critical = (gate.critical_min <= win_share <= gate.critical_max)
 
         if in_target:
-            # Subtle penalty for slight target variations
-            penalty = 40.0 * (rel_dev ** 2)
+            # Rigorous target band penalty: 98-100 is strictly reserved for deviations <= 0.5 p.p.
+            # At 0.5 p.p. rel_dev = 0.02 -> penalty ~0.5 per faction -> Score ~98.0-99.0
+            # At 1.7 p.p. rel_dev = 0.068 -> penalty ~2.75 per faction -> Score ~89-91
+            penalty = 120.0 * (rel_dev ** 1.4)
         elif in_critical:
-            # Significant penalty for warning band (e.g. 11.8% vs 20.0% is 41% rel_dev)
-            penalty = 120.0 * (rel_dev ** 1.5)
+            # Progressive penalty for warning band (target_max to critical_max)
+            penalty = 180.0 * (rel_dev ** 1.3) + 5.0
         else:
-            # Red Line violation — heavy progressive penalty (but not instant-zero)
-            penalty = 200.0 * (rel_dev ** 1.2) + 15.0
+            # Red Line violation — heavy progressive penalty
+            penalty = 250.0 * (rel_dev ** 1.1) + 20.0
 
         total_penalty += penalty
 

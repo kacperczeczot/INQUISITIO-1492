@@ -249,6 +249,6 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
-    st2.era = 4
+    st2.era = 3
     assert check_winner_details(st2) is None
 
