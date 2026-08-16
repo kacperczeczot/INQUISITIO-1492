@@ -41,16 +41,19 @@ python -m inquisitio compare --games 100 --setup 3p-oficjum-alandalus-korona --s
 ### 🤖 Autonomiczne Audytory i Optymalizatory Balansu
 
 ```bash
-# 1. Audytor Kanonu 4P (Główna kotwica: optymalizacja kart i parametrów bazowych 4P)
+# 1. Audytor Kanonu 4P (Główna kotwica: pełna optymalizacja talii 50 kart i parametrów 4P)
 python tools/sim/audytor_kanonu.py --workers 10
 
-# 2. Audytor 3P (Dedykowany optymalizator 10 setupów 3-osobowych z algorytmem Adaptive Lookahead +1D)
+# 2. Audytor 4P Makro (Szybki optymalizator zasad systemowych L1/L2/L4 bez dotykania kart, Lookahead +1D)
+python tools/sim/audytor_4p.py --workers 10
+
+# 3. Audytor 3P (Dedykowany optymalizator 10 setupów 3-osobowych z algorytmem Adaptive Lookahead +1D)
 python tools/sim/audytor_3p.py --workers 10
 
-# 3. Audytor 5P (Dedykowany optymalizator formatu 5-osobowego z algorytmem Adaptive Lookahead +1D)
+# 4. Audytor 5P (Dedykowany optymalizator formatu 5-osobowego z algorytmem Adaptive Lookahead +1D)
 python tools/sim/audytor_5p.py --workers 10
 
-# 4. Grand Audit (Pełny audyt poziomów L1–L4, telemetrii 5 filarów i testów stresu ekonomicznego)
+# 5. Grand Audit (Pełny audyt poziomów L1–L4, telemetrii 5 filarów i testów stresu ekonomicznego)
 python tools/sim/run_grand_audit.py
 ```
 

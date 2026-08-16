@@ -9,7 +9,7 @@ Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Marionetki.
 **Spłaszczanie:** unikamy skalowania 3p/4p/5p; jedna liczba, jeśli wynik jest lepszy, podobny albo tani ([hierarchia §0](../docs/rules/hierarchia_balansowania.md)).
 
 Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) · Silnik: [`../sim/README.md`](../sim/README.md) · Config: [`../game_config.yaml`](../game_config.yaml).  
-**Autonomiczne Narzędzia:** Kanon 4P: [`audytor_kanonu.py`](../tools/sim/audytor_kanonu.py) · Format 3P (Lookahead): [`audytor_3p.py`](../tools/sim/audytor_3p.py) · Format 5P (Lookahead): [`audytor_5p.py`](../tools/sim/audytor_5p.py) · Grand Audit: [`run_grand_audit.py`](../tools/sim/run_grand_audit.py).
+**Autonomiczne Narzędzia:** Kanon 4P (Karty): [`audytor_kanonu.py`](../tools/sim/audytor_kanonu.py) · Kanon 4P (Makro): [`audytor_4p.py`](../tools/sim/audytor_4p.py) · Format 3P (Lookahead): [`audytor_3p.py`](../tools/sim/audytor_3p.py) · Format 5P (Lookahead): [`audytor_5p.py`](../tools/sim/audytor_5p.py) · Grand Audit: [`run_grand_audit.py`](../tools/sim/run_grand_audit.py).
 
 ---
 
@@ -70,6 +70,16 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.67 (2026-08-16) — Kanon 4P: Karta `kb-01` (Rozkaz Dworu): `heresy` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`95.0`** → **`95.1 pkt`** | Global **`74.8`** | 3p **`69.9`** | 5p **`61.9`**
+- **Modyfikacja (`L3_KB-01_HERESY_PLUS1`):** Karta `kb-01` (Rozkaz Dworu): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.42, Deadlocks 0.4%, Pas Biedy 23.9%.
+
+### 🟢 Patch v0.66 (2026-08-16) — Kanon 4P: Karta `so-02` (Skarbiec Trybunału): `gold` → `3` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`94.5`** → **`95.0 pkt`** | Global **`74.9`** | 3p **`68.5`** | 5p **`64.5`**
+- **Modyfikacja (`L3_SO-02_GOLD_PLUS1`):** Karta `so-02` (Skarbiec Trybunału): `gold` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.44, Deadlocks 0.3%, Pas Biedy 23.9%.
 
 ### 🟢 Patch v0.65 (2026-08-16) — Kanon 4P: Karta `kt-09` (Fragment Kodeksu): `cost` → `2` (Zysk 4P Δ +0.5 pkt)
 - **Wynik 4P:** Kanon **`94.0`** → **`94.5 pkt`** | Global **`76.7`** | 3p **`67.4`** | 5p **`70.9`**
