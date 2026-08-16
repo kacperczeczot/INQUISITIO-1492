@@ -4,16 +4,6 @@
 
 # Playtesting — balans (stan aktualny)
 
-> [!IMPORTANT]
-> **Rekalibracja Funkcji Oceny Balansu (Asymptotyczny Model Ciągły — Exponential Decay):**
-> Zgodnie z wytycznymi projektowymi wyeliminowano sztuczne ucinanie wyniku do zera (`Score = 0.0`), które powodowało nasycenie i utratę gradientu porównawczego w skrajnie rozjechanych wariantach.
-> Nowy model wykorzystuje ciągłą funkcję wygaszania wykładniczego opartego na względnym odchyleniu standardowym frakcji (**RMS Relative Deviation**):
-> $$\text{Score} = 100.0 \times \exp\left( -3.2 \cdot \text{RMS\_RD}^{1.25} - \text{Deadlock Penalty} \right)$$
-> **Kluczowe właściwości:**
-> 1. **Brak zera (`Score > 0.0`):** Nawet warianty o silnej dominacji (np. jedna frakcja 50–70%) zachowują ciągły, niezerowy wynik (np. 15–40 pkt), co umożliwia precyzyjne śledzenie delty optymalizacji ($\Delta$).
-> 2. **Rygor strefy mistrzowskiej ($\ge 98.0$ pkt):** Wynik powyżej 98.0 punktów jest bezwzględnie zarezerwowany wyłącznie dla konfiguracji, w których odchylenia wszystkich frakcji nie przekraczają $\le 0.5\text{ p.p.}$ od ideału.
-> 3. **Czysty gradient:** Zapewnia optymalizatorom i audytorom pełną widoczność kierunku zmian.
-
 Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Marionetki.  
 **Werdykt fun = sesja ludzka** ([`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md)).  
 **Spłaszczanie:** unikamy skalowania 3p/4p/5p; jedna liczba, jeśli wynik jest lepszy, podobny albo tani ([hierarchia §0](../docs/rules/hierarchia_balansowania.md)).
@@ -110,10 +100,14 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
 > [!IMPORTANT]
-> ### 📐 Kalibracja i Zaostrzenie Funkcji Scoringowej (`scoring.py`, 2026-08-16)
-> Wprowadzono rygorystyczną kalibrację kary za odchylenia od fair share wewnątrz *Target Band* (zmiana z łagodnej $40 \cdot \text{rel\_dev}^2$ na progresywną $120 \cdot \text{rel\_dev}^{1.4}$).
-> - **Cel:** Wynik **`98.0–100.0 pkt`** jest odtąd ściśle zarezerwowany wyłącznie dla chirurgicznego balansu o odchyleniach $\le \mathbf{0.5\text{ p.p.}}$ (np. 24.8% vs 25.2%).
-> - **Skutek:** Warianty o rozjeździe $1.5–2.0\text{ p.p.}$ (np. 23.4% vs 26.7%), które wcześniej otrzymywały zawyżone ~99.4 pkt, otrzymują teraz realne **`~90.0–92.0 pkt`**, co eliminuje martwą strefę optymalizatora i wymusza poszukiwanie perfekcyjnego spłaszczenia rozkładu.
+> ### 📐 Wdrożenie Ciągłego Asymptotycznego Modelu Punktacji (`scoring.py`, 2026-08-16)
+> Zgodnie z wytycznymi projektowymi wyeliminowano sztuczne ucinanie wyniku do zera (`Score = 0.0`), które powodowało utratę gradientu porównawczego w skrajnie rozjechanych wariantach.
+> Nowy model wykorzystuje ciągłą funkcję wygaszania wykładniczego opartego na względnym odchyleniu standardowym frakcji (**RMS Relative Deviation**):
+> $$\text{Score} = 100.0 \times \exp\left( -3.2 \cdot \text{RMS\_RD}^{1.25} - \text{Deadlock Penalty} \right)$$
+> **Kluczowe właściwości:**
+> 1. **Brak zera (`Score > 0.0`):** Nawet warianty o silnej dominacji (np. jedna frakcja 50–70%) zachowują ciągły, niezerowy wynik (np. 15–40 pkt), co umożliwia precyzyjne śledzenie delty optymalizacji ($\Delta$).
+> 2. **Rygor strefy mistrzowskiej ($\ge 98.0$ pkt):** Wynik powyżej 98.0 punktów jest bezwzględnie zarezerwowany wyłącznie dla konfiguracji, w których odchylenia wszystkich frakcji nie przekraczają $\le 0.5\text{ p.p.}$ od ideału (np. 24.8% vs 25.2%).
+> 3. **Czysty gradient:** Zapewnia optymalizatorom i audytorom pełną widoczność kierunku zmian.
 
 ### 🟢 Patch v0.56 (2026-08-16) — Konsolidacja Kanonu 4P i Grand Audit (Nowa Skala Scoringu)
 - **Wynik (Nowa Rygorystyczna Skala):** Kanon 4P **`94.9 pkt`** 🟢 (`4p-core` **`99.3 pkt`**, `4p-no-oficjum` **`95.4 pkt`**, `4p-no-kabala` **`94.8 pkt`**, `4p-no-cienie` **`92.6 pkt`**, `4p-no-korona` **`92.5 pkt`**) | 5p **`69.5 pkt`** | 3p **`36.3 pkt`**
