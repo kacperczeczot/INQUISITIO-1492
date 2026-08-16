@@ -81,29 +81,20 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.58 — Czysty Silnik, próba 3 000 gier/setup × 16 setupów = 48 000 gier, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.57 — Oczyszczony Silnik SSOT, przed pełnym audytem testowym)
 
-- **Wyniki Balansu (Ciągły Model Asymptotyczny `scoring.py`):**
-  - **Kanon 4P Średnia:** **`79.6 / 100.0 pkt`** 🟡 (`4p-no-oficjum` **`91.8 pkt`**, `4p-core` **`86.0 pkt`**, `4p-no-kabala` **`78.4 pkt`**, `4p-no-cienie` **`71.5 pkt`**, `4p-no-korona` **`70.5 pkt`**)
-  - **`4p-core` (Kanon Klasyczny):** **`86.0 pkt`** 🟡 (SO: `27.2%`, CAA: `26.6%`, KT: `24.6%`, KB: `21.6%` — maksymalne odchylenie $\le \mathbf{3.4\text{ p.p.}}$ na czystym, nienaruszonym silniku!)
-  - **3p Średnia:** **`76.6 pkt`** 🟡 (Wszystkie warianty 3P bez sztucznych wyjątków reguł)
-  - **5p Pełny Stół (`5p-full`):** **`55.5 pkt`** 🔴 (Globalne parametry 4P)
-- **Telemetria Silnika Gry (5 Filarów):** 🟢 **OPTYMALNA I ZGODNA Z KANONEM**
-  - **Średnia Er (Tempo Gry):** **`5.53 Er`** 🟢 (norma 5.0–6.5 Er)
-  - **Remisy po Limicie Er (Deadlocks):** **`0.1%`** 🟢 (norma <5.0%)
-  - **Pas Biedy (Poverty Rate):** **`22.3%`** 🟢 (norma <28.0%)
-  - **Autodafé Inkwizytora:** **`1.53 / partię`** 🟢 (norma 1.0–2.0, pierwsze w Erze 3/4)
+- **Wyniki Balansu:** Oczekuje na uruchomienie pełnego pakietu testowego Grand Audit dla wersji `v0.58` (unifikacja 4P).
+- **Status Silnika:** 🟢 **100% ZGODNY Z REGULAMINEM (SSOT)** (Autodafé od Ery 3, pełne efekty kart, brak sztucznych filtrów).
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
-### 🟢 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé
-- **Wynik (Model Asymptotyczny):** Kanon 4P **`79.6 pkt`** 🟡 (`4p-core` **`86.0 pkt`**, `4p-no-oficjum` **`91.8 pkt`**) | 3p **`76.6 pkt`** | 5p **`55.5 pkt`** | Global **`70.6 pkt`**
+### 🟡 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé [W TRAKCIE TESTÓW]
 - **Modyfikacje:**
   1. **Usunięcie sztucznych skalowań per-gracz:** Wartości celów i ekonomii 4P stały się globalnymi wartościami bazowymi (`start_gold = 4`, `kb.era = 4`, `kt.era = 6`, `caa.era = 5`). Zachowano wyłącznie naturalnie rosnący próg oskarżenia na Dworze (`3p: 6`, `4p: 7`, `5p: 8`).
-  2. **Dostosowanie do aktywnego Autodafé:** Podniesiono próg Świętego Oficjum do `5 Stosów` (oraz Gildii Cieni do `3 Upadków` / `4` bez SO), co zbalansowało tempo partii do idealnych 5.53 Er przy regularnym działaniu Inkwizytora.
-- **Efekt:** W `4p-core` uzyskano naturalny rozkład frakcji (SO: 27.2%, CAA: 26.6%, KT: 24.6%, KB: 21.6%) bez ani jednej linijki sztucznego kodu w symulatorze.
+  2. **Dostosowanie do aktywnego Autodafé:** Podniesiono próg Świętego Oficjum do `5 Stosów` (oraz Gildii Cieni do `3 Upadków` / `4` bez SO).
+- **Wyniki:** Zostaną uzupełnione po przeprowadzeniu oficjalnych testów / audytu.
 
 ### 🟢 Patch v0.57 (2026-08-16) — Pełne Oczyszczenie Silnika Gry (SSOT) & Naprawa Autodafé
 - **Modyfikacje Silnika:**
