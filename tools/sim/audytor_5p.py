@@ -193,7 +193,8 @@ def apply_mutation_to_5p_config(raw_cfg: dict[str, Any], rule_params: dict[str, 
         off = int(offset)
         cur = section_dict.get(key, default_val)
         if isinstance(cur, dict):
-            base_v = int(cur.get("5p", cur.get("4p", default_val)))
+            val_cand = cur.get("5p", cur.get("4p", default_val))
+            base_v = int(val_cand) if val_cand is not None else int(default_val)
             new_v = max(1, base_v + off)
             cur["5p"] = new_v
         else:
