@@ -178,8 +178,12 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     """Builds the full pool of atomic candidates across L1, L2, L3, and L4."""
     tests = []
 
-    # Level 1 (Core System Parameters)
-    l1 = [t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA"]
+    # Level 1 (Core System Parameters) — hand_limit stays at SSOT 5
+    l1 = [
+        t
+        for t in audit_level1.build_level1_tests()
+        if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0]
+    ]
     tests.extend(l1)
 
     # Level 2 (Faction Victory Conditions)
