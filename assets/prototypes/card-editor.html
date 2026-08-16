@@ -1267,6 +1267,34 @@
     "heresy_text": "Autodafé z rozkazu trybunału pali strach, nie tylko drewno.",
     "lore": "Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika."
   },
+  "so-11": {
+    "name": "Dekret Czystości Wiary",
+    "type": "akcja",
+    "layer": "B",
+    "cost": 1,
+    "target_heresy": 1,
+    "gold": 1,
+    "action": "frame_rival",
+    "tags": [
+      "heresy",
+      "gold"
+    ],
+    "lore": "Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń."
+  },
+  "so-12": {
+    "name": "Straż Trybunalska",
+    "type": "akcja",
+    "layer": "A",
+    "cost": 1,
+    "agents": 1,
+    "gold": 1,
+    "action": "move_agent",
+    "tags": [
+      "move",
+      "gold"
+    ],
+    "lore": "Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom."
+  },
   "caa-01": {
     "name": "Przejście Podziemiami",
     "type": "akcja",
@@ -1414,6 +1442,34 @@
     "heresy_text": "Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.",
     "lore": "As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej."
   },
+  "caa-11": {
+    "name": "Nocna Zmiana Warty",
+    "type": "akcja",
+    "layer": "B",
+    "cost": 1,
+    "agents": 1,
+    "move_inquisitor": true,
+    "action": "move_agent",
+    "tags": [
+      "move",
+      "inquisitor"
+    ],
+    "lore": "Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku."
+  },
+  "caa-12": {
+    "name": "Skrytka w Murach",
+    "type": "akcja",
+    "layer": "A",
+    "cost": 0,
+    "heresy": 1,
+    "gold": 2,
+    "action": "gain_gold",
+    "tags": [
+      "gold",
+      "heresy"
+    ],
+    "lore": "Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień."
+  },
   "kb-01": {
     "name": "Rozkaz Dworu",
     "type": "akcja",
@@ -1559,6 +1615,32 @@
     ],
     "heresy_text": "Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.",
     "lore": "Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie."
+  },
+  "kb-11": {
+    "name": "Tajny Emisariusz",
+    "type": "akcja",
+    "layer": "A",
+    "cost": 1,
+    "agents": 1,
+    "gold": 1,
+    "action": "move_agent",
+    "tags": [
+      "move",
+      "gold"
+    ],
+    "lore": "Złote pierścienie i listy polecające otwierają każde drzwi w Toledo."
+  },
+  "kb-12": {
+    "name": "Szantaż Salonowy",
+    "type": "akcja",
+    "layer": "B",
+    "cost": 1,
+    "creates_hook": true,
+    "action": "creates_hook",
+    "tags": [
+      "hook"
+    ],
+    "lore": "Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą."
   },
   "kt-01": {
     "name": "Rytuał Przejścia",
@@ -1707,6 +1789,34 @@
     "heresy": 1,
     "lore": "Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6."
   },
+  "kt-11": {
+    "name": "Medytacja Sefirot",
+    "type": "akcja",
+    "layer": "B",
+    "cost": 1,
+    "gold": 1,
+    "heresy_decrease": 1,
+    "action": "heresy_adjust",
+    "tags": [
+      "gold",
+      "heresy"
+    ],
+    "lore": "Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony."
+  },
+  "kt-12": {
+    "name": "Strażnik Archiwum",
+    "type": "akcja",
+    "layer": "A",
+    "cost": 0,
+    "heresy": 1,
+    "agents": 1,
+    "action": "move_agent",
+    "tags": [
+      "move",
+      "heresy"
+    ],
+    "lore": "Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach."
+  },
   "gc-01": {
     "name": "Przekupiony Strażnik",
     "type": "akcja",
@@ -1851,6 +1961,35 @@
     ],
     "heresy_text": "Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.",
     "lore": "Egzekucja domu. Stół boi się trzymać ujawnione brudy."
+  },
+  "gc-11": {
+    "name": "Fałszywe Świadectwo Cechu",
+    "type": "akcja",
+    "layer": "B",
+    "cost": 1,
+    "target_heresy": 1,
+    "action": "frame_rival",
+    "tags": [
+      "heresy",
+      "hook"
+    ],
+    "lore": "Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu."
+  },
+  "gc-12": {
+    "name": "Złodziejski Zwiad",
+    "type": "akcja",
+    "layer": "A",
+    "cost": 0,
+    "heresy": 1,
+    "agents": 1,
+    "gold": 1,
+    "action": "move_agent",
+    "tags": [
+      "move",
+      "gold",
+      "heresy"
+    ],
+    "lore": "Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę."
   }
 };
 

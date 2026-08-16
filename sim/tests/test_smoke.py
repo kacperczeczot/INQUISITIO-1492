@@ -34,7 +34,7 @@ def test_layer_a_cards_simple():
         "gildia-cieni",
     ]:
         a = cards_for_faction(fac, max_layer="A")
-        assert len(a) == 5
+        assert len(a) == 6
         for c in a:
             assert c.layer == "A"
             assert c.type != "signature"
@@ -53,7 +53,7 @@ def test_layer_c_full_decks():
         "kabala-toledo",
         "gildia-cieni",
     ]:
-        assert len(cards_for_faction(fac, max_layer="C")) == 10
+        assert len(cards_for_faction(fac, max_layer="C")) == 12
     assert len(time_cards("C")) >= 8
 
 

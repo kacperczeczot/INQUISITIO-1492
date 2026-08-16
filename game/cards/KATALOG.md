@@ -4,24 +4,24 @@
 > Źródło: pojedyncze pliki w `game/cards/factions/` i `game/cards/time-deck/`.
 > Odśwież: `python3 tools/cards/build_catalog.py`
 
-Łącznie kart: **60**
+Łącznie kart: **70**
 
 Schemat pól: [`SCHEMA.md`](SCHEMA.md). Słownictwo `effect`: [`../mechanics/leksykon.md`](../mechanics/leksykon.md).
 
 ## Spis
 
-- [Święte Oficjum](#swiete-oficjum) (10)
-- [Cienie Al-Andalus](#cienie-al-andalus) (10)
-- [Korona & Borgiowie](#korona-borgiowie) (10)
-- [Kabała z Toledo](#kabala-toledo) (10)
-- [Gildia Cieni](#gildia-cieni) (10)
+- [Święte Oficjum](#swiete-oficjum) (12)
+- [Cienie Al-Andalus](#cienie-al-andalus) (12)
+- [Korona & Borgiowie](#korona-borgiowie) (12)
+- [Kabała z Toledo](#kabala-toledo) (12)
+- [Gildia Cieni](#gildia-cieni) (12)
 - [Kronika Dziejów](#time) (10)
 
 <a id="swiete-oficjum"></a>
 
 ## Święte Oficjum
 
-Kart: **10**
+Kart: **12**
 
 ### `so-01` — Patrol Familiariuszy
 
@@ -193,11 +193,45 @@ Kart: **10**
 | `tags` | signature, autodafe, heresy |
 | `status` | prototyp |
 
+### `so-11` — Dekret Czystości Wiary
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | so-11 |
+| `name` | Dekret Czystości Wiary |
+| `faction` | swiete-oficjum |
+| `type` | akcja |
+| `layer` | B |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
+| `lore` | Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń. |
+| `tags` | heresy, gold |
+| `status` | prototyp |
+
+### `so-12` — Straż Trybunalska
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | so-12 |
+| `name` | Straż Trybunalska |
+| `faction` | swiete-oficjum |
+| `type` | akcja |
+| `layer` | A |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `lore` | Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom. |
+| `tags` | move, gold |
+| `status` | prototyp |
+
 <a id="cienie-al-andalus"></a>
 
 ## Cienie Al-Andalus
 
-Kart: **10**
+Kart: **12**
 
 ### `caa-01` — Przejście Podziemiami
 
@@ -369,11 +403,45 @@ Kart: **10**
 | `tags` | signature, relic, heresy |
 | `status` | prototyp |
 
+### `caa-11` — Nocna Zmiana Warty
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | caa-11 |
+| `name` | Nocna Zmiana Warty |
+| `faction` | cienie-al-andalus |
+| `type` | akcja |
+| `layer` | B |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. |
+| `lore` | Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku. |
+| `tags` | move, inquisitor |
+| `status` | prototyp |
+
+### `caa-12` — Skrytka w Murach
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | caa-12 |
+| `name` | Skrytka w Murach |
+| `faction` | cienie-al-andalus |
+| `type` | akcja |
+| `layer` | A |
+| `cost_gold` | 0 |
+| `heresy` | 1 |
+| `heresy_text` | — |
+| `effect` | Zyskaj 2 złota. |
+| `lore` | Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień. |
+| `tags` | gold, heresy |
+| `status` | prototyp |
+
 <a id="korona-borgiowie"></a>
 
 ## Korona & Borgiowie
 
-Kart: **10**
+Kart: **12**
 
 ### `kb-01` — Rozkaz Dworu
 
@@ -545,11 +613,45 @@ Kart: **10**
 | `tags` | signature, decree, heresy |
 | `status` | prototyp |
 
+### `kb-11` — Tajny Emisariusz
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | kb-11 |
+| `name` | Tajny Emisariusz |
+| `faction` | korona-borgiowie |
+| `type` | akcja |
+| `layer` | A |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `lore` | Złote pierścienie i listy polecające otwierają każde drzwi w Toledo. |
+| `tags` | move, gold |
+| `status` | prototyp |
+
+### `kb-12` — Szantaż Salonowy
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | kb-12 |
+| `name` | Szantaż Salonowy |
+| `faction` | korona-borgiowie |
+| `type` | akcja |
+| `layer` | B |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Załóż Hak na rywala. |
+| `lore` | Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą. |
+| `tags` | hook |
+| `status` | prototyp |
+
 <a id="kabala-toledo"></a>
 
 ## Kabała z Toledo
 
-Kart: **10**
+Kart: **12**
 
 ### `kt-01` — Rytuał Przejścia
 
@@ -721,11 +823,45 @@ Kart: **10**
 | `tags` | signature, fragment |
 | `status` | prototyp |
 
+### `kt-11` — Medytacja Sefirot
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | kt-11 |
+| `name` | Medytacja Sefirot |
+| `faction` | kabala-toledo |
+| `type` | akcja |
+| `layer` | B |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. |
+| `lore` | Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony. |
+| `tags` | gold, heresy |
+| `status` | prototyp |
+
+### `kt-12` — Strażnik Archiwum
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | kt-12 |
+| `name` | Strażnik Archiwum |
+| `faction` | kabala-toledo |
+| `type` | akcja |
+| `layer` | A |
+| `cost_gold` | 0 |
+| `heresy` | 1 |
+| `heresy_text` | — |
+| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `lore` | Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach. |
+| `tags` | move, heresy |
+| `status` | prototyp |
+
 <a id="gildia-cieni"></a>
 
 ## Gildia Cieni
 
-Kart: **10**
+Kart: **12**
 
 ### `gc-01` — Przekupiony Strażnik
 
@@ -895,6 +1031,40 @@ Kart: **10**
 | `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
 | `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
 | `tags` | signature, fall, heresy |
+| `status` | prototyp |
+
+### `gc-11` — Fałszywe Świadectwo Cechu
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | gc-11 |
+| `name` | Fałszywe Świadectwo Cechu |
+| `faction` | gildia-cieni |
+| `type` | akcja |
+| `layer` | B |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
+| `heresy_text` | — |
+| `effect` | Wskaż rywala: +1 Herezja. |
+| `lore` | Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu. |
+| `tags` | heresy, hook |
+| `status` | prototyp |
+
+### `gc-12` — Złodziejski Zwiad
+
+| Pole | Wartość |
+| :--- | :--- |
+| `id` | gc-12 |
+| `name` | Złodziejski Zwiad |
+| `faction` | gildia-cieni |
+| `type` | akcja |
+| `layer` | A |
+| `cost_gold` | 0 |
+| `heresy` | 1 |
+| `heresy_text` | — |
+| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `lore` | Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę. |
+| `tags` | move, gold, heresy |
 | `status` | prototyp |
 
 <a id="time"></a>
