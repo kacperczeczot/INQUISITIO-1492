@@ -8,22 +8,15 @@ Katalog zawiera automatycznie generowane raporty symulacyjne silnika `INQUISITIO
 
 ## 📁 Struktura Katalogu
 
-- **📁 `current/` — Bieżące Raporty (Wersja Aktywna):**
-  - [`current/raport_telemetrii.md`](current/raport_telemetrii.md) — pełny rozkład szans wygranych (Win Shares) dla 16 setupów i 5 filarów telemetrii
-  - [`current/raport_uzytecznosci_i_wplywu_4p.md`](current/raport_uzytecznosci_i_wplywu_4p.md) — matryca ablacyjna 50 kart i mechanik w Kanonie 4P
-  - [`current/raport_optymalizacji_kanonu.md`](current/raport_optymalizacji_kanonu.md) — raport z audytu optymalizatora 4P (Audytor Kanonu)
-  - [`current/audyt_level1_raport.md`](current/audyt_level1_raport.md) — audyt ±1 parametrów systemowych (złoto, agenci, progi, cooldowny)
-  - [`current/audyt_level2_raport.md`](current/audyt_level2_raport.md) — audyt ±1 warunków zwycięstwa frakcji i reguł skalowania
-  - [`current/audyt_level3_raport.md`](current/audyt_level3_raport.md) — precyzyjny audyt ±1 parametrów pojedynczych kart
-  - [`current/audyt_level4_raport.md`](current/audyt_level4_raport.md) — audyt wariantów niszowych i modyfikatorów
-  - [`current/audyt_stress_raport.md`](current/audyt_stress_raport.md) — testy stresu ekonomicznego (Poverty Stress Test)
-- **📁 `logs/` — Dzienniki Ciągłe Procesów i Optymalizacji:**
-  - [`logs/canon_4p_log.md`](logs/canon_4p_log.md) — rejestr iteracji Audytora Kanonu 4P
-  - [`logs/audytor_4p_log.md`](logs/audytor_4p_log.md) — rejestr optymalizacji 4P Makro
-  - [`logs/audytor_3p_log.md`](logs/audytor_3p_log.md) — rejestr optymalizacji formatu 3P
-  - [`logs/audytor_5p_log.md`](logs/audytor_5p_log.md) — rejestr optymalizacji formatu 5P
-- **📁 `archive/` — Archiwum Historyczne Wersji:**
-  - `archive/v0.58/`, `archive/v0.57/`, ... — kompletne migawki raportów per wersja balansu ze snapshotem `game_config.yaml`
+Wszystkie raporty, dzienniki iteracji (`audytor_*_log.md` / `canon_4p_log.md`) oraz snapshoty `game_config.yaml` są zapisywane bezpośrednio w dedykowanych folderach per wersja balansu:
+
+- **📁 `archive/v0.XX/` — Kompletne Raporty Wersji Balansu:**
+  - `archive/v0.69/`, `archive/v0.68/`, `archive/v0.67/`, ...
+  - [`game_config.yaml`](archive/v0.69/game_config.yaml) — zamrożona migawka konfiguracji gry danej wersji
+  - [`raport_telemetrii.md`](archive/v0.69/raport_telemetrii.md) — pełny rozkład szans wygranych (Win Shares) dla 16 setupów i 5 filarów telemetrii
+  - [`raport_optymalizacji_kanonu.md`](archive/v0.69/raport_optymalizacji_kanonu.md) — raport z audytu optymalizatora
+  - Dzienniki audytorów (`canon_4p_log.md`, `audytor_4p_log.md`, `audytor_3p_log.md`, `audytor_5p_log.md`)
+  - Szczegółowe raporty audytów poziomów (`audyt_level1_raport.md` do `audyt_level4_raport.md`, `audyt_stress_raport.md`) jeśli wygenerowano w danej wersji
 - **📁 `game_replays/` — Zapisy Partii Krok-po-Kroku**
 
 ## 🛠️ Generowanie i Archiwizacja
