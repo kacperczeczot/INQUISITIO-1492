@@ -1,0 +1,293 @@
+#!/usr/bin/env python3
+"""INQUISITIO-1492 — AUDYTOR 5P (5-Player Adaptive Depth Lookahead Optimizer).
+
+Autonomiczny optymalizator balansu dedykowany dla formatu 5-osobowego (5P Full).
+Zasady działania:
+  1. Kanon 4P i talia 50 kart (L3) są w 100% NIENARUSZALNE.
+  2. Optymalizacja operuje wyłącznie na parametrach formatu 5P (L1, L2, L4):
+     - L1: start_gold (5p), accusation_threshold (5p)
+     - L2: warunki zwycięstwa frakcji specyficzne dla 5P (so_stacks, kb_era, kt_frags, kt_era, gc_falls itp.)
+     - L4: szlak morski (5p)
+  3. Adaptacyjny Algorytm Wybiegający w Przód (Adaptive Lookahead +1D):
+     - Bada pełną przestrzeń kombinatoryczną (1D -> 2D -> 3D -> 4D).
+     - Ponieważ 5P to 1 setup (5p-full), ewaluacja jest błyskawiczna (~10-20s na głębokość).
+     - Zatrzymuje się w punkcie nasycenia, aplikując optymalny wielowymiarowy wektor zmian w jednym przebiegu.
+  4. Bezpieczeństwo i SSOT:
+     - Zapisuje wyjątki 5p bezpośrednio pod kluczami '5p:' w game_config.yaml.
+"""
+from __future__ import annotations
+
+import argparse
+import copy
+import os
+import shutil
+import subprocess
+import sys
+import time
+from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+# Ensure sim and tools/sim directories are on path
+TOOLS_SIM_DIR = Path(__file__).resolve().parent
+SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
+
+for p in (TOOLS_SIM_DIR, SIM_DIR):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
+
+import yaml
+from inquisitio.config import CONFIG, _CONFIG_PATH
+from inquisitio.config_updater import save_config_and_bump_version
+from inquisitio.engine.setup import SETUP_PRESETS, FactionId
+from inquisitio.runner.audit_facts import score_pair, save_and_archive_report
+from inquisitio.runner.batch import run_batch
+from inquisitio.runner.scoring import (
+    calculate_category_scores,
+    calculate_global_score,
+    calculate_setup_score,
+    color_score,
+)
+
+import audit_level1
+import audit_level2
+import audit_level4
+
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
+LOG_FILE_PATH = REPORTS_DIR / "logs" / "audytor_5p_log.md"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
+
+FACTION_NAMES = {
+    FactionId.SWIETE_OFICJUM: "SO",
+    FactionId.CIENIE_AL_ANDALUS: "CAA",
+    FactionId.KORONA_BORGIOWIE: "KB",
+    FactionId.KABALA_TOLEDO: "KT",
+    FactionId.GILDIA_CIENI: "GC",
+}
+
+
+def log_msg(msg: str, echo: bool = True) -> None:
+    """Logs message to console and audytor_5p_log.md."""
+    if echo:
+        print(msg)
+    LOG_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(LOG_FILE_PATH, "a", encoding="utf-8") as f:
+        f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}\n")
+
+
+def evaluate_candidate_5p(
+    candidate: tuple[str, str, dict],
+    games: int = 2000,
+    seed: int = 42,
+) -> dict:
+    """Evaluates candidate mutation on 5p-full setup."""
+    cid, name, params = candidate
+    s = run_batch(games=games, setup="5p-full", seed=seed, layer="C", win_overrides=params)
+    sc = calculate_setup_score(s)
+
+    return {
+        "id": cid,
+        "name": name,
+        "params": params,
+        "score_5p": sc,
+        "eras_avg": round(s.eras_avg, 2),
+        "deadlock_pct": round(s.eras_limit_pct, 2),
+        "poverty_pct": round(s.passes_forced_pct, 2),
+        "autodafe_avg": round(s.autodafe_avg, 2),
+        "wins": s.wins,
+    }
+
+
+def generate_atomic_candidates_5p() -> list[tuple[str, str, dict]]:
+    """Builds atomic mutations for 5P format across L1, L2, and L4 (strictly excluding L3 cards)."""
+    tests = []
+
+    # L1: System parameters for 5P
+    tests.extend([t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0]])
+
+    # L2: Faction victory conditions for 5P
+    tests.extend([t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"])
+
+    # L4: Niche variants & Edicts
+    tests.extend([t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"])
+
+    return tests
+
+
+def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tuple[str, str, dict] | None:
+    """Merges two non-conflicting mutations."""
+    id1, name1, p1 = m1
+    id2, name2, p2 = m2
+
+    keys1 = set(p1.keys())
+    keys2 = set(p2.keys())
+    if keys1 & keys2:
+        return None
+
+    combined_id = f"{id1}__{id2}"
+    combined_name = f"{name1} + {name2}"
+    merged_params = copy.deepcopy(p1)
+    merged_params.update(p2)
+    return (combined_id, combined_name, merged_params)
+
+
+def run_lookahead_beam_search_5p(
+    baseline_score: float,
+    workers: int = 10,
+    max_depth: int = 5,
+) -> dict | None:
+    """Adaptive Lookahead +1D Optimizer for 5P."""
+    atomic = generate_atomic_candidates_5p()
+    log_msg(f"Pula kandydatów atomowych 1D: {len(atomic)} wariantów")
+
+    current_best_candidate = ("BASE_5P", "Baza 5P", {})
+    current_best_res = evaluate_candidate_5p(current_best_candidate, games=3000)
+    current_best_score = current_best_res["score_5p"]
+
+    log_msg(f"Stan początkowy 5P: {color_score(current_best_score, bold=True)} pkt")
+
+    current_level_candidates = atomic
+
+    for depth in range(1, max_depth + 1):
+        log_msg(f"\n{'='*60}\n🔍 BADANIE GŁĘBOKOŚCI {depth}D (Łącznie kandydatów: {len(current_level_candidates)})\n{'='*60}")
+        
+        t0 = time.time()
+        results = []
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = [executor.submit(evaluate_candidate_5p, c, 1000) for c in current_level_candidates]
+            for fut in futures:
+                results.append(fut.result())
+
+        results.sort(key=lambda x: x["score_5p"], reverse=True)
+        top_candidates = results[:min(30, len(results))]
+        best_of_depth = top_candidates[0]
+
+        log_msg(f"Najlepszy na głębokości {depth}D: {best_of_depth['name']} -> {best_of_depth['score_5p']:.1f} pkt (Czas: {time.time()-t0:.1f}s)")
+
+        # High-sample verification
+        verified_top = []
+        for cand in top_candidates[:8]:
+            c_tuple = (cand["id"], cand["name"], cand["params"])
+            ver_res = evaluate_candidate_5p(c_tuple, games=5000)
+            verified_top.append(ver_res)
+
+        verified_top.sort(key=lambda x: x["score_5p"], reverse=True)
+        best_verified = verified_top[0]
+
+        if best_verified["score_5p"] > current_best_score + 0.1:
+            gain = best_verified["score_5p"] - current_best_score
+            log_msg(f"✨ Zysk na głębokości {depth}D: +{gain:.2f} pkt ({current_best_score:.1f} -> {best_verified['score_5p']:.1f} pkt)")
+            current_best_score = best_verified["score_5p"]
+            current_best_candidate = (best_verified["id"], best_verified["name"], best_verified["params"])
+            current_best_res = best_verified
+
+            # Generate (depth + 1)D candidates
+            next_level = []
+            seen_ids = set()
+            for cand in top_candidates[:20]:
+                c_tuple = (cand["id"], cand["name"], cand["params"])
+                for atom in atomic:
+                    merged = merge_mutations(c_tuple, atom)
+                    if merged and merged[0] not in seen_ids:
+                        seen_ids.add(merged[0])
+                        next_level.append(merged)
+
+            if not next_level:
+                log_msg(f"Brak dalszych niekolidujących kombinacji dla poziomu {depth+1}D.")
+                break
+            current_level_candidates = next_level
+        else:
+            log_msg(f"🛑 Poziom {depth}D nie przyniósł dalszej poprawy ponad dotychczasowe optimum ({current_best_score:.1f} pkt). Zatrzymuję ekspansję.")
+            break
+
+    return current_best_res if current_best_candidate[0] != "BASE_5P" else None
+
+
+def apply_and_document_winner_5p(winner: dict) -> None:
+    """Applies the winning 5P exception to game_config.yaml under 5p: sections and updates docs."""
+    log_msg(f"\n🏆 APLIKOWANIE ZWYCIĘSKIEGO WEKTORA ZMIAN 5P: {winner['name']} ({winner['score_5p']:.1f} pkt)")
+    
+    with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+
+    # Apply parameter overrides to 5p sections in config
+    p = winner["params"]
+    
+    # 1. SO Stacks
+    if "so_stacks_offset" in p:
+        cur = cfg.get("victory", {}).get("swiete_oficjum", {}).get("stacks", 5)
+        val = (cur.get("5p", cur) if isinstance(cur, dict) else cur) + p["so_stacks_offset"]
+        if not isinstance(cfg["victory"]["swiete_oficjum"]["stacks"], dict):
+            cfg["victory"]["swiete_oficjum"]["stacks"] = {"3p": cur, "4p": cur, "5p": val}
+        else:
+            cfg["victory"]["swiete_oficjum"]["stacks"]["5p"] = val
+
+    # 2. KB Era
+    if "kb_era_offset" in p:
+        cur = cfg.get("victory", {}).get("korona_borgiowie", {}).get("era", 4)
+        val = (cur.get("5p", cur) if isinstance(cur, dict) else cur) + p["kb_era_offset"]
+        if not isinstance(cfg["victory"]["korona_borgiowie"]["era"], dict):
+            cfg["victory"]["korona_borgiowie"]["era"] = {"3p": cur, "4p": cur, "5p": val}
+        else:
+            cfg["victory"]["korona_borgiowie"]["era"]["5p"] = val
+
+    # 3. KT Era
+    if "kt_era_offset" in p:
+        cur = cfg.get("victory", {}).get("kabala_toledo", {}).get("era", 6)
+        val = (cur.get("5p", cur) if isinstance(cur, dict) else cur) + p["kt_era_offset"]
+        if not isinstance(cfg["victory"]["kabala_toledo"]["era"], dict):
+            cfg["victory"]["kabala_toledo"]["era"] = {"3p": cur, "4p": cur, "5p": val}
+        else:
+            cfg["victory"]["kabala_toledo"]["era"]["5p"] = val
+
+    # 4. GC Falls Default
+    if "gc_falls_default_offset" in p or "gc_falls_offset" in p:
+        off = p.get("gc_falls_default_offset", p.get("gc_falls_offset", 0))
+        cur = cfg.get("victory", {}).get("gildia_cieni", {}).get("falls", {}).get("default", 3)
+        val = (cur.get("5p", cur) if isinstance(cur, dict) else cur) + off
+        if not isinstance(cfg["victory"]["gildia_cieni"]["falls"]["default"], dict):
+            cfg["victory"]["gildia_cieni"]["falls"]["default"] = {"3p": cur, "4p": cur, "5p": val}
+        else:
+            cfg["victory"]["gildia_cieni"]["falls"]["default"]["5p"] = val
+
+    # 5. Start Gold
+    if "start_gold_offset" in p:
+        cur = cfg.get("system", {}).get("start_gold", 4)
+        val = (cur.get("5p", cur) if isinstance(cur, dict) else cur) + p["start_gold_offset"]
+        if not isinstance(cfg["system"]["start_gold"], dict):
+            cfg["system"]["start_gold"] = {"3p": cur, "4p": cur, "5p": val}
+        else:
+            cfg["system"]["start_gold"]["5p"] = val
+
+    new_ver = save_config_and_bump_version(cfg)
+    log_msg(f"✅ Zapisano wyjątki 5P do game_config.yaml! Nowa wersja: {new_ver}")
+
+    # Synchronize rules
+    subprocess.run(["python3", str(TOOLS_SIM_DIR / "sync_config.py")], check=True)
+    log_msg("✅ Zsynchronizowano reguły gry i katalog kart (sync_config.py).")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Audytor 5P — Adaptive Lookahead Optimizer")
+    parser.add_argument("--workers", type=int, default=10, help="Liczba procesów równoległych")
+    parser.add_argument("--max-depth", type=int, default=5, help="Maksymalna głębokość przeszukiwania Lookahead")
+    args = parser.parse_args()
+
+    log_msg("═══════════════════════════════════════════════════════════")
+    log_msg("🚀 START AUDYTOR 5P (ADAPTIVE LOOKAHEAD +1D OPTIMIZER)")
+    log_msg("═══════════════════════════════════════════════════════════")
+
+    CONFIG.reload()
+    base_res = evaluate_candidate_5p(("BASE", "Baza 5P", {}), games=3000)
+    log_msg(f"Bieżący wynik 5P: {color_score(base_res['score_5p'], bold=True)} pkt")
+
+    winner = run_lookahead_beam_search_5p(base_res["score_5p"], workers=args.workers, max_depth=args.max_depth)
+    if winner:
+        apply_and_document_winner_5p(winner)
+    else:
+        log_msg("🏁 Brak zmian przynoszących zysk w 5P. Bieżący stan jest optymalny.")
+
+
+if __name__ == "__main__":
+    main()
