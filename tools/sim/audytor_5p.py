@@ -144,13 +144,14 @@ def run_lookahead_beam_search_5p(
     current_best_candidate = ("BASE_5P", "Baza 5P", {})
     current_best_res = evaluate_candidate_5p(current_best_candidate, games=3000)
     current_best_score = current_best_res["score_5p"]
+    baseline_score = current_best_score
 
     log_msg(f"Stan początkowy 5P: {color_score(current_best_score, bold=True)} pkt")
 
     current_level_candidates = atomic
 
     for depth in range(1, max_depth + 1):
-        log_msg(f"\n{'='*60}\n🔍 BADANIE GŁĘBOKOŚCI {depth}D (Łącznie kandydatów: {len(current_level_candidates)})\n{'='*60}")
+        log_msg(f"\n{'='*60}\n🔍 BADANIE GŁĘBOKOŚCI {depth}D (Kandydatów do zbadania: {len(current_level_candidates)})\n{'='*60}")
         
         t0 = time.time()
         results = []
@@ -163,7 +164,7 @@ def run_lookahead_beam_search_5p(
         top_candidates = results[:min(30, len(results))]
         best_of_depth = top_candidates[0]
 
-        log_msg(f"Najlepszy na głębokości {depth}D: {best_of_depth['name']} -> {best_of_depth['score_5p']:.1f} pkt (Czas: {time.time()-t0:.1f}s)")
+        log_msg(f"Najlepszy wstępny na głębokości {depth}D: {best_of_depth['name']} -> {best_of_depth['score_5p']:.1f} pkt (Czas: {time.time()-t0:.1f}s)")
 
         # High-sample verification
         verified_top = []
@@ -175,33 +176,44 @@ def run_lookahead_beam_search_5p(
         verified_top.sort(key=lambda x: x["score_5p"], reverse=True)
         best_verified = verified_top[0]
 
-        if best_verified["score_5p"] > current_best_score + 0.1:
+        log_msg(f"Zweryfikowany lider {depth}D: {best_verified['name']} -> {color_score(best_verified['score_5p'], bold=True)} pkt")
+
+        improved = False
+        if best_verified["score_5p"] > current_best_score + 0.05:
             gain = best_verified["score_5p"] - current_best_score
-            log_msg(f"✨ Zysk na głębokości {depth}D: +{gain:.2f} pkt ({current_best_score:.1f} -> {best_verified['score_5p']:.1f} pkt)")
+            log_msg(f"✨ Nowe optimum na głębokości {depth}D: +{gain:.2f} pkt ({current_best_score:.1f} -> {best_verified['score_5p']:.1f} pkt)")
             current_best_score = best_verified["score_5p"]
             current_best_candidate = (best_verified["id"], best_verified["name"], best_verified["params"])
             current_best_res = best_verified
+            improved = True
 
-            # Generate (depth + 1)D candidates
+        # Lookahead rule: ALWAYS explore 2D, and for depth >= 2 continue as long as score improved
+        if depth == 1 or improved:
             next_level = []
             seen_ids = set()
-            for cand in top_candidates[:20]:
+            expansion_pool = top_candidates[:20] if improved else top_candidates[:25]
+            for cand in expansion_pool:
                 c_tuple = (cand["id"], cand["name"], cand["params"])
                 for atom in atomic:
                     merged = merge_mutations(c_tuple, atom)
-                    if merged and merged[0] not in seen_ids:
-                        seen_ids.add(merged[0])
-                        next_level.append(merged)
+                    if merged:
+                        norm_id = "__".join(sorted(merged[0].split("__")))
+                        if norm_id not in seen_ids:
+                            seen_ids.add(norm_id)
+                            next_level.append(merged)
 
             if not next_level:
                 log_msg(f"Brak dalszych niekolidujących kombinacji dla poziomu {depth+1}D.")
                 break
+            log_msg(f"🚀 Przechodzę do lookahead {depth+1}D: wygenerowano {len(next_level)} kombinacji.")
             current_level_candidates = next_level
         else:
             log_msg(f"🛑 Poziom {depth}D nie przyniósł dalszej poprawy ponad dotychczasowe optimum ({current_best_score:.1f} pkt). Zatrzymuję ekspansję.")
             break
 
-    return current_best_res if current_best_candidate[0] != "BASE_5P" else None
+    if current_best_score > baseline_score + 0.05:
+        return current_best_res
+    return None
 
 
 def apply_and_document_winner_5p(winner: dict) -> None:

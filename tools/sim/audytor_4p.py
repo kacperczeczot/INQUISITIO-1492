@@ -170,15 +170,16 @@ def run_lookahead_beam_search_4p(
     log_msg(f"Pula kandydatów atomowych 1D: {len(atomic)} wariantów")
 
     current_best_candidate = ("BASE_4P", "Baza 4P", {})
-    current_best_res = evaluate_candidate_4p(current_best_candidate, games_per_setup=2000)
+    current_best_res = evaluate_candidate_4p(current_best_candidate, games_per_setup=2500)
     current_best_score = current_best_res["score_4p"]
+    baseline_score = current_best_score
 
     log_msg(f"Stan początkowy Kanonu 4P: {color_score(current_best_score, bold=True)} pkt")
 
     current_level_candidates = atomic
 
     for depth in range(1, max_depth + 1):
-        log_msg(f"\n{'='*60}\n🔍 BADANIE GŁĘBOKOŚCI {depth}D (Łącznie kandydatów: {len(current_level_candidates)})\n{'='*60}")
+        log_msg(f"\n{'='*60}\n🔍 BADANIE GŁĘBOKOŚCI {depth}D (Kandydatów do zbadania: {len(current_level_candidates)})\n{'='*60}")
         
         t0 = time.time()
         results = []
@@ -188,14 +189,14 @@ def run_lookahead_beam_search_4p(
                 results.append(fut.result())
 
         results.sort(key=lambda x: x["score_4p"], reverse=True)
-        top_candidates = results[:min(25, len(results))]
+        top_candidates = results[:min(30, len(results))]
         best_of_depth = top_candidates[0]
 
-        log_msg(f"Najlepszy na głębokości {depth}D: {best_of_depth['name']} -> {best_of_depth['score_4p']:.1f} pkt (Czas: {time.time()-t0:.1f}s)")
+        log_msg(f"Najlepszy wstępny na głębokości {depth}D: {best_of_depth['name']} -> {best_of_depth['score_4p']:.1f} pkt (Czas: {time.time()-t0:.1f}s)")
 
-        # Verify TOP 5 on high sample
+        # Verify TOP 8 on high sample (3000 games)
         verified_top = []
-        for cand in top_candidates[:5]:
+        for cand in top_candidates[:8]:
             c_tuple = (cand["id"], cand["name"], cand["params"])
             ver_res = evaluate_candidate_4p(c_tuple, games_per_setup=3000)
             verified_top.append(ver_res)
@@ -203,33 +204,44 @@ def run_lookahead_beam_search_4p(
         verified_top.sort(key=lambda x: x["score_4p"], reverse=True)
         best_verified = verified_top[0]
 
-        if best_verified["score_4p"] > current_best_score + 0.1:
+        log_msg(f"Zweryfikowany lider {depth}D: {best_verified['name']} -> {color_score(best_verified['score_4p'], bold=True)} pkt")
+
+        improved = False
+        if best_verified["score_4p"] > current_best_score + 0.05:
             gain = best_verified["score_4p"] - current_best_score
-            log_msg(f"✨ Zysk na głębokości {depth}D: +{gain:.2f} pkt ({current_best_score:.1f} -> {best_verified['score_4p']:.1f} pkt)")
+            log_msg(f"✨ Nowe optimum na głębokości {depth}D: +{gain:.2f} pkt ({current_best_score:.1f} -> {best_verified['score_4p']:.1f} pkt)")
             current_best_score = best_verified["score_4p"]
             current_best_candidate = (best_verified["id"], best_verified["name"], best_verified["params"])
             current_best_res = best_verified
+            improved = True
 
-            # Generate (depth + 1)D candidates for next lookahead iteration
+        # Lookahead rule: ALWAYS explore 2D (depth 1 -> 2), and for depth >= 2 continue as long as score improved
+        if depth == 1 or improved:
             next_level = []
             seen_ids = set()
-            for cand in top_candidates[:15]:
+            expansion_pool = top_candidates[:20] if improved else top_candidates[:25]
+            for cand in expansion_pool:
                 c_tuple = (cand["id"], cand["name"], cand["params"])
                 for atom in atomic:
                     merged = merge_mutations(c_tuple, atom)
-                    if merged and merged[0] not in seen_ids:
-                        seen_ids.add(merged[0])
-                        next_level.append(merged)
+                    if merged:
+                        norm_id = "__".join(sorted(merged[0].split("__")))
+                        if norm_id not in seen_ids:
+                            seen_ids.add(norm_id)
+                            next_level.append(merged)
 
             if not next_level:
                 log_msg(f"Brak dalszych niekolidujących kombinacji dla poziomu {depth+1}D.")
                 break
+            log_msg(f"🚀 Przechodzę do lookahead {depth+1}D: wygenerowano {len(next_level)} kombinacji.")
             current_level_candidates = next_level
         else:
             log_msg(f"🛑 Poziom {depth}D nie przyniósł dalszej poprawy ponad dotychczasowe optimum ({current_best_score:.1f} pkt). Zatrzymuję ekspansję.")
             break
 
-    return current_best_res if current_best_candidate[0] != "BASE_4P" else None
+    if current_best_score > baseline_score + 0.05:
+        return current_best_res
+    return None
 
 
 def apply_and_document_winner_4p(winner: dict) -> None:
