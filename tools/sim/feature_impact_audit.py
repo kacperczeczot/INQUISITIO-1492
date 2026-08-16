@@ -625,15 +625,21 @@ def main():
     parser.add_argument("--games", type=int, default=5000, help="Liczba gier na setup (domyślnie: 5000, min. 1000)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba wątków równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno losowe (CRN)")
+    parser.add_argument("--canon-4p", action="store_true", help="Tryb Kanonu 4P: bada wyłącznie 5 setupów 4-osobowych (3.2x szybciej)")
 
     args = parser.parse_args()
     if args.games < 1000:
         print("⚠️ Podwyższam próbę do wymaganego minimum 1000 gier.")
         args.games = 1000
 
-    run_full_ablation_audit(games_per_setup=args.games, seed=args.seed, workers=args.workers)
+    if args.canon_4p:
+        from feature_impact_4p import run_full_ablation_audit_4p
+        run_full_ablation_audit_4p(games_per_setup=args.games, seed=args.seed, workers=args.workers)
+    else:
+        run_full_ablation_audit(games_per_setup=args.games, seed=args.seed, workers=args.workers)
 
 
 if __name__ == "__main__":
     main()
+
 
