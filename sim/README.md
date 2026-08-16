@@ -21,7 +21,7 @@ pip install -e ".[dev]"
 
 Wymaga Python **≥ 3.9** (zalecane 3.11+).
 
-## CLI
+## CLI & Narzędzia Balansujące
 
 ```bash
 # lista setupów (tylko 3–5p)
@@ -36,6 +36,22 @@ python -m inquisitio matrix --games 100 --layers C --seed 42
 
 # porównanie progu Herezji 7 vs 8
 python -m inquisitio compare --games 100 --setup 3p-oficjum-alandalus-korona --seed 42 --layer C
+```
+
+### 🤖 Autonomiczne Audytory i Optymalizatory Balansu
+
+```bash
+# 1. Audytor Kanonu 4P (Główna kotwica: optymalizacja kart i parametrów bazowych 4P)
+python tools/sim/audytor_kanonu.py --workers 10
+
+# 2. Audytor 3P (Dedykowany optymalizator 10 setupów 3-osobowych z algorytmem Adaptive Lookahead +1D)
+python tools/sim/audytor_3p.py --workers 10
+
+# 3. Audytor 5P (Dedykowany optymalizator formatu 5-osobowego z algorytmem Adaptive Lookahead +1D)
+python tools/sim/audytor_5p.py --workers 10
+
+# 4. Grand Audit (Pełny audyt poziomów L1–L4, telemetrii 5 filarów i testów stresu ekonomicznego)
+python tools/sim/run_grand_audit.py
 ```
 
 ## Testy

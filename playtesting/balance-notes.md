@@ -8,7 +8,8 @@ Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Marionetki.
 **Werdykt fun = sesja ludzka** ([`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md)).  
 **Spłaszczanie:** unikamy skalowania 3p/4p/5p; jedna liczba, jeśli wynik jest lepszy, podobny albo tani ([hierarchia §0](../docs/rules/hierarchia_balansowania.md)).
 
-Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) · Silnik: [`../sim/README.md`](../sim/README.md) · Config: [`../game_config.yaml`](../game_config.yaml).
+Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) · Silnik: [`../sim/README.md`](../sim/README.md) · Config: [`../game_config.yaml`](../game_config.yaml).  
+**Autonomiczne Narzędzia:** Kanon 4P: [`audytor_kanonu.py`](../tools/sim/audytor_kanonu.py) · Format 3P (Lookahead): [`audytor_3p.py`](../tools/sim/audytor_3p.py) · Format 5P (Lookahead): [`audytor_5p.py`](../tools/sim/audytor_5p.py) · Grand Audit: [`run_grand_audit.py`](../tools/sim/run_grand_audit.py).
 
 ---
 
@@ -69,6 +70,41 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.65 (2026-08-16) — Kanon 4P: Karta `kt-09` (Fragment Kodeksu): `cost` → `2` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`94.0`** → **`94.5 pkt`** | Global **`76.7`** | 3p **`67.4`** | 5p **`70.9`**
+- **Modyfikacja (`L3_KT-09_COST_PLUS1`):** Karta `kt-09` (Fragment Kodeksu): `cost` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.46, Deadlocks 0.4%, Pas Biedy 24.4%.
+
+### 🟢 Patch v0.64 (2026-08-16) — Kanon 4P: Karta `kt-04` (Zwierciadło Herezji): `cost` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`93.9`** → **`94.0 pkt`** | Global **`76.7`** | 3p **`67.2`** | 5p **`71.9`**
+- **Modyfikacja (`L3_KT-04_COST_PLUS1`):** Karta `kt-04` (Zwierciadło Herezji): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.47, Deadlocks 0.4%, Pas Biedy 24.4%.
+
+### 🟢 Patch v0.63 (2026-08-16) — Kanon 4P: Karta `caa-10` (Echo Alhambry): `cost` → `1` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`93.4`** → **`93.9 pkt`** | Global **`76.1`** | 3p **`67.3`** | 5p **`70.1`**
+- **Modyfikacja (`L3_CAA-10_COST_PLUS1`):** Karta `caa-10` (Echo Alhambry): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.46, Deadlocks 0.3%, Pas Biedy 24.4%.
+
+### 🟢 Patch v0.62 (2026-08-16) — Kanon 4P: Karta `caa-04` (Fałszywy Trop): `gold` → `1` (Zysk 4P Δ +1.3 pkt)
+- **Wynik 4P:** Kanon **`92.1`** → **`93.4 pkt`** | Global **`76.5`** | 3p **`67.8`** | 5p **`71.6`**
+- **Modyfikacja (`L3_CAA-04_GOLD_PLUS1`):** Karta `caa-04` (Fałszywy Trop): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.47, Deadlocks 0.3%, Pas Biedy 24.4%.
+
+### 🟢 Patch v0.61 (2026-08-16) — Kanon 4P: Karta `gc-10` (Upadek Domu): `heresy` → `1` (Zysk 4P Δ +2.3 pkt)
+- **Wynik 4P:** Kanon **`89.8`** → **`92.1 pkt`** | Global **`72.7`** | 3p **`68.4`** | 5p **`62.0`**
+- **Modyfikacja (`L3_GC-10_HERESY_MINUS1`):** Karta `gc-10` (Upadek Domu): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.46, Deadlocks 0.4%, Pas Biedy 24.4%.
+
+### 🟢 Patch v0.60 (2026-08-16) — Kanon 4P: Karta `kb-08` (Przekupstwo Sędziego): `cost` → `2` (Zysk 4P Δ +5.3 pkt)
+- **Wynik 4P:** Kanon **`84.5`** → **`89.8 pkt`** | Global **`71.3`** | 3p **`74.5`** | 5p **`51.8`**
+- **Modyfikacja (`L3_KB-08_COST_MINUS1`):** Karta `kb-08` (Przekupstwo Sędziego): `cost` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.42, Deadlocks 0.3%, Pas Biedy 24.3%.
+
+### 🟢 Patch v0.59 (2026-08-16) — Kanon 4P: Karta `gc-03` (Podrzucenie Księgi): `gold` → `1` (Zysk 4P Δ +5.7 pkt)
+- **Wynik 4P:** Kanon **`78.8`** → **`84.5 pkt`** | Global **`70.0`** | 3p **`76.8`** | 5p **`49.3`**
+- **Modyfikacja (`L3_GC-03_GOLD_PLUS1`):** Karta `gc-03` (Podrzucenie Księgi): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.46, Deadlocks 0.3%, Pas Biedy 24.6%.
 
 ### 🟢 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé
 - **Wyniki Audytu (Próba 10 000 gier/setup × 16 setupów = 160 000 gier, Model Asymptotyczny):**
