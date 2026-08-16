@@ -104,7 +104,9 @@ def _run_single_test_task_3p(args_tuple: tuple) -> dict:
         setup_scores[sname] = sc
         for fid, wins in s.wins.items():
             if s.games > 0:
-                fshares[fid].append(wins / s.games)
+                fid_enum = FactionId(fid) if not isinstance(fid, FactionId) else fid
+                if fid_enum in fshares:
+                    fshares[fid_enum].append(wins / s.games)
 
     score_3p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
     n_sum = len(summaries) if summaries else 1
@@ -186,14 +188,18 @@ def apply_mutation_to_3p_config(raw_cfg: dict[str, Any], rule_params: dict[str, 
     cfg = copy.deepcopy(raw_cfg)
     descs = []
 
-    def _set_3p(section_dict: dict, key: str, default_val: Any, offset: int, desc_name: str):
+    def _set_3p(section_dict: dict, key: str, default_val: Any, offset: Any, desc_name: str):
+        if offset is None:
+            return
+        off = int(offset)
         cur = section_dict.get(key, default_val)
         if isinstance(cur, dict):
-            base_v = cur.get("3p", cur.get("4p", default_val))
-            new_v = max(1, base_v + offset)
+            base_v = int(cur.get("3p", cur.get("4p", default_val)))
+            new_v = max(1, base_v + off)
             cur["3p"] = new_v
         else:
-            new_v = max(1, cur + offset)
+            base_v = int(cur) if cur is not None else int(default_val)
+            new_v = max(1, base_v + off)
             section_dict[key] = {"3p": new_v, "4p": cur, "5p": cur}
         descs.append(f"{desc_name} (3p): {new_v}")
 

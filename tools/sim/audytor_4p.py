@@ -115,7 +115,9 @@ def _run_single_test_task_4p(args_tuple: tuple) -> dict:
         setup_scores[sname] = sc
         for fid, wins in s.wins.items():
             if s.games > 0:
-                fshares[fid].append(wins / s.games)
+                fid_enum = FactionId(fid) if not isinstance(fid, FactionId) else fid
+                if fid_enum in fshares:
+                    fshares[fid_enum].append(wins / s.games)
 
     score_4p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
     n_sum = len(summaries) if summaries else 1
