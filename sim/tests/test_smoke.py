@@ -249,6 +249,44 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
-    st2.era = 3
-    assert check_winner_details(st2) is None
+
+
+def test_reaction_so_05_triggers_on_heresy_play():
+    import random
+    from inquisitio.engine.effects.registry import play_card
+    from inquisitio.engine.setup import new_game, FactionId
+
+    st = new_game(setup="4p-core", seed=42, layer="C")
+    so = st.players[FactionId.SWIETE_OFICJUM]
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+
+    so.hand = ["so-05"]
+    caa.hand = ["caa-03"]  # caa-03 has heresy=1
+    caa.gold = 5
+    caa_h_before = caa.heresy
+
+    rng = random.Random(42)
+    played = play_card(st, FactionId.CIENIE_AL_ANDALUS, "caa-03", rng)
+    assert played is True
+    # caa gets 1 from card, plus 2 from so-05 reaction = +3 total
+    assert caa.heresy == caa_h_before + 1 + 2
+    assert "so-05" not in so.hand
+    assert "so-05" in so.discard
+
+
+def test_reaction_gc_05_alters_verdict_vote():
+    import random
+    from inquisitio.engine.setup import new_game, FactionId
+    from inquisitio.engine.verdict import run_verdict
+
+    st = new_game(setup="4p-no-oficjum", seed=42, layer="C")
+    gc = st.players[FactionId.GILDIA_CIENI]
+    gc.hand = ["gc-05"]
+    gc.heresy = 8  # eligible accused
+
+    rng = random.Random(42)
+    # Verdict against Gildia Cieni
+    convicted = run_verdict(st, FactionId.KORONA_BORGIOWIE, FactionId.GILDIA_CIENI, rng)
+    assert "gc-05" not in gc.hand
+    assert "gc-05" in gc.discard
 

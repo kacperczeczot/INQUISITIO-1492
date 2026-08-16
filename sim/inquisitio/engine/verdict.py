@@ -59,6 +59,38 @@ def run_verdict(
             votes_burn += weight
         else:
             votes_spare += weight
+
+    # ── Reaction: gc-05 (Fałszywy Świadek) ──
+    # Trigger: after_verdict_majority_revealed (Gildia Cieni alters 1 vote)
+    if FactionId.GILDIA_CIENI in state.players:
+        gc_pl = state.players[FactionId.GILDIA_CIENI]
+        if "gc-05" in gc_pl.hand:
+            from inquisitio.cards.loader import load_all_cards
+            cards = load_all_cards(card_overrides=sys.get("card_overrides"))
+            gc_card = cards.get("gc-05")
+            gc_cost = max(0, gc_card.cost + sys.get("card_cost_offset", 0)) if gc_card else 0
+            if gc_pl.gold >= gc_cost:
+                # Case 1: Accused is Gildia Cieni and would be convicted -> save own agent
+                if accused == FactionId.GILDIA_CIENI and votes_burn > votes_spare:
+                    gc_pl.gold -= gc_cost
+                    gc_pl.hand.remove("gc-05")
+                    gc_pl.discard.append("gc-05")
+                    votes_burn -= 1
+                    votes_spare += 1
+                    state.add_log(
+                        f"gildia-cieni reaction gc-05 (Fałszywy Świadek) changed vote to spare: burn={votes_burn} spare={votes_spare}"
+                    )
+                # Case 2: Accused is a rival with Hook and 1 vote is needed to convict
+                elif accused != FactionId.GILDIA_CIENI and accused in gc_pl.hook_victims_ever and votes_burn <= votes_spare:
+                    gc_pl.gold -= gc_cost
+                    gc_pl.hand.remove("gc-05")
+                    gc_pl.discard.append("gc-05")
+                    votes_spare -= 1
+                    votes_burn += 1
+                    state.add_log(
+                        f"gildia-cieni reaction gc-05 (Fałszywy Świadek) changed vote to burn: burn={votes_burn} spare={votes_spare}"
+                    )
+
     convicted = votes_burn > votes_spare
     state.add_log(
         f"Verdict {accuser.value}->{accused.value}: "

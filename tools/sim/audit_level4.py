@@ -29,17 +29,32 @@ from inquisitio.runner.audit_facts import (
 
 def build_level4_tests():
     nv = CONFIG.variants
-    return [
+    tests = [
         ("L4_BAZA", "Baza (Bieżące warianty niszowe i zasady edyktów)", {}),
         ("L4_NO_TIME_DECK", "Kronika Dziejów: Całkowite wyłączenie edyktów", {"no_time_deck": True}),
-        ("L4_TIME_DECK_EVERY_ERA", f"Edykty Czasu: co {nv.time_deck_freq} Erę → co 1 Erę", {"time_deck_freq": 1}),
-        ("L4_TIME_DECK_EVERY_2ERAS", f"Edykty Czasu: co {nv.time_deck_freq} Erę → co 2 Ery", {"time_deck_freq": 2}),
-        ("L4_SEA_ROUTE_ERA4", f"Szlak Morski: Era {nv.sea_route_era} → Era 4", {"sea_route_era": 4}),
-        ("L4_SEA_ROUTE_ERA6", f"Szlak Morski: Era {nv.sea_route_era} → Era 6", {"sea_route_era": 6}),
-        ("L4_INQUISITOR_SPEED2", f"Inkwizytor Patrol: ruch {nv.inquisitor_speed} → 2", {"inquisitor_speed": 2}),
-        ("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {nv.inquisitor_speed} → 0", {"inquisitor_speed": 0}),
         ("L4_VERDICT_SECRET", "Werdykt: jawny → tajny (brak koordynacji anty-snowball)", {"verdict_secret": True}),
     ]
+    cur_freq = getattr(nv, "time_deck_freq", 1)
+    if cur_freq != 1:
+        tests.append(("L4_TIME_DECK_EVERY_ERA", f"Edykty Czasu: co {cur_freq} Erę → co 1 Erę", {"time_deck_freq": 1}))
+    if cur_freq != 2:
+        tests.append(("L4_TIME_DECK_EVERY_2ERAS", f"Edykty Czasu: co {cur_freq} Erę → co 2 Ery", {"time_deck_freq": 2}))
+
+    cur_sea = getattr(nv, "sea_route_era", 5)
+    if cur_sea != 4:
+        tests.append(("L4_SEA_ROUTE_ERA4", f"Szlak Morski: Era {cur_sea} → Era 4", {"sea_route_era": 4}))
+    if cur_sea != 5:
+        tests.append(("L4_SEA_ROUTE_ERA5", f"Szlak Morski: Era {cur_sea} → Era 5", {"sea_route_era": 5}))
+    if cur_sea != 6:
+        tests.append(("L4_SEA_ROUTE_ERA6", f"Szlak Morski: Era {cur_sea} → Era 6", {"sea_route_era": 6}))
+
+    cur_inq = getattr(nv, "inquisitor_speed", 1)
+    if cur_inq != 2:
+        tests.append(("L4_INQUISITOR_SPEED2", f"Inkwizytor Patrol: ruch {cur_inq} → 2", {"inquisitor_speed": 2}))
+    if cur_inq != 0:
+        tests.append(("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {cur_inq} → 0", {"inquisitor_speed": 0}))
+
+    return tests
 
 
 LEVEL4_TESTS = build_level4_tests()

@@ -358,6 +358,25 @@ def play_card(state: GameState, fid: FactionId, card_id: str, rng: random.Random
     state.add_log(f"{fid.value} played {card_id} ({name}){suffix}{paid}")
     if cost and pl.gold != gold_before:
         state.add_log(f"{fid.value} gold after cost {gold_before}→{pl.gold}")
+
+    # ── Reaction: so-05 (Wezwanie do Trybunału) ──
+    # Trigger: rival_plays_heresy_gte_1
+    if ((card.heresy and card.heresy >= 1) or (card.target_heresy and card.target_heresy >= 1)):
+        if FactionId.SWIETE_OFICJUM in state.players and fid != FactionId.SWIETE_OFICJUM:
+            so_pl = state.players[FactionId.SWIETE_OFICJUM]
+            if "so-05" in so_pl.hand:
+                so_card = cards.get("so-05")
+                so_cost = max(0, so_card.cost + card_cost_offset) if so_card else 0
+                if so_pl.gold >= so_cost:
+                    so_pl.gold -= so_cost
+                    so_pl.hand.remove("so-05")
+                    so_pl.discard.append("so-05")
+                    target_h = so_card.target_heresy if so_card else 2
+                    add_heresy(state, fid, target_h, reason="so-05:reaction")
+                    so_pl.frames_dealt += target_h
+                    state.add_log(
+                        f"swiete-oficjum reaction so-05 (Wezwanie do Trybunału) on {fid.value} (+{target_h} heresy)"
+                    )
     return True
 
 
