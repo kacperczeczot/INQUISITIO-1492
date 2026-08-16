@@ -72,11 +72,13 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
 ### 🟢 Patch v0.70 (2026-08-16) — Pełna Aktywacja Reakcji Silnika (`so-05` Wezwanie do Trybunału & `gc-05` Fałszywy Świadek)
+- **Wynik 4P:** Kanon **`69.9 pkt`** | Global **`64.8 pkt`** | 3p **`74.3 pkt`** | 5p **`50.2 pkt`**
 - **Status Gry:** 50/50 kart w pełni grywalnych w silniku symulacji (aktywne triggery reakcji).
 - **Modyfikacja Silnika:**
   - `so-05` (Wezwanie do Trybunału): Reakcja odpalana automatycznie, gdy rywal zagrywa kartę generującą Herezję ($\ge 1$).
   - `gc-05` (Fałszywy Świadek): Reakcja odpalana w Fazie Sądu, przesuwająca 1 głos w werdykcie na korzyść Gildii Cieni.
-- **Konfiguracja SSOT:** Zachowanie parametrów bazowych `v0.69` (Grand Audit dla 100% aktywnej talii).
+- **Konfiguracja SSOT:** Zachowanie parametrów bazowych `v0.69` (Benchmark kalibracyjny dla 100% aktywnej talii).
+- **Efekt:** Odsłonięcie rzeczywistej siły Świętego Oficjum i Gildii Cieni przy aktywnych reakcjach. Telemetria: Średnia Er 5.73, Deadlocks 0.6%, Pas Biedy 24.9%.
 
 ### 🟢 Patch v0.69 (2026-08-16) — Kanon 4P Makro: Limit Er: offset +1 (nowy: 12) (Zysk 4P Δ +0.1 pkt)
 - **Wynik 4P:** Kanon **`95.3`** → **`95.4 pkt`** | Global **`75.1`** | 3p **`70.0`** | 5p **`62.6`**
