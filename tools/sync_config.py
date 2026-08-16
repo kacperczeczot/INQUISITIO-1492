@@ -148,26 +148,41 @@ def _scaling_box(cfg: dict) -> str:
     t5 = t["5p"] if isinstance(t, dict) else t
 
     g = s["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
     g5 = g["5p"] if isinstance(g, dict) else g
 
     so_s = v["swiete_oficjum"]["stacks"]
     so_s3 = so_s["3p"] if isinstance(so_s, dict) else so_s
 
+    lines_3p = [
+        f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t3-1}` / Krytyczna `≥{t3}`).",
+    ]
+    if so_s3 != 4:
+        lines_3p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast 4).")
+
     kb_e = v["korona_borgiowie"]["era"]
     kb_e3 = kb_e["3p"] if isinstance(kb_e, dict) else kb_e
+    if kb_e3 != 5:
+        lines_3p.append(f"> - **Korona & Borgiowie:** Może wygrać od **`Ery {kb_e3}`** (zamiast 5).")
 
     kt_e = v["kabala_toledo"]["era"]
     kt_e3 = kt_e["3p"] if isinstance(kt_e, dict) else kt_e
+    if kt_e3 != 6:
+        lines_3p.append(f"> - **Kabała z Toledo:** Może wygrać od **`Ery {kt_e3}`** (zamiast 6).")
+
+    lines_5p = []
+    if g5 != g4:
+        lines_5p.append(f"> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`{g5} zł`** (zamiast {g4} zł).")
+    lines_5p.append(f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t5}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t5-1}` / Krytyczna `≥{t5}`).")
+
+    mod_3p_str = "\n".join(lines_3p)
+    mod_5p_str = "\n".join(lines_5p)
 
     return f"""> ### 👥 Modyfikacje dla 3 Graczy (3p):
-> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t3-1}` / Krytyczna `≥{t3}`).
-> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast 4).
-> - **Korona & Borgiowie:** Może wygrać od **`Ery {kb_e3}`** (zamiast 5).
-> - **Kabała z Toledo:** Może wygrać od **`Ery {kt_e3}`** (zamiast 6).
+{mod_3p_str}
 >
 > ### 👥 Modyfikacje dla 5 Graczy (5p):
-> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`{g5} zł`** (zamiast 3 zł).
-> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t5}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t5-1}` / Krytyczna `≥{t5}`)."""
+{mod_5p_str}"""
 
 
 def _balance_rule(cfg: dict) -> str:
@@ -179,7 +194,9 @@ def _balance_rule(cfg: dict) -> str:
 
 def _system_summary(cfg: dict) -> str:
     s = cfg["system"]
-    return f"""**Parametry systemowe (Kanon 4p):** Złoto startowe: **3 zł** (w 5p: 2 zł) | Agenci: **{s['agents_per_player']}** | Limit ręki: **{s['hand_limit']}** | Max Er: **{s['max_eras']}** | Autodafé cooldown: co **{s['autodafe_cooldown']}** Ery | Karty/Erę: **{s['cards_per_era']}**"""
+    g = s["start_gold"]
+    g_val = g["4p"] if isinstance(g, dict) else g
+    return f"""**Parametry systemowe (Kanon 4p):** Złoto startowe: **{g_val} zł** | Agenci: **{s['agents_per_player']}** | Limit ręki: **{s['hand_limit']}** | Max Er: **{s['max_eras']}** | Autodafé cooldown: co **{s['autodafe_cooldown']}** Ery | Karty/Erę: **{s['cards_per_era']}**"""
 
 
 def sync_ksiega(cfg: dict) -> list[str]:
@@ -247,8 +264,15 @@ def sync_ksiega(cfg: dict) -> list[str]:
     )
 
     # Replace setup section values
-    gold_pattern = re.compile(r"Złoto startowe: .*? na gracza\.")
-    text = gold_pattern.sub("Złoto startowe: **3 zł** na gracza (w 5p: **2 zł**).", text)
+    g = cfg["system"]["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
+    g5 = g["5p"] if isinstance(g, dict) else g
+    if g4 == g5:
+        gold_str = f"Złoto startowe: **{g4} zł** na gracza."
+    else:
+        gold_str = f"Złoto startowe: **{g4} zł** na gracza (w 5p: **{g5} zł**)."
+    gold_pattern = re.compile(r"3\. Złoto startowe: .*")
+    text = gold_pattern.sub(f"3. {gold_str}", text)
 
     hand_pattern = re.compile(r"Dobierz .*? kart z talii")
     text = hand_pattern.sub(f"Dobierz **{cfg['system']['hand_limit']}** kart z talii", text)
@@ -277,7 +301,14 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     text = path.read_text(encoding="utf-8")
 
     # Replace setup line
-    text = re.sub(r"planszetka \(Herezja \*\*0\*\*\), .*", "planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**).", text)
+    g = cfg["system"]["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
+    g5 = g["5p"] if isinstance(g, dict) else g
+    if g4 == g5:
+        gold_teach = f"planszetka (Herezja **0**), **{g4} złoto**."
+    else:
+        gold_teach = f"planszetka (Herezja **0**), **{g4} złoto** (w 5p: **{g5} zł**)."
+    text = re.sub(r"planszetka \(Herezja \*\*0\*\*\), .*", gold_teach, text)
 
     # Replace heresy zones
     text = re.sub(
@@ -299,13 +330,24 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 
     # Victory table
     v = cfg.get("victory", {})
+    so_s = v.get("swiete_oficjum", {}).get("stacks", 4)
+    so_4p = so_s.get("4p", 4) if isinstance(so_s, dict) else so_s
+    so_3p = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
+    so_c = v.get("swiete_oficjum", {}).get("condemns", 2)
+    so_teach_text = f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem** (w 3p: {so_3p} Stosy)" if so_4p != so_3p else f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem**"
+
     kb_e = v.get("korona_borgiowie", {}).get("era", 5)
     kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
     kb_3p = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
     kb_teach_text = f"**2 Dekrety** (od Ery {kb_4p}; w 3p: od Ery {kb_3p})" if kb_4p != kb_3p else f"**2 Dekrety** (od Ery {kb_4p})"
 
+    kt_e = v.get("kabala_toledo", {}).get("era", 6)
+    kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
+    kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
+    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 8])
+    kt_teach_text = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p}; w 3p: od Ery {kt_3p})" if kt_4p != kt_3p else f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p})"
+
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
-    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 7])
 
     old_teach_vic = re.compile(
         r"(\| Frakcja \| Cel.*?\n(?:\| :---.*?\n)?)"
@@ -318,10 +360,10 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     )
     new_teach_vic = f"""| Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
+| Święte Oficjum | {so_teach_text} |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
 | Korona & Borgiowie | {kb_teach_text} |
-| Kabała z Toledo | **3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** od Ery 6 (w 3p: od Ery 7) |
+| Kabała z Toledo | {kt_teach_text} |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 """
     if old_teach_vic.search(text):
@@ -342,6 +384,15 @@ def sync_hierarchia(cfg: dict) -> list[str]:
     hz = cfg["heresy_zones"]
     o3, o4 = hz["observed"]["3p"], hz["observed"]["4p_plus"]
     cr3, cr4 = hz["critical"]["3p"], hz["critical"]["4p_plus"]
+
+    g = s["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
+    g5 = g["5p"] if isinstance(g, dict) else g
+    if g4 == g5:
+        gold_hier = f"- **Ekonomia:** `{g4} złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)"
+    else:
+        gold_hier = f"- **Ekonomia:** `{g4} złote` na start (w 5p: `{g5} złote`) · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)"
+    text = re.sub(r"- \*\*Ekonomia:\*\* .*", gold_hier, text)
 
     text = re.sub(r"- \*\*Maksymalny limit Er:\*\* `\d+ Er`", f"- **Maksymalny limit Er:** `{s['max_eras']} Er`", text)
     text = re.sub(
@@ -367,6 +418,28 @@ def sync_hierarchia(cfg: dict) -> list[str]:
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/hierarchia_balansowania.md"]
+
+
+def sync_slownik(cfg: dict) -> list[str]:
+    """Sync slownik.md with game_config.yaml."""
+    path = PROJECT_ROOT / "docs" / "rules" / "slownik.md"
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    s = cfg["system"]
+    g = s["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
+    g5 = g["5p"] if isinstance(g, dict) else g
+    if g4 == g5:
+        gold_str = f"Start **{g4}**; dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)."
+    else:
+        gold_str = f"Start **{g4}** (w 5p: **{g5}**); dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)."
+    text = re.sub(r"Start \*\*.*?\*\*; dochód \*\*.*?\*\* w Fazie III.*?\.", gold_str, text)
+    text = re.sub(r"Limit gry: \*\*\d+\*\* Er", f"Limit gry: **{s['max_eras']}** Er", text)
+    text = re.sub(r"Limit \d+ Er → najbliższy celowi", f"Limit {s['max_eras']} Er → najbliższy celowi", text)
+
+    path.write_text(text, encoding="utf-8")
+    return ["Zsynchronizowano docs/rules/slownik.md"]
 
 
 def sync_setups(cfg: dict) -> list[str]:
@@ -395,13 +468,22 @@ def sync_readme(cfg: dict) -> list[str]:
         return []
     text = path.read_text(encoding="utf-8")
     v = cfg.get("victory", {})
+    so_s = v.get("swiete_oficjum", {}).get("stacks", 4)
+    so_4p = so_s.get("4p", 4) if isinstance(so_s, dict) else so_s
+    so_3p = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
+    so_readme_text = f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: {so_3p} Stosy)*" if so_4p != so_3p else f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem"
+
     kb_e = v.get("korona_borgiowie", {}).get("era", 5)
     kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
     kb_3p = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
     kb_readme_text = f"**2 Dekrety** (od Ery {kb_4p}; *w 3p: od Ery {kb_3p}*)" if kb_4p != kb_3p else f"**2 Dekrety** (od Ery {kb_4p})"
 
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
-    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 7])
+    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 8])
+    kt_e = v.get("kabala_toledo", {}).get("era", 6)
+    kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
+    kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
+    kt_readme_text = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p}; *w 3p: od Ery {kt_3p}*)" if kt_4p != kt_3p else f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p})"
 
     old_readme_vic = re.compile(
         r"(## Frakcje.*?\n\n)"
@@ -417,10 +499,10 @@ def sync_readme(cfg: dict) -> list[str]:
 
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: 3 Stosy)* |
+| **Święte Oficjum** | {so_readme_text} |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
 | **Korona & Borgiowie** | {kb_readme_text} |
-| **Kabała z Toledo** | **3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery 6; *w 3p: od Ery 7*) |
+| **Kabała z Toledo** | {kt_readme_text} |
 | **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
 """
     if old_readme_vic.search(text):
@@ -488,6 +570,8 @@ def main():
     for ch in sync_teach_sheet(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_hierarchia(cfg):
+        print(f"   ✅ {ch}")
+    for ch in sync_slownik(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_setups(cfg):
         print(f"   ✅ {ch}")
