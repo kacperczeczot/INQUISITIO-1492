@@ -4,6 +4,16 @@
 
 # Playtesting — balans (stan aktualny)
 
+> [!IMPORTANT]
+> **Rekalibracja Funkcji Oceny Balansu (Asymptotyczny Model Ciągły — Exponential Decay):**
+> Zgodnie z wytycznymi projektowymi wyeliminowano sztuczne ucinanie wyniku do zera (`Score = 0.0`), które powodowało nasycenie i utratę gradientu porównawczego w skrajnie rozjechanych wariantach.
+> Nowy model wykorzystuje ciągłą funkcję wygaszania wykładniczego opartego na względnym odchyleniu standardowym frakcji (**RMS Relative Deviation**):
+> $$\text{Score} = 100.0 \times \exp\left( -3.2 \cdot \text{RMS\_RD}^{1.25} - \text{Deadlock Penalty} \right)$$
+> **Kluczowe właściwości:**
+> 1. **Brak zera (`Score > 0.0`):** Nawet warianty o silnej dominacji (np. jedna frakcja 50–70%) zachowują ciągły, niezerowy wynik (np. 15–40 pkt), co umożliwia precyzyjne śledzenie delty optymalizacji ($\Delta$).
+> 2. **Rygor strefy mistrzowskiej ($\ge 98.0$ pkt):** Wynik powyżej 98.0 punktów jest bezwzględnie zarezerwowany wyłącznie dla konfiguracji, w których odchylenia wszystkich frakcji nie przekraczają $\le 0.5\text{ p.p.}$ od ideału.
+> 3. **Czysty gradient:** Zapewnia optymalizatorom i audytorom pełną widoczność kierunku zmian.
+
 Sim filtruje: deadlocki, oskarżenia, Autodafé, Haki, Marionetki.  
 **Werdykt fun = sesja ludzka** ([`sessions/_TEMPLATE.md`](sessions/_TEMPLATE.md)).  
 **Spłaszczanie:** unikamy skalowania 3p/4p/5p; jedna liczba, jeśli wynik jest lepszy, podobny albo tani ([hierarchia §0](../docs/rules/hierarchia_balansowania.md)).

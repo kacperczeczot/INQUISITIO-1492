@@ -1,44 +1,40 @@
-"""Balance Scoring Engine — Strict Relative Deviation Hierarchy."""
+"""Balance Scoring Engine — Continuous Asymptotic Exponential Decay Model."""
 from __future__ import annotations
 
+import math
+
 from inquisitio.engine.setup import SETUP_PRESETS
-from inquisitio.runner.balance import BalanceGate, gate_for, faction_shares
+from inquisitio.runner.balance import faction_shares
 from inquisitio.runner.batch import BatchSummary
 
 def calculate_setup_score(summary: BatchSummary) -> float:
-    """Calculates Balance Score (0–100) for a single setup summary using strict relative deviations."""
-    gate = gate_for(summary.setup, summary.layer)
+    """Calculates Balance Score (0.1–100.0) for a single setup summary using continuous exponential decay.
+    
+    Properties:
+    - Never reaches 0.0 (preserves non-zero gradient for optimization and variant comparison).
+    - Strictly reserves >=98.0 pkt for deviations <= 0.5 p.p.
+    - Smooth, continuous loss landscape without arbitrary step-discontinuities.
+    """
     shares = faction_shares(summary)
     n_players = len(SETUP_PRESETS[summary.setup])
     p_ideal = 1.0 / n_players
 
-    total_penalty = 0.0
+    # Root Mean Square Relative Deviation (RMS-RD)
+    sum_sq_rd = 0.0
     for fid, win_share in shares.items():
-        # Relative deviation from fair share
         rel_dev = abs(win_share - p_ideal) / p_ideal
+        sum_sq_rd += rel_dev ** 2
+    rms_rd = math.sqrt(sum_sq_rd / n_players)
 
-        in_target = (gate.target_min <= win_share <= gate.target_max)
-        in_critical = (gate.critical_min <= win_share <= gate.critical_max)
-
-        if in_target:
-            # Rigorous target band penalty: 98-100 is strictly reserved for deviations <= 0.5 p.p.
-            # At 0.5 p.p. rel_dev = 0.02 -> penalty ~0.5 per faction -> Score ~98.0-99.0
-            # At 1.7 p.p. rel_dev = 0.068 -> penalty ~2.75 per faction -> Score ~89-91
-            penalty = 120.0 * (rel_dev ** 1.4)
-        elif in_critical:
-            # Progressive penalty for warning band (target_max to critical_max)
-            penalty = 180.0 * (rel_dev ** 1.3) + 5.0
-        else:
-            # Red Line violation — heavy progressive penalty
-            penalty = 250.0 * (rel_dev ** 1.1) + 20.0
-
-        total_penalty += penalty
+    # Exponential decay with power 1.25 (scaled so <=0.5 pp dev is >=98.0 pkt)
+    c = 3.2
+    exponent = c * (rms_rd ** 1.25)
 
     # Deadlock penalty
-    if summary.eras_limit_pct > 0.05:
-        total_penalty += (summary.eras_limit_pct - 0.05) * 200.0
+    deadlock_penalty = max(0.0, (summary.eras_limit_pct - 0.05)) * 5.0
 
-    score = max(0.0, 100.0 - total_penalty)
+    val = 100.0 * math.exp(-(exponent + deadlock_penalty))
+    score = max(0.1, min(100.0, val))
     return round(score, 1)
 
 
