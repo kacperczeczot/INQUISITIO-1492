@@ -93,6 +93,9 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             parts.append(f"Przesuń swojego Agenta o {agents} {noun}.")
         else:
             parts.append("Przesuń swojego Agenta o 1 lokację.")
+        # Wzorzec: move_agent + move_inquisitor (np. caa-11 Nocna Zmiana Warty)
+        if data.get("move_inquisitor"):
+            parts.append("Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację.")
     elif act == "gain_gold":
         if gold == 1:
             parts.append("Zyskaj 1 złoto.")
@@ -111,6 +114,12 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
                 parts.append(f"{prefix} +1 Herezja.")
             elif theresy and theresy > 1:
                 parts.append(f"{prefix} +{theresy} Herezja.")
+            # Wzorzec: frame_rival + gold (np. so-11 Dekret Czystości Wiary)
+            if gold == 1:
+                parts.append("Zyskaj 1 złoto.")
+            elif gold and gold > 1:
+                noun = declension_pl(gold, "złoto", "złota", "złota")
+                parts.append(f"Zyskaj {gold} {noun}.")
     elif act == "send_inquisitor":
         if tloc == "agent_location":
             parts.append("Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta.")
@@ -175,6 +184,21 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
         parts.append("Zyskaj Fragment.")
         if condition == "agent_in_dungeon_or_tribunal":
             parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto.")
+    elif act == "heresy_adjust":
+        # Wzorzec: heresy_adjust — korekta własnej Herezji (np. kt-11 Medytacja Sefirot)
+        decrease = data.get("heresy_decrease", 0)
+        increase = data.get("heresy_increase", 0)
+        if decrease and increase:
+            parts.append(f"Zmniejsz swoją Herezję o {decrease} lub zwiększ o {increase}.")
+        elif decrease:
+            parts.append(f"Zmniejsz swoją Herezję o {decrease}.")
+        elif increase:
+            parts.append(f"Zwiększ swoją Herezję o {increase}.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold > 1:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
 
     # 4. Zwroty Limitów Anti-AP
     inq_lim = data.get("inquisitor_send_limit")
