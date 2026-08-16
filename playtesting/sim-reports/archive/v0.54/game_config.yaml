@@ -1,4 +1,4 @@
-version: v0.56
+version: v0.54
 date: '2026-08-16'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -222,7 +222,7 @@ cards:
     name: Szantaż Bractwa
     type: akcja
     layer: B
-    cost: 1
+    cost: 2
     creates_hook: true
     action: creates_hook
     target_loc: neighbor_location

@@ -207,6 +207,8 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     card_meta = {}
     for cid, card in sorted(all_cards.items()):
         pref = cid.split("-")[0]
+        if pref not in PREFIX_TO_FACTION_ID:
+            continue
         fname = FACTION_FULL_NAMES.get(pref, pref)
         card_name = card.name
         card_tasks.append((

@@ -81,15 +81,19 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.51, próba 3 000 gier/setup × 16 setupów = 48 000 gier, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.56 — Grand Audit, próba 10 000 gier/setup × 16 setupów = 160 000 gier, seed 42, warstwa C)
 
+- **Wyniki Balansu (Rygorystyczna Skala Scoringowa `scoring.py`):**
+  - **Kanon 4P Średnia:** **`94.9 / 100.0 pkt`** 🟢 (Wszystkie setupy 4P w przedziale 92.5–99.3 pkt)
+  - **`4p-core` (Kanon Klasyczny):** **`99.3 pkt`** 🟢 (CAA: `24.7%`, GC: `24.0%`, KB: `25.4%`, KT: `25.3%`, SO: `25.6%` — maksymalne odchylenie $\le \mathbf{0.6\text{ p.p.}}$!)
+  - **5p Pełny Stół (`5p-full`):** **`69.5 pkt`** 🟠 (SO: 18.0%, CAA: 23.8%, KB: 17.2%, KT: 17.3%, GC: 23.7%)
+  - **3p Średnia:** **`36.3 pkt`** 🔴 (Wymaga naturalnego dopasowania Stosów/celów w L2 bez dotykania talii kart)
 - **Telemetria Silnika Gry (5 Filarów):** 🟢 **OPTYMALNA**
-  - **Średnia Er (Tempo Gry):** **`5.75 Er`** 🟢 (norma 5.0–6.5 Er)
-  - **Remisy po Limicie Er (Deadlocks):** **`1.4%`** 🟢 (norma <5.0%)
-  - **Pas Biedy (Poverty Rate):** **`27.2%`** 🟢 (norma <28.0%)
-  - **Oskarżenia na Dworze:** **`3.67 / partię`** 🟢 (norma 2.0–4.5)
-  - **Autodafé Inkwizytora:** **`0.55 / partię`** 🟡 (norma 0.7–1.8)
-- **Status Balansu Win-Share w 5p:** 🟢 **WYLECZONA DOMINACJA OFICJUM** (SO: 20.6% vs idealne 20.0%, CAA: 21.8%, GC: 25.8%, KB: 16.7%, KT: 15.2%).
+  - **Średnia Er (Tempo Gry):** **`5.47 Er`** 🟢 (norma 5.0–6.5 Er)
+  - **Remisy po Limicie Er (Deadlocks):** **`0.4%`** 🟢 (norma <5.0%)
+  - **Pas Biedy (Poverty Rate):** **`25.3%`** 🟢 (norma <28.0%)
+  - **Oskarżenia na Dworze:** **`2.88 / partię`** 🟢 (norma 2.0–4.5)
+  - **Autodafé Inkwizytora:** **`0.72 / partię`** 🟢 (norma 0.7–1.8)
 
 ---
 
@@ -100,6 +104,15 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 > Wprowadzono rygorystyczną kalibrację kary za odchylenia od fair share wewnątrz *Target Band* (zmiana z łagodnej $40 \cdot \text{rel\_dev}^2$ na progresywną $120 \cdot \text{rel\_dev}^{1.4}$).
 > - **Cel:** Wynik **`98.0–100.0 pkt`** jest odtąd ściśle zarezerwowany wyłącznie dla chirurgicznego balansu o odchyleniach $\le \mathbf{0.5\text{ p.p.}}$ (np. 24.8% vs 25.2%).
 > - **Skutek:** Warianty o rozjeździe $1.5–2.0\text{ p.p.}$ (np. 23.4% vs 26.7%), które wcześniej otrzymywały zawyżone ~99.4 pkt, otrzymują teraz realne **`~90.0–92.0 pkt`**, co eliminuje martwą strefę optymalizatora i wymusza poszukiwanie perfekcyjnego spłaszczenia rozkładu.
+
+### 🟢 Patch v0.56 (2026-08-16) — Konsolidacja Kanonu 4P i Grand Audit (Nowa Skala Scoringu)
+- **Wynik (Nowa Rygorystyczna Skala):** Kanon 4P **`94.9 pkt`** 🟢 (`4p-core` **`99.3 pkt`**, `4p-no-oficjum` **`95.4 pkt`**, `4p-no-kabala` **`94.8 pkt`**, `4p-no-cienie` **`92.6 pkt`**, `4p-no-korona` **`92.5 pkt`**) | 5p **`69.5 pkt`** | 3p **`36.3 pkt`**
+- **Konsolidacja Zmian (`v0.53 – v0.56`):**
+  1. `korona_borgiowie.era`: `3p: 4 | 4p: 4 | 5p: 4` (otwarcie okna Dekretów od Ery 4).
+  2. `caa-07` (Szantaż Bractwa): `cost` → `1`.
+  3. `gc-07` (Skrytobójstwo): `heresy` → `0`.
+  4. `so-10` (Oczyść Miasto): `cost` → `5`.
+- **Efekt:** W `4p-core` osiągnięto rozrzut frakcji poniżej $\pm 0.6\text{ p.p.}$ od idealnego 25.0% (CAA: 24.7%, GC: 24.0%, KB: 25.4%, KT: 25.3%, SO: 25.6%). Telemetria 5 Filarów optymalna: Średnia Er 5.47, Deadlocks 0.4%, Pas Biedy 25.3%.
 
 ### 🟢 Patch v0.55 (2026-08-16) — Kanon 4P: Karta `caa-07` (Szantaż Bractwa): `cost` → `1` (Zysk 4P Δ +0.1 pkt)
 - **Wynik 4P:** Kanon **`99.7`** → **`99.8 pkt`** | Global **`85.5`** | 3p **`59.6`** | 5p **`97.1`**

@@ -142,7 +142,7 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | :--- | :--- |
 | **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / Era 5+) |
-| **Korona & Borgiowie** | **2 Dekrety** (od Ery **5**) |
+| **Korona & Borgiowie** | **2 Dekrety** (od Ery **4**) |
 | **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery **6**) |
 | **Gildia Cieni** | **2 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 

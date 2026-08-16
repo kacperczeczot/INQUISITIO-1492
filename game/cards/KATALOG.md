@@ -310,7 +310,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Bractwo zna imiona sąsiadów lepiej niż proboszczowie. |
 | `effect` | Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta. |
@@ -839,7 +839,7 @@ Kart: **10**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 2 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Ciało w kanałach Gildii mówi więcej niż świadek na rynku. |
 | `effect` | Aresztuj Agenta rywala w Gildii lub na Rynku. |
 | `lore` | Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami. |
