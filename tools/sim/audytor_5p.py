@@ -107,14 +107,15 @@ def _run_single_test_task_5p(args_tuple: tuple) -> dict:
                 fshares[fid].append(wins / s.games)
 
     score_5p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
-    eras_avg = round(sum(s.eras_avg for s in summaries) / len(summaries), 2)
+    n_sum = len(summaries) if summaries else 1
+    eras_avg = sum(s.eras_avg for s in summaries) / n_sum
     eras_min = min(s.eras_min for s in summaries) if summaries else 0
     eras_max = max(s.eras_max for s in summaries) if summaries else 0
-    deadlock_pct = round(sum(s.eras_limit_pct for s in summaries) / len(summaries), 2)
-    poverty_pct = round(sum(s.passes_forced_pct for s in summaries) / len(summaries), 2)
-    autodafe_avg = round(sum(s.autodafe_avg for s in summaries) / len(summaries), 2)
-    acc_avg = round(sum(s.accusations_avg for s in summaries) / len(summaries), 2)
-    gold_avg = round(sum(s.gold_end_avg for s in summaries) / len(summaries), 2)
+    deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
+    poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
+    autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
+    acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
+    gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
 
     return {
         "id": cand_id,
