@@ -499,17 +499,17 @@ class ProgressiveBeamAutoBalancer:
     def run(self):
         print("═══════════════════════════════════════════════════════════════════════")
         print("  INQUISITIO-1492 — SZALONY AUDYTOR (Progressive Beam Search 1D/2D/3D)  ")
-        print("  Wielopoziomowa optymalizacja balansu (L1 + L2 + L3 + L4 jednocześnie) ")
+        print("  3-Stopniowy Lejek Sukcesywnej Selekcji (Coarse → Deep → Ultra)        ")
         print("═══════════════════════════════════════════════════════════════════════")
-        print(f"Bieżąca wersja bazowa:  {CONFIG.version}")
-        print(f"Maksymalny czas sesji:  {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
-        print(f"Maksymalnie patchów:    {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
-        print(f"Przesiew (Etap 1):      {self.args.fast_games} gier/setup (min. 1000)")
-        print(f"Weryfikacja (Etap 2):   {self.args.confirm_games} gier/setup (min. 5000, 16 setupów)")
-        print(f"Liczba Finalistów:      TOP {self.args.top_k} (badanych w Etapie 2)")
-        print(f"Szerokość Wiązki:       K = {self.args.beam_width} (kwalifikowanych do kolejnej fazy)")
-        print(f"Wątki procesora:        {self.args.workers}")
-        print(f"Dziennik operacji:      {LOG_FILE_PATH}")
+        print(f"Bieżąca wersja bazowa:      {CONFIG.version}")
+        print(f"Maksymalny czas sesji:      {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
+        print(f"Maksymalnie patchów:        {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
+        print(f"Etap 1 (Szybki przesiew):   {self.args.fast_games} gier/setup (wszyscy kandydaci)")
+        print(f"Etap 2 (Głęboki przesiew):  {self.args.screen_games} gier/setup (TOP {self.args.top_semifinalists} półfinalistów)")
+        print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
+        print(f"Szerokość Wiązki:           K = {self.args.beam_width} (nasiona do wyższej fazy)")
+        print(f"Wątki procesora:            {self.args.workers}")
+        print(f"Dziennik operacji:          {LOG_FILE_PATH}")
         print("═══════════════════════════════════════════════════════════════════════\n")
 
         setups = sorted(SETUP_PRESETS.keys())
@@ -564,28 +564,44 @@ class ProgressiveBeamAutoBalancer:
                         candidate_pool.append(c)
 
             print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów w Fazie {current_phase}D.")
+            cand_dict = {c[0]: c for c in candidate_pool}
 
-            # 4. ETAP 1: Przesiew (min. 1000 gier/setup na wszystkich 16 setupach)
-            print(f"\n--- [ETAP 1/2: PRZESIEW GLOBALNY] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup) ---")
+            # 4. ETAP 1/3: SZYBKI PRZESIEW ZGRUBNY (Coarse Screen)
+            print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW ZGRUBNY] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup) ---")
             stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
-            stage1_results = self._execute_pool(_run_single_test_task, stage1_tasks, label=f"Przesiew {current_phase}D")
+            stage1_results = self._execute_pool(_run_single_test_task, stage1_tasks, label=f"Przesiew 1/3 ({current_phase}D)")
 
             # Sort by global score descending
             stage1_results.sort(key=lambda r: r["global_score"], reverse=True)
 
-            # Pick TOP N finalists for Stage 2
-            cand_dict = {c[0]: c for c in candidate_pool}
-            finalist_results = stage1_results[: self.args.top_k]
-            finalist_candidates = [cand_dict[r["id"]] for r in finalist_results]
+            # Pick TOP semifinalists for Stage 2
+            n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+            semifinalist_results = stage1_results[:n_semifinalists]
+            semifinalist_candidates = [cand_dict[r["id"]] for r in semifinalist_results]
 
-            print(f"\n--- [ETAP 2/2: WERYFIKACJA ULTRA] Sprawdzam TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup) ---")
-            stage2_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
-            stage2_results = self._execute_pool(_run_single_test_task, stage2_tasks, label=f"Weryfikacja {current_phase}D")
+            # 5. ETAP 2/3: GŁĘBOKI PRZESIEW I KONSOLIDACJA (Refined Screen)
+            print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW] Badam TOP {len(semifinalist_candidates)} półfinalistów ({self.args.screen_games} gier/setup) ---")
+            stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
+            stage2_results = self._execute_pool(_run_single_test_task, stage2_tasks, label=f"Przesiew 2/3 ({current_phase}D)")
 
-            # Rank verified finalists
+            # Sort by global score descending
             stage2_results.sort(key=lambda r: r["global_score"], reverse=True)
 
-            for idx, r in enumerate(stage2_results, 1):
+            # Pick TOP finalists for Stage 3
+            n_finalists = min(self.args.top_k, len(stage2_results))
+            finalist_results = stage2_results[:n_finalists]
+            finalist_candidates = [cand_dict[r["id"]] for r in finalist_results]
+
+            # 6. ETAP 3/3: WERYFIKACJA ULTRA (Ultra Verification)
+            print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA] Weryfikuję TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup) ---")
+            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
+            stage3_results = self._execute_pool(_run_single_test_task, stage3_tasks, label=f"Weryfikacja 3/3 ({current_phase}D)")
+
+            # Rank verified finalists
+            stage3_results.sort(key=lambda r: r["global_score"], reverse=True)
+
+            print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW]")
+            for idx, r in enumerate(stage3_results, 1):
                 d_g = r["global_score"] - base_res["global_score"]
                 is_safe, msg = passes_telemetry_safety(r)
                 sign = f"+{d_g:.2f}" if d_g > 0 else f"{d_g:.2f}"
@@ -595,7 +611,7 @@ class ProgressiveBeamAutoBalancer:
             accepted_candidate = None
             best_ver_res = None
 
-            for ver_res in stage2_results:
+            for ver_res in stage3_results:
                 d_global = ver_res["global_score"] - base_res["global_score"]
                 is_safe, safe_msg = passes_telemetry_safety(ver_res)
 
@@ -604,7 +620,7 @@ class ProgressiveBeamAutoBalancer:
                     best_ver_res = ver_res
                     break
 
-            # 5. Handle Outcome
+            # 7. Handle Outcome
             if accepted_candidate and best_ver_res is not None:
                 # SUCCESS: Apply Patch!
                 self.total_iterations += 1
@@ -651,7 +667,7 @@ class ProgressiveBeamAutoBalancer:
                         current_phase,
                         base_res,
                         best_ver_res,
-                        stage2_results,
+                        stage3_results,
                         change_desc,
                         rule_id,
                         iter_elapsed,
@@ -660,7 +676,7 @@ class ProgressiveBeamAutoBalancer:
 
                     telem_out, telem_arch = generate_and_save_telemetry_report(
                         new_version,
-                        games_per_setup=self.args.fast_games,
+                        games_per_setup=self.args.screen_games,
                         seed=self.args.seed,
                     )
                     print(f"   ✔ Zaktualizowano raport telemetrii: {telem_out.name} (archiwum: {telem_arch})")
@@ -680,8 +696,8 @@ class ProgressiveBeamAutoBalancer:
                 # NO POSITIVE GAIN IN CURRENT PHASE -> ESCALATE TO PHASE D+1!
                 print(f"\n⚪ Brak wariantu z dodatnim zyskiem (Δ ≥ +{self.args.min_delta} pkt) w Fazie {current_phase}D.")
                 
-                # Pick TOP K beam seeds from Stage 2 results to expand in next phase
-                top_beam_results = stage2_results[: self.args.beam_width]
+                # Pick TOP K beam seeds from Stage 3 results to expand in next phase
+                top_beam_results = stage3_results[: self.args.beam_width]
                 beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
 
                 current_phase += 1
@@ -693,26 +709,31 @@ class ProgressiveBeamAutoBalancer:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Szalony Audytor — Progressive Beam Search Optimizer")
+    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Szalony Audytor — Progressive Beam Search Optimizer (3-Stage Funnel)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 8.0 na noc)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
-    parser.add_argument("--fast-games", type=int, default=1000, help="Liczba gier w Etapie 1 (przesiew, min. 1000)")
-    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 2 (weryfikacja 16 setupów, min. 5000)")
-    parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 2 (domyślnie: 12)")
-    parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do kolejnej fazy wiązek (domyślnie: 8)")
-    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk globalny wymagany do wdrożenia patcha (pkt)")
+    parser.add_argument("--fast-games", type=int, default=200, help="Liczba gier w Etapie 1 (szybki przesiew, min. 100, domyślnie: 200)")
+    parser.add_argument("--screen-games", type=int, default=1000, help="Liczba gier w Etapie 2 (głęboki przesiew, min. 500, domyślnie: 1000)")
+    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 (weryfikacja ultra, min. 3000, domyślnie: 5000)")
+    parser.add_argument("--top-semifinalists", type=int, default=48, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 48)")
+    parser.add_argument("--top-k", type=int, default=24, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 24)")
+    parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
+    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk globalny wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
 
     args = parser.parse_args()
 
-    if args.fast_games < 1000:
-        print("⚠️ Podwyższam fast-games do wymaganego minimum 1000 gier.")
-        args.fast_games = 1000
-    if args.confirm_games < 5000:
-        print("⚠️ Podwyższam confirm-games do wymaganego minimum 5000 gier.")
-        args.confirm_games = 5000
+    if args.fast_games < 100:
+        print("⚠️ Podwyższam fast-games do wymaganego minimum 100 gier.")
+        args.fast_games = 100
+    if args.screen_games < 500:
+        print("⚠️ Podwyższam screen-games do wymaganego minimum 500 gier.")
+        args.screen_games = 500
+    if args.confirm_games < 3000:
+        print("⚠️ Podwyższam confirm-games do wymaganego minimum 3000 gier.")
+        args.confirm_games = 3000
 
     auditor = ProgressiveBeamAutoBalancer(args)
     auditor.run()
