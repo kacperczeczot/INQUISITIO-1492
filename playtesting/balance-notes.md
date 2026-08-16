@@ -70,11 +70,26 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
-### 🟡 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé [W TRAKCIE TESTÓW]
+### 🟢 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé
+- **Wyniki Audytu (Próba 10 000 gier/setup × 16 setupów = 160 000 gier, Model Asymptotyczny):**
+  - **Global Score:** **`70.6 pkt`** 🟠 (`v0.57: 51.6` $\rightarrow$ **`⬆️ +19.0 pkt`**)
+  - **Kanon 4P:** **`79.6 pkt`** 🟡 (`v0.57: 49.4` $\rightarrow$ **`⬆️ +30.2 pkt`**) | `4p-no-oficjum` **`88.9 pkt`**, `4p-core` **`83.4 pkt`**, `4p-no-kabala` **`75.4 pkt`**, `4p-no-cienie` **`72.0 pkt`**, `4p-no-korona` **`71.7 pkt`**
+  - **3p Średnia:** **`76.6 pkt`** 🟡 (`v0.57: 66.8` $\rightarrow$ **`⬆️ +9.8 pkt`**) | `3p-oficjum-alandalus-gildia` **`90.2 pkt`**, `3p-oficjum-alandalus-kabala` **`88.9 pkt`**
+  - **5p Pełny Stół (`5p-full`):** **`56.7 pkt`** 🔴 (`v0.57: 39.7` $\rightarrow$ **`⬆️ +17.0 pkt`**)
+- **Rozkład Szans Wygranych w Kanonie 4P (`4p-core`):**
+  - **SO:** `27.4%` (cel 25.0%, odchylenie $+2.4\text{ p.p.}$)
+  - **CAA:** `27.1%` (cel 25.0%, odchylenie $+2.1\text{ p.p.}$)
+  - **KT:** `24.3%` (cel 25.0%, odchylenie $-0.7\text{ p.p.}$)
+  - **KB:** `21.2%` (cel 25.0%, odchylenie $-3.8\text{ p.p.}$)
+- **Telemetria 5 Filarów Silnika Gry:** 🟢 **OPTYMALNA I STABILNA**
+  - **Średnia Er (Tempo Gry):** **`5.52 Er`** 🟢 (norma 5.0–6.5 Er)
+  - **Remisy po Limicie Er (Deadlocks):** **`0.2%`** 🟢 (norma <5.0%)
+  - **Pas Biedy (Poverty Rate):** **`22.2%`** 🟢 (norma <28.0%)
+  - **Autodafé Inkwizytora:** **`1.53 / partię`** 🟢 (norma 1.0–2.0, pierwsze w Erze 3/4)
+  - **Oskarżenia na Dworze:** **`2.78 / partię`** 🟢 (norma 2.0–4.5)
 - **Modyfikacje:**
   1. **Usunięcie sztucznych skalowań per-gracz:** Wartości celów i ekonomii 4P stały się globalnymi wartościami bazowymi (`start_gold = 4`, `kb.era = 4`, `kt.era = 6`, `caa.era = 5`). Zachowano wyłącznie naturalnie rosnący próg oskarżenia na Dworze (`3p: 6`, `4p: 7`, `5p: 8`).
-  2. **Dostosowanie do aktywnego Autodafé:** Podniesiono próg Świętego Oficjum do `5 Stosów` (oraz Gildii Cieni do `3 Upadków` / `4` bez SO).
-- **Wyniki:** Zostaną uzupełnione po przeprowadzeniu oficjalnych testów / audytu.
+  2. **Dostosowanie do aktywnego Autodafé:** Podniesiono próg Świętego Oficjum do `5 Stosów` (oraz Gildii Cieni do `3 Upadków` / `4` bez SO), co przywróciło pełną równowagę stołu bez dotykania mechaniki Inkwizytora.
 
 ### 🟢 Patch v0.57 (2026-08-16) — Pełne Oczyszczenie Silnika Gry (SSOT) & Naprawa Autodafé
 - **Wyniki Audytu (Próba 10 000 gier/setup × 16 setupów = 160 000 gier, Czysty Silnik):**
