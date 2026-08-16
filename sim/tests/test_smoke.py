@@ -218,7 +218,7 @@ def test_ssot_win_paths_match_yaml():
     gc = st5.players[FactionId.GILDIA_CIENI]
     caa5.relics_evacuated = 0
     st5.era = 1
-    gc.falls = 2
+    gc.falls = 3
     assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     assert heresy_zone(5, critical_min=6) == "obserwowana"

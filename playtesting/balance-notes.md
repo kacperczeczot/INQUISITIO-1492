@@ -81,19 +81,18 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.56 — Grand Audit, próba 10 000 gier/setup × 16 setupów = 160 000 gier, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.58 — Czysty Silnik, próba 3 000 gier/setup × 16 setupów = 48 000 gier, seed 42, warstwa C)
 
-- **Wyniki Balansu (Rygorystyczna Skala Scoringowa `scoring.py`):**
-  - **Kanon 4P Średnia:** **`94.9 / 100.0 pkt`** 🟢 (Wszystkie setupy 4P w przedziale 92.5–99.3 pkt)
-  - **`4p-core` (Kanon Klasyczny):** **`99.3 pkt`** 🟢 (CAA: `24.7%`, GC: `24.0%`, KB: `25.4%`, KT: `25.3%`, SO: `25.6%` — maksymalne odchylenie $\le \mathbf{0.6\text{ p.p.}}$!)
-  - **5p Pełny Stół (`5p-full`):** **`69.5 pkt`** 🟠 (SO: 18.0%, CAA: 23.8%, KB: 17.2%, KT: 17.3%, GC: 23.7%)
-  - **3p Średnia:** **`36.3 pkt`** 🔴 (Wymaga naturalnego dopasowania Stosów/celów w L2 bez dotykania talii kart)
-- **Telemetria Silnika Gry (5 Filarów):** 🟢 **OPTYMALNA**
-  - **Średnia Er (Tempo Gry):** **`5.47 Er`** 🟢 (norma 5.0–6.5 Er)
-  - **Remisy po Limicie Er (Deadlocks):** **`0.4%`** 🟢 (norma <5.0%)
-  - **Pas Biedy (Poverty Rate):** **`25.3%`** 🟢 (norma <28.0%)
-  - **Oskarżenia na Dworze:** **`2.88 / partię`** 🟢 (norma 2.0–4.5)
-  - **Autodafé Inkwizytora:** **`0.72 / partię`** 🟢 (norma 0.7–1.8)
+- **Wyniki Balansu (Ciągły Model Asymptotyczny `scoring.py`):**
+  - **Kanon 4P Średnia:** **`79.6 / 100.0 pkt`** 🟡 (`4p-no-oficjum` **`91.8 pkt`**, `4p-core` **`86.0 pkt`**, `4p-no-kabala` **`78.4 pkt`**, `4p-no-cienie` **`71.5 pkt`**, `4p-no-korona` **`70.5 pkt`**)
+  - **`4p-core` (Kanon Klasyczny):** **`86.0 pkt`** 🟡 (SO: `27.2%`, CAA: `26.6%`, KT: `24.6%`, KB: `21.6%` — maksymalne odchylenie $\le \mathbf{3.4\text{ p.p.}}$ na czystym, nienaruszonym silniku!)
+  - **3p Średnia:** **`76.6 pkt`** 🟡 (Wszystkie warianty 3P bez sztucznych wyjątków reguł)
+  - **5p Pełny Stół (`5p-full`):** **`55.5 pkt`** 🔴 (Globalne parametry 4P)
+- **Telemetria Silnika Gry (5 Filarów):** 🟢 **OPTYMALNA I ZGODNA Z KANONEM**
+  - **Średnia Er (Tempo Gry):** **`5.53 Er`** 🟢 (norma 5.0–6.5 Er)
+  - **Remisy po Limicie Er (Deadlocks):** **`0.1%`** 🟢 (norma <5.0%)
+  - **Pas Biedy (Poverty Rate):** **`22.3%`** 🟢 (norma <28.0%)
+  - **Autodafé Inkwizytora:** **`1.53 / partię`** 🟢 (norma 1.0–2.0, pierwsze w Erze 3/4)
 
 ---
 
@@ -108,6 +107,21 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 > 1. **Brak zera (`Score > 0.0`):** Nawet warianty o silnej dominacji (np. jedna frakcja 50–70%) zachowują ciągły, niezerowy wynik (np. 15–40 pkt), co umożliwia precyzyjne śledzenie delty optymalizacji ($\Delta$).
 > 2. **Rygor strefy mistrzowskiej ($\ge 98.0$ pkt):** Wynik powyżej 98.0 punktów jest bezwzględnie zarezerwowany wyłącznie dla konfiguracji, w których odchylenia wszystkich frakcji nie przekraczają $\le 0.5\text{ p.p.}$ od ideału (np. 24.8% vs 25.2%).
 > 3. **Czysty gradient:** Zapewnia optymalizatorom i audytorom pełną widoczność kierunku zmian.
+
+### 🟢 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé
+- **Wynik (Model Asymptotyczny):** Kanon 4P **`79.6 pkt`** 🟡 (`4p-core` **`86.0 pkt`**, `4p-no-oficjum` **`91.8 pkt`**) | 3p **`76.6 pkt`** | 5p **`55.5 pkt`** | Global **`70.6 pkt`**
+- **Modyfikacje:**
+  1. **Usunięcie sztucznych skalowań per-gracz:** Wartości celów i ekonomii 4P stały się globalnymi wartościami bazowymi (`start_gold = 4`, `kb.era = 4`, `kt.era = 6`, `caa.era = 5`). Zachowano wyłącznie naturalnie rosnący próg oskarżenia na Dworze (`3p: 6`, `4p: 7`, `5p: 8`).
+  2. **Dostosowanie do aktywnego Autodafé:** Podniesiono próg Świętego Oficjum do `5 Stosów` (oraz Gildii Cieni do `3 Upadków` / `4` bez SO), co zbalansowało tempo partii do idealnych 5.53 Er przy regularnym działaniu Inkwizytora.
+- **Efekt:** W `4p-core` uzyskano naturalny rozkład frakcji (SO: 27.2%, CAA: 26.6%, KT: 24.6%, KB: 21.6%) bez ani jednej linijki sztucznego kodu w symulatorze.
+
+### 🟢 Patch v0.57 (2026-08-16) — Pełne Oczyszczenie Silnika Gry (SSOT) & Naprawa Autodafé
+- **Modyfikacje Silnika:**
+  1. **Usunięcie sztucznych filtrów Autodafé:** Wymontowano `rng.random() < 0.18`, wymóg `crowd >= 3` oraz sztuczny limit `so_pl.stacks >= 2` z `inquisitor.py`.
+  2. **Kanon terminu Autodafé:** Ustawiono początkowy licznik `eras_since_autodafe = 0`, dzięki czemu pierwsze naturalne Autodafé odbywa się dopiero od Ery 3 (brak czystek na starcie gry w Erach 1–2).
+  3. **Naprawa kart w Warstwie C:** Odblokowano pełne działanie `caa-05` (Ukryty Kurier ewakuuje Relikwie) oraz `so-04`, `kt-03`, `kt-05` zgodnie z tekstem kart w `KATALOG.md`.
+  4. **Zasady planszowe:** Autodafé zwraca Relikwie w lokacji do puli, a spalenie celu z Hakiem zalicza Upadek Gildii Cieni.
+- **Efekt:** Całkowite wyeliminowanie rozbieżności między kodem symulatora a Księgą Zasad (111/111 testów pytest zdanych).
 
 ### 🟢 Patch v0.56 (2026-08-16) — Konsolidacja Kanonu 4P i Grand Audit (Nowa Skala Scoringu)
 - **Wynik (Nowa Rygorystyczna Skala):** Kanon 4P **`94.9 pkt`** 🟢 (`4p-core` **`99.3 pkt`**, `4p-no-oficjum` **`95.4 pkt`**, `4p-no-kabala` **`94.8 pkt`**, `4p-no-cienie` **`92.6 pkt`**, `4p-no-korona` **`92.5 pkt`**) | 5p **`69.5 pkt`** | 3p **`36.3 pkt`**
