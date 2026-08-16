@@ -17,7 +17,7 @@ Główne założenia metodologiczne:
        w pętli ciągłej aż do osiągnięcia optimum lub przerwania (Ctrl+C / limit czasu).
   5. Pełna automatyzacja dokumentacji i SSOT:
      - Zapisuje wyjątki per-5p pod sekcjami '5p:' w game_config.yaml (z podbiciem wersji)
-     - playtesting/sim-reports/logs/audytor_5p_log.md
+     - playtesting/sim-reports/archive/<wersja>/audytor_5p_log.md
      - playtesting/balance-notes.md
      - Pełna synchronizacja kart, katalogu i zasad (sync_config.py)
 """

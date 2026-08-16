@@ -21,7 +21,7 @@ Główne założenia metodologiczne:
        w pętli ciągłej aż do osiągnięcia optimum lub przerwania (Ctrl+C / limit czasu).
   4. Pełna automatyzacja dokumentacji i SSOT:
      - Aktualizacja game_config.yaml (z podbiciem wersji)
-     - playtesting/sim-reports/logs/audytor_4p_log.md
+     - playtesting/sim-reports/archive/<wersja>/audytor_4p_log.md
      - playtesting/balance-notes.md
      - Pełna synchronizacja kart, katalogu i zasad (sync_config.py)
 """
