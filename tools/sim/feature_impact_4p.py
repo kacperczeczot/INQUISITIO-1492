@@ -145,28 +145,28 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
 
 def classify_card_impact_4p(d_share: float, d_4p: float) -> tuple[str, str, str]:
     """Classifies card impact into 3x3 quadrant matrix for Kanon 4P."""
-    if d_4p >= 1.5:
-        if d_share > 2.0:
+    if d_4p >= 1.2:
+        if d_share > 0.8:
             return "TOXIC_CARRIER", "⚠️ TOKSYCZNY PROMOTOR (Disruptor Win-Driver)", "DISRUPTOR"
-        elif d_share < -2.0:
+        elif d_share < -0.8:
             return "TOXIC_BRAKE", "⚠️ TOKSYCZNY BALAST (Disruptor Self-Harm)", "DISRUPTOR"
         else:
             return "TOXIC_NOISE", "⚠️ SZUM DESTABILIZUJĄCY (Meta Disruptor)", "DISRUPTOR"
 
-    if d_4p <= -4.0:
-        if d_share >= 4.0:
+    if d_4p <= -2.0 or d_share >= 2.5:
+        if d_share >= 2.5:
             return "PILLAR", "👑 FILAR KANONU (Core Keystone)", "STABILIZER"
-        elif d_share <= -4.0:
+        elif d_share <= -2.5:
             return "SHIELD", "🛡️ TARCZA DEFENSYWNA (Faction Shield)", "STABILIZER"
         else:
             return "ANCHOR", "⚓ KOTWICA KANONU (Balance Anchor)", "STABILIZER"
 
-    if abs(d_share) <= 1.0 and abs(d_4p) <= 1.0:
-        return "DEAD_WEIGHT", "💤 KARTA PASYWNA (Dead Weight)", "DEAD_WEIGHT"
+    if abs(d_share) <= 0.4 and abs(d_4p) <= 0.4:
+        return "DEAD_WEIGHT", "💤 KARTA NISKIEGO WPŁYWU (Passive)", "DEAD_WEIGHT"
 
-    if d_share >= 2.5:
+    if d_share >= 1.0:
         return "ENGINE", "⚡ MOTOR FRAKCJI (Offensive Engine)", "BALANCED"
-    elif d_share <= -2.5:
+    elif d_share <= -1.0:
         return "BRAKE", "🛑 HAMULEC FRAKCJI (Control Tool)", "BALANCED"
     else:
         return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
@@ -185,7 +185,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     print(f"Bieżąca wersja:            {CONFIG.version}")
     print(f"Kanon Setupy:              {', '.join(setups)}")
     print(f"Wielkość próby:            {games_per_setup} gier/setup × {len(setups)} setupów 4P ({games_per_setup * len(setups)} gier per wariant)")
-    print(f"Liczba kart do zbadania:   50 kart frakcji + 8 kart czasu + 10 podsystemów")
+    print(f"Liczba kart do zbadania:   50 kart frakcji + 8 kart czasu + 8 podsystemów")
     print(f"Wątki procesora:           {workers}")
     print("═══════════════════════════════════════════════════════════════════════\n")
 
@@ -214,7 +214,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         card_tasks.append((
             f"ABLATION_{cid.upper()}",
             f"Brak karty {cid} ({card_name})",
-            {"card_overrides": {cid: {"disabled": True}}},
+            {"disabled_cards": [cid]},
             games_per_setup,
             seed,
             setups,
@@ -246,7 +246,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         time_tasks.append((
             f"TIME_{t_id.upper()}",
             f"Brak wydarzenia {t_id} ({t_name})",
-            {"time_deck_disabled": [t_id]},
+            {"disabled_cards": [t_id]},
             games_per_setup,
             seed,
             setups,
@@ -254,16 +254,15 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
 
     # 4. Build System & Victory Path Ablation Tasks
     sys_tasks = [
-        ("SYS_NO_AUTODAFE", "Wyłączone Autodafé Inkwizytora", {"disable_autodafe": True}, games_per_setup, seed, setups),
-        ("SYS_NO_TRIBUNAL", "Wyłączony Trybunał i Oskarżenia", {"disable_tribunal": True}, games_per_setup, seed, setups),
-        ("SYS_NO_TIME_DECK", "Wyłączona Kronika Dziejów (Talia Czasu)", {"disable_time_deck": True}, games_per_setup, seed, setups),
+        ("SYS_NO_TIME_DECK", "Wyłączona Kronika Dziejów (Talia Czasu)", {"no_time_deck": True}, games_per_setup, seed, setups),
         ("SYS_AUTODAFE_CD_2", "Autodafé Cooldown = 2 Ery (Agresywna czystka)", {"autodafe_cooldown": 2}, games_per_setup, seed, setups),
         ("SYS_AUTODAFE_CD_4", "Autodafé Cooldown = 4 Ery (Rzadka czystka)", {"autodafe_cooldown": 4}, games_per_setup, seed, setups),
-        ("VP_SO_NO_STACKS", "Święte Oficjum: Brak wygranej ze Stosów", {"so_no_stacks": True}, games_per_setup, seed, setups),
-        ("VP_SO_NO_CONDEMNS", "Święte Oficjum: Brak wygranej ze Skazań", {"so_no_condemns": True}, games_per_setup, seed, setups),
-        ("VP_CAA_NO_MARIONETTE", "Cienie: Brak wygranej przez Marionetkę", {"caa_no_marionette": True}, games_per_setup, seed, setups),
-        ("VP_CAA_NO_PATH", "Cienie: Brak wygranej ze Szlaku Morskiego", {"caa_no_path": True}, games_per_setup, seed, setups),
-        ("VP_KB_NO_HOOKS_WIN", "Korona: Wymóg 0 Haków (Tylko Dekrety)", {"kb_hooks_required": 0}, games_per_setup, seed, setups),
+        ("VP_SO_STACKS_REQ_PLUS2", "Święte Oficjum: Wymóg 6 Stosów (Zamiast 4)", {"so_stacks_offset": 2}, games_per_setup, seed, setups),
+        ("VP_SO_CONDEMNS_PLUS2", "Święte Oficjum: Wymóg 4 Skazań (Zamiast 2)", {"so_condemns_offset": 2}, games_per_setup, seed, setups),
+        ("VP_CAA_RELICS_PLUS2", "Cienie: Wymóg 4 Relikwii (Zamiast 2)", {"caa_relics_offset": 2}, games_per_setup, seed, setups),
+        ("VP_CAA_LATE_ERA", "Cienie: Wymóg Ery 8 (Zamiast 5)", {"caa_era_offset": 3}, games_per_setup, seed, setups),
+        ("VP_KB_DECREES_PLUS1", "Korona: Wymóg 3 Dekretów (Zamiast 2)", {"kb_decrees_offset": 1}, games_per_setup, seed, setups),
+        ("VP_KT_FRAGS_PLUS1", "Kabała: Wymóg 4 Fragmentów (Zamiast 3)", {"kt_frags_offset": 1}, games_per_setup, seed, setups),
     ]
 
     all_tasks = card_tasks + time_tasks + sys_tasks
@@ -431,10 +430,11 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
 
     stabilizers = sorted([c for c in analyzed_cards if c["group_id"] == "STABILIZER"], key=lambda x: x["d_4p"])
     for c in stabilizers:
+        ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
         lines.append(
             f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
             f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
-            f"**`-{c['d_share']:.1f}%`** | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:.1f}`) |"
+            f"**`{ds_sign}`** | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:.1f}`) |"
         )
 
     lines.extend([
@@ -450,10 +450,11 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     if not disruptors:
         lines.append("| *Brak kart destabilizujących* | - | - | - | - | - | - |")
     for c in disruptors:
+        ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
         lines.append(
             f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
             f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
-            f"`{c['d_share']:+.1f}%` | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:+.1f}`) |"
+            f"`{ds_sign}` | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:+.1f}`) |"
         )
 
     lines.extend([
