@@ -78,24 +78,19 @@ def save_and_archive_report(
     report_lines: list[str],
     filename: str,
     custom_out: str | None = None,
-) -> tuple[Path, Path | None]:
-    """Write report to playtesting/sim-reports/ and archive with game_config.yaml snapshot."""
+) -> tuple[Path, Path]:
+    """Write report directly to playtesting/sim-reports/archive/{version}/ with game_config.yaml snapshot."""
     if custom_out:
         out_path = Path(custom_out)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text("\n".join(report_lines), encoding="utf-8")
-        return out_path, None
+        return out_path, out_path
 
     repo_root = Path(__file__).resolve().parent.parent.parent.parent
     base_dir = repo_root / "playtesting" / "sim-reports"
-    current_dir = base_dir / "current"
     archive_dir = base_dir / "archive" / CONFIG.version
 
-    out_path = current_dir / filename
     archive_path = archive_dir / filename
-
-    current_dir.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(report_lines), encoding="utf-8")
 
     archive_dir.mkdir(parents=True, exist_ok=True)
     archive_path.write_text("\n".join(report_lines), encoding="utf-8")
@@ -105,4 +100,4 @@ def save_and_archive_report(
     if config_src.exists():
         shutil.copy2(config_src, archive_dir / "game_config.yaml")
 
-    return out_path, archive_path
+    return archive_path, archive_path

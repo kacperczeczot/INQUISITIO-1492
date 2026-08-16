@@ -68,7 +68,6 @@ import audit_level2
 import audit_level4
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-LOG_FILE_PATH = REPORTS_DIR / "logs" / "audytor_4p_log.md"
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
 
 CANONICAL_4P_SETUPS = [
@@ -339,7 +338,7 @@ class Macro4PAutoBalancer:
         print(f"Etap 2 (Głęboki przesiew):  {self.args.screen_games} gier/setup (TOP {self.args.top_semifinalists} półfinalistów)")
         print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
         print(f"Wątki procesora:            {self.args.workers}")
-        print(f"Dziennik operacji 4P:       {LOG_FILE_PATH}")
+        print(f"Archiwizacja raportów:     {REPORTS_DIR}/archive/<wersja>/")
         print("═══════════════════════════════════════════════════════════════════════\n")
 
         setups = CANONICAL_4P_SETUPS
@@ -484,8 +483,12 @@ class Macro4PAutoBalancer:
                     print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
                     print(f"   Modyfikacja:   {change_desc}")
 
+                    version_archive_dir = REPORTS_DIR / "archive" / new_version
+                    version_archive_dir.mkdir(parents=True, exist_ok=True)
+                    log_path = version_archive_dir / "audytor_4p_log.md"
+
                     log_4p_iteration(
-                        LOG_FILE_PATH,
+                        log_path,
                         self.total_iterations,
                         current_phase,
                         old_version,
@@ -498,6 +501,9 @@ class Macro4PAutoBalancer:
                         diag_after,
                         iter_elapsed,
                     )
+
+                    # Snapshot game_config.yaml in version archive
+                    shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
 
                     print("   📑 Aktualizuję playtesting/balance-notes.md...")
                     update_balance_notes_4p(
