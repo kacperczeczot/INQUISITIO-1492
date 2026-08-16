@@ -236,6 +236,205 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
     return (combined_id, combined_name, merged_params)
 
 
+def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000, seed: int = 42) -> tuple[Path, Path | None]:
+    """Generates and archives raport_telemetrii.md for the given version across all 16 setups."""
+    setups = sorted(SETUP_PRESETS.keys())
+    t0 = time.time()
+    setup_data = []
+
+    for sname in setups:
+        summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=8)
+        score = calculate_setup_score(summary)
+        factions = SETUP_PRESETS[sname]
+        n_players = len(factions)
+        ideal_share = round(100.0 / n_players, 1)
+
+        faction_shares = {}
+        for fid in factions:
+            fname = FACTION_NAMES[fid]
+            w_count = summary.wins.get(fid, 0)
+            share = round((w_count / summary.games) * 100.0, 1)
+            faction_shares[fname] = share
+
+        avg_eras = round(summary.eras_avg, 2)
+        deadlock_pct = round(summary.eras_limit_pct * 100.0, 1)
+        poverty_pct = round(summary.passes_forced_pct * 100.0, 1)
+        autodafe_avg = round(summary.autodafe_avg, 2)
+        accusations_avg = round(summary.accusations_avg, 2)
+
+        eras_opt = "🟢" if 5.0 <= avg_eras <= 6.5 else ("🟡" if 4.5 <= avg_eras <= 7.0 else "🔴")
+        deadlock_opt = "🟢" if deadlock_pct <= 5.0 else ("🟡" if deadlock_pct <= 10.0 else "🔴")
+        poverty_opt = "🟢" if poverty_pct <= 28.0 else ("🟡" if poverty_pct <= 32.0 else "🔴")
+        autodafe_opt = "🟢" if 0.7 <= autodafe_avg <= 1.8 else ("🟡" if 0.5 <= autodafe_avg <= 2.0 else "🔴")
+        acc_opt = "🟢" if 2.0 <= accusations_avg <= 4.5 else ("🟡" if 1.5 <= accusations_avg <= 5.0 else "🔴")
+
+        setup_data.append({
+            "setup": sname,
+            "n_players": n_players,
+            "score": score,
+            "ideal_share": ideal_share,
+            "shares": faction_shares,
+            "avg_eras": avg_eras,
+            "eras_opt": eras_opt,
+            "deadlock_pct": deadlock_pct,
+            "deadlock_opt": deadlock_opt,
+            "poverty_pct": poverty_pct,
+            "poverty_opt": poverty_opt,
+            "autodafe_avg": autodafe_avg,
+            "autodafe_opt": autodafe_opt,
+            "accusations_avg": accusations_avg,
+            "acc_opt": acc_opt,
+            "end_gold": round(summary.avg_gold_end, 2),
+            "end_heresy": round(summary.avg_heresy_end, 2),
+        })
+
+    elapsed = round(time.time() - t0, 2)
+
+    report_lines = [
+        f"# Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: {version}",
+        "",
+        f"**Wersja Balansu:** `{version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Wielkość Próby:** {games_per_setup} gier/setup ({games_per_setup * 16} gier łącznie) | **Czas Symulacji:** {elapsed}s",
+        "",
+        "## 1. Tabela Szans Wygranych Frakcji (Win Share %) vs Punkt Idealny",
+        "",
+        "| Setup | Gr. | Score | Ideal % | SO % | CAA % | KB % | KT % | GC % | Status Rozkładu Frakcji |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ]
+
+    for d in setup_data:
+        so_s = f"{d['shares'].get('SO', 0.0):.1f}%" if "SO" in d['shares'] else "-"
+        caa_s = f"{d['shares'].get('CAA', 0.0):.1f}%" if "CAA" in d['shares'] else "-"
+        kb_s = f"{d['shares'].get('KB', 0.0):.1f}%" if "KB" in d['shares'] else "-"
+        kt_s = f"{d['shares'].get('KT', 0.0):.1f}%" if "KT" in d['shares'] else "-"
+        gc_s = f"{d['shares'].get('GC', 0.0):.1f}%" if "GC" in d['shares'] else "-"
+
+        eval_str = "🟢 ZBALANSOWANY" if d['score'] >= 90.0 else ("🟡 AKCEPTOWALNY" if d['score'] >= 75.0 else ("🟠 WYMAGA UWAGI" if d['score'] >= 60.0 else "🔴 ODCHYLONY"))
+        report_lines.append(
+            f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
+        )
+
+    report_lines.extend([
+        "",
+        "## 2. Pełna Tabela Telemetrii 5 Filarów Silnika Gry z Oceną Optymalności",
+        "",
+        "| Setup | Średnia Er | Limit Er % (Deadlock) | Pas Biedy % (Złoto) | Autodafé / Partię | Oskarżenia / Partię | Śr. Złoto End | Śr. Herezja End | Globalny Status Telemetrii |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ])
+
+    for d in setup_data:
+        all_ok = (d['eras_opt'] == "🟢" and d['deadlock_opt'] == "🟢" and d['poverty_opt'] == "🟢")
+        status_icon = "🟢 OPTYMALNA" if all_ok else "⚠️ WARTOŚCI BRZEGOWE"
+        report_lines.append(
+            f"| `{d['setup']}` | {d['avg_eras']} {d['eras_opt']} | {d['deadlock_pct']}% {d['deadlock_opt']} | {d['poverty_pct']}% {d['poverty_opt']} | {d['autodafe_avg']} {d['autodafe_opt']} | {d['accusations_avg']} {d['acc_opt']} | {d['end_gold']}zł | {d['end_heresy']} | {status_icon} |"
+        )
+
+    return save_and_archive_report(report_lines, "raport_telemetrii.md")
+
+
+def generate_and_save_canon_optimization_report(
+    old_version: str,
+    new_version: str,
+    iteration: int,
+    phase: int,
+    base_res_4p: dict,
+    best_res_4p: dict,
+    diag_before: dict,
+    diag_after: dict,
+    all_ranked_candidates: list[dict],
+    change_desc: str,
+    rule_id: str,
+    elapsed_iter: float,
+) -> tuple[Path, Path | None]:
+    """Generates and archives a detailed iteration report for the newly created version."""
+    d_4p = best_res_4p["score_4p"] - base_res_4p["score_4p"]
+    delta_4p_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
+
+    d_glob = diag_after["global_score"] - diag_before["global_score"]
+    delta_glob_str = f"+{d_glob:.1f}" if d_glob > 0 else f"{d_glob:.1f}"
+
+    lines = [
+        f"# Raport Optymalizacji Kanonu 4P (Anchor-Based 4P Optimizer) — Wersja {new_version} (Iteracja #{iteration}, Faza {phase}D)",
+        "",
+        f"**Wersja Poprzednia:** `{old_version}` (4P: `{base_res_4p['score_4p']:.1f} pkt`) → **Nowa Wersja:** `{new_version}` (4P: `{best_res_4p['score_4p']:.1f} pkt`)",
+        f"**Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Czas Trwania Iteracji:** {elapsed_iter:.1f}s | **Zysk 4P:** `{delta_4p_str} pkt` | **Zysk Global:** `{delta_glob_str} pkt`",
+        "",
+        "## 1. Wprowadzona Zmiana i Wynik Balansu Kanonu 4P",
+        f"- **Wybrany Wariant ({phase}D):** `{rule_id}` — **{best_res_4p['name']}**",
+        f"- **Opis Modyfikacji:** {change_desc}",
+        f"- **Wynik Kanonu 4P Score:** {score_pair(base_res_4p['score_4p'], best_res_4p['score_4p'], colored=True)} pkt",
+        f"- **Rozbicie Setupów Kanonu 4P:**",
+    ]
+
+    for sname in sorted(base_res_4p["setup_scores"].keys()):
+        b_sc = base_res_4p["setup_scores"][sname]
+        n_sc = best_res_4p["setup_scores"].get(sname, 0.0)
+        lines.append(f"  - `{sname}`: {score_pair(b_sc, n_sc)} pkt")
+
+    lines.extend([
+        "",
+        f"## 2. Diagnostyka Wpływu Kolateralnego na Pozostałe Tryby (3P / 5P)",
+        f"- **Tryb 3-osobowy (3p Avg):** {score_pair(diag_before['cat_scores'].get('3p',0), diag_after['cat_scores'].get('3p',0))} pkt",
+        f"- **Tryb 4-osobowy (4p Avg):** {score_pair(diag_before['cat_scores'].get('4p',0), diag_after['cat_scores'].get('4p',0))} pkt",
+        f"- **Tryb 5-osobowy (5p Avg):** {score_pair(diag_before['cat_scores'].get('5p',0), diag_after['cat_scores'].get('5p',0))} pkt",
+        f"- **Global Game Balance Score:** {score_pair(diag_before['global_score'], diag_after['global_score'], colored=True)} pkt",
+        "",
+        f"- **Kluczowa Telemetria Silnika (Kanon 4P):**",
+        f"  - **Średnia Długość Gry:** `{best_res_4p['eras_avg']:.2f} Er`",
+        f"  - **Deadlocki (Limit Er):** `{best_res_4p['deadlock_pct']:.1f}%` (norma: <5%)",
+        f"  - **Pas Biedy (Złoto):** `{best_res_4p['poverty_pct']:.1f}%` (norma: <30%)",
+        f"  - **Autodafé / partię:** `{best_res_4p['autodafe_avg']:.2f}`",
+        f"  - **Oskarżenia / partię:** `{best_res_4p['acc_avg']:.2f}`",
+        "",
+        "## 3. Ranking Przebadanych Kandydatów w tej Iteracji (TOP Finaliści 4P)",
+        "",
+        "| Poz. | ID Wariantu | Nazwa / Opis | 4P Score (baza → test) | Deadlocks % | Pas Biedy % | Status |",
+        "| :---: | :---: | :--- | :---: | :---: | :---: | :---: |",
+    ])
+
+    for idx, c in enumerate(all_ranked_candidates, 1):
+        d_diff = c["score_4p"] - base_res_4p["score_4p"]
+        status = "🌟 ZWYCIĘZCA" if c["id"] == best_res_4p["id"] else ("🟢 ZYSK" if d_diff > 0.0 else "⚪ STRATA/NEUTRALNY")
+        lines.append(
+            f"| #{idx} | `{c['id']}` | {c['name']} | {score_pair(base_res_4p['score_4p'], c['score_4p'], colored=True)} | "
+            f"{c['deadlock_pct']:.1f}% | {c['poverty_pct']:.1f}% | {status} |"
+        )
+
+    return save_and_archive_report(lines, "raport_optymalizacji_kanonu.md")
+
+
+def update_balance_notes(
+    old_version: str,
+    new_version: str,
+    change_desc: str,
+    rule_id: str,
+    base_res_4p: dict,
+    best_res_4p: dict,
+    diag_before: dict,
+    diag_after: dict,
+):
+    """Automatically update playtesting/balance-notes.md with the new measured scores and patch note entry."""
+    if not BALANCE_NOTES_PATH.exists():
+        return
+
+    content = BALANCE_NOTES_PATH.read_text(encoding="utf-8")
+    today = datetime.now().strftime("%Y-%m-%d")
+    d_4p = best_res_4p["score_4p"] - base_res_4p["score_4p"]
+    delta_4p_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
+
+    patch_note_block = (
+        f"### 🟢 Patch {new_version} ({today}) — Kanon 4P: {change_desc} (Zysk 4P Δ {delta_4p_str} pkt)\n"
+        f"- **Wynik 4P:** Kanon **`{base_res_4p['score_4p']:.1f}`** → **`{best_res_4p['score_4p']:.1f} pkt`** | Global **`{diag_after['global_score']:.1f}`** | 3p **`{diag_after['cat_scores'].get('3p',0.0):.1f}`** | 5p **`{diag_after['cat_scores'].get('5p',0.0):.1f}`**\n"
+        f"- **Modyfikacja (`{rule_id}`):** {change_desc}.\n"
+        f"- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er {best_res_4p['eras_avg']:.2f}, Deadlocks {best_res_4p['deadlock_pct']:.1f}%, Pas Biedy {best_res_4p['poverty_pct']:.1f}%.\n\n"
+    )
+
+    history_heading = "## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)\n\n"
+    if history_heading in content:
+        content = content.replace(history_heading, history_heading + patch_note_block, 1)
+
+    BALANCE_NOTES_PATH.write_text(content, encoding="utf-8")
+
+
 def log_canon_iteration(
     log_path: Path,
     iteration: int,
@@ -521,9 +720,40 @@ class Canon4PAutoBalancer:
                         iter_elapsed,
                     )
 
+                    print("   📊 Generuję pełny raport telemetrii 16 setupów i archiwum...")
+                    generate_and_save_telemetry_report(new_version, games_per_setup=1000, seed=self.args.seed)
+
+                    print("   📝 Generuję szczegółowy raport optymalizacji Kanonu 4P...")
+                    generate_and_save_canon_optimization_report(
+                        old_version,
+                        new_version,
+                        self.total_iterations,
+                        current_phase,
+                        base_res,
+                        best_ver_res,
+                        diag_before,
+                        diag_after,
+                        stage3_results,
+                        change_desc,
+                        rule_id,
+                        iter_elapsed,
+                    )
+
+                    print("   📑 Aktualizuję playtesting/balance-notes.md...")
+                    update_balance_notes(
+                        old_version,
+                        new_version,
+                        change_desc,
+                        rule_id,
+                        base_res,
+                        best_ver_res,
+                        diag_before,
+                        diag_after,
+                    )
+
                     print("   🔄 Synchronizuję dokumentację kart i reguł...")
                     subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
-                    print("   ✔ Zaktualizowano katalog kart, opisy markdown i card-editor.")
+                    print("   ✔ Zaktualizowano katalog kart, opisy markdown, HTML i card-editor.")
 
                     current_phase = 1
                     beam_seeds.clear()

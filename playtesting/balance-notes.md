@@ -95,6 +95,11 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.52 (2026-08-16) — Karta `so-10` (Oczyść Miasto): `cost` → `5` (Kanon 4P: 99.5 pkt)
+- **Wynik:** Kanon 4P **`99.5 pkt`** 🟢 (`4p-core` 99.9, `4p-no-cienie` 99.4, `4p-no-kabala` 99.4, `4p-no-korona` 99.2, `4p-no-oficjum` 99.7) | 5p **`95.2 pkt`** 🟢 | 3p **`66.0 pkt`**
+- **Modyfikacja (`so-10`):** Karta `so-10` (Oczyść Miasto): `cost` → `5`.
+- **Efekt:** Perfekcyjne wyważenie Kanonu 4P (wszystkie 5 setupów >99 pkt) oraz 5p (95.2 pkt). Zmiana obnaża specyficzną słabość Świętego Oficjum w ciasnym 3p (zaledwie 6 wrogich agentów), gdzie wysoki koszt signature spowalnia pozyskiwanie 4 Stosów. Telemetria: Średnia Er 5.86, Deadlocks 1.5%, Pas Biedy 27.4%.
+
 ### 🟢 Patch v0.51 (2026-08-16) — Organiczne Skalowanie Stosów Świętego Oficjum dla 5p (5 Stosów)
 - **Wynik 5p:** Skok z `0.0 pkt` do **`66.0 pkt`** 🟠 (SO: **20.6%** vs 20.0% ideał, spadek z dominującego 31.4%)
 - **Modyfikacja:** `swiete_oficjum.stacks`: `3p: 4 | 4p: 4 | 5p: 5` (w 5p wymagane 5 Stosów ze względu na 12 wrogich agentów).

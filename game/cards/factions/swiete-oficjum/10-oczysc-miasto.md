@@ -4,7 +4,7 @@ name: Oczyść Miasto
 faction: swiete-oficjum
 type: signature
 layer: C
-cost: 4
+cost: 5
 heresy: 2
 tags:
 - signature
@@ -16,4 +16,5 @@ heresy_text: Autodafé z rozkazu trybunału pali strach, nie tylko drewno.
 lore: Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.
 breaks_rule: true
 ---
+
 
