@@ -54,8 +54,8 @@ sim/.venv/bin/python tools/sim/audytor_kanonu.py --dry-run
 
 Po każdym wdrożonym patchu Audytor Kanonu 4P automatycznie tworzy i aktualizuje:
 
-1. **`playtesting/sim-reports/canon_4p_log.md`:** Pełny dziennik iteracji i zmian wyników 4p, 3p, 5p i global.
-2. **`playtesting/sim-reports/raport_optymalizacji_kanonu.md`:** Szczegółowy raport z rankingiem finalistów i diagnostyką wpływu kolateralnego (archiwizowany w `archive/{wersja}/`).
-3. **`playtesting/sim-reports/raport_telemetrii.md`:** Pełny raport telemetrii 5 filarów dla 16 setupów (archiwizowany w `archive/{wersja}/` ze snapshotem `game_config.yaml`).
+1. **`playtesting/sim-reports/logs/canon_4p_log.md`:** Pełny dziennik iteracji i zmian wyników 4p, 3p, 5p i global.
+2. **`playtesting/sim-reports/current/raport_optymalizacji_kanonu.md`:** Szczegółowy raport z rankingiem finalistów i diagnostyką wpływu kolateralnego (archiwizowany w `archive/{wersja}/`).
+3. **`playtesting/sim-reports/current/raport_telemetrii.md`:** Pełny raport telemetrii 5 filarów dla 16 setupów (archiwizowany w `archive/{wersja}/` ze snapshotem `game_config.yaml`).
 4. **`playtesting/balance-notes.md`:** Dodanie oficjalnej notatki patcha z datą, zyskiem i telemetrią.
 5. **Księga zasad, karta pomocy i edytor kart:** Pełna synchronizacja przez `tools/sync_config.py`.

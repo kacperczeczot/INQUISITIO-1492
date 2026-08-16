@@ -88,12 +88,13 @@ def save_and_archive_report(
 
     repo_root = Path(__file__).resolve().parent.parent.parent.parent
     base_dir = repo_root / "playtesting" / "sim-reports"
+    current_dir = base_dir / "current"
     archive_dir = base_dir / "archive" / CONFIG.version
 
-    out_path = base_dir / filename
+    out_path = current_dir / filename
     archive_path = archive_dir / filename
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+    current_dir.mkdir(parents=True, exist_ok=True)
     out_path.write_text("\n".join(report_lines), encoding="utf-8")
 
     archive_dir.mkdir(parents=True, exist_ok=True)

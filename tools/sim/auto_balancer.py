@@ -61,7 +61,7 @@ import audit_level3
 import audit_level4
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-LOG_FILE_PATH = REPORTS_DIR / "auto_balancer_log.md"
+LOG_FILE_PATH = REPORTS_DIR / "logs" / "auto_balancer_log.md"
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
 
 FACTION_NAMES = {

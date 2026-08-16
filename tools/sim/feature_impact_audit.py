@@ -50,7 +50,7 @@ from inquisitio.runner.scoring import (
 )
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-OUTPUT_REPORT_PATH = REPORTS_DIR / "raport_uzytecznosci_i_wplywu.md"
+OUTPUT_REPORT_PATH = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu.md"
 
 FACTION_NAMES = {
     FactionId.SWIETE_OFICJUM: "SO",

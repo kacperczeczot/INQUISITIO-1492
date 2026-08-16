@@ -8,18 +8,22 @@ Katalog zawiera automatycznie generowane raporty symulacyjne silnika `INQUISITIO
 
 ## 📁 Struktura Katalogu
 
-- **Bieżące Raporty (Wersja Aktywna):**
-  - [`raport_telemetrii.md`](raport_telemetrii.md) — pełny rozkład szans wygranych (Win Shares) dla 16 setupów i 5 filarów telemetrii
-  - [`audyt_level1_raport.md`](audyt_level1_raport.md) — audyt ±1 parametrów systemowych (złoto, agenci, progi, cooldowny)
-  - [`audyt_level2_raport.md`](audyt_level2_raport.md) — audyt ±1 warunków zwycięstwa frakcji i reguł skalowania
-  - [`audyt_level3_raport.md`](audyt_level3_raport.md) — precyzyjny audyt ±1 parametrów pojedynczych kart
-  - [`audyt_level4_raport.md`](audyt_level4_raport.md) — audyt wariantów niszowych i modyfikatorów
-  - [`audyt_stress_raport.md`](audyt_stress_raport.md) — testy stresu ekonomicznego (Poverty Stress Test)
-- **Katalog `archive/` (Archiwum Historyczne):**
-  - `archive/v1.12/`, `archive/v1.13/`, ... — migawki raportów per wersja balansu (zapisywane automatycznie przy każdym generowaniu)
-  - `archive/legacy_iterations_01_28/` — historyczne raporty z wczesnych faz rozwoju (iteracje 1–28)
-- **Katalog `game_replays/`:**
-  - Przykładowe zapisy partii krok-po-kroku (seed 42).
+- **📁 `current/` — Bieżące Raporty (Wersja Aktywna):**
+  - [`current/raport_telemetrii.md`](current/raport_telemetrii.md) — pełny rozkład szans wygranych (Win Shares) dla 16 setupów i 5 filarów telemetrii
+  - [`current/raport_uzytecznosci_i_wplywu_4p.md`](current/raport_uzytecznosci_i_wplywu_4p.md) — matryca ablacyjna 50 kart i mechanik w Kanonie 4P
+  - [`current/raport_optymalizacji_kanonu.md`](current/raport_optymalizacji_kanonu.md) — raport z audytu optymalizatora 4P (Audytor Kanonu)
+  - [`current/audyt_level1_raport.md`](current/audyt_level1_raport.md) — audyt ±1 parametrów systemowych (złoto, agenci, progi, cooldowny)
+  - [`current/audyt_level2_raport.md`](current/audyt_level2_raport.md) — audyt ±1 warunków zwycięstwa frakcji i reguł skalowania
+  - [`current/audyt_level3_raport.md`](current/audyt_level3_raport.md) — precyzyjny audyt ±1 parametrów pojedynczych kart
+  - [`current/audyt_level4_raport.md`](current/audyt_level4_raport.md) — audyt wariantów niszowych i modyfikatorów
+  - [`current/audyt_stress_raport.md`](current/audyt_stress_raport.md) — testy stresu ekonomicznego (Poverty Stress Test)
+- **📁 `logs/` — Dzienniki Ciągłe Procesów i Optymalizacji:**
+  - [`logs/canon_4p_log.md`](logs/canon_4p_log.md) — rejestr iteracji Audytora Kanonu 4P
+  - [`logs/auto_balancer_log.md`](logs/auto_balancer_log.md) — dziennik działania Szalonego Audytora
+  - [`logs/outlier_hunter_log.md`](logs/outlier_hunter_log.md) — rejestr optymalizacji niszowych setupów
+- **📁 `archive/` — Archiwum Historyczne Wersji:**
+  - `archive/v0.56/`, `archive/v0.55/`, ... — kompletne migawki raportów per wersja balansu ze snapshotem `game_config.yaml`
+- **📁 `game_replays/` — Zapisy Partii Krok-po-Kroku**
 
 ## 🛠️ Generowanie i Archiwizacja
 

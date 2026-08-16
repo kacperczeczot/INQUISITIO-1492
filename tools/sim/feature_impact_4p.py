@@ -48,7 +48,7 @@ from inquisitio.runner.scoring import (
 )
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-OUTPUT_REPORT_PATH = REPORTS_DIR / "raport_uzytecznosci_i_wplywu_4p.md"
+OUTPUT_REPORT_PATH = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
