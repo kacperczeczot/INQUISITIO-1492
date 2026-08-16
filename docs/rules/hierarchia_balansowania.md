@@ -32,7 +32,7 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 
 - **Limit kart na ręce:** `5 kart`
 - **Ekonomia:** `4 złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)
-- **Maksymalny limit Er:** `11 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
+- **Maksymalny limit Er:** `12 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
 - **Strefy i pasma Herezji:** 
   - **Czysta:** `0–3 Herezji`
   - **Obserwowana:** `4–5 Herezji (3p) / 4–6 (4–5p)`

@@ -57,7 +57,7 @@
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | Święte Oficjum | **5 Stosy** lub **2 Skazania Werdyktem** |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery 5) |
+| Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery 4) |
 | Korona & Borgiowie | **2 Dekrety** (od Ery 4) |
 | Kabała z Toledo | **3 Fragmenty** + Herezja **3–8** (od Ery 6) |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |

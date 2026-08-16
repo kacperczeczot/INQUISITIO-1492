@@ -71,6 +71,16 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.69 (2026-08-16) — Kanon 4P Makro: Limit Er: offset +1 (nowy: 12) (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`95.3`** → **`95.4 pkt`** | Global **`75.1`** | 3p **`70.0`** | 5p **`62.6`**
+- **Modyfikacja (`L1_MAX_ERAS_PLUS1`):** Limit Er: offset +1 (nowy: 12).
+- **Efekt:** Optymalizacja parametrów makro 4P. Telemetria: Średnia Er 5.40, Deadlocks 0.1%, Pas Biedy 23.8%.
+
+### 🟢 Patch v0.68 (2026-08-16) — Kanon 4P Makro: Cienie Al-Andalus: Minimalna Era offset -1 + Wariant: Otwarcie Szlaku Morskiego = Era 6 (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`95.1`** → **`95.3 pkt`** | Global **`75.1`** | 3p **`70.1`** | 5p **`62.6`**
+- **Modyfikacja (`L2_CAA_ERA_MINUS1__L4_SEA_ROUTE_ERA6`):** Cienie Al-Andalus: Minimalna Era offset -1 + Wariant: Otwarcie Szlaku Morskiego = Era 6.
+- **Efekt:** Optymalizacja parametrów makro 4P. Telemetria: Średnia Er 5.40, Deadlocks 0.4%, Pas Biedy 23.8%.
+
 ### 🟢 Patch v0.67 (2026-08-16) — Kanon 4P: Karta `kb-01` (Rozkaz Dworu): `heresy` → `1` (Zysk 4P Δ +0.1 pkt)
 - **Wynik 4P:** Kanon **`95.0`** → **`95.1 pkt`** | Global **`74.8`** | 3p **`69.9`** | 5p **`61.9`**
 - **Modyfikacja (`L3_KB-01_HERESY_PLUS1`):** Karta `kb-01` (Rozkaz Dworu): `heresy` → `1`.
