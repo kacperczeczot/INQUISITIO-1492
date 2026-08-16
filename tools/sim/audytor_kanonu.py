@@ -267,6 +267,8 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
         autodafe_opt = "🟢" if 0.7 <= autodafe_avg <= 1.8 else ("🟡" if 0.5 <= autodafe_avg <= 2.0 else "🔴")
         acc_opt = "🟢" if 2.0 <= accusations_avg <= 4.5 else ("🟡" if 1.5 <= accusations_avg <= 5.0 else "🔴")
 
+        vit = evaluate_vitality(summary)
+
         setup_data.append({
             "setup": sname,
             "n_players": n_players,
@@ -285,6 +287,8 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
             "acc_opt": acc_opt,
             "end_gold": round(summary.avg_gold_end, 2),
             "end_heresy": round(summary.avg_heresy_end, 2),
+            "vitality_status": vit.status,
+            "vitality_warnings": vit.warnings,
         })
 
     elapsed = round(time.time() - t0, 2)
@@ -325,6 +329,20 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
         status_icon = "🟢 OPTYMALNA" if all_ok else "⚠️ WARTOŚCI BRZEGOWE"
         report_lines.append(
             f"| `{d['setup']}` | {d['avg_eras']} {d['eras_opt']} | {d['deadlock_pct']}% {d['deadlock_opt']} | {d['poverty_pct']}% {d['poverty_opt']} | {d['autodafe_avg']} {d['autodafe_opt']} | {d['accusations_avg']} {d['acc_opt']} | {d['end_gold']}zł | {d['end_heresy']} | {status_icon} |"
+        )
+
+    report_lines.extend([
+        "",
+        "## 3. Witalność Mechanik Frakcji (Mechanic Vitality & Degeneration Gate)",
+        "",
+        "| Setup | Status Witalności | Zidentyfikowane Ostrzeżenia / Degradacje Mechanik |",
+        "| :--- | :---: | :--- |",
+    ])
+
+    for d in setup_data:
+        warn_str = ", ".join(d['vitality_warnings']) if d['vitality_warnings'] else "Brak — wszystkie mechaniki aktywne i płynne"
+        report_lines.append(
+            f"| `{d['setup']}` | {d['vitality_status']} | {warn_str} |"
         )
 
     return save_and_archive_report(report_lines, "raport_telemetrii.md")

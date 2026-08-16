@@ -1,11 +1,81 @@
-"""Balance Scoring Engine — Continuous Asymptotic Exponential Decay Model."""
+"""Balance Scoring Engine — Continuous Asymptotic Exponential Decay Model with Mechanic Vitality Gate."""
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import math
 
 from inquisitio.engine.setup import SETUP_PRESETS
 from inquisitio.runner.balance import faction_shares
 from inquisitio.runner.batch import BatchSummary
+
+
+@dataclass
+class VitalityReport:
+    is_healthy: bool
+    status: str
+    warnings: list[str] = field(default_factory=list)
+    vitality_penalty: float = 0.0
+
+
+def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
+    """Evaluates whether core faction mechanics and economic flow remain vibrant and alive.
+    
+    Prevents degenerate balance mutations where a faction 'balances' win rate
+    by completely abandoning or losing access to its signature mechanics (e.g. 0 condemnations, 0 hooks).
+    """
+    factions = SETUP_PRESETS.get(summary.setup, [])
+    warnings = []
+    penalty = 0.0
+
+    # 1. Economic Flow & Poverty Stress (Threshold > 15.0%)
+    if summary.passes_forced_pct > 0.15:
+        excess = (summary.passes_forced_pct - 0.15) * 8.0
+        penalty += excess
+        warnings.append(f"Zator Monetarny / Pas Biedy {summary.passes_forced_pct*100:.1f}% (>15%)")
+
+    # 2. Deadlock Stress (Threshold > 5.0%)
+    if summary.eras_limit_pct > 0.05:
+        excess = (summary.eras_limit_pct - 0.05) * 10.0
+        penalty += excess
+        warnings.append(f"Paraliż Gry / Deadlocks {summary.eras_limit_pct*100:.1f}% (>5%)")
+
+    # 3. Faction Mechanic Vitality Gates
+    # Święte Oficjum: requires active court accusations and executions/stacks
+    if "swiete-oficjum" in factions:
+        if summary.accusations_avg < 0.5:
+            penalty += 1.5
+            warnings.append(f"Zanikanie Oskarżeń Oficjum ({summary.accusations_avg:.2f}/partię)")
+        if summary.convictions_avg < 0.1 and summary.autodafe_avg < 0.1:
+            penalty += 2.5
+            warnings.append("Kastracja Wyroków Oficjum (brak Skazań i Stosów)")
+
+    # Korona Borgiowie: requires active extortion network (hooks)
+    if "korona-borgiowie" in factions:
+        if summary.hooks_avg < 0.3:
+            penalty += 1.5
+            warnings.append(f"Zanikanie Haków Korony ({summary.hooks_avg:.2f}/partię)")
+
+    # Gildia Cieni: requires active double-agents or blackmail
+    if "gildia-cieni" in factions:
+        if summary.doubles_avg < 0.05 and summary.hooks_avg < 0.2:
+            penalty += 1.0
+            warnings.append("Zanikanie Infiltracji Gildii Cieni")
+
+    is_healthy = len(warnings) == 0
+    if is_healthy:
+        status = "🟢 Pełna Witalność"
+    elif penalty < 2.0:
+        status = "⚠️ Ostrzeżenie Witalności"
+    else:
+        status = "🔴 Zagrożenie Witalności (Kastracja Mechanik)"
+
+    return VitalityReport(
+        is_healthy=is_healthy,
+        status=status,
+        warnings=warnings,
+        vitality_penalty=penalty,
+    )
+
 
 def calculate_setup_score(summary: BatchSummary) -> float:
     """Calculates Balance Score (0.1–100.0) for a single setup summary using continuous exponential decay.
@@ -13,7 +83,7 @@ def calculate_setup_score(summary: BatchSummary) -> float:
     Properties:
     - Never reaches 0.0 (preserves non-zero gradient for optimization and variant comparison).
     - Strictly reserves >=98.0 pkt for deviations <= 0.5 p.p.
-    - Smooth, continuous loss landscape without arbitrary step-discontinuities.
+    - Integrates Mechanic Vitality Gate (penalizes mechanic castrations and flow deadlocks).
     """
     shares = faction_shares(summary)
     n_players = len(SETUP_PRESETS[summary.setup])
@@ -30,12 +100,14 @@ def calculate_setup_score(summary: BatchSummary) -> float:
     c = 3.2
     exponent = c * (rms_rd ** 1.25)
 
-    # Deadlock penalty
-    deadlock_penalty = max(0.0, (summary.eras_limit_pct - 0.05)) * 5.0
+    # Vitality penalty (includes deadlock & mechanic vitality checks)
+    vitality = evaluate_vitality(summary)
+    total_penalty = vitality.vitality_penalty
 
-    val = 100.0 * math.exp(-(exponent + deadlock_penalty))
+    val = 100.0 * math.exp(-(exponent + total_penalty))
     score = max(0.1, min(100.0, val))
     return round(score, 1)
+
 
 
 def calculate_category_scores(summaries: list[BatchSummary]) -> dict[str, float]:
