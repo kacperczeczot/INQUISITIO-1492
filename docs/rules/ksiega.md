@@ -140,7 +140,7 @@ Natychmiast, gdy spełnisz warunek frakcji:
 
 | Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
-| **Święte Oficjum** | **5 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem |
+| **Święte Oficjum** | **5 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / Era 4+) |
 | **Korona & Borgiowie** | **2 Dekrety** (od Ery **4**) |
 | **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery **6**) |

@@ -103,7 +103,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +2 Herezja. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -679,7 +679,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał. |
 | `effect` | Aresztuj Agenta rywala w Lochach lub w Trybunale. |
@@ -753,12 +753,12 @@ Kart: **10**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
-| `tags` | gold |
+| `tags` | gold, heresy |
 | `status` | prototyp |
 
 ### `gc-03` — Podrzucenie Księgi

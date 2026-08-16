@@ -71,6 +71,26 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.74 (2026-08-16) — Kanon 4P: Karta `kt-08` (Areszt Wiedzy): `cost` → `1` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`95.9`** → **`96.3 pkt`** | Global **`76.4`** | 3p **`65.3`** | 5p **`70.7`**
+- **Modyfikacja (`L3_KT-08_COST_MINUS1`):** Karta `kt-08` (Areszt Wiedzy): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.48, Deadlocks 0.1%, Pas Biedy 24.6%.
+
+### 🟢 Patch v0.73 (2026-08-16) — Kanon 4P: Karta `gc-02` (Czarny Rynek): `gold` → `1` (Zysk 4P Δ +2.2 pkt)
+- **Wynik 4P:** Kanon **`93.7`** → **`95.9 pkt`** | Global **`76.7`** | 3p **`65.8`** | 5p **`71.6`**
+- **Modyfikacja (`L3_GC-02_GOLD_MINUS1`):** Karta `gc-02` (Czarny Rynek): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.48, Deadlocks 0.1%, Pas Biedy 24.6%.
+
+### 🟢 Patch v0.72 (2026-08-16) — Kanon 4P: Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `1` (Zysk 4P Δ +5.3 pkt)
+- **Wynik 4P:** Kanon **`88.4`** → **`93.7 pkt`** | Global **`74.5`** | 3p **`64.4`** | 5p **`67.8`**
+- **Modyfikacja (`L3_SO-05_TARGET_HERESY_MINUS1`):** Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.44, Deadlocks 0.1%, Pas Biedy 24.0%.
+
+### 🟢 Patch v0.71 (2026-08-16) — Kanon 4P: Święte Oficjum: Skazania offset +1 (Zysk 4P Δ +18.5 pkt)
+- **Wynik 4P:** Kanon **`69.9`** → **`88.4 pkt`** | Global **`69.2`** | 3p **`68.0`** | 5p **`53.9`**
+- **Modyfikacja (`L2_SO_CONDEMNS_PLUS1`):** Święte Oficjum: Skazania offset +1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.40, Deadlocks 0.1%, Pas Biedy 23.9%.
+
 ### 🟢 Patch v0.70 (2026-08-16) — Pełna Aktywacja Reakcji Silnika (`so-05` Wezwanie do Trybunału & `gc-05` Fałszywy Świadek)
 - **Wynik 4P:** Kanon **`69.9 pkt`** | Global **`64.8 pkt`** | 3p **`74.3 pkt`** | 5p **`50.2 pkt`**
 - **Status Gry:** 50/50 kart w pełni grywalnych w silniku symulacji (aktywne triggery reakcji).
