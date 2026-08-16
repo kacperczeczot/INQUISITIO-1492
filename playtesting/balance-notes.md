@@ -97,12 +97,16 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 - **Wyniki:** Zostaną uzupełnione po przeprowadzeniu oficjalnych testów / audytu.
 
 ### 🟢 Patch v0.57 (2026-08-16) — Pełne Oczyszczenie Silnika Gry (SSOT) & Naprawa Autodafé
+- **Wyniki Audytu (Próba 10 000 gier/setup × 16 setupów = 160 000 gier, Czysty Silnik):**
+  - **Global Score:** **`51.6 pkt`** 🔴 | **Kanon 4P:** **`49.4 pkt`** 🔴 | **3p:** **`66.8 pkt`** 🟠 | **5p:** **`38.5 pkt`** 🔴
+  - **Rozkład 4P (`4p-core`):** SO: `37.7%`, CAA: `25.0%`, KB: `18.5%`, KT: `18.9%` (dominacja Świętego Oficjum i Gildii Cieni wynikająca z braku skalowania progów wygranej przy żywym Inkwizytorze).
+  - **Telemetria 5 Filarów:** Średnia Er: `5.34`, Deadlocks: `0.1%`, Pas Biedy: `21.4%`, Autodafé: `1.47 / partię` (pierwsze w Erze 3/4), Oskarżenia: `2.64 / partię`.
 - **Modyfikacje Silnika:**
   1. **Usunięcie sztucznych filtrów Autodafé:** Wymontowano `rng.random() < 0.18`, wymóg `crowd >= 3` oraz sztuczny limit `so_pl.stacks >= 2` z `inquisitor.py`.
   2. **Kanon terminu Autodafé:** Ustawiono początkowy licznik `eras_since_autodafe = 0`, dzięki czemu pierwsze naturalne Autodafé odbywa się dopiero od Ery 3 (brak czystek na starcie gry w Erach 1–2).
   3. **Naprawa kart w Warstwie C:** Odblokowano pełne działanie `caa-05` (Ukryty Kurier ewakuuje Relikwie) oraz `so-04`, `kt-03`, `kt-05` zgodnie z tekstem kart w `KATALOG.md`.
   4. **Zasady planszowe:** Autodafé zwraca Relikwie w lokacji do puli, a spalenie celu z Hakiem zalicza Upadek Gildii Cieni.
-- **Efekt:** Całkowite wyeliminowanie rozbieżności między kodem symulatora a Księgą Zasad (111/111 testów pytest zdanych).
+- **Wniosek Analityczny:** Odblokowanie prawdziwego Autodafé sprawiło, że dotychczasowe niskie progi zwycięstwa (`SO: 4 Stosy`, `GC: 2 Upadki`) pozwalały tym dwóm frakcjom wygrywać za szybko, co zdefiniowało konieczność podniesienia ich celów w `v0.58`.
 
 > [!IMPORTANT]
 > ### 📐 Wdrożenie Ciągłego Asymptotycznego Modelu Punktacji (`scoring.py`, 2026-08-16)
