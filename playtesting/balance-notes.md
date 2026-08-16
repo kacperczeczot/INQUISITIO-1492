@@ -68,26 +68,6 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ---
 
-## Gate przed stołem
-
-```bash
-cd sim && source .venv/bin/activate
-python -m inquisitio matrix --games 100 --layers A,B,C --seed 42
-python -m inquisitio feel --setup 3p-oficjum-alandalus-korona --seed 42 --layer C
-pytest tests/test_balance.py tests/test_smoke.py -q
-```
-
-Wysokie deadlocki C = blocker (napraw, nie drukuj).
-
----
-
-## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.57 — Oczyszczony Silnik SSOT, przed pełnym audytem testowym)
-
-- **Wyniki Balansu:** Oczekuje na uruchomienie pełnego pakietu testowego Grand Audit dla wersji `v0.58` (unifikacja 4P).
-- **Status Silnika:** 🟢 **100% ZGODNY Z REGULAMINEM (SSOT)** (Autodafé od Ery 3, pełne efekty kart, brak sztucznych filtrów).
-
----
-
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
 ### 🟡 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé [W TRAKCIE TESTÓW]
