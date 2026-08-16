@@ -1,11 +1,11 @@
-version: v0.58
+version: v0.69
 date: '2026-08-16'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 4
   agents_per_player: 3
   hand_limit: 5
-  max_eras: 11
+  max_eras: 12
   autodafe_cooldown: 3
   cards_per_era: 2
   accusation_threshold:
@@ -18,7 +18,7 @@ victory:
     condemns: 2
   cienie_al_andalus:
     relics: 2
-    path_era: 5
+    path_era: 4
   korona_borgiowie:
     decrees: 2
     hooks: 1
@@ -51,7 +51,7 @@ cards:
     type: akcja
     layer: A
     cost: 1
-    gold: 2
+    gold: 3
     action: gain_gold
     tags:
     - gold
@@ -182,6 +182,7 @@ cards:
     action: frame_rival
     tags:
     - heresy
+    gold: 1
   caa-05:
     name: Ukryty Kurier
     type: akcja
@@ -242,7 +243,7 @@ cards:
     name: Echo Alhambry
     type: signature
     layer: C
-    cost: 0
+    cost: 1
     heresy: 1
     evacuate_relic: 2
     action: evacuate_relic
@@ -262,6 +263,7 @@ cards:
     action: move_agent
     tags:
     - move
+    heresy: 1
   kb-02:
     name: Pobór Podatków
     type: akcja
@@ -327,7 +329,7 @@ cards:
     name: Przekupstwo Sędziego
     type: akcja
     layer: B
-    cost: 3
+    cost: 2
     creates_hook: true
     verdict_weight: 2
     action: creates_hook
@@ -395,7 +397,7 @@ cards:
     name: Zwierciadło Herezji
     type: akcja
     layer: A
-    cost: 0
+    cost: 1
     target_heresy: 1
     action: frame_rival
     tags:
@@ -448,7 +450,7 @@ cards:
     name: Fragment Kodeksu
     type: akcja
     layer: C
-    cost: 1
+    cost: 2
     heresy: 1
     grant_fragment: 1
     action: grant_fragment
@@ -503,6 +505,7 @@ cards:
     action: frame_rival
     tags:
     - heresy
+    gold: 1
   gc-04:
     name: Informator
     type: akcja
@@ -574,7 +577,7 @@ cards:
     type: signature
     layer: C
     cost: 4
-    heresy: 2
+    heresy: 1
     mark_fall: true
     action: creates_hook
     condition: rival_has_hook_or_double_or_autodafe
@@ -585,7 +588,7 @@ cards:
     - heresy
 variants:
   time_deck_freq: 1
-  sea_route_era: 5
+  sea_route_era: 6
   inquisitor_speed: 1
 heresy_zones:
   clean:

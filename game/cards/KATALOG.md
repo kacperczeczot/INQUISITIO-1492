@@ -52,7 +52,7 @@ Kart: **10**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Konfiskata majątku skazańców to prawny obowiązek trybunału. |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -361,7 +361,7 @@ Kart: **10**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
@@ -385,7 +385,7 @@ Kart: **10**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | Królewski nakaz wiąże bez pytania biskupów o zgodę. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu. |
@@ -503,7 +503,7 @@ Kart: **10**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 3 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala. |
@@ -611,7 +611,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Zwierciadło odbija winę na obce imię w rejestrze familiariuszy. |
 | `effect` | Wskaż rywala: +1 Herezja. |
@@ -696,7 +696,7 @@ Kart: **10**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
 | `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. |
@@ -890,7 +890,7 @@ Kart: **10**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 4 |
-| `heresy` | 2 |
+| `heresy` | 1 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
 | `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
 | `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
