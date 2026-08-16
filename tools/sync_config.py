@@ -151,8 +151,9 @@ def _scaling_box(cfg: dict) -> str:
     g4 = g["4p"] if isinstance(g, dict) else g
     g5 = g["5p"] if isinstance(g, dict) else g
 
-    so_s = v["swiete_oficjum"]["stacks"]
-    so_s3 = so_s["3p"] if isinstance(so_s, dict) else so_s
+    so_s = v.get("swiete_oficjum", {}).get("stacks", 4)
+    so_s3 = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
+    so_s5 = so_s.get("5p", 4) if isinstance(so_s, dict) else so_s
 
     lines_3p = [
         f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t3-1}` / Krytyczna `≥{t3}`).",
@@ -160,13 +161,13 @@ def _scaling_box(cfg: dict) -> str:
     if so_s3 != 4:
         lines_3p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast 4).")
 
-    kb_e = v["korona_borgiowie"]["era"]
-    kb_e3 = kb_e["3p"] if isinstance(kb_e, dict) else kb_e
+    kb_e = v.get("korona_borgiowie", {}).get("era", 5)
+    kb_e3 = kb_e.get("3p", 5) if isinstance(kb_e, dict) else kb_e
     if kb_e3 != 5:
         lines_3p.append(f"> - **Korona & Borgiowie:** Może wygrać od **`Ery {kb_e3}`** (zamiast 5).")
 
-    kt_e = v["kabala_toledo"]["era"]
-    kt_e3 = kt_e["3p"] if isinstance(kt_e, dict) else kt_e
+    kt_e = v.get("kabala_toledo", {}).get("era", 6)
+    kt_e3 = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
     if kt_e3 != 6:
         lines_3p.append(f"> - **Kabała z Toledo:** Może wygrać od **`Ery {kt_e3}`** (zamiast 6).")
 
@@ -174,6 +175,8 @@ def _scaling_box(cfg: dict) -> str:
     if g5 != g4:
         lines_5p.append(f"> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`{g5} zł`** (zamiast {g4} zł).")
     lines_5p.append(f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t5}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t5-1}` / Krytyczna `≥{t5}`).")
+    if so_s5 != 4:
+        lines_5p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s5} Stosów`** (zamiast 4) ze względu na większą pulę wrogich agentów.")
 
     mod_3p_str = "\n".join(lines_3p)
     mod_5p_str = "\n".join(lines_5p)
@@ -249,47 +252,12 @@ def sync_ksiega(cfg: dict) -> list[str]:
     text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
     text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
 
-    # Threshold text
-    text = re.sub(
-        r"\*\*Zasada Balansu:\*\* bazowy próg oskarżenia wynosi.*?\.",
-        _balance_rule(cfg),
-        text
-    )
-
-    # Parametry systemowe
-    text = re.sub(
-        r"\*\*Parametry systemowe \(Kanon 4p\):\*\*.*?(?=\n\n|\Z)",
-        _system_summary(cfg),
-        text
-    )
-
-    # Replace setup section values
-    g = cfg["system"]["start_gold"]
-    g4 = g["4p"] if isinstance(g, dict) else g
-    g5 = g["5p"] if isinstance(g, dict) else g
-    if g4 == g5:
-        gold_str = f"Złoto startowe: **{g4} zł** na gracza."
-    else:
-        gold_str = f"Złoto startowe: **{g4} zł** na gracza (w 5p: **{g5} zł**)."
-    gold_pattern = re.compile(r"3\. Złoto startowe: .*")
-    text = gold_pattern.sub(f"3. {gold_str}", text)
-
-    hand_pattern = re.compile(r"Dobierz .*? kart z talii")
-    text = hand_pattern.sub(f"Dobierz **{cfg['system']['hand_limit']}** kart z talii", text)
-
-    limit_pattern = re.compile(r"Dobierz karty do limitu ręki .*?\.")
-    text = limit_pattern.sub(f"Dobierz karty do limitu ręki **{cfg['system']['hand_limit']}**.", text)
-
-    # Replace "Limit Er" in freeze table
-    limit_er_pattern = re.compile(r"\*\*Limit Er: \d+\.\*\*")
-    text = limit_er_pattern.sub(f"**Limit Er: {cfg['system']['max_eras']}.**", text)
-
-    # Replace cards per era
-    cards_pattern = re.compile(r"\*\*do \d+\*\* \(zagranie lub pas\)")
-    text = cards_pattern.sub(f"**do {cfg['system']['cards_per_era']}** (zagranie lub pas)", text)
+    # Balance rule in Tribunal section
+    old_bal = re.compile(r"\*\*Zasada Balansu:\*\* bazowy próg.*?\.")
+    text = old_bal.sub(_balance_rule(cfg), text)
 
     ksiega_path.write_text(text, encoding="utf-8")
-    changes.append("Inline parametry zsynchronizowane")
+    changes.append("Zsynchronizowano docs/rules/ksiega.md")
     return changes
 
 
@@ -312,8 +280,8 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 
     # Replace heresy zones
     text = re.sub(
-        r"\| 4–6 \(w 3p: 4–5\) \| Obserwowana \|.*?\n\| 7–10 \(w 3p: ≥6, w 5p: ≥8\) \| \*\*Krytyczna\*\* \|.*?\n",
-        f"| 4–6 (w 3p: 4–5) | Obserwowana | Ryzyko; Kabała lubi ten pas |\n| 7–10 (w 3p: ≥6, w 5p: ≥8) | **Krytyczna** | Inni mogą Cię oskarżyć |\n",
+        r"\| Czysta \| `0–3` \| Bezpieczna \|.*?\n\| Obserwowana \| `.*?` \| Uwaga Inkwizytora \|.*?\n\| Krytyczna \| `.*?` \| Ryzyko oskarżenia \|",
+        f"| Czysta | `0–3` | Bezpieczna |\n| Obserwowana | `4–6` | Uwaga Inkwizytora (w 3p: `4–5`, w 5p: `4–7`) |\n| Krytyczna | `≥7` | Ryzyko oskarżenia (w 3p: `≥6`, w 5p: `≥8`) |",
         text
     )
 
@@ -333,8 +301,16 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     so_s = v.get("swiete_oficjum", {}).get("stacks", 4)
     so_4p = so_s.get("4p", 4) if isinstance(so_s, dict) else so_s
     so_3p = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
+    so_5p = so_s.get("5p", 4) if isinstance(so_s, dict) else so_s
     so_c = v.get("swiete_oficjum", {}).get("condemns", 2)
-    so_teach_text = f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem** (w 3p: {so_3p} Stosy)" if so_4p != so_3p else f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem**"
+    
+    so_mods = []
+    if so_3p != so_4p:
+        so_mods.append(f"w 3p: {so_3p} Stosy")
+    if so_5p != so_4p:
+        so_mods.append(f"w 5p: {so_5p} Stosów")
+    
+    so_teach_text = f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem** ({', '.join(so_mods)})" if so_mods else f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem**"
 
     kb_e = v.get("korona_borgiowie", {}).get("era", 5)
     kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
@@ -448,14 +424,19 @@ def sync_setups(cfg: dict) -> list[str]:
     if not path.exists():
         return []
     text = path.read_text(encoding="utf-8")
-    s = cfg["system"]
-    sg = s["start_gold"]
-    cd = s["autodafe_cooldown"]
-    t = s["accusation_threshold"]
+    t = cfg["system"]["accusation_threshold"]
+    g = cfg["system"]["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
+    g5 = g["5p"] if isinstance(g, dict) else g
+    if g4 == g5:
+        gold_str = f"Złoto startowe: **{g4} zł** na gracza."
+    else:
+        gold_str = f"Złoto startowe: **{g4} zł** na gracza (w 5p: **{g5} zł**)."
+    gold_pattern = re.compile(r"3\. Złoto startowe: .*")
+    text = gold_pattern.sub(f"3. {gold_str}", text)
 
-    text = re.sub(r"Startowe Złoto: \*\*.*?\*\*", f"Startowe Złoto: **{sg['3p']} zł** (3p) / **{sg['4p']} zł** (4p) / **{sg['5p']} zł** (5p)", text)
-    text = re.sub(r"Autodafé cooldown: \*\*co \d+ Ery\*\*", f"Autodafé cooldown: **co {cd} Ery**", text)
-    text = re.sub(r"Próg Oskarżenia na Dworze: \*\*.*?\*\*", f"Próg Oskarżenia na Dworze: **≥{t['3p']}** (3p) / **≥{t['4p']}** (4p) / **≥{t['5p']}** (5p)", text)
+    hand_pattern = re.compile(r"Dobierz .*? kart z talii")
+    text = hand_pattern.sub(f"Dobierz **{cfg['system']['hand_limit']}** kart z talii", text)
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano playtesting/setups.md"]
@@ -471,7 +452,15 @@ def sync_readme(cfg: dict) -> list[str]:
     so_s = v.get("swiete_oficjum", {}).get("stacks", 4)
     so_4p = so_s.get("4p", 4) if isinstance(so_s, dict) else so_s
     so_3p = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
-    so_readme_text = f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *(w 3p: {so_3p} Stosy)*" if so_4p != so_3p else f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem"
+    so_5p = so_s.get("5p", 4) if isinstance(so_s, dict) else so_s
+    
+    so_mods = []
+    if so_3p != so_4p:
+        so_mods.append(f"w 3p: {so_3p} Stosy")
+    if so_5p != so_4p:
+        so_mods.append(f"w 5p: {so_5p} Stosów")
+    
+    so_readme_text = f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *({', '.join(so_mods)})*" if so_mods else f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem"
 
     kb_e = v.get("korona_borgiowie", {}).get("era", 5)
     kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e

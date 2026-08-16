@@ -34,7 +34,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia planszy:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy - spalenie agentów):** `3p` = **3 Stosy** | `4p` = **4 Stosy** | `5p` = **4 Stosy**.
+- **Ścieżka A (Stosy - spalenie agentów):** `3p` = **4 Stosy** | `4p` = **4 Stosy** | `5p` = **5 Stosów** (proporcjonalnie do 12 wrogich agentów na planszy).
 - **Ścieżka B (Skazania Stołu - Werdykt):** **2 Skazania** (wszystkie składy `3p`, `4p`, `5p`).
 
 ### 2. Cienie Al-Andalus
@@ -47,8 +47,8 @@ Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia p
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3** (wszystkie składy).
-- **Wymagane Pasmo Herezji:** **[3, 7]**.
-- **Minimalna Era Wygranej:** `3p` = **Era 7** | `4p` = **Era 6** | `5p` = **Era 6**.
+- **Wymagane Pasmo Herezji:** **[3, 8]**.
+- **Minimalna Era Wygranej:** `3p` = **Era 6** | `4p` = **Era 6** | `5p` = **Era 6**.
 
 ### 5. Gildia Cieni
 - **Upadki Rywali (Falls):** **2 Upadki** ze Świętym Oficjum | **3 Upadki** gdy Oficjum nie gra.
@@ -81,19 +81,24 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.41, próba 10 000 gier/setup × 16 setupów = 160 000 gier, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.51, próba 3 000 gier/setup × 16 setupów = 48 000 gier, seed 42, warstwa C)
 
 - **Telemetria Silnika Gry (5 Filarów):** 🟢 **OPTYMALNA**
-  - **Średnia Er (Tempo Gry):** **`6.13 Er`** 🟢 (norma 5.0–6.5 Er)
-  - **Remisy po Limicie Er (Deadlocks):** **`1.6%`** 🟢 (norma <5.0%)
-  - **Pas Biedy (Poverty Rate):** **`25.8%`** 🟢 (w 5p spadek do 23.7%, norma <28.0%)
-  - **Oskarżenia na Dworze:** **`3.24 / partię`** 🟢 (norma 2.0–4.5)
-  - **Autodafé Inkwizytora:** **`0.44 / partię`** 🟡 (norma 0.7–1.8)
-- **Status Balansu Win-Share:** 🔴 **WYMAGA KALIBRACJI ASYMETRII** (Kabała 43.1% dominacja, Korona 19.5% blokada Haka, Oficjum 23.7% niska presja Stosów).
+  - **Średnia Er (Tempo Gry):** **`5.75 Er`** 🟢 (norma 5.0–6.5 Er)
+  - **Remisy po Limicie Er (Deadlocks):** **`1.4%`** 🟢 (norma <5.0%)
+  - **Pas Biedy (Poverty Rate):** **`27.2%`** 🟢 (norma <28.0%)
+  - **Oskarżenia na Dworze:** **`3.67 / partię`** 🟢 (norma 2.0–4.5)
+  - **Autodafé Inkwizytora:** **`0.55 / partię`** 🟡 (norma 0.7–1.8)
+- **Status Balansu Win-Share w 5p:** 🟢 **WYLECZONA DOMINACJA OFICJUM** (SO: 20.6% vs idealne 20.0%, CAA: 21.8%, GC: 25.8%, KB: 16.7%, KT: 15.2%).
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.51 (2026-08-16) — Organiczne Skalowanie Stosów Świętego Oficjum dla 5p (5 Stosów)
+- **Wynik 5p:** Skok z `0.0 pkt` do **`66.0 pkt`** 🟠 (SO: **20.6%** vs 20.0% ideał, spadek z dominującego 31.4%)
+- **Modyfikacja:** `swiete_oficjum.stacks`: `3p: 4 | 4p: 4 | 5p: 5` (w 5p wymagane 5 Stosów ze względu na 12 wrogich agentów).
+- **Efekt:** Całkowite wyleczenie asymetrii Świętego Oficjum w 5p bez naruszania naturalnego progu oskarżeń (6 w 3p, 7 w 4p, 8 w 5p). Telemetria: Średnia Er 5.75, Deadlocks 1.4%, Pas Biedy 27.2%.
 
 ### 🟢 Patch v0.50 (2026-08-16) — Karta `kt-10` (Pieczęć Salomona): `cost` → `2` (Zysk Δ +0.1 pkt)
 - **Wynik:** Global **`86.9`** | 3p **`82.7`** | 4p **`91.1`** | 5p **`0.0`**

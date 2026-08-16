@@ -233,11 +233,11 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     kt = st.players[FactionId.KABALA_TOLEDO]
     kt.fragments = 3
     kt.heresy = 5
-    st.era = 7
+    st.era = 6
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
     blocked = check_winner_details(st, {"kt_era_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KABALA_TOLEDO
-    st.era = 8
+    st.era = 7
     assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
 
     from inquisitio.engine.hooks import grant_hook
@@ -249,6 +249,6 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
-    st2.era = 5
+    st2.era = 4
     assert check_winner_details(st2) is None
 
