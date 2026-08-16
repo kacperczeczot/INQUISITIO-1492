@@ -71,6 +71,13 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.75 (2026-08-16) — Inteligentne Utility AI (Net ROI, Strefy Herezji, Taktyczny Pas) i Oczyszczenie Kart SSOT
+- **Wynik 4P:** Kanon **`34.4 pkt`** | Global **`35.8 pkt`** | 3p **`34.6 pkt`** | 5p **`38.3 pkt`**
+- **Modyfikacja Silnika & AI:**
+  - `sim/inquisitio/agents/politics.py`: Wdrożenie wielokryterialnego Utility AI (ocena kosztu netto złota, strefy zagrożenia Herezją, frakcyjne drivery wygranej, rezerwacyjna wartość Pasa).
+  - Oczyszczenie kart SSOT: Przywrócenie `gc-02` (Czarny Rynek) do `cost: 1, gold: 3, heresy: 1`, usunięcie zanieczyszczeń `gold: 1` z kart `caa-01`, `caa-04`, `gc-03`, `kt-03`, `kt-09`, `kt-10`, oczyszczenie `so-08`.
+- **Efekt:** Odsłonięcie autentycznego rozkładu balansu przy inteligentnych graczach. Drastyczny spadek Pasu Biedy z 24.6% do **5.3%–6.8%**, Deadlocki **0.7%**, Średnia Er **5.65**. Wszystkie raporty zarchiwizowane w `playtesting/sim-reports/archive/v0.75/`.
+
 ### 🟢 Patch v0.74 (2026-08-16) — Kanon 4P: Karta `kt-08` (Areszt Wiedzy): `cost` → `1` (Zysk 4P Δ +0.4 pkt)
 - **Wynik 4P:** Kanon **`95.9`** → **`96.3 pkt`** | Global **`76.4`** | 3p **`65.3`** | 5p **`70.7`**
 - **Modyfikacja (`L3_KT-08_COST_MINUS1`):** Karta `kt-08` (Areszt Wiedzy): `cost` → `1`.

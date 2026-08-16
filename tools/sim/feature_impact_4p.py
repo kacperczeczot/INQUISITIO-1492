@@ -172,6 +172,130 @@ def classify_card_impact_4p(d_share: float, d_4p: float) -> tuple[str, str, str]
         return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
 
 
+def classify_mechanic_impact_4p(d_4p: float, max_d_share: float) -> tuple[str, str, str]:
+    """Classifies system/victory mechanic impact into 3x3 (9 areas) matrix.
+    
+    Y: Severity / Importance (Critical, Moderate, Low)
+    X: Effect Direction (Worsens Balance, Neutral, Improves Balance)
+    """
+    # 1. Determine Severity
+    if abs(d_4p) >= 15.0 or max_d_share >= 10.0:
+        severity = "CRITICAL"
+    elif abs(d_4p) >= 4.0 or max_d_share >= 4.0:
+        severity = "MODERATE"
+    else:
+        severity = "LOW"
+
+    # 2. Determine Effect Direction
+    if d_4p <= -4.0:
+        direction = "STABILIZER"
+    elif d_4p >= 1.5:
+        direction = "DISRUPTOR"
+    else:
+        direction = "NEUTRAL"
+
+    # 3. 3x3 Matrix mapping (9 Areas)
+    mapping = {
+        ("CRITICAL", "STABILIZER"): ("M_CRIT_STAB", "👑 KRYTYCZNY FILAR (Core Engine Pillar)", "STABILIZER"),
+        ("CRITICAL", "NEUTRAL"):    ("M_CRIT_NEUT", "⚓ KLUCZOWY STABILIZATOR (Key Anchor)", "NEUTRAL"),
+        ("CRITICAL", "DISRUPTOR"):   ("M_CRIT_DISR", "⚠️ KRYTYCZNA WADA (Critical Flaw)", "DISRUPTOR"),
+        ("MODERATE", "STABILIZER"): ("M_MOD_STAB",  "🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard)", "STABILIZER"),
+        ("MODERATE", "NEUTRAL"):    ("M_MOD_NEUT",  "⚖️ ZBALANSOWANY REGULATOR (Balanced Regulator)", "NEUTRAL"),
+        ("MODERATE", "DISRUPTOR"):  ("M_MOD_DISR",  "⚠️ UMIARKOWANE OBCIĄŻENIE (Moderate Drag)", "DISRUPTOR"),
+        ("LOW", "STABILIZER"):      ("M_LOW_STAB",  "🛑 DROBNY REGULATOR (Minor Buffer)", "STABILIZER"),
+        ("LOW", "NEUTRAL"):         ("M_LOW_NEUT",  "💤 MECHANIKA PASYWNA (Low Impact)", "NEUTRAL"),
+        ("LOW", "DISRUPTOR"):       ("M_LOW_DISR",  "💡 KANDYDAT DO UPROSZCZENIA (Simplification)", "DISRUPTOR"),
+    }
+    return mapping.get((severity, direction), ("M_GENERIC", "⚖️ REGULATOR", "NEUTRAL"))
+
+
+def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str]) -> list[tuple[str, str, str, dict, int, int, list[str]]]:
+    """Generates comprehensive ablation & extreme-parameter tasks for ALL Level 1, Level 2, and Level 4 mechanics."""
+    v = CONFIG.victory
+    s = CONFIG.system
+    nv = CONFIG.variants
+
+    so = v.swiete_oficjum
+    caa = v.cienie_al_andalus
+    kb = v.korona_borgiowie
+    kt = v.kabala_toledo
+    gc = v.gildia_cieni
+    hb = kt.heresy_band
+
+    tasks = [
+        # ══════════════════════════════════════════════════════════════
+        # POZIOM 1: GŁÓWNE MECHANIKI SYSTEMOWE (GLOBAL SYSTEM CORE)
+        # ══════════════════════════════════════════════════════════════
+        ("L1_MAX_ERAS_8", "Limit Er: 12 → 8 Er (Presja czasu)", "Poziom 1: System Core", {"max_eras": 8}),
+        ("L1_MAX_ERAS_16", "Limit Er: 12 → 16 Er (Wydłużony silnik)", "Poziom 1: System Core", {"max_eras": 16}),
+        ("L1_THRESHOLD_MINUS1", "Próg Oskarżenia na Dworze: -1 (Agresywny Dwór)", "Poziom 1: System Core", {"threshold_offset": -1}),
+        ("L1_THRESHOLD_PLUS1", "Próg Oskarżenia na Dworze: +1 (Pasywny Dwór)", "Poziom 1: System Core", {"threshold_offset": 1}),
+        ("L1_START_GOLD_0", "Złoto startowe: 4zł → 0zł (Skrajne ubóstwo)", "Poziom 1: System Core", {"start_gold": 0}),
+        ("L1_START_GOLD_6", "Złoto startowe: 4zł → 6zł (Bogaty start)", "Poziom 1: System Core", {"start_gold": 6}),
+        ("L1_AGENTS_2", "Liczba Agentów: 3 → 2 Agentów (Ograniczony zasięg)", "Poziom 1: System Core", {"agents_offset": -1}),
+        ("L1_AGENTS_4", "Liczba Agentów: 3 → 4 Agentów (Gęsta plansza)", "Poziom 1: System Core", {"agents_offset": 1}),
+        ("L1_HAND_LIMIT_3", "Limit kart na ręce: 5 → 3 karty (Zmniejszona elastyczność)", "Poziom 1: System Core", {"hand_limit_offset": -2}),
+        ("L1_HAND_LIMIT_7", "Limit kart na ręce: 5 → 7 kart (Pełna swoboda)", "Poziom 1: System Core", {"hand_limit_offset": 2}),
+        ("L1_AUTODAFE_CD_2", "Autodafé Inkwizytora: Cooldown 2 Ery (Częsta czystka)", "Poziom 1: System Core", {"autodafe_cooldown": 2}),
+        ("L1_AUTODAFE_CD_4", "Autodafé Inkwizytora: Cooldown 4 Ery (Rzadka czystka)", "Poziom 1: System Core", {"autodafe_cooldown": 4}),
+        ("L1_AUTODAFE_DISABLED", "Autodafé Inkwizytora: Całkowity brak czystki", "Poziom 1: System Core", {"autodafe_cooldown": 99}),
+
+        # ══════════════════════════════════════════════════════════════
+        # POZIOM 2: FRAKCYJNE WARUNKI ZWYCIĘSTWA (VICTORY PATHS)
+        # ══════════════════════════════════════════════════════════════
+        # Święte Oficjum
+        ("L2_SO_STACKS_REQ_PLUS2", "Święte Oficjum: Wymóg Stosów +2", "Poziom 2: Warunki Zwycięstwa", {"so_stacks_offset": 2}),
+        ("L2_SO_STACKS_REQ_MINUS1", "Święte Oficjum: Wymóg Stosów -1", "Poziom 2: Warunki Zwycięstwa", {"so_stacks_offset": -1}),
+        ("L2_SO_CONDEMNS_REQ_PLUS2", "Święte Oficjum: Wymóg Skazań +2 (Zamiast 2-3)", "Poziom 2: Warunki Zwycięstwa", {"so_condemns_offset": 2}),
+        ("L2_SO_CONDEMNS_REQ_MINUS1", "Święte Oficjum: Wymóg Skazań -1", "Poziom 2: Warunki Zwycięstwa", {"so_condemns_offset": -1}),
+
+        # Cienie Al-Andalus
+        ("L2_CAA_RELICS_REQ_PLUS2", "Cienie: Wymóg Relikwii 2 → 4", "Poziom 2: Warunki Zwycięstwa", {"caa_relics_offset": 2}),
+        ("L2_CAA_RELICS_REQ_MINUS1", "Cienie: Wymóg Relikwii 2 → 1", "Poziom 2: Warunki Zwycięstwa", {"caa_relics_offset": -1}),
+        ("L2_CAA_ERA_EARLY", "Cienie: Wymóg Ery 5 → Era 3 (Wczesna ucieczka)", "Poziom 2: Warunki Zwycięstwa", {"caa_era_offset": -2}),
+        ("L2_CAA_ERA_LATE", "Cienie: Wymóg Ery 5 → Era 8 (Późna ucieczka)", "Poziom 2: Warunki Zwycięstwa", {"caa_era_offset": 3}),
+
+        # Korona & Borgiowie
+        ("L2_KB_DECREES_REQ_PLUS1", "Korona: Wymóg Dekretów 2 → 3", "Poziom 2: Warunki Zwycięstwa", {"kb_decrees_offset": 1}),
+        ("L2_KB_DECREES_REQ_MINUS1", "Korona: Wymóg Dekretów 2 → 1", "Poziom 2: Warunki Zwycięstwa", {"kb_decrees_offset": -1}),
+        ("L2_KB_HOOKS_REQ_0", "Korona: Brak wymogu Haków (0 Haków)", "Poziom 2: Warunki Zwycięstwa", {"kb_hooks_offset": -1}),
+        ("L2_KB_HOOKS_REQ_PLUS2", "Korona: Wymóg Haków +2", "Poziom 2: Warunki Zwycięstwa", {"kb_hooks_offset": 2}),
+        ("L2_KB_ERA_EARLY", "Korona: Wymóg Ery 5 → Era 3", "Poziom 2: Warunki Zwycięstwa", {"kb_era_offset": -2}),
+        ("L2_KB_ERA_LATE", "Korona: Wymóg Ery 5 → Era 7", "Poziom 2: Warunki Zwycięstwa", {"kb_era_offset": 2}),
+
+        # Kabała z Toledo
+        ("L2_KT_FRAGS_REQ_PLUS1", "Kabała: Wymóg Fragmentów 3 → 4", "Poziom 2: Warunki Zwycięstwa", {"kt_frags_offset": 1}),
+        ("L2_KT_FRAGS_REQ_MINUS1", "Kabała: Wymóg Fragmentów 3 → 2", "Poziom 2: Warunki Zwycięstwa", {"kt_frags_offset": -1}),
+        ("L2_KT_ERA_EARLY", "Kabała: Wymóg Ery 6 → Era 4", "Poziom 2: Warunki Zwycięstwa", {"kt_era_offset": -2}),
+        ("L2_KT_ERA_LATE", "Kabała: Wymóg Ery 6 → Era 8", "Poziom 2: Warunki Zwycięstwa", {"kt_era_offset": 2}),
+        ("L2_KT_HERESY_LOW_UP", f"Kabała: Próg Dolny Pasma {hb[0]} → {hb[0]+2} (Zawężenie od dołu)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (hb[0]+2, hb[1])}),
+        ("L2_KT_HERESY_LOW_DOWN", f"Kabała: Próg Dolny Pasma {hb[0]} → {max(0, hb[0]-2)} (Rozszerzenie w dół)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (max(0, hb[0]-2), hb[1])}),
+        ("L2_KT_HERESY_HIGH_DOWN", f"Kabała: Próg Górny Pasma {hb[1]} → {hb[1]-2} (Zawężenie od góry)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (hb[0], hb[1]-2)}),
+        ("L2_KT_HERESY_HIGH_UP", f"Kabała: Próg Górny Pasma {hb[1]} → {hb[1]+2} (Rozszerzenie w górę)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (hb[0], hb[1]+2)}),
+        ("L2_KT_HERESY_BAND_NARROW", "Kabała: Całe Pasmo Wąskie (4–6)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (4, 6)}),
+        ("L2_KT_HERESY_BAND_WIDE", "Kabała: Całe Pasmo Szerokie (2–9)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (2, 9)}),
+
+        # Gildia Cieni
+        ("L2_GC_FALLS_DEFAULT_PLUS1", "Gildia: Wymóg Upadków (z Oficjum) 2 → 3", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_default_offset": 1}),
+        ("L2_GC_FALLS_DEFAULT_MINUS1", "Gildia: Wymóg Upadków (z Oficjum) 2 → 1", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_default_offset": -1}),
+        ("L2_GC_FALLS_NO_SO_PLUS1", "Gildia: Wymóg Upadków (bez Oficjum) 3 → 4", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_no_oficjum_offset": 1}),
+        ("L2_GC_FALLS_NO_SO_MINUS1", "Gildia: Wymóg Upadków (bez Oficjum) 3 → 2", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_no_oficjum_offset": -1}),
+
+        # ══════════════════════════════════════════════════════════════
+        # POZIOM 4: WARIANTY NISZOWE I MODYFIKATORY GLOBALNE
+        # ══════════════════════════════════════════════════════════════
+        ("L4_NO_TIME_DECK", "Kronika Dziejów: Całkowite wyłączenie edyktów czasu", "Poziom 4: Warianty i Modyfikatory", {"no_time_deck": True}),
+        ("L4_TIME_DECK_EVERY_2ERAS", "Kronika Dziejów: Częstotliwość co 2 Ery", "Poziom 4: Warianty i Modyfikatory", {"time_deck_freq": 2}),
+        ("L4_VERDICT_SECRET", "Werdykt Sądu: Tajny (brak koordynacji anty-snowball)", "Poziom 4: Warianty i Modyfikatory", {"verdict_secret": True}),
+        ("L4_SEA_ROUTE_ERA4", "Szlak Morski: Odblokowanie w Erze 4 (Wczesne)", "Poziom 4: Warianty i Modyfikatory", {"sea_route_era": 4}),
+        ("L4_SEA_ROUTE_ERA6", "Szlak Morski: Odblokowanie w Erze 6 (Późne)", "Poziom 4: Warianty i Modyfikatory", {"sea_route_era": 6}),
+        ("L4_INQUISITOR_SPEED0", "Inkwizytor Patrol: Ruch 0 pól (Stacjonarny)", "Poziom 4: Warianty i Modyfikatory", {"inquisitor_speed": 0}),
+        ("L4_INQUISITOR_SPEED2", "Inkwizytor Patrol: Ruch 2 pola (Szybki patrol)", "Poziom 4: Warianty i Modyfikatory", {"inquisitor_speed": 2}),
+    ]
+
+    return [(t[0], t[1], t[2], t[3], games_per_setup, seed, setups) for t in tasks]
+
+
 def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, workers: int = 10) -> Path:
     """Executes the complete 4P ablation study across all 50 faction cards, time deck, and system mechanics."""
     t_start = time.time()
@@ -185,12 +309,11 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     print(f"Bieżąca wersja:            {CONFIG.version}")
     print(f"Kanon Setupy:              {', '.join(setups)}")
     print(f"Wielkość próby:            {games_per_setup} gier/setup × {len(setups)} setupów 4P ({games_per_setup * len(setups)} gier per wariant)")
-    print(f"Liczba kart do zbadania:   50 kart frakcji + 8 kart czasu + 8 podsystemów")
     print(f"Wątki procesora:           {workers}")
     print("═══════════════════════════════════════════════════════════════════════\n")
 
     # 1. Baseline 4P Measurement
-    print(f"🔍 [1/4] POMIAR BAZOWY KANONU 4P (Wszystkie karty aktywne)...")
+    print(f"🔍 [1/4] POMIAR BAZOWY KANONU 4P (Wszystkie elementy aktywne)...")
     base_task = ("BASE_4P", "Kanon 4P — Wszystkie Elementy Aktywne", {}, games_per_setup, seed, setups)
     base_res = _run_ablation_task_4p(base_task)
 
@@ -252,23 +375,16 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
             setups,
         ))
 
-    # 4. Build System & Victory Path Ablation Tasks
-    sys_tasks = [
-        ("SYS_NO_TIME_DECK", "Wyłączona Kronika Dziejów (Talia Czasu)", {"no_time_deck": True}, games_per_setup, seed, setups),
-        ("SYS_AUTODAFE_CD_2", "Autodafé Cooldown = 2 Ery (Agresywna czystka)", {"autodafe_cooldown": 2}, games_per_setup, seed, setups),
-        ("SYS_AUTODAFE_CD_4", "Autodafé Cooldown = 4 Ery (Rzadka czystka)", {"autodafe_cooldown": 4}, games_per_setup, seed, setups),
-        ("VP_SO_STACKS_REQ_PLUS2", "Święte Oficjum: Wymóg 6 Stosów (Zamiast 4)", {"so_stacks_offset": 2}, games_per_setup, seed, setups),
-        ("VP_SO_CONDEMNS_PLUS2", "Święte Oficjum: Wymóg 4 Skazań (Zamiast 2)", {"so_condemns_offset": 2}, games_per_setup, seed, setups),
-        ("VP_CAA_RELICS_PLUS2", "Cienie: Wymóg 4 Relikwii (Zamiast 2)", {"caa_relics_offset": 2}, games_per_setup, seed, setups),
-        ("VP_CAA_LATE_ERA", "Cienie: Wymóg Ery 8 (Zamiast 5)", {"caa_era_offset": 3}, games_per_setup, seed, setups),
-        ("VP_KB_DECREES_PLUS1", "Korona: Wymóg 3 Dekretów (Zamiast 2)", {"kb_decrees_offset": 1}, games_per_setup, seed, setups),
-        ("VP_KT_FRAGS_PLUS1", "Kabała: Wymóg 4 Fragmentów (Zamiast 3)", {"kt_frags_offset": 1}, games_per_setup, seed, setups),
-    ]
+    # 4. Build Full System & Victory Path Ablation Tasks
+    mech_tasks_raw = build_all_mechanic_tasks(games_per_setup, seed, setups)
+    mech_tasks = [(t[0], t[1], t[3], t[4], t[5], t[6]) for t in mech_tasks_raw]
+    mech_meta = {t[0]: {"id": t[0], "name": t[1], "category": t[2], "overrides": t[3]} for t in mech_tasks_raw}
 
-    all_tasks = card_tasks + time_tasks + sys_tasks
+    all_tasks = card_tasks + time_tasks + mech_tasks
     total_tasks = len(all_tasks)
 
     print(f"⏳ [2/4] URUCHAMIAM {total_tasks} ZADAŃ ABLACYJNYCH DLA KANONU 4P...")
+    print(f"   (50 Kart Frakcji + 8 Kart Czasu + {len(mech_tasks)} Mechanik Systemowych L1/L2/L4)")
     results_map = {}
 
     t_pool = time.time()
@@ -291,7 +407,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     sys.stdout.write(f"\n   ✔ Ukończono wszystkie {total_tasks} zadań ablacyjnych 4P w {round(time.time() - t_pool, 1)}s.\n\n")
 
     # 5. Process & Classify Card Results
-    print("🔬 [3/4] ANALIZUJĘ I KLASYFIKUJĘ KARTY W MATRYCY 3x3 DLA KANONU 4P...")
+    print("🔬 [3/4] ANALIZUJĘ I KLASYFIKUJĘ KARTY ORAZ MECHANIKI W MATRYCY 3x3 DLA KANONU 4P...")
     analyzed_cards = []
 
     for task in card_tasks:
@@ -336,7 +452,6 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
             "poverty_pct": res["poverty_pct"],
         })
 
-    # Sort cards by faction, then layer/cost
     analyzed_cards.sort(key=lambda c: (c["faction_code"], c["layer"], c["cost"]))
 
     # 6. Process Time Cards
@@ -356,30 +471,28 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
             "status": status,
         })
 
-    # 7. Process System Tasks
-    sys_results = []
-    sys_categories = {
-        "SYS_NO_AUTODAFE": "Globalne Podsystemy",
-        "SYS_NO_TRIBUNAL": "Globalne Podsystemy",
-        "SYS_NO_TIME_DECK": "Globalne Podsystemy",
-        "SYS_AUTODAFE_CD_2": "Globalne Podsystemy",
-        "SYS_AUTODAFE_CD_4": "Globalne Podsystemy",
-        "VP_SO_NO_STACKS": "Ścieżki Zwycięstwa",
-        "VP_SO_NO_CONDEMNS": "Ścieżki Zwycięstwa",
-        "VP_CAA_NO_MARIONETTE": "Ścieżki Zwycięstwa",
-        "VP_CAA_NO_PATH": "Ścieżki Zwycięstwa",
-        "VP_KB_NO_HOOKS_WIN": "Ścieżki Zwycięstwa",
-    }
-    for t in sys_tasks:
-        s_id = t[0]
-        s_name = t[1]
-        res = results_map[s_id]
-        sys_results.append({
-            "id": s_id,
-            "name": s_name,
+    # 7. Process Mechanics in 9-Area Matrix
+    analyzed_mechanics = []
+    for task in mech_tasks:
+        m_id = task[0]
+        res = results_map[m_id]
+        meta = mech_meta[m_id]
+
+        d_4p = round(res["score_4p"] - base_res["score_4p"], 1)
+        max_d_share = max([abs(base_res["faction_shares"].get(fn, 25.0) - res["faction_shares"].get(fn, 25.0)) for fn in base_res["faction_shares"]] or [0.0])
+
+        sub_id, role_name, group_id = classify_mechanic_impact_4p(d_4p, max_d_share)
+
+        analyzed_mechanics.append({
+            "id": m_id,
+            "name": meta["name"],
+            "category": meta["category"],
             "score_4p": res["score_4p"],
-            "setup_scores": res["setup_scores"],
-            "faction_shares": res["faction_shares"],
+            "d_4p": d_4p,
+            "max_d_share": max_d_share,
+            "sub_id": sub_id,
+            "role_name": role_name,
+            "group_id": group_id,
             "eras_avg": res["eras_avg"],
             "deadlock_pct": res["deadlock_pct"],
             "poverty_pct": res["poverty_pct"],
@@ -396,7 +509,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         "",
         "---",
         "",
-        "## 1. 🗺️ Podsumowanie Ekosystemu Kanonu 4P (Matryca Wpływu Kart 3x3)",
+        "## 1. 🗺️ Podsumowanie Ekosystemu Kart Kanonu 4P (Matryca Wpływu Kart 3x3)",
         "",
         "Rozkład wszystkich 50 kart frakcyjnych w matrycy **Wpływ na Frakcję ($\\Delta \\text{Share}$)** vs **Wpływ na Kanon 4P ($\\Delta \\text{4P Score}$)**:",
         "",
@@ -497,67 +610,73 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         "",
         "---",
         "",
-        "## 4. ⚙️ Warstwa III — Globalne Mechaniki i Parametry Silnika w 4P",
+        "## 4. ⚙️ Warstwa III — Matryca 9 Obszarów Wpływu Mechanik Gry (L1, L2, L4)",
         "",
-        "Badanie odporności Kanonu 4P na wyłączenie lub skrajne przestawienie bazowych parametrów silnika:",
+        "Zestawienie odporności Kanonu 4P na modyfikacje i ablację poszczególnych podsystemów według 9 obszarów istotności i efektu:",
         "",
-        "| Badany Podsystem / Parametr | 4P Score | $\\Delta$ 4P | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza i Wpływ na Silnik |",
+        "| Kategoria Mechaniki | Liczba Testów | Rola w Ekosystemie Kanonu 4P | Rekomendacja Balansowa |",
+        "| :--- | :---: | :--- | :--- |",
+    ])
+
+    mech_groups = {
+        "STABILIZER": len([m for m in analyzed_mechanics if m["group_id"] == "STABILIZER"]),
+        "NEUTRAL": len([m for m in analyzed_mechanics if m["group_id"] == "NEUTRAL"]),
+        "DISRUPTOR": len([m for m in analyzed_mechanics if m["group_id"] == "DISRUPTOR"]),
+    }
+
+    lines.extend([
+        f"| 👑 / 🛡️ **Filary i Bezpieczniki Stabilizujące** | **{mech_groups['STABILIZER']}** | Mechaniki krytyczne — ich brak lub rozregulowanie niszczy balans | **Nienaruszalny Kanon** |",
+        f"| ⚖️ **Zbalansowane Regulatory / Pasywne** | **{mech_groups['NEUTRAL']}** | Mechaniki harmonijnie wpisane w dynamikę rozgrywki | **Optymalne w Kanonie** |",
+        f"| ⚠️ / 💡 **Obciążenia i Kandydaci do Uproszczenia** | **{mech_groups['DISRUPTOR']}** | Mechaniki, których modyfikacja lub redukcja podnosi wynik 4P | **Kandydaci do optymalizacji** |",
+        "",
+        "### 4.1. ⚙️ Poziom 1: Główne Mechaniki Systemowe (Global System Core)",
+        "",
+        "| Badany Podsystem / Modyfikator L1 | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Pas Biedy % | Klasyfikacja w Matrycy 3x3 |",
         "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
     ])
 
-    global_sys_results = [r for r in sys_results if sys_categories.get(r["id"]) == "Globalne Podsystemy"]
-    for r in global_sys_results:
-        d4 = r["score_4p"] - base_res["score_4p"]
-        d4_str = f"+{d4:.1f}" if d4 > 0 else f"{d4:.1f}"
-        if d4 >= 1.5:
-            diag = "🟢 Zysk balansu — mechanika w obecnej formie obciąża Kanon 4P"
-        elif d4 <= -15.0:
-            diag = "🔴 Katastrofa ekosystemu — filar bezwzględnie krytyczny dla Kanonu 4P"
-        elif d4 <= -5.0:
-            diag = "🟠 Poważna destabilizacja — silnik traci płynność lub różnorodność w 4P"
-        else:
-            diag = "⚪ Wpływ neutralny / mechanika stabilna"
-
+    for m in [m for m in analyzed_mechanics if m["category"] == "Poziom 1: System Core"]:
+        d4_str = f"+{m['d_4p']:.1f}" if m['d_4p'] > 0 else f"{m['d_4p']:.1f}"
         lines.append(
-            f"| **{r['name']}** | {score_pair(base_res['score_4p'], r['score_4p'], colored=True)} | "
-            f"`{d4_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
+            f"| **{m['name']}** | {score_pair(base_res['score_4p'], m['score_4p'], colored=True)} | "
+            f"`{d4_str} pkt` | {m['eras_avg']:.2f} Er | {m['deadlock_pct']:.1f}% | {m['poverty_pct']:.1f}% | {m['role_name']} |"
+        )
+
+    lines.extend([
+        "",
+        "### 4.2. ⚔️ Poziom 2: Asymetryczne Warunki Zwycięstwa (Victory Paths)",
+        "",
+        "| Badany Warunek Zwycięstwa L2 | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Pas Biedy % | Klasyfikacja w Matrycy 3x3 |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ])
+
+    for m in [m for m in analyzed_mechanics if m["category"] == "Poziom 2: Warunki Zwycięstwa"]:
+        d4_str = f"+{m['d_4p']:.1f}" if m['d_4p'] > 0 else f"{m['d_4p']:.1f}"
+        lines.append(
+            f"| **{m['name']}** | {score_pair(base_res['score_4p'], m['score_4p'], colored=True)} | "
+            f"`{d4_str} pkt` | {m['eras_avg']:.2f} Er | {m['deadlock_pct']:.1f}% | {m['poverty_pct']:.1f}% | {m['role_name']} |"
+        )
+
+    lines.extend([
+        "",
+        "### 4.3. 🎲 Poziom 4: Warianty Niszowe & Modyfikatory Globalne (Level 4)",
+        "",
+        "| Badany Wariant / Modyfikator L4 | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Pas Biedy % | Klasyfikacja w Matrycy 3x3 |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ])
+
+    for m in [m for m in analyzed_mechanics if m["category"] == "Poziom 4: Warianty i Modyfikatory"]:
+        d4_str = f"+{m['d_4p']:.1f}" if m['d_4p'] > 0 else f"{m['d_4p']:.1f}"
+        lines.append(
+            f"| **{m['name']}** | {score_pair(base_res['score_4p'], m['score_4p'], colored=True)} | "
+            f"`{d4_str} pkt` | {m['eras_avg']:.2f} Er | {m['deadlock_pct']:.1f}% | {m['poverty_pct']:.1f}% | {m['role_name']} |"
         )
 
     lines.extend([
         "",
         "---",
         "",
-        "## 5. ⚔️ Warstwa IV — Asymetryczne Ścieżki Zwycięstwa w 4P (Victory Paths)",
-        "",
-        "Badanie krytyczności i elastyczności unikalnych bramek zwycięstwa dla każdej frakcji w Kanonie 4P:",
-        "",
-        "| Badana Ścieżka / Bramka Wygranej | 4P Score | $\\Delta$ 4P | Średnia Er | Deadlocks % | Pas Biedy % | Diagnoza Ścieżki Zwycięstwa |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :--- |",
-    ])
-
-    vp_results = [r for r in sys_results if sys_categories.get(r["id"]) == "Ścieżki Zwycięstwa"]
-    for r in vp_results:
-        d4 = r["score_4p"] - base_res["score_4p"]
-        d4_str = f"+{d4:.1f}" if d4 > 0 else f"{d4:.1f}"
-        if d4 >= 1.5:
-            diag = "🟢 Zysk balansu — ścieżka w obecnej formie zaburza równowagę w 4P"
-        elif d4 <= -15.0:
-            diag = "🔴 Krytyczna ścieżka — frakcja nie posiada alternatywnego motoru w 4P"
-        elif d4 <= -5.0:
-            diag = "🟠 Istotna ścieżka — jej brak zauważalnie ubożeje przestrzeń decyzyjną"
-        else:
-            diag = "⚪ Ścieżka alternatywna / opcjonalna"
-
-        lines.append(
-            f"| **{r['name']}** | {score_pair(base_res['score_4p'], r['score_4p'], colored=True)} | "
-            f"`{d4_str} pkt` | {r['eras_avg']:.2f} Er | {r['deadlock_pct']:.1f}% | {r['poverty_pct']:.1f}% | {diag} |"
-        )
-
-    lines.extend([
-        "",
-        "---",
-        "",
-        "## 6. 👥 Warstwa V — Odporność Stołu 4P na Nieobecność Konkretnej Frakcji",
+        "## 5. 👥 Warstwa IV — Odporność Stołu 4P na Nieobecność Konkretnej Frakcji",
         "",
         "Zestawienie stabilności 5 wariantów 4-osobowych w Kanonie 4P:",
         "",
@@ -571,7 +690,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     ])
 
     report_path, arch_path = save_and_archive_report(lines, "raport_uzytecznosci_i_wplywu_4p.md")
-    print(f"\n✅ 5-WARSTWOWY RAPORT KANONU 4P WYGENEROWANY POMYŚLNIE!")
+    print(f"\n✅ PEŁNY RAPORT UŻYTECZNOŚCI I WPŁYWU 4P WYGENEROWANY POMYŚLNIE!")
     print(f"   Raport:    {report_path}")
     print(f"   Archiwum:  {arch_path}\n")
     return report_path
@@ -584,10 +703,6 @@ def main():
     parser.add_argument("--seed", type=int, default=42, help="Ziarno losowe (CRN)")
 
     args = parser.parse_args()
-    if args.games < 1000:
-        print("⚠️ Podwyższam próbę do wymaganego minimum 1000 gier.")
-        args.games = 1000
-
     run_full_ablation_audit_4p(games_per_setup=args.games, seed=args.seed, workers=args.workers)
 
 

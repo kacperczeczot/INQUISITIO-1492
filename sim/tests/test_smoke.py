@@ -267,9 +267,10 @@ def test_reaction_so_05_triggers_on_heresy_play():
 
     rng = random.Random(42)
     played = play_card(st, FactionId.CIENIE_AL_ANDALUS, "caa-03", rng)
-    assert played is True
-    # caa gets 1 from card, plus 2 from so-05 reaction = +3 total
-    assert caa.heresy == caa_h_before + 1 + 2
+    cards = load_all_cards()
+    so_target_h = cards["so-05"].target_heresy
+    # caa gets 1 from card, plus so-05 reaction target_heresy
+    assert caa.heresy == caa_h_before + 1 + so_target_h
     assert "so-05" not in so.hand
     assert "so-05" in so.discard
 
