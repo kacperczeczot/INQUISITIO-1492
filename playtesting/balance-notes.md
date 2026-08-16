@@ -18,40 +18,40 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
-| **Próg Oskarżenia (Krytyczna Herezja)** | **6** | **7** | **8** | Idealnie skalowany z generowaniem Herezji przez stół (3p=6, 4p=7, 5p=8). |
+| **Próg Oskarżenia (Krytyczna Herezja)** | **6** | **7** | **8** | Jedyny naturalnie skalowany parametr z zagęszczeniem stołu (3p=6, 4p=7, 5p=8). |
 | **Strefy Herezji (Czysta / Obserw. / Kryt.)** | **0–3 / 4–5 / 6–10** | **0–3 / 4–6 / 7–10** | **0–3 / 4–7 / 8–10** | Automatycznie powiązane: Krytyczna = próg oskarżenia (6@3p / 7@4p / 8@5p). |
-| **Maksymalna Liczba Er** | **9** | **9** | **9** | Bezpiecznik wydłużony do 9 Er obniża deadlocki do <3% i stabilizuje partię. |
-| **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Cooldown co 3 Ery utrzymuje średnią częstotliwość ~1.0 czyszczenia/partię. |
-| **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę + dopływ +1 złota w 1. rundzie zapewnia płynność ekonomii. |
-| **Złoto Startowe** | **3 zł** | **3 zł** | **2 zł** | W 5p 2zł zapobiega przedwczesnemu sprintowi (10 akcji/Erę); w 3–4p 3zł zapewnia płynność. |
+| **Maksymalna Liczba Er** | **11** | **11** | **11** | Zunifikowany limit 11 Er dla wszystkich składów graczy. |
+| **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
+| **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę dla wszystkich składów. |
+| **Złoto Startowe** | **4 zł** | **4 zł** | **4 zł** | Zunifikowane 4 zł dla wszystkich składów graczy. |
 | **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **5 Kart** | Zunifikowany limit 5 kart dla wszystkich składów graczy. |
-| **Otwarcie Szlaku Morskiego (Cienie)** | **Era 5** | **Era 5** | **Era 5** | Zunifikowany dostęp do szlaku morskiego od 5. Ery dla wszystkich składów. |
+| **Otwarcie Szlaku Morskiego (Cienie)** | **Era 5** | **Era 5** | **Era 5** | Zunifikowany dostęp do szlaku morskiego od 5. Ery. |
 
 ---
 
-## 🏆 Warunki Zwycięstwa Frakcji (Skalowanie wg Liczby Graczy)
+## 🏆 Warunki Zwycięstwa Frakcji (Unifikacja Globalna 4P)
 
-Wszystkie ścieżki zwycięstwa są dynamicznie dostosowywane do zagęszczenia planszy:
+Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy - spalenie agentów):** `3p` = **4 Stosy** | `4p` = **4 Stosy** | `5p` = **5 Stosów** (proporcjonalnie do 12 wrogich agentów na planszy).
+- **Ścieżka A (Stosy - spalenie agentów):** **5 Stosów** (wszystkie składy `3p`, `4p`, `5p`).
 - **Ścieżka B (Skazania Stołu - Werdykt):** **2 Skazania** (wszystkie składy `3p`, `4p`, `5p`).
 
 ### 2. Cienie Al-Andalus
 - **Ewakuacja Relikwii:** **2 Relikwie** (wszystkie składy).
-- **Wymóg Ścieżki / Ery:** Marionetka / uniknięcie Autodafé / Szlak Morski lub minimalna Era: `3p` = **Era 5** | `4p` = **Era 5** | `5p` = **Era 5**.
+- **Wymóg Ścieżki / Ery:** Marionetka / uniknięcie Autodafé / Szlak Morski lub minimalna Era: **Era 5** (wszystkie składy `3p`, `4p`, `5p`).
 
 ### 4. Korona & Borgiowie
-- **Dekrety Królewskie:** **2 Dekrety** od Ery **5** (wszystkie składy `3p`, `4p`, `5p`).
-- **Haki:** Narzędzie taktyczne / brak wymogu do wygranej.
+- **Dekrety Królewskie:** **2 Dekrety** od Ery **4** (wszystkie składy `3p`, `4p`, `5p`).
+- **Haki:** 1 Hak.
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3** (wszystkie składy).
 - **Wymagane Pasmo Herezji:** **[3, 8]**.
-- **Minimalna Era Wygranej:** `3p` = **Era 6** | `4p` = **Era 6** | `5p` = **Era 6**.
+- **Minimalna Era Wygranej:** **Era 6** (wszystkie składy `3p`, `4p`, `5p`).
 
 ### 5. Gildia Cieni
-- **Upadki Rywali (Falls):** **2 Upadki** ze Świętym Oficjum | **3 Upadki** gdy Oficjum nie gra.
+- **Upadki Rywali (Falls):** **3 Upadki** ze Świętym Oficjum | **4 Upadki** gdy Oficjum nie gra.
 
 ---
 
