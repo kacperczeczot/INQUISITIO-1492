@@ -1,5 +1,5 @@
-version: v0.75
-date: '2026-08-16'
+version: v0.76
+date: '2026-08-17'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 4
@@ -141,6 +141,28 @@ cards:
     - signature
     - autodafe
     - heresy
+  so-11:
+    name: Dekret Czystości Wiary
+    type: akcja
+    layer: B
+    cost: 1
+    target_heresy: 1
+    gold: 1
+    action: frame_rival
+    tags:
+    - heresy
+    - gold
+  so-12:
+    name: Straż Trybunalska
+    type: akcja
+    layer: A
+    cost: 1
+    agents: 1
+    gold: 1
+    action: move_agent
+    tags:
+    - move
+    - gold
   caa-01:
     name: Przejście Podziemiami
     type: akcja
@@ -251,6 +273,28 @@ cards:
     - signature
     - relic
     - heresy
+  caa-11:
+    name: Nocna Zmiana Warty
+    type: akcja
+    layer: B
+    cost: 1
+    agents: 1
+    move_inquisitor: true
+    action: move_agent
+    tags:
+    - move
+    - inquisitor
+  caa-12:
+    name: Skrytka w Murach
+    type: akcja
+    layer: A
+    cost: 0
+    heresy: 1
+    gold: 2
+    action: gain_gold
+    tags:
+    - gold
+    - heresy
   kb-01:
     name: Rozkaz Dworu
     type: akcja
@@ -360,6 +404,26 @@ cards:
     - signature
     - decree
     - heresy
+  kb-11:
+    name: Tajny Emisariusz
+    type: akcja
+    layer: A
+    cost: 1
+    agents: 1
+    gold: 1
+    action: move_agent
+    tags:
+    - move
+    - gold
+  kb-12:
+    name: Szantaż Salonowy
+    type: akcja
+    layer: B
+    cost: 1
+    creates_hook: true
+    action: creates_hook
+    tags:
+    - hook
   kt-01:
     name: Rytuał Przejścia
     type: akcja
@@ -470,6 +534,28 @@ cards:
     - signature
     - fragment
     heresy: 1
+  kt-11:
+    name: Medytacja Sefirot
+    type: akcja
+    layer: B
+    cost: 1
+    gold: 1
+    heresy_decrease: 1
+    action: heresy_adjust
+    tags:
+    - gold
+    - heresy
+  kt-12:
+    name: Strażnik Archiwum
+    type: akcja
+    layer: A
+    cost: 0
+    heresy: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    - heresy
   gc-01:
     name: Przekupiony Strażnik
     type: akcja
@@ -579,6 +665,29 @@ cards:
     tags:
     - signature
     - fall
+    - heresy
+  gc-11:
+    name: Fałszywe Świadectwo Cechu
+    type: akcja
+    layer: B
+    cost: 1
+    target_heresy: 1
+    action: frame_rival
+    tags:
+    - heresy
+    - hook
+  gc-12:
+    name: Złodziejski Zwiad
+    type: akcja
+    layer: A
+    cost: 0
+    heresy: 1
+    agents: 1
+    gold: 1
+    action: move_agent
+    tags:
+    - move
+    - gold
     - heresy
 variants:
   time_deck_freq: 1
