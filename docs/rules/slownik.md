@@ -61,7 +61,7 @@ Karta Kroniki Dziejów lub efekt zmieniający prawo Ery. Odkrywany w **Fazie III
 
 ## Era
 
-Jedna pełna runda składająca się z **3 Faz** (I Intryga, II Sąd, III Kronika & Czystka). Limit gry: **10** Er (potem remis postępu → najbliższy celowi, potem najniższa Herezja).
+Jedna pełna runda składająca się z **3 Faz** (I Intryga, II Sąd, III Kronika & Czystka). Limit gry: **11** Er (potem remis postępu → najbliższy celowi, potem najniższa Herezja).
 
 **Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Zwycięstwo](#zwycięstwo) · [`ksiega.md`](ksiega.md)
 
@@ -294,7 +294,7 @@ Prawo Trybunału (hierarchia dokumentów) · Edykt karty · Zasada delty · Wyro
 
 ## Złoto
 
-Waluta kosztów kart i łapówek. Start **3** (w 5p: **2**); dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga). Płatność **przy zagraniu** (kanon reguł).
+Waluta kosztów kart i łapówek. Start **4**; dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga). Płatność **przy zagraniu** (kanon reguł).
 
 **Patrz także:** [Inicjacja karty](#inicjacja-karty), [Czystka](#czystka) · [`ksiega.md`](ksiega.md)
 
@@ -302,6 +302,6 @@ Waluta kosztów kart i łapówek. Start **3** (w 5p: **2**); dochód **+1 złoto
 
 ## Zwycięstwo
 
-Natychmiast po spełnieniu warunku frakcji (C). Limit 8 Er → najbliższy celowi; remis → najniższa Herezja. Tabela warunków: [`ksiega.md`](ksiega.md).
+Natychmiast po spełnieniu warunku frakcji (C). Limit 11 Er → najbliższy celowi; remis → najniższa Herezja. Tabela warunków: [`ksiega.md`](ksiega.md).
 
 **Patrz także:** [Era](#era), [Herezja](#herezja)

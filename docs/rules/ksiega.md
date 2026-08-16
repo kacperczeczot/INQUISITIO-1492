@@ -35,7 +35,7 @@
 
 1. Rozłóż planszę (kolejność lokacji 1→5). Inkwizytor na **Trybunale**, stan **Patrol**.
 2. Każdy wybiera frakcję: talia, 3 Agenci, planszetka (Herezja = 0), cel zwycięstwa.
-3. Złoto startowe: **3 zł** na gracza (w 5p: **2 zł**).
+3. Złoto startowe: **4 zł** na gracza.
 4. Relikwie / Fragmenty według [`../../playtesting/setups.md`](../../playtesting/setups.md).
 5. Dobierz **5** kart z talii 10 (C).
 6. **Pierwszy gracz:** ustala stół (nie losujcie domyślnie).
@@ -146,7 +146,7 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery **6**) |
 | **Gildia Cieni** | **2 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **3** gdy brak Oficjum |
 
-**Limit Er: 10.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
+**Limit Er: 11.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
 
 → [Zwycięstwo](slownik.md#zwycięstwo)
 

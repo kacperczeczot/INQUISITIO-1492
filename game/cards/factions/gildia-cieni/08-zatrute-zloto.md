@@ -4,7 +4,7 @@ name: Zatrute Złoto
 faction: gildia-cieni
 type: akcja
 layer: B
-cost: 1
+cost: 2
 heresy: 0
 tags:
 - gold
@@ -14,4 +14,5 @@ lore: Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.
 target_heresy: 1
 gold: 1
 ---
+
 

@@ -81,18 +81,83 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ---
 
-## 📊 Stan zmierzony — 2026-08-15 (Szalony Audytor Progressive Beam, seed 42, warstwa C)
+## 📊 Stan zmierzony — 2026-08-16 (Wersja v0.41, próba 10 000 gier/setup × 16 setupów = 160 000 gier, seed 42, warstwa C)
 
-YAML po Patch v0.35 (Karta `caa-08` (Kaptur Nocy): `cost` → `2`).
-
-- **Global Game Balance Score:** **`97.7 / 100.0 pkt` 🟢 (Auto-Optimizer Optimum)**
-- **3p Avg Score:** **`94.5 / 100.0 pkt` 🟢**
-- **4p Avg Score:** **`99.0 / 100.0 pkt` 🟢**
-- **5p Avg Score:** **`99.5 / 100.0 pkt` 🟢**
+- **Telemetria Silnika Gry (5 Filarów):** 🟢 **OPTYMALNA**
+  - **Średnia Er (Tempo Gry):** **`6.13 Er`** 🟢 (norma 5.0–6.5 Er)
+  - **Remisy po Limicie Er (Deadlocks):** **`1.6%`** 🟢 (norma <5.0%)
+  - **Pas Biedy (Poverty Rate):** **`25.8%`** 🟢 (w 5p spadek do 23.7%, norma <28.0%)
+  - **Oskarżenia na Dworze:** **`3.24 / partię`** 🟢 (norma 2.0–4.5)
+  - **Autodafé Inkwizytora:** **`0.44 / partię`** 🟡 (norma 0.7–1.8)
+- **Status Balansu Win-Share:** 🔴 **WYMAGA KALIBRACJI ASYMETRII** (Kabała 43.1% dominacja, Korona 19.5% blokada Haka, Oficjum 23.7% niska presja Stosów).
 
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.50 (2026-08-16) — Karta `kt-10` (Pieczęć Salomona): `cost` → `2` (Zysk Δ +0.1 pkt)
+- **Wynik:** Global **`86.9`** | 3p **`82.7`** | 4p **`91.1`** | 5p **`0.0`**
+- **Modyfikacja (`L3_KT-10_COST_PLUS1`):** Karta `kt-10` (Pieczęć Salomona): `cost` → `2`.
+- **Efekt:** Wzrost wyniku globalnego z 86.8 do **`86.9 pkt`** (+0.1 pkt). Telemetria: Średnia Er 5.80, Deadlocks 1.5%, Pas Biedy 27.4%.
+
+### 🟢 Patch v0.49 (2026-08-16) — Karta `kt-10` (Pieczęć Salomona): `gold` → `1` (Zysk Δ +0.3 pkt)
+- **Wynik:** Global **`86.8`** | 3p **`82.6`** | 4p **`91.1`** | 5p **`0.0`**
+- **Modyfikacja (`L3_KT-10_GOLD_PLUS1`):** Karta `kt-10` (Pieczęć Salomona): `gold` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 86.5 do **`86.8 pkt`** (+0.3 pkt). Telemetria: Średnia Er 5.80, Deadlocks 1.5%, Pas Biedy 27.4%.
+
+### 🟢 Patch v0.48 (2026-08-16) — Karta `kt-09` (Fragment Kodeksu): `gold` → `1` (Zysk Δ +1.3 pkt)
+- **Wynik:** Global **`86.5`** | 3p **`82.9`** | 4p **`90.0`** | 5p **`0.0`**
+- **Modyfikacja (`L3_KT-09_GOLD_PLUS1`):** Karta `kt-09` (Fragment Kodeksu): `gold` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 85.2 do **`86.5 pkt`** (+1.3 pkt). Telemetria: Średnia Er 5.80, Deadlocks 1.5%, Pas Biedy 27.4%.
+
+### 🟢 Patch v0.47 (2026-08-16) — Karta `gc-08` (Zatrute Złoto): `cost` → `2` (Zysk Δ +2.4 pkt)
+- **Wynik:** Global **`85.2`** | 3p **`82.6`** | 4p **`87.8`** | 5p **`0.0`**
+- **Modyfikacja (`L3_GC-08_COST_PLUS1`):** Karta `gc-08` (Zatrute Złoto): `cost` → `2`.
+- **Efekt:** Wzrost wyniku globalnego z 82.8 do **`85.2 pkt`** (+2.4 pkt). Telemetria: Średnia Er 5.80, Deadlocks 1.6%, Pas Biedy 27.4%.
+
+### 🟢 Patch v0.46 (2026-08-16) — Karta `kt-07` (Archiwum Ukryte): `heresy` → `1` (Zysk Δ +3.5 pkt)
+- **Wynik:** Global **`82.8`** | 3p **`85.2`** | 4p **`80.3`** | 5p **`0.0`**
+- **Modyfikacja (`L3_KT-07_HERESY_PLUS1`):** Karta `kt-07` (Archiwum Ukryte): `heresy` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 79.3 do **`82.8 pkt`** (+3.5 pkt). Telemetria: Średnia Er 5.74, Deadlocks 1.3%, Pas Biedy 26.2%.
+
+### 🟢 Patch v0.45 (2026-08-16) — Karta `gc-02` (Czarny Rynek): `cost` → `2` (Zysk Δ +5.5 pkt)
+- **Wynik:** Global **`79.3`** | 3p **`71.3`** | 4p **`87.3`** | 5p **`0.0`**
+- **Modyfikacja (`L3_GC-02_COST_PLUS1`):** Karta `gc-02` (Czarny Rynek): `cost` → `2`.
+- **Efekt:** Wzrost wyniku globalnego z 73.8 do **`79.3 pkt`** (+5.5 pkt). Telemetria: Średnia Er 5.72, Deadlocks 1.2%, Pas Biedy 26.2%.
+
+### 🟢 Patch v0.44 (2026-08-16) — Karta `kt-10` (Pieczęć Salomona): `heresy` → `1` (Zysk Δ +8.3 pkt)
+- **Wynik:** Global **`73.8`** | 3p **`72.5`** | 4p **`75.1`** | 5p **`0.0`**
+- **Modyfikacja (`L3_KT-10_HERESY_PLUS1`):** Karta `kt-10` (Pieczęć Salomona): `heresy` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 65.5 do **`73.8 pkt`** (+8.3 pkt). Telemetria: Średnia Er 5.65, Deadlocks 1.1%, Pas Biedy 24.9%.
+
+### 🟢 Patch v0.43 (2026-08-16) — Karta `so-08` (Nasłanie Inkwizytora): `target_heresy` → `1` (Zysk Δ +8.8 pkt)
+- **Wynik:** Global **`65.5`** | 3p **`55.9`** | 4p **`75.2`** | 5p **`0.0`**
+- **Modyfikacja (`L3_SO-08_TARGET_HERESY_PLUS1`):** Karta `so-08` (Nasłanie Inkwizytora): `target_heresy` → `1`.
+- **Efekt:** Wzrost wyniku globalnego z 56.7 do **`65.5 pkt`** (+8.8 pkt). Telemetria: Średnia Er 5.67, Deadlocks 0.9%, Pas Biedy 25.0%.
+
+### 🟢 Patch v0.42 (2026-08-16) — Zwiększenie Złota Startowego (4 zł) i Unifikacja Stosów Oficjum (4 Stosy)
+- **Status:** Test płynności ekonomicznej i zaostrzenia celów w 3p
+- **Modyfikacje:**
+  1. **Złoto startowe:** Podniesienie do stałych **`4 zł`** dla wszystkich składów (3p, 4p, 5p), dające graczom pełniejszą swobodę otwarcia w Erze 1.
+  2. **Święte Oficjum:** Unifikacja wymogu Stosów do **`4 Stosów`** we wszystkich składach (w tym 3p).
+
+### 🟢 Patch v0.41 (2026-08-16) — Ujednolicenie Skalowania (Złoto 3 zł, Bramki Er, Limit 11 Er)
+- **Próba:** 10 000 gier / setup (160 000 gier łącznie), seed 42, warstwa C
+- **Telemetria:** Średnia Er **`6.13`** | Deadlocks **`1.6%`** | Pas Biedy **`25.8%`** | Oskarżenia **`3.24`** | Autodafé **`0.44`**
+- **Modyfikacje:**
+  1. **Złoto startowe:** Ujednolicenie do stałych **`3 zł`** dla wszystkich składów (spadek ubóstwa w 5p z 27.2% do **23.7%**).
+  2. **Jednolite Bramki Er:** Ujednolicono minimalną Erę wygranej dla Korony (**`Era 5`** we wszystkich składach) oraz Kabały (**`Era 6`** we wszystkich składach), usuwając sztuczne opóźnienia w 3p.
+  3. **Limit Er:** Podniesiono `max_eras` do **`11`** (spadek deadlocków globalnie z 3.9% do **1.6%**).
+
+### 🟢 Patch v0.40 (2026-08-15) — Kanon 3 Faz Gry i Nowa Talia Czasu 2.0
+- **Próba:** 5 000 gier / setup (80 000 gier łącznie), seed 42, warstwa C
+- **Wynik L2 Baza:** Global **`30.4`** | 3p **`44.3`** | 4p **`16.6`** | 5p **`0.0`**
+- **Telemetria:** Średnia Er **`6.24`** | Deadlocks **`3.9%`** | Pas Biedy **`26.6%`** | Oskarżenia **`3.23`** | Autodafé **`0.45`**
+- **Modyfikacje:**
+  1. **3 Fazy Ery:** Przebudowa struktury rundy na 3 czyste fazy (`I: Intryga` $\rightarrow$ `II: Sąd` $\rightarrow$ `III: Kronika & Czystka`), eliminując martwy start w Erze 1.
+  2. **Kronika Dziejów 2.0:** Zaimplementowano pełne 10 kart edyktów historycznych i miejskich w `game/cards/time-deck/`.
+  3. **Ekonomia Faz:** Przeniesienie dochodu (+1 zł) do Fazy III oraz wprowadzenie alternatywnej Akcji Gospodarczej (+1 zł) w Fazie I.
+  4. **Bramka Korony:** Wprowadzenie wymogu 1 Haka dla Korony & Borgiów (w 5p ujawniła się blokada wymagająca odrębnego skalowania).
 
 ### 🟢 Patch v0.35 (2026-08-15) — Karta `caa-08` (Kaptur Nocy): `cost` → `2` (Zysk Δ +0.2 pkt)
 - **Wynik:** Global **`97.7`** | 3p **`94.5`** | 4p **`99.0`** | 5p **`99.5`**

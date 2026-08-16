@@ -11,7 +11,7 @@
 ## Setup (2–5 graczy)
 
 1. Plansza: 5 lokacji na **grafie** (ulice = sąsiedztwo). Inkwizytor na **Trybunale**, stan **Patrol**.
-2. Frakcje: w 3–5p każdy wybiera 1 frakcję; w 2p każdy steruje 2 frakcjami (wariant 2x2p, patrz [`ksiega.md`](ksiega.md)). Talia (**warstwa C: 10 kart**), 3 Agenci, planszetka (Herezja **0**), **3 złoto** (w 5p: **2 zł**).
+2. Frakcje: w 3–5p każdy wybiera 1 frakcję; w 2p każdy steruje 2 frakcjami (wariant 2x2p, patrz [`ksiega.md`](ksiega.md)). Talia (**warstwa C: 10 kart**), 3 Agenci, planszetka (Herezja **0**), **4 złoto**.
 3. Dobierz **5** kart. Relikwie/Fragmenty wg setupu. Kronika Dziejów na stole (C).
 4. **Pierwszy gracz:** ustala stół (nie losujcie).
 
@@ -56,13 +56,13 @@
 
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** (w 3p: 3 Stosy) |
+| Święte Oficjum | **4 Stosy** lub **2 Skazania Werdyktem** |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery 5) |
-| Korona & Borgiowie | **2 Dekrety** (od Ery 5; w 3p: od Ery 6) |
-| Kabała z Toledo | **3 Fragmenty** + Herezja **3–8** od Ery 6 (w 3p: od Ery 7) |
+| Korona & Borgiowie | **2 Dekrety** (od Ery 5) |
+| Kabała z Toledo | **3 Fragmenty** + Herezja **3–8** (od Ery 6) |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
 
-**Limit:** 9 Er → najbliższy celowi; remis → najniższa Herezja.
+**Limit:** 11 Er → najbliższy celowi; remis → najniższa Herezja.
 
 ---
 

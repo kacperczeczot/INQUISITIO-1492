@@ -1,14 +1,14 @@
-version: v0.40
-date: '2026-08-15'
+version: v0.50
+date: '2026-08-16'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold:
-    3p: 3
-    4p: 3
-    5p: 2
+    3p: 4
+    4p: 4
+    5p: 4
   agents_per_player: 3
   hand_limit: 5
-  max_eras: 10
+  max_eras: 11
   autodafe_cooldown: 3
   cards_per_era: 2
   accusation_threshold:
@@ -18,7 +18,7 @@ system:
 victory:
   swiete_oficjum:
     stacks:
-      3p: 3
+      3p: 4
       4p: 4
       5p: 4
     condemns: 2
@@ -29,7 +29,7 @@ victory:
     decrees: 2
     hooks: 1
     era:
-      3p: 6
+      3p: 5
       4p: 5
       5p: 5
   kabala_toledo:
@@ -38,7 +38,7 @@ victory:
     - 3
     - 8
     era:
-      3p: 7
+      3p: 6
       4p: 6
       5p: 6
   gildia_cieni:
@@ -130,6 +130,7 @@ cards:
     tags:
     - inquisitor
     - heresy
+    target_heresy: 1
   so-09:
     name: Świadek Koronny
     type: akcja
@@ -444,6 +445,7 @@ cards:
     condition: heresy_gte_4
     tags:
     - hook
+    heresy: 1
   kt-08:
     name: Areszt Wiedzy
     type: akcja
@@ -466,11 +468,12 @@ cards:
     tags:
     - fragment
     - heresy
+    gold: 1
   kt-10:
     name: Pieczęć Salomona
     type: signature
     layer: C
-    cost: 1
+    cost: 2
     action: check_victory
     condition: fragments_eq_3
     target_heresy_band:
@@ -481,6 +484,8 @@ cards:
     tags:
     - signature
     - fragment
+    heresy: 1
+    gold: 1
   gc-01:
     name: Przekupiony Strażnik
     type: akcja
@@ -495,7 +500,7 @@ cards:
     name: Czarny Rynek
     type: akcja
     layer: A
-    cost: 1
+    cost: 2
     gold: 2
     action: gain_gold
     tags:
@@ -557,7 +562,7 @@ cards:
     name: Zatrute Złoto
     type: akcja
     layer: B
-    cost: 1
+    cost: 2
     target_heresy: 1
     gold: 1
     action: gain_gold
@@ -640,5 +645,5 @@ telemetry_norms:
       - 0.16
       - 0.24
       critical:
-      - 0.10
-      - 0.30
+      - 0.1
+      - 0.3

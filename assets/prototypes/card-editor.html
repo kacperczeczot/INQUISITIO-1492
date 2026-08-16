@@ -1234,6 +1234,7 @@
       "inquisitor",
       "heresy"
     ],
+    "target_heresy": 1,
     "heresy_text": "Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.",
     "lore": "Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne."
   },
@@ -1655,6 +1656,7 @@
     "tags": [
       "hook"
     ],
+    "heresy": 1,
     "lore": "Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze."
   },
   "kt-08": {
@@ -1684,6 +1686,7 @@
       "fragment",
       "heresy"
     ],
+    "gold": 1,
     "heresy_text": "Pergamin Salomona brudzi palce i sumienie.",
     "lore": "Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko."
   },
@@ -1691,7 +1694,7 @@
     "name": "Pieczęć Salomona",
     "type": "signature",
     "layer": "C",
-    "cost": 1,
+    "cost": 2,
     "action": "check_victory",
     "condition": "fragments_eq_3",
     "target_heresy_band": [
@@ -1704,6 +1707,8 @@
       "signature",
       "fragment"
     ],
+    "heresy": 1,
+    "gold": 1,
     "lore": "Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6."
   },
   "gc-01": {
@@ -1724,7 +1729,7 @@
     "name": "Czarny Rynek",
     "type": "akcja",
     "layer": "A",
-    "cost": 1,
+    "cost": 2,
     "gold": 2,
     "action": "gain_gold",
     "tags": [
@@ -1807,7 +1812,7 @@
     "name": "Zatrute Złoto",
     "type": "akcja",
     "layer": "B",
-    "cost": 1,
+    "cost": 2,
     "target_heresy": 1,
     "gold": 1,
     "action": "gain_gold",
