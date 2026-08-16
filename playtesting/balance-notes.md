@@ -71,6 +71,18 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.76 (2026-08-17) — 10 nowych kart frakcyjnych (talie 10 → 12)
+- **Wynik 4P:** Kanon **`30.1`** → **`79.6 pkt`** | Global L1 **`35.5`** → **`58.3 pkt`** | 3p **`34.1`** → **`39.5`** | 4p L1 **`34.3`** → **`68.8`** | 5p **`38.1`** → **`66.6`**
+- **Modyfikacja (katalog):** Każda frakcja +2 karty. Cel: mniejsza przewidywalność dociągu (ręka 5/12 zamiast 5/10) bez zmiany zasad stołu.
+  - SO: `so-11` Dekret Czystości Wiary · `so-12` Straż Trybunalska
+  - CAA: `caa-11` Nocna Zmiana Warty · `caa-12` Skrytka w Murach
+  - KB: `kb-11` Tajny Emisariusz · `kb-12` Szantaż Salonowy
+  - KT: `kt-11` Medytacja Sefirot · `kt-12` Strażnik Archiwum
+  - GC: `gc-11` Fałszywe Świadectwo Cechu · `gc-12` Złodziejski Zwiad
+- **Audyt Poziomu 1** ([`archive/v0.76/audyt_level1_raport.md`](sim-reports/archive/v0.76/audyt_level1_raport.md), 3000 gier/setup): baza Global 🔴 **58.3** · **4p 68.8**. Telemetria bazy w normie (6.63 Er, deadlock 5.9%, pas biedy 5.3%, Autodafé 1.62, oskarżenia 3.71). **3p/5p odłożone** — wyjątki zasad dopiero po idealnym kanonie 4p.
+  - Warianty **4p z zyskiem:** limit ręki 5→4 (**68.8 → 75.6, +6.8**) · agenci 3→2 (**+1.0**). Reszta L1 na 4p płaska lub na minus (złoto ±1, Autodafé ±1, ręka 6 **−23.0**, agenci 4 **−12.3**).
+- **Efekt (kanon 4p):** `4p-core` **79.6** (CAA 29.0 / SO 21.6 / KT 26.8 / KB 22.7 — wszystkie w paśmie 20–30%). Najsłabsze składy 4p: `4p-no-oficjum` 58.6 (GC 34.8%) · `4p-no-cienie` 60.8 (GC 34.1%). Raporty: `playtesting/sim-reports/archive/v0.76/`.
+
 ### 🟢 Patch v0.75 (2026-08-16) — Inteligentne Utility AI (Net ROI, Strefy Herezji, Taktyczny Pas) i Oczyszczenie Kart SSOT
 - **Wynik 4P:** Kanon **`34.4 pkt`** | Global **`35.8 pkt`** | 3p **`34.6 pkt`** | 5p **`38.3 pkt`**
 - **Modyfikacja Silnika & AI:**
