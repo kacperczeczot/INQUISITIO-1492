@@ -207,10 +207,6 @@ def _so_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
             interrogate(state, fid, rival, rng)
     elif card.id in ("so-04", "so-08"):
         pl = state.players[fid]
-        # so-04 is A teach nasłanie; on B/C it's just a move (so-08 is the real nasłanie)
-        if card.id == "so-04" and state.layer != "A":
-            _move_agent(state, fid, rng, 1)
-            return
         limit = card.raw.get("inquisitor_send_limit", 1) if isinstance(card.raw, dict) else 1
         if pl.inquisitor_send_count >= limit:
             return
@@ -228,10 +224,7 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
     apply_generic(state, fid, card, rng)
     pl = state.players[fid]
     if card.id == "caa-05":
-        if state.layer != "A":
-            _move_agent(state, fid, rng, 1)
-            return
-        # A teach: Kurier limit per era
+        # caa-05 Ukryty Kurier: If agent at location with relic, evacuate 1 relic. Limit 1/era.
         limit = card.raw.get("kurier_limit", 1) if isinstance(card.raw, dict) else 1
         if pl.kurier_count >= limit:
             return
@@ -246,7 +239,7 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
             pl.kurier_count += 1
             pl.used_kurier = True
             state.add_log(
-                f"{fid.value} evacuated relic from {loc} (total={pl.relics_evacuated})"
+                f"{fid.value} caa-05 evacuated relic from {loc} (total={pl.relics_evacuated})"
             )
             break
     elif card.id == "caa-06":
@@ -271,7 +264,6 @@ def _kb_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
     pl = state.players[fid]
     if card.id == "kb-05":
         if state.layer == "A":
-            # One Dekret credit from List (repeat plays don't stack)
             if pl.decrees_played < 1:
                 pl.decrees_played += 1
                 state.add_log(f"{fid.value} decree played (total={pl.decrees_played})")
@@ -287,32 +279,17 @@ def _kt_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
     apply_generic(state, fid, card, rng)
     pl = state.players[fid]
     if card.id == "kt-03":
-        if state.layer == "A":
-            # Cap: only +1 Fragment if still below 2 AND already in/near sweet path
-            if pl.fragments < 2 and pl.heresy >= 3:
-                pl.fragments += 1
-                state.add_log(f"{fid.value} fragment (total={pl.fragments})")
+        # kt-03 Zakazana Wiedza: If heresy 4-6, gain 1 Fragment
+        if 4 <= pl.heresy <= 6 and pl.fragments < 3:
+            pl.fragments += 1
+            state.add_log(f"{fid.value} fragment from kt-03 (total={pl.fragments})")
         else:
             pl.gold += 1
     elif card.id == "kt-05":
-        if state.layer == "A":
-            if (
-                pl.fragments >= 1
-                and any(ag.location in ("lochy", "trybunal") for ag in pl.agents)
-            ):
-                pl.fragments += 1
-                state.add_log(f"{fid.value} fragment (total={pl.fragments})")
-        elif state.layer == "C":
-            pc = f"{len(state.turn_order)}p"
-            raw_f = CONFIG.victory.kabala_toledo.fragments
-            cap = int(raw_f[pc]) if hasattr(raw_f, "__getitem__") and not isinstance(raw_f, (str, bytes)) else int(raw_f)
-            if pl.fragments < cap and any(
-                ag.location in ("lochy", "trybunal") for ag in pl.agents
-            ):
-                pl.fragments += 1
-                state.add_log(f"{fid.value} fragment (total={pl.fragments})")
-            else:
-                pl.gold += 1
+        # kt-05 Wskazówka Cyklu: If agent at Lochy or Trybunał, gain 1 Fragment
+        if any(ag.location in ("lochy", "trybunal") for ag in pl.agents) and pl.fragments < 3:
+            pl.fragments += 1
+            state.add_log(f"{fid.value} fragment from kt-05 (total={pl.fragments})")
         else:
             pl.gold += 1
     elif card.id == "kt-06":

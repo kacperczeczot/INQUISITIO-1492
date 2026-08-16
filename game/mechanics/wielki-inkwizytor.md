@@ -22,7 +22,7 @@ NPC na planszy — **broń publiczna**. Spala **lokacje**; gracze manewrują wok
 
 ## Procedura Wkroczenia Inkwizytora (Faza II, Krok 1)
 
-1. **Reset / sprawdź** czy Autodafé jest dostępne (min. 2 pełne Ery od ostatniego, chyba że karta specjalna łamie).
+1. **Reset / sprawdź** czy Autodafé jest dostępne (min. 2 pełne Ery od ostatniego / od początku gry — pierwsze od Ery **3**, chyba że karta specjalna łamie).
 2. **Nasłania:** każdy gracz może raz na Erę ogłosić nasłanie (karta, Hak, reguła Oficjum). Konflikt: Oficjum wygrywa; potem 1. gracz; potem najniższa Herezja.
 3. **Ruch Patrol:** przesuń Inkwizytora o **0 lub 1** lokację wzdłuż **krawędzi grafu** (sąsiedztwo w `game/board/locations.md`); przy nasłaniu / edykcie „w stronę X” — jeden krok po **najkrótszej ścieżce**; **bez nasłania** — najniższa Herezja wybiera, remis → 1. gracz.
 4. **Autodafé (opcjonalne):** jeśli wolno i ktoś (zwykle Oficjum / karta) ogłasza — wykonaj procedurę poniżej w **bieżącej** lokacji Inkwizytora.
@@ -40,7 +40,7 @@ NPC na planszy — **broń publiczna**. Spala **lokacje**; gracze manewrują wok
 ## Limit anti-AP
 
 - **1 nasłanie / gracza / Erę**
-- **Autodafé max co 3 Ery** (bazowo)
+- **Autodafé max co 3 Ery** (pierwsze możliwe od Ery **3**)
 
 ## Warstwa A
 

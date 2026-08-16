@@ -107,7 +107,7 @@ class GameState:
     accusation_threshold: int = 7
     inquisitor_location: str = "trybunal"
     inquisitor_mode: InquisitorMode = InquisitorMode.PATROL
-    eras_since_autodafe: int = 99
+    eras_since_autodafe: int = 0
     autodafe_cooldown: int = 3
     sea_route_open: bool = False
     relics_on_board: dict[str, int] = field(default_factory=dict)

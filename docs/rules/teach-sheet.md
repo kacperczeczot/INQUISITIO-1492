@@ -69,7 +69,7 @@
 ## Limity anti-AP
 
 - **1** nasłanie / **1** Hak / **1** Przesłuchanie na gracza na Erę
-- Autodafé max **co 3 Ery**
+- Autodafé max **co 3 Ery** (pierwsze możliwe od Ery **3**)
 - Karty / Erę: **2**
 
 ---

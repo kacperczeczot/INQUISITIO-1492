@@ -103,21 +103,31 @@ def resolve_autodafe(
         for ag in pl.agents:
             if ag.location == loc and not ag.arrested:
                 add_heresy(state, fid, 1, reason=f"autodafe:{loc}")
+                ag.arrested = True
+                ag.location = "lochy"
                 if pl.heresy <= 3:
-                    ag.arrested = True
-                    ag.location = "lochy"
                     state.add_log(f"Autodafé (Czysta <=3): {fid.value} agent arrested -> Lochy")
                 else:
                     if so and fid != so:
                         hit_rival_dirty = True
-                    state.add_log(f"Autodafé (Obserwowana/Krytyczna >=4): {fid.value} agent burned")
+                    state.add_log(f"Autodafé (Obserwowana/Krytyczna >=4): {fid.value} agent burned -> Lochy")
+                    # Gildia Cieni: Upadek if burned rival had hook from Gildia
+                    if FactionId.GILDIA_CIENI in state.players:
+                        gc_pl = state.players[FactionId.GILDIA_CIENI]
+                        if fid != FactionId.GILDIA_CIENI and fid in gc_pl.hook_victims_ever:
+                            gc_pl.falls += 1
+                            state.add_log(f"Gildia Cieni: Upadek from Autodafé on hooked rival {fid.value} (total={gc_pl.falls})")
+
+    # Relikwia w lokacji Autodafé wraca do puli (zgodnie z Księgą Zasad)
+    if state.relics_on_board.get(loc, 0) > 0:
+        relic_cnt = state.relics_on_board[loc]
+        state.relics_on_board[loc] = 0
+        state.add_log(f"Autodafé: {relic_cnt} Relic(s) at {loc} returned to pool")
+
     if award_stack and so and hit_rival_dirty:
         so_pl = state.players[so]
-        if state.layer == "C" and so_pl.stacks >= 2 and not force:
-            state.add_log("Autodafé: pressure only (Oficjum at 2+ Stosy)")
-        else:
-            so_pl.stacks += 1
-            state.add_log(f"Autodafé stack -> {so_pl.stacks}")
+        so_pl.stacks += 1
+        state.add_log(f"Autodafé stack -> {so_pl.stacks}")
     elif so and hit_rival_dirty and not award_stack:
         state.add_log("Autodafé: pressure only (no Oficjum stack)")
     state.inquisitor_mode = InquisitorMode.PATROL
@@ -127,12 +137,10 @@ def resolve_autodafe(
 
 def era_start_inquisitor(state: GameState, rng: random.Random) -> None:
     move_inquisitor(state, rng)
-    crowd = sum(
-        1
+    has_agents = any(
+        ag.location == state.inquisitor_location and not ag.arrested
         for pl in state.players.values()
         for ag in pl.agents
-        if ag.location == state.inquisitor_location and not ag.arrested
     )
-    # Lower crowd ignition — Oficjum snowballed when Autodafé was too frequent
-    if crowd >= 3 and can_autodafe(state) and rng.random() < 0.18:
+    if has_agents and can_autodafe(state):
         resolve_autodafe(state)

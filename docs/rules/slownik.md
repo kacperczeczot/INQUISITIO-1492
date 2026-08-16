@@ -20,7 +20,7 @@ Stan Agenta w strefie Areszt lokacji **Lochy**. Agent nie porusza się i nie kon
 
 ## Autodafé (procedura)
 
-Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** → do **Aresztu w Lochach** (+1 Herezja, bez Stosu); w strefie **Obserwowanej / Krytycznej (≥4 Herezji)** → **spalenie na Stosie** (+1 Herezja, +1 Stos dla Oficjum). Relikwia w lokacji wraca do puli. Max **co 3 Ery** (bazowo).  
+Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** → do **Aresztu w Lochach** (+1 Herezja, bez Stosu); w strefie **Obserwowanej / Krytycznej (≥4 Herezji)** → **spalenie na Stosie** (+1 Herezja, +1 Stos dla Oficjum). Relikwia w lokacji wraca do puli. Max **co 3 Ery** (pierwsze możliwe od Ery **3**).  
 **Ogłoś Autodafé** → Stos przy rywalu ≥4 Herezji. **Wymuś Autodafé** (edykt) → **bez** Stosu.
 
 **Patrz także:** [Inkwizytor](#inkwizytor), [Stos](#stos) · [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md) · leksykon **Ogłoś** / **Wymuś**

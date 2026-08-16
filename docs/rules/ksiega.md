@@ -77,7 +77,7 @@ W Fazie Sądu rozliczamy skutki intryg w 4 krokach:
 * **Nasłanie (opcjonalne):** raz na gracza na Erę możesz wskazać kierunek / lokację docelową według reguł frakcji i kart (przy konflikcie wygrywa Oficjum).
 * **Patrol:** Inkwizytor przesuwa się o **0 lub 1** lokację wzdłuż krawędzi grafu (domyślnie w stronę nasłania; bez nasłania — gracz z **najniższą Herezją** wybiera; remis → **1. gracz**).
   * **Graf połączeń:** `1 Trybunał` ↔ `2 Pałac`, `3 Lochy` | `2 Pałac` ↔ `1 Trybunał`, `3 Lochy`, `4 Rynek` | `3 Lochy` ↔ `1 Trybunał`, `2 Pałac`, `5 Gildia` | `4 Rynek` ↔ `2 Pałac`, `5 Gildia` | `5 Gildia` ↔ `3 Lochy`, `4 Rynek`.
-* **Autodafé (procedura)** (max **co 3 Ery**): w lokacji Inkwizytora Agenci rywali w strefie Czystej (0–3) → Areszt w Lochach (+1 Herezja, bez Stosu); w strefie Obserwowanej/Krytycznej (≥4) → Stos (+1 Herezja, +1 Stos dla Oficjum); Relikwia → pula.
+* **Autodafé (procedura)** (max **co 3 Ery**, pierwsze możliwe od Ery **3**): w lokacji Inkwizytora Agenci rywali w strefie Czystej (0–3) → Areszt w Lochach (+1 Herezja, bez Stosu); w strefie Obserwowanej/Krytycznej (≥4) → Stos (+1 Herezja, +1 Stos dla Oficjum); Relikwia → pula.
 
 → [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md)
 
