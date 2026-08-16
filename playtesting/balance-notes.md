@@ -98,16 +98,6 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
-> [!IMPORTANT]
-> ### 📐 Wdrożenie Ciągłego Asymptotycznego Modelu Punktacji (`scoring.py`, 2026-08-16)
-> Zgodnie z wytycznymi projektowymi wyeliminowano sztuczne ucinanie wyniku do zera (`Score = 0.0`), które powodowało utratę gradientu porównawczego w skrajnie rozjechanych wariantach.
-> Nowy model wykorzystuje ciągłą funkcję wygaszania wykładniczego opartego na względnym odchyleniu standardowym frakcji (**RMS Relative Deviation**):
-> $$\text{Score} = 100.0 \times \exp\left( -3.2 \cdot \text{RMS\_RD}^{1.25} - \text{Deadlock Penalty} \right)$$
-> **Kluczowe właściwości:**
-> 1. **Brak zera (`Score > 0.0`):** Nawet warianty o silnej dominacji (np. jedna frakcja 50–70%) zachowują ciągły, niezerowy wynik (np. 15–40 pkt), co umożliwia precyzyjne śledzenie delty optymalizacji ($\Delta$).
-> 2. **Rygor strefy mistrzowskiej ($\ge 98.0$ pkt):** Wynik powyżej 98.0 punktów jest bezwzględnie zarezerwowany wyłącznie dla konfiguracji, w których odchylenia wszystkich frakcji nie przekraczają $\le 0.5\text{ p.p.}$ od ideału (np. 24.8% vs 25.2%).
-> 3. **Czysty gradient:** Zapewnia optymalizatorom i audytorom pełną widoczność kierunku zmian.
-
 ### 🟢 Patch v0.58 (2026-08-16) — Usunięcie Protez Skalowania (Unifikacja Globalna 4P) & Odporność na Autodafé
 - **Wynik (Model Asymptotyczny):** Kanon 4P **`79.6 pkt`** 🟡 (`4p-core` **`86.0 pkt`**, `4p-no-oficjum` **`91.8 pkt`**) | 3p **`76.6 pkt`** | 5p **`55.5 pkt`** | Global **`70.6 pkt`**
 - **Modyfikacje:**
@@ -122,6 +112,16 @@ Wysokie deadlocki C = blocker (napraw, nie drukuj).
   3. **Naprawa kart w Warstwie C:** Odblokowano pełne działanie `caa-05` (Ukryty Kurier ewakuuje Relikwie) oraz `so-04`, `kt-03`, `kt-05` zgodnie z tekstem kart w `KATALOG.md`.
   4. **Zasady planszowe:** Autodafé zwraca Relikwie w lokacji do puli, a spalenie celu z Hakiem zalicza Upadek Gildii Cieni.
 - **Efekt:** Całkowite wyeliminowanie rozbieżności między kodem symulatora a Księgą Zasad (111/111 testów pytest zdanych).
+
+> [!IMPORTANT]
+> ### 📐 Wdrożenie Ciągłego Asymptotycznego Modelu Punktacji (`scoring.py`, 2026-08-16)
+> Zgodnie z wytycznymi projektowymi wyeliminowano sztuczne ucinanie wyniku do zera (`Score = 0.0`), które powodowało utratę gradientu porównawczego w skrajnie rozjechanych wariantach.
+> Nowy model wykorzystuje ciągłą funkcję wygaszania wykładniczego opartego na względnym odchyleniu standardowym frakcji (**RMS Relative Deviation**):
+> $$\text{Score} = 100.0 \times \exp\left( -3.2 \cdot \text{RMS\_RD}^{1.25} - \text{Deadlock Penalty} \right)$$
+> **Kluczowe właściwości:**
+> 1. **Brak zera (`Score > 0.0`):** Nawet warianty o silnej dominacji (np. jedna frakcja 50–70%) zachowują ciągły, niezerowy wynik (np. 15–40 pkt), co umożliwia precyzyjne śledzenie delty optymalizacji ($\Delta$).
+> 2. **Rygor strefy mistrzowskiej ($\ge 98.0$ pkt):** Wynik powyżej 98.0 punktów jest bezwzględnie zarezerwowany wyłącznie dla konfiguracji, w których odchylenia wszystkich frakcji nie przekraczają $\le 0.5\text{ p.p.}$ od ideału (np. 24.8% vs 25.2%).
+> 3. **Czysty gradient:** Zapewnia optymalizatorom i audytorom pełną widoczność kierunku zmian.
 
 ### 🟢 Patch v0.56 (2026-08-16) — Konsolidacja Kanonu 4P i Grand Audit (Nowa Skala Scoringu)
 - **Wynik (Nowa Rygorystyczna Skala):** Kanon 4P **`94.9 pkt`** 🟢 (`4p-core` **`99.3 pkt`**, `4p-no-oficjum` **`95.4 pkt`**, `4p-no-kabala` **`94.8 pkt`**, `4p-no-cienie` **`92.6 pkt`**, `4p-no-korona` **`92.5 pkt`**) | 5p **`69.5 pkt`** | 3p **`36.3 pkt`**
