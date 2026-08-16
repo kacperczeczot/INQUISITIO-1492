@@ -8,13 +8,21 @@ Struktura hierarchiczna określająca ścisłą kolejność optymalizacji i dost
 
 ---
 
-## 0. Zasada spłaszczania
+## 0. Zasada Organicznego Projektowania i Zakaz Protez Konfiguracyjnych (Anti-Crutch Principle)
 
-**Unikamy skalowania po liczbie graczy.** Jedna wartość na 3p/4p/5p jest domyślna.
+1. **Domyślna jedność zasad (Kanon 4p):**
+   Podstawowym kanonem gry jest format 4-osobowy. Reguły Poziomu 1 (System) oraz Poziomu 2 (Warunki Zwycięstwa) powinny być domyślnie jednolite dla wszystkich składów (3p/4p/5p).
 
-Spłaszcz, gdy pomiar (ten sam seed, ten sam N gier) daje wynik **lepszy**, **podobny**, albo gorszy tylko **małym kosztem**. Zostaw schodek `3p`/`4p`/`5p` wyłącznie gdy jedna liczba realnie psuje czerwone linie — i nazwij powód. V-kształt (osobny 4p) i „proteza na setup” nie są skalowaniem.
+2. **Bezwzględny zakaz sztucznych protez balansowych:**
+   **Kategorycznie zabrania się wprowadzania wyjątków dla 3p lub 5p, których celem jest jedynie zatuszowanie uszkodzonej mechaniki gry zamiast jej realnej naprawy.**
+   - Wprowadzenie nienaturalnego progu (np. nagły skok progu herezji w 5p z 7 do 9) lub arbitralnych modyfikatorów tylko dlatego, że „w symulatorze podnosi to Global Score”, jest niedopuszczalne.
+   - Jeśli format 3p lub 5p wykazuje odchylenie, **pierwszym obowiązkiem jest zdiagnozowanie mechaniki źródłowej** (dynamiki planszy, przepływu akcji, interakcji) i jej organiczne uzdrowienie.
 
-Dozwolone wyjątki to tożsamość stołu, nie liczba krzeseł: np. Gildia **3 upadki bez Oficjum**. Strefy Herezji mogą iść za **jednym** progiem oskarżenia, nie odwrotnie.
+3. **Kryteria dopuszczalności wyjątku — Ścisłe Uzasadnienie Fizyką Stołu:**
+   Każdy wyjątek dla liczby graczy musi być **ściśle i logicznie uzasadniony fizyczną geometrią rozgrywki**:
+   - **Skalowanie puli celów:** Liczba obcych agentów na planszy ($N=3 \rightarrow 6$ agentów, $N=4 \rightarrow 9$ agentów, $N=5 \rightarrow 12$ agentów) — wymóg stosów lub celów może rosnąć proporcjonalnie do puli rywali, aby zachować symetryczny wysiłek wygranej.
+   - **Tożsamość obecności frakcji:** Np. brak Świętego Oficjum przy stole naturalnie zmienia warunki Gildii Cieni (3 Upadki zamiast 2).
+   - **Zrozumiałość dla człowieka:** Wyjątek musi być prosty, elegancki i intuicyjny dla gracza czytającego instrukcję przy stole (np. w tabeli pomocy gracza), a nie stanowić ukrytego, zawiłego algorytmu.
 
 ---
 
