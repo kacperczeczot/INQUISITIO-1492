@@ -69,12 +69,42 @@ def telemetry_distance(res: dict) -> float:
     return deadlock / 5.0 + poverty / 30.0 + eras_pen + acc_pen
 
 
+# Minimalny spadek telemetry_distance, żeby nie brać szumu (np. deadlock 1.0% → 0.8%).
+HEALTH_DISTANCE_MIN = 0.25
+
+
+def table_is_healthy(res: dict) -> bool:
+    """Mechanics a player would notice in a few games: flow + signature vitality."""
+    if float(res.get("vitality_penalty", 0.0)) > 1e-9:
+        return False
+    if float(res.get("deadlock_pct", 0.0)) > 5.0:
+        return False
+    if float(res.get("poverty_pct", 0.0)) > 15.0:
+        return False
+    eras = float(res.get("eras_avg", 5.5))
+    if eras < 4.5 or eras > 7.0:
+        return False
+    acc = float(res.get("acc_avg", 3.0))
+    if acc < 2.0 or acc > 4.5:
+        return False
+    return True
+
+
 def health_improved(cand: dict, base: dict) -> bool:
     if cand.get("vitality_penalty", 0.0) < base.get("vitality_penalty", 0.0) - 1e-9:
         return True
-    if telemetry_distance(cand) < telemetry_distance(base) - 1e-9:
-        return True
-    return False
+    drop = telemetry_distance(base) - telemetry_distance(cand)
+    return drop >= HEALTH_DISTANCE_MIN
+
+
+def canon_should_stop(base: dict, *, mode: str) -> bool:
+    """Autonomous halt: shares in band and the table is already healthy."""
+    if mode != "band":
+        return False
+    shares = base.get("setup_shares") or {}
+    if not setup_shares_in_range(shares, *TARGET_BAND_PCT):
+        return False
+    return table_is_healthy(base)
 
 
 def rank_key(res: dict, *, mode: str, base_in_band: bool) -> tuple:
@@ -120,6 +150,9 @@ def accept_candidate(
 
     if mode != "band":
         raise ValueError(f"Unknown accept mode: {mode!r}")
+
+    if canon_should_stop(base, mode="band"):
+        return AcceptDecision(False, "higiena: stół zdrowy, nie ruszaj mechaniki", "hygiene")
 
     if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
         return AcceptDecision(False, "witalność gorsza niż baza", "climb")

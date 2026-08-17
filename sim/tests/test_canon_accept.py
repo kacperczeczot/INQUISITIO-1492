@@ -1,7 +1,12 @@
 """4P canon accept-mode: legacy vs band (climb / hygiene)."""
 from __future__ import annotations
 
-from inquisitio.runner.canon_accept import accept_candidate, rank_key, setup_shares_in_range
+from inquisitio.runner.canon_accept import (
+    accept_candidate,
+    canon_should_stop,
+    rank_key,
+    setup_shares_in_range,
+)
 
 
 def _shares_ok() -> dict[str, dict[str, float]]:
@@ -96,11 +101,11 @@ def test_band_hygiene_rejects_cosmetic_score_gain():
     cand = _snap(score_4p=91.8, min_balance=88.2, weak=88.2)
     d = accept_candidate(base, cand, mode="band")
     assert not d.accepted
-    assert "kosmetyka" in d.reason
+    assert "zdrowy" in d.reason or "kosmetyka" in d.reason
 
 
 def test_band_veto_core_below_90_and_red_line():
-    base = _snap(core=96.0, min_balance=88.0, weak=88.0)
+    base = _snap(core=96.0, min_balance=88.0, weak=88.0, acc=5.2)
     drop_core = _snap(core=89.0, min_balance=88.0, weak=88.0, acc=4.0)
     d = accept_candidate(base, drop_core, mode="band")
     assert not d.accepted
@@ -152,3 +157,32 @@ def test_hygiene_rank_does_not_promote_wrecked_table():
         wreck, mode="band", base_in_band=True
     )
     assert not accept_candidate(healthy, wreck, mode="band").accepted
+
+
+def test_healthy_v086_table_rejects_max_eras_noise():
+    """compare_accept_modes picked L1_MAX_ERAS_PLUS1 as fake hygiene (deadlock 1.0→0.8)."""
+    base = _snap(min_balance=91.5, core=95.8, weak=91.5, acc=3.64, deadlock=1.0, eras=5.93)
+    cand = _snap(min_balance=91.4, core=95.8, weak=91.4, acc=3.64, deadlock=0.8, eras=5.94)
+    assert canon_should_stop(base, mode="band")
+    d = accept_candidate(base, cand, mode="band")
+    assert not d.accepted
+    assert "zdrowy" in d.reason
+
+
+def test_dead_win_path_keeps_hygiene_open():
+    """Equal 20–30% shares must not halt while a victory clause is unused."""
+    base = _snap(min_balance=91.5, core=95.8, weak=91.5, vitality=1.2)
+    cand = _snap(score_4p=90.0, min_balance=90.5, core=94.0, weak=90.5, vitality=0.0)
+    assert not canon_should_stop(base, mode="band")
+    d = accept_candidate(base, cand, mode="band")
+    assert d.accepted
+    assert d.phase == "hygiene"
+
+
+def test_hygiene_still_fixes_accusations_out_of_window():
+    base = _snap(score_4p=91.5, min_balance=88.0, weak=88.0, acc=5.2)
+    cand = _snap(score_4p=89.0, min_balance=86.0, weak=86.0, acc=4.0, core=93.0)
+    assert not canon_should_stop(base, mode="band")
+    d = accept_candidate(base, cand, mode="band")
+    assert d.accepted
+    assert d.phase == "hygiene"

@@ -12,6 +12,15 @@ from inquisitio.engine.setup import SETUP_PRESETS
 from inquisitio.runner.balance import faction_shares
 from inquisitio.runner.batch import BatchSummary
 
+# Dual win-paths that players can see. If a faction wins often but one path
+# never fires, the unused clause is dead — not "healthy because accusations exist".
+_DUAL_WIN_PATHS: tuple[tuple[str, str, str, str, str], ...] = (
+    ("swiete-oficjum", "so_stacks", "so_condemns", "stosy", "skazania"),
+)
+_DEAD_PATH_MIN_WINS = 20
+_DEAD_PATH_MIN_SHARE = 0.08
+_DEAD_PATH_PENALTY = 1.2
+
 
 @dataclass
 class VitalityReport:
@@ -64,6 +73,31 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
         if summary.doubles_avg < 0.05 and summary.hooks_avg < 0.2:
             penalty += 1.0
             warnings.append("Zanikanie Infiltracji Gildii Cieni")
+
+    # Dual victory clauses: usage floors are not enough (hooks can be a tax).
+    paths = summary.win_paths or {}
+    for fid, path_a, path_b, label_a, label_b in _DUAL_WIN_PATHS:
+        if fid not in factions:
+            continue
+        n_a = int(paths.get(path_a, 0))
+        n_b = int(paths.get(path_b, 0))
+        total = n_a + n_b
+        if total < _DEAD_PATH_MIN_WINS:
+            continue
+        share_a = n_a / total
+        share_b = n_b / total
+        if share_b < _DEAD_PATH_MIN_SHARE:
+            penalty += _DEAD_PATH_PENALTY
+            warnings.append(
+                f"Martwa ścieżka {label_b} ({fid}): {n_b}/{total} wygranych "
+                f"(<{_DEAD_PATH_MIN_SHARE:.0%}) — gra tylko {label_a}"
+            )
+        if share_a < _DEAD_PATH_MIN_SHARE:
+            penalty += _DEAD_PATH_PENALTY
+            warnings.append(
+                f"Martwa ścieżka {label_a} ({fid}): {n_a}/{total} wygranych "
+                f"(<{_DEAD_PATH_MIN_SHARE:.0%}) — gra tylko {label_b}"
+            )
 
     is_healthy = len(warnings) == 0
     if is_healthy:

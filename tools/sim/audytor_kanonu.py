@@ -61,6 +61,7 @@ from inquisitio.runner.balance import faction_shares as win_shares
 from inquisitio.runner.canon_accept import (
     TARGET_BAND_PCT,
     accept_candidate,
+    canon_should_stop,
     rank_key,
     setup_shares_in_range,
 )
@@ -109,6 +110,7 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
     setup_scores_balance = {}
     setup_shares: dict[str, dict[str, float]] = {}
     vitality_penalties = []
+    vitality_warnings: list[str] = []
     for sname in setups:
         summary = run_batch(
             games=games_per_setup,
@@ -123,7 +125,10 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
         setup_shares[sname] = {
             fid: round(pct * 100.0, 1) for fid, pct in win_shares(summary).items()
         }
-        vitality_penalties.append(evaluate_vitality(summary).vitality_penalty)
+        vit = evaluate_vitality(summary)
+        vitality_penalties.append(vit.vitality_penalty)
+        for msg in vit.warnings:
+            vitality_warnings.append(f"{sname}: {msg}")
 
     score_4p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
     score_4p_balance = (
@@ -164,6 +169,7 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
         "min_balance": min_balance,
         "min_balance_setup": min_balance_name,
         "vitality_penalty": vitality_penalty,
+        "vitality_warnings": vitality_warnings,
         "dt": dt,
         "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
         "deadlock_pct": deadlock_pct,
@@ -649,6 +655,14 @@ class Canon4PAutoBalancer:
             self._base_in_band = setup_shares_in_range(base_res.get("setup_shares") or {}, *TARGET_BAND_PCT)
             band_label = "w paśmie 20–30% → higiena" if self._base_in_band else "poza pasmem 20–30% → wspinaczka maximin"
             print(f"   🎚️ Pasmo 4P: {band_label}")
+            warns = base_res.get("vitality_warnings") or []
+            if warns:
+                print("   💤 Witalność — martwe / kastracja (audytor ma to leczyć, nie zatrzymywać się na win share):")
+                for w in warns:
+                    print(f"      • {w}")
+            if canon_should_stop(base_res, mode=self._accept_mode()):
+                print("\n🏁 Kanon 4P w paśmie i mechaniki żywe — nie dokręcam win share ani limitu Er.")
+                break
             for sname, sc in sorted(base_res["setup_scores"].items()):
                 bal = base_res["setup_scores_balance"].get(sname, sc)
                 print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt (balance {color_score(bal)})")
@@ -866,11 +880,11 @@ def main():
     parser.add_argument(
         "--accept-mode",
         choices=("legacy", "band"),
-        default="legacy",
+        default="band",
         help=(
-            "legacy: max średniej 4P jak dotychczas (domyślnie). "
-            "band: wspinaczka maximin poza pasmem 20–30%%, higiena zdrowia w paśmie "
-            "(witalność jako veto, nie w score)."
+            "band (domyślnie): wspinaczka maximin poza pasmem 20–30%%, "
+            "higiena zdrowia w paśmie, stop gdy stół już żywy. "
+            "legacy: max średniej 4P jak dawniej (kosmetyka +0.1)."
         ),
     )
 

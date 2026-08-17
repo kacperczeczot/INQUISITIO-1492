@@ -42,6 +42,29 @@ def test_equal_shares_balance_and_setup_match_when_vitality_is_zero():
     assert calculate_balance_score(s) >= 98.0
 
 
+def test_so_condemns_never_winning_is_dead_path_not_healthy():
+    s = _summary(
+        win_paths={
+            "so_stacks": 200,
+            "so_condemns": 0,
+            "caa_sea_route": 100,
+            "caa_era": 100,
+            "kb_main": 200,
+            "kt_codex": 200,
+        },
+    )
+    vit = evaluate_vitality(s)
+    assert vit.vitality_penalty > 0.0
+    assert any("skazania" in w for w in vit.warnings)
+
+
+def test_empty_win_paths_does_not_invent_dead_path():
+    s = _summary()
+    vit = evaluate_vitality(s)
+    assert vit.vitality_penalty == 0.0
+    assert vit.is_healthy
+
+
 def test_deadlock_lowers_setup_score_but_not_balance_score():
     s = _summary(eras_limit_pct=0.10)
     vit = evaluate_vitality(s)
