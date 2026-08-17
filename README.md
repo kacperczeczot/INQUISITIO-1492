@@ -40,7 +40,7 @@ tools/          # Generator PnP, katalog kart
 | **Święte Oficjum** | **5 Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery 4) |
 | **Korona & Borgiowie** | **2 Dekrety** (od Ery 4) |
-| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–9** (od Ery 6) |
+| **Kabała z Toledo** | **3 Fragmenty** + Herezja **0–9** (od Ery 6) |
 | **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
 
 Szczegóły: [`game/factions/`](game/factions/) · [`docs/rules/ksiega.md`](docs/rules/ksiega.md).

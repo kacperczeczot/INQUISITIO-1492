@@ -54,21 +54,14 @@ def _condemns_text(cfg: dict) -> str:
 
 def _relics_text(cfg: dict) -> str:
     r = cfg["victory"]["cienie_al_andalus"]["relics"]
-    p = cfg["victory"]["cienie_al_andalus"]["path_era"]
-    if isinstance(p, dict):
-        p_era = f"Era {p['3p']}+ przy 3p / Era {p['4p']}+ przy 4–5p" if p["3p"] != p["4p"] else f"Era {p['3p']}+"
-    else:
-        p_era = f"Era {p}+"
-    return f"**{r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / {p_era})"
+    return f"**{r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski)"
 
 
 def _korona_text(cfg: dict) -> str:
     kb = cfg["victory"]["korona_borgiowie"]
     d = kb["decrees"]
     d_val = d["3p"] if isinstance(d, dict) else d
-    e = kb["era"]
-    e_val = e["3p"] if isinstance(e, dict) else e
-    return f"**{d_val}** Dekrety (od Ery **{e_val}**)"
+    return f"**{d_val}** Dekrety"
 
 
 def _kabala_text(cfg: dict) -> str:
@@ -81,7 +74,11 @@ def _kabala_text(cfg: dict) -> str:
     else:
         e_text = f"od Ery **{e}**"
     hb = kt["heresy_band"]
-    return f"**{f_val} Fragmenty** + Herezja **{hb[0]}–{hb[1]}** ({e_text})"
+    if int(hb[0]) <= 0:
+        band = f"Herezja **≤ {hb[1]}**"
+    else:
+        band = f"Herezja **{hb[0]}–{hb[1]}**"
+    return f"**{f_val} Fragmenty** + {band} ({e_text})"
 
 
 def _gildia_text(cfg: dict) -> str:
@@ -120,9 +117,9 @@ def _victory_table(cfg: dict) -> str:
     return f"""| Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
 | **Święte Oficjum** | **{so_stacks} Stosy** (spaleni agenci) **lub {so_condemns} Skazania** Werdyktem |
-| **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / Era {caa_era}+) |
-| **Korona & Borgiowie** | **{kb_dec} Dekrety** (od Ery **{kb_era}**) |
-| **Kabała z Toledo** | **{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery **{kt_era}**) |
+| **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
+| **Korona & Borgiowie** | **{kb_dec} Dekrety** |
+| **Kabała z Toledo** | **{kt_frag} Fragmenty** + Herezja **≤ {kt_hb[1]}** (od Ery **{kt_era}**) |
 | **Gildia Cieni** | **{gc_f['default']} Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **{gc_f['no_oficjum']}** gdy brak Oficjum |"""
 
 
@@ -251,6 +248,8 @@ def sync_ksiega(cfg: dict) -> list[str]:
     cd = cfg["system"]["autodafe_cooldown"]
     text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
     text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
+    me = cfg["system"]["max_eras"]
+    text = re.sub(r"\*\*Limit Er: \d+\.\*\*", f"**Limit Er: {me}.**", text)
 
     # Balance rule in Tribunal section
     old_bal = re.compile(r"\*\*Zasada Balansu:\*\* bazowy próg.*?\.")
@@ -337,7 +336,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     new_teach_vic = f"""| Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | Święte Oficjum | {so_teach_text} |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
+| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | Korona & Borgiowie | {kb_teach_text} |
 | Kabała z Toledo | {kt_teach_text} |
 | Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
