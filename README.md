@@ -37,7 +37,7 @@ tools/          # Generator PnP, katalog kart
 
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| **Święte Oficjum** | **7 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
+| **Święte Oficjum** | **6 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery 4) |
 | **Korona & Borgiowie** | **2 Dekrety** |
 | **Kabała z Toledo** | **3 Fragmenty** (od Ery 4) |
