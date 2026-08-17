@@ -49,7 +49,8 @@ def get_factions_data(cfg: dict | None = None) -> list[tuple[str, str, str, str,
     so_stacks = so_v.get("stacks", {})
     so_s4 = so_stacks.get("4p", 4) if isinstance(so_stacks, dict) else so_stacks
     so_s3 = so_stacks.get("3p", 3) if isinstance(so_stacks, dict) else so_stacks
-    so_cond = so_v.get("condemns", 2)
+    so_cond = so_v.get("condemns", 3)
+    so_cond = so_cond.get("4p", 3) if isinstance(so_cond, dict) else so_cond
     so_goal = f"{so_s4} Stosy lub {so_cond} Skazania Werdyktem"
     so_note = f"*w 3p: {so_s3} Stosy" if so_s3 != so_s4 else ""
 
@@ -66,27 +67,34 @@ def get_factions_data(cfg: dict | None = None) -> list[tuple[str, str, str, str,
     kb_v = v.get("korona_borgiowie", {})
     kb_d = kb_v.get("decrees", 2)
     kb_d4 = kb_d.get("4p", 2) if isinstance(kb_d, dict) else kb_d
-    kb_e = kb_v.get("era", {})
-    kb_e4 = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
-    kb_e3 = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
-    kb_goal = f"{kb_d4} Dekrety (od Ery {kb_e4})"
-    kb_note = f"*w 3p: od Ery {kb_e3}" if kb_e3 != kb_e4 else ""
+    kb_e = kb_v.get("era")
+    if kb_e is None:
+        kb_goal = f"{kb_d4} Dekrety"
+        kb_note = ""
+    else:
+        kb_e4 = kb_e.get("4p") if isinstance(kb_e, dict) else kb_e
+        kb_e3 = kb_e.get("3p") if isinstance(kb_e, dict) else kb_e
+        kb_goal = f"{kb_d4} Dekrety (od Ery {kb_e4})"
+        kb_note = f"*w 3p: od Ery {kb_e3}" if kb_e3 != kb_e4 else ""
 
     # 4. Kabała z Toledo
     kt_v = v.get("kabala_toledo", {})
     kt_f = kt_v.get("fragments", 3)
     kt_f4 = kt_f.get("4p", 3) if isinstance(kt_f, dict) else kt_f
-    kt_hb = kt_v.get("heresy_band", [3, 8])
-    kt_e = kt_v.get("era", {})
-    kt_e4 = kt_e.get("4p", 6) if isinstance(kt_e, dict) else 6
-    kt_e3 = kt_e.get("3p", 7) if isinstance(kt_e, dict) else 7
-    kt_goal = f"{kt_f4} Fragmenty + Herezja {kt_hb[0]}–{kt_hb[1]} (od Ery {kt_e4})"
+    kt_e = kt_v.get("era", 6)
+    kt_e4 = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
+    kt_e3 = kt_e.get("3p", kt_e4) if isinstance(kt_e, dict) else kt_e4
+    kt_hb = kt_v.get("heresy_band")
+    if kt_hb:
+        kt_goal = f"{kt_f4} Fragmenty + Herezja {kt_hb[0]}–{kt_hb[1]} (od Ery {kt_e4})"
+    else:
+        kt_goal = f"{kt_f4} Fragmenty (od Ery {kt_e4})"
     kt_note = f"*w 3p: od Ery {kt_e3}" if kt_e3 != kt_e4 else ""
 
     # 5. Gildia Cieni
     gc_v = v.get("gildia_cieni", {})
     gc_falls = gc_v.get("falls", {})
-    gc_def = gc_falls.get("default", 2) if isinstance(gc_falls, dict) else gc_falls
+    gc_def = gc_falls.get("default", 4) if isinstance(gc_falls, dict) else gc_falls
     gc_no_so = gc_falls.get("no_oficjum", gc_def) if isinstance(gc_falls, dict) else gc_falls
     gc_goal = f"{gc_def} Upadki"
     gc_note = f"*{gc_no_so} gdy brak Oficjum w grze" if gc_no_so != gc_def else ""

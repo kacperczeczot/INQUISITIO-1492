@@ -115,16 +115,19 @@ def apply_mutation_to_config(
         vic_cfg["cienie_al_andalus"]["path_era"] = _apply_offset_to_item(vic_cfg["cienie_al_andalus"]["path_era"], off, min_val=1)
         descriptions.append(f"Cienie Al-Andalus: Minimalna Era offset {off:+d}")
     if "kb_era_offset" in rule_params:
-        off = rule_params["kb_era_offset"]
-        vic_cfg["korona_borgiowie"]["era"] = _apply_offset_to_item(vic_cfg["korona_borgiowie"]["era"], off, min_val=1)
-        descriptions.append(f"Korona Borgiowie: Era zwycięstwa offset {off:+d}")
+        kb = vic_cfg["korona_borgiowie"]
+        if "era" in kb:
+            off = rule_params["kb_era_offset"]
+            kb["era"] = _apply_offset_to_item(kb["era"], off, min_val=1)
+            descriptions.append(f"Korona Borgiowie: Era zwycięstwa offset {off:+d}")
     if "kb_decrees_offset" in rule_params:
         off = rule_params["kb_decrees_offset"]
         vic_cfg["korona_borgiowie"]["decrees"] = _apply_offset_to_item(vic_cfg["korona_borgiowie"]["decrees"], off, min_val=1)
         descriptions.append(f"Korona Borgiowie: Dekrety offset {off:+d}")
     if "kb_hooks_offset" in rule_params:
         off = rule_params["kb_hooks_offset"]
-        vic_cfg["korona_borgiowie"]["hooks"] = _apply_offset_to_item(vic_cfg["korona_borgiowie"]["hooks"], off, min_val=0)
+        kb = vic_cfg["korona_borgiowie"]
+        kb["hooks"] = _apply_offset_to_item(kb.get("hooks", 0), off, min_val=0)
         descriptions.append(f"Korona Borgiowie: Haki offset {off:+d}")
     if "kt_frags_offset" in rule_params:
         off = rule_params["kt_frags_offset"]

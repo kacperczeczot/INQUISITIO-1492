@@ -118,7 +118,7 @@ Tor **0–10** na planszetce.
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpieczniej, słabsze akcje |
-| 4–6 | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 4–6 | Obserwowana | Ryzyko — jeden krok od oskarżenia |
 | ≥7 | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |
 
 **Źródła:** `heresy` karty, `target_heresy`, ujawniony Hak, Autodafé, wykryta Marionetka, edykty.
@@ -143,7 +143,7 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | **Korona & Borgiowie** | **2 Dekrety** |
-| **Kabała z Toledo** | **3 Fragmenty** + Herezja **≤ 9** (od Ery **6**) |
+| **Kabała z Toledo** | **3 Fragmenty** (od Ery **6**) |
 | **Gildia Cieni** | **4 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem) |
 
 **Limit Er: 12.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
@@ -169,11 +169,8 @@ Kanonem rozgrywki jest **skład 4-osobowy**. Przy grze w innym gronie wprowadź 
 >
 > ### 👥 Modyfikacje dla 3 Graczy (3p):
 > - **Próg Oskarżenia (Krytyczna Herezja):** **`6`** (Strefy: Czysta `0–3` / Obserwowana `4–5` / Krytyczna `≥6`).
-> - **Święte Oficjum:** Wymaga **`3 Stosów`** (zamiast 4).
-> - **Kabała z Toledo:** Może wygrać od **`Ery 7`** (zamiast 6).
 >
 > ### 👥 Modyfikacje dla 5 Graczy (5p):
-> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`2 zł`** (zamiast 3 zł).
 > - **Próg Oskarżenia (Krytyczna Herezja):** **`8`** (Strefy: Czysta `0–3` / Obserwowana `4–7` / Krytyczna `≥8`).
 
 ---

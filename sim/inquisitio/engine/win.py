@@ -89,7 +89,8 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             if "kb_hooks" in ov:
                 hooks_need = _val(ov["kb_hooks"], pc)
             else:
-                hooks_need = max(0, _val(cfg_kb.hooks, pc) + ov.get("kb_hooks_offset", 0))
+                raw_hooks = cfg_kb.get("hooks", 0)
+                hooks_need = max(0, _val(raw_hooks, pc) + ov.get("kb_hooks_offset", 0))
 
             if (
                 state.layer == "C"
@@ -106,9 +107,12 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             elif "kt_fragments_5p" in ov and n_players >= 5:
                 frag_need = _val(ov["kt_fragments_5p"], pc)
 
-            band = ov.get("kt_heresy_band", cfg_kt.heresy_band)
-            h_low, h_high = band[0], band[1]
-            heresy_ok = (h_low <= pl.heresy <= h_high)
+            band = ov.get("kt_heresy_band", cfg_kt.get("heresy_band"))
+            if band:
+                h_low, h_high = int(band[0]), int(band[1])
+                heresy_ok = h_low <= pl.heresy <= h_high
+            else:
+                heresy_ok = True
             if "kt_era" in ov:
                 base_era = _val(ov["kt_era"], pc)
             else:

@@ -30,7 +30,7 @@
 | Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpiecznie, zwykle słabiej |
-| 4–6 (w 3p: 4–5) | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 4–6 (w 3p: 4–5) | Obserwowana | Ryzyko — jeden krok od oskarżenia |
 | 7–10 (w 3p: ≥6, w 5p: ≥8) | **Krytyczna** | Inni mogą Cię oskarżyć |
 
 ---
@@ -58,8 +58,8 @@
 | :--- | :--- |
 | Święte Oficjum | **4 Stosy** lub **3 Skazania Werdyktem** |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
-| Korona & Borgiowie | **2 Dekrety** (od Ery 4) |
-| Kabała z Toledo | **3 Fragmenty** + Herezja **0–9** (od Ery 6) |
+| Korona & Borgiowie | **2 Dekrety** |
+| Kabała z Toledo | **3 Fragmenty** (od Ery 6) |
 | Gildia Cieni | **4 Upadki** |
 
 **Limit:** 11 Er → najbliższy celowi; remis → najniższa Herezja.

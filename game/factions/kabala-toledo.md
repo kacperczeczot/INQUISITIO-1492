@@ -4,8 +4,8 @@
 
 # Kabała z Toledo *(Uczeni & Alchemicy)*
 
-**Styl:** Sweet spot Herezji [3, 7], Fragmenty Kodeksu, Imię, archiwum.  
-**Cel:** **3 Fragmenty** + Herezja **3–7** (od Ery **6**; *w 3p: od Ery 7*).
+**Styl:** Fragmenty Kodeksu, Imię, archiwum.  
+**Cel:** **3 Fragmenty** od Ery **6**.
 
 ## 📜 Tło Historyczne & Kultura (1492)
 
@@ -17,7 +17,7 @@ Jednak 31 marca 1492 r. Królowie podpisali tragiczny **Edykt z Alhambry**, naka
 
 ## Tożsamość przy stole
 
-Nie jesteś niewinny — jesteś **dokładnie wystarczająco winny**. Za niska Herezja = brak mocy. Za wysoka = Werdykt zanim odczytasz Kodeks.
+Nie jesteś czysty — Herezja to ryzyko Werdyktu, nie podatek wygranej. Zbierz Kodeks zanim stół Cię spali. Pieczęć Salomona ma własne okno Herezji na karcie.
 
 ## Mocne strony
 
@@ -27,7 +27,7 @@ Nie jesteś niewinny — jesteś **dokładnie wystarczająco winny**. Za niska H
 
 ## Słabości
 
-- Wygrana zablokowana poza 4–6 — stół może Cię **wypchnąć** Hakiem lub wrabianiem
+- Wygrana od Ery 6 — stół może Cię **spalić** Hakiem lub wrabianiem zanim zbierzesz Kodeks
 - Słabsza naga siła Autodafé
 - Zależność od dostępu do Lochów / kart B
 

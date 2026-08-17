@@ -45,16 +45,13 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 ### 3. Korona Borgiowie (`korona_borgiowie`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `decrees` | `dict` | `3p: 1..4`, `4p: 1..4`, `5p: 1..4` | Liczba zagranych kart Dekretów Signature (`KB-09`, `KB-10`) |
-| `hooks` | `dict` | `3p: 0..3`, `4p: 0..3`, `5p: 0..3` | Liczba unikalnych rywali, na których Korona założyła Hak |
-| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Maksymalna Era na zrealizowanie domeny politycznej |
+| `decrees` | `int` | `1 .. 4` | Liczba zagranych Dekretów |
 
 ### 4. Kabała Toledo (`kabala_toledo`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `fragments` | `dict` | `3p: 1..4`, `4p: 1..4`, `5p: 1..4` | Wymagana liczba zgromadzonych Fragmentów Kodeksu |
-| `heresy_band` | `list[int]` | `[min, max]` (np. `[3, 7]`) | Dopuszczalny przedział Herezji w momencie ukończenia Cyklu |
-| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Maksymalna Era na dokończenie Rytuału Cyklu |
+| `fragments` | `int` | `1 .. 4` | Wymagana liczba Fragmentów Kodeksu |
+| `era` | `int` | `1 .. 12` | Minimalna Era na zwycięstwo Kodeksem |
 
 ### 5. Gildia Cieni (`gildia_cieni`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
@@ -95,7 +92,7 @@ Każda akcja (`action`) wykorzystuje ściśle dopasowany zestaw właściwości p
 | `creates_hook` | `condition`, `target_loc`, `verdict_weight`, `on_refusal`, `creates_hook`, `penalty_heresy`, `mark_fall` | Zakłada Hak na rywala, wymusza realizację Haka lub oznacza Upadek Domu |
 | `autodafe` | `breaks_rule` | Wywołuje spalenie Autodafé (`Ogłoś Autodafé w lokacji Inkwizytora.`) |
 | `evacuate_relic` | `max_relics`, `condition`, `kurier_limit` | Ewakuuje Relikwie (`Ewakuuj Relikwię z tej lokacji.`) |
-| `check_victory` | `decree`, `condition`, `target_heresy_band`, `fallback_heresy` | Sprawdza natychmiastowe zwycięstwo (Korony / Kabały z korektą Herezji) |
+| `check_victory` | `decree`, `condition`, `target_heresy_band`, `fallback_heresy` | Natychmiastowe zwycięstwo (Dekret Korony; Pieczęć Kabały z oknem Herezji na karcie) |
 | `grant_fragment` | `condition` | Pozyskuje Fragment Kodeksu (`Zyskaj Fragment.`) oraz opcjonalnie złoto alternatywne |
 
 ### 3. Filtry Lokacji (`target_loc`)

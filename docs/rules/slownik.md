@@ -37,7 +37,7 @@ Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** 
 
 ## Dekret
 
-Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: zwykle 2 Dekrety + Haki (od Ery 5; 3p ≥0 / 4–5p ≥1).
+Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: **2 Dekrety**. Haki to narzędzie stołu, nie podatek wygranej.
 
 **Patrz także:** [Zwycięstwo](#zwycięstwo), [Hak](#hak)
 
@@ -77,7 +77,7 @@ Karta nie rozpatruje efektu (np. brak Agenta / lokacji przy odkryciu). Zgodnie z
 
 ## Fragment
 
-Znacznik / cel Kabały. Warunek: 3 Fragmenty + Herezja **3–8**, od wskazanej Ery.
+Znacznik / cel Kabały. Warunek: **3 Fragmenty** od Ery **6**. Herezja nie jest podatkiem wygranej (karta Pieczęć Salomona może mieć własne okno).
 
 **Patrz także:** [Herezja](#herezja), [Zwycięstwo](#zwycięstwo)
 

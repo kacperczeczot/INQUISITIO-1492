@@ -90,7 +90,7 @@ Cel: asymetria + sojusze, bez pełnej piątki.
 | Wyłącz | Gdy chcesz przetestować |
 | :--- | :--- |
 | **Gildia Cieni** | Czystszy stół; fokus Relikwie / Stosy / Dekrety |
-| **Kabała z Toledo** | Mniej sweet-spotu Herezji; ostrzejszy Werdykt |
+| **Kabała z Toledo** | Mniej miejsca na manewr Herezją; ostrzejszy Werdykt |
 | **Korona** | Mniej Haków/Dekretów; ostrzejsze Relikwie i Stosy |
 | **Cienie Al-Andalus** | Brak ewakuacji — fokus Herezja / Upadek / Stosy |
 | **Święte Oficjum** | Osobna hipoteza: czy Inkwizytor NPC wystarcza bez gracza-Oficjum |

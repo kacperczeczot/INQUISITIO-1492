@@ -53,8 +53,7 @@ def build_level2_tests():
     kb = v.korona_borgiowie
     kt = v.kabala_toledo
     gc = v.gildia_cieni
-    hb = kt.heresy_band
-    return [
+    tests = [
         ("L2_BAZA", "Baza (Bieżące warunki zwycięstwa)", {}),
         ("L2_SO_STACKS_PLUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, 1)}", {"so_stacks_offset": 1}),
         ("L2_SO_STACKS_MINUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -1)}", {"so_stacks_offset": -1}),
@@ -63,17 +62,14 @@ def build_level2_tests():
         ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: {caa.relics} → {caa.relics - 1}", {"caa_relics_offset": -1}),
         ("L2_KB_DECREES_PLUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, 1)}", {"kb_decrees_offset": 1}),
         ("L2_KB_DECREES_MINUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
-        ("L2_KB_HOOKS_PLUS1", f"Korona Haki: {_pc(kb.hooks)} → {_pc(kb.hooks, 1)}", {"kb_hooks_offset": 1}),
         ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
         ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
         ("L2_KT_ERA_PLUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, 1)}", {"kt_era_offset": 1}),
         ("L2_KT_ERA_MINUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, -1)}", {"kt_era_offset": -1}),
-        ("L2_KT_HERESY_LOW_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0] + 1}–{hb[1]}", {"kt_heresy_band": (hb[0] + 1, hb[1])}),
-        ("L2_KT_HERESY_HIGH_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] + 1}", {"kt_heresy_band": (hb[0], hb[1] + 1)}),
-        ("L2_KT_HERESY_HIGH_MINUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] - 1}", {"kt_heresy_band": (hb[0], hb[1] - 1)}),
         ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) + 1}", {"gc_falls_offset": 1}),
         ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) - 1}", {"gc_falls_offset": -1}),
     ]
+    return tests
 
 
 def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:

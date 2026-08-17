@@ -38,7 +38,7 @@ Powód narracyjny (Agent w lokacji, Autodafé, plotka) pomaga przy stole, ale w 
 
 - Haki (B+) mogą wymusić głos przed krokiem 3.
 - Marionetki: kontroler rusza ciałem; **nie** oddaje dodatkowego głosu przy Werdykcie.
-- Oficjum wygrywa **5 Stosami** albo **3 unikalnymi Skazaniami**. Stół tnie snowball (uniewinnienia / pile-on na Oficjum) dopiero gdy Oficjum jest **1 przed** wygraną — nie od pierwszego nazwiska ani 2 stosów.
+- Oficjum wygrywa **4 Stosami** albo **3 unikalnymi Skazaniami**. Stół tnie snowball (uniewinnienia / pile-on na Oficjum) dopiero gdy Oficjum jest **1 przed** wygraną — nie od pierwszego nazwiska ani 2 stosów.
 
 ## Warstwa A
 

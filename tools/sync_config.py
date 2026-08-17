@@ -73,12 +73,14 @@ def _kabala_text(cfg: dict) -> str:
         e_text = f"od Ery **{e['3p']}**@3p / **{e['4p']}**@4–5p" if e["3p"] != e["4p"] else f"od Ery **{e['3p']}**"
     else:
         e_text = f"od Ery **{e}**"
-    hb = kt["heresy_band"]
-    if int(hb[0]) <= 0:
-        band = f"Herezja **≤ {hb[1]}**"
-    else:
-        band = f"Herezja **{hb[0]}–{hb[1]}**"
-    return f"**{f_val} Fragmenty** + {band} ({e_text})"
+    hb = kt.get("heresy_band")
+    if hb:
+        if int(hb[0]) <= 0:
+            band = f"Herezja **≤ {hb[1]}**"
+        else:
+            band = f"Herezja **{hb[0]}–{hb[1]}**"
+        return f"**{f_val} Fragmenty** + {band} ({e_text})"
+    return f"**{f_val} Fragmenty** ({e_text})"
 
 
 def _gildia_text(cfg: dict) -> str:
@@ -112,14 +114,17 @@ def _victory_table(cfg: dict) -> str:
 
     kb_d = v["korona_borgiowie"]["decrees"]
     kb_dec = kb_d["4p"] if isinstance(kb_d, dict) else kb_d
-    kb_e = v["korona_borgiowie"]["era"]
-    kb_era = kb_e["4p"] if isinstance(kb_e, dict) else kb_e
 
     kt_f = v["kabala_toledo"]["fragments"]
     kt_frag = kt_f["4p"] if isinstance(kt_f, dict) else kt_f
-    kt_hb = v["kabala_toledo"]["heresy_band"]
     kt_e = v["kabala_toledo"]["era"]
     kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    kt_hb = v["kabala_toledo"].get("heresy_band")
+    kt_cell = (
+        f"**{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery **{kt_era}**)"
+        if kt_hb
+        else f"**{kt_frag} Fragmenty** (od Ery **{kt_era}**)"
+    )
 
     gc_n, gc_extra = _gc_falls_pair(cfg)
     gc_cell = (
@@ -136,7 +141,7 @@ def _victory_table(cfg: dict) -> str:
 | **Święte Oficjum** | **{so_stacks} Stosy** (spaleni agenci) **lub {so_condemns} Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | **Korona & Borgiowie** | **{kb_dec} Dekrety** |
-| **Kabała z Toledo** | **{kt_frag} Fragmenty** + Herezja **≤ {kt_hb[1]}** (od Ery **{kt_era}**) |
+| **Kabała z Toledo** | {kt_cell} |
 | **Gildia Cieni** | {gc_cell} |"""
 
 
@@ -148,7 +153,7 @@ def _heresy_table(cfg: dict) -> str:
     return f"""| Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
 | 0–3 | Czysta | Bezpieczniej, słabsze akcje |
-| 4–{t4-1} | Obserwowana | Ryzyko; Kabała lubi ten pas |
+| 4–{t4-1} | Obserwowana | Ryzyko — jeden krok od oskarżenia |
 | ≥{t4} | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |"""
 
 
@@ -175,10 +180,14 @@ def _scaling_box(cfg: dict) -> str:
     if so_s3 != 4:
         lines_3p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast 4).")
 
-    kb_e = v.get("korona_borgiowie", {}).get("era", 5)
-    kb_e3 = kb_e.get("3p", 5) if isinstance(kb_e, dict) else kb_e
-    if kb_e3 != 5:
-        lines_3p.append(f"> - **Korona & Borgiowie:** Może wygrać od **`Ery {kb_e3}`** (zamiast 5).")
+    kb_e = v.get("korona_borgiowie", {}).get("era")
+    if kb_e is not None:
+        kb_e3 = kb_e.get("3p") if isinstance(kb_e, dict) else kb_e
+        kb_e4 = kb_e.get("4p") if isinstance(kb_e, dict) else kb_e
+        if kb_e3 is not None and kb_e4 is not None and kb_e3 != kb_e4:
+            lines_3p.append(
+                f"> - **Korona & Borgiowie:** Może wygrać od **`Ery {kb_e3}`** (zamiast {kb_e4})."
+            )
 
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
     kt_e3 = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
@@ -251,15 +260,15 @@ def sync_ksiega(cfg: dict) -> list[str]:
         text = old_heresy_pattern.sub(new_heresy, text)
         changes.append("Tabela Herezji (Kanon 4p) zaktualizowana")
 
-    # Replace scaling section box
-    scaling_pattern = re.compile(
-        r"(## 5\. Skalowanie Składu.*?\n\n)(?:>.*?\n)+",
-        re.MULTILINE
+    # 3p/5p boxes only — keep 2p Dual Control above them.
+    three_five_pattern = re.compile(
+        r"> ### 👥 Modyfikacje dla 3 Graczy \(3p\):.*?"
+        r"(?=\n---\n)",
+        re.DOTALL,
     )
-    new_scaling = f"## 5. Skalowanie Składu (Warianty 3p i 5p)\n\n" + _scaling_box(cfg) + "\n"
-    if scaling_pattern.search(text):
-        text = scaling_pattern.sub(new_scaling, text)
-        changes.append("Sekcja 5 (Skalowanie Składu) zaktualizowana")
+    if three_five_pattern.search(text):
+        text = three_five_pattern.sub(_scaling_box(cfg) + "\n", text)
+        changes.append("Modyfikacje 3p/5p zaktualizowane")
 
     # Inline system replacements
     cd = cfg["system"]["autodafe_cooldown"]
@@ -318,7 +327,8 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     so_4p = so_s.get("4p", 4) if isinstance(so_s, dict) else so_s
     so_3p = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
     so_5p = so_s.get("5p", 4) if isinstance(so_s, dict) else so_s
-    so_c = v.get("swiete_oficjum", {}).get("condemns", 2)
+    so_c = v.get("swiete_oficjum", {}).get("condemns", 3)
+    so_c = so_c.get("4p", 3) if isinstance(so_c, dict) else so_c
     
     so_mods = []
     if so_3p != so_4p:
@@ -328,16 +338,29 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     
     so_teach_text = f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem** ({', '.join(so_mods)})" if so_mods else f"**{so_4p} Stosy** lub **{so_c} Skazania Werdyktem**"
 
-    kb_e = v.get("korona_borgiowie", {}).get("era", 5)
-    kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
-    kb_3p = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
-    kb_teach_text = f"**2 Dekrety** (od Ery {kb_4p}; w 3p: od Ery {kb_3p})" if kb_4p != kb_3p else f"**2 Dekrety** (od Ery {kb_4p})"
+    kb_d = v.get("korona_borgiowie", {}).get("decrees", 2)
+    kb_d4 = kb_d.get("4p", 2) if isinstance(kb_d, dict) else kb_d
+    kb_e = v.get("korona_borgiowie", {}).get("era")
+    if kb_e is None:
+        kb_teach_text = f"**{kb_d4} Dekrety**"
+    else:
+        kb_4p = kb_e.get("4p") if isinstance(kb_e, dict) else kb_e
+        kb_3p = kb_e.get("3p") if isinstance(kb_e, dict) else kb_e
+        kb_teach_text = (
+            f"**{kb_d4} Dekrety** (od Ery {kb_4p}; w 3p: od Ery {kb_3p})"
+            if kb_4p != kb_3p
+            else f"**{kb_d4} Dekrety** (od Ery {kb_4p})"
+        )
 
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
     kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
     kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
-    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 8])
-    kt_teach_text = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p}; w 3p: od Ery {kt_3p})" if kt_4p != kt_3p else f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p})"
+    kt_hb = v.get("kabala_toledo", {}).get("heresy_band")
+    if kt_hb:
+        kt_core = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}**"
+    else:
+        kt_core = "**3 Fragmenty**"
+    kt_teach_text = f"{kt_core} (od Ery {kt_4p}; w 3p: od Ery {kt_3p})" if kt_4p != kt_3p else f"{kt_core} (od Ery {kt_4p})"
 
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
 
@@ -485,19 +508,38 @@ def sync_readme(cfg: dict) -> list[str]:
     if so_5p != so_4p:
         so_mods.append(f"w 5p: {so_5p} Stosów")
     
-    so_readme_text = f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem *({', '.join(so_mods)})*" if so_mods else f"**{so_4p} Stosy** (spaleni agenci) **lub 2 Skazania** Werdyktem"
+    so_c = v.get("swiete_oficjum", {}).get("condemns", 3)
+    so_c4 = so_c.get("4p", 3) if isinstance(so_c, dict) else so_c
+    so_readme_text = (
+        f"**{so_4p} Stosy** (spaleni agenci) **lub {so_c4} Skazania** Werdyktem *({', '.join(so_mods)})*"
+        if so_mods
+        else f"**{so_4p} Stosy** (spaleni agenci) **lub {so_c4} Skazania** Werdyktem"
+    )
 
-    kb_e = v.get("korona_borgiowie", {}).get("era", 5)
-    kb_4p = kb_e.get("4p", 5) if isinstance(kb_e, dict) else kb_e
-    kb_3p = kb_e.get("3p", 6) if isinstance(kb_e, dict) else kb_e
-    kb_readme_text = f"**2 Dekrety** (od Ery {kb_4p}; *w 3p: od Ery {kb_3p}*)" if kb_4p != kb_3p else f"**2 Dekrety** (od Ery {kb_4p})"
+    kb_d = v.get("korona_borgiowie", {}).get("decrees", 2)
+    kb_d4 = kb_d.get("4p", 2) if isinstance(kb_d, dict) else kb_d
+    kb_e = v.get("korona_borgiowie", {}).get("era")
+    if kb_e is None:
+        kb_readme_text = f"**{kb_d4} Dekrety**"
+    else:
+        kb_4p = kb_e.get("4p") if isinstance(kb_e, dict) else kb_e
+        kb_3p = kb_e.get("3p") if isinstance(kb_e, dict) else kb_e
+        kb_readme_text = (
+            f"**{kb_d4} Dekrety** (od Ery {kb_4p}; *w 3p: od Ery {kb_3p}*)"
+            if kb_4p != kb_3p
+            else f"**{kb_d4} Dekrety** (od Ery {kb_4p})"
+        )
 
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
-    kt_hb = v.get("kabala_toledo", {}).get("heresy_band", [3, 8])
+    kt_hb = v.get("kabala_toledo", {}).get("heresy_band")
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
     kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
     kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
-    kt_readme_text = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p}; *w 3p: od Ery {kt_3p}*)" if kt_4p != kt_3p else f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p})"
+    if kt_hb:
+        kt_core = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}**"
+    else:
+        kt_core = "**3 Fragmenty**"
+    kt_readme_text = f"{kt_core} (od Ery {kt_4p}; *w 3p: od Ery {kt_3p}*)" if kt_4p != kt_3p else f"{kt_core} (od Ery {kt_4p})"
     gc_n, gc_extra = _gc_falls_pair(cfg)
     gc_readme_text = f"**{gc_n} Upadki**" if gc_extra is None else f"**{gc_n} Upadki** *({gc_extra} gdy brak Oficjum)*"
 
@@ -572,8 +614,11 @@ def main():
     v = cfg["victory"]
     print(f"   ⚔️ Oficjum: Stosy {v['swiete_oficjum']['stacks']} | Skazania {v['swiete_oficjum']['condemns']}")
     print(f"   ⚔️ Cienie: {v['cienie_al_andalus']['relics']} Relikwii | Ery {v['cienie_al_andalus']['path_era']}")
-    print(f"   ⚔️ Korona: Dekrety {v['korona_borgiowie']['decrees']} | Haki {v['korona_borgiowie']['hooks']} | Ery {v['korona_borgiowie']['era']}")
-    print(f"   ⚔️ Kabała: Fragmenty {v['kabala_toledo']['fragments']} | Herezja {v['kabala_toledo']['heresy_band']} | Ery {v['kabala_toledo']['era']}")
+    kb = v["korona_borgiowie"]
+    kb_era = kb.get("era")
+    kb_era_txt = f" | Ery {kb_era}" if kb_era is not None else ""
+    print(f"   ⚔️ Korona: Dekrety {kb['decrees']}{kb_era_txt}")
+    print(f"   ⚔️ Kabała: Fragmenty {v['kabala_toledo']['fragments']} | Ery {v['kabala_toledo']['era']}")
     print(f"   ⚔️ Gildia: Upadki {v['gildia_cieni']['falls']}")
     print()
 

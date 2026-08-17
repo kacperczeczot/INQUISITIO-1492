@@ -43,12 +43,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 - **Ścieżka:** Marionetka / cichy exit / **szlak morski** (otwarcie od Ery **4**). Brak darmowej wygranej „sama era”.
 
 ### 3. Korona & Borgiowie
-- **Dekrety Królewskie:** **2 Dekrety** (bez ery i bez wymogu 1 haka w warunku zwycięstwa).
+- **Dekrety Królewskie:** **2 Dekrety**. Haki nie są warunkiem wygranej.
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3**.
-- **Pasmo Herezji:** **≤ 9** (dolny próg 3 usunięty).
-- **Minimalna Era:** **6**.
+- **Minimalna Era:** **6**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
 
 ### 5. Gildia Cieni
 - **Upadki:** **4** (jedna liczba; wyjątek bez Oficjum usunięty).
@@ -69,6 +68,15 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.96 (2026-08-17) — Agenci 3, próg 6/7/8, werdykt jawny
+- **Cofnięcie trójki HUD z v0.95:** agenci **2 → 3**, próg oskarżenia **7/8/9 → 6/7/8**, `verdict_secret` wyłączony.
+- **Dlaczego:** agenci to fundament stołu; tajny Werdykt ogłupia AI. HUD +3.9 nie jest naprawą. Próg oskarżenia wraca do puli audytora (tempo sądu).
+- **Audytor:** pula 4P makro = wyłącznie ±1 z L1/L2/L4 (kanon ma jeszcze L3 kart). Bez katalogu `feature_impact`. Tożsamość: agenci, Autodafé, limit ręki, Werdykt Tajny, Kronika 1 edykt/erę. Nie wskrzeszać `hooks` / `heresy_band` / `korona_borgiowie.era` w victory.
+
+### 🔴 Patch v0.95 (2026-08-17) — odrzucony: agenci −1 + próg +1 + Werdykt Tajny
+- **Wynik 4P (win share):** **`84.3 pkt`** (baza `80.4`) | Global **`66.4`** | 3p **`38.4`** | 5p **`77.3`**
+- **Modyfikacja (`L1_AGENTS_MINUS1__L1_THRESHOLD_PLUS1__L4_VERDICT_SECRET`):** jeździec HUD — cofnięty w v0.96.
 
 ### 🟢 Patch v0.94 (2026-08-17) — Autodafé zostaje co 3 Ery
 - **Cofnięcie L1 z v0.93:** `autodafe_cooldown` **4 → 3**. Przy końcu ~6 Er cooldown 4 to zwykle **1** ogień; 3 Ery to **2** (3 i 6). Inkwizycja nie jest gałką HUD.

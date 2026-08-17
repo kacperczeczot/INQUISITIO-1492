@@ -89,26 +89,14 @@ class PoliticsAgent:
                     u -= 0.5  # Emptying vault carries friction
 
             # ── B. Heresy Risk & Zone Dynamics ──
-            if faction == FactionId.KABALA_TOLEDO:
-                # Kabała needs heresy in the sweet spot [3, 8] (target 4–6)
-                if pl.heresy < 3:
-                    u += max(0, c.heresy) * 1.6
-                elif 3 <= pl.heresy <= 6:
-                    if c.heresy > 0:
-                        u -= c.heresy * 1.2
-                    elif c.heresy < 0:
-                        u += 0.5  # slight stabilization
-                else:  # >= 7 (Critical danger of Court Werdykt)
-                    u -= c.heresy * 4.0
+            # Kabała nie ma pasma wygranej — Herezja to ten sam sąd co u reszty.
+            post_h = pl.heresy + c.heresy
+            if post_h >= threshold:
+                u -= c.heresy * 4.0  # Walking into Court execution
+            elif post_h >= threshold - 1:
+                u -= c.heresy * 2.0  # Observed danger
             else:
-                # Standard factions fear Critical Heresy (Court accusation threshold)
-                post_h = pl.heresy + c.heresy
-                if post_h >= threshold:
-                    u -= c.heresy * 4.0  # Walking into Court execution
-                elif post_h >= threshold - 1:
-                    u -= c.heresy * 2.0  # Observed danger
-                else:
-                    u -= c.heresy * 0.4  # Minor stain
+                u -= c.heresy * 0.4  # Minor stain
 
             # ── C. Target Heresy & Table Politics (Anti-Snowballing) ──
             if c.target_heresy > 0:
@@ -120,7 +108,7 @@ class PoliticsAgent:
                 # If Kabała is near win with 2+ fragments:
                 kt = state.players.get(FactionId.KABALA_TOLEDO)
                 if kt and faction != FactionId.KABALA_TOLEDO and kt.fragments >= 2:
-                    # Push Kabała out of sweet spot into Critical
+                    # Near Codex: push them into Court range
                     u += c.target_heresy * 1.8
 
             # ── D. Board Presence & Agent Movement ──
@@ -136,8 +124,8 @@ class PoliticsAgent:
             if "interrogation" in c.tags:
                 u += 2.2
             if c.creates_hook:
-                if faction in (FactionId.KORONA_BORGIOWIE, FactionId.GILDIA_CIENI):
-                    u += 3.5  # Core win condition prerequisite
+                if faction == FactionId.GILDIA_CIENI:
+                    u += 3.5  # Upadki often need a Hak
                 else:
                     u += 2.0
 
