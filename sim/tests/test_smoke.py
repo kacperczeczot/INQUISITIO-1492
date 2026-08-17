@@ -226,16 +226,16 @@ def test_ssot_win_paths_match_yaml():
     gc = st5.players[FactionId.GILDIA_CIENI]
     caa5.relics_evacuated = 0
     st5.era = 1
-    gc.falls = 3
+    gc.falls = 6
     assert check_winner_details(st5) is None
-    gc.falls = 4
+    gc.falls = 7
     assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     st_noso = new_game(setup="4p-no-oficjum", seed=1, layer="C")
     gc2 = st_noso.players[FactionId.GILDIA_CIENI]
-    gc2.falls = 3
+    gc2.falls = 6
     assert check_winner_details(st_noso) is None
-    gc2.falls = 4
+    gc2.falls = 7
     assert check_winner_details(st_noso) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     assert heresy_zone(3, critical_min=7, observed_min=4) == "czysta"
@@ -252,11 +252,11 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     kt = st.players[FactionId.KABALA_TOLEDO]
     kt.fragments = 3
     kt.heresy = 5
-    st.era = 6
+    st.era = 4
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
     blocked = check_winner_details(st, {"kt_era_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KABALA_TOLEDO
-    st.era = 7
+    st.era = 5
     assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
     kt.heresy = 0
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
@@ -318,7 +318,7 @@ def test_so_condemns_win_without_full_stacks():
 
     st = new_game(setup="4p-core", seed=1, layer="C")
     so = st.players[FactionId.SWIETE_OFICJUM]
-    so.stacks = 4
+    so.stacks = 5
     so.condemned_rivals = {
         FactionId.CIENIE_AL_ANDALUS,
         FactionId.KORONA_BORGIOWIE,
@@ -326,7 +326,7 @@ def test_so_condemns_win_without_full_stacks():
     }
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
     so.condemned_rivals = set()
-    so.stacks = 5
+    so.stacks = 7
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
 
 
@@ -370,7 +370,7 @@ def test_oficjum_snowball_threat_is_one_shy_not_early():
     so.stacks = 2
     so.condemned_rivals = {FactionId.CIENIE_AL_ANDALUS}
     assert oficjum_snowball_threat(st) is False
-    so.stacks = 4
+    so.stacks = 6
     assert oficjum_snowball_threat(st) is True
     so.stacks = 0
     so.condemned_rivals = {
@@ -379,4 +379,37 @@ def test_oficjum_snowball_threat_is_one_shy_not_early():
     }
     assert oficjum_snowball_threat(st) is True
 
+
+def test_kt03_grants_fragment_without_heresy_gate():
+    import random
+    from inquisitio.engine.effects.registry import play_card
+
+    st = new_game(setup="4p-core", seed=1, layer="C")
+    kt = st.players[FactionId.KABALA_TOLEDO]
+    kt.fragments = 0
+    kt.heresy = 0
+    kt.gold = 2
+    kt.hand = ["kt-03"]
+    play_card(st, FactionId.KABALA_TOLEDO, "kt-03", random.Random(1))
+    assert kt.fragments == 1
+
+
+def test_gc10_signature_requires_hook_or_double_not_critical_only():
+    import random
+    from inquisitio.cards.loader import load_all_cards
+    from inquisitio.engine.effects.registry import resolve_card_effects
+
+    st = new_game(setup="4p-no-oficjum", seed=1, layer="C")
+    gc = st.players[FactionId.GILDIA_CIENI]
+    kb = st.players[FactionId.KORONA_BORGIOWIE]
+    kb.heresy = 9
+    gc.falls = 0
+    card = load_all_cards()["gc-10"]
+    resolve_card_effects(st, FactionId.GILDIA_CIENI, card, random.Random(2))
+    assert gc.falls == 0
+
+    gc.hooks_on[FactionId.KORONA_BORGIOWIE] = 1
+    gc.hook_victims_ever.add(FactionId.KORONA_BORGIOWIE)
+    resolve_card_effects(st, FactionId.GILDIA_CIENI, card, random.Random(3))
+    assert gc.falls == 1
 

@@ -10,7 +10,7 @@ from inquisitio.engine.win import check_winner_details
 
 
 def test_yaml_exposes_observed_and_income_and_no_split_zones():
-    assert CONFIG.observed_threshold() == 4
+    assert CONFIG.observed_threshold() == 5
     assert CONFIG.era_income() == 1
     assert CONFIG.intrigue_gold() == 1
     assert int(CONFIG.system.cards_per_era) == 2
