@@ -143,8 +143,8 @@ Natychmiast, gdy spełnisz warunek frakcji:
 | **Święte Oficjum** | **5 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski / Era 4+) |
 | **Korona & Borgiowie** | **2 Dekrety** (od Ery **4**) |
-| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–8** (od Ery **6**) |
-| **Gildia Cieni** | **3 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **4** gdy brak Oficjum |
+| **Kabała z Toledo** | **3 Fragmenty** + Herezja **3–9** (od Ery **6**) |
+| **Gildia Cieni** | **3 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **5** gdy brak Oficjum |
 
 **Limit Er: 11.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
 

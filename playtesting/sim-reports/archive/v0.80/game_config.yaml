@@ -1,4 +1,4 @@
-version: v0.86
+version: v0.80
 date: '2026-08-17'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -27,7 +27,7 @@ victory:
     fragments: 3
     heresy_band:
     - 3
-    - 9
+    - 8
     era: 6
   gildia_cieni:
     falls:
@@ -194,7 +194,6 @@ cards:
     - move
     - relic
     - heresy
-    gold: 1
   caa-04:
     name: Fałszywy Trop
     type: akcja
@@ -208,7 +207,7 @@ cards:
     name: Ukryty Kurier
     type: akcja
     layer: A
-    cost: 0
+    cost: 1
     evacuate_relic: 1
     action: evacuate_relic
     condition: relic_present
@@ -249,7 +248,6 @@ cards:
     tags:
     - double
     - heresy
-    target_heresy: 1
   caa-09:
     name: Kurier Relikwii
     type: akcja
@@ -317,7 +315,6 @@ cards:
     action: gain_gold
     tags:
     - gold
-    target_heresy: 1
   kb-03:
     name: Plotka Dworska
     type: akcja
@@ -327,7 +324,6 @@ cards:
     action: frame_rival
     tags:
     - heresy
-    heresy: 1
   kb-04:
     name: Faworyt Dworu
     type: akcja
@@ -687,7 +683,7 @@ cards:
     type: akcja
     layer: A
     cost: 0
-    heresy: 2
+    heresy: 1
     agents: 1
     gold: 1
     action: move_agent

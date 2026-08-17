@@ -52,7 +52,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Konfiskata majątku skazańców to prawny obowiązek trybunału. |
-| `effect` | Zyskaj 3 złota. |
+| `effect` | Zyskaj 3 złota. Wskaż rywala: +1 Herezja. |
 | `lore` | Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -310,7 +310,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
@@ -472,7 +472,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 2 złota. Wskaż rywala: +1 Herezja. |
 | `lore` | Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -487,7 +487,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | Szept z sali tronowej dociera do familiariusza szybciej niż msza. |
 | `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4). |
@@ -1026,7 +1026,7 @@ Kart: **12**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 4 |
-| `heresy` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
 | `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
 | `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
@@ -1060,7 +1060,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę. |

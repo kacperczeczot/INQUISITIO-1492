@@ -71,6 +71,51 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.86 (2026-08-17) — Kanon 4P: Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-03` (Cień na Rynku): `gold` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`94.5`** → **`94.6 pkt`** | Global **`67.4`** | 3p **`45.7`** | 5p **`65.0`**
+- **Modyfikacja (`L3_CAA-05_COST_MINUS1__L3_CAA-03_GOLD_PLUS1`):** Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-03` (Cień na Rynku): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.94, Deadlocks 1.1%, Pas Biedy 5.6%.
+
+### 🟢 Patch v0.85 (2026-08-17) — Kanon 4P: Karta `caa-08` (Kaptur Nocy): `target_heresy` → `1` (Zysk 4P Δ +0.3 pkt)
+- **Wynik 4P:** Kanon **`94.2`** → **`94.5 pkt`** | Global **`68.2`** | 3p **`46.2`** | 5p **`67.0`**
+- **Modyfikacja (`L3_CAA-08_TARGET_HERESY_PLUS1`):** Karta `caa-08` (Kaptur Nocy): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.93, Deadlocks 1.1%, Pas Biedy 5.6%.
+
+### 🟢 Patch v0.84 (2026-08-17) — Kanon 4P: Kabała Toledo: Pasmo Herezji 3–9 (Zysk 4P Δ +1.3 pkt)
+- **Wynik 4P:** Kanon **`92.9`** → **`94.2 pkt`** | Global **`69.6`** | 3p **`45.9`** | 5p **`71.7`**
+- **Modyfikacja (`L2_KT_HERESY_HIGH_PLUS1`):** Kabała Toledo: Pasmo Herezji 3–9.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.93, Deadlocks 1.1%, Pas Biedy 5.5%.
+
+### 🟢 Patch v0.83 (2026-08-17) — Kanon 4P: Karta `gc-12` (Złodziejski Zwiad): `heresy` → `2` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`92.5`** → **`92.9 pkt`** | Global **`68.3`** | 3p **`47.2`** | 5p **`67.3`**
+- **Modyfikacja (`L3_GC-12_HERESY_PLUS1`):** Karta `gc-12` (Złodziejski Zwiad): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.95, Deadlocks 1.2%, Pas Biedy 5.5%.
+
+### 🟢 Patch v0.82 (2026-08-17) — Kanon 4P: Karta `kb-02` (Pobór Podatków): `target_heresy` → `1` (Zysk 4P Δ +2.9 pkt)
+- **Wynik 4P:** Kanon **`89.6`** → **`92.5 pkt`** | Global **`67.6`** | 3p **`47.4`** | 5p **`66.8`**
+- **Modyfikacja (`L3_KB-02_TARGET_HERESY_PLUS1`):** Karta `kb-02` (Pobór Podatków): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.94, Deadlocks 1.2%, Pas Biedy 5.7%.
+
+### 🟢 Patch v0.81 (2026-08-17) — Kanon 4P: Karta `kb-03` (Plotka Dworska): `heresy` → `1` (Zysk 4P Δ +1.8 pkt)
+- **Wynik 4P:** Kanon **`87.8`** → **`89.6 pkt`** | Global **`66.9`** | 3p **`44.4`** | 5p **`69.7`**
+- **Modyfikacja (`L3_KB-03_HERESY_PLUS1`):** Karta `kb-03` (Plotka Dworska): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.01, Deadlocks 1.4%, Pas Biedy 5.8%.
+
+### 🟢 Patch v0.80 (2026-08-17) — Kanon 4P: Karta `gc-01` (Przekupiony Strażnik): `gold` → `1` (Zysk 4P Δ +1.8 pkt)
+- **Wynik 4P:** Kanon **`86.0`** → **`87.8 pkt`** | Global **`64.7`** | 3p **`40.5`** | 5p **`67.3`**
+- **Modyfikacja (`L3_GC-01_GOLD_PLUS1`):** Karta `gc-01` (Przekupiony Strażnik): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.03, Deadlocks 1.4%, Pas Biedy 5.9%.
+
+### 🟢 Patch v0.79 (2026-08-17) — Kanon 4P: Karta `so-02` (Skarbiec Trybunału): `target_heresy` → `1` (Zysk 4P Δ +4.7 pkt)
+- **Wynik 4P:** Kanon **`81.3`** → **`86.0 pkt`** | Global **`63.9`** | 3p **`39.2`** | 5p **`67.1`**
+- **Modyfikacja (`L3_SO-02_TARGET_HERESY_PLUS1`):** Karta `so-02` (Skarbiec Trybunału): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.03, Deadlocks 1.5%, Pas Biedy 5.5%.
+
+### 🟢 Patch v0.78 (2026-08-17) — Kanon 4P: Gildia Cieni: Upadki (bez Oficjum) offset +1 (Zysk 4P Δ +5.1 pkt)
+- **Wynik 4P:** Kanon **`76.2`** → **`81.3 pkt`** | Global **`62.9`** | 3p **`37.7`** | 5p **`69.2`**
+- **Modyfikacja (`L2_GC_FALLS_NO_SO_PLUS1`):** Gildia Cieni: Upadki (bez Oficjum) offset +1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.03, Deadlocks 1.6%, Pas Biedy 5.5%.
+
 ### 🟢 Patch v0.76 (2026-08-17) — 10 nowych kart frakcyjnych (talie 10 → 12)
 - **Wynik 4P:** Kanon **`30.1`** → **`79.6 pkt`** | Global L1 **`35.5`** → **`58.3 pkt`** | 3p **`34.1`** → **`39.5`** | 4p L1 **`34.3`** → **`68.8`** | 5p **`38.1`** → **`66.6`**
 - **Modyfikacja (katalog):** Każda frakcja +2 karty. Cel: mniejsza przewidywalność dociągu (ręka 5/12 zamiast 5/10) bez zmiany zasad stołu.

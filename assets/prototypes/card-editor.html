@@ -1149,6 +1149,7 @@
     "tags": [
       "gold"
     ],
+    "target_heresy": 1,
     "heresy_text": "Konfiskata majątku skazańców to prawny obowiązek trybunału.",
     "lore": "Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie."
   },
@@ -1333,6 +1334,7 @@
       "relic",
       "heresy"
     ],
+    "gold": 1,
     "heresy_text": "Kupcy rozpoznają obce oblicze w tłumie na placu.",
     "lore": "Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień."
   },
@@ -1353,7 +1355,7 @@
     "name": "Ukryty Kurier",
     "type": "akcja",
     "layer": "A",
-    "cost": 1,
+    "cost": 0,
     "evacuate_relic": 1,
     "action": "evacuate_relic",
     "condition": "relic_present",
@@ -1406,6 +1408,7 @@
       "double",
       "heresy"
     ],
+    "target_heresy": 1,
     "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
     "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
   },
@@ -1494,6 +1497,7 @@
     "tags": [
       "gold"
     ],
+    "target_heresy": 1,
     "lore": "Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną.
 "
   },
@@ -1507,6 +1511,7 @@
     "tags": [
       "heresy"
     ],
+    "heresy": 1,
     "heresy_text": "Szept z sali tronowej dociera do familiariusza szybciej niż msza.",
     "lore": "Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4)."
   },
@@ -1828,6 +1833,7 @@
       "move"
     ],
     "heresy": 1,
+    "gold": 1,
     "heresy_text": "Strażnik zna cenę milczenia lepiej niż modlitwy.",
     "lore": "Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż."
   },
@@ -1949,7 +1955,7 @@
     "type": "signature",
     "layer": "C",
     "cost": 4,
-    "heresy": 1,
+    "heresy": 2,
     "mark_fall": true,
     "action": "creates_hook",
     "condition": "rival_has_hook_or_double_or_autodafe",
@@ -1980,7 +1986,7 @@
     "type": "akcja",
     "layer": "A",
     "cost": 0,
-    "heresy": 1,
+    "heresy": 2,
     "agents": 1,
     "gold": 1,
     "action": "move_agent",

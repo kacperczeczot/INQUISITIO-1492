@@ -5,7 +5,7 @@ faction: gildia-cieni
 type: akcja
 layer: A
 cost: 0
-heresy: 1
+heresy: 2
 tags:
 - move
 - gold
@@ -16,4 +16,5 @@ lore: Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze pr
 agents: 1
 gold: 1
 ---
+
 
