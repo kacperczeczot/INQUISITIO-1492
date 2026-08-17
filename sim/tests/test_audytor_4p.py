@@ -11,10 +11,13 @@ if str(TOOLS_SIM) not in sys.path:
 from inquisitio.config_updater import apply_mutation_to_config  # noqa: E402
 from audytor_4p import (  # noqa: E402
     accept_macro_candidate,
+    cheap_funnel_flags,
     drop_dead_path_crutches,
     generate_all_atomic_candidates_macro,
     is_dead_path_crutch,
+    is_frozen_identity_knob,
     lookahead_next_action,
+    macro_vector_beats,
     merge_mutations,
 )
 
@@ -49,6 +52,14 @@ def _dead_skazania_base() -> dict:
     }
 
 
+def test_cheap_funnel_skips_when_pool_fits_top():
+    assert cheap_funnel_flags(20, 48, 24) == (False, False)
+    assert cheap_funnel_flags(24, 48, 24) == (False, False)
+    assert cheap_funnel_flags(30, 48, 24) == (False, True)
+    assert cheap_funnel_flags(48, 48, 24) == (False, True)
+    assert cheap_funnel_flags(60, 48, 24) == (True, True)
+
+
 def test_macro_pool_has_no_cards_or_l3():
     pool = generate_all_atomic_candidates_macro()
     ids = [c[0] for c in pool]
@@ -57,8 +68,6 @@ def test_macro_pool_has_no_cards_or_l3():
     for _tid, _name, params in pool:
         assert "card_overrides" not in params
         assert "disabled_cards" not in params
-    assert all("HAND_LIMIT" not in tid for tid in ids)
-    assert all("AUTODAFE" not in tid for tid in ids)
     assert all("AGENTS" not in tid for tid in ids)
     assert all("VERDICT_SECRET" not in tid for tid in ids)
     assert all("KB_HOOKS" not in tid for tid in ids)
@@ -68,8 +77,6 @@ def test_macro_pool_has_no_cards_or_l3():
     assert all("SEA_ROUTE_OFF" not in tid for tid in ids)
     assert all("INQUISITOR_SPEED0" not in tid for tid in ids)
     for _tid, _name, params in pool:
-        assert "cooldown_offset" not in params
-        assert "autodafe_cooldown" not in params
         assert "agents_offset" not in params
         assert "verdict_secret" not in params
         assert "kb_hooks_offset" not in params
@@ -79,7 +86,13 @@ def test_macro_pool_has_no_cards_or_l3():
         assert "time_deck_freq" not in params
         assert int(params.get("sea_route_era") or 0) < 90
         assert params.get("inquisitor_speed") != 0
+        cd = params.get("autodafe_cooldown")
+        if cd is not None:
+            assert int(cd) not in (0, 99)
     assert all("TIME_DECK" not in tid for tid in ids)
+    assert "L1_HAND_LIMIT_PLUS1" in ids
+    assert "L1_MAX_ERAS_PLUS1" in ids
+    assert "L1_AUTODAFE_COOLDOWN_PLUS1" in ids
 
 
 def test_macro_pool_is_pm1_only():
@@ -90,9 +103,19 @@ def test_macro_pool_is_pm1_only():
     assert "L1_START_GOLD_0" not in ids
     assert "L1_START_GOLD_DOUBLE" not in ids
     assert "L1_MAX_ERAS_HALF" not in ids
-    assert "L1_THRESHOLD_PLUS1" in ids
-    assert "L1_THRESHOLD_MINUS1" in ids
+    assert "L1_MAX_ERAS_PLUS1" in ids
+    assert "L1_MAX_ERAS_MINUS1" in ids
+    assert "L1_OBSERVED_PLUS1" in ids
+    assert "L1_OBSERVED_MINUS1" in ids
+    assert "L1_CARDS_PER_ERA_PLUS1" in ids
+    assert "L1_INTRIGUE_GOLD_PLUS1" in ids
+    assert "L1_INTRIGUE_GOLD_MINUS1" in ids
+    assert "L2_CAA_ERA_PLUS1" in ids
+    assert "L2_SO_CONDEMNS_PLUS1" in ids
+    assert "L4_SEA_ROUTE_ERA_PLUS1" in ids
+    assert "L4_SEA_ROUTE_ERA_MINUS1" in ids
     assert "L1_AUTODAFE_DISABLED" not in ids
+    assert "L1_AUTODAFE_COOLDOWN_PLUS1" in ids
     assert "L4_TIME_DECK_EVERY_2ERAS" not in ids
     assert "L2_GC_FALLS_PLUS1" in ids
     assert "L2_GC_FALLS_DEFAULT_PLUS1" not in ids
@@ -132,6 +155,31 @@ def test_ablation_off_rejected_at_accept():
     d = accept_macro_candidate(base, cand, mode="band", min_delta=0.05)
     assert not d.accepted
     assert "ablacja" in d.reason
+
+
+def test_max_eras_pm1_is_in_apply_pool():
+    assert not is_frozen_identity_knob("L1_MAX_ERAS_PLUS1", {"max_eras_offset": 1})
+    assert not is_frozen_identity_knob("L1_HAND_LIMIT_PLUS1", {"hand_limit_offset": 1})
+    assert not is_frozen_identity_knob("L1_AUTODAFE_COOLDOWN_PLUS1", {"cooldown_offset": 1})
+    ids = {c[0] for c in generate_all_atomic_candidates_macro()}
+    assert "L1_HAND_LIMIT_PLUS1" in ids
+    assert "L1_MAX_ERAS_PLUS1" in ids
+    assert "L1_AUTODAFE_COOLDOWN_PLUS1" in ids
+    assert "L1_OBSERVED_PLUS1" in ids
+    assert "L1_CARDS_PER_ERA_PLUS1" in ids
+    assert "L1_INTRIGUE_GOLD_PLUS1" in ids
+    assert "L1_INTRIGUE_GOLD_MINUS1" in ids
+
+
+def test_macro_vector_beats_requires_score_or_vitality():
+    held = {"score_4p": 73.7, "score_4p_balance": 73.7, "vitality_penalty": 0.0, "deadlock_pct": 1.0}
+    rider = {"score_4p": 73.7, "score_4p_balance": 73.7, "vitality_penalty": 0.0, "deadlock_pct": 0.4}
+    better = {"score_4p": 74.0, "score_4p_balance": 74.0, "vitality_penalty": 0.0, "deadlock_pct": 1.0}
+    vit = {"score_4p": 73.7, "score_4p_balance": 73.7, "vitality_penalty": 0.0, "deadlock_pct": 1.0}
+    assert not macro_vector_beats(rider, held, 0.05)
+    assert macro_vector_beats(better, held, 0.05)
+    held_vit = {**held, "vitality_penalty": 1.2}
+    assert macro_vector_beats(vit, held_vit, 0.05)
 
 
 def test_chronicle_tempo_rejected_at_accept():

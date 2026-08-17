@@ -41,6 +41,12 @@ def build_level4_tests():
         tests.append(("L4_TIME_DECK_EVERY_2ERAS", f"Edykty Czasu: co {cur_freq} Erę → co 2 Ery", {"time_deck_freq": 2}))
 
     cur_sea = getattr(nv, "sea_route_era", 5)
+    tests.append(
+        ("L4_SEA_ROUTE_ERA_PLUS1", f"Szlak Morski: Era {cur_sea} → {cur_sea + 1}", {"sea_route_era_offset": 1})
+    )
+    tests.append(
+        ("L4_SEA_ROUTE_ERA_MINUS1", f"Szlak Morski: Era {cur_sea} → {cur_sea - 1}", {"sea_route_era_offset": -1})
+    )
     if cur_sea != 4:
         tests.append(("L4_SEA_ROUTE_ERA4", f"Szlak Morski: Era {cur_sea} → Era 4", {"sea_route_era": 4}))
 

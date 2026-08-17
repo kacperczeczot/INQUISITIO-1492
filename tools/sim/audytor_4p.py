@@ -6,10 +6,11 @@ Audytora Kanonu, zoptymalizowany pod kątem parametrów makro (L1, L2, L4) bez k
 
 Główne założenia metodologiczne:
   1. Kanon 4P (5 setupów 4-osobowych) — ten sam lejek co Audytor Kanonu, **bez L3 / kart**.
-  2. Pula apply = `audit_level1/2/4` ±1 (jak kanon, bez L3). Zero ablacji / skrajów
-     z `feature_impact_4p`. Tożsamość: limit ręki, Autodafé, agenci, Werdykt Tajny,
-     tempo Kroniki (1 edykt/erę). Próg oskarżenia zostaje (tempo sądu).
-     Nie wskrzeszać haków / pasma / ery Korony.
+  2. Pula apply = żywe `±1` L1/L2 (złoto, próg, Er, era Kabały, CD Autodafé, ręka, liczniki C).
+     Poza apply (klasa ruchu, nie freeze wartości): ablacja/skraj, tempo Kroniki, Werdykt Tajny,
+     agenci (SKU), split upadków, wskrzeszanie skasowanego YAML. Lookahead 2D/3D **zapisuje**
+     zweryfikowany wektor (komplementarność). Głębiej tylko gdy 4P score/witalność bije held
+     o `min_delta` — jeździec Δ≈0 (np. Er 12→13 przy tym samym wyniku) nie wchodzi.
   3. **Lookahead +1D:** nie wdraża poprawy na głębokości, na której ją znalazł — zawsze
      zagląda jedną warstwę głębiej (1D→2D zawsze, dalej tylko gdy nowa głębokość bije held).
      Jeśli głębiej nic lepszego, wdraża wcześniejszy wektor. 1D bez zysku i tak idzie w 2D.
@@ -211,10 +212,9 @@ _DEAD_PATH_CRUTCH = (
     ("stosy", "so_stacks_offset"),
 )
 
-# Fundament stołu — audytor nie kręci HUD-em (jak Autodafé / limit ręki).
+# Klasa ruchu poza makro: SKU figurek, warstwa Kroniki, tajny Werdykt, skasowane klauzule.
+# Żywe ±1 (złoto, Gospodarcza, próg oskarżenia, Obserwowana, Er, karty/erę, era KT/CAA, CD Autodafé, ręka, liczniki C, szlak ±1)
 _FROZEN_ID_MARKERS = (
-    "HAND_LIMIT",
-    "AUTODAFE",
     "AGENTS",
     "VERDICT_SECRET",
     "KB_HOOKS",
@@ -223,9 +223,6 @@ _FROZEN_ID_MARKERS = (
     "TIME_DECK",
 )
 _FROZEN_PARAM_KEYS = (
-    "hand_limit_offset",
-    "cooldown_offset",
-    "autodafe_cooldown",
     "agents_offset",
     "agents_per_player",
     "verdict_secret",
@@ -249,6 +246,34 @@ def is_frozen_identity_knob(tid: str, params: dict) -> bool:
     if any(m in tid for m in _FROZEN_ID_MARKERS):
         return True
     return any(k in params for k in _FROZEN_PARAM_KEYS)
+
+
+# Jedna liczba na stół (spłaszczanie). Format 3p/5p nie zapisuje tych gałek —
+# inaczej nadpisałyby kanon 4P albo zrobiłyby nowy split 3p/4p/5p.
+_TABLE_WIDE_PARAM_KEYS = (
+    "observed_threshold_offset",
+    "observed_threshold",
+    "cards_per_era_offset",
+    "intrigue_gold_offset",
+    "era_income_offset",
+    "max_eras_offset",
+    "max_eras",
+    "hand_limit_offset",
+    "cooldown_offset",
+    "autodafe_cooldown",
+    "sea_route_era_offset",
+    "sea_route_era",
+    "inquisitor_speed",
+)
+
+
+def is_table_wide_canon_knob(_tid: str, params: dict) -> bool:
+    return any(k in params for k in _TABLE_WIDE_PARAM_KEYS)
+
+
+def strip_table_wide_canon_params(params: dict) -> dict:
+    """Drop table-wide keys so 3p/5p apply cannot smash 4P canon."""
+    return {k: v for k, v in params.items() if k not in _TABLE_WIDE_PARAM_KEYS}
 
 
 def is_ablation_off(tid: str, params: dict) -> bool:
@@ -344,6 +369,30 @@ def accept_format_exception(
     if delta < min_delta:
         return AcceptDecision(False, f"Δ {delta:.2f} < min_delta {min_delta}", "legacy")
     return AcceptDecision(True, f"Δ {delta:+.2f} (wyjątek formatu)", "legacy")
+
+
+def cheap_funnel_flags(n: int, top_semifinalists: int, top_k: int) -> tuple[bool, bool]:
+    """Cheap screens only if they can drop candidates. Confirm always runs.
+
+    Returns (run_fast, run_screen). If n ≤ top_k, both False — only ultra.
+    """
+    run_fast = n > top_semifinalists
+    after_fast = min(n, top_semifinalists) if run_fast else n
+    run_screen = after_fast > top_k
+    return run_fast, run_screen
+
+
+def _score_4p(res: dict) -> float:
+    return float(res.get("score_4p_balance", res.get("score_4p", 0)) or 0)
+
+
+def macro_vector_beats(challenger: dict, held: dict, min_delta: float) -> bool:
+    """Deeper layer must move 4P score or vitality — not deadlock hygiene at Δscore ≈ 0."""
+    d_score = _score_4p(challenger) - _score_4p(held)
+    d_vit = float(held.get("vitality_penalty", 0) or 0) - float(challenger.get("vitality_penalty", 0) or 0)
+    if d_vit > 1e-9:
+        return True
+    return d_score >= float(min_delta)
 
 
 def lookahead_next_action(
@@ -638,8 +687,7 @@ class Macro4PAutoBalancer:
         print(f"Maksymalny czas sesji:      {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
         print(f"Maksymalnie patchów:        {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
         print(f"Kanon Setupy:               {', '.join(CANONICAL_4P_SETUPS)}")
-        print(f"Etap 1 (Szybki przesiew):   {self.args.fast_games} gier/setup ({len(CANONICAL_4P_SETUPS)} setupów 4p)")
-        print(f"Etap 2 (Głęboki przesiew):  {self.args.screen_games} gier/setup (TOP {self.args.top_semifinalists} półfinalistów)")
+        print(f"Etap 1/2:                   tanie tylko gdy pula > TOP {self.args.top_semifinalists}/{self.args.top_k} (inaczej samo ultra {self.args.confirm_games} g)")
         print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
         print(f"Lookahead +1D:              max głębokość {self.args.max_depth}D (1D zawsze zagląda w 2D)")
         print(f"Wątki procesora:            {self.args.workers}")
@@ -749,32 +797,39 @@ class Macro4PAutoBalancer:
                         search_exhausted = True
                     break
                 cand_dict = {c[0]: c for c in candidate_pool}
+                run_fast, run_screen = cheap_funnel_flags(
+                    len(candidate_pool), self.args.top_semifinalists, self.args.top_k
+                )
+                survivors = list(candidate_pool)
 
-                # 3. ETAP 1/3: Szybki Przesiew na 5 setupach 4P
-                print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
-                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
-                stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label=f"Przesiew 4P 1/3")
+                if run_fast:
+                    print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(survivors)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
+                    stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in survivors]
+                    stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label=f"Przesiew 4P 1/3")
+                    stage1_results.sort(key=self._rank)
+                    n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+                    survivors = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
+                else:
+                    print(
+                        f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): "
+                        f"{len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie."
+                    )
 
-                stage1_results.sort(key=self._rank)
+                if run_screen:
+                    print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam {len(survivors)} ({self.args.screen_games} gier/setup × 5 setupów) ---")
+                    stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in survivors]
+                    stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label=f"Przesiew 4P 2/3")
+                    stage2_results.sort(key=self._rank)
+                    n_finalists = min(self.args.top_k, len(stage2_results))
+                    survivors = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
+                else:
+                    print(
+                        f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): "
+                        f"{len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra."
+                    )
 
-                n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-                semifinalist_results = stage1_results[:n_semifinalists]
-                semifinalist_candidates = [cand_dict[r["id"]] for r in semifinalist_results]
-
-                # 4. ETAP 2/3: Głęboki Przesiew 4P
-                print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam TOP {len(semifinalist_candidates)} półfinalistów ({self.args.screen_games} gier/setup × 5 setupów) ---")
-                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
-                stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label=f"Przesiew 4P 2/3")
-
-                stage2_results.sort(key=self._rank)
-
-                n_finalists = min(self.args.top_k, len(stage2_results))
-                finalist_results = stage2_results[:n_finalists]
-                finalist_candidates = [cand_dict[r["id"]] for r in finalist_results]
-
-                # 5. ETAP 3/3: Weryfikacja Ultra 4P
-                print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup × 5 setupów) ---")
-                stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
+                print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję {len(survivors)} ({self.args.confirm_games} gier/setup × 5 setupów) ---")
+                stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in survivors]
                 stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label=f"Weryfikacja 4P 3/3")
 
                 stage3_results.sort(key=self._rank)
@@ -805,7 +860,9 @@ class Macro4PAutoBalancer:
                 elif pending_res is None:
                     found_better = True
                 else:
-                    found_better = self._rank(best_ver_res) < self._rank(pending_res)
+                    found_better = macro_vector_beats(
+                        best_ver_res, pending_res, self.args.min_delta
+                    )
 
                 action = lookahead_next_action(
                     depth=current_phase,

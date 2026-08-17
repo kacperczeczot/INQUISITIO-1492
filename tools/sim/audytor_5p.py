@@ -6,7 +6,8 @@ oparty na identycznej architekturze jak Audytor Kanonu 4P.
 
 Główne założenia metodologiczne:
   1. Setup 5-osobowy: 5p-full (12 obcych agentów przy stole).
-  2. Talia kart (L3) i Kanon 4P są w 100% NIENARUSZALNE.
+  2. Talia kart (L3), Kanon 4P i gałki całego stołu (Obserwowana, karty/erę,
+     Gospodarcza, Er, CD Autodafé, szlak) są NIENARUSZALNE — zapis tylko `5p:`.
   3. Błyskawiczny 3-Stopniowy Lejek Sukcesywnej Selekcji (L1 + L2 + L4):
      - Etap 1 (Szybki Przesiew): 500 gier -> TOP 24 półfinalistów (~1.5s)
      - Etap 2 (Głęboki Przesiew): 1500 gier -> TOP 12 finalistów (~3s)
@@ -64,9 +65,12 @@ import audit_level2
 import audit_level4
 from audytor_4p import (
     accept_format_exception,
+    cheap_funnel_flags,
     drop_dead_path_crutches,
     is_ablation_off,
     is_frozen_identity_knob,
+    is_table_wide_canon_knob,
+    strip_table_wide_canon_params,
     lookahead_next_action,
 )
 
@@ -170,7 +174,7 @@ def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: i
 
 
 def generate_all_atomic_candidates_5p() -> list[tuple[str, str, dict]]:
-    """L1/L2/L4 for 5P exceptions. No L3; frozen table identity stays out of the pool."""
+    """L1/L2/L4 for 5P exceptions. No L3; SKU/ablation/Kronika stay out of the pool."""
     tests = []
     for builder, baza in (
         (audit_level1.build_level1_tests, "L1_BAZA"),
@@ -179,6 +183,8 @@ def generate_all_atomic_candidates_5p() -> list[tuple[str, str, dict]]:
     ):
         for t in builder():
             if t[0] == baza or is_frozen_identity_knob(t[0], t[2]) or is_ablation_off(t[0], t[2]):
+                continue
+            if is_table_wide_canon_knob(t[0], t[2]):
                 continue
             tests.append(t)
     return tests
@@ -204,6 +210,7 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
 def apply_mutation_to_5p_config(raw_cfg: dict[str, Any], rule_params: dict[str, Any]) -> tuple[dict[str, Any], str]:
     """Applies parameter overrides directly to 5p sections in config dict."""
     cfg = copy.deepcopy(raw_cfg)
+    rule_params = strip_table_wide_canon_params(rule_params)
     descs = []
 
     def _set_5p(section_dict: dict, key: str, default_val: Any, offset: Any, desc_name: str):
@@ -577,23 +584,39 @@ class AutoBalancer5P:
                         search_exhausted = True
                     break
                 cand_dict = {c[0]: c for c in candidate_pool}
+                run_fast, run_screen = cheap_funnel_flags(
+                    len(candidate_pool), self.args.top_semifinalists, self.args.top_k
+                )
+                survivors = list(candidate_pool)
 
-                print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 5P] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier (5p-full)) ---")
-                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
-                stage1_results = self._execute_pool(_run_single_test_task_5p, stage1_tasks, label="Przesiew 5P 1/3")
-                stage1_results.sort(key=lambda r: r["score_5p"], reverse=True)
-                n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-                semifinalist_candidates = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
+                if run_fast:
+                    print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 5P] Testuję {len(survivors)} kandydatów ({self.args.fast_games} gier (5p-full)) ---")
+                    stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in survivors]
+                    stage1_results = self._execute_pool(_run_single_test_task_5p, stage1_tasks, label="Przesiew 5P 1/3")
+                    stage1_results.sort(key=lambda r: r["score_5p"], reverse=True)
+                    n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+                    survivors = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
+                else:
+                    print(
+                        f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): "
+                        f"{len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie."
+                    )
 
-                print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 5P] Badam TOP {len(semifinalist_candidates)} półfinalistów ({self.args.screen_games} gier (5p-full)) ---")
-                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
-                stage2_results = self._execute_pool(_run_single_test_task_5p, stage2_tasks, label="Przesiew 5P 2/3")
-                stage2_results.sort(key=lambda r: r["score_5p"], reverse=True)
-                n_finalists = min(self.args.top_k, len(stage2_results))
-                finalist_candidates = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
+                if run_screen:
+                    print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 5P] Badam {len(survivors)} ({self.args.screen_games} gier (5p-full)) ---")
+                    stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in survivors]
+                    stage2_results = self._execute_pool(_run_single_test_task_5p, stage2_tasks, label="Przesiew 5P 2/3")
+                    stage2_results.sort(key=lambda r: r["score_5p"], reverse=True)
+                    n_finalists = min(self.args.top_k, len(stage2_results))
+                    survivors = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
+                else:
+                    print(
+                        f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): "
+                        f"{len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra."
+                    )
 
-                print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 5P] Weryfikuję TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier (5p-full)) ---")
-                stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
+                print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 5P] Weryfikuję {len(survivors)} ({self.args.confirm_games} gier (5p-full)) ---")
+                stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in survivors]
                 stage3_results = self._execute_pool(_run_single_test_task_5p, stage3_tasks, label="Weryfikacja 5P 3/3")
                 stage3_results.sort(key=lambda r: r["score_5p"], reverse=True)
 

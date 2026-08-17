@@ -67,6 +67,25 @@ def apply_mutation_to_config(
         off = rule_params["threshold_offset"]
         sys_cfg["accusation_threshold"] = _apply_offset_to_item(sys_cfg["accusation_threshold"], off, min_val=1)
         descriptions.append(f"Próg oskarżenia: offset {off:+d}")
+    if "observed_threshold_offset" in rule_params:
+        off = rule_params["observed_threshold_offset"]
+        sys_cfg["observed_threshold"] = max(1, int(sys_cfg.get("observed_threshold", 4)) + off)
+        descriptions.append(f"Próg Obserwowanej: offset {off:+d} (nowy: {sys_cfg['observed_threshold']})")
+    if "observed_threshold" in rule_params:
+        sys_cfg["observed_threshold"] = max(1, int(rule_params["observed_threshold"]))
+        descriptions.append(f"Próg Obserwowanej: {sys_cfg['observed_threshold']}")
+    if "cards_per_era_offset" in rule_params:
+        off = rule_params["cards_per_era_offset"]
+        sys_cfg["cards_per_era"] = max(1, int(sys_cfg.get("cards_per_era", 2)) + off)
+        descriptions.append(f"Karty/Erę: offset {off:+d} (nowy: {sys_cfg['cards_per_era']})")
+    if "era_income_offset" in rule_params:
+        off = rule_params["era_income_offset"]
+        sys_cfg["era_income"] = max(0, int(sys_cfg.get("era_income", 1)) + off)
+        descriptions.append(f"Dochód Ery: offset {off:+d} (nowy: {sys_cfg['era_income']})")
+    if "intrigue_gold_offset" in rule_params:
+        off = rule_params["intrigue_gold_offset"]
+        sys_cfg["intrigue_gold"] = max(0, int(sys_cfg.get("intrigue_gold", 1)) + off)
+        descriptions.append(f"Akcja Gospodarcza: offset {off:+d} (nowy: {sys_cfg['intrigue_gold']})")
     if "max_eras_offset" in rule_params:
         off = rule_params["max_eras_offset"]
         sys_cfg["max_eras"] = max(1, sys_cfg.get("max_eras", 8) + off)
@@ -172,6 +191,10 @@ def apply_mutation_to_config(
     if "sea_route_era" in rule_params:
         var_cfg["sea_route_era"] = rule_params["sea_route_era"]
         descriptions.append(f"Wariant: Otwarcie Szlaku Morskiego = Era {var_cfg['sea_route_era']}")
+    if "sea_route_era_offset" in rule_params:
+        off = int(rule_params["sea_route_era_offset"])
+        var_cfg["sea_route_era"] = max(1, int(var_cfg.get("sea_route_era", 4)) + off)
+        descriptions.append(f"Wariant: Szlak Morski offset {off:+d} (nowy: Era {var_cfg['sea_route_era']})")
     if "inquisitor_speed" in rule_params:
         var_cfg["inquisitor_speed"] = rule_params["inquisitor_speed"]
         descriptions.append(f"Wariant: Prędkość Ruchu Inkwizytora = {var_cfg['inquisitor_speed']}")
