@@ -86,6 +86,13 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.99.2 (2026-08-18) — L2: Oficjum stosy 7 → 6
+
+- **Źródło:** `audyt_level2_raport.md` v0.99.1 (3000 g/setup): baza 4P **16,5 pkt**; stosy 7→6 **+7,5** na 4P, telemetria 🟢 (6,8 Er, DL 13,2%).
+- **SSOT:** `victory.swiete_oficjum.stacks` **6** (skazania 3 bez zmian).
+- **Bez:** skazania 2, upadki 8 (DL 18,5%), fragmenty 2, dekrety ±1.
+- **Następny krok:** telemetria udziałów 4P; audytor makro nadal stop do 15–35%.
+
 ### 🟢 Patch v0.99.1 (2026-08-18) — L3 ręcznie: GC disruptory + KT start
 
 - **Źródło:** `audyt_level3_raport.md` v0.99 + impact 4P (gc-06/09 disruptory, KT ~8.7%).

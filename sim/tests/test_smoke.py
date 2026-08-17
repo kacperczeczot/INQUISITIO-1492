@@ -326,7 +326,7 @@ def test_so_condemns_win_without_full_stacks():
     }
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
     so.condemned_rivals = set()
-    so.stacks = 7
+    so.stacks = 6
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
 
 
@@ -370,7 +370,7 @@ def test_oficjum_snowball_threat_is_one_shy_not_early():
     so.stacks = 2
     so.condemned_rivals = {FactionId.CIENIE_AL_ANDALUS}
     assert oficjum_snowball_threat(st) is False
-    so.stacks = 6
+    so.stacks = 5
     assert oficjum_snowball_threat(st) is True
     so.stacks = 0
     so.condemned_rivals = {
