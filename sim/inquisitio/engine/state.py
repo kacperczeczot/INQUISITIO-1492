@@ -81,6 +81,16 @@ class PlayerState:
     interrogate_count: int = 0
     kurier_count: int = 0
     vote_change_count: int = 0
+    used_puppet_move: bool = False
+
+
+@dataclass
+class StagedPlay:
+    """Face-down intrigue card; effect resolves in Faza II (odkrycie)."""
+    owner: FactionId
+    card_id: str
+    location: str
+    seq: int = 0
 
 
 @dataclass
@@ -105,6 +115,7 @@ class GameState:
     era: int = 1
     max_eras: int = 8
     accusation_threshold: int = 7
+    observed_threshold: int = 4
     inquisitor_location: str = "trybunal"
     inquisitor_mode: InquisitorMode = InquisitorMode.PATROL
     eras_since_autodafe: int = 0
@@ -121,6 +132,8 @@ class GameState:
     rng_seed: int = 0
     layer: str = "C"  # A, B, or C content enabled
     sys_overrides: dict = field(default_factory=dict)
+    pending_plays: list[StagedPlay] = field(default_factory=list)
+    accused_this_era: set[FactionId] = field(default_factory=set)
 
     def alive_factions(self) -> list[FactionId]:
         return list(self.turn_order)
@@ -129,9 +142,9 @@ class GameState:
         self.log.append(f"E{self.era}: {msg}")
 
 
-def heresy_zone(value: int, critical_min: int = 7) -> str:
-    """Clean 0–3; observed until accusation threshold; critical at threshold+."""
-    if value <= 3:
+def heresy_zone(value: int, critical_min: int = 7, observed_min: int = 4) -> str:
+    """Czysta < observed_min; Obserwowana until accusation; Krytyczna at threshold+."""
+    if value < observed_min:
         return "czysta"
     if value < critical_min:
         return "obserwowana"

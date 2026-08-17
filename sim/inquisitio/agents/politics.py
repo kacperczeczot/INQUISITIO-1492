@@ -30,11 +30,18 @@ class PoliticsAgent:
             curfew_cost = 1 if (state.active_time_edict == "time-02" and c.location in ("rynek", "gildia")) else 0
             return max(0, c.cost + card_cost_offset + s_off + curfew_cost)
 
-        # ── 1. Tactical Reservation Value of Passing (V_pass) ──
-        # In a board game, passing to conserve gold and avoid unnecessary heresy is a fundamental tactical option.
-        v_pass = 0.2
+        # ── 1. Value of Akcja Gospodarcza (always legal; pays gold now) ──
+        v_econ = 0.35
+        if "intrigue_gold_offset" in sys:
+            econ_gold = max(0, CONFIG.intrigue_gold() + int(sys["intrigue_gold_offset"]))
+        else:
+            econ_gold = int(sys.get("intrigue_gold", CONFIG.intrigue_gold()))
+        on_rynek = any(ag.location == "rynek" and not ag.arrested for ag in pl.agents)
+        if state.active_time_edict == "time-09" and on_rynek:
+            econ_gold = max(econ_gold, 2)
+        v_econ = econ_gold * 1.8 + 0.8  # gold now + optional agent step
 
-        # Check if holding a critical finisher or signature card that we cannot yet afford but could afford next era (+1 gold):
+        # Finisher one gold short: Gospodarcza this round funds it (same era or next)
         finishers = [
             cards[cid] for cid in pl.hand
             if cards.get(cid) and (
@@ -47,14 +54,12 @@ class PoliticsAgent:
         ]
         for fin in finishers:
             fin_cost = _effective_cost(fin)
-            if fin_cost > pl.gold and (pl.gold + 1 >= fin_cost):
-                # If saving our gold allows firing the finisher next era:
-                v_pass = max(v_pass, 2.5)
+            if fin_cost > pl.gold and (pl.gold + econ_gold >= fin_cost):
+                v_econ = max(v_econ, 2.5)
                 break
 
-        # If low on gold (1g) and no urgent threat, conserve gold for next era's card draw:
         if pl.gold <= 1:
-            v_pass = max(v_pass, 0.8)
+            v_econ = max(v_econ, 0.8 + econ_gold * 1.8)
 
         # ── 2. Utility Evaluation for Each Legal Card ──
         scored: list[tuple[float, str]] = []
@@ -187,10 +192,9 @@ class PoliticsAgent:
 
         scored.sort(reverse=True)
 
-        # ── 3. Rational Decision Gate (Play vs Tactical Pass) ──
+        # ── 3. Play card vs Akcja Gospodarcza (None → +gold, not a skip) ──
         best_u, best_cid = scored[0]
-        if best_u < v_pass:
-            # All available plays have lower expected utility than keeping resources / passing
+        if best_u < v_econ:
             return None
 
         return best_cid

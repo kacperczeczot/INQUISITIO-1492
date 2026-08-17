@@ -205,6 +205,11 @@ def test_ssot_win_paths_match_yaml():
     caa.path_via_double = True
     st.era = 8
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
+    st.era = 3
+    got = check_winner_details(st)
+    assert got is None or got[0] != FactionId.CIENIE_AL_ANDALUS
+    st.era = 4
+    assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 
     st5 = new_game(setup="5p-full", seed=1, layer="C")
     caa5 = st5.players[FactionId.CIENIE_AL_ANDALUS]
@@ -233,6 +238,8 @@ def test_ssot_win_paths_match_yaml():
     gc2.falls = 4
     assert check_winner_details(st_noso) == (FactionId.GILDIA_CIENI, "gc_falls")
 
+    assert heresy_zone(3, critical_min=7, observed_min=4) == "czysta"
+    assert heresy_zone(4, critical_min=7, observed_min=4) == "obserwowana"
     assert heresy_zone(5, critical_min=6) == "obserwowana"
     assert heresy_zone(6, critical_min=6) == "krytyczna"
     assert heresy_zone(6, critical_min=7) == "obserwowana"
@@ -338,12 +345,15 @@ def test_layer_c_verdict_table_feeds_condemns_so_feeds_stacks():
     assert run_verdict(st, FactionId.KORONA_BORGIOWIE, FactionId.CIENIE_AL_ANDALUS, rng)
     assert FactionId.CIENIE_AL_ANDALUS in so.condemned_rivals
     assert so.stacks == 0
+    assert any(ag.arrested for ag in caa.agents)
 
+    st.accused_this_era.clear()
     assert run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.KORONA_BORGIOWIE, rng)
     assert FactionId.KORONA_BORGIOWIE in so.condemned_rivals
     assert so.stacks == 1
 
     kb.heresy = 10
+    st.accused_this_era.clear()
     assert run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.KORONA_BORGIOWIE, rng)
     assert so.condemned_rivals == {
         FactionId.CIENIE_AL_ANDALUS,

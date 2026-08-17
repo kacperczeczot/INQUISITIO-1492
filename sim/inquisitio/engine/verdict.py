@@ -44,7 +44,7 @@ def eligible_accused(state: GameState) -> list[FactionId]:
     return [
         fid
         for fid, pl in state.players.items()
-        if is_critical(pl, threshold)
+        if is_critical(pl, threshold) and fid not in state.accused_this_era
     ]
 
 
@@ -60,6 +60,9 @@ def run_verdict(
         return False
     if accuser == accused:
         return False
+    if accused in state.accused_this_era:
+        return False
+    state.accused_this_era.add(accused)
     state.metrics.accusations += 1
     votes_burn = 0
     votes_spare = 0
@@ -123,12 +126,10 @@ def run_verdict(
     )
     if convicted:
         state.metrics.convictions += 1
-        pl = state.players[accused]
-        # remove one free agent to stack
-        for ag in list(pl.agents):
-            if not ag.arrested:
-                pl.agents.remove(ag)
-                break
+        add_heresy(state, accused, 1, reason="verdict_convict")
+        from inquisitio.engine.dungeon import arrest_agent
+
+        arrest_agent(state, accused)
         if FactionId.SWIETE_OFICJUM in state.players:
             so_pl = state.players[FactionId.SWIETE_OFICJUM]
             # Unikalne skazania: każdy Werdykt na rywalu (stół może karmić 3 Skazania).
@@ -141,14 +142,11 @@ def run_verdict(
                     so_pl.stacks += 1
             elif state.layer != "B" or accuser == FactionId.SWIETE_OFICJUM:
                 so_pl.stacks += 1
-        # Gildia fall: accuse with leverage, or 40% if your Hak-victim is condemned by anyone
+        # Gildia fall: Hak-victim convicted → Upadek
         if FactionId.GILDIA_CIENI in state.players and accused != FactionId.GILDIA_CIENI:
             gp = state.players[FactionId.GILDIA_CIENI]
             leveraged = accused in gp.hook_victims_ever
-            p_fall = 0.25 if state.layer == "B" else 0.4
-            if leveraged and (
-                accuser == FactionId.GILDIA_CIENI or rng.random() < p_fall
-            ):
+            if leveraged:
                 gp.falls += 1
                 state.add_log(f"gildia-cieni fall via hooked verdict (total={gp.falls})")
         # mark fall for gildia tracking if hook/double context — handled elsewhere

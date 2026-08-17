@@ -14,13 +14,44 @@ from inquisitio.engine.hooks import (
     grant_hook,
 )
 from inquisitio.engine.inquisitor import neighbors, resolve_autodafe, send_inquisitor
-from inquisitio.engine.state import FactionId, GameState
+from inquisitio.engine.state import (
+    LOCATIONS,
+    FactionId,
+    GameState,
+    StagedPlay,
+    heresy_zone,
+)
+from inquisitio.engine.table_ai import card_fiasco, choose_optional_agent_dest, choose_play_location
 
 Handler = Callable[[GameState, FactionId, Card, random.Random], None]
 
 
 def _neighbors(loc: str) -> list[str]:
     return neighbors(loc)
+
+
+def optional_agent_step(state: GameState, fid: FactionId, rng: random.Random) -> None:
+    """Księga: przy Opcji A/B opcjonalnie 1 Agent o max 1 lokację."""
+    choice = choose_optional_agent_dest(state, fid)
+    if not choice:
+        return
+    idx, dest = choice
+    pl = state.players[fid]
+    if idx >= len(pl.agents):
+        return
+    ag = pl.agents[idx]
+    if ag.arrested:
+        return
+    prev = ag.location
+    if dest not in _neighbors(prev) and dest != prev:
+        return
+    ag.location = dest
+    if prev != dest:
+        state.add_log(f"{fid.value} agent {prev}→{dest}")
+
+
+def _play_location(state: GameState, fid: FactionId, card: Card) -> str:
+    return choose_play_location(state, fid, card)
 
 
 def _move_agent(state: GameState, fid: FactionId, rng: random.Random, n: int = 1) -> None:
@@ -40,16 +71,6 @@ def _move_agent(state: GameState, fid: FactionId, rng: random.Random, n: int = 1
             ag.location = dest
             if prev != dest:
                 state.add_log(f"{fid.value} agent {prev}→{dest}")
-                # Cienie: agent may drag a Relic toward harbors (A teach needs drag for 2nd)
-                if (
-                    fid == FactionId.CIENIE_AL_ANDALUS
-                    and state.relics_on_board.get(prev, 0) > 0
-                    and rng.random()
-                    < {"A": 0.55, "B": 0.70, "C": 0.55}.get(state.layer, 0.55)
-                ):
-                    state.relics_on_board[prev] -= 1
-                    state.relics_on_board[dest] = state.relics_on_board.get(dest, 0) + 1
-                    state.add_log(f"{fid.value} dragged relic {prev}→{dest}")
 
 
 def _pick_rival(state: GameState, fid: FactionId, rng: random.Random) -> FactionId | None:
@@ -207,14 +228,11 @@ def _so_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
             interrogate(state, fid, rival, rng)
     elif card.id in ("so-04", "so-08"):
         pl = state.players[fid]
-        limit = card.raw.get("inquisitor_send_limit", 1) if isinstance(card.raw, dict) else 1
-        if pl.inquisitor_send_count >= limit:
+        if pl.used_inquisitor_send:
             return
         locs = [ag.location for ag in pl.agents if not ag.arrested]
         if locs:
             send_inquisitor(state, fid, rng.choice(locs))
-            pl.inquisitor_send_count += 1
-            pl.used_inquisitor_send = True
     elif card.id == "so-10":
         # apply_generic already paid heresy cost; now fire the Autodafé.
         resolve_autodafe(state, force=True)
@@ -329,44 +347,38 @@ FACTION_HANDLERS: dict[str, Handler] = {
 }
 
 
-def play_card(state: GameState, fid: FactionId, card_id: str, rng: random.Random) -> bool:
-    sys = state.sys_overrides or {}
-    cards = load_all_cards(card_overrides=sys.get("card_overrides"))
-    card = cards.get(card_id)
-    if not card:
-        return False
-    pl = state.players[fid]
-    if card_id not in pl.hand:
-        return False
+def _card_cost(state: GameState, card: Card) -> int:
     sys = state.sys_overrides or {}
     card_cost_offset = sys.get("card_cost_offset", CONFIG.economy.card_cost_offset)
     sig_offset = sys.get("sig_cost_offset", CONFIG.economy.sig_cost_offset) if (card.breaks_rule or card.type == "signature") else 0
     curfew_cost = 1 if (state.active_time_edict == "time-02" and card.location in ("rynek", "gildia")) else 0
-    cost = max(0, card.cost + card_cost_offset + sig_offset + curfew_cost)
-    if pl.gold < cost:
-        return False
-    gold_before = pl.gold
-    pl.gold -= cost
-    pl.hand.remove(card_id)
-    pl.discard.append(card_id)
+    return max(0, card.cost + card_cost_offset + sig_offset + curfew_cost)
+
+
+def resolve_card_effects(
+    state: GameState,
+    fid: FactionId,
+    card: Card,
+    rng: random.Random,
+    *,
+    staged_loc: str | None = None,
+) -> None:
+    loc = staged_loc or _play_location(state, fid, card)
+    if card_fiasco(state, fid, card, loc):
+        state.add_log(f"{fid.value} {card.id} fiasko at {loc} (no heresy)")
+        state.metrics.cards_played += 1
+        return
+    sys = state.sys_overrides or {}
+    cards = load_all_cards(card_overrides=sys.get("card_overrides"))
     handler = FACTION_HANDLERS.get(card.faction, apply_generic)
     handler(state, fid, card, rng)
     state.metrics.cards_played += 1
-    name = card.name
-    suffix = " [signature]" if card.breaks_rule or card.type == "signature" else ""
-    paid = f" paid {cost}" if cost else ""
-    state.add_log(f"{fid.value} played {card_id} ({name}){suffix}{paid}")
-    if cost and pl.gold != gold_before:
-        state.add_log(f"{fid.value} gold after cost {gold_before}→{pl.gold}")
-
-    # ── Reaction: so-05 (Wezwanie do Trybunału) ──
-    # Trigger: rival_plays_heresy_gte_1
     if ((card.heresy and card.heresy >= 1) or (card.target_heresy and card.target_heresy >= 1)):
         if FactionId.SWIETE_OFICJUM in state.players and fid != FactionId.SWIETE_OFICJUM:
             so_pl = state.players[FactionId.SWIETE_OFICJUM]
             if "so-05" in so_pl.hand:
                 so_card = cards.get("so-05")
-                so_cost = max(0, so_card.cost + card_cost_offset) if so_card else 0
+                so_cost = max(0, so_card.cost + sys.get("card_cost_offset", CONFIG.economy.card_cost_offset)) if so_card else 0
                 if so_pl.gold >= so_cost:
                     so_pl.gold -= so_cost
                     so_pl.hand.remove("so-05")
@@ -377,7 +389,68 @@ def play_card(state: GameState, fid: FactionId, card_id: str, rng: random.Random
                     state.add_log(
                         f"swiete-oficjum reaction so-05 (Wezwanie do Trybunału) on {fid.value} (+{target_h} heresy)"
                     )
+
+
+def play_card(
+    state: GameState,
+    fid: FactionId,
+    card_id: str,
+    rng: random.Random,
+    *,
+    resolve: bool = True,
+) -> bool:
+    sys = state.sys_overrides or {}
+    cards = load_all_cards(card_overrides=sys.get("card_overrides"))
+    card = cards.get(card_id)
+    if not card:
+        return False
+    pl = state.players[fid]
+    if card_id not in pl.hand:
+        return False
+    cost = _card_cost(state, card)
+    if pl.gold < cost:
+        return False
+    gold_before = pl.gold
+    pl.gold -= cost
+    pl.hand.remove(card_id)
+    loc = _play_location(state, fid, card)
+    name = card.name
+    suffix = " [signature]" if card.breaks_rule or card.type == "signature" else ""
+    paid = f" paid {cost}" if cost else ""
+    if not resolve:
+        state.pending_plays.append(
+            StagedPlay(owner=fid, card_id=card_id, location=loc, seq=len(state.pending_plays))
+        )
+        state.add_log(f"{fid.value} staged {card_id} ({name}) under {loc}{suffix}{paid}")
+        if cost and pl.gold != gold_before:
+            state.add_log(f"{fid.value} gold after cost {gold_before}→{pl.gold}")
+        return True
+    pl.discard.append(card_id)
+    state.add_log(f"{fid.value} played {card_id} ({name}){suffix}{paid}")
+    if cost and pl.gold != gold_before:
+        state.add_log(f"{fid.value} gold after cost {gold_before}→{pl.gold}")
+    resolve_card_effects(state, fid, card, rng, staged_loc=loc)
     return True
+
+
+def resolve_pending_plays(state: GameState, rng: random.Random) -> None:
+    """Faza II krok 2: odkrycie lokacje 1→5, w każdej od 1. gracza."""
+    sys = state.sys_overrides or {}
+    cards = load_all_cards(card_overrides=sys.get("card_overrides"))
+    pending = list(state.pending_plays)
+    state.pending_plays.clear()
+    for loc in LOCATIONS:
+        for fid in state.turn_order:
+            for sp in pending:
+                if sp.location != loc or sp.owner != fid:
+                    continue
+                card = cards.get(sp.card_id)
+                pl = state.players[fid]
+                if card is None:
+                    continue
+                pl.discard.append(sp.card_id)
+                state.add_log(f"{fid.value} revealed {sp.card_id} ({card.name}) at {loc}")
+                resolve_card_effects(state, fid, card, rng, staged_loc=loc)
 
 
 def resolve_time_edict(state: GameState, card_id: str, rng: random.Random) -> None:
@@ -466,11 +539,11 @@ def resolve_time_edict(state: GameState, card_id: str, rng: random.Random) -> No
     elif card.id == "time-09":
         # Jarmark Królewski: market bonus for this era
         state.active_time_edict = "time-09"
-        state.add_log("Edict: Royal Market active (+2 gold from economic action)")
+        state.add_log("Edict: Royal Market active (economic action on Rynek +2 gold)")
         
     elif card.id == "time-10":
-        # Amnestia Biskupia: reduce heresy by 1 for players in observed zone (4-6)
+        # Amnestia Biskupia: −1 Herezja w Obserwowanej (SSOT: observed_threshold … T−1)
         for fid, pl in state.players.items():
-            if 4 <= pl.heresy <= 6:
+            if heresy_zone(pl.heresy, state.accusation_threshold, state.observed_threshold) == "obserwowana":
                 add_heresy(state, fid, -1, reason="time-10 (episcopal amnesty)")
 

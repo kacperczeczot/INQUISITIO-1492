@@ -74,8 +74,9 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
                 relic_need = ov["caa_relics"]
             elif "caa_relics_5p" in ov and n_players >= 5:
                 relic_need = ov["caa_relics_5p"]
+            path_era = max(1, _val(cfg_caa.path_era, pc) + ov.get("caa_era_offset", 0))
 
-            if pl.relics_evacuated >= relic_need:
+            if pl.relics_evacuated >= relic_need and state.era >= path_era:
                 if state.sea_route_open or pl.path_via_double or pl.avoided_autodafe:
                     return (fid, "caa_sea_route")
 

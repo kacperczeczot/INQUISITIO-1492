@@ -76,7 +76,6 @@ class GameConfig:
         self.economy = _Section(self._raw["economy"])
         self.cards = _Section(self._raw.get("cards", {}))
         self.variants = _Section(self._raw["variants"])
-        self.heresy_zones = _Section(self._raw["heresy_zones"])
         self.telemetry_norms = _Section(self._raw["telemetry_norms"])
 
     # ── Convenience helpers ──────────────────────────────────────
@@ -85,6 +84,17 @@ class GameConfig:
         """Accusation threshold for a given player count."""
         key = f"{n_players}p"
         return self.system.accusation_threshold[key]
+
+    def observed_threshold(self) -> int:
+        """Start of Observed (Autodafé burn). One number for the table."""
+        return int(self.system.observed_threshold)
+
+    def era_income(self) -> int:
+        return int(getattr(self.system, "era_income", 1))
+
+    def intrigue_gold(self) -> int:
+        """Faza I Akcja Gospodarcza (one table number)."""
+        return int(getattr(self.system, "intrigue_gold", 1))
 
     def start_gold_for(self, n_players: int) -> int:
         """Starting gold for a given player count."""

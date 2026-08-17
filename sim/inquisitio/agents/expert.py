@@ -14,7 +14,7 @@ class ExpertAgent:
         cards = load_all_cards(card_overrides=sys.get("card_overrides"))
         pl = state.players[faction]
 
-        # Tactical Pass Optimization
+        # Tactical Gospodarcza: take gold now if a finisher is one coin short
         finisher_in_hand = [
             cards[cid] for cid in pl.hand
             if cards[cid].type == "signature" or "autodafe" in cards[cid].tags or "relic" in cards[cid].tags or "decree" in cards[cid].tags
@@ -25,7 +25,6 @@ class ExpertAgent:
                     cheap_costs = [cards[cid].cost_gold for cid in legal]
                     min_cost = min(cheap_costs)
                     if min_cost > 0 and pl.gold - min_cost < fin.cost_gold - 1:
-                        # Log macro event
                         if state.era <= 3:
                             state.add_log(f"EVENT:{TacticalEvent.TACTICAL_PASS_EARLY.value}:{faction.value}")
                         else:

@@ -55,3 +55,43 @@ def interrogate(
     if interrogator == FactionId.KABALA_TOLEDO:
         iq.fragments += 1
     return "heresy"
+
+
+def detect_marionettes_at(state: GameState, loc: str) -> int:
+    """Inkwizytor w lokacji z Marionetką: +2 Herezja właścicielowi, znacznik znika."""
+    n = 0
+    for fid, pl in state.players.items():
+        for ag in pl.agents:
+            if ag.location != loc or not ag.double_agent:
+                continue
+            add_heresy(state, fid, 2, reason="marionette_detected")
+            ag.double_agent = False
+            ag.controller = None
+            n += 1
+            state.add_log(f"Marionette detected at {loc}: {fid.value} +2 heresy")
+    return n
+
+
+def move_controlled_marionette(state: GameState, controller: FactionId) -> bool:
+    """Raz / Erę kontroler rusza Marionetką o 1 (bez dodatkowego głosu)."""
+    pl = state.players[controller]
+    if pl.used_puppet_move:
+        return False
+    from inquisitio.engine.inquisitor import neighbors
+
+    for other in state.players.values():
+        for ag in other.agents:
+            if ag.controller != controller or not ag.double_agent or ag.arrested:
+                continue
+            opts = neighbors(ag.location)
+            if not opts:
+                continue
+            safe = [o for o in opts if o != state.inquisitor_location]
+            dest = (safe or opts)[0]
+            prev = ag.location
+            ag.location = dest
+            pl.used_puppet_move = True
+            state.add_log(f"{controller.value} marionette {prev}→{dest} ({other.faction.value})")
+            return True
+    return False
+

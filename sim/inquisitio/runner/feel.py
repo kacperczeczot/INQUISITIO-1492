@@ -23,7 +23,7 @@ class FeelResult:
 def _progress_line(state: GameState, fid: FactionId) -> str:
     pl = state.players[fid]
     parts = [
-        f"heresy={pl.heresy}({heresy_zone(pl.heresy, state.accusation_threshold)})",
+        f"heresy={pl.heresy}({heresy_zone(pl.heresy, state.accusation_threshold, state.observed_threshold)})",
         f"gold={pl.gold}",
     ]
     if fid == FactionId.SWIETE_OFICJUM:

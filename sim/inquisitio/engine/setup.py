@@ -185,6 +185,13 @@ def new_game(
     else:
         final_threshold = CONFIG.threshold_for(n_players)
 
+    if "observed_threshold_offset" in sys:
+        observed = max(1, CONFIG.observed_threshold() + int(sys["observed_threshold_offset"]))
+    elif "observed_threshold" in sys:
+        observed = max(1, int(sys["observed_threshold"]))
+    else:
+        observed = CONFIG.observed_threshold()
+    observed = min(observed, max(1, final_threshold - 1))
 
     rng = random.Random(seed)
     disabled = set(sys.get("disabled_cards", []))
@@ -221,6 +228,7 @@ def new_game(
         players=players_map,
         turn_order=faction_list,
         accusation_threshold=final_threshold,
+        observed_threshold=observed,
         relics_on_board=relics,
         time_deck=tdeck,
         rng_seed=seed,

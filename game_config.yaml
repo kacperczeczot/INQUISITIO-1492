@@ -8,6 +8,9 @@ system:
   max_eras: 12
   autodafe_cooldown: 3
   cards_per_era: 2
+  era_income: 1
+  intrigue_gold: 1
+  observed_threshold: 4
   accusation_threshold:
     3p: 6
     4p: 7
@@ -692,20 +695,6 @@ variants:
   time_deck_freq: 1
   sea_route_era: 4
   inquisitor_speed: 1
-heresy_zones:
-  clean:
-  - 0
-  - 3
-  observed:
-    3p:
-    - 4
-    - 5
-    4p_plus:
-    - 4
-    - 6
-  critical:
-    3p: 6
-    4p_plus: 7
 telemetry_norms:
   game_length_eras:
   - 5.0

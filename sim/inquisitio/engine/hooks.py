@@ -9,6 +9,9 @@ def grant_hook(state: GameState, holder: FactionId, target: FactionId) -> None:
     if holder == target:
         return
     pl = state.players[holder]
+    if sum(pl.hooks_on.values()) >= 2:
+        state.add_log(f"Hook {holder.value} discarded (max 2 active)")
+        return
     pl.hooks_on[target] = pl.hooks_on.get(target, 0) + 1
     pl.hook_victims_ever.add(target)
     state.metrics.hooks_created += 1
@@ -38,7 +41,15 @@ def force_hook(
         del holder_pl.hooks_on[target]
     state.metrics.hooks_forced += 1
     if comply:
-        state.add_log(f"Hook complied {target.value} under {holder.value}")
+        victim_pl = state.players[target]
+        if victim_pl.gold > 0:
+            victim_pl.gold -= 1
+            holder_pl.gold += 1
+            state.add_log(
+                f"Hook complied {target.value} under {holder.value} (1 gold)"
+            )
+        else:
+            state.add_log(f"Hook complied {target.value} under {holder.value}")
         return True
     add_heresy(state, target, 2, reason="hook_reveal")
     # Gildia fall on refuse — A teach + C (B awards falls mainly via verdict)

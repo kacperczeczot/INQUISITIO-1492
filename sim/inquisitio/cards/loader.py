@@ -146,6 +146,7 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
                         if cid in cards and isinstance(c_data, dict):
                             card = cards[cid]
                             for k, v in c_data.items():
+                                card.raw[k] = v
                                 if hasattr(card, k):
                                     setattr(card, k, v)
                                     if k == "cost":
@@ -173,6 +174,7 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
         if cid in modified_cards:
             card = modified_cards[cid]
             for field_name, val in ov.items():
+                card.raw[field_name] = val
                 if hasattr(card, field_name):
                     setattr(card, field_name, val)
                     if field_name == "cost":

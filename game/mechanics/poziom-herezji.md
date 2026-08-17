@@ -16,10 +16,10 @@ Każdy gracz ma **Tor Herezji 0–10** na planszetce. Herezja mierzy, jak bardzo
 | Zakres | Strefa | Przy stole |
 | :---: | :--- | :--- |
 | 0–3 | **Czysta** | Brak podejrzeń. Bezpieczne, zwykle słabsze akcje. Oficjum lubi Cię tu widzieć — jesteś nieskuteczny. |
-| 4–5 (3p) / 4–6 (4–5p) | **Obserwowana** | Czujność Inkwizycji. Kabała **musi** tu żyć przy wygranej. Ryzykowniejsze karty, alchemia, Cień. |
-| 6–10 (3p) / 7–10 (4–5p) | **Krytyczna / HERETYK** | Inni mogą **Rzucić Oskarżenie** → [`werdykt-stolu.md`](werdykt-stolu.md). Jesteś tematem rozmowy stołu. |
+| 4 … T−1 | **Obserwowana** | Czujność Inkwizycji. Próg **4** (Autodafé → Stos). Kabała **musi** tu żyć przy wygranej. |
+| ≥T | **Krytyczna / HERETYK** | Inni mogą **Rzucić Oskarżenie** → [`werdykt-stolu.md`](werdykt-stolu.md). |
 
-> Próg oskarżenia na planszetce: **6** w 3p, **7** w 4–5p.
+> T = próg oskarżenia: **7** w 4p (Kanon), **6** w 3p, **8** w 5p.
 
 ## Źródła Herezji
 
