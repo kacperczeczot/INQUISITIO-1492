@@ -42,6 +42,10 @@ from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.audit_facts import score_pair, save_and_archive_report
 from inquisitio.runner.batch import run_batch
+from inquisitio.runner.impact_taxonomy import (
+    classify_card_impact_4p,
+    classify_mechanic_impact_4p,
+)
 from inquisitio.runner.scoring import (
     calculate_setup_score,
     color_score,
@@ -143,72 +147,6 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
     }
 
 
-def classify_card_impact_4p(d_share: float, d_4p: float) -> tuple[str, str, str]:
-    """Classifies card impact into 3x3 quadrant matrix for Kanon 4P."""
-    if d_4p >= 1.2:
-        if d_share > 0.8:
-            return "TOXIC_CARRIER", "⚠️ TOKSYCZNY PROMOTOR (Disruptor Win-Driver)", "DISRUPTOR"
-        elif d_share < -0.8:
-            return "TOXIC_BRAKE", "⚠️ TOKSYCZNY BALAST (Disruptor Self-Harm)", "DISRUPTOR"
-        else:
-            return "TOXIC_NOISE", "⚠️ SZUM DESTABILIZUJĄCY (Meta Disruptor)", "DISRUPTOR"
-
-    if d_4p <= -2.0 or d_share >= 2.5:
-        if d_share >= 2.5:
-            return "PILLAR", "👑 FILAR KANONU (Core Keystone)", "STABILIZER"
-        elif d_share <= -2.5:
-            return "SHIELD", "🛡️ TARCZA DEFENSYWNA (Faction Shield)", "STABILIZER"
-        else:
-            return "ANCHOR", "⚓ KOTWICA KANONU (Balance Anchor)", "STABILIZER"
-
-    if abs(d_share) <= 0.4 and abs(d_4p) <= 0.4:
-        return "DEAD_WEIGHT", "💤 KARTA NISKIEGO WPŁYWU (Passive)", "DEAD_WEIGHT"
-
-    if d_share >= 1.0:
-        return "ENGINE", "⚡ MOTOR FRAKCJI (Offensive Engine)", "BALANCED"
-    elif d_share <= -1.0:
-        return "BRAKE", "🛑 HAMULEC FRAKCJI (Control Tool)", "BALANCED"
-    else:
-        return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
-
-
-def classify_mechanic_impact_4p(d_4p: float, max_d_share: float) -> tuple[str, str, str]:
-    """Classifies system/victory mechanic impact into 3x3 (9 areas) matrix.
-    
-    Y: Severity / Importance (Critical, Moderate, Low)
-    X: Effect Direction (Worsens Balance, Neutral, Improves Balance)
-    """
-    # 1. Determine Severity
-    if abs(d_4p) >= 15.0 or max_d_share >= 10.0:
-        severity = "CRITICAL"
-    elif abs(d_4p) >= 4.0 or max_d_share >= 4.0:
-        severity = "MODERATE"
-    else:
-        severity = "LOW"
-
-    # 2. Determine Effect Direction
-    if d_4p <= -4.0:
-        direction = "STABILIZER"
-    elif d_4p >= 1.5:
-        direction = "DISRUPTOR"
-    else:
-        direction = "NEUTRAL"
-
-    # 3. 3x3 Matrix mapping (9 Areas)
-    mapping = {
-        ("CRITICAL", "STABILIZER"): ("M_CRIT_STAB", "👑 KRYTYCZNY FILAR (Core Engine Pillar)", "STABILIZER"),
-        ("CRITICAL", "NEUTRAL"):    ("M_CRIT_NEUT", "⚓ KLUCZOWY STABILIZATOR (Key Anchor)", "NEUTRAL"),
-        ("CRITICAL", "DISRUPTOR"):   ("M_CRIT_DISR", "⚠️ KRYTYCZNA WADA (Critical Flaw)", "DISRUPTOR"),
-        ("MODERATE", "STABILIZER"): ("M_MOD_STAB",  "🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard)", "STABILIZER"),
-        ("MODERATE", "NEUTRAL"):    ("M_MOD_NEUT",  "⚖️ ZBALANSOWANY REGULATOR (Balanced Regulator)", "NEUTRAL"),
-        ("MODERATE", "DISRUPTOR"):  ("M_MOD_DISR",  "⚠️ UMIARKOWANE OBCIĄŻENIE (Moderate Drag)", "DISRUPTOR"),
-        ("LOW", "STABILIZER"):      ("M_LOW_STAB",  "🛑 DROBNY REGULATOR (Minor Buffer)", "STABILIZER"),
-        ("LOW", "NEUTRAL"):         ("M_LOW_NEUT",  "💤 MECHANIKA PASYWNA (Low Impact)", "NEUTRAL"),
-        ("LOW", "DISRUPTOR"):       ("M_LOW_DISR",  "💡 KANDYDAT DO UPROSZCZENIA (Simplification)", "DISRUPTOR"),
-    }
-    return mapping.get((severity, direction), ("M_GENERIC", "⚖️ REGULATOR", "NEUTRAL"))
-
-
 def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str]) -> list[tuple[str, str, str, dict, int, int, list[str]]]:
     """Generates comprehensive ablation & extreme-parameter tasks for ALL Level 1, Level 2, and Level 4 mechanics."""
     v = CONFIG.victory
@@ -296,15 +234,21 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
     return [(t[0], t[1], t[2], t[3], games_per_setup, seed, setups) for t in tasks]
 
 
-def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, workers: int = 10) -> Path:
-    """Executes the complete 4P ablation study across all 50 faction cards, time deck, and system mechanics."""
+def run_full_ablation_audit_4p(
+    games_per_setup: int = 5000,
+    seed: int = 42,
+    workers: int = 10,
+    skip_cards: bool = False,
+) -> Path:
+    """4P ablation: L1/L2/L4 mechanics always; faction + time cards unless skip_cards."""
     t_start = time.time()
     setups = CANONICAL_4P_SETUPS
-    all_cards = load_all_cards()
+    all_cards = load_all_cards() if not skip_cards else {}
 
+    mode = "L1/L2/L4 (bez kart)" if skip_cards else "karty + mechaniki"
     print("═══════════════════════════════════════════════════════════════════════")
     print("   INQUISITIO-1492 — BADANIE UŻYTECZNOŚCI I WPŁYWU W KANONIE 4P        ")
-    print("   Analiza ablacyjna (Leave-One-Out) dla 50 kart i mechanik w 4P       ")
+    print(f"   Ablacja 4P — {mode}")
     print("═══════════════════════════════════════════════════════════════════════")
     print(f"Bieżąca wersja:            {CONFIG.version}")
     print(f"Kanon Setupy:              {', '.join(setups)}")
@@ -325,7 +269,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         print(f"      • {fname:<4s}: {sh:5.1f}%")
     print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%\n")
 
-    # 2. Build Card Ablation Tasks (50 faction cards)
+    # 2. Build Card Ablation Tasks (faction cards) — optional
     card_tasks = []
     card_meta = {}
     for cid, card in sorted(all_cards.items()):
@@ -380,11 +324,20 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     mech_tasks = [(t[0], t[1], t[3], t[4], t[5], t[6]) for t in mech_tasks_raw]
     mech_meta = {t[0]: {"id": t[0], "name": t[1], "category": t[2], "overrides": t[3]} for t in mech_tasks_raw}
 
+    if skip_cards:
+        time_tasks = []
+        time_cards = []
+        card_tasks = []
+        card_meta = {}
+
     all_tasks = card_tasks + time_tasks + mech_tasks
     total_tasks = len(all_tasks)
 
     print(f"⏳ [2/4] URUCHAMIAM {total_tasks} ZADAŃ ABLACYJNYCH DLA KANONU 4P...")
-    print(f"   (50 Kart Frakcji + 8 Kart Czasu + {len(mech_tasks)} Mechanik Systemowych L1/L2/L4)")
+    if skip_cards:
+        print(f"   (pominięto karty frakcji i kroniki — {len(mech_tasks)} mechanik L1/L2/L4)")
+    else:
+        print(f"   ({len(card_tasks)} kart frakcji + {len(time_tasks)} kart czasu + {len(mech_tasks)} mechanik L1/L2/L4)")
     results_map = {}
 
     t_pool = time.time()
@@ -460,7 +413,14 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         t_key = f"TIME_{t_id.upper()}"
         res = results_map[t_key]
         d_4p = round(res["score_4p"] - base_res["score_4p"], 1)
-        status = "🟢 Stabilizator tempa" if d_4p <= -1.0 else ("⚠️ Spowalniacz" if d_4p >= 1.0 else "⚖️ Neutralna Kronika")
+        if abs(d_4p) <= 0.4:
+            status = "💤 Martwa karta kroniki (Δ≈0)"
+        elif d_4p <= -1.0:
+            status = "🟢 Stabilizator tempa"
+        elif d_4p >= 1.0:
+            status = "⚠️ Spowalniacz"
+        else:
+            status = "⚖️ Neutralna Kronika"
         analyzed_time_cards.append({
             "id": t_id,
             "name": t_name,
@@ -501,110 +461,147 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     # 8. Build Comprehensive Markdown Report
     print("📝 [4/4] GENERUJĘ PEŁNY RAPORT UŻYTECZNOŚCI I WPŁYWU DLA KANONU 4P...")
 
+    n_cards = len(analyzed_cards)
+    deck_pct = (100.0 / n_cards) if n_cards else 0.0
+
+    def _deck_share(n: int) -> str:
+        return f"{n * deck_pct:.1f}%"
+
     lines = [
         f"# Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja {CONFIG.version}",
         "",
         f"**Wersja Gry:** `{CONFIG.version}` | **Data Badania:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Próba:** {games_per_setup} gier/setup ({games_per_setup * len(setups)} gier na wariant) | **Ziarno:** {seed}",
         f"**Wynik Bazowy Kanonu 4P:** {color_score(base_res['score_4p'], bold=True)} pkt | **Średnia Długość Partii:** `{base_res['eras_avg']:.2f} Er` | **Deadlocki:** `{base_res['deadlock_pct']:.1f}%` | **Pas Biedy:** `{base_res['poverty_pct']:.1f}%`",
-        "",
-        "---",
-        "",
-        "## 1. 🗺️ Podsumowanie Ekosystemu Kart Kanonu 4P (Matryca Wpływu Kart 3x3)",
-        "",
-        "Rozkład wszystkich 50 kart frakcyjnych w matrycy **Wpływ na Frakcję ($\\Delta \\text{Share}$)** vs **Wpływ na Kanon 4P ($\\Delta \\text{4P Score}$)**:",
-        "",
-        "| Kategoria Karty | Liczba Kart | Udział w Talii | Rola w Balansie Kanonu 4P | Działanie Projektowe |",
-        "| :--- | :---: | :---: | :--- | :--- |",
     ]
-
-    group_counts = {
-        "STABILIZER": len([c for c in analyzed_cards if c["group_id"] == "STABILIZER"]),
-        "DISRUPTOR": len([c for c in analyzed_cards if c["group_id"] == "DISRUPTOR"]),
-        "DEAD_WEIGHT": len([c for c in analyzed_cards if c["group_id"] == "DEAD_WEIGHT"]),
-        "BALANCED": len([c for c in analyzed_cards if c["group_id"] == "BALANCED"]),
-    }
-
-    lines.extend([
-        f"| 👑 / ⚓ **Filar / Kotwica Kanonu** | **{group_counts['STABILIZER']}** | {group_counts['STABILIZER']*2}% | Kluczowe karty napędowe frakcji lub kotwice chroniące Kanon 4P | **Nienaruszalne (Kanon)** |",
-        f"| ⚖️ **Zbalansowane Narzędzie** | **{group_counts['BALANCED']}** | {group_counts['BALANCED']*2}% | Płynne narzędzia taktyczne o zrównoważonym profilu w 4P | **Optymalne** |",
-        f"| 💤 **Karta Pasywna (Dead Weight)** | **{group_counts['DEAD_WEIGHT']}** | {group_counts['DEAD_WEIGHT']*2}% | Znikomy wpływ na tempo i wynik partii w 4P | **Kandydaci do wzmocnienia** |",
-        f"| ⚠️ **Karta Destabilizująca (Disruptor)** | **{group_counts['DISRUPTOR']}** | {group_counts['DISRUPTOR']*2}% | Ich usunięcie podnosi 4P Score | **Kandydaci do osłabienia/reworku** |",
-        "",
-        "---",
-        "",
-        "## 2. 🃏 Warstwa I — Szczegółowa Analiza 50 Kart Frakcji w Kanonie 4P",
-        "",
-        "### 2.1. 👑 Filar i Kotwice Kanonu 4P (Karty o Najsilniejszym Wpływie Stabilizującym)",
-        "Karty, których brak powoduje spadek wyniku Kanonu 4P o $\\ge 4.0$ pkt lub załamanie winrate frakcji o $\\ge 4.0\\%$:",
-        "",
-        "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 4P | Win Share Frakcji (Baza → Bez) | $\\Delta$ Frakcji | 4P Score po Wyłączeniu |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
-    ])
-
-    stabilizers = sorted([c for c in analyzed_cards if c["group_id"] == "STABILIZER"], key=lambda x: x["d_4p"])
-    for c in stabilizers:
-        ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
-        lines.append(
-            f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
-            f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
-            f"**`{ds_sign}`** | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:.1f}`) |"
-        )
-
-    lines.extend([
-        "",
-        "### 2.2. ⚠️ Karty Destabilizujące Kanon 4P (Disruptors)",
-        "Karty, których wyłączenie podnosi 4P Score ($\\Delta \\text{4P} \\ge +1.5$ pkt):",
-        "",
-        "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 4P | Win Share Frakcji (Baza → Bez) | $\\Delta$ Frakcji | 4P Score po Wyłączeniu |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
-    ])
-
-    disruptors = sorted([c for c in analyzed_cards if c["group_id"] == "DISRUPTOR"], key=lambda x: x["d_4p"], reverse=True)
-    if not disruptors:
-        lines.append("| *Brak kart destabilizujących* | - | - | - | - | - | - |")
-    for c in disruptors:
-        ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
-        lines.append(
-            f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
-            f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
-            f"`{ds_sign}` | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:+.1f}`) |"
-        )
-
-    lines.extend([
-        "",
-        "### 2.3. 📋 Pełny Wykaz Ablacji Wszystkich 50 Kart Frakcji w Kanonie 4P",
-        "",
-        "| ID | Nazwa Karty | Frakcja | Koszt | Herezja | Faction Win Share 4P | $\\Delta$ Frakcji | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Rola w Matrycy 4P |",
-        "| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
-    ])
-
-    for c in analyzed_cards:
-        ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
-        d4_sign = f"+{c['d_4p']:.1f}" if c['d_4p'] > 0 else f"{c['d_4p']:.1f}"
-        lines.append(
-            f"| `{c['id']}` | **{c['name']}** | {c['faction_name']} | {c['cost']} | {c['heresy']} | "
-            f"{c['base_share']:.1f}% → {c['ablated_share']:.1f}% | `{ds_sign}` | "
-            f"{c['score_4p']:.1f} | `{d4_sign}` | {c['eras_avg']:.2f} | {c['deadlock_pct']:.1f}% | {c['role_name']} |"
-        )
-
+    if skip_cards:
+        lines.extend([
+            "",
+            "**Tryb:** `--no-cards` — raport bez ablacji kart frakcji i kroniki (tylko L1/L2/L4 i stoły 4P).",
+        ])
     lines.extend([
         "",
         "---",
         "",
-        "## 3. ⏳ Warstwa II — Kronika Dziejów w 4P (Ablacja 8 Kart Wydarzeń Czasu)",
-        "",
-        "Badanie wpływu wyłączenia każdej pojedynczej karty z **Talii Czasu** na tempo gry, poziom deadlocków i ogólny balans w 4P:",
-        "",
-        "| ID | Karta Wydarzenia | 4P Score | $\\Delta$ 4P | Średnia Er | Deadlock % | Status Roli w Kronice |",
-        "| :--- | :--- | :---: | :---: | :---: | :---: | :--- |",
     ])
+    if not skip_cards:
+        lines.extend([
+            f"## 1. 🗺️ Podsumowanie Ekosystemu Kart Kanonu 4P (Matryca Wpływu Kart, {n_cards} kart)",
+            "",
+            f"Rozkład wszystkich {n_cards} kart frakcyjnych w matrycy **Wpływ na Frakcję ($\\Delta \\text{{Share}}$)** vs **Wpływ na Kanon 4P ($\\Delta \\text{{4P Score}}$)**:",
+            "",
+            "| Kategoria Karty | Liczba Kart | Udział w Talii | Rola w Balansie Kanonu 4P | Działanie Projektowe |",
+            "| :--- | :---: | :---: | :--- | :--- |",
+        ])
 
-    for tc in analyzed_time_cards:
-        d4_str = f"+{tc['d_4p']:.1f}" if tc['d_4p'] > 0 else f"{tc['d_4p']:.1f}"
-        lines.append(
-            f"| `{tc['id']}` | **{tc['name']}** | {score_pair(base_res['score_4p'], tc['score_4p'], colored=True)} | "
-            f"`{d4_str} pkt` | {tc['eras_avg']:.2f} Er | {tc['deadlock_pct']:.1f}% | {tc['status']} |"
-        )
+        group_counts = {
+            "STABILIZER": len([c for c in analyzed_cards if c["group_id"] == "STABILIZER"]),
+            "DISRUPTOR": len([c for c in analyzed_cards if c["group_id"] == "DISRUPTOR"]),
+            "DEAD_WEIGHT": len([c for c in analyzed_cards if c["group_id"] == "DEAD_WEIGHT"]),
+            "SELF_HARM": len([c for c in analyzed_cards if c["group_id"] == "SELF_HARM"]),
+            "BALANCED": len([c for c in analyzed_cards if c["group_id"] == "BALANCED"]),
+        }
+
+        lines.extend([
+            f"| 👑 / ⚓ **Filar / Kotwica Kanonu** | **{group_counts['STABILIZER']}** | {_deck_share(group_counts['STABILIZER'])} | Kluczowe karty napędowe frakcji lub kotwice chroniące Kanon 4P | **Nienaruszalne (Kanon)** |",
+            f"| 🩸 **Autopodatek (Self-Harm)** | **{group_counts['SELF_HARM']}** | {_deck_share(group_counts['SELF_HARM'])} | Wyłączenie **podnosi** win share własnej frakcji — karta jest haraczem, nie silnikiem | **Rework / osłabienie kosztu, nie filar** |",
+            f"| ⚖️ **Zbalansowane Narzędzie** | **{group_counts['BALANCED']}** | {_deck_share(group_counts['BALANCED'])} | Płynne narzędzia taktyczne o zrównoważonym profilu w 4P | **Optymalne** |",
+            f"| 💤 **Karta Pasywna (Dead Weight)** | **{group_counts['DEAD_WEIGHT']}** | {_deck_share(group_counts['DEAD_WEIGHT'])} | Znikomy wpływ na tempo i wynik partii w 4P | **Kandydaci do wzmocnienia lub wycięcia** |",
+            f"| ⚠️ **Karta Destabilizująca (Disruptor)** | **{group_counts['DISRUPTOR']}** | {_deck_share(group_counts['DISRUPTOR'])} | Ich usunięcie podnosi 4P Score | **Kandydaci do osłabienia/reworku** |",
+            "",
+            "---",
+            "",
+            f"## 2. 🃏 Warstwa I — Szczegółowa Analiza {n_cards} Kart Frakcji w Kanonie 4P",
+            "",
+            "### 2.1. 👑 Filar i Kotwice Kanonu 4P (Karty o Najsilniejszym Wpływie Stabilizującym)",
+            "Karty, których brak powoduje spadek wyniku Kanonu 4P o $\\ge 4.0$ pkt lub załamanie winrate frakcji o $\\ge 4.0\\%$ — **bez** autopodatków (te są w 2.1b):",
+            "",
+            "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 4P | Win Share Frakcji (Baza → Bez) | $\\Delta$ Frakcji | 4P Score po Wyłączeniu |",
+            "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
+        ])
+
+        stabilizers = sorted([c for c in analyzed_cards if c["group_id"] == "STABILIZER"], key=lambda x: x["d_4p"])
+        for c in stabilizers:
+            ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
+            lines.append(
+                f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
+                f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
+                f"**`{ds_sign}`** | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:.1f}`) |"
+            )
+
+        self_harm = sorted([c for c in analyzed_cards if c["group_id"] == "SELF_HARM"], key=lambda x: x["d_share"])
+        lines.extend([
+            "",
+            "### 2.1b. 🩸 Autopodatek Frakcji (Self-Harm)",
+            "Karty, których wyłączenie **podnosi** win share własnej frakcji. Gracz zauważy je jako haracz, nawet gdy stół 4P jest równy dzięki temu haraczowi.",
+            "",
+            "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 4P | Win Share Frakcji (Baza → Bez) | $\\Delta$ Frakcji | 4P Score po Wyłączeniu |",
+            "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
+        ])
+        if not self_harm:
+            lines.append("| *Brak kart-autopodatków* | - | - | - | - | - | - |")
+        for c in self_harm:
+            ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
+            lines.append(
+                f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
+                f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
+                f"**`{ds_sign}`** | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:.1f}`) |"
+            )
+
+        lines.extend([
+            "",
+            "### 2.2. ⚠️ Karty Destabilizujące Kanon 4P (Disruptors)",
+            "Karty, których wyłączenie podnosi 4P Score ($\\Delta \\text{4P} \\ge +1.5$ pkt):",
+            "",
+            "| Karta | Frakcja | Koszt / Herezja | Rola w Matrycy 4P | Win Share Frakcji (Baza → Bez) | $\\Delta$ Frakcji | 4P Score po Wyłączeniu |",
+            "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
+        ])
+
+        disruptors = sorted([c for c in analyzed_cards if c["group_id"] == "DISRUPTOR"], key=lambda x: x["d_4p"], reverse=True)
+        if not disruptors:
+            lines.append("| *Brak kart destabilizujących* | - | - | - | - | - | - |")
+        for c in disruptors:
+            ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
+            lines.append(
+                f"| `{c['id']}` **{c['name']}** | {c['faction_name']} | {c['cost']}zł / {c['heresy']}☣ | "
+                f"{c['role_name']} | {c['base_share']:.1f}% → **{c['ablated_share']:.1f}%** | "
+                f"`{ds_sign}` | {base_res['score_4p']:.1f} → **{c['score_4p']:.1f} pkt** (`{c['d_4p']:+.1f}`) |"
+            )
+
+        lines.extend([
+            "",
+            f"### 2.3. 📋 Pełny Wykaz Ablacji Wszystkich {n_cards} Kart Frakcji w Kanonie 4P",
+            "",
+            "| ID | Nazwa Karty | Frakcja | Koszt | Herezja | Faction Win Share 4P | $\\Delta$ Frakcji | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Rola w Matrycy 4P |",
+            "| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+        ])
+
+        for c in analyzed_cards:
+            ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
+            d4_sign = f"+{c['d_4p']:.1f}" if c['d_4p'] > 0 else f"{c['d_4p']:.1f}"
+            lines.append(
+                f"| `{c['id']}` | **{c['name']}** | {c['faction_name']} | {c['cost']} | {c['heresy']} | "
+                f"{c['base_share']:.1f}% → {c['ablated_share']:.1f}% | `{ds_sign}` | "
+                f"{c['score_4p']:.1f} | `{d4_sign}` | {c['eras_avg']:.2f} | {c['deadlock_pct']:.1f}% | {c['role_name']} |"
+            )
+
+        lines.extend([
+            "",
+            "---",
+            "",
+            "## 3. ⏳ Warstwa II — Kronika Dziejów w 4P (Ablacja 8 Kart Wydarzeń Czasu)",
+            "",
+            "Badanie wpływu wyłączenia każdej pojedynczej karty z **Talii Czasu** na tempo gry, poziom deadlocków i ogólny balans w 4P:",
+            "",
+            "| ID | Karta Wydarzenia | 4P Score | $\\Delta$ 4P | Średnia Er | Deadlock % | Status Roli w Kronice |",
+            "| :--- | :--- | :---: | :---: | :---: | :---: | :--- |",
+        ])
+
+        for tc in analyzed_time_cards:
+            d4_str = f"+{tc['d_4p']:.1f}" if tc['d_4p'] > 0 else f"{tc['d_4p']:.1f}"
+            lines.append(
+                f"| `{tc['id']}` | **{tc['name']}** | {score_pair(base_res['score_4p'], tc['score_4p'], colored=True)} | "
+                f"`{d4_str} pkt` | {tc['eras_avg']:.2f} Er | {tc['deadlock_pct']:.1f}% | {tc['status']} |"
+            )
 
     lines.extend([
         "",
@@ -612,7 +609,7 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
         "",
         "## 4. ⚙️ Warstwa III — Matryca 9 Obszarów Wpływu Mechanik Gry (L1, L2, L4)",
         "",
-        "Zestawienie odporności Kanonu 4P na modyfikacje i ablację poszczególnych podsystemów według 9 obszarów istotności i efektu:",
+        "Zestawienie odporności Kanonu 4P na modyfikacje i ablację poszczególnych podsystemów. **Δ≈0 nie jest harmonią** — to klauzula, której gracze nie czują.",
         "",
         "| Kategoria Mechaniki | Liczba Testów | Rola w Ekosystemie Kanonu 4P | Rekomendacja Balansowa |",
         "| :--- | :---: | :--- | :--- |",
@@ -621,13 +618,37 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
     mech_groups = {
         "STABILIZER": len([m for m in analyzed_mechanics if m["group_id"] == "STABILIZER"]),
         "NEUTRAL": len([m for m in analyzed_mechanics if m["group_id"] == "NEUTRAL"]),
+        "DEAD": len([m for m in analyzed_mechanics if m["group_id"] == "DEAD"]),
         "DISRUPTOR": len([m for m in analyzed_mechanics if m["group_id"] == "DISRUPTOR"]),
     }
 
     lines.extend([
         f"| 👑 / 🛡️ **Filary i Bezpieczniki Stabilizujące** | **{mech_groups['STABILIZER']}** | Mechaniki krytyczne — ich brak lub rozregulowanie niszczy balans | **Nienaruszalny Kanon** |",
-        f"| ⚖️ **Zbalansowane Regulatory / Pasywne** | **{mech_groups['NEUTRAL']}** | Mechaniki harmonijnie wpisane w dynamikę rozgrywki | **Optymalne w Kanonie** |",
+        f"| ⚖️ **Zbalansowane Regulatory** | **{mech_groups['NEUTRAL']}** | Mechaniki, które ruszają share, ale nie walą w 4P Score | **Optymalne w Kanonie** |",
+        f"| 💤 **Martwe Mechaniki (Δ≈0)** | **{mech_groups['DEAD']}** | Ablacja nic albo prawie nic nie zmienia — klauzula nie gra | **Ożywić albo wyciąć** |",
         f"| ⚠️ / 💡 **Obciążenia i Kandydaci do Uproszczenia** | **{mech_groups['DISRUPTOR']}** | Mechaniki, których modyfikacja lub redukcja podnosi wynik 4P | **Kandydaci do optymalizacji** |",
+        "",
+        "### 4.0. 💤 Martwe mechaniki (osobny wykaz)",
+        "Testy z $|\\Delta\\text{4P}| \\le 0.8$ i ruchem share $\\le 1.5$ pp. To nie jest „optymalny kanon”.",
+        "",
+        "| Badany Podsystem | Kategoria | 4P Score | $\\Delta$ 4P | Klasyfikacja |",
+        "| :--- | :--- | :---: | :---: | :--- |",
+    ])
+
+    dead_mechs = sorted(
+        [m for m in analyzed_mechanics if m["group_id"] == "DEAD"],
+        key=lambda x: (abs(x["d_4p"]), x["name"]),
+    )
+    if not dead_mechs:
+        lines.append("| *Brak martwych klauzul w tej próbie* | - | - | - | - |")
+    for m in dead_mechs:
+        d4_str = f"+{m['d_4p']:.1f}" if m['d_4p'] > 0 else f"{m['d_4p']:.1f}"
+        lines.append(
+            f"| **{m['name']}** | {m['category']} | {score_pair(base_res['score_4p'], m['score_4p'], colored=True)} | "
+            f"`{d4_str} pkt` | {m['role_name']} |"
+        )
+
+    lines.extend([
         "",
         "### 4.1. ⚙️ Poziom 1: Główne Mechaniki Systemowe (Global System Core)",
         "",
@@ -698,12 +719,22 @@ def run_full_ablation_audit_4p(games_per_setup: int = 5000, seed: int = 42, work
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 Feature & Card Impact Audit for Kanon 4P (Ablation Study 4P)")
-    parser.add_argument("--games", type=int, default=5000, help="Liczba gier na setup (domyślnie: 5000, min. 1000)")
+    parser.add_argument("--games", type=int, default=5000, help="Liczba gier na setup (domyślnie: 5000; przy --no-cards zwykle 300–800)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba wątków równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno losowe (CRN)")
+    parser.add_argument(
+        "--no-cards",
+        action="store_true",
+        help="Pomiń ablację kart frakcji i kroniki; tylko L1/L2/L4 i odporność stołu 4P",
+    )
 
     args = parser.parse_args()
-    run_full_ablation_audit_4p(games_per_setup=args.games, seed=args.seed, workers=args.workers)
+    run_full_ablation_audit_4p(
+        games_per_setup=args.games,
+        seed=args.seed,
+        workers=args.workers,
+        skip_cards=args.no_cards,
+    )
 
 
 if __name__ == "__main__":
