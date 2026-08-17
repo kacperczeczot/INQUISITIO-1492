@@ -171,14 +171,15 @@ def _scaling_box(cfg: dict) -> str:
     g5 = g["5p"] if isinstance(g, dict) else g
 
     so_s = v.get("swiete_oficjum", {}).get("stacks", 4)
-    so_s3 = so_s.get("3p", 4) if isinstance(so_s, dict) else so_s
-    so_s5 = so_s.get("5p", 4) if isinstance(so_s, dict) else so_s
+    so_s4 = so_s.get("4p", 4) if isinstance(so_s, dict) else so_s
+    so_s3 = so_s.get("3p", so_s4) if isinstance(so_s, dict) else so_s4
+    so_s5 = so_s.get("5p", so_s4) if isinstance(so_s, dict) else so_s4
 
     lines_3p = [
         f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t3-1}` / Krytyczna `≥{t3}`).",
     ]
-    if so_s3 != 4:
-        lines_3p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast 4).")
+    if so_s3 != so_s4:
+        lines_3p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast {so_s4}).")
 
     kb_e = v.get("korona_borgiowie", {}).get("era")
     if kb_e is not None:
@@ -201,8 +202,10 @@ def _scaling_box(cfg: dict) -> str:
     if g5 != g4:
         lines_5p.append(f"> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`{g5} zł`** (zamiast {g4} zł).")
     lines_5p.append(f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t5}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t5-1}` / Krytyczna `≥{t5}`).")
-    if so_s5 != 4:
-        lines_5p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s5} Stosów`** (zamiast 4) ze względu na większą pulę wrogich agentów.")
+    if so_s5 != so_s4:
+        lines_5p.append(
+            f"> - **Święte Oficjum:** Wymaga **`{so_s5} Stosów`** (zamiast {so_s4}) ze względu na większą pulę wrogich agentów."
+        )
 
     mod_3p_str = "\n".join(lines_3p)
     mod_5p_str = "\n".join(lines_5p)
@@ -375,10 +378,12 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
     kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
     kt_hb = v.get("kabala_toledo", {}).get("heresy_band")
+    kt_f = v.get("kabala_toledo", {}).get("fragments", 3)
+    kt_frag = kt_f.get("4p", 3) if isinstance(kt_f, dict) else kt_f
     if kt_hb:
-        kt_core = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}**"
+        kt_core = f"**{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}**"
     else:
-        kt_core = "**3 Fragmenty**"
+        kt_core = f"**{kt_frag} Fragmenty**"
     kt_teach_text = f"{kt_core} (od Ery {kt_4p}; w 3p: od Ery {kt_3p})" if kt_4p != kt_3p else f"{kt_core} (od Ery {kt_4p})"
 
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
@@ -404,7 +409,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     new_teach_vic = f"""| Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | Święte Oficjum | {so_teach_text} |
-| Cienie Al-Andalus | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
+| Cienie Al-Andalus | {_relics_text(cfg)} |
 | Korona & Borgiowie | {kb_teach_text} |
 | Kabała z Toledo | {kt_teach_text} |
 | Gildia Cieni | {gc_teach_text} |
@@ -467,6 +472,40 @@ def sync_hierarchia(cfg: dict) -> list[str]:
         text,
     )
     v = cfg["victory"]
+    so_s = v["swiete_oficjum"]["stacks"]
+    so_st = so_s["4p"] if isinstance(so_s, dict) else so_s
+    so_c = v["swiete_oficjum"]["condemns"]
+    so_co = so_c["4p"] if isinstance(so_c, dict) else so_c
+    caa_r = v["cienie_al_andalus"]["relics"]
+    caa_p = v["cienie_al_andalus"]["path_era"]
+    caa_era = caa_p["4p"] if isinstance(caa_p, dict) else caa_p
+    kb_d = v["korona_borgiowie"]["decrees"]
+    kb_dec = kb_d["4p"] if isinstance(kb_d, dict) else kb_d
+    gc_n, _gc_extra = _gc_falls_pair(cfg)
+    so_cell = f"**{so_st} Stosy** lub {so_co} Skazania"
+    caa_cell = f"**{caa_r} Relikwie** + Ścieżka (Era {caa_era}+)"
+    kb_cell = f"**{kb_dec} Dekrety**"
+    gc_cell = f"**{gc_n} Upadki**"
+    text = re.sub(
+        r"\| \*\*Święte Oficjum\*\* \|.*",
+        f"| **Święte Oficjum** | {so_cell} | {so_cell} | {so_cell} |",
+        text,
+    )
+    text = re.sub(
+        r"\| \*\*Cienie Al-Andalus\*\* \|.*",
+        f"| **Cienie Al-Andalus** | {caa_cell} | {caa_cell} | {caa_cell} |",
+        text,
+    )
+    text = re.sub(
+        r"\| \*\*Korona & Borgiowie\*\* \|.*",
+        f"| **Korona & Borgiowie** | {kb_cell} | {kb_cell} | {kb_cell} |",
+        text,
+    )
+    text = re.sub(
+        r"\| \*\*Gildia Cieni\*\* \|.*",
+        f"| **Gildia Cieni** | {gc_cell} | {gc_cell} | {gc_cell} |",
+        text,
+    )
     kt = v["kabala_toledo"]
     kt_e = kt["era"]
     kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
@@ -587,6 +626,19 @@ def sync_slownik(cfg: dict) -> list[str]:
     text = re.sub(r"Limit \d+ Er → najbliższy celowi", f"Limit {s['max_eras']} Er → najbliższy celowi", text)
     text = re.sub(r"Remis postępu po \*\*\d+\*\* Er", f"Remis postępu po **{s['max_eras']}** Er", text)
     text = re.sub(r"Remis postępu po \d+ Er", f"Remis postępu po **{s['max_eras']}** Er", text)
+    v = cfg["victory"]
+    kb_d = v["korona_borgiowie"]["decrees"]
+    kb_dec = kb_d["4p"] if isinstance(kb_d, dict) else kb_d
+    kt_f = v["kabala_toledo"]["fragments"]
+    kt_frag = kt_f["4p"] if isinstance(kt_f, dict) else kt_f
+    kt_e = v["kabala_toledo"]["era"]
+    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    text = re.sub(r"Warunek zwycięstwa: \*\*\d+ Dekrety\*\*", f"Warunek zwycięstwa: **{kb_dec} Dekrety**", text)
+    text = re.sub(
+        r"Warunek: \*\*\d+ Fragmenty\*\* od Ery \*\*\d+\*\*",
+        f"Warunek: **{kt_frag} Fragmenty** od Ery **{kt_era}**",
+        text,
+    )
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/slownik.md"]
@@ -657,14 +709,19 @@ def sync_readme(cfg: dict) -> list[str]:
         )
 
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
+    if isinstance(caa_era, dict):
+        caa_era = caa_era.get("4p", 5)
+    caa_r = v.get("cienie_al_andalus", {}).get("relics", 2)
     kt_hb = v.get("kabala_toledo", {}).get("heresy_band")
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
     kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
     kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
+    kt_f = v.get("kabala_toledo", {}).get("fragments", 3)
+    kt_frag = kt_f.get("4p", 3) if isinstance(kt_f, dict) else kt_f
     if kt_hb:
-        kt_core = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}**"
+        kt_core = f"**{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}**"
     else:
-        kt_core = "**3 Fragmenty**"
+        kt_core = f"**{kt_frag} Fragmenty**"
     kt_readme_text = f"{kt_core} (od Ery {kt_4p}; *w 3p: od Ery {kt_3p}*)" if kt_4p != kt_3p else f"{kt_core} (od Ery {kt_4p})"
     gc_n, gc_extra = _gc_falls_pair(cfg)
     gc_readme_text = f"**{gc_n} Upadki**" if gc_extra is None else f"**{gc_n} Upadki** *({gc_extra} gdy brak Oficjum)*"
@@ -684,7 +741,7 @@ def sync_readme(cfg: dict) -> list[str]:
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | **Święte Oficjum** | {so_readme_text} |
-| **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
+| **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (od Ery {caa_era}) |
 | **Korona & Borgiowie** | {kb_readme_text} |
 | **Kabała z Toledo** | {kt_readme_text} |
 | **Gildia Cieni** | {gc_readme_text} |
