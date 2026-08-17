@@ -77,7 +77,7 @@ Karta nie rozpatruje efektu (np. brak Agenta / lokacji przy odkryciu). Zgodnie z
 
 ## Fragment
 
-Znacznik / cel Kabały. Warunek: **3 Fragmenty** od Ery **4**. Herezja nie jest podatkiem wygranej (karta Pieczęć Salomona może mieć własne okno).
+Znacznik / cel Kabały. Warunek: **2 Fragmenty** od Ery **5**. Herezja nie jest podatkiem wygranej (karta Pieczęć Salomona może mieć własne okno).
 
 **Patrz także:** [Herezja](#herezja), [Zwycięstwo](#zwycięstwo)
 

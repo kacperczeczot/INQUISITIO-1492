@@ -64,7 +64,7 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3**.
-- **Minimalna Era:** **4**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
+- **Minimalna Era:** **5**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
 
 ### 5. Gildia Cieni
 - **Upadki:** **5** (jedna liczba; wyjątek bez Oficjum usunięty).
@@ -85,6 +85,17 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟡 Patch v1.0.0 (2026-08-18) — ręczna wspinaczka do bramki audytora (niedokończona)
+
+- **Cel:** wszystkie udziały 4P w **15–35%** (`table_has_share_foundation`) → dopiero wtedy audytor makro może zapisywać.
+- **Łańcuch od v0.99.2 (24,4 pkt / 5000g):** fragmenty **2**; buff CAA (`caa-02/04/05/07` taniej, `caa-06` ☣0, `caa-08` cost 1, `caa-09` cost 1, `caa-10` cost 0); era KT **5**; ścieżka Cieni **era 1**; Gildia upadki **8**; stosy **6**; reszta bez zmian (skazania 3, relikwie 2).
+- **Pomiar (5000 g/setup, seed 42):** HUD **54,4** | min `4p-core` **46,7** | witalność **0,000**. **Fundament nadal False.**
+- **Setupy OK (15–35%):** `4p-no-cienie`, `4p-no-korona`, `4p-no-oficjum` (CAA **15,0%**).
+- **Blokada:** CAA **12,1%** (`4p-core`), **13,0%** (`4p-no-kabala`) — ~2 pp poniżej progu mimo dziesiątek iteracji L2/L3.
+- **Odrzucone:** relikwie 1 (CAA ~66–90%), stosy 5 (SO 37% w `4p-no-kabala`), stosy 7 (SO 8,7% w `4p-no-cienie`), KB era 6 bez kompensacji (Korona 0% w core), próg 4p 8, dekrety 3.
+- **Narzędzie:** `tools/sim/measure_foundation.py` — szybki pomiar udziałów + flagi OUT.
+- **Następny krok:** rework toru CAA (silnik / `caa-03` / polityka bota), nie kolejne ±1 kosztu; audytor makro **stop** na bramce fundamentu.
 
 ### 🟢 Patch v0.99.2 (2026-08-18) — L2: Oficjum stosy 7 → 6
 

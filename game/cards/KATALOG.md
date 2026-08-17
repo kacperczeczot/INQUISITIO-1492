@@ -259,7 +259,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. |
@@ -293,7 +293,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce. |
 | `effect` | Wskaż rywala: +1 Herezja. |
@@ -310,7 +310,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
@@ -328,7 +328,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 2 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
 | `effect` | Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację. |
 | `lore` | Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą. |
@@ -344,7 +344,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Bractwo zna imiona sąsiadów lepiej niż proboszczowie. |
 | `effect` | Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta. |
@@ -361,7 +361,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
@@ -378,7 +378,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji. |
@@ -395,7 +395,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |

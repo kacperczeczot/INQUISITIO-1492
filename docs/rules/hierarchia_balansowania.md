@@ -51,10 +51,10 @@ Progi wygranej. Różnice 3p/4p/5p poniżej to wyjątki pod zasadą spłaszczani
 | Frakcja | Rozgrywka 3-osobowa (3p) | Rozgrywka 4-osobowa (4p) | Rozgrywka 5-osobowa (5p) |
 | :--- | :--- | :--- | :--- |
 | **Święte Oficjum** | **6 Stosy** lub 3 Skazania | **6 Stosy** lub 3 Skazania | **6 Stosy** lub 3 Skazania |
-| **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 4+) | **2 Relikwie** + Ścieżka (Era 4+) | **2 Relikwie** + Ścieżka (Era 4+) |
+| **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 1+) | **2 Relikwie** + Ścieżka (Era 1+) | **2 Relikwie** + Ścieżka (Era 1+) |
 | **Korona & Borgiowie** | **2 Dekrety** | **2 Dekrety** | **2 Dekrety** |
-| **Kabała z Toledo** | **3 Fragmenty** (Era 4+) | **3 Fragmenty** (Era 4+) | **3 Fragmenty** (Era 4+) |
-| **Gildia Cieni** | **7 Upadki** | **7 Upadki** | **7 Upadki** |
+| **Kabała z Toledo** | **2 Fragmenty** (Era 5+) | **2 Fragmenty** (Era 5+) | **2 Fragmenty** (Era 5+) |
+| **Gildia Cieni** | **8 Upadki** | **8 Upadki** | **8 Upadki** |
 
 ---
 

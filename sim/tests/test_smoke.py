@@ -205,10 +205,7 @@ def test_ssot_win_paths_match_yaml():
     caa.path_via_double = True
     st.era = 8
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
-    st.era = 3
-    got = check_winner_details(st)
-    assert got is None or got[0] != FactionId.CIENIE_AL_ANDALUS
-    st.era = 4
+    st.era = 1
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 
     st5 = new_game(setup="5p-full", seed=1, layer="C")
@@ -226,16 +223,16 @@ def test_ssot_win_paths_match_yaml():
     gc = st5.players[FactionId.GILDIA_CIENI]
     caa5.relics_evacuated = 0
     st5.era = 1
-    gc.falls = 6
-    assert check_winner_details(st5) is None
     gc.falls = 7
+    assert check_winner_details(st5) is None
+    gc.falls = 8
     assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     st_noso = new_game(setup="4p-no-oficjum", seed=1, layer="C")
     gc2 = st_noso.players[FactionId.GILDIA_CIENI]
-    gc2.falls = 6
-    assert check_winner_details(st_noso) is None
     gc2.falls = 7
+    assert check_winner_details(st_noso) is None
+    gc2.falls = 8
     assert check_winner_details(st_noso) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     assert heresy_zone(3, critical_min=7, observed_min=4) == "czysta"
@@ -250,13 +247,13 @@ def test_win_overrides_kt_era_kb_decrees_alt():
 
     st = new_game(setup="3p-oficjum-kabala-gildia", seed=1, layer="C")
     kt = st.players[FactionId.KABALA_TOLEDO]
-    kt.fragments = 3
+    kt.fragments = 2
     kt.heresy = 5
-    st.era = 4
+    st.era = 5
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
     blocked = check_winner_details(st, {"kt_era_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KABALA_TOLEDO
-    st.era = 5
+    st.era = 6
     assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
     kt.heresy = 0
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")

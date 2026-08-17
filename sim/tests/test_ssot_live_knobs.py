@@ -57,12 +57,12 @@ def test_path_era_offset_blocks_early_caa():
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]
     caa.relics_evacuated = 2
     caa.path_via_double = True
-    st.era = 4
+    st.era = 1
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
     assert check_winner_details(st, {"caa_era_offset": 1}) is None or (
         check_winner_details(st, {"caa_era_offset": 1})[0] != FactionId.CIENIE_AL_ANDALUS
     )
-    st.era = 5
+    st.era = 2
     assert check_winner_details(st, {"caa_era_offset": 1}) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 
 
