@@ -128,6 +128,21 @@ def apply_generic(state: GameState, fid: FactionId, card: Card, rng: random.Rand
                 grant_hook(state, fid, rival)
 
 
+def _mark_gc10_fall_if_legal(state: GameState, fid: FactionId) -> None:
+    """Upadek Domu: tylko rywal z Hakiem Gildii lub Marionetką (nie sam krytyczny próg)."""
+    pl_gc = state.players[fid]
+    for rival in state.turn_order:
+        if rival == fid:
+            continue
+        rp = state.players[rival]
+        hooked = pl_gc.hooks_on.get(rival, 0) > 0 or rival in pl_gc.hook_victims_ever
+        marionette = any(ag.double_agent for ag in rp.agents)
+        if hooked or marionette:
+            pl_gc.falls += 1
+            state.add_log(f"{fid.value} fall on {rival.value} (total={pl_gc.falls})")
+            break
+
+
 def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random) -> None:
     apply_generic(state, fid, card, rng)
     pl = state.players[fid]
@@ -206,18 +221,6 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
         if pl.fragments >= 3 and not (4 <= pl.heresy <= 6):
             pl.heresy = 5
         state.add_log(f"{fid.value} fragments={pl.fragments} heresy={pl.heresy}")
-    elif card.id == "gc-10":
-        # mark fall if any rival critical or hooked
-        for rival in state.turn_order:
-            if rival == fid:
-                continue
-            rp = state.players[rival]
-            if rp.heresy >= state.accusation_threshold or any(
-                ag.double_agent for ag in rp.agents
-            ):
-                pl.falls += 1
-                state.add_log(f"{fid.value} fall on {rival.value} (total={pl.falls})")
-                break
 
 
 def _so_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) -> None:
@@ -297,12 +300,13 @@ def _kt_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
     apply_generic(state, fid, card, rng)
     pl = state.players[fid]
     if card.id == "kt-03":
-        # kt-03 Zakazana Wiedza: If heresy 4-6, gain 1 Fragment
-        if 4 <= pl.heresy <= 6 and pl.fragments < 3:
+        # Zakazana Wiedza: zawsze startuje tor fragmentów (nie tylko przy herezji 4–6).
+        if pl.fragments < 3:
             pl.fragments += 1
             state.add_log(f"{fid.value} fragment from kt-03 (total={pl.fragments})")
         else:
             pl.gold += 1
+            state.add_log(f"{fid.value} kt-03 overflow +1 gold")
     elif card.id == "kt-05":
         # kt-05 Wskazówka Cyklu: If agent at Lochy or Trybunał, gain 1 Fragment
         if any(ag.location in ("lochy", "trybunal") for ag in pl.agents) and pl.fragments < 3:
@@ -335,7 +339,7 @@ def _gc_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
         # already creates_hook via generic; refusal path in politics
         pass
     elif card.id == "gc-10":
-        _signature(state, fid, card, rng)
+        _mark_gc10_fall_if_legal(state, fid)
 
 
 FACTION_HANDLERS: dict[str, Handler] = {
