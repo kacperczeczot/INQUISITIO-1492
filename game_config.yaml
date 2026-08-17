@@ -1,4 +1,4 @@
-version: v0.99
+version: v0.99.1
 date: '2026-08-17'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -448,7 +448,7 @@ cards:
     type: akcja
     layer: A
     cost: 0
-    heresy: 1
+    heresy: 0
     grant_fragment: 1
     action: grant_fragment
     tags:
@@ -615,6 +615,7 @@ cards:
     type: akcja
     layer: B
     cost: 2
+    heresy: 1
     creates_hook: true
     action: creates_hook
     tags:
@@ -647,6 +648,7 @@ cards:
     type: akcja
     layer: C
     cost: 3
+    heresy: 1
     creates_hook: true
     mark_fall: true
     action: creates_hook

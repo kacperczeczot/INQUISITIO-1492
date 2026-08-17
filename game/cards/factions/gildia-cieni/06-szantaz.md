@@ -5,7 +5,7 @@ faction: gildia-cieni
 type: akcja
 layer: B
 cost: 2
-heresy: 0
+heresy: 1
 tags:
 - hook
 effect: Załóż Hak na rywala.

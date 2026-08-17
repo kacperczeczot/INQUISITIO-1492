@@ -5,7 +5,7 @@ faction: kabala-toledo
 type: akcja
 layer: A
 cost: 0
-heresy: 1
+heresy: 0
 tags:
 - fragment
 - heresy

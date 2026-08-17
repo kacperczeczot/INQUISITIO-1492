@@ -23,7 +23,7 @@ Wchodzi m.in.: Gospodarcza i Jarmark; zakrycie / odkrycie 1→5; fiasko bez Here
 
 **Gwarancja:** od **v0.96** audytor i batch mierzą **tę** grę (procedury kanonu), nie proxy bez Gospodarczej / z kasowaniem agentów przy Werdykcie / z darmową ewakuacją Cieni.
 
-**Audytor — wolno odpalać.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P (żywe `±1`; Gospodarcza **≥1**, nie 1→0). `audytor_3p.py` / `audytor_5p.py` piszą **tylko** wyjątki `3p:` / `5p:` (próg, złoto, L2) — **nie** ruszają gałek całego stołu (Obserwowana, karty/erę, Gospodarcza, Er, CD Autodafé, szlak). `--dry-run` = pomiar bez zapisu YAML. Jeździec Δ≈0 i ablacja `off` nie wchodzą. Kasowanie Gospodarczej to decyzja po raporcie użyteczności, nie pierwszy patch.
+**Audytor — nie z dołu.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P tylko gdy udziały są już w 15–35% (żywe `±1`; Gospodarcza **≥1**, nie 1→0). Poza czerwoną linią (v0.98 L2: 3.7 pkt) makro **stop** — L2/ręczny SSOT. `audytor_3p.py` / `audytor_5p.py` piszą **tylko** wyjątki `3p:` / `5p:` (próg, złoto, L2) — **nie** ruszają gałek całego stołu (Obserwowana, karty/erę, Gospodarcza, Er, CD Autodafé, szlak). `--dry-run` = pomiar bez zapisu YAML. Jeździec Δ≈0 i ablacja `off` nie wchodzą. Kasowanie Gospodarczej to decyzja po raporcie użyteczności, nie pierwszy patch.
 
 — Cursor Grok 4.6
 
@@ -52,8 +52,8 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy):** **4 Stosy**.
-- **Ścieżka B (Skazania):** **3 Skazania** (Werdykt; unikalne nazwiska). Stos z Werdyktu tylko gdy Oficjum oskarża.
+- **Ścieżka A (Stosy):** **5 Stosów**.
+- **Ścieżka B (Skazania):** **3 Skazania** (Werdykt; unikalne nazwiska — max 3 przy 4p). Stos z Werdyktu tylko gdy Oficjum oskarża.
 
 ### 2. Cienie Al-Andalus
 - **Ewakuacja Relikwii:** **2 Relikwie**.
@@ -64,10 +64,10 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3**.
-- **Minimalna Era:** **6**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
+- **Minimalna Era:** **4**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
 
 ### 5. Gildia Cieni
-- **Upadki:** **4** (jedna liczba; wyjątek bez Oficjum usunięty).
+- **Upadki:** **5** (jedna liczba; wyjątek bez Oficjum usunięty).
 
 ---
 
@@ -85,6 +85,30 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.1 (2026-08-18) — L3 ręcznie: GC disruptory + KT start
+
+- **Źródło:** `audyt_level3_raport.md` v0.99 + impact 4P (gc-06/09 disruptory, KT ~8.7%).
+- **Karty:** `gc-06` / `gc-09` heresy **0 → 1** (dźwignia L3: +1.0 / +1.4 HUD); `kt-03` heresy **1 → 0** (konserwatywny buff KT: +1.6 na 4P w L3).
+- **Bez:** cost gc-09→4, KB-09/10, KT-09 (za agresywne Δ+14).
+- **Następny krok:** telemetria 1500–5000 g/setup; jeśli SO/GC nadal poza 15–35%, L2 (stosy/upadki) z pomiarem.
+
+### 🟢 Patch v0.99 (2026-08-17) — fundament pod prawdziwy silnik (nie audytor z dołu)
+
+- **Diagnoza (600 g/setup):** `4p-core` SO ~57% + KB ~37%, KT ~0.7%; bez Korony GC ~65%. Proxy-karty (darmowy kurier, darmowy informator) + `kt-03` tylko przy herezji 4–6 + `gc-10` na każdym krytycznym = zła gra.
+- **Silnik:** `kt-03` zawsze daje fragment (tor startuje); `gc-10` tylko Hak/Marionetka (nie samo krytyczna herezja).
+- **SSOT:** Obserwowana **5**; Oficjum stosy **7**; Gildia upadki **7**; Kabała od ery **4**; `caa-05` koszt **1**; `gc-04` koszt **1**; `gc-09` koszt **3**.
+- **Pomiar (1500 g/setup):** HUD **~11 pkt** (z 3.7); KT w core **~7.5%**; min setup **~8.7** (`4p-no-korona`). Czerwona linia 15–35% nadal nie — SO ~52%, GC w setupach bez Korony ~50–59%. **Audytor makro stop**; kolejny krok: L3 / tempo SO (nie skazania 2).
+
+### 🟢 Patch v0.98 (2026-08-17) — korekta L2 po audycie v0.97
+- **Pomiar:** baza v0.97 = **6.98 Er** (już w 5–7), ale HUD **0.6 pkt**. Ślepe `+1` na wszystkich celach.
+- **Żywe:** stosy **5** (6 = deadlock 15%), upadki **5** (4 psuje global). Skazania **3** (2 to proteza martwej ścieżki).
+- **Martwe / przesadzone — cofnięte:** relikwie 3→**2**, era Cieni/szlak 5→**4**, dekrety 3→**2**, fragmenty 4→**3**, era Kabały 7→**6** (Δ≈0 w L2).
+
+### 🟢 Patch v0.97 (2026-08-17) — dłuższa partia: +1 na licznikach C (ręcznie)
+- **Dlaczego:** po naprawie silnika 4P kończyło się **~4.49 Er** (podłoga telemetryki 4.5). Audytor `±1` chciał **obniżać** relikwie (jeszcze krócej) i nie złoży wektora „wszystkie cele w górę”.
+- **Jedna liczba na stół:** stosy **5**, relikwie **3**, ścieżka/szlak od Ery **5**, dekrety **3**, fragmenty **4** od Ery **7**, upadki **5**. Skazania **3** (sufit unikalnych rywali przy 4p).
+- **Nie ruszać:** Gospodarcza, Obserwowana, karty/erę, próg oskarżenia.
 
 ### ⚪ Pomiar makro 4P (2026-08-17) — nie jest patchem; YAML bez zmian
 - Lookahead (ultra): złoto 4→3 + Kabała od ery 7 + próg 5/6/7 = **73.7** (baza 57.4). Era Kabały sama w 1D: 54.9. Limit Er +1 przy tym samym wyniku = jeździec.
