@@ -224,7 +224,7 @@ Prawomocne reguły kanoniczne:
 | Karty / Erę | **do 2** (zagranie lub Akcja Gospodarcza) |
 | Kronika Dziejów | odkryj **1** kartę w Fazie III (nowe prawo na kolejną Erę) |
 | Patrol bez nasłania | najniższa Herezja; remis → 1. gracz |
-| Limit Er / remis | 9 Er; najbliższy cel, potem najniższa Herezja |
+| Limit Er / remis | **12** Er; najbliższy cel, potem najniższa Herezja |
 | Lokacje kluczowe Gildii | Oficjum→Trybunał, Korona→Pałac, Cienie→Gildia, Kabała→Lochy, ofiara-Gildia→Rynek |
 
 **Zasada Balansu:** próg oskarżenia wynosi **6** dla 3p, **7** dla 4p, **8** dla 5p (zatwierdzone w raportach sim-reports).

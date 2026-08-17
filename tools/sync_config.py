@@ -191,8 +191,11 @@ def _scaling_box(cfg: dict) -> str:
 
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
     kt_e3 = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
-    if kt_e3 != 6:
-        lines_3p.append(f"> - **Kabała z Toledo:** Może wygrać od **`Ery {kt_e3}`** (zamiast 6).")
+    kt_e4 = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
+    if kt_e3 != kt_e4:
+        lines_3p.append(
+            f"> - **Kabała z Toledo:** Może wygrać od **`Ery {kt_e3}`** (zamiast {kt_e4})."
+        )
 
     lines_5p = []
     if g5 != g4:
@@ -276,6 +279,12 @@ def sync_ksiega(cfg: dict) -> list[str]:
     text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
     me = cfg["system"]["max_eras"]
     text = re.sub(r"\*\*Limit Er: \d+\.\*\*", f"**Limit Er: {me}.**", text)
+    text = re.sub(
+        r"\| Limit Er / remis \| \*\*\d+\*\* Er;",
+        f"| Limit Er / remis | **{me}** Er;",
+        text,
+    )
+    text = re.sub(r"Remis postępu po \*\*\d+\*\* Er", f"Remis postępu po **{me}** Er", text)
 
     # Balance rule in Tribunal section
     old_bal = re.compile(r"\*\*Zasada Balansu:\*\* bazowy próg.*?\.")
@@ -303,19 +312,29 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
         gold_teach = f"planszetka (Herezja **0**), **{g4} złoto** (w 5p: **{g5} zł**)."
     text = re.sub(r"planszetka \(Herezja \*\*0\*\*\), .*", gold_teach, text)
 
-    # Replace heresy zones
+    t = cfg["system"]["accusation_threshold"]
+    t3 = t["3p"] if isinstance(t, dict) else t
+    t4 = t["4p"] if isinstance(t, dict) else t
+    t5 = t["5p"] if isinstance(t, dict) else t
+
     text = re.sub(
-        r"\| Czysta \| `0–3` \| Bezpieczna \|.*?\n\| Obserwowana \| `.*?` \| Uwaga Inkwizytora \|.*?\n\| Krytyczna \| `.*?` \| Ryzyko oskarżenia \|",
-        f"| Czysta | `0–3` | Bezpieczna |\n| Obserwowana | `4–6` | Uwaga Inkwizytora (w 3p: `4–5`, w 5p: `4–7`) |\n| Krytyczna | `≥7` | Ryzyko oskarżenia (w 3p: `≥6`, w 5p: `≥8`) |",
+        r"\| 0–3 \| Czysta \|.*?\n"
+        r"\| 4–\d+(?: \(w 3p: 4–\d+\))? \| Obserwowana \|.*?\n"
+        r"\| \d+–10 \(w 3p: ≥\d+, w 5p: ≥\d+\) \| \*\*Krytyczna\*\* \|.*",
+        f"| 0–3 | Czysta | Bezpiecznie, zwykle słabiej |\n"
+        f"| 4–{t4 - 1} (w 3p: 4–{t3 - 1}) | Obserwowana | Ryzyko — jeden krok od oskarżenia |\n"
+        f"| {t4}–10 (w 3p: ≥{t3}, w 5p: ≥{t5}) | **Krytyczna** | Inni mogą Cię oskarżyć |",
+        text,
+    )
+
+    text = re.sub(
+        r"1\. Cel w Krytycznej \(≥.*?\)\.",
+        f"1. Cel w Krytycznej (≥{t4}, w 3p: ≥{t3}, w 5p: ≥{t5}).",
         text
     )
 
-    # Accusation rule
-    text = re.sub(
-        r"1\. Cel w Krytycznej \(≥.*?\)\.",
-        "1. Cel w Krytycznej (≥7, w 3p: ≥6, w 5p: ≥8).",
-        text
-    )
+    me = cfg["system"]["max_eras"]
+    text = re.sub(r"\*\*Limit:\*\* \d+ Er", f"**Limit:** {me} Er", text)
 
     cd = cfg["system"]["autodafe_cooldown"]
     text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
@@ -405,34 +424,58 @@ def sync_hierarchia(cfg: dict) -> list[str]:
     text = path.read_text(encoding="utf-8")
     s = cfg["system"]
     t = s["accusation_threshold"]
-    hz = cfg["heresy_zones"]
-    o3, o4 = hz["observed"]["3p"], hz["observed"]["4p_plus"]
-    cr3, cr4 = hz["critical"]["3p"], hz["critical"]["4p_plus"]
 
     g = s["start_gold"]
     g4 = g["4p"] if isinstance(g, dict) else g
     g5 = g["5p"] if isinstance(g, dict) else g
+    income = int(s.get("era_income", 1))
+    ig = int(s.get("intrigue_gold", 1))
     if g4 == g5:
-        gold_hier = f"- **Ekonomia:** `{g4} złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)"
+        gold_hier = f"- **Ekonomia:** `{g4} złote` na start · Dochód `+{income} złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+{ig} zł) w Fazie I (Intryga)"
     else:
-        gold_hier = f"- **Ekonomia:** `{g4} złote` na start (w 5p: `{g5} złote`) · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)"
+        gold_hier = f"- **Ekonomia:** `{g4} złote` na start (w 5p: `{g5} złote`) · Dochód `+{income} złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+{ig} zł) w Fazie I (Intryga)"
     text = re.sub(r"- \*\*Ekonomia:\*\* .*", gold_hier, text)
 
+    t3, t4, t5 = t["3p"], t["4p"], t["5p"]
     text = re.sub(r"- \*\*Maksymalny limit Er:\*\* `\d+ Er`", f"- **Maksymalny limit Er:** `{s['max_eras']} Er`", text)
-    text = re.sub(
-        r"- \*\*Obserwowana:\*\* `.*?`",
-        f"- **Obserwowana:** `{o3[0]}–{o3[1]} Herezji (3p) / {o4[0]}–{o4[1]} (4–5p)`",
-        text
+    if t3 == t4 == t5:
+        prog_hier = f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t4}`"
+    else:
+        prog_hier = (
+            f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t4}` "
+            f"(Kanon 4p; w 3p: `≥{t3}`, w 5p: `≥{t5}`)"
+        )
+    strefy_prog = (
+        "- **Strefy Herezji:** Czysta `0–3`; Obserwowana od `4` do `T−1`; Krytyczna `≥T`\n"
+        "- **Próg Obserwowanej:** `≥4` (Autodafé: Stos zamiast aresztu)\n"
+        + prog_hier
     )
     text = re.sub(
-        r"- \*\*Krytyczna / Heretyk:\*\* `.*?`",
-        f"- **Krytyczna / Heretyk:** `{cr3}–10 Herezji (3p) / {cr4}–10 (4–5p)`",
-        text
+        r"- \*\*Strefy(?: i pasma)? Herezji:\*\* .*\n"
+        r"(?:  - \*\*.*\n)*"
+        r"(?:- \*\*Próg Obserwowanej:\*\* .*\n)?"
+        r"- \*\*Próg Oskarżenia na Dworze:\*\* .*",
+        strefy_prog,
+        text,
+        count=1,
     )
+    h = s["hand_limit"]
+    h4 = h["4p"] if isinstance(h, dict) else h
     text = re.sub(
-        r"- \*\*Próg Oskarżenia na Dworze:\*\* `.*?`",
-        f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t['3p']} (3p) / ≥ {t['4p']} (4–5p)`",
-        text
+        r"- \*\*Limit kart na ręce:\*\* `\d+ kart`",
+        f"- **Limit kart na ręce:** `{h4} kart`",
+        text,
+    )
+    v = cfg["victory"]
+    kt = v["kabala_toledo"]
+    kt_e = kt["era"]
+    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    kt_f = kt["fragments"]
+    kt_frag = kt_f["4p"] if isinstance(kt_f, dict) else kt_f
+    text = re.sub(
+        r"\| \*\*Kabała z Toledo\*\* \|.*",
+        f"| **Kabała z Toledo** | **{kt_frag} Fragmenty** (Era {kt_era}+) | **{kt_frag} Fragmenty** (Era {kt_era}+) | **{kt_frag} Fragmenty** (Era {kt_era}+) |",
+        text,
     )
     text = re.sub(
         r"- \*\*Cooldown Autodafé Inkwizytora:\*\* Max `co \d+ Ery`",
@@ -442,6 +485,85 @@ def sync_hierarchia(cfg: dict) -> list[str]:
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/hierarchia_balansowania.md"]
+
+
+def sync_balance_notes(cfg: dict) -> list[str]:
+    """Sync the live SSOT snapshot at the top of balance-notes.md (not patch history)."""
+    path = PROJECT_ROOT / "playtesting" / "balance-notes.md"
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    s = cfg["system"]
+    t = s["accusation_threshold"]
+    t3, t4, t5 = t["3p"], t["4p"], t["5p"]
+    g = s["start_gold"]
+    g4 = g["4p"] if isinstance(g, dict) else g
+    h = s["hand_limit"]
+    h4 = h["4p"] if isinstance(h, dict) else h
+    cd = s["autodafe_cooldown"]
+    me = s["max_eras"]
+    kt = cfg["victory"]["kabala_toledo"]
+    kt_e = kt["era"]
+    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+
+    if t3 == t4 == t5:
+        prog_why = "Kanon. Obserwowana kończy się na T−1."
+    else:
+        prog_why = (
+            f"Kanon 4p = **{t4}**. Wyjątki składu: 3p={t3}, 5p={t5}. "
+            f"Obserwowana kończy się na T−1."
+        )
+    text = re.sub(
+        r"\| \*\*Próg Obserwowanej\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \|.*",
+        "| **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"\| \*\*Próg Oskarżenia \(Krytyczna(?: Herezja)?\)\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \|.*",
+        f"| **Próg Oskarżenia (Krytyczna)** | **{t3}** | **{t4}** | **{t5}** | {prog_why} |",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"\| \*\*Strefy Herezji \(Czysta / Obserw\. / Kryt\.\)\*\* \|.*\n",
+        "",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"\| \*\*Maksymalna Liczba Er\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \|",
+        f"| **Maksymalna Liczba Er** | **{me}** | **{me}** | **{me}** |",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"\| \*\*Cooldown Autodafé\*\* \| \*\*\d+ Ery\*\* \| \*\*\d+ Ery\*\* \| \*\*\d+ Ery\*\* \|.*",
+        f"| **Cooldown Autodafé** | **{cd} Ery** | **{cd} Ery** | **{cd} Ery** | Zunifikowany cooldown co {cd} Ery (pierwsze możliwe od Ery {cd}). |",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"\| \*\*Złoto Startowe\*\* \| \*\*\d+ zł\*\* \| \*\*\d+ zł\*\* \| \*\*\d+ zł\*\* \|.*",
+        f"| **Złoto Startowe** | **{g4} zł** | **{g4} zł** | **{g4} zł** | Zunifikowane {g4} zł dla wszystkich składów graczy. |",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"\| \*\*Limit Kart na Ręce\*\* \| \*\*\d+ Kart\*\* \| \*\*\d+ Kart\*\* \| \*\*\d+ Kart\*\* \|.*",
+        f"| **Limit Kart na Ręce** | **{h4} Kart** | **{h4} Kart** | **{h4} Kart** | Zunifikowany limit {h4} kart dla wszystkich składów graczy. |",
+        text,
+        count=1,
+    )
+    text = re.sub(
+        r"(- \*\*Minimalna Era:\*\* \*\*)\d+",
+        rf"\g<1>{kt_era}",
+        text,
+        count=1,
+    )
+
+    path.write_text(text, encoding="utf-8")
+    return ["Zsynchronizowano playtesting/balance-notes.md (snapshot SSOT)"]
 
 
 def sync_slownik(cfg: dict) -> list[str]:
@@ -454,13 +576,17 @@ def sync_slownik(cfg: dict) -> list[str]:
     g = s["start_gold"]
     g4 = g["4p"] if isinstance(g, dict) else g
     g5 = g["5p"] if isinstance(g, dict) else g
+    income = int(s.get("era_income", 1))
+    ig = int(s.get("intrigue_gold", 1))
     if g4 == g5:
-        gold_str = f"Start **{g4}**; dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)."
+        gold_str = f"Start **{g4}**; dochód **+{income} złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+{ig} zł) w Fazie I (Intryga)."
     else:
-        gold_str = f"Start **{g4}** (w 5p: **{g5}**); dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)."
+        gold_str = f"Start **{g4}** (w 5p: **{g5}**); dochód **+{income} złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+{ig} zł) w Fazie I (Intryga)."
     text = re.sub(r"Start \*\*.*?\*\*; dochód \*\*.*?\*\* w Fazie III.*?\.", gold_str, text)
     text = re.sub(r"Limit gry: \*\*\d+\*\* Er", f"Limit gry: **{s['max_eras']}** Er", text)
     text = re.sub(r"Limit \d+ Er → najbliższy celowi", f"Limit {s['max_eras']} Er → najbliższy celowi", text)
+    text = re.sub(r"Remis postępu po \*\*\d+\*\* Er", f"Remis postępu po **{s['max_eras']}** Er", text)
+    text = re.sub(r"Remis postępu po \d+ Er", f"Remis postępu po **{s['max_eras']}** Er", text)
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/slownik.md"]
@@ -631,6 +757,8 @@ def main():
     for ch in sync_teach_sheet(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_hierarchia(cfg):
+        print(f"   ✅ {ch}")
+    for ch in sync_balance_notes(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_slownik(cfg):
         print(f"   ✅ {ch}")

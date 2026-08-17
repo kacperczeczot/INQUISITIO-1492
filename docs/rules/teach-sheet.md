@@ -62,7 +62,7 @@
 | Kabała z Toledo | **3 Fragmenty** (od Ery 6) |
 | Gildia Cieni | **4 Upadki** |
 
-**Limit:** 11 Er → najbliższy celowi; remis → najniższa Herezja.
+**Limit:** 12 Er → najbliższy celowi; remis → najniższa Herezja.
 
 ---
 

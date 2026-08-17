@@ -25,7 +25,7 @@ Struktura hierarchiczna określająca ścisłą kolejność optymalizacji i dost
    - **Zrozumiałość dla człowieka:** Wyjątek musi być prosty, elegancki i intuicyjny dla gracza czytającego instrukcję przy stole (np. w tabeli pomocy gracza), a nie stanowić ukrytego, zawiłego algorytmu.
 
 4. **Ablacja ≠ gałka audytora:**
-   Raport użyteczności może wyłączyć podsystem (Kronika, Szlak, patrol Inkwizytora), żeby zmierzyć, czy żyje. Audytor **nie wdraża** wyłączeń ani skrajów z tego raportu. Pula apply = ±1 z audytów L1/L2/L3/L4. Tempo Kroniki to **1 edykt na erę** — wadliwe karty Kroniki się naprawia, nie `time_deck_freq`.
+   Raport użyteczności może wyłączyć podsystem (Kronika, Szlak, patrol Inkwizytora), żeby zmierzyć, czy żyje. Audytor **nie wdraża** wyłączeń ani skrajów. Makro 4P: żywe `±1` L1/L2 (złoto, Akcja Gospodarcza, próg oskarżenia, Obserwowana, Er, karty/erę, era Kabały/Cieni, CD Autodafé, ręka, liczniki C, szlak ±1). Lookahead 2D/3D **zapisuje** zweryfikowany wektor (komplementarność; gałka nie musi wygrywać 1D). Głębiej tylko gdy 4P score albo witalność bije held — jeździec Δ≈0 nie wchodzi. Poza apply: agenci (SKU), Werdykt Tajny, tempo Kroniki (`freq` / OFF), split upadków, wskrzeszanie skasowanego YAML. **3p/5p nie ruszają gałek całego stołu.** Karty = audytor kanonu.
 
 ---
 
@@ -35,12 +35,10 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 
 - **Limit kart na ręce:** `5 kart`
 - **Ekonomia:** `4 złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)
-- **Maksymalny limit Er:** `12 Er` (remis po 8 Er -> gracz najbliższy celowi, następnie najniższa Herezja)
-- **Strefy i pasma Herezji:** 
-  - **Czysta:** `0–3 Herezji`
-  - **Obserwowana:** `4–5 Herezji (3p) / 4–6 (4–5p)`
-  - **Krytyczna / Heretyk:** `6–10 Herezji (3p) / 7–10 (4–5p)`
-- **Próg Oskarżenia na Dworze:** `Herezja ≥ 6 (3p) / ≥ 7 (4–5p)`
+- **Maksymalny limit Er:** `12 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
+- **Strefy Herezji:** Czysta `0–3`; Obserwowana od `4` do `T−1`; Krytyczna `≥T`
+- **Próg Obserwowanej:** `≥4` (Autodafé: Stos zamiast aresztu)
+- **Próg Oskarżenia na Dworze:** `Herezja ≥ 7` (Kanon 4p; w 3p: `≥6`, w 5p: `≥8`)
 - **Liczba Agentów per gracz:** `3 Agenci`
 - **Cooldown Autodafé Inkwizytora:** Max `co 3 Ery`
 

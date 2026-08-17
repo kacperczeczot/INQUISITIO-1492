@@ -13,17 +13,34 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
+## Gwarancja silnika — `game_config.yaml` **v0.96**
+
+**Zakres:** od tego momentu pętla ery w simie **gra te same procedury stołu** co księga / słownik / `game/mechanics/` (Intryga, Sąd, Kronika). Każda nazwana mechanika jest **wpięta i odpala się, gdy jest legalna** — nie jako martwy YAML ani pusty `pass`.
+
+Wchodzi m.in.: Gospodarcza i Jarmark; zakrycie / odkrycie 1→5; fiasko bez Herezji; Hak (max 2, wymuszenie 1/erę); nasłanie → Patrol 0–1 → Autodafé na **rywalach** (Stos za agenta); Przesłuchanie (Marionetka / Hak / +2); wykrycie Marionetki; ruch Marionetki 1/erę; Werdykt (1 oskarżenie na cel / erę, remis = uniewinnienie, skazanie = areszt + Herezja, Stos tylko gdy Oficjum oskarża); reakcje `so-05` / `gc-05`; Kronika; cele C; tie-break.
+
+**Poza zakresem (świadomie):** AI nie blefuje jak człowiek (heurystyka celów i głosów); tekst `effect` nie jest osobnym kompilatorem leksykonu — karty idą przez handlery + pola YAML. Sesja ludzka nadal mierzy fun Werdyktu.
+
+**Gwarancja:** od **v0.96** audytor i batch mierzą **tę** grę (procedury kanonu), nie proxy bez Gospodarczej / z kasowaniem agentów przy Werdykcie / z darmową ewakuacją Cieni.
+
+**Audytor — wolno odpalać.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P (żywe `±1`, w tym Gospodarcza). `audytor_3p.py` / `audytor_5p.py` piszą **tylko** wyjątki `3p:` / `5p:` (próg, złoto, L2) — **nie** ruszają gałek całego stołu (Obserwowana, karty/erę, Gospodarcza, Er, CD Autodafé, szlak). `--dry-run` = pomiar bez zapisu YAML. Jeździec Δ≈0 i ablacja `off` nie wchodzą.
+
+— Cursor Grok 4.6
+
+---
+
 ## ⚙️ Kluczowe Parametry Systemowe (Single Source of Truth: `game_config.yaml`)
 
 Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_config.yaml`](../game_config.yaml):
 
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
-| **Próg Oskarżenia (Krytyczna Herezja)** | **6** | **7** | **8** | Jedyny naturalnie skalowany parametr z zagęszczeniem stołu (3p=6, 4p=7, 5p=8). |
-| **Strefy Herezji (Czysta / Obserw. / Kryt.)** | **0–3 / 4–5 / 6–10** | **0–3 / 4–6 / 7–10** | **0–3 / 4–7 / 8–10** | Automatycznie powiązane: Krytyczna = próg oskarżenia (6@3p / 7@4p / 8@5p). |
+| **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |
+| **Próg Oskarżenia (Krytyczna)** | **6** | **7** | **8** | Kanon 4p = **7**. Wyjątki składu: 3p=6, 5p=8. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **12** | **12** | **12** | Fus / tiebreak; partie 4P kończą się ~6 Er. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
-| **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę dla wszystkich składów. |
+| **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
+| **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
 | **Złoto Startowe** | **4 zł** | **4 zł** | **4 zł** | Zunifikowane 4 zł dla wszystkich składów graczy. |
 | **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **5 Kart** | Zunifikowany limit 5 kart dla wszystkich składów graczy. |
 | **Otwarcie Szlaku Morskiego (Cienie)** | **Era 4** | **Era 4** | **Era 4** | Szlak w oknie partii (wcześniej era 6 = po końcu gry). |
@@ -68,6 +85,10 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### ⚪ Pomiar makro 4P (2026-08-17) — nie jest patchem; YAML bez zmian
+- Lookahead (ultra): złoto 4→3 + Kabała od ery 7 + próg 5/6/7 = **73.7** (baza 57.4). Era Kabały sama w 1D: 54.9. Limit Er +1 przy tym samym wyniku = jeździec.
+- Zapis przerwany (SIGKILL). To nie bump wersji. SSOT: **v0.96**.
 
 ### 🟢 Patch v0.96 (2026-08-17) — Agenci 3, próg 6/7/8, werdykt jawny
 - **Cofnięcie trójki HUD z v0.95:** agenci **2 → 3**, próg oskarżenia **7/8/9 → 6/7/8**, `verdict_secret` wyłączony.

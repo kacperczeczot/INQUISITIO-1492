@@ -154,7 +154,9 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
         elif condition == "rival_in_dungeon_or_inquisitor":
             parts.append("Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.")
         elif condition == "heresy_gte_4":
-            parts.append("Załóż Hak na rywala z Herezją ≥ 4.")
+            from inquisitio.config import CONFIG
+            ot = CONFIG.observed_threshold()
+            parts.append(f"Załóż Hak na rywala z Herezją ≥ {ot}.")
         elif tloc == "neighbor_location":
             parts.append("Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta.")
         elif data.get("verdict_weight") == 2:

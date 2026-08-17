@@ -6,6 +6,7 @@
 # INQUISITIO 1492 — silnik symulacji
 
 Silnik Python pod prototyp (**warstwa C** na stół; A/B = filtry talii w sim).  
+Pętla ery: Faza I = zakryta karta **lub** Akcja Gospodarcza (`system.intrigue_gold`); Faza II = Inkwizytor → odkrycie 1→5 → Lochy → Werdykt.  
 Karty: Markdown → YAML z [`../game/cards/`](../game/cards/).  
 Raporty batch: lokalnie → [`../playtesting/sim-reports/`](../playtesting/sim-reports/) (gitignore; skrót do [`../playtesting/balance-notes.md`](../playtesting/balance-notes.md)).
 
@@ -44,7 +45,7 @@ python -m inquisitio compare --games 100 --setup 3p-oficjum-alandalus-korona --s
 # 1. Audytor Kanonu 4P (Główna kotwica: pełna optymalizacja talii 50 kart i parametrów 4P)
 python tools/sim/audytor_kanonu.py --workers 10
 
-# 2. Audytor 4P Makro (Szybki optymalizator zasad systemowych L1/L2/L4 bez dotykania kart, Lookahead +1D)
+# 2. Audytor 4P Makro (L1/L2/L4 ±1, Lookahead +1D; bez kart)
 python tools/sim/audytor_4p.py --workers 10
 
 # 3. Audytor 3P (Dedykowany optymalizator 10 setupów 3-osobowych z algorytmem Adaptive Lookahead +1D)
@@ -55,6 +56,13 @@ python tools/sim/audytor_5p.py --workers 10
 
 # 5. Grand Audit (Pełny audyt poziomów L1–L4, telemetrii 5 filarów i testów stresu ekonomicznego)
 python tools/sim/run_grand_audit.py
+```
+
+Makro (`audytor_4p.py` / 3p / 5p) wdraża żywe `±1` i lookahead 2D/3D. Nie wdraża: ablacji `off`, agentów (SKU), Werdyktu Tajnego, tempa Kroniki, splitu upadków. Jeździec Δ≈0 (np. Er +1 bez zmiany 4P) odpada przy held. **3p/5p nie zapisują gałek całego stołu** (Gospodarcza, Obserwowana, karty/erę, limit Er, CD Autodafé, szlak) — to kanon 4P. `--dry-run` bez zapisu YAML. Szczegóły: [`docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) §0 pkt 4.
+
+```bash
+# pomiar bez zapisu
+python tools/sim/audytor_4p.py --workers 10 --dry-run
 ```
 
 ## Testy

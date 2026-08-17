@@ -93,7 +93,7 @@ Znacznik / cel Kabały. Warunek: **3 Fragmenty** od Ery **6**. Herezja nie jest 
 
 ## Herezja
 
-Tor **0–10** na planszetce. Strefy: Czysta 0–3, Obserwowana 4–5 (3p) / 4–6 (4–5p), **Krytyczna** 6–10 (3p) / 7–10 (4–5p). **Oskarżenie** od Herezji ≥ **6** (3p) / ≥ **7** (4–5p). Źródła: karty, Hak ujawniony, Autodafé, Marionetka wykryta, Werdykt (uniewinnienie) itd.
+Tor **0–10** na planszetce. **Próg Obserwowanej `≥4`** (Czysta 0–3; Autodafé: Stos). **Krytyczna = próg oskarżenia T** (Kanon 4p: **7**; w 3p: **6**, w 5p: **8**). Obserwowana: 4 … T−1. Źródła: karty, Hak ujawniony, Autodafé, Marionetka wykryta, Werdykt (uniewinnienie) itd.
 
 **Patrz także:** [Krytyczna](#krytyczna), [Oskarżenie](#oskarżenie) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
 
@@ -222,7 +222,7 @@ Znacznik celu Cieni (i interakcji Autodafé). Przy Autodafé w lokacji z Relikwi
 
 ## Remis
 
-Przy Werdykcie (równe wagi głosów) → Uniewinnienie. Przy remisie korzyści bez zapisu → [Wyrok surowy](#wyrok-surowy). Remis postępu po 8 Er → najniższa Herezja.
+Przy Werdykcie (równe wagi głosów) → Uniewinnienie. Przy remisie korzyści bez zapisu → [Wyrok surowy](#wyrok-surowy). Remis postępu po **12** Er → najbliższy celowi, potem najniższa Herezja.
 
 **Patrz także:** [Werdykt](#werdykt), [Zwycięstwo](#zwycięstwo)
 

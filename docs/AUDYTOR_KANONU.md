@@ -12,7 +12,7 @@
      `4p-core`, `4p-no-cienie`, `4p-no-kabala`, `4p-no-korona`, `4p-no-oficjum`.
 2. **Obnażanie Realnych Anomalii 3p i 5p:**
    * Doprowadzenie 4P do perfekcji tworzy **nieskazitelny punkt odniesienia**.
-   * Po każdym patchu skrypt wykonuje pomiar kolateralny na 3p i 5p, bezlitośnie obnażając, gdzie faktycznie brakuje proporcjonalnego skalowania stołu (np. liczby Stosów Oficjum przy 12 celach).
+   * Po każdym patchu skrypt wykonuje pomiar kolateralny na 3p i 5p. Wyjątki formatu zapisują **tylko** `audytor_3p.py` / `audytor_5p.py` pod kluczami `3p:` / `5p:` — nie skalują kanonu 4P „na wszelki wypadek”.
 
 ---
 
@@ -59,3 +59,21 @@ Po każdym wdrożonym patchu Audytor Kanonu 4P automatycznie tworzy i aktualizuj
 3. **`playtesting/sim-reports/archive/{wersja}/raport_telemetrii.md`:** Pełny raport telemetrii 5 filarów dla 16 setupów (ze snapshotem `game_config.yaml`).
 4. **`playtesting/balance-notes.md`:** Dodanie oficjalnej notatki patcha z datą, zyskiem i telemetrią.
 5. **Księga zasad, karta pomocy i edytor kart:** Pełna synchronizacja przez `tools/sync_config.py`.
+
+Makro (`audytor_4p.py`) zapisuje lookahead 2D/3D na żywych `±1`. Poza apply: agenci (SKU), Werdykt Tajny, tempo Kroniki, ablacja. Jeździec Δ≈0 nie wchodzi. Patrz [`rules/hierarchia_balansowania.md`](rules/hierarchia_balansowania.md) §0.
+
+---
+
+## Audytory makro i formatu (wolno odpalać)
+
+`audytor_kanonu.py` = karty 4P. `audytor_4p.py` = skalary kanonu 4P (w tym Obserwowana, karty/erę, Gospodarcza, Er).  
+`audytor_3p.py` / `audytor_5p.py` = **tylko** wyjątki `3p:` / `5p:` (próg oskarżenia, złoto startowe, L2). Nie zapisują gałek całego stołu.
+
+```bash
+# bez zapisu YAML
+sim/.venv/bin/python tools/sim/audytor_4p.py --workers 10 --dry-run
+sim/.venv/bin/python tools/sim/audytor_3p.py --workers 10 --dry-run
+sim/.venv/bin/python tools/sim/audytor_5p.py --workers 10 --dry-run
+```
+
+Bez `--dry-run` 4P podbija wersję SSOT; 3p/5p podbijają wersję, ale zostawiają kanon 4P nietknięty.

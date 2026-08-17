@@ -11,7 +11,7 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 1. **Poziom 1 (`system`):** Zasady i stałe ogólnosystemowe (złoto startowe, agenci, limit ręki, max Er, progi oskarżeń).
 2. **Poziom 2 (`victory`):** Warunki zwycięstwa dla 5 frakcji w zależności od liczby graczy (3p, 4p, 5p).
 3. **Poziom 3 (`economy` & `cards`):** Globalna ekonomia oraz indywidualna deklaratywna specyfikacja 50 kart.
-4. **Poziom 4 (`variants`, `heresy_zones`, `telemetry_norms`):** Warianty rozgrywki, tor planszetek i normy audytowe.
+4. **Poziom 4 (`variants`, `telemetry_norms`):** Warianty rozgrywki i normy audytowe. Strefy Herezji liczy silnik z `observed_threshold` + `accusation_threshold` (nie ma osobnego bloku `heresy_zones`).
 
 ---
 
@@ -19,12 +19,18 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 
 | Klucz w YAML | Typ | Dopuszczalne wartości | Domyślnie | Opis |
 | :--- | :--- | :--- | :--- | :--- |
-| `start_gold` | `int` | `1 .. 10` | `3` | Złoto na starcie gry dla każdego gracza |
+| `start_gold` | `int` | `1 .. 10` | `4` | Złoto na starcie gry dla każdego gracza |
 | `agents_per_player` | `int` | `1 .. 5` | `3` | Liczba figurków agentów w puli gracza |
 | `hand_limit` | `int` | `3 .. 10` | `5` | Maksymalna liczba kart na ręce na koniec tury |
-| `max_eras` | `int` | `3 .. 12` | `8` | Limit Er (po osiągnięciu gra kończy się remisem / deadlockiem) |
+| `max_eras` | `int` | `3 .. 16` | `12` | Limit Er; po nim tie-break (najbliższy celowi, potem najniższa Herezja). |
 | `autodafe_cooldown` | `int` | `1 .. 4` | `3` | Co ile Er Inkwizytor ogłasza rutynowe Autodafé |
-| `accusation_threshold` | `dict` | `3p: 5..10`, `4p: 5..10`, `5p: 5..10` | `3p:6, 4p:7, 5p:7` | Próg Herezji wyzwalający Werdykt i Oskarżenie |
+| `cards_per_era` | `int` | `1 .. 4` | `2` | Rundy Intrygi (karta **lub** Akcja Gospodarcza) na Erę. |
+| `era_income` | `int` | `0 .. 3` | `1` | Złoto w Fazie III (Kronika). |
+| `intrigue_gold` | `int` | `0 .. 3` | `1` | Złoto z Akcji Gospodarczej w Fazie I. Jarmark (`time-09`) na Rynku: **+2** zamiast tej wartości (min. 2). |
+| `observed_threshold` | `int` | `1 .. 9` | `4` | Start Obserwowanej; Autodafé pali na Stos od tej wartości (po +1 Herezji). Czysta = poniżej. |
+| `accusation_threshold` | `dict` | `3p: 5..10`, `4p: 5..10`, `5p: 5..10` | `3p:6, 4p:7, 5p:8` | Próg Herezji = Krytyczna / Oskarżenie / Werdykt. Obserwowana kończy się na T−1. |
+
+Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gold`, `max_eras`, `autodafe_cooldown`, `era_income`, `hand_limit`) to **jedna liczba na stół**. Zapisuje je tylko `audytor_4p.py`. `audytor_3p.py` / `audytor_5p.py` mogą splitować `start_gold`, `accusation_threshold` i cele `victory`.
 
 ---
 
