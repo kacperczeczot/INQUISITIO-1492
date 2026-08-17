@@ -27,12 +27,6 @@
 
 | ID | Warunek Zwycięstwa Poziomu 2 | Global (baza → test) | 3p (baza → test) | 4p (baza → test) | 5p (baza → test) | Status Balansu |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: |
-| `L2_CAA_ERA_PLUS1` | Cienie Era: 4 → 5 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
-| `L2_CAA_ERA_MINUS1` | Cienie Era: 4 → 3 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
-| `L2_KB_ERA_PLUS1` | Korona Era: 4 → 5 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
-| `L2_KB_ERA_MINUS1` | Korona Era: 4 → 3 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
-| `L2_KB_HOOKS_MINUS1` | Korona Haki: 0 → -1 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
-| `L2_KT_HERESY_LOW_MINUS1` | Kabała Pasmo: 0–9 → -1–9 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
 | `L2_KT_HERESY_LOW_PLUS1` | Kabała Pasmo: 0–9 → 1–9 | 🔴 ** 26.8** | 24.4 | 34.9 | 21.2 | ⚪ OPTYMALNY |
 | `L2_KT_HERESY_HIGH_MINUS1` | Kabała Pasmo: 0–9 → 0–8 | 26.8 → 🔴 ** 26.4** (`-0.4`) | 24.4 → 23.9 (`-0.5`) | 34.9 → 34.1 (`-0.8`) | 21.2 | ⚪ OPTYMALNY |
 | `L2_GC_FALLS_NO_SO_PLUS1` | Gildia Upadki (bez Oficjum): 5 → 6 | 26.8 → 🔴 ** 23.5** (`-3.3`) | 24.4 → 18.6 (`-5.8`) | 34.9 → 30.8 (`-4.1`) | 21.2 | 🔴 POGARSZA GLOBALNIE |
@@ -71,12 +65,6 @@
 
 | ID | Długość Gry (Ery) [Min–Max] | Deadlocks % (<15%) | Pas Biedy % (<30%) | Autodafé / Partię [Min–Max] | Oskarżenia / Partię [Min–Max] | Złoto End [Min–Max] | Herezja End [Min–Max] | Weryfikacja Norm Telemetrii |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `L2_CAA_ERA_PLUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
-| `L2_CAA_ERA_MINUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
-| `L2_KB_ERA_PLUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
-| `L2_KB_ERA_MINUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
-| `L2_KB_HOOKS_MINUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
-| `L2_KT_HERESY_LOW_MINUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
 | `L2_KT_HERESY_LOW_PLUS1` | 6.73 Er (1–12) | 5.5% | 5.1% | 1.62 (0–4) | 4.34 (0–22) | 3.84zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
 | `L2_KT_HERESY_HIGH_MINUS1` | 6.75 Er (1–12) | 5.8% | 5.1% | 1.62 (0–4) | 4.38 (0–22) | 3.85zł (0.0–11.3) | 6.53 (1.0–10.0) | 🟢 W NORMIE |
 | `L2_GC_FALLS_NO_SO_PLUS1` | 6.81 Er (1–12) | 6.2% | 5.1% | 1.64 (0–4) | 4.44 (0–22) | 3.88zł (0.0–11.3) | 6.56 (1.0–10.0) | 🟢 W NORMIE |

@@ -26,15 +26,6 @@ Testy z $|\Delta\text{4P}| \le 0.8$ i ruchem share $\le 1.5$ pp. To nie jest „
 
 | Badany Podsystem | Kategoria | 4P Score | $\Delta$ 4P | Klasyfikacja |
 | :--- | :--- | :---: | :---: | :--- |
-| **Cienie: Wymóg Ery 5 → Era 3 (Wczesna ucieczka)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Cienie: Wymóg Ery 5 → Era 8 (Późna ucieczka)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kabała: Całe Pasmo Szerokie (2–9)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kabała: Próg Dolny Pasma 0 → 0 (Rozszerzenie w dół)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kabała: Próg Dolny Pasma 0 → 2 (Zawężenie od dołu)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Korona: Brak wymogu Haków (0 Haków)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Korona: Wymóg Ery 5 → Era 3** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Korona: Wymóg Ery 5 → Era 7** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Szlak Morski: Odblokowanie w Erze 4 (Wczesne)** | Poziom 4: Warianty i Modyfikatory | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Święte Oficjum: Wymóg Skazań +2 (Zamiast 2-3)** | Poziom 2: Warunki Zwycięstwa | 🔴 ** 27.6** | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Limit Er: 12 → 16 Er (Wydłużony silnik)** | Poziom 1: System Core | 27.6 → 🔴 ** 28.0** (`⬆️ +0.4`) | `+0.4 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Próg Oskarżenia na Dworze: +1 (Pasywny Dwór)** | Poziom 1: System Core | 27.6 → 🔴 ** 28.1** (`⬆️ +0.5`) | `+0.5 pkt` | 💤 MARTWA MECHANIKA (Low Impact) |
@@ -73,24 +64,16 @@ Testy z $|\Delta\text{4P}| \le 0.8$ i ruchem share $\le 1.5$ pp. To nie jest „
 | **Święte Oficjum: Wymóg Skazań -1** | 27.6 → 🔴 ** 48.2** (`⬆️ +20.6`) | `+20.6 pkt` | 5.48 Er | 0.5% | 5.6% | ⚠️ KRYTYCZNA WADA (Critical Flaw) |
 | **Cienie: Wymóg Relikwii 2 → 4** | 27.6 → 🔴 **  8.9** (`-18.7`) | `-18.7 pkt` | 6.04 Er | 1.0% | 5.6% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Cienie: Wymóg Relikwii 2 → 1** | 27.6 → 🔴 **  6.5** (`-21.1`) | `-21.1 pkt` | 4.65 Er | 0.1% | 5.4% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
-| **Cienie: Wymóg Ery 5 → Era 3 (Wczesna ucieczka)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Cienie: Wymóg Ery 5 → Era 8 (Późna ucieczka)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Korona: Wymóg Dekretów 2 → 3** | 27.6 → 🔴 **  9.3** (`-18.3`) | `-18.3 pkt` | 5.93 Er | 1.1% | 5.6% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Korona: Wymóg Dekretów 2 → 1** | 27.6 → 🔴 **  3.1** (`-24.5`) | `-24.5 pkt` | 2.93 Er | 0.1% | 4.5% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
-| **Korona: Brak wymogu Haków (0 Haków)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Korona: Wymóg Haków +2** | 27.6 → 🔴 ** 20.1** (`-7.5`) | `-7.5 pkt` | 5.78 Er | 0.6% | 5.6% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
-| **Korona: Wymóg Ery 5 → Era 3** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Korona: Wymóg Ery 5 → Era 7** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Kabała: Wymóg Fragmentów 3 → 4** | 27.6 → 🔴 ** 16.2** (`-11.4`) | `-11.4 pkt` | 5.76 Er | 0.9% | 5.5% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Kabała: Wymóg Fragmentów 3 → 2** | 27.6 → 🔴 ** 24.9** (`-2.7`) | `-2.7 pkt` | 5.40 Er | 0.4% | 5.6% | ⚓ KLUCZOWY STABILIZATOR (Key Anchor) |
 | **Kabała: Wymóg Ery 6 → Era 4** | 27.6 → 🔴 ** 27.9** (`⬆️ +0.3`) | `+0.3 pkt` | 5.44 Er | 0.5% | 5.5% | ⚖️ ZBALANSOWANY REGULATOR (Balanced Regulator) |
 | **Kabała: Wymóg Ery 6 → Era 8** | 27.6 → 🔴 ** 19.4** (`-8.2`) | `-8.2 pkt` | 5.74 Er | 0.6% | 5.5% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
-| **Kabała: Próg Dolny Pasma 0 → 2 (Zawężenie od dołu)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kabała: Próg Dolny Pasma 0 → 0 (Rozszerzenie w dół)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Kabała: Próg Górny Pasma 9 → 7 (Zawężenie od góry)** | 27.6 → 🔴 ** 24.3** (`-3.3`) | `-3.3 pkt` | 5.64 Er | 0.9% | 5.5% | 💤 MARTWA MECHANIKA (Low Impact) |
 | **Kabała: Próg Górny Pasma 9 → 11 (Rozszerzenie w górę)** | 27.6 → 🔴 ** 28.9** (`⬆️ +1.3`) | `+1.3 pkt` | 5.55 Er | 0.2% | 5.6% | 💤 MARTWA MECHANIKA (Low Impact) |
 | **Kabała: Całe Pasmo Wąskie (4–6)** | 27.6 → 🔴 ** 19.2** (`-8.4`) | `-8.4 pkt` | 5.71 Er | 1.0% | 5.5% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
-| **Kabała: Całe Pasmo Szerokie (2–9)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Gildia: Wymóg Upadków (z Oficjum) 2 → 3** | 27.6 → 🔴 ** 25.7** (`-1.9`) | `-1.9 pkt` | 5.89 Er | 0.7% | 5.6% | ⚓ KLUCZOWY STABILIZATOR (Key Anchor) |
 | **Gildia: Wymóg Upadków (z Oficjum) 2 → 1** | 27.6 → 🔴 ** 21.7** (`-5.9`) | `-5.9 pkt` | 5.10 Er | 0.4% | 5.5% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Gildia: Wymóg Upadków (bez Oficjum) 3 → 4** | 27.6 → 🔴 ** 26.6** (`-1.0`) | `-1.0 pkt` | 5.65 Er | 0.7% | 5.6% | 💤 MARTWA MECHANIKA (Low Impact) |
@@ -103,7 +86,6 @@ Testy z $|\Delta\text{4P}| \le 0.8$ i ruchem share $\le 1.5$ pp. To nie jest „
 | **Kronika Dziejów: Całkowite wyłączenie edyktów czasu** | 27.6 → 🔴 ** 12.2** (`-15.4`) | `-15.4 pkt` | 5.70 Er | 0.9% | 6.1% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Kronika Dziejów: Częstotliwość co 2 Ery** | 27.6 → 🔴 ** 18.5** (`-9.1`) | `-9.1 pkt` | 5.75 Er | 1.2% | 5.8% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
 | **Werdykt Sądu: Tajny (brak koordynacji anty-snowball)** | 27.6 → 🔴 ** 24.1** (`-3.5`) | `-3.5 pkt` | 5.13 Er | 0.3% | 5.7% | ⚓ KLUCZOWY STABILIZATOR (Key Anchor) |
-| **Szlak Morski: Odblokowanie w Erze 4 (Wczesne)** | 🔴 ** 27.6** | `0.0 pkt` | 5.59 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Szlak Morski: Odblokowanie w Erze 6 (Późne)** | 27.6 → 🔴 ** 28.1** (`⬆️ +0.5`) | `+0.5 pkt` | 5.58 Er | 0.5% | 5.6% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Inkwizytor Patrol: Ruch 0 pól (Stacjonarny)** | 27.6 → 🔴 ** 27.5** (`-0.1`) | `-0.1 pkt` | 6.00 Er | 1.0% | 5.5% | ⚓ KLUCZOWY STABILIZATOR (Key Anchor) |
 | **Inkwizytor Patrol: Ruch 2 pola (Szybki patrol)** | 27.6 → 🔴 ** 24.7** (`-2.9`) | `-2.9 pkt` | 5.43 Er | 0.4% | 5.6% | 💤 MARTWA MECHANIKA (Low Impact) |
