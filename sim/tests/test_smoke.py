@@ -213,7 +213,10 @@ def test_ssot_win_paths_match_yaml():
     got = check_winner_details(st5)
     assert got is None or got[0] != FactionId.CIENIE_AL_ANDALUS
     st5.era = 5
-    assert check_winner_details(st5) == (FactionId.CIENIE_AL_ANDALUS, "caa_era")
+    got = check_winner_details(st5)
+    assert got is None or got[0] != FactionId.CIENIE_AL_ANDALUS
+    st5.sea_route_open = True
+    assert check_winner_details(st5) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 
     gc = st5.players[FactionId.GILDIA_CIENI]
     caa5.relics_evacuated = 0
@@ -240,12 +243,10 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     st.era = 7
     assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
 
-    from inquisitio.engine.hooks import grant_hook
     st2 = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="C")
     kb = st2.players[FactionId.KORONA_BORGIOWIE]
     kb.decrees_played = 2
-    grant_hook(st2, FactionId.KORONA_BORGIOWIE, FactionId.SWIETE_OFICJUM)
-    st2.era = 6
+    st2.era = 1
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KORONA_BORGIOWIE
@@ -290,4 +291,22 @@ def test_reaction_gc_05_alters_verdict_vote():
     convicted = run_verdict(st, FactionId.KORONA_BORGIOWIE, FactionId.GILDIA_CIENI, rng)
     assert "gc-05" not in gc.hand
     assert "gc-05" in gc.discard
+
+
+def test_so_condemns_win_without_full_stacks():
+    from inquisitio.engine.win import check_winner_details
+
+    st = new_game(setup="4p-core", seed=1, layer="C")
+    so = st.players[FactionId.SWIETE_OFICJUM]
+    so.stacks = 4
+    so.condemned_rivals = {
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+        FactionId.KABALA_TOLEDO,
+    }
+    assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
+    so.condemned_rivals = set()
+    so.stacks = 5
+    assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
+
 

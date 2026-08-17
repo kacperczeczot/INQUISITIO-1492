@@ -46,14 +46,13 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             condemn_need = max(1, base_condemn + ov.get("so_condemns_offset", 0))
             condemn_ok = (state.layer != "B" and len(pl.condemned_rivals) >= condemn_need)
 
+            if condemn_ok:
+                return (fid, "so_condemns")
             if pl.stacks >= stack_need:
                 return (fid, "so_stacks")
-            elif condemn_ok:
-                return (fid, "so_condemns")
 
         elif fid == FactionId.CIENIE_AL_ANDALUS:
             cfg_caa = cfg_v.cienie_al_andalus
-            base_era = _val(cfg_caa.path_era, pc) + ov.get("caa_era_offset", 0)
             relic_need = max(1, _val(cfg_caa.relics, pc) + ov.get("caa_relics_offset", 0))
             if "caa_relics" in ov:
                 relic_need = ov["caa_relics"]
@@ -63,16 +62,10 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             if pl.relics_evacuated >= relic_need:
                 if state.sea_route_open or pl.path_via_double or pl.avoided_autodafe:
                     return (fid, "caa_sea_route")
-                elif state.era >= base_era:
-                    return (fid, "caa_era")
 
         elif fid == FactionId.KORONA_BORGIOWIE:
             cfg_kb = cfg_v.korona_borgiowie
             hooks_ever = distinct_hook_victims_ever(state, fid)
-            if "kb_era" in ov:
-                base_era = _val(ov["kb_era"], pc)
-            else:
-                base_era = _val(cfg_kb.era, pc) + ov.get("kb_era_offset", 0)
             if "kb_decrees_3p" in ov and n_players <= 3:
                 decrees_need = ov["kb_decrees_3p"]
             else:
@@ -86,7 +79,6 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
                 state.layer == "C"
                 and pl.decrees_played >= decrees_need
                 and hooks_ever >= hooks_need
-                and state.era >= base_era
             ):
                 return (fid, "kb_main")
 
