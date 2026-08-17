@@ -207,7 +207,7 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     l1 = [
         t
         for t in audit_level1.build_level1_tests()
-        if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0]
+        if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0] and "AUTODAFE" not in t[0]
     ]
     tests.extend(l1)
 

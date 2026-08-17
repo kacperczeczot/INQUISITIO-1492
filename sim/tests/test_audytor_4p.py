@@ -58,6 +58,10 @@ def test_macro_pool_has_no_cards_or_l3():
         assert "card_overrides" not in params
         assert "disabled_cards" not in params
     assert all("HAND_LIMIT" not in tid for tid in ids)
+    assert all("AUTODAFE" not in tid for tid in ids)
+    for _tid, _name, params in pool:
+        assert "cooldown_offset" not in params
+        assert "autodafe_cooldown" not in params
 
 
 def test_macro_pool_has_pm1_and_extremes():
@@ -65,8 +69,9 @@ def test_macro_pool_has_pm1_and_extremes():
     assert "L2_SO_CONDEMNS_MINUS1" in ids
     assert "L2_SO_CONDEMNS_LO" in ids
     assert "L2_SO_CONDEMNS_HI" in ids
-    assert "L1_AUTODAFE_DISABLED" in ids
     assert "L1_START_GOLD_0" in ids
+    assert "L1_AUTODAFE_DISABLED" not in ids
+    assert "L1_AUTODAFE_COOLDOWN_PLUS1" not in ids
 
 
 def test_crutch_veto_rejects_lowering_dead_condemns():

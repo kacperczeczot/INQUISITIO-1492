@@ -175,7 +175,9 @@ def generate_all_atomic_candidates_macro() -> list[tuple[str, str, dict]]:
         [
             t
             for t in audit_level1.build_level1_tests()
-            if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0]
+            if t[0] != "L1_BAZA"
+            and "HAND_LIMIT" not in t[0]
+            and "AUTODAFE" not in t[0]
         ]
     )
     tests.extend([t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"])
@@ -191,6 +193,8 @@ def generate_all_atomic_candidates_macro() -> list[tuple[str, str, dict]]:
     out: list[tuple[str, str, dict]] = []
     for tid, name, params in tests:
         if tid.startswith("L3_") or "card_overrides" in params or "disabled_cards" in params:
+            continue
+        if "AUTODAFE" in tid or "cooldown_offset" in params or "autodafe_cooldown" in params:
             continue
         if tid in seen:
             continue
