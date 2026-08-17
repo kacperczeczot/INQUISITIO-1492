@@ -4,7 +4,7 @@
 Specjalistyczne narzędzie analityczne do badania wkładu każdego pojedynczego elementu gry w Kanon 4-osobowy (4P):
   1. Ablacja Kart (Per-Card Ablation w 4P): Wyłącza każdą z 50 kart z osobna na 5 setupach 4p:
      - Wpływ na Win Share frakcji w 4P (Kanon: idealne 25.0%)
-     - Wpływ na 4P Balance Score (czy karta stabilizuje kanon 4p, czy go destabilizuje)
+     - Wpływ na 4P Score = win share (`calculate_balance_score`); witalność osobno, nie w tej liczbie
      - Wpływ na tempo partii (Średnia Er) i wskaźnik deadlocków w 4P
   2. Klasyfikacja Kart w Kanonie 4P (Matryca 2D):
      - 👑 FILAR FRAKCJI W 4P (Core Keystone): Kluczowy motor napędowy wygranych frakcji
@@ -47,12 +47,15 @@ from inquisitio.runner.impact_taxonomy import (
     classify_mechanic_impact_4p,
 )
 from inquisitio.runner.scoring import (
+    calculate_balance_score,
     calculate_setup_score,
     color_score,
+    evaluate_vitality,
 )
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
 OUTPUT_REPORT_PATH = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
+REPORT_GAMES_MIN = 5000
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -96,8 +99,11 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
 
     summaries = []
     setup_scores = {}
+    setup_scores_vitality = {}
     faction_wins: dict[str, int] = {}
     faction_total_games: dict[str, int] = {}
+    vitality_penalties: list[float] = []
+    vitality_warnings: list[str] = []
 
     for sname in setups:
         summary = run_batch(
@@ -108,7 +114,12 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
             win_overrides=sys_overrides,
         )
         summaries.append(summary)
-        setup_scores[sname] = calculate_setup_score(summary)
+        setup_scores[sname] = calculate_balance_score(summary)
+        setup_scores_vitality[sname] = calculate_setup_score(summary)
+        vit = evaluate_vitality(summary)
+        vitality_penalties.append(vit.vitality_penalty)
+        for msg in vit.warnings:
+            vitality_warnings.append(f"{sname}: {msg}")
 
         factions = SETUP_PRESETS[sname]
         for fid in factions:
@@ -137,6 +148,9 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
         "name": element_name,
         "score_4p": score_4p,
         "setup_scores": setup_scores,
+        "setup_scores_vitality": setup_scores_vitality,
+        "vitality_penalty": max(vitality_penalties) if vitality_penalties else 0.0,
+        "vitality_warnings": vitality_warnings,
         "faction_shares": faction_shares,
         "eras_avg": eras_avg,
         "deadlock_pct": deadlock_pct,
@@ -165,7 +179,6 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         # POZIOM 1: GŁÓWNE MECHANIKI SYSTEMOWE (GLOBAL SYSTEM CORE)
         # ══════════════════════════════════════════════════════════════
         ("L1_MAX_ERAS_8", "Limit Er: 12 → 8 Er (Presja czasu)", "Poziom 1: System Core", {"max_eras": 8}),
-        ("L1_MAX_ERAS_16", "Limit Er: 12 → 16 Er (Wydłużony silnik)", "Poziom 1: System Core", {"max_eras": 16}),
         ("L1_THRESHOLD_MINUS1", "Próg Oskarżenia na Dworze: -1 (Agresywny Dwór)", "Poziom 1: System Core", {"threshold_offset": -1}),
         ("L1_THRESHOLD_PLUS1", "Próg Oskarżenia na Dworze: +1 (Pasywny Dwór)", "Poziom 1: System Core", {"threshold_offset": 1}),
         ("L1_START_GOLD_0", "Złoto startowe: 4zł → 0zł (Skrajne ubóstwo)", "Poziom 1: System Core", {"start_gold": 0}),
@@ -184,40 +197,31 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         # Święte Oficjum
         ("L2_SO_STACKS_REQ_PLUS2", "Święte Oficjum: Wymóg Stosów +2", "Poziom 2: Warunki Zwycięstwa", {"so_stacks_offset": 2}),
         ("L2_SO_STACKS_REQ_MINUS1", "Święte Oficjum: Wymóg Stosów -1", "Poziom 2: Warunki Zwycięstwa", {"so_stacks_offset": -1}),
-        ("L2_SO_CONDEMNS_REQ_PLUS2", "Święte Oficjum: Wymóg Skazań +2 (Zamiast 2-3)", "Poziom 2: Warunki Zwycięstwa", {"so_condemns_offset": 2}),
         ("L2_SO_CONDEMNS_REQ_MINUS1", "Święte Oficjum: Wymóg Skazań -1", "Poziom 2: Warunki Zwycięstwa", {"so_condemns_offset": -1}),
 
         # Cienie Al-Andalus
         ("L2_CAA_RELICS_REQ_PLUS2", "Cienie: Wymóg Relikwii 2 → 4", "Poziom 2: Warunki Zwycięstwa", {"caa_relics_offset": 2}),
         ("L2_CAA_RELICS_REQ_MINUS1", "Cienie: Wymóg Relikwii 2 → 1", "Poziom 2: Warunki Zwycięstwa", {"caa_relics_offset": -1}),
-        ("L2_CAA_ERA_EARLY", "Cienie: Wymóg Ery 5 → Era 3 (Wczesna ucieczka)", "Poziom 2: Warunki Zwycięstwa", {"caa_era_offset": -2}),
-        ("L2_CAA_ERA_LATE", "Cienie: Wymóg Ery 5 → Era 8 (Późna ucieczka)", "Poziom 2: Warunki Zwycięstwa", {"caa_era_offset": 3}),
 
         # Korona & Borgiowie
         ("L2_KB_DECREES_REQ_PLUS1", "Korona: Wymóg Dekretów 2 → 3", "Poziom 2: Warunki Zwycięstwa", {"kb_decrees_offset": 1}),
         ("L2_KB_DECREES_REQ_MINUS1", "Korona: Wymóg Dekretów 2 → 1", "Poziom 2: Warunki Zwycięstwa", {"kb_decrees_offset": -1}),
-        ("L2_KB_HOOKS_REQ_0", "Korona: Brak wymogu Haków (0 Haków)", "Poziom 2: Warunki Zwycięstwa", {"kb_hooks_offset": -1}),
         ("L2_KB_HOOKS_REQ_PLUS2", "Korona: Wymóg Haków +2", "Poziom 2: Warunki Zwycięstwa", {"kb_hooks_offset": 2}),
-        ("L2_KB_ERA_EARLY", "Korona: Wymóg Ery 5 → Era 3", "Poziom 2: Warunki Zwycięstwa", {"kb_era_offset": -2}),
-        ("L2_KB_ERA_LATE", "Korona: Wymóg Ery 5 → Era 7", "Poziom 2: Warunki Zwycięstwa", {"kb_era_offset": 2}),
 
         # Kabała z Toledo
         ("L2_KT_FRAGS_REQ_PLUS1", "Kabała: Wymóg Fragmentów 3 → 4", "Poziom 2: Warunki Zwycięstwa", {"kt_frags_offset": 1}),
         ("L2_KT_FRAGS_REQ_MINUS1", "Kabała: Wymóg Fragmentów 3 → 2", "Poziom 2: Warunki Zwycięstwa", {"kt_frags_offset": -1}),
         ("L2_KT_ERA_EARLY", "Kabała: Wymóg Ery 6 → Era 4", "Poziom 2: Warunki Zwycięstwa", {"kt_era_offset": -2}),
         ("L2_KT_ERA_LATE", "Kabała: Wymóg Ery 6 → Era 8", "Poziom 2: Warunki Zwycięstwa", {"kt_era_offset": 2}),
-        ("L2_KT_HERESY_LOW_UP", f"Kabała: Próg Dolny Pasma {hb[0]} → {hb[0]+2} (Zawężenie od dołu)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (hb[0]+2, hb[1])}),
-        ("L2_KT_HERESY_LOW_DOWN", f"Kabała: Próg Dolny Pasma {hb[0]} → {max(0, hb[0]-2)} (Rozszerzenie w dół)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (max(0, hb[0]-2), hb[1])}),
         ("L2_KT_HERESY_HIGH_DOWN", f"Kabała: Próg Górny Pasma {hb[1]} → {hb[1]-2} (Zawężenie od góry)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (hb[0], hb[1]-2)}),
         ("L2_KT_HERESY_HIGH_UP", f"Kabała: Próg Górny Pasma {hb[1]} → {hb[1]+2} (Rozszerzenie w górę)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (hb[0], hb[1]+2)}),
         ("L2_KT_HERESY_BAND_NARROW", "Kabała: Całe Pasmo Wąskie (4–6)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (4, 6)}),
-        ("L2_KT_HERESY_BAND_WIDE", "Kabała: Całe Pasmo Szerokie (2–9)", "Poziom 2: Warunki Zwycięstwa", {"kt_heresy_band": (2, 9)}),
 
         # Gildia Cieni
-        ("L2_GC_FALLS_DEFAULT_PLUS1", "Gildia: Wymóg Upadków (z Oficjum) 2 → 3", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_default_offset": 1}),
-        ("L2_GC_FALLS_DEFAULT_MINUS1", "Gildia: Wymóg Upadków (z Oficjum) 2 → 1", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_default_offset": -1}),
-        ("L2_GC_FALLS_NO_SO_PLUS1", "Gildia: Wymóg Upadków (bez Oficjum) 3 → 4", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_no_oficjum_offset": 1}),
-        ("L2_GC_FALLS_NO_SO_MINUS1", "Gildia: Wymóg Upadków (bez Oficjum) 3 → 2", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_no_oficjum_offset": -1}),
+        ("L2_GC_FALLS_DEFAULT_PLUS1", f"Gildia: Wymóg Upadków (z Oficjum) {gc.falls.default} → {gc.falls.default + 1}", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_default_offset": 1}),
+        ("L2_GC_FALLS_DEFAULT_MINUS1", f"Gildia: Wymóg Upadków (z Oficjum) {gc.falls.default} → {gc.falls.default - 1}", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_default_offset": -1}),
+        ("L2_GC_FALLS_NO_SO_PLUS1", f"Gildia: Wymóg Upadków (bez Oficjum) {gc.falls.no_oficjum} → {gc.falls.no_oficjum + 1}", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_no_oficjum_offset": 1}),
+        ("L2_GC_FALLS_NO_SO_MINUS1", f"Gildia: Wymóg Upadków (bez Oficjum) {gc.falls.no_oficjum} → {gc.falls.no_oficjum - 1}", "Poziom 2: Warunki Zwycięstwa", {"gc_falls_no_oficjum_offset": -1}),
 
         # ══════════════════════════════════════════════════════════════
         # POZIOM 4: WARIANTY NISZOWE I MODYFIKATORY GLOBALNE
@@ -225,13 +229,46 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         ("L4_NO_TIME_DECK", "Kronika Dziejów: Całkowite wyłączenie edyktów czasu", "Poziom 4: Warianty i Modyfikatory", {"no_time_deck": True}),
         ("L4_TIME_DECK_EVERY_2ERAS", "Kronika Dziejów: Częstotliwość co 2 Ery", "Poziom 4: Warianty i Modyfikatory", {"time_deck_freq": 2}),
         ("L4_VERDICT_SECRET", "Werdykt Sądu: Tajny (brak koordynacji anty-snowball)", "Poziom 4: Warianty i Modyfikatory", {"verdict_secret": True}),
-        ("L4_SEA_ROUTE_ERA4", "Szlak Morski: Odblokowanie w Erze 4 (Wczesne)", "Poziom 4: Warianty i Modyfikatory", {"sea_route_era": 4}),
-        ("L4_SEA_ROUTE_ERA6", "Szlak Morski: Odblokowanie w Erze 6 (Późne)", "Poziom 4: Warianty i Modyfikatory", {"sea_route_era": 6}),
         ("L4_INQUISITOR_SPEED0", "Inkwizytor Patrol: Ruch 0 pól (Stacjonarny)", "Poziom 4: Warianty i Modyfikatory", {"inquisitor_speed": 0}),
-        ("L4_INQUISITOR_SPEED2", "Inkwizytor Patrol: Ruch 2 pola (Szybki patrol)", "Poziom 4: Warianty i Modyfikatory", {"inquisitor_speed": 2}),
     ]
 
+    # Don't ablate knobs already at the identity (Δ=0 is noise, not a finding).
+    kb_hooks = int(kb.hooks) if not isinstance(kb.hooks, dict) else int(kb.hooks.get("4p", 0))
+    if kb_hooks > 0:
+        tasks.append((
+            "L2_KB_HOOKS_REQ_0",
+            "Korona: Brak wymogu Haków (0 Haków)",
+            "Poziom 2: Warunki Zwycięstwa",
+            {"kb_hooks": 0},
+        ))
+    if hb[0] > 0:
+        tasks.append((
+            "L2_KT_HERESY_LOW_DOWN",
+            f"Kabała: Próg Dolny Pasma {hb[0]} → {max(0, hb[0]-2)} (Rozszerzenie w dół)",
+            "Poziom 2: Warunki Zwycięstwa",
+            {"kt_heresy_band": (max(0, hb[0] - 2), hb[1])},
+        ))
+    sea_era = int(nv.sea_route_era)
+    if sea_era != 4:
+        tasks.append((
+            "L4_SEA_ROUTE_ERA4",
+            "Szlak Morski: Odblokowanie w Erze 4 (Wczesne)",
+            "Poziom 4: Warianty i Modyfikatory",
+            {"sea_route_era": 4},
+        ))
+
     return [(t[0], t[1], t[2], t[3], games_per_setup, seed, setups) for t in tasks]
+
+
+def assert_report_sample_size(games_per_setup: int, *, screen: bool) -> None:
+    """Archive reports need 5000 games/setup. Smaller N is screen-only."""
+    if screen:
+        return
+    if games_per_setup < REPORT_GAMES_MIN:
+        raise SystemExit(
+            f"Raport archiwalny wymaga ≥{REPORT_GAMES_MIN} gier/setup "
+            f"(dostałem {games_per_setup}). Przesiew: --screen --games N."
+        )
 
 
 def run_full_ablation_audit_4p(
@@ -239,8 +276,10 @@ def run_full_ablation_audit_4p(
     seed: int = 42,
     workers: int = 10,
     skip_cards: bool = False,
-) -> Path:
+    screen: bool = False,
+) -> Path | None:
     """4P ablation: L1/L2/L4 mechanics always; faction + time cards unless skip_cards."""
+    assert_report_sample_size(games_per_setup, screen=screen)
     t_start = time.time()
     setups = CANONICAL_4P_SETUPS
     all_cards = load_all_cards() if not skip_cards else {}
@@ -254,6 +293,8 @@ def run_full_ablation_audit_4p(
     print(f"Kanon Setupy:              {', '.join(setups)}")
     print(f"Wielkość próby:            {games_per_setup} gier/setup × {len(setups)} setupów 4P ({games_per_setup * len(setups)} gier per wariant)")
     print(f"Wątki procesora:           {workers}")
+    if screen:
+        print("TRYB:                      PRZESIEW (--screen) — bez archiwum")
     print("═══════════════════════════════════════════════════════════════════════\n")
 
     # 1. Baseline 4P Measurement
@@ -261,13 +302,26 @@ def run_full_ablation_audit_4p(
     base_task = ("BASE_4P", "Kanon 4P — Wszystkie Elementy Aktywne", {}, games_per_setup, seed, setups)
     base_res = _run_ablation_task_4p(base_task)
 
-    print(f"   🎯 Wynik Kanonu 4P Score: {color_score(base_res['score_4p'], bold=True)} pkt")
+    print(
+        f"   🎯 4P Score (win share): {color_score(base_res['score_4p'], bold=True)} pkt | "
+        f"witalność kara {base_res['vitality_penalty']:.3f}"
+    )
     for sname, sc in sorted(base_res["setup_scores"].items()):
-        print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt")
-    print(f"   📊 Udziały Frakcji w 4P (Kanon: idealne 25.0%):")
+        vit_sc = base_res["setup_scores_vitality"].get(sname, sc)
+        print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt (setup+witalność {color_score(vit_sc)})")
+    print("   📊 Udziały Frakcji w 4P (Kanon: idealne 25.0%):")
     for fname, sh in sorted(base_res["faction_shares"].items()):
         print(f"      • {fname:<4s}: {sh:5.1f}%")
-    print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%\n")
+    print(
+        f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | "
+        f"Pas Biedy: {base_res['poverty_pct']:.1f}%"
+    )
+    warns = base_res.get("vitality_warnings") or []
+    if warns:
+        print("   💤 Witalność:")
+        for w in warns:
+            print(f"      • {w}")
+    print()
 
     # 2. Build Card Ablation Tasks (faction cards) — optional
     card_tasks = []
@@ -471,13 +525,21 @@ def run_full_ablation_audit_4p(
         f"# Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja {CONFIG.version}",
         "",
         f"**Wersja Gry:** `{CONFIG.version}` | **Data Badania:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Próba:** {games_per_setup} gier/setup ({games_per_setup * len(setups)} gier na wariant) | **Ziarno:** {seed}",
-        f"**Wynik Bazowy Kanonu 4P:** {color_score(base_res['score_4p'], bold=True)} pkt | **Średnia Długość Partii:** `{base_res['eras_avg']:.2f} Er` | **Deadlocki:** `{base_res['deadlock_pct']:.1f}%` | **Pas Biedy:** `{base_res['poverty_pct']:.1f}%`",
+        f"**4P Score (win share):** {color_score(base_res['score_4p'], bold=True)} pkt | **Witalność (osobna kara):** `{base_res['vitality_penalty']:.3f}` | **Śr. Er:** `{base_res['eras_avg']:.2f}` | **Deadlocki:** `{base_res['deadlock_pct']:.1f}%` | **Pas Biedy:** `{base_res['poverty_pct']:.1f}%`",
+        f"**Udziały 4P:** " + " · ".join(f"{fn} {sh:.1f}%" for fn, sh in sorted(base_res["faction_shares"].items())),
+        "",
+        "Klasyfikacja L1/L2/L4 i Δ 4P liczą **wyłącznie równość win share** (`calculate_balance_score`). Kara witalności nie wchodzi do tej liczby — inaczej martwa ścieżka Oficjum zaniża kanon z ~90 pkt do ~35 i etykietuje leczenie skazań jako „wadę”.",
     ]
     if skip_cards:
         lines.extend([
             "",
             "**Tryb:** `--no-cards` — raport bez ablacji kart frakcji i kroniki (tylko L1/L2/L4 i stoły 4P).",
         ])
+    warns = base_res.get("vitality_warnings") or []
+    if warns:
+        lines.extend(["", "**Ostrzeżenia witalności (nie w 4P Score):**"])
+        for w in warns:
+            lines.append(f"- {w}")
     lines.extend([
         "",
         "---",
@@ -609,7 +671,7 @@ def run_full_ablation_audit_4p(
         "",
         "## 4. ⚙️ Warstwa III — Matryca 9 Obszarów Wpływu Mechanik Gry (L1, L2, L4)",
         "",
-        "Zestawienie odporności Kanonu 4P na modyfikacje i ablację poszczególnych podsystemów. **Δ≈0 nie jest harmonią** — to klauzula, której gracze nie czują.",
+        "Docelowo **każda kluczowa gałka L1/L2/L4** ląduje w filarach. Inne kubełki to dług, nie złoty środek. **Δ≈0 nie jest harmonią.**",
         "",
         "| Kategoria Mechaniki | Liczba Testów | Rola w Ekosystemie Kanonu 4P | Rekomendacja Balansowa |",
         "| :--- | :---: | :--- | :--- |",
@@ -617,16 +679,16 @@ def run_full_ablation_audit_4p(
 
     mech_groups = {
         "STABILIZER": len([m for m in analyzed_mechanics if m["group_id"] == "STABILIZER"]),
-        "NEUTRAL": len([m for m in analyzed_mechanics if m["group_id"] == "NEUTRAL"]),
+        "WEAK": len([m for m in analyzed_mechanics if m["group_id"] in ("WEAK", "NEUTRAL")]),
         "DEAD": len([m for m in analyzed_mechanics if m["group_id"] == "DEAD"]),
         "DISRUPTOR": len([m for m in analyzed_mechanics if m["group_id"] == "DISRUPTOR"]),
     }
 
     lines.extend([
-        f"| 👑 / 🛡️ **Filary i Bezpieczniki Stabilizujące** | **{mech_groups['STABILIZER']}** | Mechaniki krytyczne — ich brak lub rozregulowanie niszczy balans | **Nienaruszalny Kanon** |",
-        f"| ⚖️ **Zbalansowane Regulatory** | **{mech_groups['NEUTRAL']}** | Mechaniki, które ruszają share, ale nie walą w 4P Score | **Optymalne w Kanonie** |",
-        f"| 💤 **Martwe Mechaniki (Δ≈0)** | **{mech_groups['DEAD']}** | Ablacja nic albo prawie nic nie zmienia — klauzula nie gra | **Ożywić albo wyciąć** |",
-        f"| ⚠️ / 💡 **Obciążenia i Kandydaci do Uproszczenia** | **{mech_groups['DISRUPTOR']}** | Mechaniki, których modyfikacja lub redukcja podnosi wynik 4P | **Kandydaci do optymalizacji** |",
+        f"| 👑 / 🛡️ **Filary i Bezpieczniki** | **{mech_groups['STABILIZER']}** | Ablacja wali w stół — gracze czują tę gałkę | **Cel kanonu** |",
+        f"| ⚠️ **Za słabe dźwignie** | **{mech_groups['WEAK']}** | Rusza share, nie trzyma stołu — nie jest „zbalansowana” | **Wzmocnić aż będzie filarem** |",
+        f"| 💤 **Martwe / nietestowalne bezpieczniki** | **{mech_groups['DEAD']}** | Δ≈0: klauzula nie gra albo poluzowaliśmy bezpiecznik, który i tak nie strzela | **Ożywić, wyciąć, albo nie testować jako mechaniki** |",
+        f"| ⚠️ / 💡 **Wady bieżącej wartości** | **{mech_groups['DISRUPTOR']}** | Inna wartość gałki **podnosi** 4P — obecny setting szkodzi | **Przekręcić albo rework** |",
         "",
         "### 4.0. 💤 Martwe mechaniki (osobny wykaz)",
         "Testy z $|\\Delta\\text{4P}| \\le 0.8$ i ruchem share $\\le 1.5$ pp. To nie jest „optymalny kanon”.",
@@ -699,16 +761,20 @@ def run_full_ablation_audit_4p(
         "",
         "## 5. 👥 Warstwa IV — Odporność Stołu 4P na Nieobecność Konkretnej Frakcji",
         "",
-        "Zestawienie stabilności 5 wariantów 4-osobowych w Kanonie 4P:",
+        "Zestawienie stabilności 5 wariantów 4-osobowych. Kolumna win share to HUD kanonu; setup+witalność to stary blend (kara martwej ścieżki).",
         "",
-        "| Nieobecna Frakcja | Setup Testowy | 4P Score Setupu | Diagnoza Wpływu Braku Frakcji na Stół 4P |",
-        "| :--- | :--- | :---: | :--- |",
-        f"| **Bez Gildii Cieni** | `4p-core` | **`{base_res['setup_scores'].get('4p-core', 0.0):.1f} pkt`** | Stół klasyczny (czysta walka religijno-polityczna) |",
-        f"| **Bez Kabały z Toledo** | `4p-no-kabala` | **`{base_res['setup_scores'].get('4p-no-kabala', 0.0):.1f} pkt`** | Brak presji okultystycznej i manipulacji czasem |",
-        f"| **Bez Korony i Borgiów** | `4p-no-korona` | **`{base_res['setup_scores'].get('4p-no-korona', 0.0):.1f} pkt`** | Brak presji podatkowej i aresztów królewskich |",
-        f"| **Bez Cieni Al-Andalus** | `4p-no-cienie` | **`{base_res['setup_scores'].get('4p-no-cienie', 0.0):.1f} pkt`** | Brak szlaków morskich i ucieczek podziemiami |",
-        f"| **Bez Świętego Oficjum** | `4p-no-oficjum` | **`{base_res['setup_scores'].get('4p-no-oficjum', 0.0):.1f} pkt`** | Brak presji stosów i bezpośredniego Inkwizytora |",
+        "| Nieobecna Frakcja | Setup Testowy | Win share | Setup+witalność | Diagnoza |",
+        "| :--- | :--- | :---: | :---: | :--- |",
+        f"| **Bez Gildii Cieni** | `4p-core` | **`{base_res['setup_scores'].get('4p-core', 0.0):.1f}`** | `{base_res['setup_scores_vitality'].get('4p-core', 0.0):.1f}` | Stół klasyczny (czysta walka religijno-polityczna) |",
+        f"| **Bez Kabały z Toledo** | `4p-no-kabala` | **`{base_res['setup_scores'].get('4p-no-kabala', 0.0):.1f}`** | `{base_res['setup_scores_vitality'].get('4p-no-kabala', 0.0):.1f}` | Brak presji okultystycznej i manipulacji czasem |",
+        f"| **Bez Korony i Borgiów** | `4p-no-korona` | **`{base_res['setup_scores'].get('4p-no-korona', 0.0):.1f}`** | `{base_res['setup_scores_vitality'].get('4p-no-korona', 0.0):.1f}` | Brak presji podatkowej i aresztów królewskich |",
+        f"| **Bez Cieni Al-Andalus** | `4p-no-cienie` | **`{base_res['setup_scores'].get('4p-no-cienie', 0.0):.1f}`** | `{base_res['setup_scores_vitality'].get('4p-no-cienie', 0.0):.1f}` | Brak szlaków morskich i ucieczek podziemiami |",
+        f"| **Bez Świętego Oficjum** | `4p-no-oficjum` | **`{base_res['setup_scores'].get('4p-no-oficjum', 0.0):.1f}`** | `{base_res['setup_scores_vitality'].get('4p-no-oficjum', 0.0):.1f}` | Brak presji stosów i bezpośredniego Inkwizytora |",
     ])
+
+    if screen:
+        print("\n⚠️ PRZESIEW — wynik tylko na konsoli, archiwum nie ruszane.")
+        return None
 
     report_path, arch_path = save_and_archive_report(lines, "raport_uzytecznosci_i_wplywu_4p.md")
     print(f"\n✅ PEŁNY RAPORT UŻYTECZNOŚCI I WPŁYWU 4P WYGENEROWANY POMYŚLNIE!")
@@ -719,13 +785,23 @@ def run_full_ablation_audit_4p(
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 Feature & Card Impact Audit for Kanon 4P (Ablation Study 4P)")
-    parser.add_argument("--games", type=int, default=5000, help="Liczba gier na setup (domyślnie: 5000; przy --no-cards zwykle 300–800)")
+    parser.add_argument(
+        "--games",
+        type=int,
+        default=REPORT_GAMES_MIN,
+        help=f"Gier na setup (raport: ≥{REPORT_GAMES_MIN}; mniej tylko z --screen)",
+    )
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba wątków równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno losowe (CRN)")
     parser.add_argument(
         "--no-cards",
         action="store_true",
         help="Pomiń ablację kart frakcji i kroniki; tylko L1/L2/L4 i odporność stołu 4P",
+    )
+    parser.add_argument(
+        "--screen",
+        action="store_true",
+        help="Przesiew: wolno <5000 gier/setup, nie zapisuje raportu do archive/",
     )
 
     args = parser.parse_args()
@@ -734,6 +810,7 @@ def main():
         seed=args.seed,
         workers=args.workers,
         skip_cards=args.no_cards,
+        screen=args.screen,
     )
 
 
