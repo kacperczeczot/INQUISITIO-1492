@@ -86,7 +86,9 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
-### 🟡 Patch v1.0.0 (2026-08-18) — ręczna wspinaczka do bramki audytora (niedokończona)
+### 🟡 Patch v0.99.3 (2026-08-18) — wspinaczka do bramki audytora (niedokończona; **nie** v1.0)
+
+- **Numer:** kontynuacja serii 0.99.x — bramka fundamentu nadal **False**, audytor makro **stop**. v1.0 zarezerwowane na przejście 15–35% we wszystkich setupach 4P.
 
 - **Cel:** wszystkie udziały 4P w **15–35%** (`table_has_share_foundation`) → dopiero wtedy audytor makro może zapisywać.
 - **Łańcuch od v0.99.2 (24,4 pkt / 5000g):** fragmenty **2**; buff CAA (`caa-02/04/05/07` taniej, `caa-06` ☣0, `caa-08` cost 1, `caa-09` cost 1, `caa-10` cost 0); era KT **5**; ścieżka Cieni **era 1**; Gildia upadki **8**; stosy **6**; reszta bez zmian (skazania 3, relikwie 2).
