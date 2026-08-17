@@ -47,7 +47,9 @@ def classify_card_impact_4p(d_share: float, d_4p: float) -> tuple[str, str, str]
 def classify_mechanic_impact_4p(d_4p: float, max_d_share: float) -> tuple[str, str, str]:
     """Classifies system/victory mechanic impact.
 
-    Near-zero ablation is group DEAD (martwa klauzula), not NEUTRAL-optimal.
+    Key L1/L2/L4 knobs should land in STABILIZER. A mid Δ that only
+    shuffles share is a weak lever (needs work), not a gold-star 'balanced' slot.
+    Near-zero ablation is DEAD, not optimal.
     """
     if abs(d_4p) <= 0.8 and max_d_share <= 1.5:
         return "M_DEAD", "💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra)", "DEAD"
@@ -71,10 +73,14 @@ def classify_mechanic_impact_4p(d_4p: float, max_d_share: float) -> tuple[str, s
         ("CRITICAL", "NEUTRAL"): ("M_CRIT_NEUT", "⚓ KLUCZOWY STABILIZATOR (Key Anchor)", "STABILIZER"),
         ("CRITICAL", "DISRUPTOR"): ("M_CRIT_DISR", "⚠️ KRYTYCZNA WADA (Critical Flaw)", "DISRUPTOR"),
         ("MODERATE", "STABILIZER"): ("M_MOD_STAB", "🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard)", "STABILIZER"),
-        ("MODERATE", "NEUTRAL"): ("M_MOD_NEUT", "⚖️ ZBALANSOWANY REGULATOR (Balanced Regulator)", "NEUTRAL"),
+        ("MODERATE", "NEUTRAL"): (
+            "M_MOD_NEUT",
+            "⚠️ ZA SŁABA DŹWIGNIA (rusza share, nie trzyma stołu)",
+            "WEAK",
+        ),
         ("MODERATE", "DISRUPTOR"): ("M_MOD_DISR", "⚠️ UMIARKOWANE OBCIĄŻENIE (Moderate Drag)", "DISRUPTOR"),
-        ("LOW", "STABILIZER"): ("M_LOW_STAB", "🛑 DROBNY REGULATOR (Minor Buffer)", "STABILIZER"),
+        ("LOW", "STABILIZER"): ("M_LOW_STAB", "🛡️ DROBNY BEZPIECZNIK (Minor Buffer)", "STABILIZER"),
         ("LOW", "NEUTRAL"): ("M_LOW_NEUT", "💤 MARTWA MECHANIKA (Low Impact)", "DEAD"),
         ("LOW", "DISRUPTOR"): ("M_LOW_DISR", "💡 KANDYDAT DO UPROSZCZENIA (Simplification)", "DISRUPTOR"),
     }
-    return mapping.get((severity, direction), ("M_GENERIC", "⚖️ REGULATOR", "NEUTRAL"))
+    return mapping.get((severity, direction), ("M_GENERIC", "⚠️ ZA SŁABA DŹWIGNIA", "WEAK"))

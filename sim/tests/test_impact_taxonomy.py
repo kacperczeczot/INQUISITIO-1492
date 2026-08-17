@@ -21,6 +21,12 @@ def test_real_pillar_stays_stabilizer():
     assert group == "STABILIZER"
 
 
+def test_share_nudge_without_table_crash_is_weak_not_optimal():
+    _, role, group = classify_mechanic_impact_4p(-2.0, 5.0)
+    assert group == "WEAK"
+    assert "SŁABA" in role
+
+
 def test_kb_hook_tax_card_is_self_harm_not_shield():
     # 24.8% → 40.9% when removed: d_share negative, d_4p catastrophic
     _, _, group = classify_card_impact_4p(24.8 - 40.9, 50.0 - 94.6)
