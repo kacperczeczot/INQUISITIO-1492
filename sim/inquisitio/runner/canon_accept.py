@@ -19,13 +19,22 @@ class AcceptDecision:
     phase: str  # legacy | climb | hygiene
 
 
-def telemetry_is_safe(res: dict) -> tuple[bool, str]:
-    """Hard telemetry veto used by both accept modes."""
+def telemetry_is_safe(res: dict, *, relax_era: bool = False) -> tuple[bool, str]:
+    """Hard telemetry veto. Era window is hygiene for a table already in band.
+
+    Climb (wrecked 4P, shares outside 20–30%): do not freeze apply because the
+    base is already under 4.5 Er — that is how v0.96 sat at 8.5 pkt with 0 patches.
+    Deadlock / poverty stay hard. Blowout length (<3 or >9 Er) still vetoes.
+    """
     if res.get("deadlock_pct", 0) > 5.0:
         return False, f"Deadlock {res['deadlock_pct']:.1f}% > 5.0%"
     if res.get("poverty_pct", 0) > 30.0:
         return False, f"Pas Biedy {res['poverty_pct']:.1f}% > 30.0%"
     eras = res.get("eras_avg", 5.5)
+    if relax_era:
+        if eras < 3.0 or eras > 9.0:
+            return False, f"Śr. Er {eras:.2f} poza zakresem wspinaczki [3.0, 9.0]"
+        return True, "OK"
     if eras < 4.5 or eras > 7.0:
         return False, f"Śr. Er {eras:.2f} poza zakresem [4.5, 7.0]"
     return True, "OK"
@@ -97,6 +106,16 @@ def health_improved(cand: dict, base: dict) -> bool:
     return drop >= HEALTH_DISTANCE_MIN
 
 
+def table_has_share_foundation(res: dict) -> bool:
+    """True when every 4P setup is already inside the 15–35% red line.
+
+    Below that, ±1 points at crutches (lower live goals) and climbing from the
+    pit would lock a bad local optimum. L2 / hand SSOT first; auditor protects
+    a ridge (breaking it lowers score).
+    """
+    return setup_shares_in_range(res.get("setup_shares") or {}, *RED_LINE_PCT)
+
+
 def canon_should_stop(base: dict, *, mode: str) -> bool:
     """Autonomous halt: shares in band and the table is already healthy."""
     if mode != "band":
@@ -138,11 +157,10 @@ def accept_candidate(
     min_delta: float = 0.05,
 ) -> AcceptDecision:
     """Decide whether a verified 4P candidate may be applied."""
-    safe, msg = telemetry_is_safe(cand)
-    if not safe:
-        return AcceptDecision(False, msg, mode if mode == "legacy" else "climb")
-
     if mode == "legacy":
+        safe, msg = telemetry_is_safe(cand)
+        if not safe:
+            return AcceptDecision(False, msg, "legacy")
         d = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
         if d >= min_delta:
             return AcceptDecision(True, f"legacy Δ {d:+.2f} ≥ {min_delta}", "legacy")
@@ -151,14 +169,27 @@ def accept_candidate(
     if mode != "band":
         raise ValueError(f"Unknown accept mode: {mode!r}")
 
+    base_shares = base.get("setup_shares") or {}
+    cand_shares = cand.get("setup_shares") or {}
+    climbing = not setup_shares_in_range(base_shares, *TARGET_BAND_PCT)
+
+    if not table_has_share_foundation(base):
+        return AcceptDecision(
+            False,
+            "fundament: 4P poza czerwoną linią 15–35%, nie wdrażaj z dołu",
+            "foundation",
+        )
+
+    safe, msg = telemetry_is_safe(cand, relax_era=climbing)
+    if not safe:
+        return AcceptDecision(False, msg, "climb")
+
     if canon_should_stop(base, mode="band"):
         return AcceptDecision(False, "higiena: stół zdrowy, nie ruszaj mechaniki", "hygiene")
 
     if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
         return AcceptDecision(False, "witalność gorsza niż baza", "climb")
 
-    cand_shares = cand.get("setup_shares") or {}
-    base_shares = base.get("setup_shares") or {}
     if not setup_shares_in_range(cand_shares, *RED_LINE_PCT):
         return AcceptDecision(False, "frakcja poza czerwoną linią 15–35%", "climb")
 

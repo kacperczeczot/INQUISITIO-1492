@@ -6,6 +6,7 @@ from inquisitio.runner.canon_accept import (
     canon_should_stop,
     rank_key,
     setup_shares_in_range,
+    table_has_share_foundation,
 )
 
 
@@ -72,6 +73,59 @@ def test_legacy_telemetry_veto_beats_score_gain():
     d = accept_candidate(base, cand, mode="legacy")
     assert not d.accepted
     assert "Deadlock" in d.reason
+
+
+def test_foundation_blocks_apply_from_wrecked_shares():
+    """v0.98 L2: 3.7 pkt — gradient to protezy (skazania 3→2). Nie wdrażaj z dołu."""
+    wreck = _shares_ok()
+    wreck["4p-core"] = {"SO": 55.0, "CAA": 15.0, "KB": 15.0, "KT": 15.0}
+    wreck["4p-no-korona"] = {"SO": 70.0, "CAA": 10.0, "KT": 10.0, "GC": 10.0}
+    base = _snap(
+        score_4p=8.5,
+        min_balance=2.7,
+        core=5.7,
+        weak=2.7,
+        shares=wreck,
+        eras=4.49,
+        vitality=1.2,
+    )
+    even = _shares_ok()
+    cand = _snap(
+        score_4p=16.9,
+        min_balance=16.9,
+        core=18.0,
+        weak=16.9,
+        shares=even,
+        eras=3.98,
+        vitality=1.2,
+    )
+    assert not table_has_share_foundation(base)
+    d = accept_candidate(base, cand, mode="band", min_delta=0.05)
+    assert not d.accepted
+    assert d.phase == "foundation"
+    assert "z dołu" in d.reason
+
+
+def test_in_band_still_vetoes_short_games():
+    base = _snap()
+    cand = _snap(score_4p=95.0, min_balance=90.0, weak=90.0, eras=3.98)
+    d = accept_candidate(base, cand, mode="band")
+    assert not d.accepted
+    assert "Er" in d.reason
+
+
+def test_climb_still_runs_inside_red_line_outside_target_band():
+    """16–34% is a ridge the auditor may climb; 10% / 55% is not."""
+    shares = _shares_ok()
+    shares["4p-no-oficjum"]["KB"] = 34.0
+    shares["4p-no-oficjum"]["GC"] = 16.0
+    base = _snap(min_balance=83.0, shares=shares, score_4p=91.0)
+    still_out = dict(shares)
+    still_out["4p-no-oficjum"] = {"CAA": 25.0, "KB": 36.0, "KT": 25.0, "GC": 14.0}
+    cand = _snap(min_balance=85.0, weak=85.0, shares=still_out, score_4p=90.5)
+    d = accept_candidate(base, cand, mode="band", min_delta=0.05)
+    assert not d.accepted
+    assert "czerwoną" in d.reason
 
 
 def test_band_climb_uses_min_not_mean():

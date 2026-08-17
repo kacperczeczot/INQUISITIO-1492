@@ -64,6 +64,7 @@ from inquisitio.runner.canon_accept import (
     canon_should_stop,
     rank_key,
     setup_shares_in_range,
+    table_has_share_foundation,
 )
 from inquisitio.runner.scoring import (
     calculate_balance_score,
@@ -661,6 +662,12 @@ class Canon4PAutoBalancer:
                 print("   💤 Witalność — martwe / kastracja (audytor ma to leczyć, nie zatrzymywać się na win share):")
                 for w in warns:
                     print(f"      • {w}")
+            if self._accept_mode() == "band" and not table_has_share_foundation(base_res):
+                print(
+                    "\n🧱 Fundament: 4P poza czerwoną linią 15–35%. "
+                    "Makro nie zapisuje z dołu — L2 / ręczny SSOT, nie wspinaczka protezami."
+                )
+                break
             if canon_should_stop(base_res, mode=self._accept_mode()):
                 print("\n🏁 Kanon 4P w paśmie i mechaniki żywe — nie dokręcam win share ani limitu Er.")
                 break
