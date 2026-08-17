@@ -310,3 +310,50 @@ def test_so_condemns_win_without_full_stacks():
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
 
 
+def test_layer_c_verdict_table_feeds_condemns_so_feeds_stacks():
+    """Any conviction unique-names Oficjum; only SO accusations add stacks (repeats too)."""
+    st = new_game(setup="4p-core", seed=1, layer="C")
+    so = st.players[FactionId.SWIETE_OFICJUM]
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+    kb = st.players[FactionId.KORONA_BORGIOWIE]
+    caa.heresy = 10
+    kb.heresy = 10
+    so.stacks = 0
+    so.condemned_rivals.clear()
+    rng = random.Random(0)
+
+    assert run_verdict(st, FactionId.KORONA_BORGIOWIE, FactionId.CIENIE_AL_ANDALUS, rng)
+    assert FactionId.CIENIE_AL_ANDALUS in so.condemned_rivals
+    assert so.stacks == 0
+
+    assert run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.KORONA_BORGIOWIE, rng)
+    assert FactionId.KORONA_BORGIOWIE in so.condemned_rivals
+    assert so.stacks == 1
+
+    kb.heresy = 10
+    assert run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.KORONA_BORGIOWIE, rng)
+    assert so.condemned_rivals == {
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+    }
+    assert so.stacks == 2
+
+
+def test_oficjum_snowball_threat_is_one_shy_not_early():
+    from inquisitio.engine.verdict import oficjum_snowball_threat
+
+    st = new_game(setup="4p-core", seed=1, layer="C")
+    so = st.players[FactionId.SWIETE_OFICJUM]
+    so.stacks = 2
+    so.condemned_rivals = {FactionId.CIENIE_AL_ANDALUS}
+    assert oficjum_snowball_threat(st) is False
+    so.stacks = 4
+    assert oficjum_snowball_threat(st) is True
+    so.stacks = 0
+    so.condemned_rivals = {
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+    }
+    assert oficjum_snowball_threat(st) is True
+
+

@@ -16,7 +16,7 @@ W sercu Kastylii — wielokulturowym **Toledo** — pięć potęg toczy bezwzgl�
 
 | Frakcja | Archetyp Historyczny | Styl Gry | Główny Cel Zwycięstwa |
 | :--- | :--- | :--- | :--- |
-| [**Święte Oficjum**](swiete-oficjum.md) | Inkwizycja Torquemady, familiariusze | Terror, Autodafé, oskarżenia | **4 Stosy** lub **2 Skazania** |
+| [**Święte Oficjum**](swiete-oficjum.md) | Inkwizycja Torquemady, familiariusze | Terror, Autodafé, oskarżenia | **5 Stosów** lub **3 Skazania** |
 | [**Cienie Al-Andalus**](cienie-al-andalus.md) | Moryskowie, ostatni Maurowie | Kamuflaż (*takijja*), tunele, relikwie | **2 Relikwie** + Szlak Morski |
 | [**Korona & Borgiowie**](korona-borgiowie.md) | Królowie Katoliccy, Kuria Borgiów | Prawo stołu, dekrety, wielkie złoto | **2 Dekrety** od Ery 5 |
 | [**Kabała z Toledo**](kabala-toledo.md) | Sefardyjscy uczeni, alchemicy, *Zohar* | Sweet-spot Herezji `[3, 8]`, Kodeks | **3 Fragmenty** w Paśmie Herezji |

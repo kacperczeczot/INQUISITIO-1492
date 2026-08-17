@@ -238,7 +238,7 @@ Typ karty trzymanej w ręce; zagranie w [oknie reakcji](#okno-reakcji) przy waru
 
 ## Stos
 
-Żeton eliminacji / zwycięstwa Oficjum. Źródła: Autodafé, skazanie Werdyktem (wybór Stosu). Oficjum liczy Stosy do celu.
+Żeton eliminacji / zwycięstwa Oficjum. Źródła: Autodafé (rywal ≥4 Herezji); skazanie Werdyktem **tylko** gdy Oficjum oskarżało (powtórka też). Wyrok innego gracza zapisuje Skazanie (nazwisko), bez Stosu.
 
 **Patrz także:** [Autodafé](#autodafé), [Werdykt](#werdykt), [Zwycięstwo](#zwycięstwo)
 
@@ -254,7 +254,7 @@ Talia 10 edyktów i wydarzeń miejskich (Toledo 1492). W **Fazie III (Kronika)**
 
 ## Werdykt (procedura)
 
-Głosowanie jawne Skazać / Uniewinnić (bez oskarżonego) po Oskarżeniu. Remis → Uniewinnienie. Skazanie: Agent → Stos lub Lochy +1 Herezja. Uniewinnienie: oskarżyciel +1 Herezja.
+Głosowanie jawne Skazać / Uniewinnić (bez oskarżonego) po Oskarżeniu. Remis → Uniewinnienie. Skazanie: Agent → Lochy +1 Herezja; nazwisko na tor Skazań; **Stos** tylko gdy Oficjum oskarżało (także powtórka). Uniewinnienie: oskarżyciel +1 Herezja.
 
 **Patrz także:** [Oskarżenie](#oskarżenie), [Krytyczna](#krytyczna) · [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
 

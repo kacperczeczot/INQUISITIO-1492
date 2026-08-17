@@ -97,7 +97,7 @@ W Fazie Sądu rozliczamy skutki intryg w 4 krokach:
 #### 4. Dwór (Oskarżenia i Werdykt)
 * Gracz może **Rzucić Oskarżenie** przeciwko rywalowi w **Strefie Krytycznej** (≥7 w 4p, ≥6 w 3p, ≥8 w 5p) → **Werdykt**:
   * Jawne głosowanie stołu: Skazać / Uniewinnić (bez oskarżonego; remis = uniewinnienie).
-  * **Skazanie:** 1 Agent oskarżonego → Stos lub Lochy (+1 Herezja).
+  * **Skazanie:** 1 Agent oskarżonego → Lochy (+1 Herezja). Unikalne nazwisko na tor **3 Skazania** (każdy oskarżyciel). **Stos** tylko gdy **Oficjum oskarżało** (powtórka na tym samym celu też +1 Stos).
   * **Uniewinnienie:** oskarżyciel +1 Herezja.
 
 → [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
@@ -222,7 +222,7 @@ Prawomocne reguły kanoniczne:
 | Dochód złota | **+1 zł** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł w Fazie I) |
 | Fiasko (brak lokacji/agentów) | bez Herezji |
 | Relikwia przy Autodafé | wraca do puli |
-| Werdykt | głosowanie **jawne** (na 4–5p Stos dla Oficjum tylko gdy Oficjum oskarżało) |
+| Werdykt | głosowanie **jawne**; Skazanie (nazwisko) z każdego wyroku; Stos tylko gdy Oficjum oskarżało (także powtórka) |
 | Marionetka | tylko ruch (bez głosu) |
 | Karty / Erę | **do 2** (zagranie lub Akcja Gospodarcza) |
 | Kronika Dziejów | odkryj **1** kartę w Fazie III (nowe prawo na kolejną Erę) |

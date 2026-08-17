@@ -74,6 +74,15 @@ def apply_mutation_to_config(
         off = rule_params["cooldown_offset"]
         sys_cfg["autodafe_cooldown"] = max(0, sys_cfg.get("autodafe_cooldown", 3) + off)
         descriptions.append(f"Cooldown Autodafé: offset {off:+d} (nowy: {sys_cfg['autodafe_cooldown']})")
+    if "autodafe_cooldown" in rule_params:
+        sys_cfg["autodafe_cooldown"] = max(0, int(rule_params["autodafe_cooldown"]))
+        descriptions.append(f"Cooldown Autodafé: {sys_cfg['autodafe_cooldown']}")
+    if "start_gold" in rule_params:
+        sys_cfg["start_gold"] = max(0, int(rule_params["start_gold"]))
+        descriptions.append(f"Startowe złoto: {sys_cfg['start_gold']}zł")
+    if "max_eras" in rule_params:
+        sys_cfg["max_eras"] = max(1, int(rule_params["max_eras"]))
+        descriptions.append(f"Limit Er: {sys_cfg['max_eras']}")
 
     # --- Level 2: Victory Conditions ---
     if "so_stacks_offset" in rule_params:
@@ -155,6 +164,9 @@ def apply_mutation_to_config(
     if "verdict_secret" in rule_params:
         var_cfg["verdict_secret"] = bool(rule_params["verdict_secret"])
         descriptions.append(f"Wariant: Werdykt Tajny = {var_cfg['verdict_secret']}")
+    if "no_time_deck" in rule_params:
+        var_cfg["no_time_deck"] = bool(rule_params["no_time_deck"])
+        descriptions.append(f"Wariant: Kronika Dziejów wyłączona = {var_cfg['no_time_deck']}")
 
     desc = " + ".join(descriptions) if descriptions else f"Zastosowano regułę {rule_id}"
     return raw_cfg, desc

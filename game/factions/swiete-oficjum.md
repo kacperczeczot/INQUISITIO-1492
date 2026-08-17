@@ -5,7 +5,7 @@
 # Święte Oficjum *(Torquemada)*
 
 **Styl:** Terror publiczny, Autodafé, kontrola Trybunału i Lochów.  
-**Cel:** **4 Stosy** (spaleni agenci) lub **2 Skazania Werdyktem** *(w 3p: 3 Stosy)*.
+**Cel:** **5 Stosów** (Autodafé; Werdykt tylko gdy Oficjum oskarżało) lub **3 unikalne Skazania Werdyktem**.
 
 ## 📜 Tło Historyczne & Kultura (1492)
 
@@ -27,7 +27,7 @@ Publiczna twarz prawa Bożego. Wszyscy wiedzą, kim jesteś — i dlatego boją 
 
 ## Słabości
 
-- Stół łatwo się sprzymierza, gdy blisko 3. Stosu / 2. skazania
+- Stół łatwo się sprzymierza, gdy Oficjum jest **1 przed** wygraną (4. Stos / 2. unikalne Skazanie)
 - Słabszy transport Relikwii i gra w Cieniu
 - Uniewinnienie na Werdykcie boli (+Herezja na Ciebie jako oskarżyciela)
 - Edykt *Auto-da-fé Toledo* pali lokację **bez** darmowego Stosu

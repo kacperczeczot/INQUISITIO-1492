@@ -27,6 +27,13 @@ def test_share_nudge_without_table_crash_is_weak_not_optimal():
     assert "SŁABA" in role
 
 
+def test_mid_delta_without_share_crash_is_weak_not_dead():
+    """Δ≈−3 on one composition knob is a weak lever, not a corpse."""
+    _, role, group = classify_mechanic_impact_4p(-3.0, 1.2)
+    assert group == "WEAK"
+    assert "SŁABA" in role
+
+
 def test_kb_hook_tax_card_is_self_harm_not_shield():
     # 24.8% → 40.9% when removed: d_share negative, d_4p catastrophic
     _, _, group = classify_card_impact_4p(24.8 - 40.9, 50.0 - 94.6)

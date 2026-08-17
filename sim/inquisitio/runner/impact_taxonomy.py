@@ -80,7 +80,11 @@ def classify_mechanic_impact_4p(d_4p: float, max_d_share: float) -> tuple[str, s
         ),
         ("MODERATE", "DISRUPTOR"): ("M_MOD_DISR", "⚠️ UMIARKOWANE OBCIĄŻENIE (Moderate Drag)", "DISRUPTOR"),
         ("LOW", "STABILIZER"): ("M_LOW_STAB", "🛡️ DROBNY BEZPIECZNIK (Minor Buffer)", "STABILIZER"),
-        ("LOW", "NEUTRAL"): ("M_LOW_NEUT", "💤 MARTWA MECHANIKA (Low Impact)", "DEAD"),
+        ("LOW", "NEUTRAL"): (
+            "M_LOW_NEUT",
+            "⚠️ ZA SŁABA DŹWIGNIA (rusza share, nie trzyma stołu)",
+            "WEAK",
+        ),
         ("LOW", "DISRUPTOR"): ("M_LOW_DISR", "💡 KANDYDAT DO UPROSZCZENIA (Simplification)", "DISRUPTOR"),
     }
     return mapping.get((severity, direction), ("M_GENERIC", "⚠️ ZA SŁABA DŹWIGNIA", "WEAK"))

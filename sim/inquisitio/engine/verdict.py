@@ -2,9 +2,37 @@
 from __future__ import annotations
 
 import random
+from typing import Any
 
+from inquisitio.config import CONFIG
 from inquisitio.engine.heresy import add_heresy, is_critical
 from inquisitio.engine.state import FactionId, GameState
+
+
+def _cfg_int(item: Any, pc: str) -> int:
+    if hasattr(item, "__getitem__") and not isinstance(item, (str, bytes)):
+        try:
+            return int(item[pc])
+        except (KeyError, TypeError):
+            pass
+    return int(item)
+
+
+def oficjum_snowball_threat(state: GameState) -> bool:
+    """True when Oficjum is 1 shy of a dual-win — table may pile on.
+
+    Early 2 stacks / 1 unique name is *not* a snowball: that was starving
+    the condemns path so stacks from repeat verdicts finished first.
+    """
+    so = state.players.get(FactionId.SWIETE_OFICJUM)
+    if not so:
+        return False
+    pc = f"{len(state.turn_order)}p"
+    stacks_need = _cfg_int(CONFIG.victory.swiete_oficjum.stacks, pc)
+    condemns_need = _cfg_int(CONFIG.victory.swiete_oficjum.condemns, pc)
+    return so.stacks >= max(1, stacks_need - 1) or len(so.condemned_rivals) >= max(
+        1, condemns_need - 1
+    )
 
 
 def eligible_accused(state: GameState) -> list[FactionId]:
@@ -35,10 +63,7 @@ def run_verdict(
     state.metrics.accusations += 1
     votes_burn = 0
     votes_spare = 0
-    so = state.players.get(FactionId.SWIETE_OFICJUM)
-    so_near_win = bool(
-        so and (so.stacks >= 2 or len(so.condemned_rivals) >= 1)
-    )
+    so_near_win = oficjum_snowball_threat(state)
     sys = state.sys_overrides or {}
     secret_verdict = sys.get("verdict_secret", False)
     for fid in state.turn_order:
@@ -106,11 +131,16 @@ def run_verdict(
                 break
         if FactionId.SWIETE_OFICJUM in state.players:
             so_pl = state.players[FactionId.SWIETE_OFICJUM]
-            # B teach: Stos from Werdykt only if Oficjum oskarża (cuts 5p snowball)
-            if state.layer != "B" or accuser == FactionId.SWIETE_OFICJUM:
-                so_pl.stacks += 1
+            # Unikalne skazania: każdy Werdykt na rywalu (stół może karmić 3 Skazania).
+            # Stos z Werdyktu: tylko oskarżenie Oficjum (powtórka też) — stół nie
+            # dobija 5 stosów przy okazji.
             if accused != FactionId.SWIETE_OFICJUM:
                 so_pl.condemned_rivals.add(accused)
+            if state.layer == "C":
+                if accuser == FactionId.SWIETE_OFICJUM and accused != FactionId.SWIETE_OFICJUM:
+                    so_pl.stacks += 1
+            elif state.layer != "B" or accuser == FactionId.SWIETE_OFICJUM:
+                so_pl.stacks += 1
         # Gildia fall: accuse with leverage, or 40% if your Hak-victim is condemned by anyone
         if FactionId.GILDIA_CIENI in state.players and accused != FactionId.GILDIA_CIENI:
             gp = state.players[FactionId.GILDIA_CIENI]

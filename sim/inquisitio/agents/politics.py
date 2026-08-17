@@ -6,6 +6,7 @@ import random
 from inquisitio.cards.loader import Card, load_all_cards
 from inquisitio.config import CONFIG
 from inquisitio.engine.state import FactionId, GameState
+from inquisitio.engine.verdict import oficjum_snowball_threat
 
 
 class PoliticsAgent:
@@ -113,9 +114,8 @@ class PoliticsAgent:
             if c.target_heresy > 0:
                 u += c.target_heresy * 1.5
                 so = state.players.get(FactionId.SWIETE_OFICJUM)
-                # If Oficjum is snowballing with Stacks (>= 2):
-                if so and faction != FactionId.SWIETE_OFICJUM and (so.stacks >= 2 or len(so.condemned_rivals) >= 1):
-                    # Do not frame random rivals (which feeds free Stacks to Oficjum)
+                if so and faction != FactionId.SWIETE_OFICJUM and oficjum_snowball_threat(state):
+                    # Oficjum 1 shy of win — don't spend heresy framing random rivals
                     u -= c.target_heresy * 1.2
                 # If Kabała is near win with 2+ fragments:
                 kt = state.players.get(FactionId.KABALA_TOLEDO)

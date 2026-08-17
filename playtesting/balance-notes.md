@@ -36,7 +36,7 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ### 1. Święte Oficjum
 - **Ścieżka A (Stosy):** **5 Stosów**.
-- **Ścieżka B (Skazania):** **3 Skazania** (równorzędna w silniku; przy stole 4P nadal rzadka).
+- **Ścieżka B (Skazania):** **3 Skazania** (Werdykt; unikalne nazwiska). Stos z Werdyktu tylko gdy Oficjum oskarża.
 
 ### 2. Cienie Al-Andalus
 - **Ewakuacja Relikwii:** **2 Relikwie**.
@@ -70,34 +70,48 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.92 (2026-08-17) — Dual-win Oficjum: stos ≠ skazanie
+- **Wynik 4P (win share, 5000 g/setup):** **47.0 pkt** | CAA **21.1%** · GC **35.6%** · KB **25.7%** · KT **27.6%** · SO **15.0%** | witalność **0.000**
+- **Telemetria (ta sama próba):** Śr. Er **5.91**, Deadlocks **1.5%**, Pas Biedy **5.6%**
+- **Ścieżki SO (n=2901 dual-win):** stosy **51.4%** · skazania **48.6%** — obie ≥8%. Próg **condemns: 3** zostaje.
+- **Werdykt (warstwa C):** unikalne Skazanie z każdego wyroku na rywalu; **Stos tylko gdy Oficjum oskarżało** (także powtórka). Stół nie dobija 5 stosów „przy okazji”. Threat / pile-on stołu dopiero 1 przed wygraną (4 stosy lub 2 nazwiska), nie od 2 stosów / 1 nazwiska.
+- **HUD 47 pkt** to Gildia ~41% w setupach z GC i SO ~15% — to zadanie audytora 4P, nie proteza 3→2.
+- **Audytor:** `sim/.venv/bin/python tools/sim/audytor_4p.py` (witalność nie veto-uje bazy; L2_SO_CONDEMNS_MINUS1 nadal proteza).
+
 ### 🟢 Patch v0.91 (2026-08-17) — Cofnięcie patrolu-łowcy Inkwizytora (powrót do pasma 4P)
-- **4P win share (400 gier/setup):** CAA 22.2% · GC 23.5% · KB 26.4% · KT 26.0% · SO 26.9% (z powrotem w 20–30%).
-- **Cofnięcie v0.90:** łowca na najwyższą herezję wybił pasmo (SO/GC ~33%, CAA/KB <20%). Speed 0 w L4 v0.90 **poprawiał** global — sam patrol-hunt był za gruby.
-- **Zostaje:** losowy patrol `speed 1`. Pogrom Inkwizytora = osobny design (np. tylko strefa krytyczna), nie v0.90.
+- **Wynik 4P (win share, 5000 g/setup):** **86.6 pkt** | CAA **21.3%** · GC **25.4%** · KB **26.5%** · KT **25.8%** · SO **25.9%** | witalność **1.200**
+- **Telemetria (ta sama próba):** Śr. Er **5.96**, Deadlocks **1.1%**, Pas Biedy **5.5%**
+- **Przesiew 400 g/setup (przed pełną ablacją):** CAA 22.2 · GC 23.5 · KB 26.4 · KT 26.0 · SO 26.9 (pasmo 20–30%)
+- **Cofnięcie v0.90:** łowca na najwyższą herezję wybił pasmo. Zostaje losowy patrol `speed 1`.
 - **Raport:** [`archive/v0.91/raport_uzytecznosci_i_wplywu_4p.md`](sim-reports/archive/v0.91/raport_uzytecznosci_i_wplywu_4p.md)
 
 ### 🔴 Patch v0.90 (2026-08-17) — Inkwizytor łowca (wycofane w v0.91)
-- Patrol krok w stronę agenta gracza z najwyższą herezją.
-- **4P:** CAA 19.3% · KB 19.2% · KT 20.1% · SO 32.5% · GC 33.8% — poza celem 20–30%.
+- **Wynik 4P (win share, 400 g/setup):** CAA **19.3%** · KB **19.2%** · KT **20.1%** · SO **32.5%** · GC **33.8%** — poza 20–30%.
+- **Impact blended (`--no-cards`, 400 g):** **27.6 pkt** | Śr. Er **5.59**, Deadlocks **0.5%**, Pas Biedy **5.6%**
+- **Audyt L4 (250 g/setup):** Global **20.3** | 3p **26.3** | 4p **24.4** | 5p **10.2** | Śr. Er **6.34**, Deadlocks **3.7%**, Pas Biedy **5.2%**
+- **L4_INQUISITOR_SPEED0:** Global 20.3 → **31.9** (`+11.6`) | 4p 24.4 → **51.6** — patrol-hunt był za gruby, nie speed 1.
 - **Audyt L4:** [`archive/v0.90/audyt_level4_raport.md`](sim-reports/archive/v0.90/audyt_level4_raport.md)
 
 ### 🟢 Patch v0.89 (2026-08-17) — Oficjum: skazania równorzędne ze stosami
-- Silnik: najpierw **3 skazania**, potem **5 stosów** (wcześniej stosy zjadały skazania).
-- **4P share bez zmian vs v0.88** (skazania przy progu 3 nadal rzadkie w live grach). To naprawa kłamstwa w kolejności, nie `condemns: 2`.
+- **Impact blended (400 g, `--no-cards`):** **34.7 pkt** (bez zmian vs v0.88) | Śr. Er **5.98**, Deadlocks **1.1%**, Pas Biedy **5.6%**
+- **Audyt L2 (250 g/setup):** Global **27.1** | 3p **24.8** | 4p **34.8** | 5p **21.7** | Śr. Er **6.73**, Deadlocks **5.5%**, Pas Biedy **5.1%**
+- **L2_SO_CONDEMNS_MINUS1 (3→2):** Global 27.1 → **53.4** (`+26.3`) | 4p 34.8 → **62.6** — próg 3 zostaje; ścieżka uśpiona, nie skasowana.
+- Silnik: najpierw **3 skazania**, potem **5 stosów**.
 - **Audyt L2:** [`archive/v0.89/audyt_level2_raport.md`](sim-reports/archive/v0.89/audyt_level2_raport.md)
 
 ### 🟢 Patch v0.88 (2026-08-17) — Szlak morski od Ery 4
-- `variants.sea_route_era`: **6 → 4** (zegar w oknie partii ~6 Er).
-- **4P share:** CAA 21.9% → **22.2%**. Δ blended setup-score ~0.
+- **4P share (400 g/setup):** CAA **21.9% → 22.2%**
+- **Impact blended (400 g, `--no-cards`):** **34.7 pkt** | Śr. Er **5.98**, Deadlocks **1.1%**, Pas Biedy **5.6%**
+- **Audyt L4 (250 g/setup):** Global **27.1** | 3p **24.8** | 4p **34.8** | 5p **21.7** | Śr. Er **6.73**, Deadlocks **5.5%**, Pas Biedy **5.1%**
+- `variants.sea_route_era`: **6 → 4**. `L4_SEA_ROUTE_ERA6` Δ≈0 (zegar znowu w oknie ~6 Er).
 - **Audyt L4:** [`archive/v0.88/audyt_level4_raport.md`](sim-reports/archive/v0.88/audyt_level4_raport.md)
 
 ### 🟢 Patch v0.87 (2026-08-17) — Higiena L2: martwe kłódki z warunków zwycięstwa
-- Korona: `hooks: 1 → 0`; wygrana = **2 dekrety** (bez ery).
-- Cienie: usunięta darmowa wygrana `caa_era` (zostają relikwie + marionetka / cichy exit / szlak).
-- Kabała: pasmo **3–9 → 0–9** (tylko sufit ≤9).
-- Księga: Limit Er **12** (zgodne z YAML).
-- **4P share (400 g/setup):** CAA 21.9 · GC 23.9 · KB 26.4 · KT 25.9 · SO 26.9 (w paśmie). Blended setup-score ~35, bo witalność karze martwe skazania SO — to nie zapaść win share.
-- L2: era CAA/KB i hak −1 = Δ 0 (potwierdzenie). `condemns −1` nadal rusza stół — ścieżka uśpiona, nie usunięta.
+- **4P share (400 g/setup):** CAA **21.9** · GC **23.9** · KB **26.4** · KT **25.9** · SO **26.9** (pasmo 20–30%)
+- **Impact blended (400 g, `--no-cards`):** **35.1 pkt** | Śr. Er **5.96**, Deadlocks **1.0%**, Pas Biedy **5.6%** — HUD ~35 to kara witalności (skazania), nie zapaść share
+- **Audyt L2 (250 g/setup):** Global **26.8** | 3p **24.4** | 4p **34.9** | 5p **21.2** | Śr. Er **6.73**, Deadlocks **5.5%**, Pas Biedy **5.1%**
+- Korona: `hooks: 1 → 0` (wygrana = 2 dekrety). Cienie: bez darmowej `caa_era`. Kabała: pasmo **0–9**. Limit Er **12**.
+- `condemns −1` nadal rusza L2 (4p 34.9 → 63.3) — ścieżka uśpiona, nie usunięta.
 - **Audyt L2 + impact `--no-cards`:** [`archive/v0.87/`](sim-reports/archive/v0.87/)
 
 ### 🟢 Patch v0.86 (2026-08-17) — Kanon 4P: Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-03` (Cień na Rynku): `gold` → `1` (Zysk 4P Δ +0.1 pkt)

@@ -208,7 +208,10 @@ def new_game(
     relics["gildia"] = 1
     relics["trybunal"] = 1
 
-    if sys.get("no_time_deck"):
+    no_time_deck = sys.get("no_time_deck")
+    if no_time_deck is None:
+        no_time_deck = bool(CONFIG.variants.get("no_time_deck", False))
+    if no_time_deck:
         tdeck = []
     else:
         tdeck = [c.id for c in time_cards(max_layer=layer) if c.id not in disabled]

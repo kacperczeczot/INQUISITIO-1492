@@ -10,7 +10,7 @@ from inquisitio.engine.heresy import is_critical
 from inquisitio.engine.hooks import active_hook_targets, force_hook
 from inquisitio.engine.inquisitor import era_start_inquisitor, neighbors
 from inquisitio.engine.state import FactionId, GameState
-from inquisitio.engine.verdict import eligible_accused, run_verdict
+from inquisitio.engine.verdict import eligible_accused, oficjum_snowball_threat, run_verdict
 from inquisitio.engine.win import check_winner, check_winner_details, end_game_tiebreak
 
 
@@ -107,22 +107,23 @@ def play_era(
                 # victim complies if heresy would hurt more
                 comply = state.players[t].heresy >= 6 or rng.random() < 0.55
                 force_hook(state, fid, t, comply=comply)
-        # accusation — table politics vs Oficjum snowball
+        # accusation — pile on Oficjum only when 1 shy of a dual-win
         accused_list = [a for a in eligible_accused(state) if a != fid]
         if accused_list:
             so = state.players.get(FactionId.SWIETE_OFICJUM)
-            so_near = bool(
-                so and (so.stacks >= 2 or len(so.condemned_rivals) >= 1)
-            )
-            # Prefer accusing Oficjum when they lead; otherwise random critical
+            so_near = oficjum_snowball_threat(state)
+            condemned = so.condemned_rivals if so else set()
+            fresh = [a for a in accused_list if a not in condemned]
+            repeats = [a for a in accused_list if a in condemned]
             if so_near and FactionId.SWIETE_OFICJUM in accused_list:
                 target = FactionId.SWIETE_OFICJUM
-                p_acc = 0.7
-            elif so_near:
-                target = accused_list[0]
-                p_acc = 0.25  # avoid feeding free Stosy
+                p_acc = 0.55
+            elif fid == FactionId.SWIETE_OFICJUM and fresh and repeats:
+                target = rng.choice(fresh if rng.random() < 0.55 else repeats)
+                p_acc = 0.55
             else:
-                target = accused_list[0]
+                pool = fresh or accused_list
+                target = rng.choice(pool)
                 p_acc = 0.5
             if rng.random() < p_acc:
                 run_verdict(state, fid, target, rng)

@@ -28,15 +28,17 @@ Powód narracyjny (Agent w lokacji, Autodafé, plotka) pomaga przy stole, ale w 
    - Efekty kart (np. Korona) mogą ustawić **wagę 2** na wskazany Werdykt — wtedy ten głos liczy się jak dwa głosy o tej samej decyzji.
 4. Remis (suma wag równa) → **Uniewinnienie**.
 5. **Skazanie:**
-   - Oskarżyciel wybiera: Agent celu → **Stos** (eliminacja z gry) **lub** Agent → **Lochy** i cel **+1 Herezja**.
-   - Jeśli Stos: Oficjum zapisuje **1 Stos** (nawet jeśli oskarżycielem był kto inny — Stos zawsze dla toru Oficjum / puli Autodafé; jeśli Oficjum nie gra, żeton Stosu i tak istnieje jako licznik świata).
+   - 1 Agent celu → **Lochy**, cel **+1 Herezja**.
+   - **Skazanie (nazwisko)** na tor Oficjum: każdy wyrok na rywalu (także gdy oskarża kto inny). Unikalne nazwiska liczą się do ścieżki **3 Skazania**.
+   - **Stos** na tor Oficjum **tylko** gdy oskarżało **Święte Oficjum** (powtórka na tym samym celu też +1 Stos). Werdykt innego gracza nie dodaje Stosu.
+   - Gdy Oficjum nie gra, Werdykt i tak zamyka Agenta w Lochach; żeton Stosu z Autodafé zostaje licznikiem świata.
 6. **Uniewinnienie:** oskarżyciel **+1 Herezja**.
 
 ## Polityka
 
 - Haki (B+) mogą wymusić głos przed krokiem 3.
 - Marionetki: kontroler rusza ciałem; **nie** oddaje dodatkowego głosu przy Werdykcie.
-- Oficjum wygrywa Stosami; reszta stołu może celowo uniewinniać, by ciąć snowball.
+- Oficjum wygrywa **5 Stosami** albo **3 unikalnymi Skazaniami**. Stół tnie snowball (uniewinnienia / pile-on na Oficjum) dopiero gdy Oficjum jest **1 przed** wygraną — nie od pierwszego nazwiska ani 2 stosów.
 
 ## Warstwa A
 

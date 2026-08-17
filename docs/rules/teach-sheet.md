@@ -48,7 +48,7 @@
 2. Oskarżyciel ogłasza (1× przeciw temu graczowi / Erę).
 3. Głosowanie **jawne**: Skazać / Uniewinnić (bez oskarżonego).
 4. Remis → Uniewinnienie.
-5. Skazanie: Agent → **Stos** lub Lochy +1 Herezja; Uniewinnienie: oskarżyciel +1 Herezja.
+5. Skazanie: Agent → Lochy +1 Herezja; nazwisko na tor Skazań. **Stos Oficjum** tylko gdy Oficjum oskarżyło (także powtórka). Uniewinnienie: oskarżyciel +1 Herezja.
 
 ---
 
