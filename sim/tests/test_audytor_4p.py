@@ -14,6 +14,7 @@ from audytor_4p import (  # noqa: E402
     cheap_funnel_flags,
     drop_dead_path_crutches,
     generate_all_atomic_candidates_macro,
+    is_ablation_off,
     is_dead_path_crutch,
     is_frozen_identity_knob,
     lookahead_next_action,
@@ -109,7 +110,7 @@ def test_macro_pool_is_pm1_only():
     assert "L1_OBSERVED_MINUS1" in ids
     assert "L1_CARDS_PER_ERA_PLUS1" in ids
     assert "L1_INTRIGUE_GOLD_PLUS1" in ids
-    assert "L1_INTRIGUE_GOLD_MINUS1" in ids
+    assert "L1_INTRIGUE_GOLD_MINUS1" not in ids
     assert "L2_CAA_ERA_PLUS1" in ids
     assert "L2_SO_CONDEMNS_PLUS1" in ids
     assert "L4_SEA_ROUTE_ERA_PLUS1" in ids
@@ -168,7 +169,25 @@ def test_max_eras_pm1_is_in_apply_pool():
     assert "L1_OBSERVED_PLUS1" in ids
     assert "L1_CARDS_PER_ERA_PLUS1" in ids
     assert "L1_INTRIGUE_GOLD_PLUS1" in ids
-    assert "L1_INTRIGUE_GOLD_MINUS1" in ids
+    assert "L1_INTRIGUE_GOLD_MINUS1" not in ids
+
+
+def test_zeroing_gospodarcza_is_ablation_not_pm1():
+    assert is_ablation_off("L1_INTRIGUE_GOLD_MINUS1", {"intrigue_gold_offset": -1})
+    assert not is_ablation_off("L1_INTRIGUE_GOLD_PLUS1", {"intrigue_gold_offset": 1})
+    base = _dead_skazania_base()
+    base["vitality_penalty"] = 0.0
+    base["vitality_warnings"] = []
+    cand = {
+        **base,
+        "id": "L1_INTRIGUE_GOLD_MINUS1",
+        "params": {"intrigue_gold_offset": -1},
+        "score_4p": 90.0,
+        "min_balance": 90.0,
+    }
+    d = accept_macro_candidate(base, cand, mode="band", min_delta=0.05)
+    assert not d.accepted
+    assert "ablacja" in d.reason
 
 
 def test_macro_vector_beats_requires_score_or_vitality():

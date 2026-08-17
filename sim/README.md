@@ -58,7 +58,7 @@ python tools/sim/audytor_5p.py --workers 10
 python tools/sim/run_grand_audit.py
 ```
 
-Makro (`audytor_4p.py` / 3p / 5p) wdraża żywe `±1` i lookahead 2D/3D. Nie wdraża: ablacji `off`, agentów (SKU), Werdyktu Tajnego, tempa Kroniki, splitu upadków. Jeździec Δ≈0 (np. Er +1 bez zmiany 4P) odpada przy held. **3p/5p nie zapisują gałek całego stołu** (Gospodarcza, Obserwowana, karty/erę, limit Er, CD Autodafé, szlak) — to kanon 4P. `--dry-run` bez zapisu YAML. Szczegóły: [`docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) §0 pkt 4.
+Makro (`audytor_4p.py` / 3p / 5p) wdraża żywe `±1` i lookahead 2D/3D. Nie wdraża: ablacji `off` (w tym Gospodarcza 1→0), agentów (SKU), Werdyktu Tajnego, tempa Kroniki, splitu upadków. Jeździec Δ≈0 (np. Er +1 bez zmiany 4P) odpada przy held. **3p/5p nie zapisują gałek całego stołu** (Gospodarcza, Obserwowana, karty/erę, limit Er, CD Autodafé, szlak) — to kanon 4P. `--dry-run` bez zapisu YAML. Szczegóły: [`docs/rules/hierarchia_balansowania.md`](../docs/rules/hierarchia_balansowania.md) §0 pkt 4.
 
 ```bash
 # pomiar bez zapisu

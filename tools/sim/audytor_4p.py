@@ -288,6 +288,13 @@ def is_ablation_off(tid: str, params: dict) -> bool:
         return True
     if params.get("start_gold") == 0:
         return True
+    # Gospodarcza 1→0 wyłącza akcję Fazy I. Kwotę (1↔2) makro może ruszać;
+    # skasowanie mechaniki to decyzja po raporcie użyteczności, nie patch ±1.
+    if "intrigue_gold" in params and int(params["intrigue_gold"]) <= 0:
+        return True
+    if "intrigue_gold_offset" in params:
+        if CONFIG.intrigue_gold() + int(params["intrigue_gold_offset"]) <= 0:
+            return True
     cd = params.get("autodafe_cooldown")
     if cd is not None and int(cd) in (0, 99):
         return True

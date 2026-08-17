@@ -23,7 +23,7 @@ Wchodzi m.in.: Gospodarcza i Jarmark; zakrycie / odkrycie 1→5; fiasko bez Here
 
 **Gwarancja:** od **v0.96** audytor i batch mierzą **tę** grę (procedury kanonu), nie proxy bez Gospodarczej / z kasowaniem agentów przy Werdykcie / z darmową ewakuacją Cieni.
 
-**Audytor — wolno odpalać.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P (żywe `±1`, w tym Gospodarcza). `audytor_3p.py` / `audytor_5p.py` piszą **tylko** wyjątki `3p:` / `5p:` (próg, złoto, L2) — **nie** ruszają gałek całego stołu (Obserwowana, karty/erę, Gospodarcza, Er, CD Autodafé, szlak). `--dry-run` = pomiar bez zapisu YAML. Jeździec Δ≈0 i ablacja `off` nie wchodzą.
+**Audytor — wolno odpalać.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P (żywe `±1`; Gospodarcza **≥1**, nie 1→0). `audytor_3p.py` / `audytor_5p.py` piszą **tylko** wyjątki `3p:` / `5p:` (próg, złoto, L2) — **nie** ruszają gałek całego stołu (Obserwowana, karty/erę, Gospodarcza, Er, CD Autodafé, szlak). `--dry-run` = pomiar bez zapisu YAML. Jeździec Δ≈0 i ablacja `off` nie wchodzą. Kasowanie Gospodarczej to decyzja po raporcie użyteczności, nie pierwszy patch.
 
 — Cursor Grok 4.6
 
