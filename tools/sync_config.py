@@ -82,11 +82,20 @@ def _kabala_text(cfg: dict) -> str:
 
 
 def _gildia_text(cfg: dict) -> str:
+    n, extra = _gc_falls_pair(cfg)
+    core = f"**{n} upadki** (Hak / Marionetka / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem)"
+    if extra is None:
+        return core
+    return f"{core}; **{extra}** gdy brak Oficjum"
+
+
+def _gc_falls_pair(cfg: dict) -> tuple[int, int | None]:
     gc = cfg["victory"]["gildia_cieni"]["falls"]
-    return (
-        f"**{gc['default']} upadki** (Hak / Marionetka / Autodafé lokacji kluczowej / Werdykt na celu z Hakiem); "
-        f"**{gc['no_oficjum']}** gdy brak Oficjum"
-    )
+    if isinstance(gc, dict):
+        d = int(gc["default"])
+        n = int(gc.get("no_oficjum", d))
+        return d, None if d == n else n
+    return int(gc), None
 
 
 def _victory_table(cfg: dict) -> str:
@@ -112,7 +121,15 @@ def _victory_table(cfg: dict) -> str:
     kt_e = v["kabala_toledo"]["era"]
     kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
 
-    gc_f = v["gildia_cieni"]["falls"]
+    gc_n, gc_extra = _gc_falls_pair(cfg)
+    gc_cell = (
+        f"**{gc_n} Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem)"
+        if gc_extra is None
+        else (
+            f"**{gc_n} Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); "
+            f"**{gc_extra}** gdy brak Oficjum"
+        )
+    )
 
     return f"""| Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
@@ -120,7 +137,7 @@ def _victory_table(cfg: dict) -> str:
 | **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | **Korona & Borgiowie** | **{kb_dec} Dekrety** |
 | **Kabała z Toledo** | **{kt_frag} Fragmenty** + Herezja **≤ {kt_hb[1]}** (od Ery **{kt_era}**) |
-| **Gildia Cieni** | **{gc_f['default']} Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem); **{gc_f['no_oficjum']}** gdy brak Oficjum |"""
+| **Gildia Cieni** | {gc_cell} |"""
 
 
 def _heresy_table(cfg: dict) -> str:
@@ -324,6 +341,15 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 
     caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
 
+    gc_f = v.get("gildia_cieni", {}).get("falls", {"default": 4, "no_oficjum": 4})
+    gc_def = gc_f.get("default", 4) if isinstance(gc_f, dict) else gc_f
+    gc_noso = gc_f.get("no_oficjum", gc_def) if isinstance(gc_f, dict) else gc_f
+    gc_teach_text = (
+        f"**{gc_def} Upadki**"
+        if gc_def == gc_noso
+        else f"**{gc_def} Upadki** ({gc_noso} bez Oficjum)"
+    )
+
     old_teach_vic = re.compile(
         r"(\| Frakcja \| Cel.*?\n(?:\| :---.*?\n)?)"
         r"(\| Święte Oficjum \|.*?\n)"
@@ -339,7 +365,7 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | Korona & Borgiowie | {kb_teach_text} |
 | Kabała z Toledo | {kt_teach_text} |
-| Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
+| Gildia Cieni | {gc_teach_text} |
 """
     if old_teach_vic.search(text):
         text = old_teach_vic.sub(new_teach_vic, text)
@@ -472,6 +498,8 @@ def sync_readme(cfg: dict) -> list[str]:
     kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
     kt_3p = kt_e.get("3p", 6) if isinstance(kt_e, dict) else kt_e
     kt_readme_text = f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p}; *w 3p: od Ery {kt_3p}*)" if kt_4p != kt_3p else f"**3 Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery {kt_4p})"
+    gc_n, gc_extra = _gc_falls_pair(cfg)
+    gc_readme_text = f"**{gc_n} Upadki**" if gc_extra is None else f"**{gc_n} Upadki** *({gc_extra} gdy brak Oficjum)*"
 
     old_readme_vic = re.compile(
         r"(## Frakcje.*?\n\n)"
@@ -491,7 +519,7 @@ def sync_readme(cfg: dict) -> list[str]:
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (od Ery {caa_era}) |
 | **Korona & Borgiowie** | {kb_readme_text} |
 | **Kabała z Toledo** | {kt_readme_text} |
-| **Gildia Cieni** | **2 Upadki** *(3 gdy brak Oficjum)* |
+| **Gildia Cieni** | {gc_readme_text} |
 """
     if old_readme_vic.search(text):
         text = old_readme_vic.sub(new_readme_vic, text)

@@ -321,6 +321,14 @@ def _n4(item) -> int:
     return int(item)
 
 
+def _falls_n(falls) -> int:
+    if hasattr(falls, "default"):
+        return int(falls.default)
+    if isinstance(falls, dict):
+        return int(falls.get("default", falls.get("no_oficjum", 4)))
+    return int(falls)
+
+
 def _win_extremes(cur: int, min_val: int = 1) -> list[tuple[str, int, int]]:
     """Offsets that are not ±1: floor (if |Δ|≥2), double (if |Δ|≥2), or 0→2."""
     rows: list[tuple[str, int, int]] = []
@@ -403,19 +411,12 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         if tight != (lo_b, hi_b):
             add("L2_KT_HERESY_TIGHT", f"Kabała: pasmo {lo_b}–{hi_b} → {tight[0]}–{tight[1]}", cat2, {"kt_heresy_band": tight})
 
-    for tag, off, new in _win_extremes(int(gc.falls.default)):
+    for tag, off, new in _win_extremes(_falls_n(gc.falls)):
         add(
-            f"L2_GC_FALLS_DEFAULT_{tag}",
-            f"Gildia: upadki (z Oficjum) {int(gc.falls.default)} → {new}",
+            f"L2_GC_FALLS_{tag}",
+            f"Gildia: upadki {_falls_n(gc.falls)} → {new}",
             cat2,
-            {"gc_falls_default_offset": off},
-        )
-    for tag, off, new in _win_extremes(int(gc.falls.no_oficjum)):
-        add(
-            f"L2_GC_FALLS_NO_SO_{tag}",
-            f"Gildia: upadki (bez Oficjum) {int(gc.falls.no_oficjum)} → {new}",
-            cat2,
-            {"gc_falls_no_oficjum_offset": off},
+            {"gc_falls_offset": off},
         )
 
     add("L4_NO_TIME_DECK", "Kronika Dziejów: całkowite wyłączenie", cat4, {"no_time_deck": True})

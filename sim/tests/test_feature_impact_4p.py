@@ -36,6 +36,8 @@ def test_impact_skips_plusminus1_and_identity():
         "L2_KT_FRAGS_REQ_PLUS1",
         "L2_KT_FRAGS_REQ_MINUS1",
         "L2_KT_ERA_EARLY",
+        "L2_GC_FALLS_PLUS1",
+        "L2_GC_FALLS_MINUS1",
         "L2_GC_FALLS_DEFAULT_PLUS1",
         "L2_GC_FALLS_DEFAULT_MINUS1",
         "L2_GC_FALLS_NO_SO_PLUS1",

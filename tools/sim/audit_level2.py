@@ -38,6 +38,13 @@ def _pc(sec, delta: int = 0) -> str:
     return str(int(sec) + delta)
 
 
+def _gc_falls_n(gc) -> int:
+    f = gc.falls
+    if hasattr(f, "default"):
+        return int(f.default)
+    return int(f)
+
+
 def build_level2_tests():
     """Generate ±1 tests dynamically from current CONFIG victory conditions."""
     v = CONFIG.victory
@@ -64,12 +71,8 @@ def build_level2_tests():
         ("L2_KT_HERESY_LOW_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0] + 1}–{hb[1]}", {"kt_heresy_band": (hb[0] + 1, hb[1])}),
         ("L2_KT_HERESY_HIGH_PLUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] + 1}", {"kt_heresy_band": (hb[0], hb[1] + 1)}),
         ("L2_KT_HERESY_HIGH_MINUS1", f"Kabała Pasmo: {hb[0]}–{hb[1]} → {hb[0]}–{hb[1] - 1}", {"kt_heresy_band": (hb[0], hb[1] - 1)}),
-        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki (default/bez SO): {gc.falls.default}/{gc.falls.no_oficjum} → {gc.falls.default + 1}/{gc.falls.no_oficjum + 1}", {"gc_falls_offset": 1}),
-        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki (default/bez SO): {gc.falls.default}/{gc.falls.no_oficjum} → {gc.falls.default - 1}/{gc.falls.no_oficjum - 1}", {"gc_falls_offset": -1}),
-        ("L2_GC_FALLS_DEFAULT_PLUS1", f"Gildia Upadki (z Oficjum): {gc.falls.default} → {gc.falls.default + 1}", {"gc_falls_default_offset": 1}),
-        ("L2_GC_FALLS_DEFAULT_MINUS1", f"Gildia Upadki (z Oficjum): {gc.falls.default} → {gc.falls.default - 1}", {"gc_falls_default_offset": -1}),
-        ("L2_GC_FALLS_NO_SO_PLUS1", f"Gildia Upadki (bez Oficjum): {gc.falls.no_oficjum} → {gc.falls.no_oficjum + 1}", {"gc_falls_no_oficjum_offset": 1}),
-        ("L2_GC_FALLS_NO_SO_MINUS1", f"Gildia Upadki (bez Oficjum): {gc.falls.no_oficjum} → {gc.falls.no_oficjum - 1}", {"gc_falls_no_oficjum_offset": -1}),
+        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) + 1}", {"gc_falls_offset": 1}),
+        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) - 1}", {"gc_falls_offset": -1}),
     ]
 
 

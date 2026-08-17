@@ -87,7 +87,7 @@ def get_factions_data(cfg: dict | None = None) -> list[tuple[str, str, str, str,
     gc_v = v.get("gildia_cieni", {})
     gc_falls = gc_v.get("falls", {})
     gc_def = gc_falls.get("default", 2) if isinstance(gc_falls, dict) else gc_falls
-    gc_no_so = gc_falls.get("no_oficjum", 3) if isinstance(gc_falls, dict) else 3
+    gc_no_so = gc_falls.get("no_oficjum", gc_def) if isinstance(gc_falls, dict) else gc_falls
     gc_goal = f"{gc_def} Upadki"
     gc_note = f"*{gc_no_so} gdy brak Oficjum w grze" if gc_no_so != gc_def else ""
 

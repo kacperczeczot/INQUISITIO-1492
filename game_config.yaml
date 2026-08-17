@@ -1,4 +1,4 @@
-version: v0.92
+version: v0.94
 date: '2026-08-17'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -14,7 +14,7 @@ system:
     5p: 8
 victory:
   swiete_oficjum:
-    stacks: 5
+    stacks: 4
     condemns: 3
   cienie_al_andalus:
     relics: 2
@@ -30,9 +30,7 @@ victory:
     - 9
     era: 6
   gildia_cieni:
-    falls:
-      default: 3
-      no_oficjum: 5
+    falls: 4
 economy:
   card_cost_offset: 0
   sig_cost_offset: 0

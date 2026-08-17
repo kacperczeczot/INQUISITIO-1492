@@ -230,10 +230,8 @@ def apply_mutation_to_3p_config(raw_cfg: dict[str, Any], rule_params: dict[str, 
     if "kt_era_offset" in rule_params:
         _set_3p(vic.setdefault("kabala_toledo", {}), "era", 6, rule_params["kt_era_offset"], "KT Era")
     if "gc_falls_default_offset" in rule_params or "gc_falls_offset" in rule_params:
-        off = rule_params.get("gc_falls_default_offset", rule_params.get("gc_falls_offset", 0))
-        _set_3p(vic.setdefault("gildia_cieni", {}).setdefault("falls", {}), "default", 3, off, "GC Upadki (z SO)")
-    if "gc_falls_no_so_offset" in rule_params:
-        _set_3p(vic.setdefault("gildia_cieni", {}).setdefault("falls", {}), "no_oficjum", 4, rule_params["gc_falls_no_so_offset"], "GC Upadki (bez SO)")
+        off = rule_params.get("gc_falls_offset", rule_params.get("gc_falls_default_offset", 0))
+        _set_3p(vic.setdefault("gildia_cieni", {}), "falls", 4, off, "GC Upadki")
 
     desc = ", ".join(descs) if descs else "Modyfikacja parametrów 3P"
     return cfg, desc

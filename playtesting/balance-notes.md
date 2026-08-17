@@ -35,7 +35,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy):** **5 Stosów**.
+- **Ścieżka A (Stosy):** **4 Stosy**.
 - **Ścieżka B (Skazania):** **3 Skazania** (Werdykt; unikalne nazwiska). Stos z Werdyktu tylko gdy Oficjum oskarża.
 
 ### 2. Cienie Al-Andalus
@@ -51,7 +51,7 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 - **Minimalna Era:** **6**.
 
 ### 5. Gildia Cieni
-- **Upadki:** **3** z Oficjum | **5** gdy Oficjum nie gra.
+- **Upadki:** **4** (jedna liczba; wyjątek bez Oficjum usunięty).
 
 ---
 
@@ -69,6 +69,17 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.94 (2026-08-17) — Autodafé zostaje co 3 Ery
+- **Cofnięcie L1 z v0.93:** `autodafe_cooldown` **4 → 3**. Przy końcu ~6 Er cooldown 4 to zwykle **1** ogień; 3 Ery to **2** (3 i 6). Inkwizycja nie jest gałką HUD.
+- **Zostaje z v0.93:** stosy **4**, Gildia **4** (jedna liczba, bez `no_oficjum`).
+- **Audytor 4P / kanon:** cooldown Autodafé wyjęty z puli (jak limit ręki). Ablacja w raporcie użyteczności nadal może to mierzyć.
+
+### 🟢 Patch v0.93 (2026-08-17) — Kanon 4P Makro: Cooldown Autodafé: offset +1 (nowy: 4) + Święte Oficjum: Stosy offset -1 + Gildia Cieni: Upadki (z Oficjum) offset +1 + Gildia Cieni: Upadki (bez Oficjum) offset -1 (Zysk 4P Δ +36.8 pkt)
+- **Wynik 4P (win share):** **`83.8 pkt`** (baza `47.0`) | blended `47.0` → `83.8` | Global **`61.2`** | 3p **`31.7`** | 5p **`70.7`**
+- **Modyfikacja (`L2_GC_FALLS_DEFAULT_PLUS1__L2_SO_STACKS_MINUS1__L2_GC_FALLS_NO_SO_MINUS1__L1_AUTODAFE_COOLDOWN_PLUS1`):** Cooldown Autodafé: offset +1 (nowy: 4) + Święte Oficjum: Stosy offset -1 + Gildia Cieni: Upadki (z Oficjum) offset +1 + Gildia Cieni: Upadki (bez Oficjum) offset -1.
+- **Efekt:** Makro L1/L2/L4. Telemetria: Średnia Er 6.13, Deadlocks 1.5%, Pas Biedy 5.4%. Witalność `0.000` → `0.000`.
+- **Uwaga:** `L1_AUTODAFE_COOLDOWN_PLUS1` to jeździec HUD — cofnięty w v0.94. Stosy 4 i Gildia 4/4 zostają.
 
 ### 🟢 Patch v0.92 (2026-08-17) — Dual-win Oficjum: stos ≠ skazanie
 - **Wynik 4P (win share, 5000 g/setup):** **47.0 pkt** | CAA **21.1%** · GC **35.6%** · KB **25.7%** · KT **27.6%** · SO **15.0%** | witalność **0.000**

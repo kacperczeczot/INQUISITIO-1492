@@ -222,7 +222,16 @@ def test_ssot_win_paths_match_yaml():
     caa5.relics_evacuated = 0
     st5.era = 1
     gc.falls = 3
+    assert check_winner_details(st5) is None
+    gc.falls = 4
     assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
+
+    st_noso = new_game(setup="4p-no-oficjum", seed=1, layer="C")
+    gc2 = st_noso.players[FactionId.GILDIA_CIENI]
+    gc2.falls = 3
+    assert check_winner_details(st_noso) is None
+    gc2.falls = 4
+    assert check_winner_details(st_noso) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     assert heresy_zone(5, critical_min=6) == "obserwowana"
     assert heresy_zone(6, critical_min=6) == "krytyczna"

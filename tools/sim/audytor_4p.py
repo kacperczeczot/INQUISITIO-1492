@@ -196,6 +196,10 @@ def generate_all_atomic_candidates_macro() -> list[tuple[str, str, dict]]:
             continue
         if "AUTODAFE" in tid or "cooldown_offset" in params or "autodafe_cooldown" in params:
             continue
+        if "GC_FALLS_DEFAULT" in tid or "GC_FALLS_NO_SO" in tid:
+            continue
+        if "gc_falls_default_offset" in params or "gc_falls_no_oficjum_offset" in params:
+            continue
         if tid in seen:
             continue
         seen.add(tid)

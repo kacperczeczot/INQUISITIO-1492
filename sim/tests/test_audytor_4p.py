@@ -71,7 +71,12 @@ def test_macro_pool_has_pm1_and_extremes():
     assert "L2_SO_CONDEMNS_HI" in ids
     assert "L1_START_GOLD_0" in ids
     assert "L1_AUTODAFE_DISABLED" not in ids
-    assert "L1_AUTODAFE_COOLDOWN_PLUS1" not in ids
+    assert "L2_GC_FALLS_PLUS1" in ids
+    assert "L2_GC_FALLS_DEFAULT_PLUS1" not in ids
+    assert "L2_GC_FALLS_NO_SO_MINUS1" not in ids
+    for _tid, _name, params in generate_all_atomic_candidates_macro():
+        assert "gc_falls_default_offset" not in params
+        assert "gc_falls_no_oficjum_offset" not in params
 
 
 def test_crutch_veto_rejects_lowering_dead_condemns():
@@ -136,8 +141,12 @@ def test_absolute_extremes_persist_to_yaml_keys():
     assert "99" in desc
     cfg, _ = apply_mutation_to_config(raw, "L1_START_GOLD_0", {"start_gold": 0})
     assert cfg["system"]["start_gold"] == 0
-    cfg, _ = apply_mutation_to_config(raw, "L4_NO_TIME_DECK", {"no_time_deck": True})
-    assert cfg["variants"]["no_time_deck"] is True
+    cfg, _ = apply_mutation_to_config(
+        {"system": {}, "victory": {"gildia_cieni": {"falls": 4}}, "variants": {}, "cards": {}},
+        "L2_GC_FALLS_PLUS1",
+        {"gc_falls_offset": 1},
+    )
+    assert cfg["victory"]["gildia_cieni"]["falls"] == 5
 
 
 def test_lookahead_1d_always_peeks_2d():

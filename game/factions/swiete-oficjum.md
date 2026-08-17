@@ -5,7 +5,7 @@
 # Święte Oficjum *(Torquemada)*
 
 **Styl:** Terror publiczny, Autodafé, kontrola Trybunału i Lochów.  
-**Cel:** **5 Stosów** (Autodafé; Werdykt tylko gdy Oficjum oskarżało) lub **3 unikalne Skazania Werdyktem**.
+**Cel:** **4 Stosy** (Autodafé; Werdykt tylko gdy Oficjum oskarżało) lub **3 unikalne Skazania Werdyktem**.
 
 ## 📜 Tło Historyczne & Kultura (1492)
 

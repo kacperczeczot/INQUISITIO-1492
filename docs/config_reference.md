@@ -59,8 +59,7 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 ### 5. Gildia Cieni (`gildia_cieni`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `falls.default` | `int` | `1 .. 4` | Liczba doprowadzonych Upadków rywali w standardowej grze |
-| `falls.no_oficjum` | `int` | `1 .. 5` | Liczba Upadków rywali, gdy w partii nie bierze udziału Święte Oficjum |
+| `falls` | `int` | `1 .. 6` | `4` | Upadki Gildii (jedna liczba; bez wyjątku „gdy brak Oficjum”) |
 
 ---
 

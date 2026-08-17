@@ -56,11 +56,11 @@
 
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
-| Święte Oficjum | **5 Stosy** lub **3 Skazania Werdyktem** |
+| Święte Oficjum | **4 Stosy** lub **3 Skazania Werdyktem** |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | Korona & Borgiowie | **2 Dekrety** (od Ery 4) |
 | Kabała z Toledo | **3 Fragmenty** + Herezja **0–9** (od Ery 6) |
-| Gildia Cieni | **2 Upadki** (3 bez Oficjum) |
+| Gildia Cieni | **4 Upadki** |
 
 **Limit:** 11 Er → najbliższy celowi; remis → najniższa Herezja.
 

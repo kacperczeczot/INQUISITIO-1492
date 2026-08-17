@@ -33,6 +33,19 @@ def _apply_offset_to_item(item: Any, offset: int, min_val: int = 1) -> Any:
     return max(min_val, int(item) + offset)
 
 
+def _nudge_gc_falls(falls: Any, offset: int) -> Any:
+    """Scalar falls, or legacy default/no_oficjum dict — both keys move together."""
+    if isinstance(falls, dict):
+        out = dict(falls)
+        for k in ("default", "no_oficjum"):
+            if k in out:
+                out[k] = max(1, int(out[k]) + offset)
+        if "default" in out and "no_oficjum" in out and out["default"] == out["no_oficjum"]:
+            return out["default"]
+        return out
+    return max(1, int(falls) + offset)
+
+
 def apply_mutation_to_config(
     raw_cfg: dict[str, Any],
     rule_id: str,
@@ -127,17 +140,15 @@ def apply_mutation_to_config(
         descriptions.append(f"Kabała Toledo: Pasmo Herezji {band[0]}–{band[1]}")
     if "gc_falls_offset" in rule_params:
         off = rule_params["gc_falls_offset"]
-        vic_cfg["gildia_cieni"]["falls"]["default"] = max(1, vic_cfg["gildia_cieni"]["falls"]["default"] + off)
-        vic_cfg["gildia_cieni"]["falls"]["no_oficjum"] = max(1, vic_cfg["gildia_cieni"]["falls"]["no_oficjum"] + off)
+        vic_cfg["gildia_cieni"]["falls"] = _nudge_gc_falls(vic_cfg["gildia_cieni"]["falls"], off)
         descriptions.append(f"Gildia Cieni: Upadki offset {off:+d}")
-    if "gc_falls_default_offset" in rule_params:
-        off = rule_params["gc_falls_default_offset"]
-        vic_cfg["gildia_cieni"]["falls"]["default"] = max(1, vic_cfg["gildia_cieni"]["falls"]["default"] + off)
-        descriptions.append(f"Gildia Cieni: Upadki (z Oficjum) offset {off:+d}")
-    if "gc_falls_no_oficjum_offset" in rule_params:
-        off = rule_params["gc_falls_no_oficjum_offset"]
-        vic_cfg["gildia_cieni"]["falls"]["no_oficjum"] = max(1, vic_cfg["gildia_cieni"]["falls"]["no_oficjum"] + off)
-        descriptions.append(f"Gildia Cieni: Upadki (bez Oficjum) offset {off:+d}")
+    if "gc_falls_default_offset" in rule_params or "gc_falls_no_oficjum_offset" in rule_params:
+        off = int(rule_params.get("gc_falls_default_offset", 0) or 0) + int(
+            rule_params.get("gc_falls_no_oficjum_offset", 0) or 0
+        )
+        if off:
+            vic_cfg["gildia_cieni"]["falls"] = _nudge_gc_falls(vic_cfg["gildia_cieni"]["falls"], off)
+            descriptions.append(f"Gildia Cieni: Upadki (złożony offset) {off:+d}")
 
     # --- Level 3: Card Parameters (Supports multiple card overrides!) ---
     if "card_overrides" in rule_params:

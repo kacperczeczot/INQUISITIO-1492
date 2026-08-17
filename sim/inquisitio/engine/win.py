@@ -22,6 +22,22 @@ def _val(item: Any, pc: str) -> int:
     return int(item)
 
 
+def _gc_falls_need(falls: Any, ov: dict, *, no_oficjum: bool, layer: str) -> int:
+    """One table-wide number. Legacy default/no_oficjum dict still reads for old YAML."""
+    unified = int(ov.get("gc_falls_offset", 0) or 0)
+    split_default = int(ov.get("gc_falls_default_offset", 0) or 0)
+    split_noso = int(ov.get("gc_falls_no_oficjum_offset", 0) or 0)
+    if hasattr(falls, "default"):
+        raw = falls.no_oficjum if (layer == "B" or no_oficjum) else falls.default
+        split = split_noso if (layer == "B" or no_oficjum) else split_default
+        return max(1, int(raw) + split + unified)
+    if isinstance(falls, dict):
+        raw = falls["no_oficjum"] if (layer == "B" or no_oficjum) else falls["default"]
+        split = split_noso if (layer == "B" or no_oficjum) else split_default
+        return max(1, int(raw) + split + unified)
+    return max(1, int(falls) + unified + split_default + split_noso)
+
+
 def check_winner_details(state: GameState, win_overrides: dict | None = None) -> tuple[FactionId, str] | None:
     """Returns tuple of (winner_faction, win_path_id) or None."""
     ov = win_overrides or {}
@@ -104,11 +120,9 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
         elif fid == FactionId.GILDIA_CIENI:
             cfg_gc = cfg_v.gildia_cieni
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
-            if state.layer == "B" or no_oficjum:
-                base_falls = cfg_gc.falls.no_oficjum + ov.get("gc_falls_no_oficjum_offset", 0)
-            else:
-                base_falls = cfg_gc.falls.default + ov.get("gc_falls_default_offset", 0)
-            falls_need = max(1, base_falls + ov.get("gc_falls_offset", 0))
+            falls_need = _gc_falls_need(
+                cfg_gc.falls, ov, no_oficjum=no_oficjum, layer=state.layer
+            )
 
             if pl.falls >= falls_need:
                 return (fid, "gc_falls")
