@@ -21,12 +21,12 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Oskarżenia (Krytyczna Herezja)** | **6** | **7** | **8** | Jedyny naturalnie skalowany parametr z zagęszczeniem stołu (3p=6, 4p=7, 5p=8). |
 | **Strefy Herezji (Czysta / Obserw. / Kryt.)** | **0–3 / 4–5 / 6–10** | **0–3 / 4–6 / 7–10** | **0–3 / 4–7 / 8–10** | Automatycznie powiązane: Krytyczna = próg oskarżenia (6@3p / 7@4p / 8@5p). |
-| **Maksymalna Liczba Er** | **11** | **11** | **11** | Zunifikowany limit 11 Er dla wszystkich składów graczy. |
+| **Maksymalna Liczba Er** | **12** | **12** | **12** | Fus / tiebreak; partie 4P kończą się ~6 Er. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę dla wszystkich składów. |
 | **Złoto Startowe** | **4 zł** | **4 zł** | **4 zł** | Zunifikowane 4 zł dla wszystkich składów graczy. |
 | **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **5 Kart** | Zunifikowany limit 5 kart dla wszystkich składów graczy. |
-| **Otwarcie Szlaku Morskiego (Cienie)** | **Era 5** | **Era 5** | **Era 5** | Zunifikowany dostęp do szlaku morskiego od 5. Ery. |
+| **Otwarcie Szlaku Morskiego (Cienie)** | **Era 4** | **Era 4** | **Era 4** | Szlak w oknie partii (wcześniej era 6 = po końcu gry). |
 
 ---
 
@@ -35,24 +35,23 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy - spalenie agentów):** **5 Stosów** (wszystkie składy `3p`, `4p`, `5p`).
-- **Ścieżka B (Skazania Stołu - Werdykt):** **2 Skazania** (wszystkie składy `3p`, `4p`, `5p`).
+- **Ścieżka A (Stosy):** **5 Stosów**.
+- **Ścieżka B (Skazania):** **3 Skazania** (równorzędna w silniku; przy stole 4P nadal rzadka).
 
 ### 2. Cienie Al-Andalus
-- **Ewakuacja Relikwii:** **2 Relikwie** (wszystkie składy).
-- **Wymóg Ścieżki / Ery:** Marionetka / uniknięcie Autodafé / Szlak Morski lub minimalna Era: **Era 5** (wszystkie składy `3p`, `4p`, `5p`).
+- **Ewakuacja Relikwii:** **2 Relikwie**.
+- **Ścieżka:** Marionetka / cichy exit / **szlak morski** (otwarcie od Ery **4**). Brak darmowej wygranej „sama era”.
 
-### 4. Korona & Borgiowie
-- **Dekrety Królewskie:** **2 Dekrety** od Ery **4** (wszystkie składy `3p`, `4p`, `5p`).
-- **Haki:** 1 Hak.
+### 3. Korona & Borgiowie
+- **Dekrety Królewskie:** **2 Dekrety** (bez ery i bez wymogu 1 haka w warunku zwycięstwa).
 
 ### 4. Kabała z Toledo
-- **Fragmenty Kodeksu:** **3** (wszystkie składy).
-- **Wymagane Pasmo Herezji:** **[3, 8]**.
-- **Minimalna Era Wygranej:** **Era 6** (wszystkie składy `3p`, `4p`, `5p`).
+- **Fragmenty Kodeksu:** **3**.
+- **Pasmo Herezji:** **≤ 9** (dolny próg 3 usunięty).
+- **Minimalna Era:** **6**.
 
 ### 5. Gildia Cieni
-- **Upadki Rywali (Falls):** **3 Upadki** ze Świętym Oficjum | **4 Upadki** gdy Oficjum nie gra.
+- **Upadki:** **3** z Oficjum | **5** gdy Oficjum nie gra.
 
 ---
 
@@ -70,6 +69,36 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.91 (2026-08-17) — Cofnięcie patrolu-łowcy Inkwizytora (powrót do pasma 4P)
+- **4P win share (400 gier/setup):** CAA 22.2% · GC 23.5% · KB 26.4% · KT 26.0% · SO 26.9% (z powrotem w 20–30%).
+- **Cofnięcie v0.90:** łowca na najwyższą herezję wybił pasmo (SO/GC ~33%, CAA/KB <20%). Speed 0 w L4 v0.90 **poprawiał** global — sam patrol-hunt był za gruby.
+- **Zostaje:** losowy patrol `speed 1`. Pogrom Inkwizytora = osobny design (np. tylko strefa krytyczna), nie v0.90.
+- **Raport:** [`archive/v0.91/raport_uzytecznosci_i_wplywu_4p.md`](sim-reports/archive/v0.91/raport_uzytecznosci_i_wplywu_4p.md)
+
+### 🔴 Patch v0.90 (2026-08-17) — Inkwizytor łowca (wycofane w v0.91)
+- Patrol krok w stronę agenta gracza z najwyższą herezją.
+- **4P:** CAA 19.3% · KB 19.2% · KT 20.1% · SO 32.5% · GC 33.8% — poza celem 20–30%.
+- **Audyt L4:** [`archive/v0.90/audyt_level4_raport.md`](sim-reports/archive/v0.90/audyt_level4_raport.md)
+
+### 🟢 Patch v0.89 (2026-08-17) — Oficjum: skazania równorzędne ze stosami
+- Silnik: najpierw **3 skazania**, potem **5 stosów** (wcześniej stosy zjadały skazania).
+- **4P share bez zmian vs v0.88** (skazania przy progu 3 nadal rzadkie w live grach). To naprawa kłamstwa w kolejności, nie `condemns: 2`.
+- **Audyt L2:** [`archive/v0.89/audyt_level2_raport.md`](sim-reports/archive/v0.89/audyt_level2_raport.md)
+
+### 🟢 Patch v0.88 (2026-08-17) — Szlak morski od Ery 4
+- `variants.sea_route_era`: **6 → 4** (zegar w oknie partii ~6 Er).
+- **4P share:** CAA 21.9% → **22.2%**. Δ blended setup-score ~0.
+- **Audyt L4:** [`archive/v0.88/audyt_level4_raport.md`](sim-reports/archive/v0.88/audyt_level4_raport.md)
+
+### 🟢 Patch v0.87 (2026-08-17) — Higiena L2: martwe kłódki z warunków zwycięstwa
+- Korona: `hooks: 1 → 0`; wygrana = **2 dekrety** (bez ery).
+- Cienie: usunięta darmowa wygrana `caa_era` (zostają relikwie + marionetka / cichy exit / szlak).
+- Kabała: pasmo **3–9 → 0–9** (tylko sufit ≤9).
+- Księga: Limit Er **12** (zgodne z YAML).
+- **4P share (400 g/setup):** CAA 21.9 · GC 23.9 · KB 26.4 · KT 25.9 · SO 26.9 (w paśmie). Blended setup-score ~35, bo witalność karze martwe skazania SO — to nie zapaść win share.
+- L2: era CAA/KB i hak −1 = Δ 0 (potwierdzenie). `condemns −1` nadal rusza stół — ścieżka uśpiona, nie usunięta.
+- **Audyt L2 + impact `--no-cards`:** [`archive/v0.87/`](sim-reports/archive/v0.87/)
 
 ### 🟢 Patch v0.86 (2026-08-17) — Kanon 4P: Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-03` (Cień na Rynku): `gold` → `1` (Zysk 4P Δ +0.1 pkt)
 - **Wynik 4P:** Kanon **`94.5`** → **`94.6 pkt`** | Global **`67.4`** | 3p **`45.7`** | 5p **`65.0`**
