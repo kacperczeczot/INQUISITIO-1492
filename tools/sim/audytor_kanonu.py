@@ -57,11 +57,20 @@ from inquisitio.config_updater import apply_mutation_to_config, save_config_and_
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.audit_facts import score_pair, save_and_archive_report
 from inquisitio.runner.batch import run_batch
+from inquisitio.runner.balance import faction_shares as win_shares
+from inquisitio.runner.canon_accept import (
+    TARGET_BAND_PCT,
+    accept_candidate,
+    rank_key,
+    setup_shares_in_range,
+)
 from inquisitio.runner.scoring import (
+    calculate_balance_score,
     calculate_category_scores,
     calculate_global_score,
     calculate_setup_score,
     color_score,
+    evaluate_vitality,
 )
 
 # Import test builders
@@ -90,18 +99,6 @@ FACTION_NAMES = {
 }
 
 
-def passes_telemetry_safety(res: dict) -> tuple[bool, str]:
-    """Verify that candidate results stay within safety margins."""
-    if res.get("deadlock_pct", 0) > 5.0:
-        return False, f"Deadlock {res['deadlock_pct']:.1f}% > 5.0%"
-    if res.get("poverty_pct", 0) > 30.0:
-        return False, f"Pas Biedy {res['poverty_pct']:.1f}% > 30.0%"
-    eras = res.get("eras_avg", 5.5)
-    if eras < 4.5 or eras > 7.0:
-        return False, f"Śr. Er {eras:.2f} poza zakresem [4.5, 7.0]"
-    return True, "OK"
-
-
 def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:
     """Execute a single candidate rule across the 5 canonical 4P setups."""
     (rule_id, rule_name, rule_params), games_per_setup, seed, setups = task_args
@@ -109,6 +106,9 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
 
     summaries = []
     setup_scores = {}
+    setup_scores_balance = {}
+    setup_shares: dict[str, dict[str, float]] = {}
+    vitality_penalties = []
     for sname in setups:
         summary = run_batch(
             games=games_per_setup,
@@ -119,8 +119,18 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
         )
         summaries.append(summary)
         setup_scores[sname] = calculate_setup_score(summary)
+        setup_scores_balance[sname] = calculate_balance_score(summary)
+        setup_shares[sname] = {
+            fid: round(pct * 100.0, 1) for fid, pct in win_shares(summary).items()
+        }
+        vitality_penalties.append(evaluate_vitality(summary).vitality_penalty)
 
     score_4p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
+    score_4p_balance = (
+        round(sum(setup_scores_balance.values()) / len(setup_scores_balance), 1)
+        if setup_scores_balance
+        else 0.0
+    )
     dt = round(time.time() - t_rule, 2)
 
     n_sum = len(summaries)
@@ -137,14 +147,23 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
 
     min_setup_name = min(setup_scores, key=lambda k: setup_scores[k])
     min_setup_score = setup_scores[min_setup_name]
+    min_balance_name = min(setup_scores_balance, key=lambda k: setup_scores_balance[k])
+    min_balance = setup_scores_balance[min_balance_name]
+    vitality_penalty = max(vitality_penalties) if vitality_penalties else 0.0
 
     return {
         "id": rule_id,
         "name": rule_name,
         "params": rule_params,
         "score_4p": score_4p,
+        "score_4p_balance": score_4p_balance,
         "setup_scores": setup_scores,
+        "setup_scores_balance": setup_scores_balance,
+        "setup_shares": setup_shares,
         "min_setup": (min_setup_name, min_setup_score),
+        "min_balance": min_balance,
+        "min_balance_setup": min_balance_name,
+        "vitality_penalty": vitality_penalty,
         "dt": dt,
         "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
         "deadlock_pct": deadlock_pct,
@@ -248,6 +267,7 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
     for sname in setups:
         summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=8)
         score = calculate_setup_score(summary)
+        balance = calculate_balance_score(summary)
         factions = SETUP_PRESETS[sname]
         n_players = len(factions)
         ideal_share = round(100.0 / n_players, 1)
@@ -277,6 +297,7 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
             "setup": sname,
             "n_players": n_players,
             "score": score,
+            "balance": balance,
             "ideal_share": ideal_share,
             "shares": faction_shares,
             "avg_eras": avg_eras,
@@ -293,6 +314,7 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
             "end_heresy": round(summary.avg_heresy_end, 2),
             "vitality_status": vit.status,
             "vitality_warnings": vit.warnings,
+            "vitality_penalty": round(vit.vitality_penalty, 3),
         })
 
     elapsed = round(time.time() - t0, 2)
@@ -302,10 +324,12 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
         "",
         f"**Wersja Balansu:** `{version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Wielkość Próby:** {games_per_setup} gier/setup ({games_per_setup * 16} gier łącznie) | **Czas Symulacji:** {elapsed}s",
         "",
+        "*Score* = legacy (win share + kara witalności w jednym wykładniku). *Balance* = tylko równość win share.",
+        "",
         "## 1. Tabela Szans Wygranych Frakcji (Win Share %) vs Punkt Idealny",
         "",
-        "| Setup | Gr. | Score | Ideal % | SO % | CAA % | KB % | KT % | GC % | Status Rozkładu Frakcji |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+        "| Setup | Gr. | Score | Balance | Ideal % | SO % | CAA % | KB % | KT % | GC % | Status Rozkładu Frakcji |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
     ]
 
     for d in setup_data:
@@ -317,7 +341,7 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
 
         eval_str = "🟢 ZBALANSOWANY" if d['score'] >= 90.0 else ("🟡 AKCEPTOWALNY" if d['score'] >= 75.0 else ("🟠 WYMAGA UWAGI" if d['score'] >= 60.0 else "🔴 ODCHYLONY"))
         report_lines.append(
-            f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
+            f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {color_score(d['balance'])} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
         )
 
     report_lines.extend([
@@ -339,14 +363,14 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
         "",
         "## 3. Witalność Mechanik Frakcji (Mechanic Vitality & Degeneration Gate)",
         "",
-        "| Setup | Status Witalności | Zidentyfikowane Ostrzeżenia / Degradacje Mechanik |",
-        "| :--- | :---: | :--- |",
+        "| Setup | Status Witalności | Kara | Zidentyfikowane Ostrzeżenia / Degradacje Mechanik |",
+        "| :--- | :---: | :---: | :--- |",
     ])
 
     for d in setup_data:
         warn_str = ", ".join(d['vitality_warnings']) if d['vitality_warnings'] else "Brak — wszystkie mechaniki aktywne i płynne"
         report_lines.append(
-            f"| `{d['setup']}` | {d['vitality_status']} | {warn_str} |"
+            f"| `{d['setup']}` | {d['vitality_status']} | {d['vitality_penalty']:.3f} | {warn_str} |"
         )
 
     return save_and_archive_report(report_lines, "raport_telemetrii.md")
@@ -517,7 +541,14 @@ class Canon4PAutoBalancer:
         self.total_iterations = 0
         self.start_time = time.time()
         self.initial_version = CONFIG.version
+        self._base_in_band = False
         signal.signal(signal.SIGINT, self._handle_sigint)
+
+    def _accept_mode(self) -> str:
+        return getattr(self.args, "accept_mode", "legacy")
+
+    def _rank(self, res: dict) -> tuple:
+        return rank_key(res, mode=self._accept_mode(), base_in_band=self._base_in_band)
 
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
@@ -554,7 +585,7 @@ class Canon4PAutoBalancer:
             for idx, future in enumerate(as_completed(future_to_task), 1):
                 res = future.result()
                 results.append(res)
-                if best_so_far is None or res["score_4p"] > best_so_far["score_4p"]:
+                if best_so_far is None or self._rank(res) < self._rank(best_so_far):
                     best_so_far = res
 
                 elapsed = time.time() - t0
@@ -582,6 +613,7 @@ class Canon4PAutoBalancer:
         print(f"Etap 2 (Głęboki przesiew):  {self.args.screen_games} gier/setup (TOP {self.args.top_semifinalists} półfinalistów)")
         print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
         print(f"Wątki procesora:            {self.args.workers}")
+        print(f"Tryb przyjęcia patcha:      {self._accept_mode()}")
         print(f"Archiwizacja raportów:     {REPORTS_DIR}/archive/<wersja>/")
         print("═══════════════════════════════════════════════════════════════════════\n")
 
@@ -609,8 +641,17 @@ class Canon4PAutoBalancer:
             base_res = self._execute_pool(_run_single_test_task_4p, [base_task[0]], label="Baza 4P")[0]
 
             print(f"   🎯 Wynik Kanonu 4P Score: {color_score(base_res['score_4p'], bold=True)} pkt")
+            print(
+                f"   📐 Balance (win share): {color_score(base_res['score_4p_balance'])} pkt | "
+                f"min `{base_res['min_balance_setup']}` {color_score(base_res['min_balance'])} | "
+                f"witalność kara {base_res['vitality_penalty']:.3f}"
+            )
+            self._base_in_band = setup_shares_in_range(base_res.get("setup_shares") or {}, *TARGET_BAND_PCT)
+            band_label = "w paśmie 20–30% → higiena" if self._base_in_band else "poza pasmem 20–30% → wspinaczka maximin"
+            print(f"   🎚️ Pasmo 4P: {band_label}")
             for sname, sc in sorted(base_res["setup_scores"].items()):
-                print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt")
+                bal = base_res["setup_scores_balance"].get(sname, sc)
+                print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt (balance {color_score(bal)})")
             print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
 
             # 2. Candidate Pool
@@ -643,7 +684,7 @@ class Canon4PAutoBalancer:
             stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
             stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label=f"Przesiew 4P 1/3")
 
-            stage1_results.sort(key=lambda r: r["score_4p"], reverse=True)
+            stage1_results.sort(key=self._rank)
 
             n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
             semifinalist_results = stage1_results[:n_semifinalists]
@@ -654,7 +695,7 @@ class Canon4PAutoBalancer:
             stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
             stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label=f"Przesiew 4P 2/3")
 
-            stage2_results.sort(key=lambda r: r["score_4p"], reverse=True)
+            stage2_results.sort(key=self._rank)
 
             n_finalists = min(self.args.top_k, len(stage2_results))
             finalist_results = stage2_results[:n_finalists]
@@ -665,25 +706,32 @@ class Canon4PAutoBalancer:
             stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
             stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label=f"Weryfikacja 4P 3/3")
 
-            stage3_results.sort(key=lambda r: r["score_4p"], reverse=True)
+            stage3_results.sort(key=self._rank)
 
-            print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW KANONU 4P]")
+            print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW KANONU 4P] tryb={self._accept_mode()}")
             for idx, r in enumerate(stage3_results, 1):
+                decision = accept_candidate(
+                    base_res, r, mode=self._accept_mode(), min_delta=self.args.min_delta
+                )
                 d_4 = r["score_4p"] - base_res["score_4p"]
-                is_safe, msg = passes_telemetry_safety(r)
                 sign = f"+{d_4:.2f}" if d_4 > 0 else f"{d_4:.2f}"
-                print(f"   #{idx:2d} [{r['id'][:42]}...] 4P Score: {base_res['score_4p']:.1f} → {r['score_4p']:.1f} (Δ {sign}) | {msg}")
+                mark = "✔" if decision.accepted else "✖"
+                print(
+                    f"   #{idx:2d} {mark} [{r['id'][:42]}...] 4P {base_res['score_4p']:.1f} → {r['score_4p']:.1f} "
+                    f"(Δ {sign}) min {r['min_balance']:.1f} | {decision.reason}"
+                )
 
             accepted_candidate = None
             best_ver_res = None
 
             for ver_res in stage3_results:
-                d_4p = ver_res["score_4p"] - base_res["score_4p"]
-                is_safe, safe_msg = passes_telemetry_safety(ver_res)
-
-                if is_safe and d_4p >= self.args.min_delta:
+                decision = accept_candidate(
+                    base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
+                )
+                if decision.accepted:
                     accepted_candidate = cand_dict[ver_res["id"]]
                     best_ver_res = ver_res
+                    print(f"\n   → Wybrano `{ver_res['id']}` ({decision.phase}): {decision.reason}")
                     break
 
             # 6. Apply Patch & Measure Collateral Impact
@@ -787,7 +835,10 @@ class Canon4PAutoBalancer:
                     beam_seeds.clear()
 
             else:
-                print(f"\n⚪ Brak wariantu z dodatnim zyskiem dla Kanonu 4P (Δ ≥ +{self.args.min_delta} pkt) w Fazie {current_phase}D.")
+                print(
+                    f"\n⚪ Brak wariantu do przyjęcia (tryb {self._accept_mode()}, "
+                    f"legacy min_delta={self.args.min_delta}) w Fazie {current_phase}D."
+                )
                 top_beam_results = stage3_results[: self.args.beam_width]
                 beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
                 current_phase += 1
@@ -812,6 +863,16 @@ def main():
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
+    parser.add_argument(
+        "--accept-mode",
+        choices=("legacy", "band"),
+        default="legacy",
+        help=(
+            "legacy: max średniej 4P jak dotychczas (domyślnie). "
+            "band: wspinaczka maximin poza pasmem 20–30%%, higiena zdrowia w paśmie "
+            "(witalność jako veto, nie w score)."
+        ),
+    )
 
     args = parser.parse_args()
 

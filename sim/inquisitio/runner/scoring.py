@@ -1,4 +1,8 @@
-"""Balance Scoring Engine — Continuous Asymptotic Exponential Decay Model with Mechanic Vitality Gate."""
+"""Balance Scoring Engine — win-share decay, plus a separate Mechanic Vitality Gate.
+
+`calculate_balance_score` is win-share equality only.
+`calculate_setup_score` is the legacy blend (win share + vitality in one exponent).
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -77,36 +81,37 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
     )
 
 
-def calculate_setup_score(summary: BatchSummary) -> float:
-    """Calculates Balance Score (0.1–100.0) for a single setup summary using continuous exponential decay.
-    
-    Properties:
-    - Never reaches 0.0 (preserves non-zero gradient for optimization and variant comparison).
-    - Strictly reserves >=98.0 pkt for deviations <= 0.5 p.p.
-    - Integrates Mechanic Vitality Gate (penalizes mechanic castrations and flow deadlocks).
-    """
+def _win_share_decay(summary: BatchSummary) -> float:
+    """RMS relative deviation of win shares, scaled for exponential score decay."""
     shares = faction_shares(summary)
     n_players = len(SETUP_PRESETS[summary.setup])
     p_ideal = 1.0 / n_players
 
-    # Root Mean Square Relative Deviation (RMS-RD)
     sum_sq_rd = 0.0
-    for fid, win_share in shares.items():
+    for _fid, win_share in shares.items():
         rel_dev = abs(win_share - p_ideal) / p_ideal
         sum_sq_rd += rel_dev ** 2
     rms_rd = math.sqrt(sum_sq_rd / n_players)
+    return 3.2 * (rms_rd ** 1.25)
 
-    # Exponential decay with power 1.25 (scaled so <=0.5 pp dev is >=98.0 pkt)
-    c = 3.2
-    exponent = c * (rms_rd ** 1.25)
 
-    # Vitality penalty (includes deadlock & mechanic vitality checks)
+def calculate_balance_score(summary: BatchSummary) -> float:
+    """Win-share equality only (0.1–100.0). Does not apply vitality penalty.
+
+    Use this for 4P canon ranking. Vitality is a separate gate, not part of this number.
+    """
+    val = 100.0 * math.exp(-_win_share_decay(summary))
+    return round(max(0.1, min(100.0, val)), 1)
+
+
+def calculate_setup_score(summary: BatchSummary) -> float:
+    """Legacy setup score: win-share decay plus vitality penalty in the same exponent.
+
+    Kept unchanged for 3p/5p auditors, L1–L4 reports, and historical comparability.
+    """
     vitality = evaluate_vitality(summary)
-    total_penalty = vitality.vitality_penalty
-
-    val = 100.0 * math.exp(-(exponent + total_penalty))
-    score = max(0.1, min(100.0, val))
-    return round(score, 1)
+    val = 100.0 * math.exp(-(_win_share_decay(summary) + vitality.vitality_penalty))
+    return round(max(0.1, min(100.0, val)), 1)
 
 
 
