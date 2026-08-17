@@ -140,11 +140,11 @@ Natychmiast, gdy spełnisz warunek frakcji:
 
 | Frakcja | Warunek Zwycięstwa (Kanon 4p) |
 | :--- | :--- |
-| **Święte Oficjum** | **4 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
+| **Święte Oficjum** | **7 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | **Korona & Borgiowie** | **2 Dekrety** |
-| **Kabała z Toledo** | **3 Fragmenty** (od Ery **6**) |
-| **Gildia Cieni** | **4 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem) |
+| **Kabała z Toledo** | **3 Fragmenty** (od Ery **4**) |
+| **Gildia Cieni** | **7 Upadki** (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem) |
 
 **Limit Er: 12.** Jeśli nikt nie wygrał — wygrywa gracz najbliższy celowi; remis postępu → **najniższa Herezja**.
 

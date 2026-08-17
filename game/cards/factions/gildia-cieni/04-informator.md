@@ -4,7 +4,7 @@ name: Informator
 faction: gildia-cieni
 type: akcja
 layer: A
-cost: 0
+cost: 1
 heresy: 1
 tags:
 - hook
@@ -14,4 +14,5 @@ heresy_text: Donosiciel pamięta twarz i zapach srebra.
 lore: Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.
 creates_hook: true
 ---
+
 

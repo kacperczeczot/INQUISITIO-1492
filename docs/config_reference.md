@@ -39,30 +39,30 @@ Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gol
 ### 1. Święte Oficjum (`swiete_oficjum`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `stacks` | `dict` | `3p: 1..5`, `4p: 1..5`, `5p: 1..5` | Wymagana liczba Stosów (ze spalonych agentów w Autodafé) |
+| `stacks` | `int` | `1 .. 6` | `5` | Wymagana liczba Stosów (ze spalonych agentów w Autodafé) |
 | `condemns` | `dict` | `3p: 1..5`, `4p: 1..5`, `5p: 1..5` | Wymagana liczba skazanych rywali w Werdyktach (ścieżka alternatywna) |
 
 ### 2. Cienie Al-Andalus (`cienie_al_andalus`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `relics` | `int` | `1 .. 3` | Liczba Relikwii wymagana do ewakuacji |
-| `path_era` | `dict` | `3p: 3..8`, `4p: 3..8`, `5p: 3..8` | Minimalna Era na ukończenie ewakuacji bez ścieżki (szlak / Marionetka / cichy exit) |
+| `relics` | `int` | `1 .. 3` | `2` | Liczba Relikwii wymagana do ewakuacji |
+| `path_era` | `int` | `3 .. 8` | `4` | Minimalna Era na ukończenie ewakuacji (szlak / Marionetka / cichy exit) |
 
 ### 3. Korona Borgiowie (`korona_borgiowie`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `decrees` | `int` | `1 .. 4` | Liczba zagranych Dekretów |
+| `decrees` | `int` | `1 .. 4` | `2` | Liczba zagranych Dekretów |
 
 ### 4. Kabała Toledo (`kabala_toledo`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `fragments` | `int` | `1 .. 4` | Wymagana liczba Fragmentów Kodeksu |
-| `era` | `int` | `1 .. 12` | Minimalna Era na zwycięstwo Kodeksem |
+| `fragments` | `int` | `1 .. 4` | `3` | Wymagana liczba Fragmentów Kodeksu |
+| `era` | `int` | `1 .. 12` | `6` | Minimalna Era na zwycięstwo Kodeksem |
 
 ### 5. Gildia Cieni (`gildia_cieni`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `falls` | `int` | `1 .. 6` | `4` | Upadki Gildii (jedna liczba; bez wyjątku „gdy brak Oficjum”) |
+| `falls` | `int` | `1 .. 6` | `5` | Upadki Gildii (jedna liczba; bez wyjątku „gdy brak Oficjum”) |
 
 ---
 

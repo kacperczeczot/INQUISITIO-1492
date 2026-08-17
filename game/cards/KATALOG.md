@@ -310,7 +310,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
@@ -557,7 +557,7 @@ Kart: **12**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala z Herezją ≥ 4. |
+| `effect` | Załóż Hak na rywala z Herezją ≥ 5. |
 | `lore` | Korona poluje na już brudnych. Dwa Haki zaczynają się tu. |
 | `tags` | hook |
 | `status` | prototyp |
@@ -697,7 +697,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu. |
 | `effect` | Zyskaj Fragment. |
 | `lore` | Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną. |
@@ -767,7 +767,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala z Herezją ≥ 4. |
+| `effect` | Załóż Hak na rywala z Herezją ≥ 5. |
 | `lore` | Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze. |
 | `tags` | hook |
 | `status` | prototyp |
@@ -923,7 +923,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Donosiciel pamięta twarz i zapach srebra. |
 | `effect` | Załóż Hak na rywala. |
@@ -958,7 +958,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 2 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
 | `lore` | Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek. |
@@ -1008,8 +1008,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 2 |
-| `heresy` | 0 |
+| `cost_gold` | 3 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala. |
 | `lore` | Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole. |
@@ -1238,7 +1238,7 @@ Kart: **10**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Każdy gracz w Strefie Obserwowanej (4–6 Herezji) zmniejsza swoją Herezję o 1. |
+| `effect` | Każdy gracz w Strefie Obserwowanej zmniejsza swoją Herezję o 1. |
 | `lore` | Biskup ogłasza wielki jubileusz i powszechne rozgrzeszenie, dając wytchnienie podejrzanym. |
 | `tags` | edict, heresy |
 | `status` | prototyp |

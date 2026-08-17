@@ -25,7 +25,7 @@ Struktura hierarchiczna określająca ścisłą kolejność optymalizacji i dost
    - **Zrozumiałość dla człowieka:** Wyjątek musi być prosty, elegancki i intuicyjny dla gracza czytającego instrukcję przy stole (np. w tabeli pomocy gracza), a nie stanowić ukrytego, zawiłego algorytmu.
 
 4. **Ablacja ≠ gałka audytora:**
-   Raport użyteczności może wyłączyć podsystem (Kronika, Szlak, patrol Inkwizytora, Gospodarcza = 0), żeby zmierzyć, czy żyje. Audytor **nie wdraża** wyłączeń ani skrajów — w tym `intrigue_gold` 1→0 (kasuje Akcję Gospodarczą, która dopiero dostała silnik). Kwota 1↔2 to żywe `±1`. Usunięcie mechaniki to decyzja po raporcie, nie pierwszy patch makro. Makro 4P: żywe `±1` L1/L2 (złoto, Gospodarcza **≥1**, próg oskarżenia, Obserwowana, Er, karty/erę, era Kabały/Cieni, CD Autodafé, ręka, liczniki C, szlak ±1). Lookahead 2D/3D **zapisuje** zweryfikowany wektor (komplementarność; gałka nie musi wygrywać 1D). Głębiej tylko gdy 4P score albo witalność bije held — jeździec Δ≈0 nie wchodzi. Poza apply: agenci (SKU), Werdykt Tajny, tempo Kroniki (`freq` / OFF), split upadków, wskrzeszanie skasowanego YAML. **3p/5p nie ruszają gałek całego stołu.** Karty = audytor kanonu.
+   Raport użyteczności może wyłączyć podsystem (Kronika, Szlak, patrol Inkwizytora, Gospodarcza = 0), żeby zmierzyć, czy żyje. Audytor **nie wdraża** wyłączeń ani skrajów — w tym `intrigue_gold` 1→0 (kasuje Akcję Gospodarczą, która dopiero dostała silnik). Kwota 1↔2 to żywe `±1`. Usunięcie mechaniki to decyzja po raporcie, nie pierwszy patch makro. Makro 4P: żywe `±1` L1/L2 (złoto, Gospodarcza **≥1**, próg oskarżenia, Obserwowana, Er, karty/erę, era Kabały/Cieni, CD Autodafé, ręka, liczniki C, szlak ±1). Lookahead 2D/3D **zapisuje** zweryfikowany wektor (komplementarność; gałka nie musi wygrywać 1D). Głębiej tylko gdy 4P score albo witalność bije held — jeździec Δ≈0 nie wchodzi. **Fundament przed wspinaczką:** poza czerwoną linią 15–35% makro **nie zapisuje** (HUD jak v0.98 ~4 pkt — gradient L2 to protezy). Najpierw ręczny L2/SSOT, aż ±1 wokół żywych celów psuje wynik (jak dekrety 2). Wspinaczka maximin tylko wewnątrz 15–35% w stronę 20–30%. Poza apply: agenci (SKU), Werdykt Tajny, tempo Kroniki (`freq` / OFF), split upadków, wskrzeszanie skasowanego YAML. **3p/5p nie ruszają gałek całego stołu.** Karty = audytor kanonu.
 
 ---
 
@@ -50,11 +50,11 @@ Progi wygranej. Różnice 3p/4p/5p poniżej to wyjątki pod zasadą spłaszczani
 
 | Frakcja | Rozgrywka 3-osobowa (3p) | Rozgrywka 4-osobowa (4p) | Rozgrywka 5-osobowa (5p) |
 | :--- | :--- | :--- | :--- |
-| **Święte Oficjum** | **4 Stosy** lub 3 Skazania | **4 Stosy** lub 3 Skazania | **4 Stosy** lub 3 Skazania |
+| **Święte Oficjum** | **7 Stosy** lub 3 Skazania | **7 Stosy** lub 3 Skazania | **7 Stosy** lub 3 Skazania |
 | **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 4+) | **2 Relikwie** + Ścieżka (Era 4+) | **2 Relikwie** + Ścieżka (Era 4+) |
 | **Korona & Borgiowie** | **2 Dekrety** | **2 Dekrety** | **2 Dekrety** |
-| **Kabała z Toledo** | **3 Fragmenty** (Era 6+) | **3 Fragmenty** (Era 6+) | **3 Fragmenty** (Era 6+) |
-| **Gildia Cieni** | **4 Upadki** | **4 Upadki** | **4 Upadki** |
+| **Kabała z Toledo** | **3 Fragmenty** (Era 4+) | **3 Fragmenty** (Era 4+) | **3 Fragmenty** (Era 4+) |
+| **Gildia Cieni** | **7 Upadki** | **7 Upadki** | **7 Upadki** |
 
 ---
 
