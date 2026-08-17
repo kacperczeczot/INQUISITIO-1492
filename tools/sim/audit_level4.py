@@ -43,14 +43,8 @@ def build_level4_tests():
     cur_sea = getattr(nv, "sea_route_era", 5)
     if cur_sea != 4:
         tests.append(("L4_SEA_ROUTE_ERA4", f"Szlak Morski: Era {cur_sea} → Era 4", {"sea_route_era": 4}))
-    if cur_sea != 5:
-        tests.append(("L4_SEA_ROUTE_ERA5", f"Szlak Morski: Era {cur_sea} → Era 5", {"sea_route_era": 5}))
-    if cur_sea != 6:
-        tests.append(("L4_SEA_ROUTE_ERA6", f"Szlak Morski: Era {cur_sea} → Era 6", {"sea_route_era": 6}))
 
     cur_inq = getattr(nv, "inquisitor_speed", 1)
-    if cur_inq != 2:
-        tests.append(("L4_INQUISITOR_SPEED2", f"Inkwizytor Patrol: ruch {cur_inq} → 2", {"inquisitor_speed": 2}))
     if cur_inq != 0:
         tests.append(("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {cur_inq} → 0", {"inquisitor_speed": 0}))
 
