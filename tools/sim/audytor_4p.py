@@ -6,7 +6,10 @@ Audytora Kanonu, zoptymalizowany pod kątem parametrów makro (L1, L2, L4) bez k
 
 Główne założenia metodologiczne:
   1. Kanon 4P (5 setupów 4-osobowych) — ten sam lejek co Audytor Kanonu, **bez L3 / kart**.
-  2. Pula: ±1 z audit_level1/2/4 **oraz** skraj/off z raportu użyteczności.
+  2. Pula apply = `audit_level1/2/4` ±1 (jak kanon, bez L3). Zero ablacji / skrajów
+     z `feature_impact_4p`. Tożsamość: limit ręki, Autodafé, agenci, Werdykt Tajny,
+     tempo Kroniki (1 edykt/erę). Próg oskarżenia zostaje (tempo sądu).
+     Nie wskrzeszać haków / pasma / ery Korony.
   3. **Lookahead +1D:** nie wdraża poprawy na głębokości, na której ją znalazł — zawsze
      zagląda jedną warstwę głębiej (1D→2D zawsze, dalej tylko gdy nowa głębokość bije held).
      Jeśli głębiej nic lepszego, wdraża wcześniejszy wektor. 1D bez zysku i tak idzie w 2D.
@@ -168,33 +171,29 @@ def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: i
     }
 
 
+def _skip_apply_candidate(tid: str, params: dict) -> bool:
+    return is_frozen_identity_knob(tid, params) or is_ablation_off(tid, params)
+
+
 def generate_all_atomic_candidates_macro() -> list[tuple[str, str, dict]]:
-    """L1/L2/L4 ±1 plus extreme/off from feature_impact. No L3 / no card_overrides."""
+    """L1/L2/L4 ±1 from audit_level*. No L3, no feature_impact extremes/off."""
     tests: list[tuple[str, str, dict]] = []
-    tests.extend(
-        [
-            t
-            for t in audit_level1.build_level1_tests()
-            if t[0] != "L1_BAZA"
-            and "HAND_LIMIT" not in t[0]
-            and "AUTODAFE" not in t[0]
-        ]
-    )
-    tests.extend([t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"])
-    tests.extend([t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"])
-
-    from feature_impact_4p import CANONICAL_4P_SETUPS as IMPACT_SETUPS
-    from feature_impact_4p import build_all_mechanic_tasks
-
-    for t in build_all_mechanic_tasks(1, 1, IMPACT_SETUPS):
-        tests.append((t[0], t[1], t[3]))
+    for builder, baza in (
+        (audit_level1.build_level1_tests, "L1_BAZA"),
+        (audit_level2.build_level2_tests, "L2_BAZA"),
+        (audit_level4.build_level4_tests, "L4_BAZA"),
+    ):
+        for t in builder():
+            if t[0] == baza or _skip_apply_candidate(t[0], t[2]):
+                continue
+            tests.append(t)
 
     seen: set[str] = set()
     out: list[tuple[str, str, dict]] = []
     for tid, name, params in tests:
         if tid.startswith("L3_") or "card_overrides" in params or "disabled_cards" in params:
             continue
-        if "AUTODAFE" in tid or "cooldown_offset" in params or "autodafe_cooldown" in params:
+        if _skip_apply_candidate(tid, params):
             continue
         if "GC_FALLS_DEFAULT" in tid or "GC_FALLS_NO_SO" in tid:
             continue
@@ -211,6 +210,63 @@ _DEAD_PATH_CRUTCH = (
     ("skazania", "so_condemns_offset"),
     ("stosy", "so_stacks_offset"),
 )
+
+# Fundament stołu — audytor nie kręci HUD-em (jak Autodafé / limit ręki).
+_FROZEN_ID_MARKERS = (
+    "HAND_LIMIT",
+    "AUTODAFE",
+    "AGENTS",
+    "VERDICT_SECRET",
+    "KB_HOOKS",
+    "KB_ERA",
+    "KT_HERESY",
+    "TIME_DECK",
+)
+_FROZEN_PARAM_KEYS = (
+    "hand_limit_offset",
+    "cooldown_offset",
+    "autodafe_cooldown",
+    "agents_offset",
+    "agents_per_player",
+    "verdict_secret",
+    "kb_hooks_offset",
+    "kb_era_offset",
+    "kt_heresy_band",
+    "time_deck_freq",
+    "no_time_deck",
+)
+_ABLATION_OFF_ID_MARKERS = (
+    "NO_TIME_DECK",
+    "SEA_ROUTE_OFF",
+    "INQUISITOR_SPEED0",
+    "START_GOLD_0",
+    "AUTODAFE_DISABLED",
+    "AUTODAFE_CD_0",
+)
+
+
+def is_frozen_identity_knob(tid: str, params: dict) -> bool:
+    if any(m in tid for m in _FROZEN_ID_MARKERS):
+        return True
+    return any(k in params for k in _FROZEN_PARAM_KEYS)
+
+
+def is_ablation_off(tid: str, params: dict) -> bool:
+    """Kill/never/disable a subsystem. feature_impact may measure; auditor must not apply."""
+    if any(m in tid for m in _ABLATION_OFF_ID_MARKERS):
+        return True
+    if params.get("no_time_deck"):
+        return True
+    if int(params.get("sea_route_era") or 0) >= 90:
+        return True
+    if params.get("inquisitor_speed") == 0:
+        return True
+    if params.get("start_gold") == 0:
+        return True
+    cd = params.get("autodafe_cooldown")
+    if cd is not None and int(cd) in (0, 99):
+        return True
+    return False
 
 
 def is_dead_path_crutch(base: dict, params: dict) -> bool:
@@ -229,8 +285,23 @@ def drop_dead_path_crutches(
     return [c for c in candidates if not is_dead_path_crutch(base, c[2])]
 
 
+def _reject_identity_or_ablation(cand: dict) -> AcceptDecision | None:
+    params = cand.get("params") or {}
+    cid = str(cand.get("id") or "")
+    if is_frozen_identity_knob(cid, params):
+        return AcceptDecision(False, "tożsamość stołu: gałka zamrożona (nie HUD)", "hygiene")
+    if is_ablation_off(cid, params):
+        return AcceptDecision(
+            False, "ablacja: wyłączenie podsystemu (raport użyteczności, nie patch)", "hygiene"
+        )
+    return None
+
+
 def accept_macro_candidate(base: dict, cand: dict, **kwargs) -> AcceptDecision:
     """Same gates as kanon, plus: don't 'heal' a dead dual-path by lowering its threshold."""
+    blocked = _reject_identity_or_ablation(cand)
+    if blocked is not None:
+        return blocked
     params = cand.get("params") or {}
     if is_dead_path_crutch(base, params):
         warns = " ".join(base.get("vitality_warnings") or [])
@@ -242,6 +313,37 @@ def accept_macro_candidate(base: dict, cand: dict, **kwargs) -> AcceptDecision:
                     "hygiene",
                 )
     return accept_candidate(base, cand, **kwargs)
+
+
+def accept_format_exception(
+    base: dict,
+    cand: dict,
+    *,
+    score_key: str,
+    min_delta: float,
+    telemetry_ok: tuple[bool, str],
+) -> AcceptDecision:
+    """3p/5p: blended score + telemetry + vitality crutch / frozen identity. No 4P band."""
+    blocked = _reject_identity_or_ablation(cand)
+    if blocked is not None:
+        return blocked
+    params = cand.get("params") or {}
+    if is_dead_path_crutch(base, params):
+        warns = " ".join(base.get("vitality_warnings") or [])
+        for label, key in _DEAD_PATH_CRUTCH:
+            if f"Martwa ścieżka {label}" in warns and int(params.get(key, 0) or 0) < 0:
+                return AcceptDecision(
+                    False,
+                    f"użyteczność: obniżenie {key} przy martwej ścieżce {label} to proteza",
+                    "hygiene",
+                )
+    ok, msg = telemetry_ok
+    if not ok:
+        return AcceptDecision(False, msg, "hygiene")
+    delta = float(cand.get(score_key, 0) or 0) - float(base.get(score_key, 0) or 0)
+    if delta < min_delta:
+        return AcceptDecision(False, f"Δ {delta:.2f} < min_delta {min_delta}", "legacy")
+    return AcceptDecision(True, f"Δ {delta:+.2f} (wyjątek formatu)", "legacy")
 
 
 def lookahead_next_action(
@@ -605,7 +707,7 @@ class Macro4PAutoBalancer:
                     break
 
                 if current_phase == 1 or not beam_seeds:
-                    print(f"\n🌐 [FAZA 1D — MAKRO 4P] Pula L1/L2/L4 ±1 + skraj/off, bez kart ({len(atomic_pool)} wariantów)...")
+                    print(f"\n🌐 [FAZA 1D — MAKRO 4P] Pula L1/L2/L4 ±1, bez kart / bez ablacji ({len(atomic_pool)} wariantów)...")
                     candidate_pool = atomic_pool
                 else:
                     print(f"\n🌐 [FAZA {current_phase}D — MAKRO 4P] Wiązki 4P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik)...")

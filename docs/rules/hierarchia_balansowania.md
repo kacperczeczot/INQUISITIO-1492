@@ -24,6 +24,9 @@ Struktura hierarchiczna określająca ścisłą kolejność optymalizacji i dost
    - **Tożsamość obecności frakcji:** Np. brak Świętego Oficjum przy stole naturalnie zmienia warunki Gildii Cieni (3 Upadki zamiast 2).
    - **Zrozumiałość dla człowieka:** Wyjątek musi być prosty, elegancki i intuicyjny dla gracza czytającego instrukcję przy stole (np. w tabeli pomocy gracza), a nie stanowić ukrytego, zawiłego algorytmu.
 
+4. **Ablacja ≠ gałka audytora:**
+   Raport użyteczności może wyłączyć podsystem (Kronika, Szlak, patrol Inkwizytora), żeby zmierzyć, czy żyje. Audytor **nie wdraża** wyłączeń ani skrajów z tego raportu. Pula apply = ±1 z audytów L1/L2/L3/L4. Tempo Kroniki to **1 edykt na erę** — wadliwe karty Kroniki się naprawia, nie `time_deck_freq`.
+
 ---
 
 ## 1. Poziom 1: Główne Mechaniki Systemowe (Global System Core)
@@ -49,11 +52,11 @@ Progi wygranej. Różnice 3p/4p/5p poniżej to wyjątki pod zasadą spłaszczani
 
 | Frakcja | Rozgrywka 3-osobowa (3p) | Rozgrywka 4-osobowa (4p) | Rozgrywka 5-osobowa (5p) |
 | :--- | :--- | :--- | :--- |
-| **Święte Oficjum** | **3 Stosy** lub 2 Skazania | **3 Stosy** lub 3 Skazania | **4 Stosy** lub 4 Skazania |
-| **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 6+) | **2 Relikwie** + Ścieżka (Era 5+) | **2 Relikwie** + Ścieżka (Era 5+) |
-| **Korona & Borgiowie** | **2 Dekrety** + ≥0 Haków (Era 5+) | **2 Dekrety** + ≥1 Hak (Era 5+)<br>lub **1 Dekret + 2 Haki** | **2 Dekrety** + ≥1 Hak (Era 5+)<br>lub **1 Dekret + 2 Haki** |
-| **Kabała z Toledo** | **3 Fragmenty** + Pasmo 3–8 (Era 7+) | **3 Fragmenty** + Pasmo 3–8 (Era 6+) | **3 Fragmenty** + Pasmo 3–8 (Era 6+) |
-| **Gildia Cieni** | **2 Upadki** *(3 bez Oficjum)* | **2 Upadki** *(3 bez Oficjum)* | **2 Upadki** *(3 bez Oficjum)* |
+| **Święte Oficjum** | **4 Stosy** lub 3 Skazania | **4 Stosy** lub 3 Skazania | **4 Stosy** lub 3 Skazania |
+| **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 4+) | **2 Relikwie** + Ścieżka (Era 4+) | **2 Relikwie** + Ścieżka (Era 4+) |
+| **Korona & Borgiowie** | **2 Dekrety** | **2 Dekrety** | **2 Dekrety** |
+| **Kabała z Toledo** | **3 Fragmenty** (Era 6+) | **3 Fragmenty** (Era 6+) | **3 Fragmenty** (Era 6+) |
+| **Gildia Cieni** | **4 Upadki** | **4 Upadki** | **4 Upadki** |
 
 ---
 

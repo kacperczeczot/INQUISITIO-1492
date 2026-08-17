@@ -346,7 +346,10 @@ def _win_extremes(cur: int, min_val: int = 1) -> list[tuple[str, int, int]]:
 
 
 def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str]) -> list[tuple[str, str, str, dict, int, int, list[str]]]:
-    """Extreme / off ablations for L1, L2, L4. ±1 lives in audit_level1/2/4."""
+    """Extreme / off ablations for L1, L2, L4. ±1 lives in audit_level1/2/4.
+
+    Measurement only. Auditors must not import this catalog into apply-pool.
+    """
     v = CONFIG.victory
     sys_cfg = CONFIG.system
     nv = CONFIG.variants
@@ -387,7 +390,6 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
     add("L1_AUTODAFE_DISABLED", "Autodafé: całkowite wyłączenie", cat1, {"autodafe_cooldown": 99})
 
     so, caa, kb, kt, gc = v.swiete_oficjum, v.cienie_al_andalus, v.korona_borgiowie, v.kabala_toledo, v.gildia_cieni
-    hb = kt.heresy_band
 
     for tag, off, new in _win_extremes(_n4(so.stacks)):
         add(f"L2_SO_STACKS_{tag}", f"Święte Oficjum: stosy {_n4(so.stacks)} → {new}", cat2, {"so_stacks_offset": off})
@@ -397,19 +399,21 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         add(f"L2_CAA_RELICS_{tag}", f"Cienie: relikwie {_n4(caa.relics)} → {new}", cat2, {"caa_relics_offset": off})
     for tag, off, new in _win_extremes(_n4(kb.decrees)):
         add(f"L2_KB_DECREES_{tag}", f"Korona: dekrety {_n4(kb.decrees)} → {new}", cat2, {"kb_decrees_offset": off})
-    for tag, off, new in _win_extremes(_n4(kb.hooks), min_val=0):
-        add(f"L2_KB_HOOKS_{tag}", f"Korona: haki {_n4(kb.hooks)} → {new}", cat2, {"kb_hooks_offset": off})
+    for tag, off, new in _win_extremes(int(kb.get("hooks", 0)), min_val=0):
+        add(f"L2_KB_HOOKS_{tag}", f"Korona: wymóg haków 0 → {new} (podatek)", cat2, {"kb_hooks_offset": off})
     for tag, off, new in _win_extremes(_n4(kt.fragments)):
         add(f"L2_KT_FRAGS_{tag}", f"Kabała: fragmenty {_n4(kt.fragments)} → {new}", cat2, {"kt_frags_offset": off})
     for tag, off, new in _win_extremes(_n4(kt.era)):
         add(f"L2_KT_ERA_{tag}", f"Kabała: era {_n4(kt.era)} → {new}", cat2, {"kt_era_offset": off})
 
-    lo_b, hi_b = int(hb[0]), int(hb[1])
-    if hi_b - lo_b >= 4:
-        mid = (lo_b + hi_b) // 2
-        tight = (max(0, mid - 1), mid + 1)
-        if tight != (lo_b, hi_b):
-            add("L2_KT_HERESY_TIGHT", f"Kabała: pasmo {lo_b}–{hi_b} → {tight[0]}–{tight[1]}", cat2, {"kt_heresy_band": tight})
+    hb = kt.get("heresy_band")
+    if hb:
+        lo_b, hi_b = int(hb[0]), int(hb[1])
+        if hi_b - lo_b >= 4:
+            mid = (lo_b + hi_b) // 2
+            tight = (max(0, mid - 1), mid + 1)
+            if tight != (lo_b, hi_b):
+                add("L2_KT_HERESY_TIGHT", f"Kabała: pasmo {lo_b}–{hi_b} → {tight[0]}–{tight[1]}", cat2, {"kt_heresy_band": tight})
 
     for tag, off, new in _win_extremes(_falls_n(gc.falls)):
         add(

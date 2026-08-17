@@ -11,10 +11,10 @@ Główne założenia metodologiczne:
      - Etap 1 (Szybki Przesiew): 150 gier/setup × 10 setupów -> TOP 24 półfinalistów
      - Etap 2 (Głęboki Przesiew): 600 gier/setup × 10 setupów -> TOP 12 finalistów
      - Etap 3 (Weryfikacja Ultra): 2500 gier/setup × 10 setupów -> Zwycięski Patch
-  4. Ciągła Pętla Progresywna (Progressive Beam Search 1D -> 2D -> 3D -> ...):
-     - Jeśli w danej fazie (np. 1D) żaden wariant nie daje zysku, skrypt automatycznie
-       kwalifikuje TOP nasiona i eskaluje do kolejnej fazy (2D, 3D itd.), działając
-       w pętli ciągłej aż do osiągnięcia optimum lub przerwania (Ctrl+C / limit czasu).
+  4. **Lookahead +1D** (jak Audytor 4P): nie wdraża poprawy na głębokości, na której ją
+     znalazł — 1D zawsze zagląda w 2D; dalej tylko gdy nowa głębokość bije held.
+     Zapis idzie w wyjątki `3p:` (Kanon 4P i L3 nietknięte). Ranking: blended setup_score.
+     Bramka witalności: proteza skazań/stosów −1 przy martwej ścieżce jest odrzucana.
   5. Pełna automatyzacja dokumentacji i SSOT:
      - Zapisuje wyjątki per-3p pod sekcjami '3p:' w game_config.yaml (z podbiciem wersji)
      - playtesting/sim-reports/archive/<wersja>/audytor_3p_log.md
@@ -56,11 +56,19 @@ from inquisitio.runner.scoring import (
     calculate_global_score,
     calculate_setup_score,
     color_score,
+    evaluate_vitality,
 )
 
 import audit_level1
 import audit_level2
 import audit_level4
+from audytor_4p import (
+    accept_format_exception,
+    drop_dead_path_crutches,
+    is_ablation_off,
+    is_frozen_identity_knob,
+    lookahead_next_action,
+)
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
@@ -94,6 +102,8 @@ def _run_single_test_task_3p(args_tuple: tuple) -> dict:
 
     summaries = []
     setup_scores = {}
+    vitality_penalties = []
+    vitality_warnings: list[str] = []
     fshares = {fid: [] for fid in FACTION_NAMES.keys()}
 
     for sname in setups:
@@ -101,6 +111,10 @@ def _run_single_test_task_3p(args_tuple: tuple) -> dict:
         summaries.append(s)
         sc = calculate_setup_score(s)
         setup_scores[sname] = sc
+        vit = evaluate_vitality(s)
+        vitality_penalties.append(vit.vitality_penalty)
+        for msg in vit.warnings:
+            vitality_warnings.append(f"{sname}: {msg}")
         for fid, wins in s.wins.items():
             if s.games > 0:
                 fid_enum = FactionId(fid) if not isinstance(fid, FactionId) else fid
@@ -131,6 +145,8 @@ def _run_single_test_task_3p(args_tuple: tuple) -> dict:
         "autodafe_avg": autodafe_avg,
         "acc_avg": acc_avg,
         "gold_avg": gold_avg,
+        "vitality_penalty": max(vitality_penalties) if vitality_penalties else 0.0,
+        "vitality_warnings": vitality_warnings,
     }
 
 
@@ -154,14 +170,17 @@ def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: i
 
 
 def generate_all_atomic_candidates_3p() -> list[tuple[str, str, dict]]:
-    """Builds atomic candidate pool for 3P parameters (L1, L2, L4) excluding cards (L3)."""
+    """L1/L2/L4 for 3P exceptions. No L3; frozen table identity stays out of the pool."""
     tests = []
-    # Level 1 (Core System Parameters)
-    tests.extend([t for t in audit_level1.build_level1_tests() if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0]])
-    # Level 2 (Faction Victory Conditions)
-    tests.extend([t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"])
-    # Level 4 (Niche Variants & Edicts)
-    tests.extend([t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"])
+    for builder, baza in (
+        (audit_level1.build_level1_tests, "L1_BAZA"),
+        (audit_level2.build_level2_tests, "L2_BAZA"),
+        (audit_level4.build_level4_tests, "L4_BAZA"),
+    ):
+        for t in builder():
+            if t[0] == baza or is_frozen_identity_knob(t[0], t[2]) or is_ablation_off(t[0], t[2]):
+                continue
+            tests.append(t)
     return tests
 
 
@@ -219,12 +238,8 @@ def apply_mutation_to_3p_config(raw_cfg: dict[str, Any], rule_params: dict[str, 
         _set_3p(vic.setdefault("cienie_al_andalus", {}), "relics", 2, rule_params["caa_relics_offset"], "CAA Relikwie")
     if "caa_era_offset" in rule_params:
         _set_3p(vic.setdefault("cienie_al_andalus", {}), "path_era", 5, rule_params["caa_era_offset"], "CAA Era")
-    if "kb_era_offset" in rule_params:
-        _set_3p(vic.setdefault("korona_borgiowie", {}), "era", 4, rule_params["kb_era_offset"], "KB Era")
     if "kb_decrees_offset" in rule_params:
         _set_3p(vic.setdefault("korona_borgiowie", {}), "decrees", 2, rule_params["kb_decrees_offset"], "KB Dekrety")
-    if "kb_hooks_offset" in rule_params:
-        _set_3p(vic.setdefault("korona_borgiowie", {}), "hooks", 1, rule_params["kb_hooks_offset"], "KB Haki")
     if "kt_frags_offset" in rule_params:
         _set_3p(vic.setdefault("kabala_toledo", {}), "fragments", 3, rule_params["kt_frags_offset"], "KT Fragmenty")
     if "kt_era_offset" in rule_params:
@@ -260,7 +275,7 @@ def update_balance_notes_3p(
         f"### 🟢 Patch {new_version} ({today}) — Format 3P: {change_desc} (Zysk 3P Δ {delta_3p_str} pkt)\n"
         f"- **Wynik 3P:** 3p **`{base_res_3p['score_3p']:.1f}`** → **`{best_res_3p['score_3p']:.1f} pkt`** | Kanon 4P **`{diag_after['cat_scores'].get('4p',0.0):.1f}`** | 5p **`{diag_after['cat_scores'].get('5p',0.0):.1f}`** | Global **`{diag_after['global_score']:.1f}`**\n"
         f"- **Modyfikacja (`{rule_id}`):** {change_desc}.\n"
-        f"- **Efekt:** Optymalizacja formatu 3P. Telemetria: Średnia Er {best_res_3p['eras_avg']:.2f}, Deadlocks {best_res_3p['deadlock_pct']:.1f}%, Pas Biedy {best_res_3p['poverty_pct']:.1f}%.\n\n"
+        f"- **Efekt:** Lookahead +1D, wyjątek `3p:`. Telemetria: Średnia Er {best_res_3p['eras_avg']:.2f}, Deadlocks {best_res_3p['deadlock_pct']:.1f}%, Pas Biedy {best_res_3p['poverty_pct']:.1f}%. Witalność `{base_res_3p.get('vitality_penalty', 0):.3f}` → `{best_res_3p.get('vitality_penalty', 0):.3f}`.\n\n"
     )
 
     history_heading = "## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)\n\n"
@@ -362,17 +377,104 @@ class AutoBalancer3P:
                 eta_s = (total - idx) / rate if rate > 0 else 0
                 eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
                 lead_id = best_so_far['id'][:26] if best_so_far else "-"
-                lead_sc = f"{best_so_far['score_3p']:.1f}" if best_so_far else "-"
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<7s} | Lider 3P: {lead_id} ({lead_sc} pkt)  ")
+                lead_sc = (
+                    f"{best_so_far['score_3p']:.1f} vit {best_so_far.get('vitality_penalty', 0):.2f}"
+                    if best_so_far
+                    else "-"
+                )
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<7s} | Lider 3P: {lead_id} ({lead_sc})  ")
                 sys.stdout.flush()
 
         sys.stdout.write(f"\n   ✔ Ukończono {total} zadań w {round(time.time() - t0, 1)}s.\n")
         return results
 
+    def _commit_patch(
+        self,
+        *,
+        accepted_candidate: tuple[str, str, dict],
+        best_ver_res: dict,
+        base_res: dict,
+        phase: int,
+        iter_start: float,
+    ) -> None:
+        """Write an accepted lookahead vector to 3p: YAML exceptions (or print dry-run)."""
+        self.total_iterations += 1
+        rule_id, _rule_name, rule_params = accepted_candidate
+
+        with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
+            raw_cfg = yaml.safe_load(f)
+
+        old_version = raw_cfg.get("version", "v0.51")
+        mod_cfg, change_desc = apply_mutation_to_3p_config(raw_cfg, rule_params)
+
+        print("\n🔬 [DIAGNOZA WPŁYWU NA POZOSTAŁE TRYBY (4P / 5P)]...")
+        diag_before = _run_full_diagnostic({}, games_per_setup=1000, seed=self.args.seed)
+        diag_after = _run_full_diagnostic(rule_params, games_per_setup=1000, seed=self.args.seed)
+
+        d_4 = diag_after["cat_scores"].get("4p", 0) - diag_before["cat_scores"].get("4p", 0)
+        d_5 = diag_after["cat_scores"].get("5p", 0) - diag_before["cat_scores"].get("5p", 0)
+        d_g = diag_after["global_score"] - diag_before["global_score"]
+        d4_sign = f"+{d_4:.1f}" if d_4 > 0 else f"{d_4:.1f}"
+        d5_sign = f"+{d_5:.1f}" if d_5 > 0 else f"{d_5:.1f}"
+        dg_sign = f"+{d_g:.1f}" if d_g > 0 else f"{d_g:.1f}"
+        print(
+            f"   🎯 3P Format: {base_res['score_3p']:.1f} → **{best_ver_res['score_3p']:.1f} pkt** "
+            f"(Δ {best_ver_res['score_3p'] - base_res['score_3p']:+.2f} pkt)"
+        )
+        print(
+            f"   💤 Witalność:   {base_res.get('vitality_penalty', 0):.3f} → "
+            f"{best_ver_res.get('vitality_penalty', 0):.3f}"
+        )
+        print(f"   👥 Kanon 4P:  {diag_before['cat_scores'].get('4p',0):.1f} → {diag_after['cat_scores'].get('4p',0):.1f} pkt (`{d4_sign} pkt`)")
+        print(f"   👥 Wpływ 5p:  {diag_before['cat_scores'].get('5p',0):.1f} → {diag_after['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
+        print(f"   🌐 Globalny:  {diag_before['global_score']:.1f} → {diag_after['global_score']:.1f} pkt (`{dg_sign} pkt`)")
+
+        if self.args.dry_run:
+            print(f"\n[DRY RUN] Zaakceptowano by wektor {phase}D (wyjątek 3p:): {change_desc}")
+            return
+
+        new_version, _saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
+        iter_elapsed = round(time.time() - iter_start, 2)
+        print(f"\n🎉 [ZAAKCEPTOWANO PATCH FORMATU 3P #{self.total_iterations} — FAZA {phase}D]")
+        print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
+        print(f"   Modyfikacja:   {change_desc}")
+
+        version_archive_dir = REPORTS_DIR / "archive" / new_version
+        version_archive_dir.mkdir(parents=True, exist_ok=True)
+        log_3p_iteration(
+            version_archive_dir / "audytor_3p_log.md",
+            self.total_iterations,
+            phase,
+            old_version,
+            new_version,
+            change_desc,
+            rule_id,
+            base_res,
+            best_ver_res,
+            diag_before,
+            diag_after,
+            iter_elapsed,
+        )
+        shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
+        print("   📑 Aktualizuję playtesting/balance-notes.md...")
+        update_balance_notes_3p(
+            old_version,
+            new_version,
+            change_desc,
+            rule_id,
+            base_res,
+            best_ver_res,
+            diag_before,
+            diag_after,
+        )
+        print("   🔄 Synchronizuję dokumentację kart i reguł...")
+        subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
+        print("   ✔ Zaktualizowano katalog kart, opisy markdown, HTML i card-editor.")
+
     def run(self):
         print("═══════════════════════════════════════════════════════════════════════")
-        print("   INQUISITIO-1492 — AUDYTOR 3P (Continuous Lookahead Optimizer)       ")
-        print("   Optymalizacja 10 setupów 3-osobowych bez naruszania talii i Kanonu  ")
+        print("   INQUISITIO-1492 — AUDYTOR 3P (Adaptive Lookahead +1D)                ")
+        print("   Wyjątki 3p: — bez ruszania kanonu 4P i kart (L3)                     ")
         print("═══════════════════════════════════════════════════════════════════════")
         print(f"Bieżąca wersja bazowa:      {CONFIG.version}")
         print(f"Maksymalny czas sesji:      {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
@@ -381,15 +483,15 @@ class AutoBalancer3P:
         print(f"Etap 1 (Szybki przesiew):   {self.args.fast_games} gier/setup ({len(SETUPS_3P)} setupów 3p)")
         print(f"Etap 2 (Głęboki przesiew):  {self.args.screen_games} gier/setup (TOP {self.args.top_semifinalists} półfinalistów)")
         print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
+        print(f"Lookahead +1D:              max głębokość {self.args.max_depth}D (1D zawsze zagląda w 2D)")
         print(f"Wątki procesora:            {self.args.workers}")
+        print(f"Ranking:                    blended setup_score (bez pasma 4P); witalność = veto protezy")
         print(f"Archiwizacja raportów:     {REPORTS_DIR}/archive/<wersja>/")
         print("═══════════════════════════════════════════════════════════════════════\n")
 
         setups = SETUPS_3P
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
-
-        current_phase = 1
-        beam_seeds: list[tuple[str, str, dict]] = []
+        max_depth = int(getattr(self.args, "max_depth", 4))
 
         while not self.stop_requested:
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -402,178 +504,205 @@ class AutoBalancer3P:
 
             iter_start = time.time()
 
-            # 1. Measure 3P Baseline
             print(f"\n{'='*71}")
             print(f"🔍 [POMIAR BAZOWY FORMATU 3P] Diagnoza 10 setupów 3p (Próba: {self.args.confirm_games} gier/setup)...")
             base_task = ((("BASE", "Bieżący stan 3P", {}), self.args.confirm_games, self.args.seed, setups),)
             base_res = self._execute_pool(_run_single_test_task_3p, [base_task[0]], label="Baza 3P")[0]
 
             print(f"   🎯 Wynik 3P Score: {color_score(base_res['score_3p'], bold=True)} pkt")
+            print(f"   💤 Witalność kara: {base_res.get('vitality_penalty', 0):.3f}")
+            warns = base_res.get("vitality_warnings") or []
+            if warns:
+                print("   💤 Witalność — audytor nie leczy obniżeniem progu dual-win:")
+                for w in warns:
+                    print(f"      • {w}")
             for sname, sc in sorted(base_res["setup_scores"].items()):
                 print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt")
             print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
 
-            # 2. Candidate Pool
-            atomic_pool = generate_all_atomic_candidates_3p()
+            atomic_pool = drop_dead_path_crutches(base_res, generate_all_atomic_candidates_3p())
+            pending_cand: tuple[str, str, dict] | None = None
+            pending_res: dict | None = None
+            pending_phase: int | None = None
+            current_phase = 1
+            beam_seeds: list[tuple[str, str, dict]] = []
+            applied = False
+            search_exhausted = False
 
-            if current_phase == 1 or not beam_seeds:
-                print(f"\n🌐 [FAZA 1D — FORMAT 3P] Pełna pula atomowa L1, L2, L4 ({len(atomic_pool)} wariantów)...")
-                candidate_pool = atomic_pool
-            else:
-                print(f"\n🌐 [FAZA {current_phase}D — FORMAT 3P] Wiązki 3P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik)...")
-                composite_pool = []
-                for seed_mut in beam_seeds:
-                    for atomic_mut in atomic_pool:
-                        merged = merge_mutations(seed_mut, atomic_mut)
-                        if merged:
-                            composite_pool.append(merged)
-
-                seen_ids = set()
-                candidate_pool = []
-                for c in composite_pool:
-                    norm_id = "__".join(sorted(c[0].split("__")))
-                    if norm_id not in seen_ids:
-                        seen_ids.add(norm_id)
-                        candidate_pool.append(c)
-
-            print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Formatu 3P.")
-            cand_dict = {c[0]: c for c in candidate_pool}
-
-            # 3. ETAP 1/3: Szybki Przesiew na 10 setupach 3P
-            print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 3P] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup × 10 setupów) ---")
-            stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
-            stage1_results = self._execute_pool(_run_single_test_task_3p, stage1_tasks, label=f"Przesiew 3P 1/3")
-
-            stage1_results.sort(key=lambda r: r["score_3p"], reverse=True)
-
-            n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-            semifinalist_results = stage1_results[:n_semifinalists]
-            semifinalist_candidates = [cand_dict[r["id"]] for r in semifinalist_results]
-
-            # 4. ETAP 2/3: Głęboki Przesiew 3P
-            print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 3P] Badam TOP {len(semifinalist_candidates)} półfinalistów ({self.args.screen_games} gier/setup × 10 setupów) ---")
-            stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
-            stage2_results = self._execute_pool(_run_single_test_task_3p, stage2_tasks, label=f"Przesiew 3P 2/3")
-
-            stage2_results.sort(key=lambda r: r["score_3p"], reverse=True)
-
-            n_finalists = min(self.args.top_k, len(stage2_results))
-            finalist_results = stage2_results[:n_finalists]
-            finalist_candidates = [cand_dict[r["id"]] for r in finalist_results]
-
-            # 5. ETAP 3/3: Weryfikacja Ultra 3P
-            print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 3P] Weryfikuję TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup × 10 setupów) ---")
-            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
-            stage3_results = self._execute_pool(_run_single_test_task_3p, stage3_tasks, label=f"Weryfikacja 3P 3/3")
-
-            stage3_results.sort(key=lambda r: r["score_3p"], reverse=True)
-
-            print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW FORMATU 3P]")
-            for idx, r in enumerate(stage3_results, 1):
-                d_3 = r["score_3p"] - base_res["score_3p"]
-                is_safe, msg = passes_telemetry_safety(r)
-                sign = f"+{d_3:.2f}" if d_3 > 0 else f"{d_3:.2f}"
-                print(f"   #{idx:2d} [{r['id'][:42]}...] 3P Score: {base_res['score_3p']:.1f} → {r['score_3p']:.1f} (Δ {sign}) | {msg}")
-
-            accepted_candidate = None
-            best_ver_res = None
-
-            for ver_res in stage3_results:
-                d_3p = ver_res["score_3p"] - base_res["score_3p"]
-                is_safe, safe_msg = passes_telemetry_safety(ver_res)
-
-                if is_safe and d_3p >= self.args.min_delta:
-                    accepted_candidate = cand_dict[ver_res["id"]]
-                    best_ver_res = ver_res
+            while not self.stop_requested and current_phase <= max_depth:
+                if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
+                    print(f"\n⏱️ Osiągnięto limit czasu sesji ({self.args.hours}h). Kończę pracę.")
+                    search_exhausted = True
                     break
 
-            # 6. Apply Patch & Measure Cross Impact
-            if accepted_candidate and best_ver_res is not None:
-                self.total_iterations += 1
-                rule_id, rule_name, rule_params = accepted_candidate
-
-                with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
-                    raw_cfg = yaml.safe_load(f)
-
-                old_version = raw_cfg.get("version", "v0.51")
-                mod_cfg, change_desc = apply_mutation_to_3p_config(raw_cfg, rule_params)
-
-                # Cross-impact diagnosis
-                print(f"\n🔬 [DIAGNOZA WPŁYWU NA POZOSTAŁE TRYBY (4P / 5P)]...")
-                diag_before = _run_full_diagnostic({}, games_per_setup=1000, seed=self.args.seed)
-                diag_after = _run_full_diagnostic(rule_params, games_per_setup=1000, seed=self.args.seed)
-
-                d_4 = diag_after["cat_scores"].get("4p", 0) - diag_before["cat_scores"].get("4p", 0)
-                d_5 = diag_after["cat_scores"].get("5p", 0) - diag_before["cat_scores"].get("5p", 0)
-                d_g = diag_after["global_score"] - diag_before["global_score"]
-
-                d4_sign = f"+{d_4:.1f}" if d_4 > 0 else f"{d_4:.1f}"
-                d5_sign = f"+{d_5:.1f}" if d_5 > 0 else f"{d_5:.1f}"
-                dg_sign = f"+{d_g:.1f}" if d_g > 0 else f"{d_g:.1f}"
-
-                print(f"   🎯 3P Format: {base_res['score_3p']:.1f} → **{best_ver_res['score_3p']:.1f} pkt** (Δ {best_ver_res['score_3p'] - base_res['score_3p']:+.2f} pkt)")
-                print(f"   👥 Kanon 4P:  {diag_before['cat_scores'].get('4p',0):.1f} → {diag_after['cat_scores'].get('4p',0):.1f} pkt (`{d4_sign} pkt`)")
-                print(f"   👥 Wpływ 5p:  {diag_before['cat_scores'].get('5p',0):.1f} → {diag_after['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
-                print(f"   🌐 Globalny:  {diag_before['global_score']:.1f} → {diag_after['global_score']:.1f} pkt (`{dg_sign} pkt`)")
-
-                if self.args.dry_run:
-                    print(f"\n[DRY RUN] Zaakceptowano by modyfikację Formatu 3P: {change_desc}")
-                    current_phase += 1
+                if current_phase == 1 or not beam_seeds:
+                    print(f"\n🌐 [FAZA 1D — FORMAT 3P] Pula L1/L2/L4, bez kart ({len(atomic_pool)} wariantów)...")
+                    candidate_pool = atomic_pool
                 else:
-                    new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
-                    iter_elapsed = round(time.time() - iter_start, 2)
+                    print(f"\n🌐 [FAZA {current_phase}D — FORMAT 3P] Wiązki 3P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik)...")
+                    composite_pool = []
+                    for seed_mut in beam_seeds:
+                        for atomic_mut in atomic_pool:
+                            merged = merge_mutations(seed_mut, atomic_mut)
+                            if merged:
+                                composite_pool.append(merged)
+                    seen_ids = set()
+                    candidate_pool = []
+                    for c in composite_pool:
+                        norm_id = "__".join(sorted(c[0].split("__")))
+                        if norm_id not in seen_ids:
+                            seen_ids.add(norm_id)
+                            candidate_pool.append(c)
 
-                    print(f"\n🎉 [ZAAKCEPTOWANO PATCH FORMATU 3P #{self.total_iterations} — FAZA {current_phase}D]")
-                    print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
-                    print(f"   Modyfikacja:   {change_desc}")
+                print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Formatu 3P.")
+                if not candidate_pool:
+                    action = lookahead_next_action(
+                        depth=current_phase,
+                        max_depth=max_depth,
+                        has_pending=pending_cand is not None,
+                        found_better=False,
+                    )
+                    if action == "apply_pending" and pending_cand is not None and pending_res is not None:
+                        print(f"\n🛑 Brak kombinacji {current_phase}D — wdrażam held {pending_phase}D.")
+                        self._commit_patch(
+                            accepted_candidate=pending_cand,
+                            best_ver_res=pending_res,
+                            base_res=base_res,
+                            phase=pending_phase or current_phase,
+                            iter_start=iter_start,
+                        )
+                        applied = True
+                    else:
+                        print(f"\n🏁 Brak dalszych niekolidujących kombinacji na {current_phase}D.")
+                        search_exhausted = True
+                    break
+                cand_dict = {c[0]: c for c in candidate_pool}
 
-                    version_archive_dir = REPORTS_DIR / "archive" / new_version
-                    version_archive_dir.mkdir(parents=True, exist_ok=True)
-                    log_path = version_archive_dir / "audytor_3p_log.md"
+                print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 3P] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup × 10 setupów) ---")
+                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
+                stage1_results = self._execute_pool(_run_single_test_task_3p, stage1_tasks, label="Przesiew 3P 1/3")
+                stage1_results.sort(key=lambda r: r["score_3p"], reverse=True)
+                n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+                semifinalist_candidates = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
 
-                    log_3p_iteration(
-                        log_path,
-                        self.total_iterations,
-                        current_phase,
-                        old_version,
-                        new_version,
-                        change_desc,
-                        rule_id,
+                print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 3P] Badam TOP {len(semifinalist_candidates)} półfinalistów ({self.args.screen_games} gier/setup × 10 setupów) ---")
+                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
+                stage2_results = self._execute_pool(_run_single_test_task_3p, stage2_tasks, label="Przesiew 3P 2/3")
+                stage2_results.sort(key=lambda r: r["score_3p"], reverse=True)
+                n_finalists = min(self.args.top_k, len(stage2_results))
+                finalist_candidates = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
+
+                print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 3P] Weryfikuję TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup × 10 setupów) ---")
+                stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
+                stage3_results = self._execute_pool(_run_single_test_task_3p, stage3_tasks, label="Weryfikacja 3P 3/3")
+                stage3_results.sort(key=lambda r: r["score_3p"], reverse=True)
+
+                print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW FORMATU 3P] {current_phase}D")
+                for idx, r in enumerate(stage3_results, 1):
+                    decision = accept_format_exception(
                         base_res,
-                        best_ver_res,
-                        diag_before,
-                        diag_after,
-                        iter_elapsed,
+                        r,
+                        score_key="score_3p",
+                        min_delta=self.args.min_delta,
+                        telemetry_ok=passes_telemetry_safety(r),
+                    )
+                    print(
+                        f"   #{idx:2d} [{r['id'][:42]}...] 3P {r['score_3p']:.1f} | "
+                        f"witalność {r.get('vitality_penalty', 0):.3f} | {decision.reason}"
                     )
 
-                    # Snapshot game_config.yaml in version archive
-                    shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
-
-                    print("   📑 Aktualizuję playtesting/balance-notes.md...")
-                    update_balance_notes_3p(
-                        old_version,
-                        new_version,
-                        change_desc,
-                        rule_id,
+                accepted_candidate = None
+                best_ver_res = None
+                for ver_res in stage3_results:
+                    decision = accept_format_exception(
                         base_res,
-                        best_ver_res,
-                        diag_before,
-                        diag_after,
+                        ver_res,
+                        score_key="score_3p",
+                        min_delta=self.args.min_delta,
+                        telemetry_ok=passes_telemetry_safety(ver_res),
                     )
+                    if decision.accepted:
+                        accepted_candidate = cand_dict[ver_res["id"]]
+                        best_ver_res = ver_res
+                        break
 
-                    print("   🔄 Synchronizuję dokumentację kart i reguł...")
-                    subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
-                    print("   ✔ Zaktualizowano katalog kart, opisy markdown, HTML i card-editor.")
+                if accepted_candidate is None or best_ver_res is None:
+                    found_better = False
+                elif pending_res is None:
+                    found_better = True
+                else:
+                    found_better = best_ver_res["score_3p"] > pending_res["score_3p"]
 
-                    current_phase = 1
-                    beam_seeds.clear()
+                action = lookahead_next_action(
+                    depth=current_phase,
+                    max_depth=max_depth,
+                    has_pending=pending_cand is not None,
+                    found_better=found_better,
+                )
+                top_beam = drop_dead_path_crutches(
+                    base_res,
+                    [cand_dict[r["id"]] for r in stage3_results[: self.args.beam_width] if r["id"] in cand_dict],
+                )
 
-            else:
-                print(f"\n⚪ Brak wariantu z dodatnim zyskiem dla Formatu 3P (Δ ≥ +{self.args.min_delta} pkt) w Fazie {current_phase}D.")
-                top_beam_results = stage3_results[: self.args.beam_width]
-                beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
-                current_phase += 1
-                print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
+                if action == "hold_and_deeper":
+                    pending_cand = accepted_candidate
+                    pending_res = best_ver_res
+                    pending_phase = current_phase
+                    beam_seeds = top_beam
+                    print(
+                        f"\n✨ Nowe optimum na {current_phase}D (`{pending_cand[0]}`) — "
+                        f"NIE wdrażam, lookahead {current_phase + 1}D ({len(beam_seeds)} nasion)."
+                    )
+                    current_phase += 1
+                    continue
+
+                if action == "deeper_empty":
+                    beam_seeds = top_beam
+                    print(
+                        f"\n⚪ Brak wariantu do przyjęcia w 1D — i tak sprawdzam 2D "
+                        f"(lookahead +1D, {len(beam_seeds)} nasion)."
+                    )
+                    current_phase += 1
+                    continue
+
+                if action == "apply_pending" and pending_cand is not None and pending_res is not None:
+                    print(
+                        f"\n🛑 {current_phase}D nie przebiło held {pending_phase}D "
+                        f"(`{pending_cand[0]}`) — wdrażam wcześniejszy wektor (wyjątek 3p:)."
+                    )
+                    self._commit_patch(
+                        accepted_candidate=pending_cand,
+                        best_ver_res=pending_res,
+                        base_res=base_res,
+                        phase=pending_phase or current_phase,
+                        iter_start=iter_start,
+                    )
+                    applied = True
+                    break
+
+                if action == "apply_current" and accepted_candidate is not None and best_ver_res is not None:
+                    print(f"\n🏁 Max głębokość {max_depth}D — wdrażam bieżący wektor (`{accepted_candidate[0]}`).")
+                    self._commit_patch(
+                        accepted_candidate=accepted_candidate,
+                        best_ver_res=best_ver_res,
+                        base_res=base_res,
+                        phase=current_phase,
+                        iter_start=iter_start,
+                    )
+                    applied = True
+                    break
+
+                print(
+                    f"\n🏁 Brak zmian 3P przynoszących zysk na {current_phase}D "
+                    f"(lookahead +1D wyczerpany). Bieżący stan jest lokalnym optimum puli."
+                )
+                search_exhausted = True
+                break
+
+            if self.args.dry_run and applied:
+                break
+            if search_exhausted:
+                break
 
         print(f"\n═══════════════════════════════════════════════════════════════════════")
         print(f"   AUDYTOR 3P ZAKOŃCZYŁ SESJĘ. ŁĄCZNIE WPROWADZONO {self.total_iterations} PATCHY.")
@@ -581,7 +710,7 @@ class AutoBalancer3P:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor 3P (Continuous Optimizer)")
+    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor 3P (Adaptive Lookahead +1D)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
     parser.add_argument("--fast-games", type=int, default=150, help="Liczba gier w Etapie 1 na 10 setupach 3p (domyślnie: 150)")
@@ -590,6 +719,7 @@ def main():
     parser.add_argument("--top-semifinalists", type=int, default=24, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 24)")
     parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 12)")
     parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
+    parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość Lookahead +1D (domyślnie: 4)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 3P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
@@ -603,6 +733,8 @@ def main():
         args.screen_games = 400
     if args.confirm_games < 2000:
         args.confirm_games = 2000
+    if args.max_depth < 2:
+        args.max_depth = 2
 
     auditor = AutoBalancer3P(args)
     auditor.run()

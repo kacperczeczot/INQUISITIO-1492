@@ -79,6 +79,7 @@ import audit_level1
 import audit_level2
 import audit_level3
 import audit_level4
+from audytor_4p import is_ablation_off, is_frozen_identity_knob
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
@@ -203,24 +204,24 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     """Builds the full pool of atomic candidates across L1, L2, L3, and L4."""
     tests = []
 
-    # Level 1 (Core System Parameters) — hand_limit stays at SSOT 5
     l1 = [
         t
         for t in audit_level1.build_level1_tests()
-        if t[0] != "L1_BAZA" and "HAND_LIMIT" not in t[0] and "AUTODAFE" not in t[0]
+        if t[0] != "L1_BAZA" and not is_frozen_identity_knob(t[0], t[2]) and not is_ablation_off(t[0], t[2])
     ]
     tests.extend(l1)
 
-    # Level 2 (Faction Victory Conditions)
     l2 = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
     tests.extend(l2)
 
-    # Level 3 (Card Parameters: cost, heresy, gold, target_heresy)
     l3 = [t for t in audit_level3.build_level3_tests(param_filter="cost,heresy,gold,target_heresy") if t[0] != "L3_BAZA"]
     tests.extend(l3)
 
-    # Level 4 (Niche Variants & Edicts)
-    l4 = [t for t in audit_level4.build_level4_tests() if t[0] != "L4_BAZA"]
+    l4 = [
+        t
+        for t in audit_level4.build_level4_tests()
+        if t[0] != "L4_BAZA" and not is_frozen_identity_knob(t[0], t[2]) and not is_ablation_off(t[0], t[2])
+    ]
     tests.extend(l4)
 
     return tests
