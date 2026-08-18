@@ -41,7 +41,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
-| **Maksymalna Liczba Er** | **11** | **11** | **11** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
+| **Maksymalna Liczba Er** | **12** | **12** | **12** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
 | **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
@@ -89,6 +89,16 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.3 (2026-08-18) — Kanon 4P: Limit Er: offset +1 (nowy: 12) (Zysk 4P Δ +1.3 pkt)
+- **Wynik 4P:** Kanon **`75.2`** → **`76.5 pkt`** | Global **`45.5`** | 3p **`18.6`** | 5p **`40.5`**
+- **Modyfikacja (`L1_MAX_ERAS_PLUS1`):** Limit Er: offset +1 (nowy: 12).
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.20, Deadlocks 1.9%, Pas Biedy 1.6%.
+
+### 🟢 Patch v1.0-alpha.2 (2026-08-18) — Kanon 4P: Karta `kb-11` (Tajny Emisariusz): `gold` → `0` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`74.8`** → **`75.2 pkt`** | Global **`43.7`** | 3p **`15.0`** | 5p **`40.5`**
+- **Modyfikacja (`L3_KB-11_GOLD_MINUS1`):** Karta `kb-11` (Tajny Emisariusz): `gold` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.18, Deadlocks 2.7%, Pas Biedy 1.6%.
 
 ### 🟢 Patch v0.99.27 (2026-08-18) — Kanon 4P: Kanoniczna Blokada Limitu Er (`max_eras` = 11) i Trwałe Zamrożenie w Narzędziach Audytu
 - **Problem:** Automatyczny optymalizator balansu sztucznie podbijał parametr `max_eras` (8 → ... → 14) jako drogę na skróty do redukcji deadlocków bez rozwiązywania realnych problemów ekonomii kart. W `v0.99.26` błędnie zaakceptowano podbicie limitu do 14 Er przy zerowym zysku 4P ($\Delta = 0.00$ pkt).
