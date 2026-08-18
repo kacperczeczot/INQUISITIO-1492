@@ -454,6 +454,38 @@ def _format_effect_html(effect: str) -> str:
     if not raw:
         return ""
 
+    # Wyodrębnij nagłówek banera (np. „Łamie regułę «...»:”) od reszty treści karty
+    m_break = re.match(
+        r"^((?:DEKRET\s+\d+\s*—\s*)?Łamie\s+regułę\s*„[^”]+”)\s*:\s*(.*)$",
+        raw,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    m_edykt = (
+        re.match(r"^(EDYKT(?:\s+Ery)?)\.?\s+(.*)$", raw, flags=re.DOTALL | re.IGNORECASE)
+        if not m_break
+        else None
+    )
+    m_dekret = (
+        re.match(r"^(DEKRET\s+\d+)\s*—\s*(.*)$", raw, flags=re.DOTALL | re.IGNORECASE)
+        if not (m_break or m_edykt)
+        else None
+    )
+
+    lead_banner: str | None = None
+    lead_banner_type: str | None = None
+    if m_break:
+        lead_banner = m_break.group(1).strip()
+        lead_banner_type = "break"
+        raw = m_break.group(2).strip()
+    elif m_edykt:
+        lead_banner = m_edykt.group(1).strip()
+        lead_banner_type = "edykt"
+        raw = m_edykt.group(2).strip()
+    elif m_dekret:
+        lead_banner = m_dekret.group(1).strip()
+        lead_banner_type = "dekret"
+        raw = m_dekret.group(2).strip()
+
     if re.search(r"\n\s*\n", raw):
         chunks = [c.strip() for c in re.split(r"\n\s*\n", raw) if c.strip()]
         line_groups: list[list[str]] = [
@@ -467,20 +499,20 @@ def _format_effect_html(effect: str) -> str:
         )
         line_groups = _effect_auto_blocks(parts)
 
-    if not line_groups:
-        return ""
+    blocks_html = [_format_effect_group(group) for group in line_groups] if line_groups else []
 
-    blocks_html = [_format_effect_group(group) for group in line_groups]
-    joined = "".join(blocks_html)
-    # Single plain fx-block without banners — unwrap outer for short cards
-    if (
-        len(blocks_html) == 1
-        and joined.startswith('<div class="fx-block">')
-        and joined.endswith("</div>")
-        and joined.count('<div class="fx-') == 1
-    ):
-        return joined[len('<div class="fx-block">') : -len("</div>")]
-    return joined
+    parts_out: list[str] = []
+    if lead_banner:
+        formatted_banner = _format_effect_line(lead_banner)
+        if lead_banner_type == "break":
+            parts_out.append(f'<div class="fx-break">{formatted_banner}</div>')
+        elif lead_banner_type == "edykt":
+            parts_out.append(f'<div class="fx-banner fx-edykt">{formatted_banner}</div>')
+        elif lead_banner_type == "dekret":
+            parts_out.append(f'<div class="fx-banner fx-dekret">{formatted_banner}</div>')
+
+    parts_out.extend(blocks_html)
+    return "".join(parts_out)
 
 
 def _note_effect_overflow(
@@ -993,59 +1025,44 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .card-proto .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.6mm;
-  font-size: 7.5pt;
+  gap: 0.8mm;
+  font-size: 8pt;
   font-weight: bold;
-  line-height: 1.2;
-  padding: 0.55mm 1.4mm;
+  line-height: 1;
+  padding: 0.5mm 1.3mm;
   border-radius: 1.2mm;
   border: 0.25mm solid rgba(42,28,18,0.4);
-  background: rgba(255,255,255,0.65);
+  background: rgba(255,255,255,0.85);
   white-space: nowrap;
+  height: 4.8mm;
+  box-sizing: border-box;
 }
-.card-proto .badge-ico { font-size: 8pt; line-height: 1; }
-/* Moneta (CSS) — nie emoji „kamienia” */
-.coin {
-  display: inline-block;
+.card-proto .badge .ico,
+.card-proto .badge svg {
   width: 3.4mm;
   height: 3.4mm;
-  flex: 0 0 3.4mm;
-  border-radius: 50%;
-  box-sizing: border-box;
+  display: inline-block;
   vertical-align: middle;
-  background:
-    radial-gradient(circle at 32% 28%, #fff6c8 0%, #e8c84a 38%, #c9a227 72%, #8a6a14 100%);
-  border: 0.35mm solid #6a5210;
-  box-shadow: inset 0 0 0 0.35mm rgba(255, 236, 160, 0.55);
+  flex-shrink: 0;
 }
 .card-proto .badge-gold {
   color: #5c4010;
-  background: #f0dfa8;
-  border-color: #a67c2d;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8mm;
-}
-.card-proto .badge-gold .ico,
-.card-proto .badge-gold svg {
-  width: 3.6mm;
-  height: 3.6mm;
-  display: inline-block;
-  vertical-align: middle;
+  background: #fbf1d3;
+  border-color: #c49a3c;
 }
 .card-proto .badge-heresy {
   color: #3a3028;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.85);
 }
 .card-proto .badge-heresy-hot {
-  color: #fff8f4;
-  background: #6e1818;
-  border-color: #3a0c0c;
+  color: #7a1f1f;
+  background: #fce8e8;
+  border-color: #dca0a0;
 }
 .card-proto .badge-heresy-cool {
-  color: #1e3a2e;
-  background: #cfe0d6;
-  border-color: #2d5a45;
+  color: #1b4d3e;
+  background: #e2f2eb;
+  border-color: #8ec4af;
 }
 .card-proto .heresy-caption {
   margin-top: 0.8mm;
@@ -1736,6 +1753,12 @@ body.bw .card-proto {
 /* Card cell: single cut inside, outer bleed on perimeter */
 .card-proto.card-print-cell {
   position: relative;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
   box-sizing: border-box;
   overflow: hidden;
   border: none;

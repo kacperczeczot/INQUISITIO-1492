@@ -476,68 +476,44 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .card-proto .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.6mm;
-  font-size: 7.5pt;
+  gap: 0.8mm;
+  font-size: 8pt;
   font-weight: bold;
-  line-height: 1.2;
-  padding: 0.55mm 1.4mm;
+  line-height: 1;
+  padding: 0.5mm 1.3mm;
   border-radius: 1.2mm;
   border: 0.25mm solid rgba(42,28,18,0.4);
-  background: rgba(255,255,255,0.65);
+  background: rgba(255,255,255,0.85);
   white-space: nowrap;
+  height: 4.8mm;
+  box-sizing: border-box;
 }
-.card-proto .badge-ico { font-size: 8pt; line-height: 1; }
-/* Moneta (CSS) — nie emoji „kamienia” */
-.coin {
-  display: inline-block;
+.card-proto .badge .ico,
+.card-proto .badge svg {
   width: 3.4mm;
   height: 3.4mm;
-  flex: 0 0 3.4mm;
-  border-radius: 50%;
-  box-sizing: border-box;
+  display: inline-block;
   vertical-align: middle;
-  background:
-    radial-gradient(circle at 32% 28%, #fff6c8 0%, #e8c84a 38%, #c9a227 72%, #8a6a14 100%);
-  border: 0.35mm solid #6a5210;
-  box-shadow: inset 0 0 0 0.35mm rgba(255, 236, 160, 0.55);
+  flex-shrink: 0;
 }
 .card-proto .badge-gold {
   color: #5c4010;
-  background: #f0dfa8;
-  border-color: #a67c2d;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8mm;
-}
-.card-proto .badge-gold .ico,
-.card-proto .badge-gold svg {
-  width: 3.6mm;
-  height: 3.6mm;
-  display: inline-block;
-  vertical-align: middle;
+  background: #fbf1d3;
+  border-color: #c49a3c;
 }
 .card-proto .badge-heresy {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8mm;
-  font-weight: bold;
-}
-.card-proto .badge-heresy .ico,
-.card-proto .badge-heresy svg {
-  width: 3.6mm;
-  height: 3.6mm;
-  display: inline-block;
-  vertical-align: middle;
+  color: #3a3028;
+  background: rgba(255,255,255,0.85);
 }
 .card-proto .badge-heresy-hot {
-  color: #8b1d24;
-  background: #fae6e6;
-  border-color: #b83a3a;
+  color: #7a1f1f;
+  background: #fce8e8;
+  border-color: #dca0a0;
 }
 .card-proto .badge-heresy-cool {
   color: #1b4d3e;
-  background: #e6f4ed;
-  border-color: #2d6a4f;
+  background: #e2f2eb;
+  border-color: #8ec4af;
 }
 .card-proto .heresy-caption {
   margin-top: 0.8mm;
@@ -1228,6 +1204,12 @@ body.bw .card-proto {
 /* Card cell: single cut inside, outer bleed on perimeter */
 .card-proto.card-print-cell {
   position: relative;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
   box-sizing: border-box;
   overflow: hidden;
   border: none;
@@ -1657,7 +1639,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt.</div>
       <div class="card-footer-meta"><span>SO-01</span><span>v0.99.12</span></div>
     </div>
@@ -1677,7 +1659,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 3 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.</div>
       <div class="card-footer-meta"><span>SO-02</span><span>v0.99.12</span></div>
     </div>
@@ -1697,7 +1679,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.</div>
       <div class="card-footer-meta"><span>SO-03</span><span>v0.99.12</span></div>
     </div>
@@ -1737,7 +1719,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Jeśli rywal zagrywa kartę z Herezją ≥ 1:<br><strong>Wskaż</strong> tego rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block">Jeśli rywal zagrywa kartę z Herezją ≥ 1:<br><strong>Wskaż</strong> tego rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.</div>
       <div class="card-footer-meta"><span>SO-05</span><span>v0.99.12</span></div>
     </div>
@@ -1757,7 +1739,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w lokacji swojego Agenta.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w lokacji swojego Agenta.</div></div>
       <div class="card-lore">Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem.</div>
       <div class="card-footer-meta"><span>SO-06</span><span>v0.99.12</span></div>
     </div>
@@ -1817,7 +1799,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w Lochach lub w lokacji <em>Inkwizytora</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w Lochach lub w lokacji <em>Inkwizytora</em>.</div></div>
       <div class="card-lore">Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.</div>
       <div class="card-footer-meta"><span>SO-09</span><span>v0.99.12</span></div>
     </div>
@@ -1986,7 +1968,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Autodafé</em> / 3 Ery”: <strong>Ogłoś</strong> <em>Autodafé</em> w lokacji <em>Inkwizytora</em>.</div><div class="fx-block">Jeśli Agent rywala jest w lokacji <em>Inkwizytora</em>:<br><strong>Zyskaj</strong> <em>Stos</em>.</div></div>
+      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Autodafé</em> / 3 Ery”</div><div class="fx-block"><strong>Ogłoś</strong> <em>Autodafé</em> w lokacji <em>Inkwizytora</em>.</div><div class="fx-block">Jeśli Agent rywala jest w lokacji <em>Inkwizytora</em>:<br><strong>Zyskaj</strong> <em>Stos</em>.</div></div>
       <div class="card-lore">Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.</div>
       <div class="card-footer-meta"><span>SO-10</span><span>v0.99.12</span></div>
     </div>
@@ -2006,7 +1988,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.<br><strong>Zyskaj</strong> 1 złoto.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
       <div class="card-lore">Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń.</div>
       <div class="card-footer-meta"><span>SO-11</span><span>v0.99.12</span></div>
     </div>
@@ -2026,7 +2008,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom.</div>
       <div class="card-footer-meta"><span>SO-12</span><span>v0.99.12</span></div>
     </div>
@@ -2046,7 +2028,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec.</div>
       <div class="card-footer-meta"><span>CAA-01</span><span>v0.99.12</span></div>
     </div>
@@ -2066,7 +2048,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 3 złota.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.</div></div>
       <div class="card-lore">Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację.</div>
       <div class="card-footer-meta"><span>CAA-02</span><span>v0.99.12</span></div>
     </div>
@@ -2086,7 +2068,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień.</div>
       <div class="card-footer-meta"><span>CAA-03</span><span>v0.99.12</span></div>
     </div>
@@ -2106,7 +2088,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę.</div>
       <div class="card-footer-meta"><span>CAA-04</span><span>v0.99.12</span></div>
     </div>
@@ -2146,7 +2128,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Uwolnij</strong> swojego aresztowanego Agenta z Lochów.<br><strong>Przesuń</strong> tego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Uwolnij</strong> swojego aresztowanego Agenta z Lochów.<br><strong>Przesuń</strong> tego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą.</div>
       <div class="card-footer-meta"><span>CAA-06</span><span>v0.99.12</span></div>
     </div>
@@ -2315,7 +2297,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w sąsiedniej lokacji swojego Agenta.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w sąsiedniej lokacji swojego Agenta.</div></div>
       <div class="card-lore">Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni.</div>
       <div class="card-footer-meta"><span>CAA-07</span><span>v0.99.12</span></div>
     </div>
@@ -2335,7 +2317,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Jeśli masz <em>Marionetkę</em>:<br><strong>Przesuń</strong> <em>Marionetkę</em> o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block">Jeśli masz <em>Marionetkę</em>:<br><strong>Przesuń</strong> <em>Marionetkę</em> o 1 lokację.</div></div>
       <div class="card-lore">Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę.</div>
       <div class="card-footer-meta"><span>CAA-08</span><span>v0.99.12</span></div>
     </div>
@@ -2355,7 +2337,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przenieś</strong> <em>Relikwię</em> z lokacji swojego Agenta do sąsiedniej lokacji.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przenieś</strong> <em>Relikwię</em> z lokacji swojego Agenta do sąsiedniej lokacji.</div></div>
       <div class="card-lore">Bluff kierunku Relikwii jest połową gry Cieni.</div>
       <div class="card-footer-meta"><span>CAA-09</span><span>v0.99.12</span></div>
     </div>
@@ -2375,7 +2357,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Relikwia</em> tylko ze Szlaku Morskiego”: Jeśli nie ma <em>Inkwizytora</em> w lokacji lub masz <em>Marionetkę</em> lub Szlak jest otwarty: <strong>Ewakuuj</strong> do 2 <em>Relikwii</em> z lokacji Twoich Agentów.</div></div>
+      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Relikwia</em> tylko ze Szlaku Morskiego”</div><div class="fx-block">Jeśli nie ma <em>Inkwizytora</em> w lokacji lub masz <em>Marionetkę</em> lub Szlak jest otwarty:<br><strong>Ewakuuj</strong> do 2 <em>Relikwii</em> z lokacji Twoich Agentów.</div></div>
       <div class="card-lore">As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.</div>
       <div class="card-footer-meta"><span>CAA-10</span><span>v0.99.12</span></div>
     </div>
@@ -2415,7 +2397,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 3 złota.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.</div></div>
       <div class="card-lore">Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień.</div>
       <div class="card-footer-meta"><span>CAA-12</span><span>v0.99.12</span></div>
     </div>
@@ -2435,7 +2417,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu.</div>
       <div class="card-footer-meta"><span>KB-01</span><span>v0.99.12</span></div>
     </div>
@@ -2455,7 +2437,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 2 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 2 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną.</div>
       <div class="card-footer-meta"><span>KB-02</span><span>v0.99.12</span></div>
     </div>
@@ -2475,7 +2457,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4).</div>
       <div class="card-footer-meta"><span>KB-03</span><span>v0.99.12</span></div>
     </div>
@@ -2644,7 +2626,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.</div>
       <div class="card-footer-meta"><span>KB-04</span><span>v0.99.12</span></div>
     </div>
@@ -2664,7 +2646,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.</div>
       <div class="card-footer-meta"><span>KB-05</span><span>v0.99.12</span></div>
     </div>
@@ -2684,7 +2666,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.</div></div>
       <div class="card-lore">Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba aresztu.</div>
       <div class="card-footer-meta"><span>KB-06</span><span>v0.99.12</span></div>
     </div>
@@ -2704,7 +2686,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div></div>
       <div class="card-lore">Korona poluje na już brudnych. Dwa Haki zaczynają się tu.</div>
       <div class="card-footer-meta"><span>KB-07</span><span>v0.99.12</span></div>
     </div>
@@ -2724,7 +2706,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">W następnym Werdykcie Twój głos ma wagę 2.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-effect"><div class="fx-block">W następnym Werdykcie Twój głos ma wagę 2.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone.</div>
       <div class="card-footer-meta"><span>KB-08</span><span>v0.99.12</span></div>
     </div>
@@ -2744,7 +2726,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-break"><strong>DEKRET 1</strong> — Łamie regułę „1 wymuszenie <em>Haka</em> / gracza / Erę”: <strong>Wymuś</strong> spełnienie <em>Haka</em>.</div><div class="fx-block"><strong>Odmowa:</strong> +3 <em>Herezja</em>.</div></div>
+      <div class="card-effect"><div class="fx-break"><strong>DEKRET 1</strong> — Łamie regułę „1 wymuszenie <em>Haka</em> / gracza / Erę”</div><div class="fx-block"><strong>Wymuś</strong> spełnienie <em>Haka</em>.</div><div class="fx-block"><strong>Odmowa:</strong> +3 <em>Herezja</em>.</div></div>
       <div class="card-lore">Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.</div>
       <div class="card-footer-meta"><span>KB-09</span><span>v0.99.12</span></div>
     </div>
@@ -2764,7 +2746,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-break"><strong>DEKRET 2</strong> — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli masz aktywne <em>Haki</em> na ≥ 2 graczach: zwycięstwo.</div></div>
+      <div class="card-effect"><div class="fx-break"><strong>DEKRET 2</strong> — Łamie regułę „zwycięstwo tylko po Erze”</div><div class="fx-block">Jeśli masz aktywne <em>Haki</em> na ≥ 2 graczach: zwycięstwo.</div></div>
       <div class="card-lore">Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.</div>
       <div class="card-footer-meta"><span>KB-10</span><span>v0.99.12</span></div>
     </div>
@@ -2784,7 +2766,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Złote pierścienie i listy polecające otwierają każde drzwi w Toledo.</div>
       <div class="card-footer-meta"><span>KB-11</span><span>v0.99.12</span></div>
     </div>
@@ -2804,7 +2786,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą.</div>
       <div class="card-footer-meta"><span>KB-12</span><span>v0.99.12</span></div>
     </div>
@@ -2973,7 +2955,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę.</div>
       <div class="card-footer-meta"><span>KT-01</span><span>v0.99.12</span></div>
     </div>
@@ -2993,7 +2975,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 2 złota.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 2 złota.</div></div>
       <div class="card-lore">Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.</div>
       <div class="card-footer-meta"><span>KT-02</span><span>v0.99.12</span></div>
     </div>
@@ -3013,7 +2995,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> <em>Fragment</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> <em>Fragment</em>.</div></div>
       <div class="card-lore">Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną.</div>
       <div class="card-footer-meta"><span>KT-03</span><span>v0.99.12</span></div>
     </div>
@@ -3033,7 +3015,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.</div>
       <div class="card-footer-meta"><span>KT-04</span><span>v0.99.12</span></div>
     </div>
@@ -3093,7 +3075,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div></div>
       <div class="card-lore">Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze.</div>
       <div class="card-footer-meta"><span>KT-07</span><span>v0.99.12</span></div>
     </div>
@@ -3113,7 +3095,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w Lochach lub w Trybunale.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Lochach lub w Trybunale.</div></div>
       <div class="card-lore">Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem.</div>
       <div class="card-footer-meta"><span>KT-08</span><span>v0.99.12</span></div>
     </div>
@@ -3133,7 +3115,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Jeśli masz ≥1 <em>Fragment</em> i Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div>
+      <div class="card-effect"><div class="fx-block">Jeśli masz ≥1 <em>Fragment</em> i Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div></div>
       <div class="card-lore">Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko.</div>
       <div class="card-footer-meta"><span>KT-09</span><span>v0.99.12</span></div>
     </div>
@@ -3302,7 +3284,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Herezja</em> tylko z karty”: Jeśli masz 3 <em>Fragmenty</em> i <em>Herezję</em> 4–6: zwycięstwo.</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> bez <em>Herezji</em> 4–6:<br><strong>Ustaw</strong> swoją <em>Herezję</em> na 5.</div></div>
+      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Herezja</em> tylko z karty”</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> i <em>Herezję</em> 4–6: zwycięstwo.</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> bez <em>Herezji</em> 4–6:<br><strong>Ustaw</strong> swoją <em>Herezję</em> na 5.</div></div>
       <div class="card-lore">Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.</div>
       <div class="card-footer-meta"><span>KT-10</span><span>v0.99.12</span></div>
     </div>
@@ -3322,7 +3304,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Zmniejsz swoją <em>Herezję</em> o 1.<br><strong>Zyskaj</strong> 1 złoto.</div>
+      <div class="card-effect"><div class="fx-block">Zmniejsz swoją <em>Herezję</em> o 1.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
       <div class="card-lore">Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony.</div>
       <div class="card-footer-meta"><span>KT-11</span><span>v0.99.12</span></div>
     </div>
@@ -3342,7 +3324,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach.</div>
       <div class="card-footer-meta"><span>KT-12</span><span>v0.99.12</span></div>
     </div>
@@ -3362,7 +3344,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż.</div>
       <div class="card-footer-meta"><span>GC-01</span><span>v0.99.12</span></div>
     </div>
@@ -3382,7 +3364,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 3 złota.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.</div></div>
       <div class="card-lore">Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.</div>
       <div class="card-footer-meta"><span>GC-02</span><span>v0.99.12</span></div>
     </div>
@@ -3402,7 +3384,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Klasyczny frame: zakazana księga ląduje w cudzej komnacie.</div>
       <div class="card-footer-meta"><span>GC-03</span><span>v0.99.12</span></div>
     </div>
@@ -3422,7 +3404,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.</div>
       <div class="card-footer-meta"><span>GC-04</span><span>v0.99.12</span></div>
     </div>
@@ -3462,7 +3444,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek.</div>
       <div class="card-footer-meta"><span>GC-06</span><span>v0.99.12</span></div>
     </div>
@@ -3631,7 +3613,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w Gildii lub na Rynku.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Gildii lub na Rynku.</div></div>
       <div class="card-lore">Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.</div>
       <div class="card-footer-meta"><span>GC-07</span><span>v0.99.12</span></div>
     </div>
@@ -3651,7 +3633,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Zyskaj</strong> 1 złoto.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 1 złoto.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.</div>
       <div class="card-footer-meta"><span>GC-08</span><span>v0.99.12</span></div>
     </div>
@@ -3691,7 +3673,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”: Jeśli rywal ma ujawniony <em>Hak</em>, <em>Marionetkę</em> lub <em>Autodafé</em> w lokacji kluczowej: <strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
+      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”</div><div class="fx-block">Jeśli rywal ma ujawniony <em>Hak</em>, <em>Marionetkę</em> lub <em>Autodafé</em> w lokacji kluczowej:<br><strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
       <div class="card-lore">Egzekucja domu. Stół boi się trzymać ujawnione brudy.</div>
       <div class="card-footer-meta"><span>GC-10</span><span>v0.99.12</span></div>
     </div>
@@ -3711,7 +3693,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu.</div>
       <div class="card-footer-meta"><span>GC-11</span><span>v0.99.12</span></div>
     </div>
@@ -3731,7 +3713,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę.</div>
       <div class="card-footer-meta"><span>GC-12</span><span>v0.99.12</span></div>
     </div>
@@ -3751,7 +3733,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Każdy gracz z Agentem w Pałacu zyskuje +1 złoto.<br><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 krok w stronę Trybunału.</div>
+      <div class="card-effect"><div class="fx-block">Każdy gracz z Agentem w Pałacu zyskuje +1 złoto.<br><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 krok w stronę Trybunału.</div></div>
       <div class="card-lore">Świętowanie na Dworze. Korona nagradza dyplomatów, a Inkwizytor powraca do centrum władzy kościelnej.</div>
       <div class="card-footer-meta"><span>TIME-01</span><span>v0.99.12</span></div>
     </div>
@@ -3771,7 +3753,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery.</strong></div><div class="fx-block">W tej Erze: Każde zagranie karty pod Rynek lub Gildię kosztuje +1 złoto dodatkowo.</div></div>
+      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Każde zagranie karty pod Rynek lub Gildię kosztuje +1 złoto dodatkowo.</div></div>
       <div class="card-lore">Straż miejska blokuje plebejskie zaułki. Ukryte operacje i handel stają się znacznie kosztowniejsze.</div>
       <div class="card-footer-meta"><span>TIME-02</span><span>v0.99.12</span></div>
     </div>
@@ -3791,7 +3773,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Otwórz</strong> <em>Szlak Morski</em>.<br>Każdy gracz z Agentem na Rynku lub w Gildii zyskuje +1 złoto.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Otwórz</strong> <em>Szlak Morski</em>.<br>Każdy gracz z Agentem na Rynku lub w Gildii zyskuje +1 złoto.</div></div>
       <div class="card-lore">Wyprawa za ocean otwiera szlak ucieczki, a portowe rynki i warsztaty zalewa fala nowych zleceń.</div>
       <div class="card-footer-meta"><span>TIME-03</span><span>v0.99.12</span></div>
     </div>
@@ -3960,7 +3942,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Gracz o najwyższej <em>Herezji</em>: +1 <em>Herezja</em>.<br>Gracz o najniższej <em>Herezji</em>: Zyskuje +1 złoto.</div>
+      <div class="card-effect"><div class="fx-block">Gracz o najwyższej <em>Herezji</em>: +1 <em>Herezja</em>.<br>Gracz o najniższej <em>Herezji</em>: Zyskuje +1 złoto.</div></div>
       <div class="card-lore">Inkwizycja zaostrza śledztwa wobec najbardziej podejrzanych, sowicie nagradzając lojalnych mieszczan.</div>
       <div class="card-footer-meta"><span>TIME-04</span><span>v0.99.12</span></div>
     </div>
@@ -3980,7 +3962,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery.</strong></div><div class="fx-block">W tej Erze: Próg Krytycznej <em>Herezji</em> (oskarżenia na Dworze) jest obniżony o 1.</div></div>
+      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Próg Krytycznej <em>Herezji</em> (oskarżenia na Dworze) jest obniżony o 1.</div></div>
       <div class="card-lore">Paranoja w Toledo sięga zenitu. Wystarczy cień podejrzenia, by stanąć przed trybunałem sądu.</div>
       <div class="card-footer-meta"><span>TIME-05</span><span>v0.99.12</span></div>
     </div>
@@ -4000,7 +3982,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji z największą liczbą Agentów.<br>Przy remisie wybiera Pierwszy Gracz.</div>
+      <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji z największą liczbą Agentów.<br>Przy remisie wybiera Pierwszy Gracz.</div></div>
       <div class="card-lore">Straż i inkwizytorzy uderzają w najludniejsze zgromadzenie w mieście, siejąc postrach.</div>
       <div class="card-footer-meta"><span>TIME-06</span><span>v0.99.12</span></div>
     </div>
@@ -4040,7 +4022,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery.</strong></div><div class="fx-block">W tej Erze: Faza Dworu zostaje zawieszona (brak możliwości rzucenia Oskarżenia).</div></div>
+      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Faza Dworu zostaje zawieszona (brak możliwości rzucenia Oskarżenia).</div></div>
       <div class="card-lore">Tymczasowy rozejm polityczny na szczytach władzy zamraża publiczne procesy i egzekucje.</div>
       <div class="card-footer-meta"><span>TIME-08</span><span>v0.99.12</span></div>
     </div>
@@ -4060,7 +4042,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery.</strong></div><div class="fx-block">W tej Erze: Akcja Gospodarcza na Rynku przynosi +2 złote zamiast +1 zł.</div></div>
+      <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Akcja Gospodarcza na Rynku przynosi +2 złote zamiast +1 zł.</div></div>
       <div class="card-lore">Królewski przywilej targowy ściąga kupców z całej Kastylii, napędzając miejski handel.</div>
       <div class="card-footer-meta"><span>TIME-09</span><span>v0.99.12</span></div>
     </div>
@@ -4080,7 +4062,7 @@ body.mode-trim .crop-line-h-right {
     </div>
     <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
-      <div class="card-effect">Każdy gracz w Strefie Obserwowanej zmniejsza swoją <em>Herezję</em> o 1.</div>
+      <div class="card-effect"><div class="fx-block">Każdy gracz w Strefie Obserwowanej zmniejsza swoją <em>Herezję</em> o 1.</div></div>
       <div class="card-lore">Biskup ogłasza wielki jubileusz i powszechne rozgrzeszenie, dając wytchnienie podejrzanym.</div>
       <div class="card-footer-meta"><span>TIME-10</span><span>v0.99.12</span></div>
     </div>

@@ -476,68 +476,44 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .card-proto .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.6mm;
-  font-size: 7.5pt;
+  gap: 0.8mm;
+  font-size: 8pt;
   font-weight: bold;
-  line-height: 1.2;
-  padding: 0.55mm 1.4mm;
+  line-height: 1;
+  padding: 0.5mm 1.3mm;
   border-radius: 1.2mm;
   border: 0.25mm solid rgba(42,28,18,0.4);
-  background: rgba(255,255,255,0.65);
+  background: rgba(255,255,255,0.85);
   white-space: nowrap;
+  height: 4.8mm;
+  box-sizing: border-box;
 }
-.card-proto .badge-ico { font-size: 8pt; line-height: 1; }
-/* Moneta (CSS) — nie emoji „kamienia” */
-.coin {
-  display: inline-block;
+.card-proto .badge .ico,
+.card-proto .badge svg {
   width: 3.4mm;
   height: 3.4mm;
-  flex: 0 0 3.4mm;
-  border-radius: 50%;
-  box-sizing: border-box;
+  display: inline-block;
   vertical-align: middle;
-  background:
-    radial-gradient(circle at 32% 28%, #fff6c8 0%, #e8c84a 38%, #c9a227 72%, #8a6a14 100%);
-  border: 0.35mm solid #6a5210;
-  box-shadow: inset 0 0 0 0.35mm rgba(255, 236, 160, 0.55);
+  flex-shrink: 0;
 }
 .card-proto .badge-gold {
   color: #5c4010;
-  background: #f0dfa8;
-  border-color: #a67c2d;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8mm;
-}
-.card-proto .badge-gold .ico,
-.card-proto .badge-gold svg {
-  width: 3.6mm;
-  height: 3.6mm;
-  display: inline-block;
-  vertical-align: middle;
+  background: #fbf1d3;
+  border-color: #c49a3c;
 }
 .card-proto .badge-heresy {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8mm;
-  font-weight: bold;
-}
-.card-proto .badge-heresy .ico,
-.card-proto .badge-heresy svg {
-  width: 3.6mm;
-  height: 3.6mm;
-  display: inline-block;
-  vertical-align: middle;
+  color: #3a3028;
+  background: rgba(255,255,255,0.85);
 }
 .card-proto .badge-heresy-hot {
-  color: #8b1d24;
-  background: #fae6e6;
-  border-color: #b83a3a;
+  color: #7a1f1f;
+  background: #fce8e8;
+  border-color: #dca0a0;
 }
 .card-proto .badge-heresy-cool {
   color: #1b4d3e;
-  background: #e6f4ed;
-  border-color: #2d6a4f;
+  background: #e2f2eb;
+  border-color: #8ec4af;
 }
 .card-proto .heresy-caption {
   margin-top: 0.8mm;
@@ -1228,6 +1204,12 @@ body.bw .card-proto {
 /* Card cell: single cut inside, outer bleed on perimeter */
 .card-proto.card-print-cell {
   position: relative;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
   box-sizing: border-box;
   overflow: hidden;
   border: none;
@@ -1588,7 +1570,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę.</div>
     <div class="card-footer-meta"><span>KT-01</span><span>v0.99.12</span></div>
   </div>
@@ -1605,7 +1587,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Zyskaj</strong> 2 złota.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 2 złota.</div></div>
     <div class="card-lore">Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.</div>
     <div class="card-footer-meta"><span>KT-02</span><span>v0.99.12</span></div>
   </div>
@@ -1622,7 +1604,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Zyskaj</strong> <em>Fragment</em>.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> <em>Fragment</em>.</div></div>
     <div class="card-lore">Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną.</div>
     <div class="card-footer-meta"><span>KT-03</span><span>v0.99.12</span></div>
   </div>
@@ -1639,7 +1621,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.</div>
     <div class="card-footer-meta"><span>KT-04</span><span>v0.99.12</span></div>
   </div>
@@ -1690,7 +1672,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div></div>
     <div class="card-lore">Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze.</div>
     <div class="card-footer-meta"><span>KT-07</span><span>v0.99.12</span></div>
   </div>
@@ -1707,7 +1689,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w Lochach lub w Trybunale.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Lochach lub w Trybunale.</div></div>
     <div class="card-lore">Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem.</div>
     <div class="card-footer-meta"><span>KT-08</span><span>v0.99.12</span></div>
   </div>
@@ -1724,7 +1706,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect">Jeśli masz ≥1 <em>Fragment</em> i Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div>
+    <div class="card-effect"><div class="fx-block">Jeśli masz ≥1 <em>Fragment</em> i Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div></div>
     <div class="card-lore">Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko.</div>
     <div class="card-footer-meta"><span>KT-09</span><span>v0.99.12</span></div>
   </div>
@@ -1742,7 +1724,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Herezja</em> tylko z karty”: Jeśli masz 3 <em>Fragmenty</em> i <em>Herezję</em> 4–6: zwycięstwo.</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> bez <em>Herezji</em> 4–6:<br><strong>Ustaw</strong> swoją <em>Herezję</em> na 5.</div></div>
+    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Herezja</em> tylko z karty”</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> i <em>Herezję</em> 4–6: zwycięstwo.</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> bez <em>Herezji</em> 4–6:<br><strong>Ustaw</strong> swoją <em>Herezję</em> na 5.</div></div>
     <div class="card-lore">Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.</div>
     <div class="card-footer-meta"><span>KT-10</span><span>v0.99.12</span></div>
   </div>
@@ -1759,7 +1741,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect">Zmniejsz swoją <em>Herezję</em> o 1.<br><strong>Zyskaj</strong> 1 złoto.</div>
+    <div class="card-effect"><div class="fx-block">Zmniejsz swoją <em>Herezję</em> o 1.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
     <div class="card-lore">Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony.</div>
     <div class="card-footer-meta"><span>KT-11</span><span>v0.99.12</span></div>
   </div>
@@ -1776,7 +1758,7 @@ body.mode-trim .crop-line-h-right {
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
-    <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+    <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach.</div>
     <div class="card-footer-meta"><span>KT-12</span><span>v0.99.12</span></div>
   </div>
