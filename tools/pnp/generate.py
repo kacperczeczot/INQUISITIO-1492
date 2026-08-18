@@ -1764,7 +1764,7 @@ body.bw .card-proto {
   box-sizing: border-box;
   overflow: hidden;
   border: none;
-  background: var(--faction-bg, #f4ead7) !important;
+  background: var(--faction-edge, var(--blood)) !important;
   display: flex;
   flex-direction: column;
   padding: 0;
