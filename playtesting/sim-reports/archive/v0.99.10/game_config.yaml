@@ -1,4 +1,4 @@
-version: v0.99.10
+version: v0.99.12
 date: '2026-08-18'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -11,10 +11,7 @@ system:
   era_income: 1
   intrigue_gold: 1
   observed_threshold: 5
-  accusation_threshold:
-    3p: 6
-    4p: 7
-    5p: 8
+  accusation_threshold: 7
 victory:
   swiete_oficjum:
     stacks: 6

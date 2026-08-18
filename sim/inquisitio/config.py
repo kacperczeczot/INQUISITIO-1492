@@ -82,8 +82,15 @@ class GameConfig:
 
     def threshold_for(self, n_players: int) -> int:
         """Accusation threshold for a given player count."""
-        key = f"{n_players}p"
-        return self.system.accusation_threshold[key]
+        t = self.system.accusation_threshold
+        if hasattr(t, "raw"):
+            t = t.raw()
+        if isinstance(t, (int, float)):
+            return int(t)
+        if isinstance(t, dict):
+            key = f"{n_players}p"
+            return int(t.get(key, t.get("4p", 7)))
+        return int(t)
 
     def observed_threshold(self) -> int:
         """Start of Observed (Autodafé burn). One number for the table."""

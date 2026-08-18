@@ -40,7 +40,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
-| **Próg Oskarżenia (Krytyczna)** | **6** | **7** | **8** | Kanon 4p = **7**. Wyjątki składu: 3p=6, 5p=8. Obserwowana kończy się na T−1. |
+| **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **12** | **12** | **12** | Fus / tiebreak; partie 4P kończą się ~6 Er. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
@@ -89,6 +89,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.12 (2026-08-18) — Kanon 4P: Spłaszczenie progu oskarżenia (skalar 7) i usunięcie wyjątków 3p/5p
+- **Wynik 4P:** Kanon **`70.4 pkt`** | Kara witalności: **`0.040`**
+- **Modyfikacja:** Spłaszczenie `accusation_threshold` do pojedynczego parametru stołu `7` (usunięcie skalowania per-skład 3p:6 / 4p:7 / 5p:8 na rzecz czystego prototypu 4P).
+- **Synchronizacja:** Zsynchronizowano dokumentację i procedury stołu.
 
 ### 🟢 Patch v0.99.11 (2026-08-18) — Narzędzia: Ujednolicenie sekcji problematycznych mechanik w raporcie 4P + Audyt protez
 - **Wynik 4P:** Kanon **`70.4 pkt`** | Kara witalności: **`0.040`**
