@@ -57,11 +57,11 @@ Strefy Herezji: **bez** `margin-top: auto` — przyklejone pod tor 0–10.
 
 | Frakcja | n | Żeton |
 | :--- | ---: | :--- |
-| Oficjum | 4 | Stos |
+| Oficjum | 6 | Stos |
 | Cienie | 2 | Relikwia |
 | Korona | 2 | Dekret |
-| Kabała | 3 | Fragment |
-| Gildia | 2 | Upadek |
+| Kabała | 2 | Fragment |
+| Gildia | 8 | Upadek |
 
 ### Świadomie poza matą
 
@@ -76,9 +76,9 @@ Pozycja Agenta = plansza/Areszt/Stos · ofiara Haka = na żetonie · Marionetka 
 │ FRAKCJA                                                 │
 │ Cel: …                                                  │  auto
 ├─────────────────────────────────────────────────────────┤
-│ HEREZJA (*próg oskarżenia: 3p ≥6, 5p ≥8)                │
+│ HEREZJA (*próg oskarżenia: 3p ≥6, 4–5p ≥7)              │
 │ [0]…[10]                                                │
-│ Czysta 0–3 | Obserwowana 4–6 | Krytyczna ≥7*            │  28 mm
+│ Czysta 0–4 | Obserwowana 5–6 | Krytyczna ≥7*            │  28 mm
 ├──────────┬────────────────────────────┬─────────────────┤
 │ AGENCI   │ ZŁOTO (tacka)              │ HAKI            │
 │ ○ ○ ○    │                            │ □ □             │  ~1fr

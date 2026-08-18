@@ -66,10 +66,10 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
-| `effect` | Wskaż rywala: +1 Herezja. |
+| `effect` | Wskaż rywala: +2 Herezja. |
 | `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -151,7 +151,7 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze. |
 | `effect` | Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę. |
@@ -327,7 +327,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
 | `effect` | Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację. |
@@ -362,7 +362,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
 | `lore` | Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę. |
@@ -816,7 +816,7 @@ Kart: **12**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 2 |
-| `heresy` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty i Herezję 4–6: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji 4–6: Ustaw swoją Herezję na 5. |
 | `lore` | Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6. |

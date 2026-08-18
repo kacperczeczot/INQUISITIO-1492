@@ -39,7 +39,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
-| **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |
+| **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **6** | **7** | **8** | Kanon 4p = **7**. Wyjątki składu: 3p=6, 5p=8. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **12** | **12** | **12** | Fus / tiebreak; partie 4P kończą się ~6 Er. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
@@ -89,6 +89,26 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.10 (2026-08-18) — Kanon 4P: Karta `so-08` (Nasłanie Inkwizytora): `cost` → `0` (Zysk 4P Δ -0.5 pkt)
+- **Wynik 4P:** Kanon **`63.7`** → **`63.2 pkt`** | Global **`39.0`** | 3p **`14.7`** | 5p **`37.7`**
+- **Modyfikacja (`L3_SO-08_COST_MINUS1`):** Karta `so-08` (Nasłanie Inkwizytora): `cost` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.19, Deadlocks 2.1%, Pas Biedy 1.4%.
+
+### 🟢 Patch v0.99.9 (2026-08-18) — Kanon 4P: Karta `caa-06` (Ucieczka z Lochów): `cost` → `0` (Zysk 4P Δ +0.6 pkt)
+- **Wynik 4P:** Kanon **`63.1`** → **`63.7 pkt`** | Global **`39.1`** | 3p **`14.6`** | 5p **`37.5`**
+- **Modyfikacja (`L3_CAA-06_COST_MINUS1`):** Karta `caa-06` (Ucieczka z Lochów): `cost` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.18, Deadlocks 2.1%, Pas Biedy 1.4%.
+
+### 🟢 Patch v0.99.8 (2026-08-18) — Kanon 4P: Karta `caa-08` (Kaptur Nocy): `heresy` → `0` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`62.7`** → **`63.1 pkt`** | Global **`38.7`** | 3p **`14.5`** | 5p **`37.0`**
+- **Modyfikacja (`L3_CAA-08_HERESY_MINUS1`):** Karta `caa-08` (Kaptur Nocy): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.18, Deadlocks 2.1%, Pas Biedy 1.4%.
+
+### 🟢 Patch v0.99.7 (2026-08-18) — Kanon 4P: Karta `kt-10` (Pieczęć Salomona): `heresy` → `2` (Zysk 4P Δ +0.9 pkt)
+- **Wynik 4P:** Kanon **`61.8`** → **`62.7 pkt`** | Global **`39.1`** | 3p **`14.5`** | 5p **`38.7`**
+- **Modyfikacja (`L3_KT-10_HERESY_PLUS1`):** Karta `kt-10` (Pieczęć Salomona): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.18, Deadlocks 2.1%, Pas Biedy 1.4%.
 
 ### 🟢 Patch v0.99.6 (2026-08-18) — Kanon 4P: Karta `caa-08` (Kaptur Nocy): `target_heresy` → `2` (Zysk 4P Δ +5.2 pkt)
 - **Wynik 4P:** Kanon **`56.2`** → **`61.4 pkt`** | Global **`39.1`** | 3p **`12.9`** | 5p **`41.2`**

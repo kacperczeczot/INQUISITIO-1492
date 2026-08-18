@@ -148,12 +148,14 @@ def _victory_table(cfg: dict) -> str:
 def _heresy_table(cfg: dict) -> str:
     """Generate heresy zones table for Kanon 4p."""
     s = cfg["system"]
+    ot = int(s.get("observed_threshold", 4))
     t = s["accusation_threshold"]
     t4 = t["4p"] if isinstance(t, dict) else t
+    clean_max = ot - 1
     return f"""| Zakres | Strefa | Skutek |
 | :---: | :--- | :--- |
-| 0–3 | Czysta | Bezpieczniej, słabsze akcje |
-| 4–{t4-1} | Obserwowana | Ryzyko — jeden krok od oskarżenia |
+| 0–{clean_max} | Czysta | Bezpieczniej, słabsze akcje |
+| {ot}–{t4-1} | Obserwowana | Ryzyko — jeden krok od oskarżenia |
 | ≥{t4} | **Krytyczna** | Inni mogą **Rzucić Oskarżenie** |"""
 
 
@@ -165,6 +167,7 @@ def _scaling_box(cfg: dict) -> str:
     t = s["accusation_threshold"]
     t3 = t["3p"] if isinstance(t, dict) else t
     t5 = t["5p"] if isinstance(t, dict) else t
+    ot = int(s.get("observed_threshold", 4))
 
     g = s["start_gold"]
     g4 = g["4p"] if isinstance(g, dict) else g
@@ -176,7 +179,7 @@ def _scaling_box(cfg: dict) -> str:
     so_s5 = so_s.get("5p", so_s4) if isinstance(so_s, dict) else so_s4
 
     lines_3p = [
-        f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t3-1}` / Krytyczna `≥{t3}`).",
+        f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t3}`** (Strefy: Czysta `0–{ot-1}` / Obserwowana `{ot}–{t3-1}` / Krytyczna `≥{t3}`).",
     ]
     if so_s3 != so_s4:
         lines_3p.append(f"> - **Święte Oficjum:** Wymaga **`{so_s3} Stosów`** (zamiast {so_s4}).")
@@ -201,7 +204,7 @@ def _scaling_box(cfg: dict) -> str:
     lines_5p = []
     if g5 != g4:
         lines_5p.append(f"> - **Złoto Startowe:** Każdy gracz otrzymuje na start **`{g5} zł`** (zamiast {g4} zł).")
-    lines_5p.append(f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t5}`** (Strefy: Czysta `0–3` / Obserwowana `4–{t5-1}` / Krytyczna `≥{t5}`).")
+    lines_5p.append(f"> - **Próg Oskarżenia (Krytyczna Herezja):** **`{t5}`** (Strefy: Czysta `0–{ot-1}` / Obserwowana `{ot}–{t5-1}` / Krytyczna `≥{t5}`).")
     if so_s5 != so_s4:
         lines_5p.append(
             f"> - **Święte Oficjum:** Wymaga **`{so_s5} Stosów`** (zamiast {so_s4}) ze względu na większą pulę wrogich agentów."
@@ -319,13 +322,14 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
     t3 = t["3p"] if isinstance(t, dict) else t
     t4 = t["4p"] if isinstance(t, dict) else t
     t5 = t["5p"] if isinstance(t, dict) else t
+    ot = int(cfg["system"].get("observed_threshold", 4))
 
     text = re.sub(
-        r"\| 0–3 \| Czysta \|.*?\n"
-        r"\| 4–\d+(?: \(w 3p: 4–\d+\))? \| Obserwowana \|.*?\n"
+        r"\| 0–\d+ \| Czysta \|.*?\n"
+        r"\| \d+–\d+.*\| Obserwowana \|.*?\n"
         r"\| \d+–10 \(w 3p: ≥\d+, w 5p: ≥\d+\) \| \*\*Krytyczna\*\* \|.*",
-        f"| 0–3 | Czysta | Bezpiecznie, zwykle słabiej |\n"
-        f"| 4–{t4 - 1} (w 3p: 4–{t3 - 1}) | Obserwowana | Ryzyko — jeden krok od oskarżenia |\n"
+        f"| 0–{ot - 1} | Czysta | Bezpiecznie, zwykle słabiej |\n"
+        f"| {ot}–{t4 - 1} (w 3p: {ot}–{t3 - 1}, w 5p: {ot}–{t5 - 1}) | Obserwowana | Ryzyko — jeden krok od oskarżenia |\n"
         f"| {t4}–10 (w 3p: ≥{t3}, w 5p: ≥{t5}) | **Krytyczna** | Inni mogą Cię oskarżyć |",
         text,
     )
@@ -429,6 +433,7 @@ def sync_hierarchia(cfg: dict) -> list[str]:
     text = path.read_text(encoding="utf-8")
     s = cfg["system"]
     t = s["accusation_threshold"]
+    ot = int(s.get("observed_threshold", 4))
 
     g = s["start_gold"]
     g4 = g["4p"] if isinstance(g, dict) else g
@@ -451,8 +456,8 @@ def sync_hierarchia(cfg: dict) -> list[str]:
             f"(Kanon 4p; w 3p: `≥{t3}`, w 5p: `≥{t5}`)"
         )
     strefy_prog = (
-        "- **Strefy Herezji:** Czysta `0–3`; Obserwowana od `4` do `T−1`; Krytyczna `≥T`\n"
-        "- **Próg Obserwowanej:** `≥4` (Autodafé: Stos zamiast aresztu)\n"
+        f"- **Strefy Herezji:** Czysta `0–{ot - 1}`; Obserwowana od `{ot}` do `T−1`; Krytyczna `≥T`\n"
+        + f"- **Próg Obserwowanej:** `≥{ot}` (Autodafé: Stos zamiast aresztu)\n"
         + prog_hier
     )
     text = re.sub(
@@ -535,6 +540,7 @@ def sync_balance_notes(cfg: dict) -> list[str]:
     s = cfg["system"]
     t = s["accusation_threshold"]
     t3, t4, t5 = t["3p"], t["4p"], t["5p"]
+    ot = int(s.get("observed_threshold", 4))
     g = s["start_gold"]
     g4 = g["4p"] if isinstance(g, dict) else g
     h = s["hand_limit"]
@@ -554,7 +560,7 @@ def sync_balance_notes(cfg: dict) -> list[str]:
         )
     text = re.sub(
         r"\| \*\*Próg Obserwowanej\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \|.*",
-        "| **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |",
+        f"| **Próg Obserwowanej** | **{ot}** | **{ot}** | **{ot}** | Czysta to 0–{ot-1}. Od **{ot}** Autodafé pali na Stos (nie areszt). |",
         text,
         count=1,
     )

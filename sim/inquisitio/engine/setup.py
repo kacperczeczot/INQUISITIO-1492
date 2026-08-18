@@ -130,9 +130,9 @@ def new_game(
     setup: str | None = None,
     players: int | None = None,
     seed: int = 42,
-    threshold: int = 8,
+    threshold: int | None = None,
     layer: str = "C",
-    max_eras: int = 8,
+    max_eras: int | None = None,
     sys_overrides: dict | None = None,
 ) -> GameState:
     if setup:
@@ -171,16 +171,20 @@ def new_game(
         hand_limit = CONFIG.hand_limit_for(n_players)
 
     if "max_eras_offset" in sys:
-        max_eras = max(1, CONFIG.system.max_eras + sys["max_eras_offset"])
+        final_max_eras = max(1, CONFIG.system.max_eras + sys["max_eras_offset"])
+    elif "max_eras" in sys:
+        final_max_eras = sys["max_eras"]
+    elif max_eras is not None:
+        final_max_eras = max_eras
     else:
-        max_eras = sys.get("max_eras", CONFIG.system.max_eras)
+        final_max_eras = CONFIG.system.max_eras
 
     # Threshold: sys_overrides > explicit param > CONFIG per player count
     if "threshold_offset" in sys:
         final_threshold = max(1, CONFIG.threshold_for(n_players) + sys["threshold_offset"])
     elif "threshold" in sys:
         final_threshold = sys["threshold"]
-    elif threshold != 8:
+    elif threshold is not None:
         final_threshold = threshold
     else:
         final_threshold = CONFIG.threshold_for(n_players)
@@ -233,7 +237,7 @@ def new_game(
         time_deck=tdeck,
         rng_seed=seed,
         layer=layer,
-        max_eras=max_eras,
+        max_eras=final_max_eras,
         autodafe_cooldown=(
             max(0, CONFIG.system.autodafe_cooldown + sys["cooldown_offset"])
             if "cooldown_offset" in sys

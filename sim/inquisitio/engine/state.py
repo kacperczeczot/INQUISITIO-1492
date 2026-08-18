@@ -52,14 +52,15 @@ class AgentToken:
 class PlayerState:
     faction: FactionId
     heresy: int = 0
-    gold: int = 3
+    gold: int = 4
     hand: list[str] = field(default_factory=list)
     deck: list[str] = field(default_factory=list)
     discard: list[str] = field(default_factory=list)
     agents: list[AgentToken] = field(default_factory=list)
     # victory trackers
     stacks: int = 0  # Oficjum (Autodafé / Werdykt)
-    condemned_rivals: set[FactionId] = field(default_factory=set)  # Oficjum alternate
+    condemnations: int = 0  # Oficjum alternate (łączna liczba wyroków skazujących na rywalach)
+    condemned_rivals: set[FactionId] = field(default_factory=set)  # Oficjum alternate (unikalne frakcje)
     relics_evacuated: int = 0  # Cienie
     decrees_played: int = 0  # Korona
     fragments: int = 0  # Kabala
@@ -115,9 +116,9 @@ class GameState:
     players: dict[FactionId, PlayerState]
     turn_order: list[FactionId]
     era: int = 1
-    max_eras: int = 8
+    max_eras: int = 12
     accusation_threshold: int = 7
-    observed_threshold: int = 4
+    observed_threshold: int = 5
     inquisitor_location: str = "trybunal"
     inquisitor_mode: InquisitorMode = InquisitorMode.PATROL
     eras_since_autodafe: int = 0
@@ -144,7 +145,7 @@ class GameState:
         self.log.append(f"E{self.era}: {msg}")
 
 
-def heresy_zone(value: int, critical_min: int = 7, observed_min: int = 4) -> str:
+def heresy_zone(value: int, critical_min: int = 7, observed_min: int = 5) -> str:
     """Czysta < observed_min; Obserwowana until accusation; Krytyczna at threshold+."""
     if value < observed_min:
         return "czysta"

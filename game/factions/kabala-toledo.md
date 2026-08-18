@@ -5,7 +5,7 @@
 # Kabała z Toledo *(Uczeni & Alchemicy)*
 
 **Styl:** Fragmenty Kodeksu, Imię, archiwum.  
-**Cel:** **3 Fragmenty** od Ery **6**.
+**Cel:** **2 Fragmenty** od Ery **6**.
 
 ## 📜 Tło Historyczne & Kultura (1492)
 

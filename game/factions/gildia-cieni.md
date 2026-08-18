@@ -5,7 +5,7 @@
 # Gildia Cieni *(Świat przestępczy)*
 
 **Styl:** Szantaż, podrzucanie, skrytobójstwo, Upadek frakcji.  
-**Cel:** **4 upadki** rywali (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem). Jedna liczba przy każdym składzie.
+**Cel:** **8 upadków** rywali (Hak / Marionetka / Autodafé / Werdykt na celu z Hakiem). Jedna liczba przy każdym składzie.
 
 ## 📜 Tło Historyczne & Kultura (1492)
 

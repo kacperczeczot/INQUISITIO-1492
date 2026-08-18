@@ -31,7 +31,8 @@ def oficjum_snowball_threat(state: GameState) -> bool:
     pc = f"{len(state.turn_order)}p"
     stacks_need = _cfg_int(CONFIG.victory.swiete_oficjum.stacks, pc)
     condemns_need = _cfg_int(CONFIG.victory.swiete_oficjum.condemns, pc)
-    return so.stacks >= max(1, stacks_need - 1) or len(so.condemned_rivals) >= max(
+    condemns_count = max(so.condemnations, len(so.condemned_rivals))
+    return so.stacks >= max(1, stacks_need - 1) or condemns_count >= max(
         1, condemns_need - 1
     )
 
@@ -133,10 +134,9 @@ def run_verdict(
         arrest_agent(state, accused)
         if FactionId.SWIETE_OFICJUM in state.players:
             so_pl = state.players[FactionId.SWIETE_OFICJUM]
-            # Unikalne skazania: każdy Werdykt na rywalu (stół może karmić 3 Skazania).
-            # Stos z Werdyktu: tylko oskarżenie Oficjum (powtórka też) — stół nie
-            # dobija 5 stosów przy okazji.
+            # Skazania: każdy udany Werdykt na rywalu daje żeton Skazania (3 wyroki = wygrana Oficjum)
             if accused != FactionId.SWIETE_OFICJUM:
+                so_pl.condemnations += 1
                 so_pl.condemned_rivals.add(accused)
             if state.layer == "C":
                 if accuser == FactionId.SWIETE_OFICJUM and accused != FactionId.SWIETE_OFICJUM:

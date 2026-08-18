@@ -15,8 +15,8 @@ Każdy gracz ma **Tor Herezji 0–10** na planszetce. Herezja mierzy, jak bardzo
 
 | Zakres | Strefa | Przy stole |
 | :---: | :--- | :--- |
-| 0–3 | **Czysta** | Brak podejrzeń. Bezpieczne, zwykle słabsze akcje. Oficjum lubi Cię tu widzieć — jesteś nieskuteczny. |
-| 4 … T−1 | **Obserwowana** | Czujność Inkwizycji. Próg **4** (Autodafé → Stos). Kabała **musi** tu żyć przy wygranej. |
+| 0–4 | **Czysta** | Brak podejrzeń. Bezpieczne, zwykle słabsze akcje. Oficjum lubi Cię tu widzieć — jesteś nieskuteczny. |
+| 5 … T−1 | **Obserwowana** | Czujność Inkwizycji. Próg **5** (Autodafé → Stos). Kabała **musi** tu żyć przy wygranej. |
 | ≥T | **Krytyczna / HERETYK** | Inni mogą **Rzucić Oskarżenie** → [`werdykt-stolu.md`](werdykt-stolu.md). |
 
 > T = próg oskarżenia: **7** w 4p (Kanon), **6** w 3p, **8** w 5p.
@@ -46,4 +46,4 @@ Krytyczna otwiera **głos stołu** ([`werdykt-stolu.md`](werdykt-stolu.md)).
 
 ## Playtest — loguj
 
-Ile wejść w Krytyczną / Erę; ile oskarżeń; czy gracze **boją się** 6→7; czy Kabała utrzymuje 4–6.
+Ile wejść w Krytyczną / Erę; ile oskarżeń; czy gracze **boją się** 6→7; czy Kabała utrzymuje 5–6.

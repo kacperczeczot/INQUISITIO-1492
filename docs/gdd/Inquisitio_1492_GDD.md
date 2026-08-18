@@ -52,11 +52,11 @@ Cele wymagają **brudnych rąk** (Herezja, silniki), nie czystego zbieractwa.
 
 | Frakcja | Fantazja | Wygrana (C) |
 | :--- | :--- | :--- |
-| **Święte Oficjum** | Terror prawa Bożego | 4 Stosy **lub** 3 Skazania |
+| **Święte Oficjum** | Terror prawa Bożego | 6 Stosy **lub** 3 Skazania |
 | **Cienie Al-Andalus** | Stealth, Relikwie | 2 Relikwie + ścieżka |
 | **Korona & Borgiowie** | Dekrety, pieczęć | 2 Dekrety |
-| **Kabała z Toledo** | Kodeks | 3 Fragmenty (od Ery 6) |
-| **Gildia Cieni** | Szantaż, upadek | 4 Upadki |
+| **Kabała z Toledo** | Kodeks | 2 Fragmenty (od Ery 6) |
+| **Gildia Cieni** | Szantaż, upadek | 8 Upadki |
 
 Opisy: [`../../game/factions/`](../../game/factions/).
 

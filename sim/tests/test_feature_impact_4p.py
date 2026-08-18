@@ -64,10 +64,10 @@ def test_impact_uses_extreme_or_off():
         "L2_SO_CONDEMNS_LO",
         "L2_SO_CONDEMNS_HI",
         "L2_CAA_RELICS_HI",
-        "L2_KB_HOOKS_HI",
     ):
         assert eid in ids, eid
     assert "L2_CAA_RELICS_LO" not in ids  # 2→1 is ±1, L2 audit
+    assert "L2_KB_HOOKS_HI" not in ids  # hooks=0 is inactive, not ablated
     offs = {t[0]: t[3] for t in build_all_mechanic_tasks(1, 1, CANONICAL_4P_SETUPS)}
     assert abs(offs["L2_SO_CONDEMNS_LO"]["so_condemns_offset"]) >= 2
     assert abs(offs["L2_SO_CONDEMNS_HI"]["so_condemns_offset"]) >= 2

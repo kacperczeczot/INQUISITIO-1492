@@ -60,7 +60,8 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             else:
                 base_condemn = 2
             condemn_need = max(1, base_condemn + ov.get("so_condemns_offset", 0))
-            condemn_ok = (state.layer != "B" and len(pl.condemned_rivals) >= condemn_need)
+            condemns_count = max(pl.condemnations, len(pl.condemned_rivals))
+            condemn_ok = (state.layer != "B" and condemns_count >= condemn_need)
 
             if condemn_ok:
                 return (fid, "so_condemns")
@@ -157,7 +158,7 @@ def end_game_tiebreak(state: GameState) -> FactionId:
     for fid in state.turn_order:
         pl = state.players[fid]
         if fid == FactionId.SWIETE_OFICJUM:
-            progress = max(pl.stacks, len(pl.condemned_rivals))
+            progress = max(pl.stacks, pl.condemnations, len(pl.condemned_rivals))
         elif fid == FactionId.CIENIE_AL_ANDALUS:
             progress = pl.relics_evacuated
         elif fid == FactionId.KORONA_BORGIOWIE:

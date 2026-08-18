@@ -81,6 +81,11 @@ import audit_level2
 import audit_level3
 import audit_level4
 from audytor_4p import is_ablation_off, is_frozen_identity_knob
+from manual_ablation_hints import (
+    collect_manual_ablation_candidates,
+    format_manual_ablation_report,
+    print_manual_ablation_summary,
+)
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
@@ -561,6 +566,7 @@ class Canon4PAutoBalancer:
         self.start_time = time.time()
         self.initial_version = CONFIG.version
         self._base_in_band = False
+        self._last_base_res: dict | None = None
         signal.signal(signal.SIGINT, self._handle_sigint)
 
     def _accept_mode(self) -> str:
@@ -572,6 +578,23 @@ class Canon4PAutoBalancer:
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
         self.stop_requested = True
+
+    def _emit_manual_ablation_review(self) -> None:
+        if self._last_base_res is None:
+            return
+        candidates = collect_manual_ablation_candidates(self._last_base_res)
+        print_manual_ablation_summary(
+            candidates,
+            version=CONFIG.version,
+            patches_applied=self.total_iterations,
+        )
+        report_lines = format_manual_ablation_report(
+            candidates,
+            version=CONFIG.version,
+            patches_applied=self.total_iterations,
+        )
+        archive_path, _ = save_and_archive_report(report_lines, "kandydaci_recznej_ablacji.md")
+        print(f"\n   📄 Raport ręcznej ablacji: {archive_path}")
 
     def _execute_pool(self, task_func, task_list: list, label: str = "Testy 4P") -> list[dict]:
         total = len(task_list)
@@ -658,6 +681,7 @@ class Canon4PAutoBalancer:
             print(f"🔍 [POMIAR BAZOWY KANONU 4P] Diagnoza 5 setupów 4p (Próba: {self.args.confirm_games} gier/setup)...")
             base_task = ((("BASE", "Bieżący stan Kanonu 4P", {}), self.args.confirm_games, self.args.seed, setups),)
             base_res = self._execute_pool(_run_single_test_task_4p, [base_task[0]], label="Baza 4P")[0]
+            self._last_base_res = base_res
 
             print(f"   🎯 Wynik Kanonu 4P Score: {color_score(base_res['score_4p'], bold=True)} pkt")
             print(
@@ -885,6 +909,7 @@ class Canon4PAutoBalancer:
                 current_phase += 1
                 print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
+        self._emit_manual_ablation_review()
         print(f"\n═══════════════════════════════════════════════════════════════════════")
         print(f"   AUDYTOR KANONU 4P ZAKOŃCZYŁ SESJĘ. ŁĄCZNIE WPROWADZONO {self.total_iterations} PATCHY.")
         print(f"═══════════════════════════════════════════════════════════════════════\n")

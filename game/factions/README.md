@@ -16,11 +16,11 @@ W sercu Kastylii — wielokulturowym **Toledo** — pięć potęg toczy bezwzgl�
 
 | Frakcja | Archetyp Historyczny | Styl Gry | Główny Cel Zwycięstwa |
 | :--- | :--- | :--- | :--- |
-| [**Święte Oficjum**](swiete-oficjum.md) | Inkwizycja Torquemady, familiariusze | Terror, Autodafé, oskarżenia | **4 Stosy** lub **3 Skazania** |
+| [**Święte Oficjum**](swiete-oficjum.md) | Inkwizycja Torquemady, familiariusze | Terror, Autodafé, oskarżenia | **6 Stosy** lub **3 Skazania** |
 | [**Cienie Al-Andalus**](cienie-al-andalus.md) | Moryskowie, ostatni Maurowie | Kamuflaż (*takijja*), tunele, relikwie | **2 Relikwie** + Szlak Morski |
 | [**Korona & Borgiowie**](korona-borgiowie.md) | Królowie Katoliccy, Kuria Borgiów | Prawo stołu, dekrety, wielkie złoto | **2 Dekrety** |
-| [**Kabała z Toledo**](kabala-toledo.md) | Sefardyjscy uczeni, alchemicy, *Zohar* | Kodeks, Fragmenty | **3 Fragmenty** (od Ery 6) |
-| [**Gildia Cieni**](gildia-cieni.md) | Półświatek kastylijski (*hampa*), szantaż | Donosy, fałszywi świadkowie, Haki | **4 Upadki** |
+| [**Kabała z Toledo**](kabala-toledo.md) | Sefardyjscy uczeni, alchemicy, *Zohar* | Kodeks, Fragmenty | **2 Fragmenty** (od Ery 6) |
+| [**Gildia Cieni**](gildia-cieni.md) | Półświatek kastylijski (*hampa*), szantaż | Donosy, fałszywi świadkowie, Haki | **8 Upadki** |
 
 ---
 

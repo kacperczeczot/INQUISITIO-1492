@@ -136,7 +136,7 @@ def test_band_climb_uses_min_not_mean():
     # Mean up, weakest down — reject
     worse_min = _snap(min_balance=80.0, weak=80.0, shares=shares, score_4p=93.0)
     assert not accept_candidate(base, worse_min, mode="band").accepted
-    better_min = _snap(min_balance=85.0, weak=85.0, shares=shares, score_4p=90.5)
+    better_min = _snap(min_balance=85.0, weak=85.0, shares=shares, score_4p=91.2)
     d = accept_candidate(base, better_min, mode="band")
     assert d.accepted
     assert d.phase == "climb"

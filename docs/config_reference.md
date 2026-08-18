@@ -27,7 +27,7 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 | `cards_per_era` | `int` | `1 .. 4` | `2` | Rundy Intrygi (karta **lub** Akcja Gospodarcza) na Erę. |
 | `era_income` | `int` | `0 .. 3` | `1` | Złoto w Fazie III (Kronika). |
 | `intrigue_gold` | `int` | `0 .. 3` | `1` | Złoto z Akcji Gospodarczej w Fazie I. Jarmark (`time-09`) na Rynku: **+2** zamiast tej wartości (min. 2). |
-| `observed_threshold` | `int` | `1 .. 9` | `4` | Start Obserwowanej; Autodafé pali na Stos od tej wartości (po +1 Herezji). Czysta = poniżej. |
+| `observed_threshold` | `int` | `1 .. 9` | `5` | Start Obserwowanej; Autodafé pali na Stos od tej wartości (po +1 Herezji). Czysta = poniżej. |
 | `accusation_threshold` | `dict` | `3p: 5..10`, `4p: 5..10`, `5p: 5..10` | `3p:6, 4p:7, 5p:8` | Próg Herezji = Krytyczna / Oskarżenie / Werdykt. Obserwowana kończy się na T−1. |
 
 Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gold`, `max_eras`, `autodafe_cooldown`, `era_income`, `hand_limit`) to **jedna liczba na stół**. Zapisuje je tylko `audytor_4p.py`. `audytor_3p.py` / `audytor_5p.py` mogą splitować `start_gold`, `accusation_threshold` i cele `victory`.
@@ -39,14 +39,14 @@ Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gol
 ### 1. Święte Oficjum (`swiete_oficjum`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `stacks` | `int` | `1 .. 6` | `5` | Wymagana liczba Stosów (ze spalonych agentów w Autodafé) |
+| `stacks` | `int` | `1 .. 8` | `6` | Wymagana liczba Stosów (ze spalonych agentów w Autodafé) |
 | `condemns` | `dict` | `3p: 1..5`, `4p: 1..5`, `5p: 1..5` | Wymagana liczba skazanych rywali w Werdyktach (ścieżka alternatywna) |
 
 ### 2. Cienie Al-Andalus (`cienie_al_andalus`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
 | `relics` | `int` | `1 .. 3` | `2` | Liczba Relikwii wymagana do ewakuacji |
-| `path_era` | `int` | `3 .. 8` | `4` | Minimalna Era na ukończenie ewakuacji (szlak / Marionetka / cichy exit) |
+| `path_era` | `int` | `1 .. 12` | `1` | Minimalna Era na ukończenie ewakuacji (szlak / Marionetka / cichy exit) |
 
 ### 3. Korona Borgiowie (`korona_borgiowie`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
@@ -56,13 +56,13 @@ Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gol
 ### 4. Kabała Toledo (`kabala_toledo`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `fragments` | `int` | `1 .. 4` | `3` | Wymagana liczba Fragmentów Kodeksu |
+| `fragments` | `int` | `1 .. 4` | `2` | Wymagana liczba Fragmentów Kodeksu |
 | `era` | `int` | `1 .. 12` | `6` | Minimalna Era na zwycięstwo Kodeksem |
 
 ### 5. Gildia Cieni (`gildia_cieni`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
-| `falls` | `int` | `1 .. 6` | `5` | Upadki Gildii (jedna liczba; bez wyjątku „gdy brak Oficjum”) |
+| `falls` | `int` | `1 .. 10` | `8` | Upadki Gildii (jedna liczba; bez wyjątku „gdy brak Oficjum”) |
 
 ---
 

@@ -31,9 +31,9 @@ NPC na planszy — **broń publiczna**. Spala **lokacje**; gracze manewrują wok
 
 1. Ogłoś lokację (tam, gdzie stoi figurka).
 2. Każdy Agent rywala w lokacji:
-   * **Strefa Czysta (0–3 Herezji):** Agent trafia do **Aresztu w Lochach** (+1 Herezja dla właściciela, bez Stosu dla Oficjum).
-   * **Strefa Obserwowana / Krytyczna (≥4 Herezji):** Agent zostaje **spalony na Stosie** (+1 Herezja dla właściciela, +1 Stos dla Oficjum po **Ogłoś Autodafé**).
-3. **Stos:** połóż **1 żeton Stosu** za wyeliminowanego Agenta rywala $\ge$4 Herezji po **Ogłoś Autodafé**. **Wymuś Autodafé** (edykt) = kroki 1–2 i 4–5 **bez** Stosu.
+   * **Strefa Czysta (0–4 Herezji):** Agent trafia do **Aresztu w Lochach** (+1 Herezja dla właściciela, bez Stosu dla Oficjum).
+   * **Strefa Obserwowana / Krytyczna (≥5 Herezji):** Agent zostaje **spalony na Stosie** (+1 Herezja dla właściciela, +1 Stos dla Oficjum po **Ogłoś Autodafé**).
+3. **Stos:** połóż **1 żeton Stosu** za wyeliminowanego Agenta rywala $\ge$5 Herezji po **Ogłoś Autodafé**. **Wymuś Autodafé** (edykt) = kroki 1–2 i 4–5 **bez** Stosu.
 4. Relikwia w lokacji: **wraca do puli**.
 5. Stan wraca do Patrol; zapisz „Autodafé w Erze N”.
 

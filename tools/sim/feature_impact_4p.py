@@ -399,8 +399,10 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         add(f"L2_CAA_RELICS_{tag}", f"Cienie: relikwie {_n4(caa.relics)} → {new}", cat2, {"caa_relics_offset": off})
     for tag, off, new in _win_extremes(_n4(kb.decrees)):
         add(f"L2_KB_DECREES_{tag}", f"Korona: dekrety {_n4(kb.decrees)} → {new}", cat2, {"kb_decrees_offset": off})
-    for tag, off, new in _win_extremes(int(kb.get("hooks", 0)), min_val=0):
-        add(f"L2_KB_HOOKS_{tag}", f"Korona: wymóg haków 0 → {new} (podatek)", cat2, {"kb_hooks_offset": off})
+    kb_hooks_val = int(kb.get("hooks", 0))
+    if kb_hooks_val > 0:
+        for tag, off, new in _win_extremes(kb_hooks_val, min_val=0):
+            add(f"L2_KB_HOOKS_{tag}", f"Korona: wymóg haków {kb_hooks_val} → {new}", cat2, {"kb_hooks_offset": off})
     for tag, off, new in _win_extremes(_n4(kt.fragments)):
         add(f"L2_KT_FRAGS_{tag}", f"Kabała: fragmenty {_n4(kt.fragments)} → {new}", cat2, {"kt_frags_offset": off})
     for tag, off, new in _win_extremes(_n4(kt.era)):
@@ -864,20 +866,20 @@ def run_full_ablation_audit_4p(
         f"| 💤 **Martwe / uśpione ścieżki** | **{mech_groups['DEAD']}** | Dual-win z witalności albo ablacja Δ≈0 | Wada pomiaru, nie harmonia |",
         f"| ⚠️ / 💡 **Wady bieżącej wartości** | **{mech_groups['DISRUPTOR']}** | Inna wartość gałki **podnosi** 4P — obecny setting szkodzi | **Przekręcić albo rework** |",
         "",
-        "### 4.0. 💤 Martwe mechaniki (osobny wykaz)",
-        "Ścieżki dual-win z `evaluate_vitality` oraz testy z $|\\Delta\\text{4P}| \\le 0.8$ i ruchem share $\\le 1.5$ pp.",
+        "### 4.0. ⚠️ Problematyczne mechaniki (osobny wykaz)",
+        "Wszystkie mechaniki z grup **DEAD**, **WEAK/NEUTRAL** i **DISRUPTOR**: ścieżki dual-win z `evaluate_vitality`, testy z $|\\Delta\\text{4P}| \\le 0.8$ i ruchem share $\\le 1.5$ pp (DEAD), za słabe dźwignie (WEAK) oraz wady bieżącej wartości (DISRUPTOR).",
         "",
         "| Badany Podsystem | Kategoria | 4P Score | $\\Delta$ 4P | Klasyfikacja |",
         "| :--- | :--- | :---: | :---: | :--- |",
     ])
 
-    dead_mechs = sorted(
-        [m for m in analyzed_mechanics if m["group_id"] == "DEAD"],
-        key=lambda x: (abs(x["d_4p"]), x["name"]),
+    problem_mechs = sorted(
+        [m for m in analyzed_mechanics if m["group_id"] in ("DEAD", "WEAK", "NEUTRAL", "DISRUPTOR")],
+        key=lambda x: ({"DEAD": 0, "WEAK": 1, "NEUTRAL": 1, "DISRUPTOR": 2}.get(x["group_id"], 3), abs(x["d_4p"]), x["name"]),
     )
-    if not dead_mechs:
-        lines.append("| *Brak martwych klauzul w tej próbie* | - | - | - | - |")
-    for m in dead_mechs:
+    if not problem_mechs:
+        lines.append("| *Brak problematycznych mechanik w tej próbie* | - | - | - | - |")
+    for m in problem_mechs:
         d4_str = f"+{m['d_4p']:.1f}" if m['d_4p'] > 0 else f"{m['d_4p']:.1f}"
         lines.append(
             f"| **{m['name']}** | {m['category']} | {score_pair(base_res['score_4p'], m['score_4p'], colored=True)} | "

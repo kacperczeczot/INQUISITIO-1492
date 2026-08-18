@@ -58,9 +58,9 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 | Relikwia | **8** | kafelek; 1–2 warianty wyglądu OK |
 | Fragment Kodeksu | **6** | fragment pergaminu (Kabała) |
 | Złoto | **40** | kafelek ze znakiem monety; opcjonalnie 2 wartości (1 i 5) |
-| Stos / Autodafé | **4** | płomień + stos / krzyż inkwizycji |
-| Upadek frakcji (Gildia) | **4** | czarna pieczęć / zbita tarcza |
-| Dekret (Korona) | **4** | pieczęć / pergamin (postęp karty specjalnej) |
+| Stos / Autodafé | **6** | płomień + stos / krzyż inkwizycji |
+| Upadek frakcji (Gildia) | **8** | czarna pieczęć / zbita tarcza |
+| Dekret (Korona) | **2** | pieczęć / pergamin (postęp karty specjalnej) |
 | Piętno | **15** | mały kafelek ✕ — limit Nasłanie / Hak / Przesłuchanie |
 | Stan Inkwizytora | **2** | małe kafle: Patrol / Autodafé (jeśli nie na bazie figurki) |
 
@@ -99,9 +99,9 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 | Relikwie | 8 |
 | Fragmenty | 6 |
 | Złoto | 40 |
-| Stosy | 4 |
-| Upadek | 4 |
-| Dekret | 4 |
+| Stosy | 6 |
+| Upadek | 8 |
+| Dekret | 2 |
 | Opcjonalne markery | 2–5 |
 | **Razem (P1+P2)** | **~107** |
 
@@ -110,7 +110,7 @@ Wspólny kształt PnP / 3D: **kwadrat 20×20 mm, lekko zaokrąglone rogi** (Agen
 Tylko frakcje przy stole (np. Oficjum + Al-Andalus + Korona):
 
 - Inkwizytor **1**, Agenci **9**, Marionetka **4**, Herezja **3**
-- Haki **8**, Relikwie **5–6**, Fragmenty **4**, Złoto **25**, Stosy **2**, Upadek **2**, Dekret **2**
+- Haki **8**, Relikwie **5–6**, Fragmenty **4** (pula 3p), Złoto **25**, Stosy **6**, Upadek **8**, Dekret **2**
 
 ---
 
