@@ -24,7 +24,8 @@
     {
       "root": "sim",
       "extraPaths": [
-        "sim"
+        "sim",
+        "tools/sim"
       ]
     }
   ]
