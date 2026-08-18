@@ -1599,39 +1599,56 @@ body.bw .card-proto {
   margin: 0 0 2mm 0;
   display: flex;
   justify-content: space-between;
-  width: 204mm;
+  width: 194mm;
   flex-shrink: 0;
 }
-.cards-print-grid {
-  display: grid;
-  grid-template-columns: repeat(3, var(--card-gross-w));
-  grid-template-rows: repeat(3, var(--card-gross-h));
-  gap: 0;
-  width: 204mm;
-  height: 279mm;
+
+.cards-print-block {
+  position: relative;
+  width: 194mm;
+  height: 269mm;
   margin: 0 auto;
-  box-sizing: border-box;
 }
 
-/* Card with full bleed: 68x93mm (Netto 63x88mm + 2.5mm Bleed all around) */
+.cards-print-grid {
+  display: grid;
+  grid-template-columns: 65.5mm 63mm 65.5mm;
+  grid-template-rows: 90.5mm 88mm 90.5mm;
+  gap: 0;
+  width: 194mm;
+  height: 269mm;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* Card cell: single cut inside, outer bleed on perimeter */
 .card-proto.card-print-cell {
   position: relative;
-  width: var(--card-gross-w);
-  height: var(--card-gross-h);
-  min-width: var(--card-gross-w); max-width: var(--card-gross-w);
-  min-height: var(--card-gross-h); max-height: var(--card-gross-h);
   box-sizing: border-box;
   overflow: hidden;
   border: none;
-  background: var(--faction-edge, var(--blood)); /* Full bleed of faction color to gross edge */
+  background: var(--faction-edge, var(--blood));
   display: flex;
   flex-direction: column;
-  padding: calc(var(--card-bleed) + 1.5mm); /* 2.5mm bleed + 1.5mm border = 4.0mm inset */
   box-shadow: none;
 }
 .card-proto.card-print-cell::before {
-  display: none !important; /* No side stripe */
+  display: none !important;
 }
+
+/* Position-dependent padding: outer edges have 2.5mm bleed + 1.5mm border = 4.0mm */
+.pos-r0-c0 { padding: 4mm 1.5mm 1.5mm 4mm; }
+.pos-r0-c1 { padding: 4mm 1.5mm 1.5mm 1.5mm; }
+.pos-r0-c2 { padding: 4mm 4mm 1.5mm 1.5mm; }
+
+.pos-r1-c0 { padding: 1.5mm 1.5mm 1.5mm 4mm; }
+.pos-r1-c1 { padding: 1.5mm 1.5mm 1.5mm 1.5mm; }
+.pos-r1-c2 { padding: 1.5mm 4mm 1.5mm 1.5mm; }
+
+.pos-r2-c0 { padding: 1.5mm 1.5mm 4mm 4mm; }
+.pos-r2-c1 { padding: 1.5mm 1.5mm 4mm 1.5mm; }
+.pos-r2-c2 { padding: 1.5mm 4mm 4mm 1.5mm; }
 
 /* Inner parchment canvas inside the faction frame */
 .card-proto.card-print-cell .card-inner-flow,
@@ -1645,7 +1662,7 @@ body.bw .card-proto {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 0.25mm solid rgba(166, 124, 45, 0.55); /* Subtle inner gold hairline */
+  border: 0.25mm solid rgba(166, 124, 45, 0.55);
 }
 
 /* Header */
@@ -1671,34 +1688,63 @@ body.bw .card-proto {
   z-index: 5;
 }
 
-/* Corner Crop Marks (marking the 63x88mm trim line through the faction bleed) */
-.crop-mark {
+/* Perimeter Crop Marks (marking 4 vertical cutlines & 4 horizontal cutlines) */
+.crop-line-v-top {
   position: absolute;
+  top: -7mm;
+  width: 0.25mm;
+  height: 6mm;
+  background: #1a120c;
   pointer-events: none;
-  z-index: 35;
-  background: #ffffff; /* White hairlines clearly visible on faction color */
-  box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.8);
+  z-index: 50;
 }
-.crop-tl-h { top: var(--card-bleed); left: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-tl-v { top: 0; left: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+.crop-line-v-bot {
+  position: absolute;
+  bottom: -7mm;
+  width: 0.25mm;
+  height: 6mm;
+  background: #1a120c;
+  pointer-events: none;
+  z-index: 50;
+}
+.crop-line-h-left {
+  position: absolute;
+  left: -7mm;
+  height: 0.25mm;
+  width: 6mm;
+  background: #1a120c;
+  pointer-events: none;
+  z-index: 50;
+}
+.crop-line-h-right {
+  position: absolute;
+  right: -7mm;
+  height: 0.25mm;
+  width: 6mm;
+  background: #1a120c;
+  pointer-events: none;
+  z-index: 50;
+}
 
-.crop-tr-h { top: var(--card-bleed); right: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-tr-v { top: 0; right: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+/* Cutline positions */
+.cut-col-0 { left: 2.5mm; }
+.cut-col-1 { left: 65.5mm; }
+.cut-col-2 { left: 128.5mm; }
+.cut-col-3 { left: 191.5mm; }
 
-.crop-bl-h { bottom: var(--card-bleed); left: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-bl-v { bottom: 0; left: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
-
-.crop-br-h { bottom: var(--card-bleed); right: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-br-v { bottom: 0; right: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+.cut-row-0 { top: 2.5mm; }
+.cut-row-1 { top: 90.5mm; }
+.cut-row-2 { top: 178.5mm; }
+.cut-row-3 { top: 266.5mm; }
 
 /* Safe Zone Guide (DTP inspection mode: 3mm inside trim line) */
 .safe-zone-guide {
   display: none;
   position: absolute;
-  top: calc(var(--card-bleed) + var(--card-safe-pad));
-  left: calc(var(--card-bleed) + var(--card-safe-pad));
-  width: calc(var(--card-trim-w) - 2 * var(--card-safe-pad));
-  height: calc(var(--card-trim-h) - 2 * var(--card-safe-pad));
+  top: 1.5mm;
+  left: 1.5mm;
+  right: 1.5mm;
+  bottom: 1.5mm;
   border: 0.3mm dashed rgba(0, 120, 255, 0.9);
   pointer-events: none;
   z-index: 40;
@@ -1709,20 +1755,21 @@ body.mode-safe .safe-zone-guide {
 }
 
 /* Mode trim: preview without bleed (Netto 63x88mm with 1.5mm faction border) */
-body.mode-trim .card-proto.card-print-cell {
-  width: var(--card-trim-w);
-  height: var(--card-trim-h);
-  min-width: var(--card-trim-w); max-width: var(--card-trim-w);
-  min-height: var(--card-trim-h); max-height: var(--card-trim-h);
-  padding: 1.5mm;
-  margin: 1.5mm;
-}
 body.mode-trim .cards-print-grid {
-  grid-template-columns: repeat(3, var(--card-trim-w));
-  grid-template-rows: repeat(3, var(--card-trim-h));
-  gap: 3mm;
+  grid-template-columns: repeat(3, 63mm);
+  grid-template-rows: repeat(3, 88mm);
+  width: 189mm;
+  height: 264mm;
 }
-body.mode-trim .crop-mark { display: none; }
+body.mode-trim .card-proto.card-print-cell {
+  padding: 1.5mm !important;
+}
+body.mode-trim .crop-line-v-top,
+body.mode-trim .crop-line-v-bot,
+body.mode-trim .crop-line-h-left,
+body.mode-trim .crop-line-h-right {
+  display: none;
+}
 
 /* Light Ink-Saver Card Backs with Full Bleed Faction Border */
 .card-proto.card-print-cell.card-back-cell {
@@ -1730,7 +1777,6 @@ body.mode-trim .crop-mark { display: none; }
   color: var(--ink, #1a120c);
   border: none;
   position: relative;
-  padding: calc(var(--card-bleed) + 1.5mm);
 }
 .card-proto.card-print-cell.card-back-cell .card-back-content {
   align-items: center;
@@ -1750,11 +1796,17 @@ body.mode-trim .crop-mark { display: none; }
   z-index: 5;
 }
 .card-back-crest {
-  font-size: 32pt;
-  line-height: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 5;
+  width: 16mm;
+  height: 16mm;
+}
+.card-back-crest .ico, .card-back-crest svg {
+  width: 16mm;
+  height: 16mm;
 }
 .card-back-brand {
   font-family: "Palatino Linotype", Palatino, serif;
@@ -2081,16 +2133,40 @@ def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug
 # ---------------------------------------------------------------------------
 
 FACTION_BACK_INFO: dict[str, tuple[str, str, str]] = {
-    "swiete-oficjum": ("Święte Oficjum", "✝️", "#7a1f1f"),
-    "cienie-al-andalus": ("Cienie Al-Andalus", "💎", "#1e4d3a"),
-    "korona-borgiowie": ("Korona & Borgia", "👑", "#8a6420"),
-    "kabala-toledo": ("Kabała z Toledo", "📜", "#4a2d5c"),
-    "gildia-cieni": ("Gildia Cieni", "🗡️", "#4a3c28"),
-    "time": ("Kronika Dziejów", "⏳", "#3a2e1c"),
+    "swiete-oficjum": ("Święte Oficjum", _icon("swiete-oficjum", "Święte Oficjum"), "#7a1f1f"),
+    "cienie-al-andalus": ("Cienie Al-Andalus", _icon("cienie-al-andalus", "Cienie Al-Andalus"), "#1e4d3a"),
+    "korona-borgiowie": ("Korona & Borgia", _icon("korona-borgiowie", "Korona & Borgiowie"), "#8a6420"),
+    "kabala-toledo": ("Kabała z Toledo", _icon("kabala-toledo", "Kabała z Toledo"), "#4a2d5c"),
+    "gildia-cieni": ("Gildia Cieni", _icon("gildia-cieni", "Gildia Cieni"), "#4a3c28"),
+    "time": ("Kronika Dziejów", '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9" fill="none" stroke="#a67c2d" stroke-width="1.5"/><polyline points="12,6 12,12 16,14" stroke="#a67c2d" stroke-width="1.5" stroke-linecap="round"/></svg>', "#3a2e1c"),
 }
 
 
-def render_card_print_cell(c: Card, faction_slug: str, version: str = "v0.35") -> str:
+def _render_crop_lines_html() -> str:
+    return """
+  <div class="crop-line-v-top cut-col-0"></div>
+  <div class="crop-line-v-top cut-col-1"></div>
+  <div class="crop-line-v-top cut-col-2"></div>
+  <div class="crop-line-v-top cut-col-3"></div>
+
+  <div class="crop-line-v-bot cut-col-0"></div>
+  <div class="crop-line-v-bot cut-col-1"></div>
+  <div class="crop-line-v-bot cut-col-2"></div>
+  <div class="crop-line-v-bot cut-col-3"></div>
+
+  <div class="crop-line-h-left cut-row-0"></div>
+  <div class="crop-line-h-left cut-row-1"></div>
+  <div class="crop-line-h-left cut-row-2"></div>
+  <div class="crop-line-h-left cut-row-3"></div>
+
+  <div class="crop-line-h-right cut-row-0"></div>
+  <div class="crop-line-h-right cut-row-1"></div>
+  <div class="crop-line-h-right cut-row-2"></div>
+  <div class="crop-line-h-right cut-row-3"></div>
+"""
+
+
+def render_card_print_cell(c: Card, faction_slug: str, row: int = 0, col: int = 0, version: str = "v0.35") -> str:
     fac = _escape(faction_slug or "time")
     effect = (c.effect or "").strip()
     heresy_text = (getattr(c, "heresy_text", None) or "").strip()
@@ -2108,11 +2184,7 @@ def render_card_print_cell(c: Card, faction_slug: str, version: str = "v0.35") -
     stats_html = f'<div class="stat-row">{badges}</div>' if badges else ""
 
     return f"""
-<article class="card-proto card-print-cell faction-{fac}" data-faction="{fac}">
-  <div class="crop-mark crop-tl-h"></div><div class="crop-mark crop-tl-v"></div>
-  <div class="crop-mark crop-tr-h"></div><div class="crop-mark crop-tr-v"></div>
-  <div class="crop-mark crop-bl-h"></div><div class="crop-mark crop-bl-v"></div>
-  <div class="crop-mark crop-br-h"></div><div class="crop-mark crop-br-v"></div>
+<article class="card-proto card-print-cell faction-{fac} pos-r{row}-c{col}" data-faction="{fac}">
   <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
   <div class="card-inner-flow">
     <div class="hdr">
@@ -2134,17 +2206,13 @@ def render_card_print_cell(c: Card, faction_slug: str, version: str = "v0.35") -
 """
 
 
-def render_card_back_cell(faction_slug: str) -> str:
+def render_card_back_cell(faction_slug: str, row: int = 0, col: int = 0) -> str:
     fac = faction_slug or "time"
     title, crest, accent = FACTION_BACK_INFO.get(
         fac, ("INQUISITIO 1492", "⚔️", "#7a1f1f")
     )
     return f"""
-<div class="card-proto card-print-cell card-back-cell faction-{fac}" data-faction="{fac}">
-  <div class="crop-mark crop-tl-h"></div><div class="crop-mark crop-tl-v"></div>
-  <div class="crop-mark crop-tr-h"></div><div class="crop-mark crop-tr-v"></div>
-  <div class="crop-mark crop-bl-h"></div><div class="crop-mark crop-bl-v"></div>
-  <div class="crop-mark crop-br-h"></div><div class="crop-mark crop-br-v"></div>
+<div class="card-proto card-print-cell card-back-cell faction-{fac} pos-r{row}-c{col}" data-faction="{fac}">
   <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
   <div class="card-back-content" style="--back-accent: {accent};">
     <div class="card-back-title">{_escape(title)}</div>
@@ -2176,7 +2244,7 @@ def render_all_cards_print(layer: str) -> str:
     toolbar_html = """
 <div class="print-toolbar" role="region" aria-label="Narzędzia druku PnP">
   <div class="tb-brand">
-    <span>⚔️ <strong>INQUISITIO 1492</strong> — Arkusz Drukarski Kart (Bleed & Crop Marks)</span>
+    <span>⚔️ <strong>INQUISITIO 1492</strong> — Arkusz Drukarski Kart (Układ 3×3, Single-Cut)</span>
   </div>
   <div class="tb-controls">
     <button class="tb-btn tb-btn-primary" onclick="window.print()" title="Otwórz okno drukowania / Zapisz do PDF (Ctrl+P)">
@@ -2185,7 +2253,7 @@ def render_all_cards_print(layer: str) -> str:
     <div class="tb-group">
       <label for="view-mode-sel">Widok:</label>
       <select id="view-mode-sel" class="tb-select" onchange="updateViewMode(this.value)">
-        <option value="bleed">Spad + Znaczniki cięcia (Bleed 2.5 mm)</option>
+        <option value="bleed">Spad obwodowy + Znaczniki cięcia (Bleed 2.5 mm)</option>
         <option value="trim">Podgląd po docięciu (Netto 63×88 mm)</option>
         <option value="safe">Inspekcja DTP (Strefa Bezpieczna 3 mm)</option>
       </select>
@@ -2223,22 +2291,27 @@ def render_all_cards_print(layer: str) -> str:
 
         # Front cells
         front_cells: list[str] = []
-        for c, fac, _label in chunk:
-            front_cells.append(render_card_print_cell(c, fac, version=version))
-
-        # Pad to 9 cells if last page is incomplete
-        while len(front_cells) < 9:
-            front_cells.append('<div class="card-proto card-print-cell empty-cell" style="background:transparent;border:none;"></div>')
+        for idx in range(9):
+            row = idx // 3
+            col = idx % 3
+            if idx < len(chunk):
+                c, fac, _label = chunk[idx]
+                front_cells.append(render_card_print_cell(c, fac, row=row, col=col, version=version))
+            else:
+                front_cells.append(f'<div class="card-proto card-print-cell empty-cell pos-r{row}-c{col}" style="background:transparent;border:none;"></div>')
 
         card_range = f"{start + 1}–{min(start + per_page, total_cards)}"
         front_sheet_html = f"""
 <div class="page-a4 cards-master-sheet card-front-sheet" data-page-mm="210x297">
   <div class="sheet-meta-header">
     <span>INQUISITIO 1492 · Arkusz Kart {page_idx + 1}/{total_sheets} (Awersy {card_range})</span>
-    <span>Wymiar: 63×88 mm · Spad: +2.5 mm (Brutto 68×93 mm) · Pasery narożne</span>
+    <span>Układ 3×3 (Bez przerw, wspólne linie cięcia) · Spad obwodowy 2.5 mm</span>
   </div>
-  <div class="cards-print-grid">
-    {"".join(front_cells)}
+  <div class="cards-print-block">
+    {_render_crop_lines_html()}
+    <div class="cards-print-grid">
+      {"".join(front_cells)}
+    </div>
   </div>
 </div>
 """
@@ -2252,13 +2325,14 @@ def render_all_cards_print(layer: str) -> str:
 
         mirrored_back_cells: list[str] = []
         for row in range(3):
-            for col in range(2, -1, -1):
-                idx = row * 3 + col
-                f_slug = back_chunk_facs[idx]
+            for col in range(3):
+                front_col = 2 - col
+                front_idx = row * 3 + front_col
+                f_slug = back_chunk_facs[front_idx]
                 if f_slug:
-                    mirrored_back_cells.append(render_card_back_cell(f_slug))
+                    mirrored_back_cells.append(render_card_back_cell(f_slug, row=row, col=col))
                 else:
-                    mirrored_back_cells.append('<div class="card-proto card-print-cell empty-cell" style="background:transparent;border:none;"></div>')
+                    mirrored_back_cells.append(f'<div class="card-proto card-print-cell empty-cell pos-r{row}-c{col}" style="background:transparent;border:none;"></div>')
 
         back_sheet_html = f"""
 <div class="page-a4 cards-master-sheet card-back-sheet" data-page-mm="210x297">
@@ -2266,8 +2340,11 @@ def render_all_cards_print(layer: str) -> str:
     <span>INQUISITIO 1492 · Rewersy Kart {page_idx + 1}/{total_sheets} (Lustrzane pod dupleks)</span>
     <span>Druk obustronny: obrót wzdłuż długiej krawędzi (Flip on long edge)</span>
   </div>
-  <div class="cards-print-grid">
-    {"".join(mirrored_back_cells)}
+  <div class="cards-print-block">
+    {_render_crop_lines_html()}
+    <div class="cards-print-grid">
+      {"".join(mirrored_back_cells)}
+    </div>
   </div>
 </div>
 """
