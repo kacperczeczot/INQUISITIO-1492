@@ -29,7 +29,7 @@ Powód narracyjny (Agent w lokacji, Autodafé, plotka) pomaga przy stole, ale w 
 4. Remis (suma wag równa) → **Uniewinnienie**.
 5. **Skazanie:**
    - 1 Agent celu → **Lochy**, cel **+1 Herezja**.
-   - **Skazanie (nazwisko)** na tor Oficjum: każdy wyrok na rywalu (także gdy oskarża kto inny). Unikalne nazwiska liczą się do ścieżki **3 Skazania**.
+   - **Skazanie (nazwisko)** na tor Oficjum: każdy wyrok na rywalu (także gdy oskarża kto inny). Unikalne nazwiska liczą się do ścieżki **3 Skazania** (w 3p: **2 Skazania**).
    - **Stos** na tor Oficjum **tylko** gdy oskarżało **Święte Oficjum** (powtórka na tym samym celu też +1 Stos). Werdykt innego gracza nie dodaje Stosu.
    - Gdy Oficjum nie gra, Werdykt i tak zamyka Agenta w Lochach; żeton Stosu z Autodafé zostaje licznikiem świata.
 6. **Uniewinnienie:** oskarżyciel **+1 Herezja**.
@@ -38,7 +38,7 @@ Powód narracyjny (Agent w lokacji, Autodafé, plotka) pomaga przy stole, ale w 
 
 - Haki (B+) mogą wymusić głos przed krokiem 3.
 - Marionetki: kontroler rusza ciałem; **nie** oddaje dodatkowego głosu przy Werdykcie.
-- Oficjum wygrywa **4 Stosami** albo **3 unikalnymi Skazaniami**. Stół tnie snowball (uniewinnienia / pile-on na Oficjum) dopiero gdy Oficjum jest **1 przed** wygraną — nie od pierwszego nazwiska ani 2 stosów.
+- Oficjum wygrywa **6 Stosami** albo **3 unikalnymi Skazaniami** (w 3p: **2 unikalnymi Skazaniami**). Stół tnie snowball (uniewinnienia / pile-on na Oficjum) dopiero gdy Oficjum jest **1 przed** wygraną — nie od pierwszego nazwiska ani 2 stosów.
 
 ## Warstwa A
 

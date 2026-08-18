@@ -206,7 +206,7 @@ Trwała ścieżka ucieczki otwierana przez kartę Kroniki Dziejów (*Flota Odkry
 
 ## Werdykt (procedura)
 Jawne głosowanie stołu (*Skazać* / *Uniewinnić*) nad oskarżonym graczem (bez głosu oskarżonego):
-* **Skazanie:** 1 Agent celu idzie do Aresztu, cel dostaje +1 Herezji, Oficjum kładzie 1 żeton Skazania na swojej planszetce (3 Skazania = zwycięstwo).
+* **Skazanie:** 1 Agent celu idzie do Aresztu, cel dostaje +1 Herezji, Oficjum kładzie 1 żeton Skazania na swojej planszetce (3 Skazania / w 3p: 2 Skazania = zwycięstwo).
 * **Uniewinnienie:** oskarżyciel otrzymuje +1 Herezji.
 * **Remis:** oznacza Uniewinnienie.  
 **Patrz także:** [Oskarżenie](#oskarżenie), [Krytyczna](#krytyczna)
@@ -241,7 +241,7 @@ Waluta używana do opłacania kosztów kart i łapówek. Start: **4 złota**; do
 
 ## Zwycięstwo
 Gra kończy się natychmiast w Fazie III, jeśli którykolwiek gracz spełnia swój warunek kanoniczny:
-* **Święte Oficjum:** 6 Stosów lub 3 Skazania Werdyktem (łącznie 3 wyroki skazujące).
+* **Święte Oficjum:** 6 Stosów lub 3 Skazania Werdyktem (w 3p: 2 Skazania).
 * **Cienie Al-Andalus:** 2 Relikwie ewakuowane.
 * **Korona & Borgiowie:** 2 Dekrety.
 * **Kabała z Toledo:** 2 Fragmenty (od Ery 6).

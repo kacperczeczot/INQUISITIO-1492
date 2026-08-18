@@ -5,7 +5,7 @@ faction: swiete-oficjum
 type: akcja
 layer: B
 cost: 1
-heresy: 0
+heresy: 1
 tags:
 - heresy
 - gold
@@ -14,5 +14,6 @@ lore: Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień pode
 target_heresy: 1
 gold: 1
 ---
+
 
 

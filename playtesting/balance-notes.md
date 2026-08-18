@@ -56,8 +56,8 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P:
 
 ### 1. Święte Oficjum
-- **Ścieżka A (Stosy):** **5 Stosów**.
-- **Ścieżka B (Skazania):** **3 Skazania** (Werdykt; unikalne nazwiska — max 3 przy 4p). Stos z Werdyktu tylko gdy Oficjum oskarża.
+- **Ścieżka A (Stosy):** **6 Stosów**.
+- **Ścieżka B (Skazania):** **3 Skazania** (w 3p: **2 Skazania**; Werdykt; unikalne nazwiska). Stos z Werdyktu tylko gdy Oficjum oskarża.
 
 ### 2. Cienie Al-Andalus
 - **Ewakuacja Relikwii:** **2 Relikwie**.
@@ -89,6 +89,37 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.24 (2026-08-18) — Kanon 4P: Karta `gc-04` (Informator): `target_heresy` → `1` (Zysk 4P Δ +0.7 pkt)
+- **Wynik 4P:** Kanon **`75.5`** → **`76.2 pkt`** | Global **`45.4`** | 3p **`21.2`** | 5p **`37.6`**
+- **Modyfikacja (`L3_GC-04_TARGET_HERESY_PLUS1`):** Karta `gc-04` (Informator): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.6%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.23 (2026-08-18) — Święte Oficjum: Skalowanie Skazań per liczba graczy (3p: 2, 4p/5p: 3) — Naprawa martwej ścieżki
+- **Problem:** W rozgrywce 3-osobowej warunek zwycięstwa `condemns: 3` wymagał skazania 3 unikalnych rywali przy obecności tylko 2 rywali przy stole — ścieżka skazania była matematycznie niemożliwa do spełnienia (0 wygranych we wszystkich 6 setupach 3P).
+- **Modyfikacja:** W `game_config.yaml` (`victory.swiete_oficjum.condemns`) wprowadzono skalowanie per-player-count: `3p: 2`, `4p: 3`, `5p: 3`.
+- **Efekt:** Pełne odblokowanie i przywrócenie witalności ścieżki skazań w 3P (od 47 do 185 wygranych / 500 partii). Setupy `3p-oficjum-kabala-gildia` i `3p-oficjum-korona-gildia` osiągnęły 🟢 Pełną Witalność (0.00 kary witalności).
+- **Synchronizacja reguł i narzędzi:** Zsynchronizowano `game/factions/swiete-oficjum.md`, `game/mechanics/werdykt-stolu.md`, `docs/rules/ksiega.md`, `docs/rules/slownik.md` oraz helper `_n4()` w `tools/sim/feature_impact_4p.py`.
+
+### 🟢 Patch v0.99.22 (2026-08-18) — Kanon 4P: Karta `so-11` (Dekret Czystości Wiary): `heresy` → `1` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`75.3`** → **`75.5 pkt`** | Global **`42.2`** | 3p **`13.0`** | 5p **`37.1`**
+- **Modyfikacja (`L3_SO-11_HERESY_PLUS1`):** Karta `so-11` (Dekret Czystości Wiary): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.25, Deadlocks 0.6%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.21 (2026-08-18) — Kanon 4P: Karta `kt-05` (Wskazówka Cyklu): `heresy` → `1` (Zysk 4P Δ +1.8 pkt)
+- **Wynik 4P:** Kanon **`73.5`** → **`75.3 pkt`** | Global **`42.2`** | 3p **`13.0`** | 5p **`37.2`**
+- **Modyfikacja (`L3_KT-05_HERESY_PLUS1`):** Karta `kt-05` (Wskazówka Cyklu): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.25, Deadlocks 0.6%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.20 (2026-08-18) — Kanon 4P: Karta `gc-08` (Zatrute Złoto): `heresy` → `1` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`73.1`** → **`73.5 pkt`** | Global **`40.7`** | 3p **`14.5`** | 5p **`33.5`**
+- **Modyfikacja (`L3_GC-08_HERESY_PLUS1`):** Karta `gc-08` (Zatrute Złoto): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.22, Deadlocks 0.7%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.19 (2026-08-18) — Kanon 4P: Karta `kb-11` (Tajny Emisariusz): `target_heresy` → `1` (Zysk 4P Δ +1.9 pkt)
+- **Wynik 4P:** Kanon **`71.2`** → **`73.1 pkt`** | Global **`41.3`** | 3p **`14.2`** | 5p **`36.4`**
+- **Modyfikacja (`L3_KB-11_TARGET_HERESY_PLUS1`):** Karta `kb-11` (Tajny Emisariusz): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.22, Deadlocks 0.7%, Pas Biedy 1.5%.
 
 ### 🟢 Patch v0.99.18 (2026-08-18) — Kanon 4P: Karta `gc-01` (Przekupiony Strażnik): `cost` → `2` (Zysk 4P Δ +0.5 pkt)
 - **Wynik 4P:** Kanon **`70.7`** → **`71.2 pkt`** | Global **`42.3`** | 3p **`14.6`** | 5p **`40.7`**

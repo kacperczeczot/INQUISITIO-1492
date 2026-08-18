@@ -193,7 +193,7 @@ Herezja odzwierciedla uwagę, jaką Inkwizycja skupia na danym rodzie:
 Warunki zwycięstwa sprawdzane są na początku Fazy III (kolejno od 1. gracza):
 
 ### ✝ Święte Oficjum
-* **Cel:** **6 Stosów** (spaleni Agenci rywali) **LUB 3 Skazania** rywali Werdyktem Trybunału (łącznie 3 wyroki skazujące na rywalach).
+* **Cel:** **6 Stosów** (spaleni Agenci rywali) **LUB 3 Skazania** rywali Werdyktem Trybunału (w 3p: **2 Skazania**).
 * **Styl gry:** kierowanie ruchem Inkwizytora, areszty, wymuszanie procedury Autodafé i oskarżenia przy stole.
 * **Karta Signature (so-10):** *Oczyść Miasto* — łamie cooldown Autodafé i pozwala przeprowadzić natychmiastową czystkę.
 

@@ -1,4 +1,4 @@
-version: v0.99.18
+version: v0.99.24
 date: '2026-08-18'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -15,7 +15,10 @@ system:
 victory:
   swiete_oficjum:
     stacks: 6
-    condemns: 3
+    condemns:
+      3p: 2
+      4p: 3
+      5p: 3
   cienie_al_andalus:
     relics: 2
     path_era: 1
@@ -147,6 +150,7 @@ cards:
     tags:
     - heresy
     - gold
+    heresy: 1
   so-12:
     name: Straż Trybunalska
     type: akcja
@@ -414,6 +418,7 @@ cards:
     tags:
     - move
     - gold
+    target_heresy: 1
   kb-12:
     name: Szantaż Salonowy
     type: akcja
@@ -471,6 +476,7 @@ cards:
     condition: agent_in_dungeon_or_tribunal
     tags:
     - fragment
+    heresy: 1
   kt-06:
     name: Przesłuchanie Imienia
     type: akcja
@@ -597,6 +603,7 @@ cards:
     tags:
     - hook
     - heresy
+    target_heresy: 1
   gc-05:
     name: Fałszywy Świadek
     type: reakcja
@@ -641,6 +648,7 @@ cards:
     tags:
     - gold
     - heresy
+    heresy: 1
   gc-09:
     name: Lista Dłużników
     type: akcja

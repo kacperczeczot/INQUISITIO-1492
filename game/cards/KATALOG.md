@@ -203,7 +203,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
 | `lore` | Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń. |
@@ -731,7 +731,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto. |
 | `lore` | Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale. |
@@ -992,7 +992,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |
