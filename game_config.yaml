@@ -1,4 +1,4 @@
-version: v0.99.10
+version: v0.99.11
 date: '2026-08-18'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -56,8 +56,8 @@ cards:
     name: Podejrzenie
     type: akcja
     layer: A
-    cost: 1
-    target_heresy: 2
+    cost: 2
+    target_heresy: 1
     action: frame_rival
     tags:
     - heresy

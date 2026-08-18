@@ -316,16 +316,19 @@ def test_so_condemns_win_without_full_stacks():
     st = new_game(setup="4p-core", seed=1, layer="C")
     so = st.players[FactionId.SWIETE_OFICJUM]
     so.stacks = 5
-    so.condemnations = 3
+    so.condemned_rivals = {
+        FactionId.CIENIE_AL_ANDALUS,
+        FactionId.KORONA_BORGIOWIE,
+        FactionId.KABALA_TOLEDO,
+    }
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
-    so.condemnations = 0
     so.condemned_rivals = set()
     so.stacks = 6
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
 
 
 def test_layer_c_verdict_table_feeds_condemns_so_feeds_stacks():
-    """Any conviction counts toward condemnations; only SO accusations add stacks (repeats too)."""
+    """Any conviction unique-names Oficjum; only SO accusations add stacks (repeats too)."""
     st = new_game(setup="4p-core", seed=1, layer="C")
     so = st.players[FactionId.SWIETE_OFICJUM]
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]
@@ -333,26 +336,22 @@ def test_layer_c_verdict_table_feeds_condemns_so_feeds_stacks():
     caa.heresy = 10
     kb.heresy = 10
     so.stacks = 0
-    so.condemnations = 0
     so.condemned_rivals.clear()
     rng = random.Random(0)
 
     assert run_verdict(st, FactionId.KORONA_BORGIOWIE, FactionId.CIENIE_AL_ANDALUS, rng)
     assert FactionId.CIENIE_AL_ANDALUS in so.condemned_rivals
-    assert so.condemnations == 1
     assert so.stacks == 0
     assert any(ag.arrested for ag in caa.agents)
 
     st.accused_this_era.clear()
     assert run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.KORONA_BORGIOWIE, rng)
     assert FactionId.KORONA_BORGIOWIE in so.condemned_rivals
-    assert so.condemnations == 2
     assert so.stacks == 1
 
     kb.heresy = 10
     st.accused_this_era.clear()
     assert run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.KORONA_BORGIOWIE, rng)
-    assert so.condemnations == 3
     assert so.condemned_rivals == {
         FactionId.CIENIE_AL_ANDALUS,
         FactionId.KORONA_BORGIOWIE,

@@ -59,8 +59,7 @@ class PlayerState:
     agents: list[AgentToken] = field(default_factory=list)
     # victory trackers
     stacks: int = 0  # Oficjum (Autodafé / Werdykt)
-    condemnations: int = 0  # Oficjum alternate (łączna liczba wyroków skazujących na rywalach)
-    condemned_rivals: set[FactionId] = field(default_factory=set)  # Oficjum alternate (unikalne frakcje)
+    condemned_rivals: set[FactionId] = field(default_factory=set)  # Oficjum alternate
     relics_evacuated: int = 0  # Cienie
     decrees_played: int = 0  # Korona
     fragments: int = 0  # Kabala

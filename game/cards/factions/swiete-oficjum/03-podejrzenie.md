@@ -4,14 +4,14 @@ name: Podejrzenie
 faction: swiete-oficjum
 type: akcja
 layer: A
-cost: 1
+cost: 2
 heresy: 0
 tags:
 - heresy
-effect: 'Wskaż rywala: +2 Herezja.'
+effect: 'Wskaż rywala: +1 Herezja.'
 heresy_text: Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.
 lore: Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.
-target_heresy: 2
+target_heresy: 1
 ---
 
 

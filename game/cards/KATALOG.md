@@ -66,10 +66,10 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
-| `effect` | Wskaż rywala: +2 Herezja. |
+| `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
 | `tags` | heresy |
 | `status` | prototyp |

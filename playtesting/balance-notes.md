@@ -90,6 +90,12 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.99.11 (2026-08-18) — Narzędzia: Ujednolicenie sekcji problematycznych mechanik w raporcie 4P + Audyt protez
+- **Wynik 4P:** Kanon **`70.4 pkt`** | Kara witalności: **`0.040`**
+- **Zmiany w raportowaniu:** Wyłączenie nieaktywnego testu `kb_hooks` z generatora ablacji (`hooks <= 0`). Sekcja **4.0** w raporcie 4P agreguje teraz zbiorczo wszystkie problematyczne mechaniki (`DEAD`, `WEAK/NEUTRAL`, `DISRUPTOR`).
+- **Weryfikacja reguł:** Odrzucenie sztucznej protezy `condemns: 3 → 2` oraz weryfikacja unikalności ścieżki Skazań.
+- **Telemetria 4P:** SO 25.8%, GC 24.0%, KT 25.4%, KB 29.5%, CAA 20.2%.
+
 ### 🟢 Patch v0.99.10 (2026-08-18) — Kanon 4P: Karta `so-08` (Nasłanie Inkwizytora): `cost` → `0` (Zysk 4P Δ -0.5 pkt)
 - **Wynik 4P:** Kanon **`63.7`** → **`63.2 pkt`** | Global **`39.0`** | 3p **`14.7`** | 5p **`37.7`**
 - **Modyfikacja (`L3_SO-08_COST_MINUS1`):** Karta `so-08` (Nasłanie Inkwizytora): `cost` → `0`.
