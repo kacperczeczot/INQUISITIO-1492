@@ -379,7 +379,8 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   border: 1.5mm solid var(--faction-edge, var(--blood));
   background: var(--parch);
   display: flex; flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
+  border-radius: 1.5mm;
   flex-shrink: 0;
   box-sizing: border-box;
 }
@@ -389,6 +390,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   position: absolute;
   inset: 0.6mm;
   border: 0.25mm solid #b8961e;
+  border-radius: 1mm;
   pointer-events: none;
   z-index: 2;
 }
@@ -592,29 +594,29 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 }
 /* Card tints + faction edge */
 /* ── Frakcja: Święte Oficjum — głęboka inkwizytorska czerwień ── */
-.card-proto.faction-swiete-oficjum { background: #f5dcd5; --faction-edge: #7a1f1f; --faction-bg: #f5dcd5; }
+.card-proto.faction-swiete-oficjum { background: var(--parch, #f4ead7); --faction-edge: #7a1f1f; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-swiete-oficjum .name { color: #7a1f1f; }
-.card-proto.faction-swiete-oficjum .hdr { background: #e9c5bc; }
+.card-proto.faction-swiete-oficjum .hdr { background: #ede0d0; }
 /* ── Frakcja: Cienie Al-Andalus — ciemna malachitowa zieleń ── */
-.card-proto.faction-cienie-al-andalus { background: #cfe0d8; --faction-edge: #1e4d3a; --faction-bg: #cfe0d8; }
+.card-proto.faction-cienie-al-andalus { background: var(--parch, #f4ead7); --faction-edge: #1e4d3a; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-cienie-al-andalus .name { color: #1e4d3a; }
-.card-proto.faction-cienie-al-andalus .hdr { background: #b8d2c8; }
+.card-proto.faction-cienie-al-andalus .hdr { background: #ede0d0; }
 /* ── Frakcja: Korona & Borgiowie — kastylijski złoty ── */
-.card-proto.faction-korona-borgiowie { background: #f0e0b0; --faction-edge: #8a6420; --faction-bg: #f0e0b0; }
+.card-proto.faction-korona-borgiowie { background: var(--parch, #f4ead7); --faction-edge: #8a6420; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-korona-borgiowie .name { color: #7a5518; }
-.card-proto.faction-korona-borgiowie .hdr { background: #e0ca8a; }
+.card-proto.faction-korona-borgiowie .hdr { background: #ede0d0; }
 /* ── Frakcja: Kabała z Toledo — purpurowy ── */
-.card-proto.faction-kabala-toledo { background: #e0d0e8; --faction-edge: #4a2d5c; --faction-bg: #e0d0e8; }
+.card-proto.faction-kabala-toledo { background: var(--parch, #f4ead7); --faction-edge: #4a2d5c; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-kabala-toledo .name { color: #4a2d5c; }
-.card-proto.faction-kabala-toledo .hdr { background: #ccb8dc; }
+.card-proto.faction-kabala-toledo .hdr { background: #ede0d0; }
 /* ── Frakcja: Gildia Cieni — dymna brązowoszarość ── */
-.card-proto.faction-gildia-cieni { background: #d8cebb; --faction-edge: #4a3c28; --faction-bg: #d8cebb; }
+.card-proto.faction-gildia-cieni { background: var(--parch, #f4ead7); --faction-edge: #4a3c28; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-gildia-cieni .name { color: #3c2e18; }
-.card-proto.faction-gildia-cieni .hdr { background: #c4b89e; }
+.card-proto.faction-gildia-cieni .hdr { background: #ede0d0; }
 /* ── Kronika Dziejów — pergaminowy brąz ── */
-.card-proto.faction-time { background: #e4d8b8; --faction-edge: #3a2e1c; --faction-bg: #e4d8b8; }
+.card-proto.faction-time { background: var(--parch, #f4ead7); --faction-edge: #3a2e1c; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-time .name { color: #3a2e1c; }
-.card-proto.faction-time .hdr { background: #d0c090; }
+.card-proto.faction-time .hdr { background: #ede0d0; }
 body.bw .card-proto {
   filter: grayscale(1);
   border-width: 0.7mm;
@@ -1215,7 +1217,7 @@ body.bw .card-proto {
   box-sizing: border-box;
   overflow: hidden;
   border: none;
-  background: var(--faction-bg, #f4ead7) !important;
+  background: var(--faction-edge, var(--blood)) !important;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -1243,6 +1245,7 @@ body.bw .card-proto {
   flex-direction: column;
   overflow: hidden;
   border: 0.25mm solid rgba(166, 124, 45, 0.55);
+  border-radius: 1.5mm;
 }
 
 /* Exact margins: 1.5mm card border on inside cuts + 2.5mm bleed on outer perimeter */
@@ -1568,7 +1571,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt.</div>
-    <div class="card-footer-meta"><span>SO-01</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-01</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1585,7 +1588,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.</div>
-    <div class="card-footer-meta"><span>SO-02</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-02</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1602,7 +1605,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.</div>
-    <div class="card-footer-meta"><span>SO-03</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-03</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1619,7 +1622,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 lokację w stronę lokacji swojego Agenta.</div><div class="fx-block"><strong>Limit:</strong> 1 nasłanie / gracza / Erę.</div></div>
     <div class="card-lore">Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel.</div>
-    <div class="card-footer-meta"><span>SO-04</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-04</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1636,7 +1639,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block">Jeśli rywal zagrywa kartę z Herezją ≥ 1:<br><strong>Wskaż</strong> tego rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.</div>
-    <div class="card-footer-meta"><span>SO-05</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-05</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1653,7 +1656,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w lokacji swojego Agenta.</div></div>
     <div class="card-lore">Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem.</div>
-    <div class="card-footer-meta"><span>SO-06</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-06</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1670,7 +1673,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wykonaj</strong> <em>Przesłuchanie</em> na aresztowanego Agenta rywala.</div><div class="fx-block"><strong>Limit:</strong> 1 / gracza / Erę.</div></div>
     <div class="card-lore">Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję.</div>
-    <div class="card-footer-meta"><span>SO-07</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-07</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1687,7 +1690,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji ze swoim Agentem.</div><div class="fx-block"><strong>Limit:</strong> 1 nasłanie / gracza / Erę.</div></div>
     <div class="card-lore">Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.</div>
-    <div class="card-footer-meta"><span>SO-08</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-08</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1704,7 +1707,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w Lochach lub w lokacji <em>Inkwizytora</em>.</div></div>
     <div class="card-lore">Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.</div>
-    <div class="card-footer-meta"><span>SO-09</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-09</span><span>v0.99.24</span></div>
   </div>
 </article>
 </div></div>
@@ -1722,7 +1725,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Autodafé</em> / 3 Ery”</div><div class="fx-block"><strong>Ogłoś</strong> <em>Autodafé</em> w lokacji <em>Inkwizytora</em>.</div><div class="fx-block">Jeśli Agent rywala jest w lokacji <em>Inkwizytora</em>:<br><strong>Zyskaj</strong> <em>Stos</em>.</div></div>
     <div class="card-lore">Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.</div>
-    <div class="card-footer-meta"><span>SO-10</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-10</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1732,14 +1735,14 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Dekret Czystości Wiary</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
     <div class="card-lore">Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń.</div>
-    <div class="card-footer-meta"><span>SO-11</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-11</span><span>v0.99.24</span></div>
   </div>
 </article>
 
@@ -1756,7 +1759,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom.</div>
-    <div class="card-footer-meta"><span>SO-12</span><span>v0.99.12</span></div>
+    <div class="card-footer-meta"><span>SO-12</span><span>v0.99.24</span></div>
   </div>
 </article>
 </div></div>

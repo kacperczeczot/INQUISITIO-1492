@@ -400,6 +400,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      border-radius: 1.5mm;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
       color: var(--line);
       font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
@@ -413,6 +414,7 @@
       position: absolute;
       inset: 0.6mm;
       border: 0.25mm solid rgba(166, 124, 45, 0.5);
+      border-radius: 1mm;
       pointer-events: none;
       z-index: 2;
     }
@@ -561,7 +563,7 @@
 
     /* Faction Color Tints */
     .card-proto.faction-swiete-oficjum {
-      background: #f1ddd6;
+      background: var(--parch, #f4ead7);
       --faction-edge: #7a1f1f;
     }
 
@@ -570,7 +572,7 @@
     }
 
     .card-proto.faction-cienie-al-andalus {
-      background: #dde8e2;
+      background: var(--parch, #f4ead7);
       --faction-edge: #1e4d3a;
     }
 
@@ -579,7 +581,7 @@
     }
 
     .card-proto.faction-korona-borgiowie {
-      background: #f2e6c8;
+      background: var(--parch, #f4ead7);
       --faction-edge: #8a6420;
     }
 
@@ -588,7 +590,7 @@
     }
 
     .card-proto.faction-kabala-toledo {
-      background: #e6dde8;
+      background: var(--parch, #f4ead7);
       --faction-edge: #4a2d5c;
     }
 
@@ -597,7 +599,7 @@
     }
 
     .card-proto.faction-gildia-cieni {
-      background: #e5dfd2;
+      background: var(--parch, #f4ead7);
       --faction-edge: #4a3c28;
     }
 
@@ -606,7 +608,7 @@
     }
 
     .card-proto.faction-time {
-      background: #e8e2d4;
+      background: var(--parch, #f4ead7);
       --faction-edge: #3a2e1c;
     }
 
@@ -1281,6 +1283,7 @@
       "heresy",
       "gold"
     ],
+    "heresy": 1,
     "lore": "Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń."
   },
   "so-12": {
@@ -1634,6 +1637,7 @@
       "move",
       "gold"
     ],
+    "target_heresy": 1,
     "lore": "Złote pierścienie i listy polecające otwierają każde drzwi w Toledo."
   },
   "kb-12": {
@@ -1712,6 +1716,7 @@
     "tags": [
       "fragment"
     ],
+    "heresy": 1,
     "lore": "Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale."
   },
   "kt-06": {
@@ -1877,6 +1882,7 @@
       "hook",
       "heresy"
     ],
+    "target_heresy": 1,
     "heresy_text": "Donosiciel pamięta twarz i zapach srebra.",
     "lore": "Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę."
   },
@@ -1935,6 +1941,7 @@
       "gold",
       "heresy"
     ],
+    "heresy": 1,
     "lore": "Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej."
   },
   "gc-09": {

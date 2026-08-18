@@ -549,6 +549,10 @@ def _icon(key: str, alt: str = "", extra_cls: str = "") -> str:
         cls = f"ico {extra_cls}".strip()
         return f'<span class="{cls}" title="{_escape(label)}">{svg}</span>'
     short = ICON_SHORT.get(key, (label[:1] or "?").upper())
+    cls = f"ico-fallback {extra_cls}".strip()
+    return f'<span class="{cls}" title="{_escape(label)}">{_escape(short)}</span>'
+
+
 # ---------------------------------------------------------------------------
 
 def _css() -> str:
@@ -928,7 +932,8 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   border: 1.5mm solid var(--faction-edge, var(--blood));
   background: var(--parch);
   display: flex; flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
+  border-radius: 1.5mm;
   flex-shrink: 0;
   box-sizing: border-box;
 }
@@ -938,6 +943,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   position: absolute;
   inset: 0.6mm;
   border: 0.25mm solid #b8961e;
+  border-radius: 1mm;
   pointer-events: none;
   z-index: 2;
 }
@@ -1141,29 +1147,29 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 }
 /* Card tints + faction edge */
 /* ── Frakcja: Święte Oficjum — głęboka inkwizytorska czerwień ── */
-.card-proto.faction-swiete-oficjum { background: #f5dcd5; --faction-edge: #7a1f1f; --faction-bg: #f5dcd5; }
+.card-proto.faction-swiete-oficjum { background: var(--parch, #f4ead7); --faction-edge: #7a1f1f; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-swiete-oficjum .name { color: #7a1f1f; }
-.card-proto.faction-swiete-oficjum .hdr { background: #e9c5bc; }
+.card-proto.faction-swiete-oficjum .hdr { background: #ede0d0; }
 /* ── Frakcja: Cienie Al-Andalus — ciemna malachitowa zieleń ── */
-.card-proto.faction-cienie-al-andalus { background: #cfe0d8; --faction-edge: #1e4d3a; --faction-bg: #cfe0d8; }
+.card-proto.faction-cienie-al-andalus { background: var(--parch, #f4ead7); --faction-edge: #1e4d3a; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-cienie-al-andalus .name { color: #1e4d3a; }
-.card-proto.faction-cienie-al-andalus .hdr { background: #b8d2c8; }
+.card-proto.faction-cienie-al-andalus .hdr { background: #ede0d0; }
 /* ── Frakcja: Korona & Borgiowie — kastylijski złoty ── */
-.card-proto.faction-korona-borgiowie { background: #f0e0b0; --faction-edge: #8a6420; --faction-bg: #f0e0b0; }
+.card-proto.faction-korona-borgiowie { background: var(--parch, #f4ead7); --faction-edge: #8a6420; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-korona-borgiowie .name { color: #7a5518; }
-.card-proto.faction-korona-borgiowie .hdr { background: #e0ca8a; }
+.card-proto.faction-korona-borgiowie .hdr { background: #ede0d0; }
 /* ── Frakcja: Kabała z Toledo — purpurowy ── */
-.card-proto.faction-kabala-toledo { background: #e0d0e8; --faction-edge: #4a2d5c; --faction-bg: #e0d0e8; }
+.card-proto.faction-kabala-toledo { background: var(--parch, #f4ead7); --faction-edge: #4a2d5c; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-kabala-toledo .name { color: #4a2d5c; }
-.card-proto.faction-kabala-toledo .hdr { background: #ccb8dc; }
+.card-proto.faction-kabala-toledo .hdr { background: #ede0d0; }
 /* ── Frakcja: Gildia Cieni — dymna brązowoszarość ── */
-.card-proto.faction-gildia-cieni { background: #d8cebb; --faction-edge: #4a3c28; --faction-bg: #d8cebb; }
+.card-proto.faction-gildia-cieni { background: var(--parch, #f4ead7); --faction-edge: #4a3c28; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-gildia-cieni .name { color: #3c2e18; }
-.card-proto.faction-gildia-cieni .hdr { background: #c4b89e; }
+.card-proto.faction-gildia-cieni .hdr { background: #ede0d0; }
 /* ── Kronika Dziejów — pergaminowy brąz ── */
-.card-proto.faction-time { background: #e4d8b8; --faction-edge: #3a2e1c; --faction-bg: #e4d8b8; }
+.card-proto.faction-time { background: var(--parch, #f4ead7); --faction-edge: #3a2e1c; --faction-bg: var(--parch, #f4ead7); }
 .card-proto.faction-time .name { color: #3a2e1c; }
-.card-proto.faction-time .hdr { background: #d0c090; }
+.card-proto.faction-time .hdr { background: #ede0d0; }
 body.bw .card-proto {
   filter: grayscale(1);
   border-width: 0.7mm;
@@ -1792,6 +1798,7 @@ body.bw .card-proto {
   flex-direction: column;
   overflow: hidden;
   border: 0.25mm solid rgba(166, 124, 45, 0.55);
+  border-radius: 1.5mm;
 }
 
 /* Exact margins: 1.5mm card border on inside cuts + 2.5mm bleed on outer perimeter */
