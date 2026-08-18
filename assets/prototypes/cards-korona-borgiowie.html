@@ -157,33 +157,39 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 3mm;
+  gap: 3.5mm;
   /* leave room for time-deck on the right (2×63mm + gaps ≈ 140mm) */
   margin-right: 145mm;
 }
 .pool-box {
   flex: 0 0 auto;
-  display: flex; flex-direction: column; align-items: center; gap: 2mm;
+  display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
   background: rgba(244, 234, 215, 0.98);
   border: 0.45mm solid var(--line);
-  padding: 2.5mm 3mm 3mm;
+  padding: 2mm 2.5mm 2.5mm;
   width: max-content;
   max-width: none;
 }
 .pool-box .pool-title {
-  font-size: 16pt; font-weight: bold; color: var(--blood);
+  font-size: 13pt; font-weight: bold; color: var(--blood);
   margin: 0; border: none; padding: 0;
   text-align: center; line-height: 1.15;
   width: 100%;
   border-bottom: 0.35mm solid var(--gold);
-  padding-bottom: 1.5mm;
+  padding-bottom: 1.2mm;
   white-space: nowrap;
 }
 .pool-box .pool-body {
   display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
   gap: 2mm;
 }
-.pool-slots { display: inline-flex; flex-wrap: nowrap; gap: 2mm; vertical-align: middle; }
+.pool-slots {
+  display: grid;
+  grid-template-columns: repeat(3, var(--token-d));
+  grid-template-rows: repeat(2, var(--token-d));
+  gap: 1.8mm;
+  justify-content: center;
+}
 .sq {
   width: var(--token-d); height: var(--token-d);
   border: 0.45mm solid var(--slot);
@@ -273,6 +279,13 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   width: 100%;
   flex-shrink: 0;
   line-height: 1.15;
+}
+.loc-head .start-inq {
+  font-size: 10pt;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0;
+  vertical-align: middle;
 }
 /* One row: all tokens for this location (wrap for Lochy arrests) */
 .token-row {
@@ -1571,7 +1584,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu.</div>
-    <div class="card-footer-meta"><span>KB-01</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-01</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1588,7 +1601,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 2 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną.</div>
-    <div class="card-footer-meta"><span>KB-02</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-02</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1605,7 +1618,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4).</div>
-    <div class="card-footer-meta"><span>KB-03</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-03</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1622,7 +1635,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
     <div class="card-lore">Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.</div>
-    <div class="card-footer-meta"><span>KB-04</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-04</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1639,7 +1652,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
     <div class="card-lore">List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.</div>
-    <div class="card-footer-meta"><span>KB-05</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-05</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1656,7 +1669,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.</div></div>
     <div class="card-lore">Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba aresztu.</div>
-    <div class="card-footer-meta"><span>KB-06</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-06</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1673,7 +1686,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div></div>
     <div class="card-lore">Korona poluje na już brudnych. Dwa Haki zaczynają się tu.</div>
-    <div class="card-footer-meta"><span>KB-07</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-07</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1690,7 +1703,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block">W następnym Werdykcie Twój głos ma wagę 2.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
     <div class="card-lore">Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone.</div>
-    <div class="card-footer-meta"><span>KB-08</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-08</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1707,7 +1720,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-break"><strong>DEKRET 1</strong> — Łamie regułę „1 wymuszenie <em>Haka</em> / gracza / Erę”</div><div class="fx-block"><strong>Wymuś</strong> spełnienie <em>Haka</em>.</div><div class="fx-block"><strong>Odmowa:</strong> +3 <em>Herezja</em>.</div></div>
     <div class="card-lore">Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.</div>
-    <div class="card-footer-meta"><span>KB-09</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-09</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 </div></div>
@@ -1725,7 +1738,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-break"><strong>DEKRET 2</strong> — Łamie regułę „zwycięstwo tylko po Erze”</div><div class="fx-block">Jeśli masz aktywne <em>Haki</em> na ≥ 2 graczach: zwycięstwo.</div></div>
     <div class="card-lore">Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.</div>
-    <div class="card-footer-meta"><span>KB-10</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-10</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1742,7 +1755,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Złote pierścienie i listy polecające otwierają każde drzwi w Toledo.</div>
-    <div class="card-footer-meta"><span>KB-11</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-11</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1759,7 +1772,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
     <div class="card-lore">Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą.</div>
-    <div class="card-footer-meta"><span>KB-12</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>KB-12</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 </div></div>

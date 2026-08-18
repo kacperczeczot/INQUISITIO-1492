@@ -157,33 +157,39 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 3mm;
+  gap: 3.5mm;
   /* leave room for time-deck on the right (2×63mm + gaps ≈ 140mm) */
   margin-right: 145mm;
 }
 .pool-box {
   flex: 0 0 auto;
-  display: flex; flex-direction: column; align-items: center; gap: 2mm;
+  display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
   background: rgba(244, 234, 215, 0.98);
   border: 0.45mm solid var(--line);
-  padding: 2.5mm 3mm 3mm;
+  padding: 2mm 2.5mm 2.5mm;
   width: max-content;
   max-width: none;
 }
 .pool-box .pool-title {
-  font-size: 16pt; font-weight: bold; color: var(--blood);
+  font-size: 13pt; font-weight: bold; color: var(--blood);
   margin: 0; border: none; padding: 0;
   text-align: center; line-height: 1.15;
   width: 100%;
   border-bottom: 0.35mm solid var(--gold);
-  padding-bottom: 1.5mm;
+  padding-bottom: 1.2mm;
   white-space: nowrap;
 }
 .pool-box .pool-body {
   display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
   gap: 2mm;
 }
-.pool-slots { display: inline-flex; flex-wrap: nowrap; gap: 2mm; vertical-align: middle; }
+.pool-slots {
+  display: grid;
+  grid-template-columns: repeat(3, var(--token-d));
+  grid-template-rows: repeat(2, var(--token-d));
+  gap: 1.8mm;
+  justify-content: center;
+}
 .sq {
   width: var(--token-d); height: var(--token-d);
   border: 0.45mm solid var(--slot);
@@ -273,6 +279,13 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   width: 100%;
   flex-shrink: 0;
   line-height: 1.15;
+}
+.loc-head .start-inq {
+  font-size: 10pt;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0;
+  vertical-align: middle;
 }
 /* One row: all tokens for this location (wrap for Lochy arrests) */
 .token-row {
@@ -1571,7 +1584,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block">Każdy gracz z Agentem w Pałacu zyskuje +1 złoto.<br><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 krok w stronę Trybunału.</div></div>
     <div class="card-lore">Świętowanie na Dworze. Korona nagradza dyplomatów, a Inkwizytor powraca do centrum władzy kościelnej.</div>
-    <div class="card-footer-meta"><span>TIME-01</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-01</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1588,7 +1601,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Każde zagranie karty pod Rynek lub Gildię kosztuje +1 złoto dodatkowo.</div></div>
     <div class="card-lore">Straż miejska blokuje plebejskie zaułki. Ukryte operacje i handel stają się znacznie kosztowniejsze.</div>
-    <div class="card-footer-meta"><span>TIME-02</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-02</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1605,7 +1618,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Otwórz</strong> <em>Szlak Morski</em>.<br>Każdy gracz z Agentem na Rynku lub w Gildii zyskuje +1 złoto.</div></div>
     <div class="card-lore">Wyprawa za ocean otwiera szlak ucieczki, a portowe rynki i warsztaty zalewa fala nowych zleceń.</div>
-    <div class="card-footer-meta"><span>TIME-03</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-03</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1622,7 +1635,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block">Gracz o najwyższej <em>Herezji</em>: +1 <em>Herezja</em>.<br>Gracz o najniższej <em>Herezji</em>: Zyskuje +1 złoto.</div></div>
     <div class="card-lore">Inkwizycja zaostrza śledztwa wobec najbardziej podejrzanych, sowicie nagradzając lojalnych mieszczan.</div>
-    <div class="card-footer-meta"><span>TIME-04</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-04</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1639,7 +1652,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Próg Krytycznej <em>Herezji</em> (oskarżenia na Dworze) jest obniżony o 1.</div></div>
     <div class="card-lore">Paranoja w Toledo sięga zenitu. Wystarczy cień podejrzenia, by stanąć przed trybunałem sądu.</div>
-    <div class="card-footer-meta"><span>TIME-05</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-05</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1656,7 +1669,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji z największą liczbą Agentów.<br>Przy remisie wybiera Pierwszy Gracz.</div></div>
     <div class="card-lore">Straż i inkwizytorzy uderzają w najludniejsze zgromadzenie w mieście, siejąc postrach.</div>
-    <div class="card-footer-meta"><span>TIME-06</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-06</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1673,7 +1686,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Uwolnij</strong> 1 uwięzionego Agenta do Gildii.</div><div class="fx-block">Jeśli w Lochach nie ma uwięzionych Agentów:<br><strong>Umieść</strong> <em>Relikwię</em> w Lochach.</div></div>
     <div class="card-lore">Zamieszki w kazamatach otwierają drogę ucieczki dla więźnia lub ujawniają ukrytą w murach relikwię.</div>
-    <div class="card-footer-meta"><span>TIME-07</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-07</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1690,7 +1703,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Faza Dworu zostaje zawieszona (brak możliwości rzucenia Oskarżenia).</div></div>
     <div class="card-lore">Tymczasowy rozejm polityczny na szczytach władzy zamraża publiczne procesy i egzekucje.</div>
-    <div class="card-footer-meta"><span>TIME-08</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-08</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1707,7 +1720,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Akcja Gospodarcza na Rynku przynosi +2 złote zamiast +1 zł.</div></div>
     <div class="card-lore">Królewski przywilej targowy ściąga kupców z całej Kastylii, napędzając miejski handel.</div>
-    <div class="card-footer-meta"><span>TIME-09</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-09</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 </div></div>
@@ -1725,7 +1738,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block">Każdy gracz w Strefie Obserwowanej zmniejsza swoją <em>Herezję</em> o 1.</div></div>
     <div class="card-lore">Biskup ogłasza wielki jubileusz i powszechne rozgrzeszenie, dając wytchnienie podejrzanym.</div>
-    <div class="card-footer-meta"><span>TIME-10</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>TIME-10</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 </div></div>

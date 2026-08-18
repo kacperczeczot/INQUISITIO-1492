@@ -157,33 +157,39 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 3mm;
+  gap: 3.5mm;
   /* leave room for time-deck on the right (2×63mm + gaps ≈ 140mm) */
   margin-right: 145mm;
 }
 .pool-box {
   flex: 0 0 auto;
-  display: flex; flex-direction: column; align-items: center; gap: 2mm;
+  display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
   background: rgba(244, 234, 215, 0.98);
   border: 0.45mm solid var(--line);
-  padding: 2.5mm 3mm 3mm;
+  padding: 2mm 2.5mm 2.5mm;
   width: max-content;
   max-width: none;
 }
 .pool-box .pool-title {
-  font-size: 16pt; font-weight: bold; color: var(--blood);
+  font-size: 13pt; font-weight: bold; color: var(--blood);
   margin: 0; border: none; padding: 0;
   text-align: center; line-height: 1.15;
   width: 100%;
   border-bottom: 0.35mm solid var(--gold);
-  padding-bottom: 1.5mm;
+  padding-bottom: 1.2mm;
   white-space: nowrap;
 }
 .pool-box .pool-body {
   display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
   gap: 2mm;
 }
-.pool-slots { display: inline-flex; flex-wrap: nowrap; gap: 2mm; vertical-align: middle; }
+.pool-slots {
+  display: grid;
+  grid-template-columns: repeat(3, var(--token-d));
+  grid-template-rows: repeat(2, var(--token-d));
+  gap: 1.8mm;
+  justify-content: center;
+}
 .sq {
   width: var(--token-d); height: var(--token-d);
   border: 0.45mm solid var(--slot);
@@ -273,6 +279,13 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   width: 100%;
   flex-shrink: 0;
   line-height: 1.15;
+}
+.loc-head .start-inq {
+  font-size: 10pt;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0;
+  vertical-align: middle;
 }
 /* One row: all tokens for this location (wrap for Lochy arrests) */
 .token-row {
@@ -1571,7 +1584,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt.</div>
-    <div class="card-footer-meta"><span>SO-01</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-01</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1588,7 +1601,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.</div>
-    <div class="card-footer-meta"><span>SO-02</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-02</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1605,7 +1618,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.</div>
-    <div class="card-footer-meta"><span>SO-03</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-03</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1622,7 +1635,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 lokację w stronę lokacji swojego Agenta.</div><div class="fx-block"><strong>Limit:</strong> 1 nasłanie / gracza / Erę.</div></div>
     <div class="card-lore">Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel.</div>
-    <div class="card-footer-meta"><span>SO-04</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-04</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1639,7 +1652,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block">Jeśli rywal zagrywa kartę z Herezją ≥ 1:<br><strong>Wskaż</strong> tego rywala: +1 <em>Herezja</em>.</div></div>
     <div class="card-lore">Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.</div>
-    <div class="card-footer-meta"><span>SO-05</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-05</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1656,7 +1669,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w lokacji swojego Agenta.</div></div>
     <div class="card-lore">Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem.</div>
-    <div class="card-footer-meta"><span>SO-06</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-06</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1673,7 +1686,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wykonaj</strong> <em>Przesłuchanie</em> na aresztowanego Agenta rywala.</div><div class="fx-block"><strong>Limit:</strong> 1 / gracza / Erę.</div></div>
     <div class="card-lore">Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję.</div>
-    <div class="card-footer-meta"><span>SO-07</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-07</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1690,7 +1703,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji ze swoim Agentem.</div><div class="fx-block"><strong>Limit:</strong> 1 nasłanie / gracza / Erę.</div></div>
     <div class="card-lore">Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.</div>
-    <div class="card-footer-meta"><span>SO-08</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-08</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1707,7 +1720,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w Lochach lub w lokacji <em>Inkwizytora</em>.</div></div>
     <div class="card-lore">Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.</div>
-    <div class="card-footer-meta"><span>SO-09</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-09</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 </div></div>
@@ -1725,7 +1738,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Autodafé</em> / 3 Ery”</div><div class="fx-block"><strong>Ogłoś</strong> <em>Autodafé</em> w lokacji <em>Inkwizytora</em>.</div><div class="fx-block">Jeśli Agent rywala jest w lokacji <em>Inkwizytora</em>:<br><strong>Zyskaj</strong> <em>Stos</em>.</div></div>
     <div class="card-lore">Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.</div>
-    <div class="card-footer-meta"><span>SO-10</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-10</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1742,7 +1755,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
     <div class="card-lore">Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń.</div>
-    <div class="card-footer-meta"><span>SO-11</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-11</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 
@@ -1759,7 +1772,7 @@ body.mode-trim .crop-line-h-right {
   <div class="card-main">
     <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
     <div class="card-lore">Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom.</div>
-    <div class="card-footer-meta"><span>SO-12</span><span>v0.99.24</span></div>
+    <div class="card-footer-meta"><span>SO-12</span><span>v1.0-alpha.1</span></div>
   </div>
 </article>
 </div></div>

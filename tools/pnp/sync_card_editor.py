@@ -74,6 +74,10 @@ def main():
         # Insert before AVAILABLE_TAGS
         html = html.replace("const AVAILABLE_TAGS =", f"{new_code}\n\nconst AVAILABLE_TAGS =")
 
+    ver = cfg.get("version", "v1.0-alpha.1")
+    html = re.sub(r'<span id="prev-meta-ver">.*?</span>', f'<span id="prev-meta-ver">{ver}</span>', html)
+    html = re.sub(r"document\.getElementById\('prev-meta-ver'\)\.textContent = '.*?';", f"document.getElementById('prev-meta-ver').textContent = '{ver}';", html)
+
     EDITOR_PATH.write_text(html, encoding="utf-8")
     print(f"✅ Zsynchronizowano {len(full_db)} kart z `game_config.yaml` do `assets/prototypes/card-editor.html`!")
 
