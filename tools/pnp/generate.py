@@ -710,33 +710,39 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 3mm;
+  gap: 3.5mm;
   /* leave room for time-deck on the right (2×63mm + gaps ≈ 140mm) */
   margin-right: 145mm;
 }
 .pool-box {
   flex: 0 0 auto;
-  display: flex; flex-direction: column; align-items: center; gap: 2mm;
+  display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
   background: rgba(244, 234, 215, 0.98);
   border: 0.45mm solid var(--line);
-  padding: 2.5mm 3mm 3mm;
+  padding: 2mm 2.5mm 2.5mm;
   width: max-content;
   max-width: none;
 }
 .pool-box .pool-title {
-  font-size: 16pt; font-weight: bold; color: var(--blood);
+  font-size: 13pt; font-weight: bold; color: var(--blood);
   margin: 0; border: none; padding: 0;
   text-align: center; line-height: 1.15;
   width: 100%;
   border-bottom: 0.35mm solid var(--gold);
-  padding-bottom: 1.5mm;
+  padding-bottom: 1.2mm;
   white-space: nowrap;
 }
 .pool-box .pool-body {
   display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
   gap: 2mm;
 }
-.pool-slots { display: inline-flex; flex-wrap: nowrap; gap: 2mm; vertical-align: middle; }
+.pool-slots {
+  display: grid;
+  grid-template-columns: repeat(3, var(--token-d));
+  grid-template-rows: repeat(2, var(--token-d));
+  gap: 1.8mm;
+  justify-content: center;
+}
 .sq {
   width: var(--token-d); height: var(--token-d);
   border: 0.45mm solid var(--slot);
@@ -826,6 +832,13 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   width: 100%;
   flex-shrink: 0;
   line-height: 1.15;
+}
+.loc-head .start-inq {
+  font-size: 10pt;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0;
+  vertical-align: middle;
 }
 /* One row: all tokens for this location (wrap for Lochy arrests) */
 .token-row {
@@ -2194,28 +2207,17 @@ def render_board(layer: str) -> str:
 """
 
     nodes_html = []
-    inq_icon = _escape(ICON_SHORT.get("inquisitor", "✝"))
     for num, short, full, _hint, left, top, slug in LOCATIONS:
         agents = "".join('<span class="agent" title="Agent Ø20 mm"></span>' for _ in range(4))
         arrest = ""
         if num == "3":
             arrest = "".join('<span class="arrest" title="Areszt Ø20 mm (Agent)"></span>' for _ in range(4))
-        inquisitor = ""
-        if slug == "trybunal":
-            inquisitor = (
-                '<div class="inquisitor-wrap" title="Wielki Inkwizytor — start: Trybunał, Patrol">'
-                f'<span class="inquisitor-fig" aria-label="Inkwizytor">{inq_icon}</span>'
-                '<div class="inquisitor-states">'
-                '<span class="inq-state is-active" title="Patrol">Patrol</span>'
-                '<span class="inq-state" title="Autodafé">Autodafé</span>'
-                "</div></div>"
-            )
+        start_tag = ' <span class="start-inq" title="Pozycja startowa Wielkiego Inkwizytora (Patrol)">[Start ✝]</span>' if slug == "trybunal" else ""
         nodes_html.append(f"""
 <section class="loc-node" data-loc="{_escape(num)}" data-slug="{_escape(slug)}"
   title="{_escape(full)}" style="left:{left}%;top:{top}%">
-  <h2 class="loc-head">{_escape(num)} · {_escape(short)}</h2>
+  <h2 class="loc-head">{_escape(num)} · {_escape(short)}{start_tag}</h2>
   <div class="token-row">
-    {inquisitor}
     {agents}
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     {arrest}
@@ -2977,6 +2979,14 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
         index_entries.append(("slownik.html", "📚 Słownik Pojęć A–Z (Druk HTML / PDF)"))
     if (out_dir / "wariant-2p.html").exists():
         index_entries.append(("wariant-2p.html", "⚔️ Wariant 2-osobowy 2P (Druk HTML / PDF)"))
+    if (out_dir / "cards-all-print.pdf").exists():
+        index_entries.append(("cards-all-print.pdf", "📄 Wszystkie Karty (Plik PDF)"))
+    if (out_dir / "board.pdf").exists():
+        index_entries.append(("board.pdf", "📄 Plansza A2 (Plik PDF)"))
+    if (out_dir / "player-boards.pdf").exists():
+        index_entries.append(("player-boards.pdf", "📄 Planszetki Graczy (Plik PDF)"))
+    if (out_dir / "tokens.pdf").exists():
+        index_entries.append(("tokens.pdf", "📄 Żetony Stołu (Plik PDF)"))
     if (out_dir / "ksiega-zasad.pdf").exists():
         index_entries.append(("ksiega-zasad.pdf", "📄 Księga Zasad 4P (Plik PDF)"))
     if (out_dir / "slownik.pdf").exists():
