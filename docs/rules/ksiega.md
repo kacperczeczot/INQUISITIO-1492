@@ -39,9 +39,12 @@
 ## 3. Komponenty
 
 * **1 Plansza główna** (5 lokacji Toledo połączonych grafem ulic + slot Aresztu w Lochach).
-* **1 Figurka Wielkiego Inkwizytora** (stany: Patrol / Autodafé).
+* **1 Figurka Wielkiego Inkwizytora** + 2 żetony stanu: **Patrol** i **Autodafé**.
 * **1 Talia Kroniki Dziejów** (10 kart Edyktów).
-* **Żetony wspólne:** ~12 Haków, ~8 Nakładek Marionetki, 4 Znaczniki Herezji (płomienie), ~40 Złota, 6–8 Relikwii, 6 Fragmentów Kodeksu, 4 Stosy, 4 Upadki, 4 Dekrety, Znacznik 1. gracza, Znacznik Szlaku Morskiego.
+* **Żetony wspólne i puli:**
+  * **Intryga & Kasa:** 12 Haków, 8 Nakładek Marionetki, 4 Znaczniki Herezji, ~40 monet Złota, 15 żetonów Piętna (limity akcji).
+  * **Cele Frakcji:** 6 Stosów (Oficjum), 6 Relikwii (Cienie), 6 Fragmentów Kodeksu (Kabała), 2 Dekrety (Korona), 8 Upadków (Gildia).
+  * **Oznaczenia stołu:** Znacznik 1. gracza, Znacznik Szlaku Morskiego.
 * **Elementy 4 frakcji:** dla każdej talia 10 kart, 3 figurki Agentów, planszetka gracza z torem Herezji 0–10.
 
 > W 4-osobowej grze jedna z pięciu frakcji nie bierze udziału. Rekomendacja na pierwszą sesję: wyłącz **Gildię Cieni**.

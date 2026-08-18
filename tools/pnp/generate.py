@@ -166,6 +166,8 @@ ICONS_SVG: dict[str, str] = {
     "korona-borgiowie": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 18h18v2H3zM4 16l2-10 4.5 5L12 4l1.5 7 4.5-5 2 10z" fill="#a67c2d" stroke="#3a2618" stroke-width="1.1"/><circle cx="6" cy="6" r="1.2" fill="#8b1d24"/><circle cx="12" cy="4" r="1.5" fill="#8b1d24"/><circle cx="18" cy="6" r="1.2" fill="#8b1d24"/></svg>',
     "kabala-toledo": '<svg viewBox="0 0 24 24" class="ico-svg"><polygon points="12,2 15,8 22,9 17,14 18,21 12,17.5 6,21 7,14 2,9 9,8" fill="#1f2d5a" stroke="#d4af37" stroke-width="1"/><circle cx="12" cy="11.5" r="2.5" fill="#d4af37"/></svg>',
     "gildia-cieni": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2l2 6-2 11-2-11z" fill="#2a2030" stroke="#a67c2d" stroke-width="1"/><path d="M8 7h8v2H8zM12 19v3" stroke="#a67c2d" stroke-width="1.5"/><path d="M5 10l4 3M19 10l-4 3" stroke="#8b1d24" stroke-width="1.2" stroke-linecap="round"/></svg>',
+    "first_player": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f4ead7" stroke="#946c23" stroke-width="1.2"/><polygon points="12,4 14,9 19,9 15,13 16.5,18 12,15 7.5,18 9,13 5,9 10,9" fill="#d4af37" stroke="#7a1f1f" stroke-width="0.8"/></svg>',
+    "sea_route": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#2d6a7a" stroke="#d4af37" stroke-width="1.2"/><path d="M4 17c2-1 4-1 6 0s4 1 6 0 4-1 4-1" stroke="#f4ead7" stroke-width="1.2" fill="none"/><path d="M12 4v11M12 4l5 3-5 3" fill="#f4ead7" stroke="#f4ead7" stroke-width="0.8"/><path d="M7 15h10l-1.5 3H8.5z" fill="#a67c2d"/></svg>',
 }
 
 
@@ -174,6 +176,8 @@ PNP_TOKEN_COUNTS: dict[str, int] = {
     "inquisitor": 1,
     "inquisitor_patrol": 1,
     "inquisitor_autodafe": 1,
+    "first_player": 1,
+    "sea_route": 1,
     "heresy": 4,
     "gold": 40,
     "stack": 6,
@@ -2564,6 +2568,8 @@ def render_tokens(layer: str) -> str:
         ("inquisitor", "Inkwizytor (figurka)", c["inquisitor"]),
         ("patrol", "Patrol (stan Inkwizytora)", c["inquisitor_patrol"]),
         ("autodafe_state", "Autodafé (stan Inkwizytora)", c["inquisitor_autodafe"]),
+        ("first_player", "Znacznik 1. Gracza", c["first_player"]),
+        ("sea_route", "Szlak Morski (Otwarty)", c["sea_route"]),
         ("heresy", "Herezja (tor 0–10)", c["heresy"]),
         ("gold", "Złoto", c["gold"]),
         ("stack", "Stos / Autodafé", c["stack"]),
@@ -2571,7 +2577,7 @@ def render_tokens(layer: str) -> str:
         ("fragment", "Fragment Kodeksu", c["fragment"]),
         ("decree", "Dekret", c["decree"]),
         ("fall", "Upadek", c["fall"]),
-        ("spent", "Piętno", c["spent"]),
+        ("spent", "Piętno (Zużycie)", c["spent"]),
     ]
     if layer in ("B", "C"):
         specs.extend([
