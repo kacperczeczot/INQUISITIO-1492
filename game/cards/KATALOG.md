@@ -262,7 +262,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -327,7 +327,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
 | `effect` | Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację. |
@@ -378,7 +378,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji. |
@@ -396,7 +396,7 @@ Kart: **12**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 0 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
 | `lore` | As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej. |
@@ -432,7 +432,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
@@ -588,7 +588,7 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 3 |
+| `cost_gold` | 4 |
 | `heresy` | 1 |
 | `heresy_text` | Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać. |
 | `effect` | DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie Haka. Odmowa: +3 Herezja. |
@@ -605,7 +605,7 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 2 |
+| `cost_gold` | 3 |
 | `heresy` | 2 |
 | `heresy_text` | Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu. |
 | `effect` | DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli masz aktywne Haki na ≥ 2 graczach: zwycięstwo. |

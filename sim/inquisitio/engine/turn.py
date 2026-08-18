@@ -102,6 +102,8 @@ def _legal_card_ids(state: GameState, fid: FactionId) -> list[str]:
             raw = c.raw if isinstance(c.raw, dict) else {}
             if cid == "kb-10" and raw.get("condition") and not card_condition_met(state, fid, c):
                 continue
+            if cid == "caa-10" and raw.get("condition") and not card_condition_met(state, fid, c):
+                continue
             legal.append(cid)
     return legal
 

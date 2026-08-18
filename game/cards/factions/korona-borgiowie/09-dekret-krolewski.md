@@ -4,7 +4,7 @@ name: Dekret Królewski
 faction: korona-borgiowie
 type: signature
 layer: C
-cost: 3
+cost: 4
 heresy: 1
 tags:
 - signature
@@ -16,3 +16,4 @@ heresy_text: Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie n
 lore: Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.
 breaks_rule: true
 ---
+

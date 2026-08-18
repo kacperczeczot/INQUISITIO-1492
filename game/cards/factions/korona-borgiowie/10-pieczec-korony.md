@@ -4,7 +4,7 @@ name: Pieczęć Korony
 faction: korona-borgiowie
 type: signature
 layer: C
-cost: 2
+cost: 3
 heresy: 2
 tags:
 - signature
@@ -16,3 +16,4 @@ heresy_text: Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.
 lore: Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.
 breaks_rule: true
 ---
+

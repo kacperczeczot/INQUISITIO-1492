@@ -249,11 +249,11 @@ def test_win_overrides_kt_era_kb_decrees_alt():
     kt = st.players[FactionId.KABALA_TOLEDO]
     kt.fragments = 2
     kt.heresy = 5
-    st.era = 5
+    st.era = 6
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
     blocked = check_winner_details(st, {"kt_era_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KABALA_TOLEDO
-    st.era = 6
+    st.era = 7
     assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
     kt.heresy = 0
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")

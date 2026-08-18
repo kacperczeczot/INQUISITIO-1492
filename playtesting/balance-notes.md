@@ -13,7 +13,7 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v0.99.4**
+## Gwarancja silnika — `game_config.yaml` **v0.99.5**
 
 **Zakres:** pętla ery gra te same procedury stołu co księga / słownik / `game/mechanics/` (Intryga, Sąd, Kronika). Każda **nazwana mechanika L4 i pole karty z `config_reference.md`** jest wpięta — nie martwy YAML.
 
@@ -68,7 +68,7 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ### 4. Kabała z Toledo
 - **Fragmenty Kodeksu:** **3**.
-- **Minimalna Era:** **5**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
+- **Minimalna Era:** **6**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
 
 ### 5. Gildia Cieni
 - **Upadki:** **5** (jedna liczba; wyjątek bez Oficjum usunięty).
@@ -89,6 +89,18 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.6 (2026-08-18) — Kanon 4P: Karta `caa-08` (Kaptur Nocy): `target_heresy` → `2` (Zysk 4P Δ +5.2 pkt)
+- **Wynik 4P:** Kanon **`56.2`** → **`61.4 pkt`** | Global **`39.1`** | 3p **`12.9`** | 5p **`41.2`**
+- **Modyfikacja (`L3_CAA-08_TARGET_HERESY_PLUS1`):** Karta `caa-08` (Kaptur Nocy): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 2.5%, Pas Biedy 1.4%.
+
+### 🟢 Patch v0.99.5 (2026-08-18) — bramka fundamentu → audytor makro
+
+- **Cel:** `FOUNDATION=True` (15–35% we wszystkich 5 setupach 4P) po gwarancji silnika v0.99.4.
+- **SSOT:** CAA (`caa-02/03/06/09/10/12`), Korona (`kb-09` cost 4, `kb-10` cost 3), Kabała era **6**; polityka bota (tor relikwii, `kb-10` tylko przy 2 Hakach).
+- **Pomiar (5000g, seed 42):** HUD **55,7** | **Fundament True** | min `4p-no-oficjum` **52,0**.
+- **Audytor:** przechodzi pomiar bazowy i wchodzi w pulę kandydatów L1–L4 (nie stop na bramce).
 
 ### 🟢 Patch v0.99.4 (2026-08-18) — domknięcie gwarancji silnika (L4 + CAA + staged)
 

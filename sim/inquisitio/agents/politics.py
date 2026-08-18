@@ -5,6 +5,7 @@ import random
 
 from inquisitio.cards.loader import Card, load_all_cards
 from inquisitio.config import CONFIG
+from inquisitio.engine.card_conditions import card_condition_met
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.verdict import oficjum_snowball_threat
 
@@ -146,9 +147,25 @@ class PoliticsAgent:
 
             elif faction == FactionId.CIENIE_AL_ANDALUS:
                 if "relic" in c.tags:
-                    u += 3.5
+                    u += 4.0
                     if pl.relics_evacuated >= 1:
-                        u += 2.5
+                        u += 3.5
+                    if state.sea_route_open and pl.relics_evacuated < 2:
+                        u += 2.0
+                if c.id == "caa-03":
+                    on_relic = any(
+                        state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested
+                        for ag in pl.agents
+                    )
+                    if on_relic:
+                        u += 4.0
+                if c.id == "caa-09" and pl.relics_evacuated < 2:
+                    u += 3.0
+                if c.id == "caa-10":
+                    if card_condition_met(state, faction, c) or state.sea_route_open:
+                        u += 9.0 if pl.relics_evacuated >= 1 else 6.0
+                    else:
+                        u -= 18.0
                 if c.id == "caa-05":  # Ukryty Kurier
                     on_relic = any(
                         state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested
@@ -173,14 +190,14 @@ class PoliticsAgent:
                         u += 2.0
                 if c.id == "kb-10":
                     if active_hooks >= 2:
-                        u += 14.0
+                        u += 6.0
                     else:
                         u -= 20.0
                 if c.creates_hook:
-                    if active_hooks < 2 or len(pl.hook_victims_ever) < 2:
-                        u += 4.5
-                    else:
-                        u += 2.5
+                    if active_hooks < 2:
+                        u += 3.5
+                    elif len(pl.hook_victims_ever) < 2:
+                        u += 2.0
 
             elif faction == FactionId.KABALA_TOLEDO:
                 if "fragment" in c.tags:

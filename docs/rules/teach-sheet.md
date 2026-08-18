@@ -59,7 +59,7 @@
 | Święte Oficjum | **6 Stosy** lub **3 Skazania Werdyktem** |
 | Cienie Al-Andalus | **2 Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski) |
 | Korona & Borgiowie | **2 Dekrety** |
-| Kabała z Toledo | **2 Fragmenty** (od Ery 5) |
+| Kabała z Toledo | **2 Fragmenty** (od Ery 6) |
 | Gildia Cieni | **8 Upadki** |
 
 **Limit:** 12 Er → najbliższy celowi; remis → najniższa Herezja.
