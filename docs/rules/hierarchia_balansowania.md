@@ -36,8 +36,8 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 - **Limit kart na ręce:** `5 kart`
 - **Ekonomia:** `4 złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)
 - **Maksymalny limit Er:** `12 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
-- **Strefy Herezji:** Czysta `0–3`; Obserwowana od `4` do `T−1`; Krytyczna `≥T`
-- **Próg Obserwowanej:** `≥4` (Autodafé: Stos zamiast aresztu)
+- **Strefy Herezji:** Czysta `0–4`; Obserwowana od `5` do `T−1`; Krytyczna `≥T`
+- **Próg Obserwowanej:** `≥5` (Autodafé: Stos zamiast aresztu)
 - **Próg Oskarżenia na Dworze:** `Herezja ≥ 7` (Kanon 4p; w 3p: `≥6`, w 5p: `≥8`)
 - **Liczba Agentów per gracz:** `3 Agenci`
 - **Cooldown Autodafé Inkwizytora:** Max `co 3 Ery`
@@ -64,11 +64,11 @@ Koszty złotowe oraz przydział efektów kart w poszczególnych warstwach:
 
 - **Koszt zagrania kart:** Dociąg, alchemia, areszty i wymuszenia zbalansowane w Warstwach A, B i C.
 - **Karty Signature (Warstwa C):**
-  - Święte Oficjum `so-10`: koszt 2zł
-  - Cienie Al-Andalus `caa-10`: koszt 2zł
-  - Korona & Borgiowie `kb-10`: koszt 2zł
-  - Kabała z Toledo `kt-10`: koszt 1zł
-  - Gildia Cieni `gc-10`: koszt 2zł
+  - Święte Oficjum `so-10`: koszt 5zł
+  - Cienie Al-Andalus `caa-10`: koszt 0zł
+  - Korona & Borgiowie `kb-10`: koszt 3zł
+  - Kabała z Toledo `kt-10`: koszt 2zł
+  - Gildia Cieni `gc-10`: koszt 4zł
 
 ---
 

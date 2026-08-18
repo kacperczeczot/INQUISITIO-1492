@@ -1,307 +1,250 @@
-[Strona główna](../../README.md) > [Dokumentacja](../README.md) > [Zasady](README.md)
+[Strona główna](../../README.md) > [Dokumentacja](../README.md) > [Zasady](README.md) > Słownik
+
+---
+
+# INQUISITIO 1492 — Słownik Pojęć A–Z
 
 ---
 
 ## Agent
-
-Figurka frakcji na planszy (3 / gracza). Porusza się o max 1 krawędź grafu na turę Planu (chyba że karta mówi inaczej). Kontroluje lokacje, wchodzi w Autodafé, areszt i Werdykt.
-
+Figurka frakcji na planszy (3 / gracza). Porusza się o max 1 krawędź grafu w turze Intrygi (chyba że karta stanowi inaczej). Wpływa na obecność w lokacjach, podlega procedurom Autodafé, aresztu w Lochach i wyrokom Werdyktu.  
 **Patrz także:** [Lokacja](#lokacja), [Marionetka](#marionetka), [Areszt](#areszt)
 
 ---
 
 ## Areszt
-
-Stan Agenta w strefie Areszt lokacji **Lochy**. Agent nie porusza się i nie kontroluje lokacji, dopóki nie wróci. Źródła: `arrest` na karcie, Werdykt, edykt / Autodafé wg tekstu.
-
-**Patrz także:** [Lochy](#lochy), [Przesłuchanie](#przesłuchanie) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
+Stan Agenta umieszczonego w strefie Aresztu lokacji **Lochy**. Uwięziony Agent nie może się poruszać ani kontrolować lokacji, dopóki nie zostanie uwolniony. Może być celem Przesłuchania.  
+**Patrz także:** [Lochy](#lochy), [Przesłuchanie](#przesłuchanie)
 
 ---
 
 ## Autodafé (procedura)
-
-Czystka lokacji Inkwizytora: Agent rywala w strefie **Czystej (0–3 Herezji)** → do **Aresztu w Lochach** (+1 Herezja, bez Stosu); w strefie **Obserwowanej / Krytycznej (≥4 Herezji)** → **spalenie na Stosie** (+1 Herezja, +1 Stos dla Oficjum). Relikwia w lokacji wraca do puli. Max **co 3 Ery** (pierwsze możliwe od Ery **3**).  
-**Ogłoś Autodafé** → Stos przy rywalu ≥4 Herezji. **Wymuś Autodafé** (edykt) → **bez** Stosu.
-
-**Patrz także:** [Inkwizytor](#inkwizytor), [Stos](#stos) · [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md) · leksykon **Ogłoś** / **Wymuś**
+Czystka wiary przeprowadzana w lokacji, w której stoi Wielki Inkwizytor. Dostępna najwcześniej od Ery 3, z zachowaniem cooldownu co najmniej 3 pełnych Er.  
+* Agent rywala w strefie **Czystej (0–4 Herezji)** $\rightarrow$ trafia do **Aresztu w Lochach** (+1 Herezja, brak Stosu).
+* Agent rywala w strefie **Obserwowanej / Krytycznej ($\ge 5$ Herezji)** $\rightarrow$ zostaje **spalony na Stosie** (+1 Herezja, +1 Stos dla Oficjum, jeśli Oficjum ogłosiło procedurę).
+* Relikwia w lokacji wraca do puli ogólnej.  
+**Patrz także:** [Inkwizytor](#inkwizytor), [Stos](#stos), [Herezja](#herezja)
 
 ---
 
 ## Czystka (faza)
-
-**Faza III (Kronika & Czystka):** Sprawdzenie natychmiastowych celów zwycięstwa; **Uzupełnienie:** dobór kart do limitu 5 + pobranie dochodu **+1 złoto** z banku; odkrycie karty Kroniki Dziejów; przesuń znacznik 1. gracza.
-
-**Patrz także:** [Zwycięstwo](#zwycięstwo), [Era](#era), [Złoto](#złoto) · [`ksiega.md`](ksiega.md)
+Trzecia faza Ery (**Faza III: Kronika & Czystka**): sprawdzenie warunków zwycięstwa, uzupełnienie ręki do limitu 5 kart, pobranie dochodu +1 złoto, odkrycie nowej karty Kroniki Dziejów oraz rotacja znacznika 1. gracza.  
+**Patrz także:** [Era](#era), [Kronika Dziejów](#kronika-dziejów), [Zwycięstwo](#zwycięstwo)
 
 ---
 
 ## Dekret
-
-Cel / znacznik Korony (i karty Korony). Warunek zwycięstwa: **2 Dekrety**. Haki to narzędzie stołu, nie podatek wygranej.
-
+Znacznik i cel zwycięstwa Korony & Borgiów. Warunek wygranej: **2 Dekrety** wprowadzone kartami signature (*Dekret Królewski* i *Pieczęć Korony*).  
 **Patrz także:** [Zwycięstwo](#zwycięstwo), [Hak](#hak)
 
 ---
 
 ## Edykt
-
-Karta Kroniki Dziejów lub efekt zmieniający prawo Ery. Odkrywany w **Fazie III (Kronika)** (1 / Erę jako prawo na kolejną rundę). Tekst edyktu obowiązuje w danej Erze według karty.
-
+Karta z talii Kroniki Dziejów odkrywana w Fazie III. Jej treść wprowadza ogólne prawo lub modyfikację reguł obowiązującą wszystkich graczy w nadchodzącej Erze.  
 **Patrz także:** [Kronika Dziejów](#kronika-dziejów), [Edykt karty](#edykt-karty)
 
 ---
 
 ## Edykt karty
-
-**Złote prawo:** tekst karty (`Łamie regułę …` / `breaks_rule`) wygrywa z księgą i teach.
-
+Zasada nadrzędności: tekst karty (`Łamie regułę …`) ma bezwzględne pierwszeństwo przed ogólnymi regułami z Księgi Zasad.  
 **Patrz także:** [Złote prawa](#złote-prawa), [Karty (typy)](#karty-typy)
 
 ---
 
 ## Era
-
-Jedna pełna runda składająca się z **3 Faz** (I Intryga, II Sąd, III Kronika & Czystka). Limit gry: **12** Er (potem remis postępu → najbliższy celowi, potem najniższa Herezja).
-
-**Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Zwycięstwo](#zwycięstwo) · [`ksiega.md`](ksiega.md)
+Pojedyncza runda gry złożona z 3 Faz (I Intryga, II Sąd, III Kronika & Czystka). Maksymalny czas gry wynosi **12 Er**.  
+**Patrz także:** [Zwycięstwo](#zwycięstwo), [Czystka](#czystka)
 
 ---
 
 ## Fiasko
-
-Karta nie rozpatruje efektu (np. brak Agenta / lokacji przy odkryciu). Zgodnie z **kanonem reguł**: fiasko karty następuje **bez** przydzielania Herezji, chyba że tekst karty mówi inaczej.
-
-**Patrz także:** [Inicjacja karty](#inicjacja-karty), [Odkrycie](#odkrycie)
+Sytuacja, w której warunek zagrania karty nie jest spełniony w momencie jej odkrycia w Fazie II (np. brak wymaganego Agenta w danej lokacji). Karta nie wywołuje efektu i nie dodaje Herezji.  
+**Patrz także:** [Odkrycie](#odkrycie)
 
 ---
 
-## Fragment
-
-Znacznik / cel Kabały. Warunek: **2 Fragmenty** od Ery **6**. Herezja nie jest podatkiem wygranej (karta Pieczęć Salomona może mieć własne okno).
-
+## Fragment Kodeksu
+Znacznik i cel zwycięstwa Kabały z Toledo. Warunek wygranej: **2 Fragmenty** odblokowywane najwcześniej od **Ery 6**.  
 **Patrz także:** [Herezja](#herezja), [Zwycięstwo](#zwycięstwo)
 
 ---
 
 ## Hak
-
-Żeton **jednego typu** — prywatna władza nad ofiarą. Źródła: Przesłuchanie, karty (`creates_hook`), edykty. Max **2** aktywne Haki / gracza (prototyp).
-
-**Patrz także:** [Wymuszenie](#wymuszenie), [Przesłuchanie](#przesłuchanie) · [`../../game/mechanics/haki.md`](../../game/mechanics/haki.md)
+Żeton prywatnego nacisku na rywala. Zdobywany przez Przesłuchanie w Lochach lub efekty kart. Gracz może posiadać maksymalnie **2 aktywne Haki** naraz. Używany do procedury Wymuszenia (limit 1× na Erę).  
+**Patrz także:** [Wymuszenie](#wymuszenie), [Przesłuchanie](#przesłuchanie)
 
 ---
 
 ## Herezja
-
-Tor **0–10** na planszetce. **Próg Obserwowanej `≥4`** (Czysta 0–3; Autodafé: Stos). **Krytyczna = próg oskarżenia T** (Kanon 4p: **7**; w 3p: **6**, w 5p: **8**). Obserwowana: 4 … T−1. Źródła: karty, Hak ujawniony, Autodafé, Marionetka wykryta, Werdykt (uniewinnienie) itd.
-
-**Patrz także:** [Krytyczna](#krytyczna), [Oskarżenie](#oskarżenie) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
-
----
-
-## Inicjacja karty
-
-**Suplement I:** deklaracja → koszty (płać przy zagraniu) → efekt (przy odkryciu w Fazie II lub wg tekstu). Język efektu → leksykon.
-
-**Patrz także:** [Fiasko](#fiasko), [Limit / Erę](#limit--erę) · [`ksiega.md`](ksiega.md) · [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md)
+Wskaźnik podejrzeń (tor 0–10 na planszetce):
+* **0–4 (Czysta):** pełne bezpieczeństwo przed Stosem.
+* **5–6 (Obserwowana):** podatność na spalenie w Autodafé.
+* **7–10 (Krytyczna / Próg Oskarżenia):** rywale mogą wnieść formalne Oskarżenie w Fazie Sądu.  
+*Maksymalny poziom to 10 (nadwyżki przepadają).*  
+**Patrz także:** [Krytyczna](#krytyczna), [Oskarżenie](#oskarżenie), [Werdykt](#werdykt)
 
 ---
 
-## Inkwizytor
-
-Figurka NPC (Wielki Inkwizytor). Stany: Patrol / Autodafé. W **Fazie II (Sąd):** nasłania → ruch 0–1 → ewentualne Autodafé. Bez nasłania ruch wybiera gracz z najniższą Herezją (remis → 1. gracz).
-
-**Patrz także:** [Nasłanie](#nasłanie), [Autodafé](#autodafé) · [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md)
+## Inkwizytor (Wielki Inkwizytor)
+Neutralna figurka poruszająca się po planszy w Fazie II. Po wykonaniu ruchu może zainicjować procedurę Autodafé. Ruch wynosi 0–1 krawędź (przy braku nasłań kierunek wskazuje gracz o najniższej Herezji).  
+**Patrz także:** [Nasłanie](#nasłanie), [Autodafé](#autodafé)
 
 ---
 
 ## Karty (typy)
-
-**Akcja** — zagrywana zakryta pod lokacją w Fazie I (Intryga). **Reakcja** — okno reakcji przy warunku. **Specjalna** — często `Łamie regułę`. Anatomia: SCHEMA; komendy: leksykon (Title Case; `EDYKT`/`DEKRET` = CAPS; zero prozy w `effect`).
-
-**Patrz także:** [Okno reakcji](#okno-reakcji), [Edykt karty](#edykt-karty) · [`../../game/cards/SCHEMA.md`](../../game/cards/SCHEMA.md) · [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md)
-
----
-
-## Krytyczna
-
-Strefa Herezji **6–10 (3p)** lub **7–10 (4–5p)** — tożsamy z progiem oskarżenia. Inni gracze mogą **Rzucić Oskarżenie** w Fazie II (limit 1× przeciw temu graczowi / Erę).
-
-**Patrz także:** [Herezja](#herezja), [Werdykt](#werdykt) · [`../../game/mechanics/poziom-herezji.md`](../../game/mechanics/poziom-herezji.md)
-
----
-
-## Limit / Erę
-
-Etykieta na karcie (`Limit:`) i limity anti-AP stołu: **1** wymuszenie Haka · **1** Przesłuchanie · **1** nasłanie · **max 2** akcje na gracza na Erę (zagranie karty lub Akcja Gospodarcza). Autodafé: max co 3 Ery.  
-**Maksymalnie** (np. max 2 Haki) = twardy cap posiadania, nie to samo co Limit / Erę.
-
-**Patrz także:** [Wydarzenie ramowe](#wydarzenie-ramowe), [Może / musi](#może--musi) · leksykon §2
-
----
-
-## Lokacja
-
-Jedno z 5 miejsc na grafie (Trybunał → … → Gildia). Kolejność odkrywania kart 1→5 ≠ graf ruchu. Inkwizytor i Agenci poruszają się po **krawędziach**.
-
-**Patrz także:** [Odkrycie](#odkrycie), [Agent](#agent) · [`../../game/board/locations.md`](../../game/board/locations.md)
-
----
-
-## Lochy
-
-Lokacja #3. Tu znajduje się strefa Aresztu oraz przeprowadzana jest procedura **Przesłuchania** w Fazie II (Sąd).
-
-**Patrz także:** [Areszt](#areszt), [Przesłuchanie](#przesłuchanie) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
-
----
-
-## Może / musi
-
-**Może** = opcjonalne (np. nasłanie, ruch Agenta, Autodafé jeśli wolno). Kroki **wydarzeń ramowych** 3 Faz są obowiązkowe, o ile tekst nie mówi „opcjonalne”. Konflikt „czy muszę?” bez zapisu → [Wyrok surowy](#wyrok-surowy).
-
-**Patrz także:** [Okno reakcji](#okno-reakcji), [Limit / Erę](#limit--erę)
-
----
-
-## Nasłanie (opcjonalne)
-
-Raz na gracza na Erę: wskaż kierunek / lokację dla Inkwizytora. Konflikt nasłań: wygrywa **Oficjum** (chyba że karta specjalna inaczej).
-
-**Patrz także:** [Inkwizytor](#inkwizytor) · [`../../game/mechanics/wielki-inkwizytor.md`](../../game/mechanics/wielki-inkwizytor.md)
-
----
-
-## Odkrycie (krok Fazy II)
-
-**Faza II (Krok 2):** lokacje 1→5 — odkryj karty od 1. gracza, rozpatrz efekty, Herezję, areszty i konflikty kontroli.
-
-**Patrz także:** [Fiasko](#fiasko), [Inicjacja karty](#inicjacja-karty) · [`ksiega.md`](ksiega.md)
-
----
-
-## Okno reakcji
-
-Moment poza kolejką Fazy Intrygi, gdy warunek karty **Reakcja** jest spełniony. Opcjonalne; nie zastępuje wydarzeń ramowych.
-
-**Patrz także:** [Karty (typy)](#karty-typy), [Wydarzenie ramowe](#wydarzenie-ramowe)
-
----
-
-## Oskarżenie
-
-Akcja gracza w **Fazie II (Dwór)** przeciw celowi w Krytycznej (1× przeciw temu graczowi / Erę). Uruchamia **Werdykt (procedura)**.
-
-**Patrz także:** [Krytyczna](#krytyczna), [Werdykt](#werdykt) · [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
-
----
-
-## Marionetka
-
-Znacznik na Agencie po Przesłuchaniu. Raz / Erę kontroler rusza nim o 1 jak swoim; **bez** dodatkowego głosu Werdyktu. Wykrycie → właściciel +2 Herezja, znacznik znika.
-
-**Patrz także:** [Przesłuchanie](#przesłuchanie), [Agent](#agent) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
-
----
-
-## Przesłuchanie (procedura)
-
-1 / gracza / Erę w **Fazie II (Lochy)**. Dostęp: Agent w Lochach lub karta. Wybór na aresztowanym rywalu: Marionetka **lub** Hak **lub** +2 Herezja właścicielowi.
-
-**Patrz także:** [Lochy](#lochy), [Hak](#hak) · [`../../game/mechanics/lochy-przesluchania.md`](../../game/mechanics/lochy-przesluchania.md)
-
----
-
-## Relikwia
-
-Znacznik celu Cieni (i interakcji Autodafé). Przy Autodafé w lokacji z Relikwią: Relikwia **wraca do puli** (freeze).
-
-**Patrz także:** [Autodafé](#autodafé), [Zwycięstwo](#zwycięstwo)
-
----
-
-## Remis
-
-Przy Werdykcie (równe wagi głosów) → Uniewinnienie. Przy remisie korzyści bez zapisu → [Wyrok surowy](#wyrok-surowy). Remis postępu po **12** Er → najbliższy celowi, potem najniższa Herezja.
-
-**Patrz także:** [Werdykt](#werdykt), [Zwycięstwo](#zwycięstwo)
-
----
-
-## Reakcja
-
-Typ karty trzymanej w ręce; zagranie w [oknie reakcji](#okno-reakcji) przy warunku z tekstu.
-
-**Patrz także:** [Karty (typy)](#karty-typy), [Okno reakcji](#okno-reakcji)
-
----
-
-## Stos
-
-Żeton eliminacji / zwycięstwa Oficjum. Źródła: Autodafé (rywal ≥4 Herezji); skazanie Werdyktem **tylko** gdy Oficjum oskarżało (powtórka też). Wyrok innego gracza zapisuje Skazanie (nazwisko), bez Stosu.
-
-**Patrz także:** [Autodafé](#autodafé), [Werdykt](#werdykt), [Zwycięstwo](#zwycięstwo)
+* **Akcja:** zagrywana zakryta pod lokację w Fazie I (koszt złota płacony od razu).
+* **Reakcja:** zagrywana z ręki natychmiast po spełnieniu warunku wyzwalającego.
+* **Karta Signature (Specjalna):** karta unikalna frakcji, łamiąca konkretną regułę stołu.  
+**Patrz także:** [Edykt karty](#edykt-karty), [Okno reakcji](#okno-reakcji)
 
 ---
 
 ## Kronika Dziejów
+Talia 10 kart Edyktów miejskich Toledo 1492. Na koniec każdej Ery odkrywana jest 1 karta określająca prawo na kolejną rundę.  
+**Patrz także:** [Edykt](#edykt), [Czystka](#czystka)
 
-Talia 10 edyktów i wydarzeń miejskich (Toledo 1492). W **Fazie III (Kronika)** odkryj **1** kartę jako zwiastun prawa na nadchodzącą Erę.
+---
 
-**Patrz także:** [Edykt](#edykt), [Faza III](#faza-iii)
+## Krytyczna (Strefa Krytyczna)
+Przedział Herezji **7–10**. Gracz znajdujący się w tej strefie może zostać postawiony przed sądem w Fazie II (Dwór) przez dowolnego rywala.  
+**Patrz także:** [Herezja](#herezja), [Oskarżenie](#oskarżenie), [Werdykt](#werdykt)
+
+---
+
+## Limit na Erę (Anti-AP)
+Kluczowe ograniczenia zapobiegające paraliżowi decyzyjnemu:
+* Max **2 akcje** na gracza w Fazie I (zagranie karty lub akcja gospodarcza).
+* Max **1 Wymuszenie Haka** na gracza na Erę.
+* Max **1 Nasłanie Inkwizytora** na gracza na Erę.
+* Max **1 Przesłuchanie** w Lochach na gracza na Erę.
+* Autodafé: max **1 raz na 3 Ery** (najwcześniej od Ery 3).
+
+---
+
+## Lokacja
+Jeden z 5 węzłów na planszy (1. Trybunał, 2. Pałac, 3. Lochy, 4. Rynek, 5. Gildia). Ruch odbywa się po krawędziach grafu; rozpatrywanie kart w Fazie II następuje ściśle wg numeracji (1 $\rightarrow$ 5).  
+**Patrz także:** [Agent](#agent), [Odkrycie](#odkrycie)
+
+---
+
+## Lochy
+Lokacja #3. Zawiera strefę Aresztu dla uwięzionych Agentów oraz jest miejscem wykonywania Przesłuchań w Fazie Sądu.  
+**Patrz także:** [Areszt](#areszt), [Przesłuchanie](#przesłuchanie)
+
+---
+
+## Marionetka
+Nakładka umieszczana na figurce uwięzionego Agenta w wyniku Przesłuchania. Kontroler Marionetki może raz na Erę wykonać nią ruch o 1 krawędź jak własnym pionkiem (nie daje dodatkowego głosu w Werdykcie). Ujawnienie Marionetki daje jej właścicielowi +2 Herezji.  
+**Patrz także:** [Przesłuchanie](#przesłuchanie), [Agent](#agent)
+
+---
+
+## Nasłanie
+Deklaracja kierunku ruchu Inkwizytora w Fazie II. Każdy gracz może zgłosić 1 nasłanie. Głos Świętego Oficjum ma zawsze najwyższy priorytet.  
+**Patrz także:** [Inkwizytor](#inkwizytor)
+
+---
+
+## Odkrycie
+Krok 2 w Fazie II (Sąd): zakryte karty są odkrywane i rozpatrywane lokacja po lokacji (1 $\rightarrow$ 5), od 1. gracza.  
+**Patrz także:** [Fiasko](#fiasko), [Karty (typy)](#karty-typy)
+
+---
+
+## Okno reakcji
+Moment gry, w którym gracz może zagrać kartę typu Reakcja w odpowiedzi na określone zdarzenie (np. zagranie karty przez rywala).  
+**Patrz także:** [Karty (typy)](#karty-typy)
+
+---
+
+## Oskarżenie
+Formalne postawienie przed sądem gracza mającego Herezję $\ge 7$ w Fazie II (Krok 4: Dwór). Uruchamia procedurę Werdyktu.  
+**Patrz także:** [Krytyczna](#krytyczna), [Werdykt](#werdykt)
+
+---
+
+## Przesłuchanie (procedura)
+Akcja w Fazie II (Lochy) dostępna dla gracza posiadającego Agenta w Lochach:
+1. **Marionetka:** nałożenie nakładki na pionek rywala.
+2. **Hak:** pobranie żetonu Haka na właściciela Agenta.
+3. **Wymuszenie Herezji:** +2 Herezji dla właściciela Agenta.  
+**Patrz także:** [Lochy](#lochy), [Marionetka](#marionetka), [Hak](#hak)
+
+---
+
+## Relikwia
+Żeton ewakuowany przez Cienie Al-Andalus. W przypadku Autodafé w lokacji z Relikwią, Relikwia wraca do puli ogólnej.  
+**Patrz także:** [Autodafé](#autodafé), [Szlak Morski](#szlak-morski), [Zwycięstwo](#zwycięstwo)
+
+---
+
+## Remis
+* **W głosowaniu Werdyktu:** remis oznacza Uniewinnienie.
+* **W interpretacji reguł:** rozstrzygaj na niekorzyść gracza najwięcej zyskującego ([Wyrok surowy](#wyrok-surowy)).
+* **Po 12 Erach:** wygrywa gracz najbliższy swojemu celowi, a przy dalszym remisie ten o najniższej Herezji.  
+**Patrz także:** [Werdykt](#werdykt), [Wyrok surowy](#wyrok-surowy), [Zwycięstwo](#zwycięstwo)
+
+---
+
+## Stos
+Żeton eliminacji i cel Świętego Oficjum. Zdobywany przez spalenie Agenta rywala w Autodafé ($\ge 5$ Herezji) lub Skazanie w Werdykcie wniesionym przez Oficjum.  
+**Patrz także:** [Autodafé](#autodafé), [Werdykt](#werdykt), [Zwycięstwo](#zwycięstwo)
+
+---
+
+## Szlak Morski
+Trwała ścieżka ucieczki otwierana przez kartę Kroniki Dziejów (*Flota Odkrywców*) lub dedykowane karty Cieni Al-Andalus. Umożliwia ewakuację Relikwii poza planszę.  
+**Patrz także:** [Relikwia](#relikwia), [Zwycięstwo](#zwycięstwo)
+
+---
+
+## Upadek
+Żeton klęski politycznej i cel Gildii Cieni. Zdobywany przez odmowy spełnienia Haków, Marionetki oraz wyroki Werdyktu na oznaczonych celach.  
+**Patrz także:** [Hak](#hak), [Zwycięstwo](#zwycięstwo)
 
 ---
 
 ## Werdykt (procedura)
-
-Głosowanie jawne Skazać / Uniewinnić (bez oskarżonego) po Oskarżeniu. Remis → Uniewinnienie. Skazanie: Agent → Lochy +1 Herezja; nazwisko na tor Skazań; **Stos** tylko gdy Oficjum oskarżało (także powtórka). Uniewinnienie: oskarżyciel +1 Herezja.
-
-**Patrz także:** [Oskarżenie](#oskarżenie), [Krytyczna](#krytyczna) · [`../../game/mechanics/werdykt-stolu.md`](../../game/mechanics/werdykt-stolu.md)
+Jawne głosowanie stołu (*Skazać* / *Uniewinnić*) nad oskarżonym graczem (bez głosu oskarżonego):
+* **Skazanie:** 1 Agent celu idzie do Aresztu, cel dostaje +1 Herezji, Oficjum kładzie 1 żeton Skazania na swojej planszetce (3 Skazania = zwycięstwo).
+* **Uniewinnienie:** oskarżyciel otrzymuje +1 Herezji.
+* **Remis:** oznacza Uniewinnienie.  
+**Patrz także:** [Oskarżenie](#oskarżenie), [Krytyczna](#krytyczna)
 
 ---
 
 ## Wymuszenie (procedura)
-
-Zużyj Hak (1 / gracza / Erę): ogłoś żądanie z listy; ofiara spełnia **albo** odmawia → Hak znika, ofiara +2 Herezja (cap 10).
-
-**Patrz także:** [Hak](#hak), [Limit / Erę](#limit--erę) · [`../../game/mechanics/haki.md`](../../game/mechanics/haki.md)
-
----
-
-## Wydarzenie ramowe
-
-Obowiązkowy krok Ery w strukturze **3 Faz** (I Intryga, II Sąd, III Kronika & Czystka). Osobno od opcjonalnego [okna reakcji](#okno-reakcji).
-
-**Patrz także:** [Era](#era) · [`ksiega.md`](ksiega.md)
+Zużycie żetonu Haka przed/po akcji w Fazie I: ogłoszenie żądania wobec ofiary. Spełnienie żądania zużywa Hak; odmowa daje ofierze +2 Herezji i również zużywa Hak.  
+**Patrz także:** [Hak](#hak), [Limit na Erę](#limit-na-erę-anti-ap)
 
 ---
 
 ## Wyrok surowy
-
-**Złote prawo:** brak zapisu / konflikt kolejności → na niekorzyść gracza, który najbardziej zyskuje; remis korzyści → wyższa Herezja przegrywa spór; graj dalej.
-
+Złote prawo stołu: w sytuacjach nieopisanych lub spornych podejmuj decyzję na niekorzyść gracza, który najwięcej zyskuje. Przy remisie korzyści spór przegrywa gracz o wyższej Herezji.  
 **Patrz także:** [Złote prawa](#złote-prawa), [Remis](#remis)
 
 ---
 
 ## Złote prawa
-
-Prawo Trybunału (hierarchia dokumentów) · Edykt karty · Zasada delty · Wyrok surowy. Pełny tekst: [`README.md`](README.md).
-
+1. Tekst karty bije reguły ogólne.
+2. Księga Zasad i Słownik stanowią pełne źródło prawa.
+3. Wyrok surowy rozstrzyga wszelkie wątpliwości.  
 **Patrz także:** [Edykt karty](#edykt-karty), [Wyrok surowy](#wyrok-surowy)
 
 ---
 
 ## Złoto
-
-Waluta kosztów kart i łapówek. Start **4**; dochód **+1 złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga). Płatność **przy zagraniu** (kanon reguł).
-
-**Patrz także:** [Inicjacja karty](#inicjacja-karty), [Czystka](#czystka) · [`ksiega.md`](ksiega.md)
+Waluta używana do opłacania kosztów kart i łapówek. Start: **4 złota**; dochód: **+1 złoto** w Fazie III. Możliwość pozyskania +1 złota w Fazie I (Akcja Gospodarcza). Koszt kart płacony jest natychmiast przy zagraniu.  
+**Patrz także:** [Czystka](#czystka), [Karty (typy)](#karty-typy)
 
 ---
 
 ## Zwycięstwo
-
-Natychmiast po spełnieniu warunku frakcji (C). Limit 12 Er → najbliższy celowi; remis → najniższa Herezja. Tabela warunków: [`ksiega.md`](ksiega.md).
-
+Gra kończy się natychmiast w Fazie III, jeśli którykolwiek gracz spełnia swój warunek kanoniczny:
+* **Święte Oficjum:** 6 Stosów lub 3 Skazania Werdyktem (łącznie 3 wyroki skazujące).
+* **Cienie Al-Andalus:** 2 Relikwie ewakuowane.
+* **Korona & Borgiowie:** 2 Dekrety.
+* **Kabała z Toledo:** 2 Fragmenty (od Ery 6).
+* **Gildia Cieni:** 8 Upadków.  
+Po 12 Erach wygrywa gracz najbliższy celowi / z najniższą Herezją.  
 **Patrz także:** [Era](#era), [Herezja](#herezja)

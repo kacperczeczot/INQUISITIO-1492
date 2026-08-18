@@ -77,17 +77,16 @@ Diagram gry, nie mapa miasta. W każdym węźle: **stos ≤3 kart** 63×88 mm (j
 - **Kronika Dziejów:** karty edyktów (talia + aktywny Edykt Ery) — nie żetony
 
 ```
-  [Relikwie · Stosy · Fragmenty]     [Kronika Dziejów: talia | edykt]
+  [Relikwie · Stosy · Fragmenty]        [Kronika Dziejów: talia | edykt]
                     ● Inkwizytor (na lokacji)
 
-                      (2) PAŁAC
-                     ╱    │    ╲
-                    ╱     │     ╲
-        (1) TRYBUNAŁ      │      (4) RYNEK
-              │  ╲        │        │
-              │   ╲───────┘        │
-              │                    │
-        (3) LOCHY ────────── (5) GILDIA
+                         (2) PAŁAC ─────────── (4) RYNEK
+                        ╱    │                    │
+                       ╱     │                    │
+        (1) TRYBUNAŁ ──      │                    │
+                       ╲     │                    │
+                        ╲    │                    │
+                         (3) LOCHY ─────────── (5) GILDIA
 
   W każdym węźle: ○○○○ Agenci · Relikwia □ · ▭ stos ≤3
   Lochy +: Areszt ○○○○

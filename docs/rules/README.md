@@ -5,16 +5,16 @@
 ## Złote prawa stołu
 
 1. **Prawo Trybunału (hierarchia)**  
-   [`ksiega.md`](ksiega.md) + [`slownik.md`](slownik.md) > [`teach-sheet.md`](teach-sheet.md) > GDD / notatki playtestowe.
+   [`ksiega.md`](ksiega.md) + [`slownik.md`](slownik.md) stanowią pełną wykładnię zasad stołu.
 
 2. **Edykt karty**  
-   Tekst karty (`Łamie regułę …` / `breaks_rule`) > księga / teach.
+   Tekst karty (`Łamie regułę …` / `breaks_rule`) ma pierwszeństwo przed regułami ogólnymi.
 
 3. **Zasada delty**  
-   Karta pisze tylko deltę względem reguł bazowych; nie powtarza procedur z księgi ani `game/mechanics/`.
+   Karta określa jedynie modyfikację reguł bazowych; nie powtarza procedur z księgi ani `game/mechanics/`.
 
 4. **Wyrok surowy**  
-   Brak zapisu lub konflikt kolejności → na niekorzyść gracza, który najbardziej zyskuje; remis korzyści → wyższa Herezja przegrywa spór; graj dalej.
+   W przypadku sytuacji spornej lub braku zapisu rozstrzygaj na niekorzyść gracza, który najbardziej zyskuje; przy remisie korzyści spór przegrywa gracz o wyższej Herezji; graj dalej.
 
 ---
 
@@ -22,9 +22,9 @@
 
 | Plik | Rola |
 | :--- | :--- |
-| [`teach-sheet.md`](teach-sheet.md) | Nauka przy stole (1–2 strony) — **nie jest księgą** |
-| [`ksiega.md`](ksiega.md) | Kompletna księga: komponenty, setup, 3 Fazy Ery, zwycięstwo, freeze, suplementy-lite |
-| [`slownik.md`](slownik.md) | Słowniczek A–Z — **pierwszy lookup** przy stole |
+| [`ksiega.md`](ksiega.md) | Kompletna Księga Zasad (4p): komponenty, setup, 3 Fazy Ery, procedury, opis frakcji |
+| [`slownik.md`](slownik.md) | Słownik i leksykon A–Z — pierwszy lookup przy stole |
+| [`wariant-2p.md`](wariant-2p.md) | Suplement reguł dla 2 graczy (wariant 2×2 oraz 1v1) |
 | [`../../game/mechanics/`](../../game/mechanics/) | Głębokie procedury pod hasła słownika |
 | [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md) | Zamknięty język `effect` na kartach |
 | [`../../game/cards/SCHEMA.md`](../../game/cards/SCHEMA.md) | Anatomia pól karty |

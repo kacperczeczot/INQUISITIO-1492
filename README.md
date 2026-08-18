@@ -16,7 +16,7 @@ A/B w sim = teach / izolacja talii, nie osobny PnP.
 | :--- | :--- |
 | GDD | [`docs/gdd/Inquisitio_1492_GDD.md`](docs/gdd/Inquisitio_1492_GDD.md) |
 | Zasady (hub) | [`docs/rules/README.md`](docs/rules/README.md) |
-| Teach / księga / słownik | [`docs/rules/teach-sheet.md`](docs/rules/teach-sheet.md) · [`ksiega.md`](docs/rules/ksiega.md) · [`slownik.md`](docs/rules/slownik.md) |
+| Księga zasad / słownik | [`docs/rules/ksiega.md`](docs/rules/ksiega.md) · [`docs/rules/slownik.md`](docs/rules/slownik.md) |
 | Setupy | [`playtesting/setups.md`](playtesting/setups.md) |
 | Balans | [`playtesting/balance-notes.md`](playtesting/balance-notes.md) |
 | Sim | [`sim/README.md`](sim/README.md) |
@@ -47,7 +47,7 @@ Szczegóły: [`game/factions/`](game/factions/) · [`docs/rules/ksiega.md`](docs
 
 ## Szybki start
 
-1. Nauka → `docs/rules/teach-sheet.md` · lookup → `docs/rules/slownik.md` · księga → `docs/rules/ksiega.md`
+1. Zasady → `docs/rules/ksiega.md` · lookup → `docs/rules/slownik.md`
 2. Setup → `playtesting/setups.md`
 3. Karty → `game/cards/` · zbiorczo: `game/cards/KATALOG.md`
 4. Feel: `cd sim && python -m inquisitio feel --setup 3p-oficjum-alandalus-korona --seed 42 --layer C`
