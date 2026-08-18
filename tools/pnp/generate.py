@@ -1601,6 +1601,13 @@ body.bw .card-proto {
   height: 14.5mm;
   display: block;
 }
+.token-cell .coin {
+  width: 14.5mm;
+  height: 14.5mm;
+  flex: 0 0 14.5mm;
+  border-width: 0.6mm;
+  box-shadow: inset 0 0 0 0.6mm rgba(255, 236, 160, 0.6);
+}
 
 /* Faction agent cards */
 .token-cell.agent-so { background: #7a1f1f; }
@@ -1729,37 +1736,27 @@ body.bw .card-proto {
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
-  border-right: 0.25mm solid rgba(42, 28, 18, 0.5);
-  border-bottom: 0.25mm solid rgba(42, 28, 18, 0.5);
-  background: var(--parch) !important;
+  border: none;
+  background: var(--faction-edge, var(--blood)) !important;
   display: flex;
   flex-direction: column;
   padding: 0;
+  margin: 0;
   box-shadow: none;
 }
-.card-proto.card-print-cell:nth-child(3n) { border-right: none; }
-.card-proto.card-print-cell:nth-child(n+7) { border-bottom: none; }
 .card-proto.card-print-cell::before {
   display: none !important;
 }
 
-/* Outer perimeter bleed margin (2.5mm) */
-.pos-r0-c0 { padding: 2.5mm 0 0 2.5mm; }
-.pos-r0-c1 { padding: 2.5mm 0 0 0; }
-.pos-r0-c2 { padding: 2.5mm 2.5mm 0 0; }
-
-.pos-r1-c0 { padding: 0 0 0 2.5mm; }
-.pos-r1-c1 { padding: 0; }
-.pos-r1-c2 { padding: 0 2.5mm 0 0; }
-
-.pos-r2-c0 { padding: 0 0 2.5mm 2.5mm; }
-.pos-r2-c1 { padding: 0 0 2.5mm 0; }
-.pos-r2-c2 { padding: 0 2.5mm 2.5mm 0; }
-
-/* Inner parchment canvas */
-.card-proto.card-print-cell .card-inner-flow {
-  width: 100%;
-  height: 100%;
+/* Inner parchment canvas: exact 60×85 mm on all cards */
+.card-proto.card-print-cell .card-inner-flow,
+.card-proto.card-print-cell .card-back-content {
+  width: 60mm;
+  height: 85mm;
+  min-width: 60mm;
+  max-width: 60mm;
+  min-height: 85mm;
+  max-height: 85mm;
   box-sizing: border-box;
   background: var(--parch, #f4ead7);
   position: relative;
@@ -1767,26 +1764,25 @@ body.bw .card-proto {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: none;
+  border: 0.25mm solid rgba(166, 124, 45, 0.55);
 }
 
+/* Exact margins: 1.5mm card border on inside cuts + 2.5mm bleed on outer perimeter */
+.pos-r0-c0 .card-inner-flow, .pos-r0-c0 .card-back-content { margin: 4mm 1.5mm 1.5mm 4mm; }
+.pos-r0-c1 .card-inner-flow, .pos-r0-c1 .card-back-content { margin: 4mm 1.5mm 1.5mm 1.5mm; }
+.pos-r0-c2 .card-inner-flow, .pos-r0-c2 .card-back-content { margin: 4mm 4mm 1.5mm 1.5mm; }
+
+.pos-r1-c0 .card-inner-flow, .pos-r1-c0 .card-back-content { margin: 1.5mm 1.5mm 1.5mm 4mm; }
+.pos-r1-c1 .card-inner-flow, .pos-r1-c1 .card-back-content { margin: 1.5mm 1.5mm 1.5mm 1.5mm; }
+.pos-r1-c2 .card-inner-flow, .pos-r1-c2 .card-back-content { margin: 1.5mm 4mm 1.5mm 1.5mm; }
+
+.pos-r2-c0 .card-inner-flow, .pos-r2-c0 .card-back-content { margin: 1.5mm 1.5mm 4mm 4mm; }
+.pos-r2-c1 .card-inner-flow, .pos-r2-c1 .card-back-content { margin: 1.5mm 1.5mm 4mm 1.5mm; }
+.pos-r2-c2 .card-inner-flow, .pos-r2-c2 .card-back-content { margin: 1.5mm 4mm 4mm 1.5mm; }
+
 .card-proto.card-print-cell.card-back-cell {
-  background: var(--back-accent, var(--blood)) !important;
+  background: var(--back-accent, var(--faction-edge, var(--blood))) !important;
   color: #ffffff;
-}
-.card-proto.card-print-cell .card-back-content {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background: var(--back-accent, var(--blood));
-  position: relative;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border: none;
 }
 
 /* Header */
@@ -1895,29 +1891,52 @@ body.mode-trim .crop-line-h-right {
   display: none;
 }
 
-/* Light Ink-Saver Card Backs with Full Bleed Faction Border */
+/* High-Contrast Royal Faction Card Backs */
 .card-proto.card-print-cell.card-back-cell {
   background: var(--back-accent, var(--faction-edge, var(--blood))) !important;
-  color: var(--ink, #1a120c);
+  color: #ffffff;
   border: none;
   position: relative;
 }
 .card-proto.card-print-cell.card-back-cell .card-back-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--back-accent, var(--blood));
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
-  padding: 4mm 3mm;
+  justify-content: space-evenly;
+  padding: 5.5mm 3.5mm;
+  overflow: hidden;
+  border: none;
+  z-index: 3;
+}
+.card-proto.card-print-cell.card-back-cell .card-back-content::before {
+  content: "";
+  position: absolute;
+  inset: 2.2mm;
+  border: 0.35mm solid rgba(244, 234, 215, 0.45);
+  outline: 0.25mm solid rgba(212, 175, 55, 0.65);
+  outline-offset: -1.2mm;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .card-back-title {
-  font-family: "Palatino Linotype", Palatino, serif;
-  font-size: 10pt;
-  letter-spacing: 0.14em;
-  color: var(--back-accent, #7a1f1f);
+  font-family: "Cinzel", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 11.5pt;
+  letter-spacing: 0.16em;
+  color: #fffaf0;
   text-transform: uppercase;
   text-align: center;
   font-weight: bold;
   position: relative;
   z-index: 5;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 10px rgba(0, 0, 0, 0.5);
+  max-width: 100%;
+  line-height: 1.15;
 }
 .card-back-crest {
   display: flex;
@@ -1925,22 +1944,28 @@ body.mode-trim .crop-line-h-right {
   justify-content: center;
   position: relative;
   z-index: 5;
-  width: 16mm;
-  height: 16mm;
+  width: 24mm;
+  height: 24mm;
+  background: radial-gradient(circle at 35% 30%, #fffef8 0%, #f4ead7 65%, #d8c29d 100%);
+  border: 0.55mm solid #d4af37;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.4mm rgba(42, 28, 18, 0.4), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 0 5px rgba(166, 124, 45, 0.3);
 }
 .card-back-crest .ico, .card-back-crest svg {
   width: 16mm;
   height: 16mm;
+  display: block;
 }
 .card-back-brand {
-  font-family: "Palatino Linotype", Palatino, serif;
-  font-size: 7.5pt;
-  letter-spacing: 0.22em;
-  color: #5c4c3e;
+  font-family: "Cinzel", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 8.5pt;
+  letter-spacing: 0.24em;
+  color: #e5c365;
   font-weight: bold;
   text-align: center;
   position: relative;
   z-index: 5;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 /* Print Toolbar UI */
@@ -2681,7 +2706,7 @@ def _render_token_crop_marks() -> str:
 
 def render_tokens(layer: str) -> str:
     """Cut sheet: 20×20 mm single-cut dense grid (0 gap, shared cutlines)."""
-    # 1. Sheet 1 tokens (72 tokens: Agents, Inquisitor, Faction goals, Intrigues)
+    # 1. Sheet 1 tokens (72 tokens: Agenci, Markery, 5 Herezji, Cele Frakcji, Marionetki, Haki)
     sheet1_items: list[tuple[str, str, str]] = []
     
     # 15 Agents (3 per faction)
@@ -2691,43 +2716,39 @@ def render_tokens(layer: str) -> str:
     sheet1_items.extend([("agent_kabala_toledo", "Kabała", "agent-kt")] * 3)
     sheet1_items.extend([("agent_gildia_cieni", "Gildia", "agent-gc")] * 3)
 
-    # Inquisitor & markers
+    # Inquisitor & markers (5)
     sheet1_items.append(("inquisitor", "Inkwizytor", "token-inq"))
     sheet1_items.append(("patrol", "Patrol", "token-patrol"))
     sheet1_items.append(("autodafe_state", "Autodafé", "token-auto"))
     sheet1_items.append(("first_player", "1. Gracz", "token-p1"))
     sheet1_items.append(("sea_route", "Szlak", "token-sea"))
 
-    # Herezja
-    sheet1_items.extend([("heresy", "Herezja", "token-heresy")] * 4)
+    # 5 Znaczników Herezji (komplet dla 5 graczy)
+    sheet1_items.extend([("heresy", "Herezja", "token-heresy")] * 5)
 
-    # Cele frakcji
+    # Cele frakcji (28)
     sheet1_items.extend([("stack", "Stos", "token-stack")] * 6)
     sheet1_items.extend([("relic", "Relikwia", "token-relic")] * 6)
     sheet1_items.extend([("fragment", "Fragment", "token-fragment")] * 6)
     sheet1_items.extend([("decree", "Dekret", "token-decree")] * 2)
     sheet1_items.extend([("fall", "Upadek", "token-fall")] * 8)
 
-    # Intryga
-    sheet1_items.extend([("hook", "Hak", "token-hook")] * 12)
+    # Intryga: Marionetki (8) + Haki (11 na arkusz 1)
     sheet1_items.extend([("double", "Marionetka", "token-double")] * 8)
+    sheet1_items.extend([("hook", "Hak", "token-hook")] * 11)
 
-    # Pad to 72 if needed
-    while len(sheet1_items) < 72:
-        sheet1_items.append(("gold", "1 złoto", "token-gold"))
-
-    # 2. Sheet 2 tokens (72 tokens: Piętno + Złoto + zapasowe)
+    # 2. Sheet 2 tokens (72 tokens: Haki, Piętno, Skarbiec Złota)
     sheet2_items: list[tuple[str, str, str]] = []
-    sheet2_items.extend([("spent", "Piętno", "token-spent")] * 15)
-    sheet2_items.extend([("gold", "1 złoto", "token-gold")] * 40)
-    # 1 dodatkowa Herezja (dla wariantu 5p) + zapasowe monety złota do pełnego arkusza 72
-    sheet2_items.append(("heresy", "Herezja", "token-heresy"))
-    while len(sheet2_items) < 72:
-        sheet2_items.append(("gold", "1 złoto", "token-gold"))
+    # Dokończenie Haków (1 sztuka + 2 zapasowe = 3)
+    sheet2_items.extend([("hook", "Hak", "token-hook")] * 3)
+    # Piętna (15 limitów + 3 zapasowe = 18, czyli 2 równe rzędy)
+    sheet2_items.extend([("spent", "Piętno", "token-spent")] * 18)
+    # Skarbiec Złota (51 monet, czyste rzędy złota)
+    sheet2_items.extend([("gold", "1 złoto", "token-gold")] * 51)
 
     sheets = [
-        ("Arkusz Żetonów 1/2 — Agenci, Frakcje, Intryga", sheet1_items[:72]),
-        ("Arkusz Żetonów 2/2 — Piętno, Skarbiec Złota", sheet2_items[:72]),
+        ("Arkusz Żetonów 1/2 — Agenci, Markery, Herezja, Cele, Marionetki", sheet1_items[:72]),
+        ("Arkusz Żetonów 2/2 — Haki, Piętna, Skarbiec Złota", sheet2_items[:72]),
     ]
 
     pages = []
