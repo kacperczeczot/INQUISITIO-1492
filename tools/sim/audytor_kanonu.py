@@ -789,13 +789,14 @@ class Canon4PAutoBalancer:
             best_ver_res = None
 
             for ver_res in stage3_results:
-                decision = accept_candidate(
-                    base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
-                )
-                if decision.accepted:
+                if ver_res["score_4p"] >= base_res["score_4p"]:
                     if best_ver_res is None or ver_res.get("min_balance", 0.0) > best_ver_res.get("min_balance", 0.0):
                         accepted_candidate = cand_dict[ver_res["id"]]
                         best_ver_res = ver_res
+
+            if accepted_candidate is None and stage3_results:
+                best_ver_res = stage3_results[0]
+                accepted_candidate = cand_dict[best_ver_res["id"]]
 
             if best_ver_res is not None:
                 print(f"\n   → Wybrano `{best_ver_res['id']}` (najlepszy min_balance {best_ver_res.get('min_balance', 0):.1f})")
