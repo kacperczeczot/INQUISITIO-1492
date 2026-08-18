@@ -368,7 +368,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .cards {
   display: grid;
   grid-template-columns: repeat(3, var(--card-w));
-  gap: 3mm;
+  gap: 0;
   justify-content: start;
 }
 .card-proto {
@@ -761,7 +761,7 @@ body.bw .card-proto {
 .heresy-pip.z3 { background: #e8b8b8; }
 .heresy-zones {
   display: grid;
-  grid-template-columns: 4fr 3fr 4fr;
+  grid-template-columns: 5fr 2fr 4fr; /* 0-4 (5), 5-6 (2), 7-10 (4) - exact 11 pips match */
   margin: 0; /* tuż pod torem — nigdy margin-top: auto */
   flex: 0 0 auto;
   font-size: 11pt;
@@ -798,10 +798,10 @@ body.bw .card-proto {
   min-width: 0;
 }
 .pb-row-top {
-  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Haki: 2×20 + pad */
+  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Agenci: 3×20 | Złoto flex | Haki: 2×20 */
 }
 .pb-row-bot {
-  grid-template-columns: minmax(0, 1fr) auto; /* Postęp: auto width pod liczbę żetonów */
+  grid-template-columns: 116mm minmax(0, 1fr); /* Limity: 116mm (3 kolumny ~37mm) | Postęp: reszta ~86mm */
 }
 .pb-box {
   box-sizing: border-box;
@@ -831,6 +831,12 @@ body.bw .card-proto {
   overflow: hidden;
   white-space: nowrap;
 }
+.pb-title-hint {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #5c4c3e;
+  margin-left: 1mm;
+}
 .pb-slots {
   display: flex;
   flex-wrap: nowrap;
@@ -840,6 +846,22 @@ body.bw .card-proto {
   min-height: 0;
   overflow: hidden;
 }
+.pb-slots.progress-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 14mm);
+  grid-template-rows: repeat(2, 14mm);
+  gap: 1.5mm;
+  justify-content: center;
+  align-content: center;
+}
+.pb-slots.progress-grid-8 {
+  display: grid;
+  grid-template-columns: repeat(4, 14mm);
+  grid-template-rows: repeat(2, 14mm);
+  gap: 1.5mm;
+  justify-content: center;
+  align-content: center;
+}
 .pb-tray {
   width: 100%;
   height: 100%;
@@ -848,6 +870,23 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pb-tray-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.pb-tray-hint {
+  font-size: 9pt;
+  font-weight: bold;
+  color: #7a5a18;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -868,6 +907,18 @@ body.bw .card-proto {
   align-items: center;
   justify-content: center;
 }
+.pb-token.token-compact {
+  width: 14mm;
+  height: 14mm;
+  flex: 0 0 14mm;
+}
+.pb-token.token-compact .ico {
+  width: 9.5mm;
+  height: 9.5mm;
+}
+.pb-token.token-compact .ico-fallback {
+  font-size: 11pt;
+}
 .pb-token.hook-slot { border-color: var(--line); }
 .pb-token.progress-slot {
   border-style: dashed;
@@ -881,7 +932,7 @@ body.bw .card-proto {
   min-height: 0;
   opacity: 0.32; /* ghost w odcisku — odróżnić od prawdziwego żetonu */
 }
-/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — mieści się w ~130×41 mm */
+/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — szerokość 116mm */
 .pb-body.layer-c .pb-box.limits {
   grid-template-columns: 1fr;
   grid-template-rows: 7mm minmax(0, 1fr);
@@ -922,7 +973,7 @@ body.bw .card-proto {
 }
 .pb-limit .pb-token .ico-fallback { font-size: 11pt; }
 .pb-limit-lbl {
-  font-size: 12pt;
+  font-size: 11.5pt;
   font-weight: bold;
   color: var(--ink);
   line-height: 1.1;
@@ -943,6 +994,7 @@ body.bw .card-proto {
 .pb-body.layer-a .pb-limit-lbl { font-size: 11pt; }
 
 .page-a4.player-page {
+  position: relative;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -956,6 +1008,16 @@ body.bw .card-proto {
 }
 .page-a4.player-page .player-stack + .player-stack {
   border-top: none;
+}
+.player-cut-mark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 148mm;
+  height: 0;
+  border-top: 0.35mm dashed rgba(42, 28, 18, 0.4);
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* tokens — 20×20 mm rounded squares packed onto one A4 */
