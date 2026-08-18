@@ -6,6 +6,7 @@ from collections import deque
 
 from inquisitio.config import CONFIG
 from inquisitio.engine.heresy import add_heresy
+from inquisitio.engine.variants import variant_int
 from inquisitio.engine.state import (
     LOCATION_INDEX,
     NEIGHBORS,
@@ -54,8 +55,7 @@ def step_toward(src: str, dst: str) -> str:
 
 
 def move_inquisitor(state: GameState, rng: random.Random, toward: str | None = None) -> None:
-    sys = state.sys_overrides or {}
-    speed = sys.get("inquisitor_speed", CONFIG.variants.inquisitor_speed)
+    speed = variant_int(state, "inquisitor_speed", int(CONFIG.variants.inquisitor_speed))
     if speed == 0:
         state.inquisitor_mode = InquisitorMode.PATROL
         return
@@ -70,10 +70,12 @@ def move_inquisitor(state: GameState, rng: random.Random, toward: str | None = N
     state.add_log(f"Inquisitor patrol -> {state.inquisitor_location}")
 
 
-def send_inquisitor(state: GameState, sender: FactionId, location: str) -> bool:
-    """Nasłanie already spent this era → no extra teleport on reveal."""
+def send_inquisitor(
+    state: GameState, sender: FactionId, location: str, *, limit: int = 1
+) -> bool:
+    """Nasłanie — limit per era from card YAML (`inquisitor_send_limit`)."""
     p = state.players[sender]
-    if p.used_inquisitor_send:
+    if p.inquisitor_send_count >= limit:
         return False
     if location not in LOCATION_INDEX:
         return False
@@ -153,16 +155,20 @@ def era_start_inquisitor(
     dest: str | None = None,
     announce_autodafe: bool | None = None,
 ) -> None:
-    """Patrol 0 or 1 (speed override for L4), then optional Autodafé."""
-    sys = state.sys_overrides or {}
-    speed = sys.get("inquisitor_speed", CONFIG.variants.inquisitor_speed)
+    """Patrol 0 or 1+ (speed override for L4), then optional Autodafé."""
+    speed = variant_int(state, "inquisitor_speed", int(CONFIG.variants.inquisitor_speed))
     cur = state.inquisitor_location
     if int(speed) == 0:
         state.inquisitor_mode = InquisitorMode.PATROL
         state.add_log("Inquisitor patrol skipped (speed 0)")
     elif dest is not None:
-        if dest == cur or dest in neighbors(cur):
-            state.inquisitor_location = dest
+        steps = max(1, int(speed))
+        target = dest if dest in LOCATION_INDEX else cur
+        for _ in range(steps):
+            nxt = step_toward(state.inquisitor_location, target)
+            if nxt == state.inquisitor_location:
+                break
+            state.inquisitor_location = nxt
         state.inquisitor_mode = InquisitorMode.PATROL
         state.add_log(f"Inquisitor patrol -> {state.inquisitor_location}")
     elif toward and toward in LOCATION_INDEX:

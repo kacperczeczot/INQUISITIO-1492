@@ -13,17 +13,21 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v0.96**
+## Gwarancja silnika — `game_config.yaml` **v0.99.4**
 
-**Zakres:** od tego momentu pętla ery w simie **gra te same procedury stołu** co księga / słownik / `game/mechanics/` (Intryga, Sąd, Kronika). Każda nazwana mechanika jest **wpięta i odpala się, gdy jest legalna** — nie jako martwy YAML ani pusty `pass`.
+**Zakres:** pętla ery gra te same procedury stołu co księga / słownik / `game/mechanics/` (Intryga, Sąd, Kronika). Każda **nazwana mechanika L4 i pole karty z `config_reference.md`** jest wpięta — nie martwy YAML.
 
-Wchodzi m.in.: Gospodarcza i Jarmark; zakrycie / odkrycie 1→5; fiasko bez Herezji; Hak (max 2, wymuszenie 1/erę); nasłanie → Patrol 0–1 → Autodafé na **rywalach** (Stos za agenta); Przesłuchanie (Marionetka / Hak / +2); wykrycie Marionetki; ruch Marionetki 1/erę; Werdykt (1 oskarżenie na cel / erę, remis = uniewinnienie, skazanie = areszt + Herezja, Stos tylko gdy Oficjum oskarża); reakcje `so-05` / `gc-05`; Kronika; cele C; tie-break.
+**v0.99.4 domknięcie luk (wcześniej martwe w simie):**
+- `variants.sea_route_era` — planowe otwarcie Szlaku (nie tylko edykt `time-03`)
+- `variants.verdict_secret`, `no_time_deck`, `time_deck_freq`, `inquisitor_speed` — odczyt z CONFIG + `sys_overrides`
+- CAA: `caa-03` ciągnie relikwię; `caa-05` → `shadow_exit`; `caa-08`/`caa-11`; `caa-10` warunek + snapshot przy stagingu
+- Korona: `kb-10` warunek `active_hooks_gte_2` + ochrona Haków do odkrycia (`StagedPlay.cond_ok`, skip `force_hook`)
+- Karty: `heresy_decrease` (`kt-11`), YAML `condition` → fiasko (per-handler, nie globalnie)
+- Testy: `sim/tests/test_engine_guarantee.py`, `test_ssot_live_knobs.py` — **204 passed**
 
-**Poza zakresem (świadomie):** AI nie blefuje jak człowiek (heurystyka celów i głosów); tekst `effect` nie jest osobnym kompilatorem leksykonu — karty idą przez handlery + pola YAML. Sesja ludzka nadal mierzy fun Werdyktu.
+**Poza zakresem (świadomie):** AI nie blefuje jak człowiek; wolny tekst `effect` nie jest kompilatorem leksykonu — karty idą przez handlery + pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (balance-notes).
 
-**Gwarancja:** od **v0.96** audytor i batch mierzą **tę** grę (procedury kanonu), nie proxy bez Gospodarczej / z kasowaniem agentów przy Werdykcie / z darmową ewakuacją Cieni.
-
-**Audytor — nie z dołu.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P tylko gdy udziały są już w 15–35% (żywe `±1`; Gospodarcza **≥1**, nie 1→0). Poza czerwoną linią (v0.98 L2: 3.7 pkt) makro **stop** — L2/ręczny SSOT. `audytor_3p.py` / `audytor_5p.py` piszą **tylko** wyjątki `3p:` / `5p:` (próg, złoto, L2) — **nie** ruszają gałek całego stołu (Obserwowana, karty/erę, Gospodarcza, Er, CD Autodafé, szlak). `--dry-run` = pomiar bez zapisu YAML. Jeździec Δ≈0 i ablacja `off` nie wchodzą. Kasowanie Gospodarczej to decyzja po raporcie użyteczności, nie pierwszy patch.
+**Audytor — nie z dołu.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P tylko gdy udziały są już w 15–35%.
 
 — Cursor Grok 4.6
 
@@ -85,6 +89,13 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.4 (2026-08-18) — domknięcie gwarancji silnika (L4 + CAA + staged)
+
+- **Problem:** `sea_route_era`, `verdict_secret`, `caa-03/05/08/11`, YAML `condition`/`heresy_decrease`/`decree`/`move_inquisitor` — martwe w simie mimo SSOT.
+- **Silnik:** `variants.py`, `card_conditions.py`; Szlak z `sea_route_era`; CAA (`shadow_exit`, ciągnięcie relikwii, warunki); `kb-10` + fix race staged/fiasko (Haki zjadane przed odkryciem); `StagedPlay.cond_ok` snapshot warunku.
+- **Testy:** `test_engine_guarantee.py` — **204 passed**.
+- **Balans (5000g, seed 42):** HUD **44,8** | **Fundament nadal False** (CAA ~13% w `4p-core`/`4p-no-kabala` przez `caa-10` condition; Korona ~36–40% w składach bez Oficjum). Audytor makro **uruchamia się**, kończy na bramce — **0 patchy**.
 
 ### 🟡 Patch v0.99.3 (2026-08-18) — wspinaczka do bramki audytora (niedokończona; **nie** v1.0)
 

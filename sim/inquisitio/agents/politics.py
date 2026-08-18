@@ -164,12 +164,23 @@ class PoliticsAgent:
                         u += 3.0
 
             elif faction == FactionId.KORONA_BORGIOWIE:
+                from inquisitio.engine.hooks import distinct_hook_victims
+
+                active_hooks = distinct_hook_victims(state, faction)
                 if "decree" in c.tags:
                     u += 4.0
                     if pl.decrees_played < 2:
                         u += 2.0
-                if c.creates_hook and len(pl.hook_victims_ever) < 2:
-                    u += 2.5
+                if c.id == "kb-10":
+                    if active_hooks >= 2:
+                        u += 14.0
+                    else:
+                        u -= 20.0
+                if c.creates_hook:
+                    if active_hooks < 2 or len(pl.hook_victims_ever) < 2:
+                        u += 4.5
+                    else:
+                        u += 2.5
 
             elif faction == FactionId.KABALA_TOLEDO:
                 if "fragment" in c.tags:

@@ -6,6 +6,7 @@ from typing import Callable
 
 from inquisitio.cards.loader import Card, load_all_cards
 from inquisitio.config import CONFIG
+from inquisitio.engine.card_conditions import card_condition_met
 from inquisitio.engine.dungeon import arrest_agent, interrogate
 from inquisitio.engine.heresy import add_heresy
 from inquisitio.engine.hooks import (
@@ -93,6 +94,11 @@ def apply_generic(state: GameState, fid: FactionId, card: Card, rng: random.Rand
             state.add_log(f"{fid.value} gold {before}→{pl.gold} ({card.id})")
     if card.heresy:
         add_heresy(state, fid, card.heresy, reason=card.id)
+    raw = card.raw if isinstance(card.raw, dict) else {}
+    dec = int(raw.get("heresy_decrease", 0) or 0)
+    if dec > 0 and pl.heresy > 0:
+        pl.heresy = max(0, pl.heresy - dec)
+        state.add_log(f"{fid.value} heresy -{dec} -> {pl.heresy} ({card.id})")
     if card.target_heresy:
         rival = _pick_rival(state, fid, rng)
         if rival:
@@ -128,6 +134,21 @@ def apply_generic(state: GameState, fid: FactionId, card: Card, rng: random.Rand
                 grant_hook(state, fid, rival)
 
 
+def _drag_relic_toward_harbor(
+    state: GameState, fid: FactionId, loc: str, rng: random.Random
+) -> None:
+    if state.relics_on_board.get(loc, 0) <= 0:
+        return
+    neigh = _neighbors(loc)
+    if not neigh:
+        return
+    harbors = [d for d in neigh if d in ("rynek", "gildia")]
+    dest = rng.choice(harbors) if harbors and rng.random() < 0.7 else rng.choice(neigh)
+    state.relics_on_board[loc] -= 1
+    state.relics_on_board[dest] = state.relics_on_board.get(dest, 0) + 1
+    state.add_log(f"{fid.value} relic {loc}→{dest}")
+
+
 def _mark_gc10_fall_if_legal(state: GameState, fid: FactionId) -> None:
     """Upadek Domu: tylko rywal z Hakiem Gildii lub Marionetką (nie sam krytyczny próg)."""
     pl_gc = state.players[fid]
@@ -141,6 +162,25 @@ def _mark_gc10_fall_if_legal(state: GameState, fid: FactionId) -> None:
             pl_gc.falls += 1
             state.add_log(f"{fid.value} fall on {rival.value} (total={pl_gc.falls})")
             break
+
+
+def _staged_condition_ok(state: GameState, fid: FactionId, card_id: str) -> bool | None:
+    for sp in state.pending_plays:
+        if sp.owner == fid and sp.card_id == card_id:
+            return sp.cond_ok
+    return None
+
+
+def _card_condition_satisfied(
+    state: GameState, fid: FactionId, card: Card, *, staged: bool = False
+) -> bool:
+    raw = card.raw if isinstance(card.raw, dict) else {}
+    if not raw.get("condition"):
+        return True
+    snap = _staged_condition_ok(state, fid, card.id) if staged else None
+    if snap is not None:
+        return snap
+    return card_condition_met(state, fid, card)
 
 
 def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random) -> None:
@@ -161,6 +201,9 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                     state.add_log(f"{fid.value} relic {ag.location}→{dest}")
                 break
     elif card.id == "caa-10":
+        if not _card_condition_satisfied(state, fid, card, staged=True):
+            state.add_log(f"{fid.value} {card.id} fiasko (condition unmet)")
+            return
         evacuated_n = 0
         for ag in pl.agents:
             if evacuated_n >= 2:
@@ -202,18 +245,23 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
             state.add_log(
                 f"{fid.value} evacuated {evacuated_n} relic(s) (total={pl.relics_evacuated})"
             )
-    elif card.id in ("kb-09", "kb-10"):
+    elif card.id == "kb-09":
         pl.decrees_played += 1
         state.add_log(f"{fid.value} decree played (total={pl.decrees_played})")
-        if card.id == "kb-09":
-            targets = [t for t, n in pl.hooks_on.items() if n > 0]
-            if targets:
-                force_hook(state, fid, targets[0], comply=rng.random() < 0.5)
-            else:
-                rival = _pick_rival(state, fid, rng)
-                # Plant only if Korona already held a Hak on someone ever
-                if rival and distinct_hook_victims_ever(state, fid) >= 1:
-                    grant_hook(state, fid, rival)
+        targets = [t for t, n in pl.hooks_on.items() if n > 0]
+        if targets:
+            force_hook(state, fid, targets[0], comply=rng.random() < 0.5)
+        else:
+            rival = _pick_rival(state, fid, rng)
+            # Plant only if Korona already held a Hak on someone ever
+            if rival and distinct_hook_victims_ever(state, fid) >= 1:
+                grant_hook(state, fid, rival)
+    elif card.id == "kb-10":
+        if not _card_condition_satisfied(state, fid, card, staged=True):
+            state.add_log(f"{fid.value} {card.id} fiasko (condition unmet)")
+            return
+        pl.decrees_played += 1
+        state.add_log(f"{fid.value} decree played (total={pl.decrees_played})")
     elif card.id == "kt-10":
         # Finisher assist: +1 Fragment only when already on the path (≥1)
         if pl.fragments >= 1:
@@ -262,7 +310,14 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
             state.add_log(
                 f"{fid.value} caa-05 evacuated relic from {loc} (total={pl.relics_evacuated})"
             )
+            if state.inquisitor_location != loc:
+                pl.shadow_exit = True
             break
+    elif card.id == "caa-03":
+        for ag in pl.agents:
+            if not ag.arrested and state.relics_on_board.get(ag.location, 0) > 0:
+                _drag_relic_toward_harbor(state, fid, ag.location, rng)
+                break
     elif card.id == "caa-06":
         for ag in pl.agents:
             if ag.arrested:
@@ -270,6 +325,9 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                 _move_agent(state, fid, rng, 1)
                 break
     elif card.id == "caa-08":
+        if not card_condition_met(state, fid, card):
+            state.add_log(f"{fid.value} {card.id} fiasko (condition unmet)")
+            return
         for ag in pl.agents:
             if ag.double_agent and ag.controller == fid:
                 opts = _neighbors(ag.location)
@@ -278,6 +336,13 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                 break
     elif card.id in ("caa-09", "caa-10"):
         _signature(state, fid, card, rng)
+    elif card.id == "caa-11":
+        raw = card.raw if isinstance(card.raw, dict) else {}
+        if raw.get("move_inquisitor"):
+            for ag in pl.agents:
+                if not ag.arrested:
+                    send_inquisitor(state, fid, ag.location)
+                    break
 
 
 def _kb_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) -> None:
@@ -339,6 +404,9 @@ def _gc_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
         # already creates_hook via generic; refusal path in politics
         pass
     elif card.id == "gc-10":
+        if not card_condition_met(state, fid, card):
+            state.add_log(f"{fid.value} {card.id} fiasko (condition unmet)")
+            return
         _mark_gc10_fall_if_legal(state, fid)
 
 
@@ -422,8 +490,16 @@ def play_card(
     suffix = " [signature]" if card.breaks_rule or card.type == "signature" else ""
     paid = f" paid {cost}" if cost else ""
     if not resolve:
+        raw = card.raw if isinstance(card.raw, dict) else {}
+        cond_ok = card_condition_met(state, fid, card) if raw.get("condition") else None
         state.pending_plays.append(
-            StagedPlay(owner=fid, card_id=card_id, location=loc, seq=len(state.pending_plays))
+            StagedPlay(
+                owner=fid,
+                card_id=card_id,
+                location=loc,
+                seq=len(state.pending_plays),
+                cond_ok=cond_ok,
+            )
         )
         state.add_log(f"{fid.value} staged {card_id} ({name}) under {loc}{suffix}{paid}")
         if cost and pl.gold != gold_before:

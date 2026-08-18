@@ -5,6 +5,7 @@ import random
 from typing import Any
 
 from inquisitio.config import CONFIG
+from inquisitio.engine.variants import variant_bool
 from inquisitio.engine.heresy import add_heresy, is_critical
 from inquisitio.engine.state import FactionId, GameState
 
@@ -68,7 +69,7 @@ def run_verdict(
     votes_spare = 0
     so_near_win = oficjum_snowball_threat(state)
     sys = state.sys_overrides or {}
-    secret_verdict = sys.get("verdict_secret", False)
+    secret_verdict = variant_bool(state, "verdict_secret", False)
     for fid in state.turn_order:
         if fid == accused:
             continue

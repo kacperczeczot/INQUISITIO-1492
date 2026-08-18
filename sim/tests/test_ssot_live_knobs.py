@@ -52,6 +52,36 @@ def test_apply_mutation_writes_observed_and_cards_per_era():
     assert cfg["variants"]["sea_route_era"] == 5
 
 
+def test_sea_route_era_opens_from_ssot_variant():
+    """variants.sea_route_era must reach play — not only time-03 edict."""
+    from inquisitio.engine.turn import _maybe_open_sea_route
+
+    st = new_game(setup="4p-core", seed=1, layer="C")
+    assert int(CONFIG.variants.sea_route_era) == 4
+    assert not st.sea_route_open
+    st.era = 3
+    _maybe_open_sea_route(st)
+    assert not st.sea_route_open
+    st.era = 4
+    _maybe_open_sea_route(st)
+    assert st.sea_route_open
+
+    off = new_game(setup="4p-core", seed=2, layer="C", sys_overrides={"sea_route_era": 99})
+    off.era = 8
+    _maybe_open_sea_route(off)
+    assert not off.sea_route_open
+
+
+def test_caa_shadow_exit_and_sea_route_win_paths():
+    st = new_game(setup="3p-cienie-korona-kabala", seed=1, layer="C")
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+    caa.relics_evacuated = 2
+    st.era = 2
+    assert check_winner_details(st) is None
+    caa.shadow_exit = True
+    assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
+
+
 def test_path_era_offset_blocks_early_caa():
     st = new_game(setup="3p-cienie-korona-kabala", seed=1, layer="C")
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]

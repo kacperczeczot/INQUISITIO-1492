@@ -77,7 +77,12 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             path_era = max(1, _val(cfg_caa.path_era, pc) + ov.get("caa_era_offset", 0))
 
             if pl.relics_evacuated >= relic_need and state.era >= path_era:
-                if state.sea_route_open or pl.path_via_double or pl.avoided_autodafe:
+                if (
+                    state.sea_route_open
+                    or pl.path_via_double
+                    or pl.avoided_autodafe
+                    or pl.shadow_exit
+                ):
                     return (fid, "caa_sea_route")
 
         elif fid == FactionId.KORONA_BORGIOWIE:

@@ -5,6 +5,8 @@ import random
 
 from inquisitio.cards.loader import load_all_cards
 from inquisitio.config import CONFIG
+from inquisitio.engine.variants import variant_bool, variant_int
+from inquisitio.engine.card_conditions import card_condition_met
 from inquisitio.engine.dungeon import interrogate, move_controlled_marionette
 from inquisitio.engine.effects.registry import (
     optional_agent_step,
@@ -12,7 +14,7 @@ from inquisitio.engine.effects.registry import (
     resolve_pending_plays,
     resolve_time_edict,
 )
-from inquisitio.engine.hooks import active_hook_targets, force_hook
+from inquisitio.engine.hooks import active_hook_targets, distinct_hook_victims, force_hook
 from inquisitio.engine.inquisitor import can_autodafe, era_start_inquisitor
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.table_ai import (
@@ -42,6 +44,28 @@ def _draw(state: GameState, fid: FactionId, n: int = 1) -> None:
             # reshuffle handled by caller rng externally — simple reverse
             pl.deck = pl.deck[::-1]
         pl.hand.append(pl.deck.pop())
+
+
+def _sea_route_era_threshold(state: GameState) -> int:
+    if "sea_route_era" in (state.sys_overrides or {}):
+        return max(1, variant_int(state, "sea_route_era", 4))
+    off = (state.sys_overrides or {}).get("sea_route_era_offset")
+    base = int(getattr(CONFIG.variants, "sea_route_era", 4))
+    if off is not None:
+        return max(1, base + int(off))
+    return max(1, base)
+
+
+def _maybe_open_sea_route(state: GameState) -> None:
+    """SSOT variants.sea_route_era — scheduled opening (Kronika time-03 still stacks)."""
+    if state.sea_route_open:
+        return
+    threshold = _sea_route_era_threshold(state)
+    if threshold >= 90:
+        return
+    if state.era >= threshold:
+        state.sea_route_open = True
+        state.add_log(f"Sea route open (era {state.era} ≥ {threshold})")
 
 
 def _reset_era_flags(state: GameState) -> None:
@@ -75,6 +99,9 @@ def _legal_card_ids(state: GameState, fid: FactionId) -> list[str]:
         curfew_cost = 1 if (state.active_time_edict == "time-02" and c.location in ("rynek", "gildia")) else 0
         cost = max(0, c.cost + card_cost_offset + sig_offset + curfew_cost)
         if pl.gold >= cost:
+            raw = c.raw if isinstance(c.raw, dict) else {}
+            if cid == "kb-10" and raw.get("condition") and not card_condition_met(state, fid, c):
+                continue
             legal.append(cid)
     return legal
 
@@ -112,6 +139,15 @@ def take_economic_action(
 
 def _maybe_force_hook(state: GameState, fid: FactionId, rng: random.Random) -> None:
     if state.players[fid].used_hook:
+        return
+    pl = state.players[fid]
+    if any(sp.owner == fid and sp.card_id == "kb-10" for sp in state.pending_plays):
+        return
+    if (
+        fid == FactionId.KORONA_BORGIOWIE
+        and "kb-10" in pl.hand
+        and distinct_hook_victims(state, fid) >= 2
+    ):
         return
     targets = active_hook_targets(state, fid)
     if not targets:
@@ -195,6 +231,7 @@ def play_era(
     sys = state.sys_overrides or {}
     state.metrics.eras += 1
     state.eras_since_autodafe += 1
+    _maybe_open_sea_route(state)
     _reset_era_flags(state)
 
     # ══════════════════════════════════════════════════════════════
@@ -279,8 +316,13 @@ def play_era(
         state.add_log(f"{fid.value} end of era upkeep: +{income} gold (now {pl.gold})")
 
     # 2. Odkrycie Edyktu Kroniki Dziejów (obowiązującego w nadchodzącej Erze)
-    freq = sys.get("time_deck_freq", CONFIG.variants.time_deck_freq)
-    if state.layer == "C" and state.time_deck and (state.era % freq == 0) and not sys.get("no_time_deck", False):
+    freq = variant_int(state, "time_deck_freq", int(CONFIG.variants.time_deck_freq))
+    if (
+        state.layer == "C"
+        and state.time_deck
+        and (state.era % freq == 0)
+        and not variant_bool(state, "no_time_deck", False)
+    ):
         state.active_time_edict = None
         edict = state.time_deck.pop()
         resolve_time_edict(state, edict, rng)

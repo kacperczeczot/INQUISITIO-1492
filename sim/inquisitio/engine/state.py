@@ -74,6 +74,7 @@ class PlayerState:
     used_inquisitor_send: bool = False
     avoided_autodafe: bool = False
     path_via_double: bool = False
+    shadow_exit: bool = False  # CAA: cichy exit (Ukryty Kurier bez Inkwizytora w lokacji)
     # A teach / shared pressure metric
     frames_dealt: int = 0
     used_kurier: bool = False  # A: caa-05 once
@@ -91,6 +92,7 @@ class StagedPlay:
     card_id: str
     location: str
     seq: int = 0
+    cond_ok: bool | None = None
 
 
 @dataclass
