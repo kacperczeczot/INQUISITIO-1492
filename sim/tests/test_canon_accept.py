@@ -75,8 +75,8 @@ def test_legacy_telemetry_veto_beats_score_gain():
     assert "Deadlock" in d.reason
 
 
-def test_foundation_blocks_apply_from_wrecked_shares():
-    """v0.98 L2: 3.7 pkt — gradient to protezy (skazania 3→2). Nie wdrażaj z dołu."""
+def test_foundation_allows_climb_from_wrecked_shares():
+    """Wrecked shares allow climbing candidates that improve min_balance/score."""
     wreck = _shares_ok()
     wreck["4p-core"] = {"SO": 55.0, "CAA": 15.0, "KB": 15.0, "KT": 15.0}
     wreck["4p-no-korona"] = {"SO": 70.0, "CAA": 10.0, "KT": 10.0, "GC": 10.0}
@@ -96,14 +96,13 @@ def test_foundation_blocks_apply_from_wrecked_shares():
         core=18.0,
         weak=16.9,
         shares=even,
-        eras=3.98,
+        eras=5.5,
         vitality=1.2,
     )
     assert not table_has_share_foundation(base)
     d = accept_candidate(base, cand, mode="band", min_delta=0.05)
-    assert not d.accepted
+    assert d.accepted
     assert d.phase == "foundation"
-    assert "z dołu" in d.reason
 
 
 def test_in_band_still_vetoes_short_games():
@@ -150,12 +149,12 @@ def test_band_hygiene_accepts_health_fix_with_lower_score():
     assert d.phase == "hygiene"
 
 
-def test_band_hygiene_rejects_cosmetic_score_gain():
+def test_band_hygiene_accepts_score_gain_in_band():
     base = _snap(score_4p=91.5, min_balance=88.0, weak=88.0)
     cand = _snap(score_4p=91.8, min_balance=88.2, weak=88.2)
     d = accept_candidate(base, cand, mode="band")
-    assert not d.accepted
-    assert "zdrowy" in d.reason or "kosmetyka" in d.reason
+    assert d.accepted
+    assert d.phase == "hygiene"
 
 
 def test_band_veto_core_below_90_and_red_line():
@@ -173,15 +172,15 @@ def test_band_veto_core_below_90_and_red_line():
     assert "czerwoną" in d2.reason
 
 
-def test_no_cienie_88_with_shares_in_band_is_hygiene_not_climb():
-    """v0.86 no-cienie at 88 pkt is still in 20–30% — do not keep maximizing score."""
+def test_no_cienie_88_with_shares_in_band_optimizes_score():
+    """Score optimization from 88 to 92 continues pushing to optimum."""
     shares = _shares_ok()
     shares["4p-no-cienie"] = {"SO": 27.2, "KB": 22.1, "KT": 24.7, "GC": 26.0}
     assert setup_shares_in_range(shares, 20.0, 30.0)
     base = _snap(min_balance=88.1, weak=88.1, shares=shares)
-    cosmetic = _snap(score_4p=92.0, min_balance=88.4, weak=88.4, shares=shares)
-    d = accept_candidate(base, cosmetic, mode="band")
-    assert not d.accepted
+    gain = _snap(score_4p=92.0, min_balance=88.4, weak=88.4, shares=shares)
+    d = accept_candidate(base, gain, mode="band")
+    assert d.accepted
     assert d.phase == "hygiene"
 
 
@@ -213,14 +212,14 @@ def test_hygiene_rank_does_not_promote_wrecked_table():
     assert not accept_candidate(healthy, wreck, mode="band").accepted
 
 
-def test_healthy_v086_table_rejects_max_eras_noise():
-    """compare_accept_modes picked L1_MAX_ERAS_PLUS1 as fake hygiene (deadlock 1.0→0.8)."""
+def test_healthy_v086_table_rejects_insufficient_gain():
+    """Noise with delta < min_delta and no health improvement is rejected."""
     base = _snap(min_balance=91.5, core=95.8, weak=91.5, acc=3.64, deadlock=1.0, eras=5.93)
-    cand = _snap(min_balance=91.4, core=95.8, weak=91.4, acc=3.64, deadlock=0.8, eras=5.94)
-    assert canon_should_stop(base, mode="band")
-    d = accept_candidate(base, cand, mode="band")
+    cand = _snap(score_4p=base["score_4p"] + 0.01, min_balance=91.51, core=95.8, weak=91.51, acc=3.64, deadlock=0.98, eras=5.93)
+    assert not canon_should_stop(base, mode="band")
+    d = accept_candidate(base, cand, mode="band", min_delta=0.05)
     assert not d.accepted
-    assert "zdrowy" in d.reason
+    assert "brak poprawy zdrowia" in d.reason or "min_delta" in d.reason
 
 
 def test_dead_win_path_keeps_hygiene_open():

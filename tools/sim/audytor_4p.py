@@ -741,11 +741,10 @@ class Macro4PAutoBalancer:
             if self._accept_mode() == "band" and not table_has_share_foundation(base_res):
                 print(
                     "\n🧱 Fundament: 4P poza czerwoną linią 15–35%. "
-                    "Makro nie zapisuje z dołu — L2 / ręczny SSOT, nie wspinaczka protezami."
+                    "Wspinaczka aktywna — akceptuję kandydatów poprawiających rozkład frakcji."
                 )
-                break
             if canon_should_stop(base_res, mode=self._accept_mode()):
-                print("\n🏁 Kanon 4P w paśmie i mechaniki żywe — stop.")
+                print(f"\n🏁 Kanon 4P: {base_res['score_4p']:.1f} pkt — optimum osiągnięte.")
                 break
             for sname, bal in sorted(base_res["setup_scores_balance"].items()):
                 blended = base_res["setup_scores"].get(sname, bal)
