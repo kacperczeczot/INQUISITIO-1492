@@ -1087,39 +1087,56 @@ body.bw .card-proto {
   margin: 0 0 2mm 0;
   display: flex;
   justify-content: space-between;
-  width: 204mm;
+  width: 194mm;
   flex-shrink: 0;
 }
-.cards-print-grid {
-  display: grid;
-  grid-template-columns: repeat(3, var(--card-gross-w));
-  grid-template-rows: repeat(3, var(--card-gross-h));
-  gap: 0;
-  width: 204mm;
-  height: 279mm;
+
+.cards-print-block {
+  position: relative;
+  width: 194mm;
+  height: 269mm;
   margin: 0 auto;
-  box-sizing: border-box;
 }
 
-/* Card with full bleed: 68x93mm (Netto 63x88mm + 2.5mm Bleed all around) */
+.cards-print-grid {
+  display: grid;
+  grid-template-columns: 65.5mm 63mm 65.5mm;
+  grid-template-rows: 90.5mm 88mm 90.5mm;
+  gap: 0;
+  width: 194mm;
+  height: 269mm;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* Card cell: single cut inside, outer bleed on perimeter */
 .card-proto.card-print-cell {
   position: relative;
-  width: var(--card-gross-w);
-  height: var(--card-gross-h);
-  min-width: var(--card-gross-w); max-width: var(--card-gross-w);
-  min-height: var(--card-gross-h); max-height: var(--card-gross-h);
   box-sizing: border-box;
   overflow: hidden;
   border: none;
-  background: var(--faction-edge, var(--blood)); /* Full bleed of faction color to gross edge */
+  background: var(--faction-edge, var(--blood));
   display: flex;
   flex-direction: column;
-  padding: calc(var(--card-bleed) + 1.5mm); /* 2.5mm bleed + 1.5mm border = 4.0mm inset */
   box-shadow: none;
 }
 .card-proto.card-print-cell::before {
-  display: none !important; /* No side stripe */
+  display: none !important;
 }
+
+/* Position-dependent padding: outer edges have 2.5mm bleed + 1.5mm border = 4.0mm */
+.pos-r0-c0 { padding: 4mm 1.5mm 1.5mm 4mm; }
+.pos-r0-c1 { padding: 4mm 1.5mm 1.5mm 1.5mm; }
+.pos-r0-c2 { padding: 4mm 4mm 1.5mm 1.5mm; }
+
+.pos-r1-c0 { padding: 1.5mm 1.5mm 1.5mm 4mm; }
+.pos-r1-c1 { padding: 1.5mm 1.5mm 1.5mm 1.5mm; }
+.pos-r1-c2 { padding: 1.5mm 4mm 1.5mm 1.5mm; }
+
+.pos-r2-c0 { padding: 1.5mm 1.5mm 4mm 4mm; }
+.pos-r2-c1 { padding: 1.5mm 1.5mm 4mm 1.5mm; }
+.pos-r2-c2 { padding: 1.5mm 4mm 4mm 1.5mm; }
 
 /* Inner parchment canvas inside the faction frame */
 .card-proto.card-print-cell .card-inner-flow,
@@ -1133,7 +1150,7 @@ body.bw .card-proto {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 0.25mm solid rgba(166, 124, 45, 0.55); /* Subtle inner gold hairline */
+  border: 0.25mm solid rgba(166, 124, 45, 0.55);
 }
 
 /* Header */
@@ -1159,34 +1176,63 @@ body.bw .card-proto {
   z-index: 5;
 }
 
-/* Corner Crop Marks (marking the 63x88mm trim line through the faction bleed) */
-.crop-mark {
+/* Perimeter Crop Marks (marking 4 vertical cutlines & 4 horizontal cutlines) */
+.crop-line-v-top {
   position: absolute;
+  top: -7mm;
+  width: 0.25mm;
+  height: 6mm;
+  background: #1a120c;
   pointer-events: none;
-  z-index: 35;
-  background: #ffffff; /* White hairlines clearly visible on faction color */
-  box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.8);
+  z-index: 50;
 }
-.crop-tl-h { top: var(--card-bleed); left: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-tl-v { top: 0; left: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+.crop-line-v-bot {
+  position: absolute;
+  bottom: -7mm;
+  width: 0.25mm;
+  height: 6mm;
+  background: #1a120c;
+  pointer-events: none;
+  z-index: 50;
+}
+.crop-line-h-left {
+  position: absolute;
+  left: -7mm;
+  height: 0.25mm;
+  width: 6mm;
+  background: #1a120c;
+  pointer-events: none;
+  z-index: 50;
+}
+.crop-line-h-right {
+  position: absolute;
+  right: -7mm;
+  height: 0.25mm;
+  width: 6mm;
+  background: #1a120c;
+  pointer-events: none;
+  z-index: 50;
+}
 
-.crop-tr-h { top: var(--card-bleed); right: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-tr-v { top: 0; right: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+/* Cutline positions */
+.cut-col-0 { left: 2.5mm; }
+.cut-col-1 { left: 65.5mm; }
+.cut-col-2 { left: 128.5mm; }
+.cut-col-3 { left: 191.5mm; }
 
-.crop-bl-h { bottom: var(--card-bleed); left: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-bl-v { bottom: 0; left: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
-
-.crop-br-h { bottom: var(--card-bleed); right: 0; width: var(--card-bleed); height: 0.25mm; }
-.crop-br-v { bottom: 0; right: var(--card-bleed); width: 0.25mm; height: var(--card-bleed); }
+.cut-row-0 { top: 2.5mm; }
+.cut-row-1 { top: 90.5mm; }
+.cut-row-2 { top: 178.5mm; }
+.cut-row-3 { top: 266.5mm; }
 
 /* Safe Zone Guide (DTP inspection mode: 3mm inside trim line) */
 .safe-zone-guide {
   display: none;
   position: absolute;
-  top: calc(var(--card-bleed) + var(--card-safe-pad));
-  left: calc(var(--card-bleed) + var(--card-safe-pad));
-  width: calc(var(--card-trim-w) - 2 * var(--card-safe-pad));
-  height: calc(var(--card-trim-h) - 2 * var(--card-safe-pad));
+  top: 1.5mm;
+  left: 1.5mm;
+  right: 1.5mm;
+  bottom: 1.5mm;
   border: 0.3mm dashed rgba(0, 120, 255, 0.9);
   pointer-events: none;
   z-index: 40;
@@ -1197,20 +1243,21 @@ body.mode-safe .safe-zone-guide {
 }
 
 /* Mode trim: preview without bleed (Netto 63x88mm with 1.5mm faction border) */
-body.mode-trim .card-proto.card-print-cell {
-  width: var(--card-trim-w);
-  height: var(--card-trim-h);
-  min-width: var(--card-trim-w); max-width: var(--card-trim-w);
-  min-height: var(--card-trim-h); max-height: var(--card-trim-h);
-  padding: 1.5mm;
-  margin: 1.5mm;
-}
 body.mode-trim .cards-print-grid {
-  grid-template-columns: repeat(3, var(--card-trim-w));
-  grid-template-rows: repeat(3, var(--card-trim-h));
-  gap: 3mm;
+  grid-template-columns: repeat(3, 63mm);
+  grid-template-rows: repeat(3, 88mm);
+  width: 189mm;
+  height: 264mm;
 }
-body.mode-trim .crop-mark { display: none; }
+body.mode-trim .card-proto.card-print-cell {
+  padding: 1.5mm !important;
+}
+body.mode-trim .crop-line-v-top,
+body.mode-trim .crop-line-v-bot,
+body.mode-trim .crop-line-h-left,
+body.mode-trim .crop-line-h-right {
+  display: none;
+}
 
 /* Light Ink-Saver Card Backs with Full Bleed Faction Border */
 .card-proto.card-print-cell.card-back-cell {
@@ -1218,7 +1265,6 @@ body.mode-trim .crop-mark { display: none; }
   color: var(--ink, #1a120c);
   border: none;
   position: relative;
-  padding: calc(var(--card-bleed) + 1.5mm);
 }
 .card-proto.card-print-cell.card-back-cell .card-back-content {
   align-items: center;
@@ -1238,11 +1284,17 @@ body.mode-trim .crop-mark { display: none; }
   z-index: 5;
 }
 .card-back-crest {
-  font-size: 32pt;
-  line-height: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 5;
+  width: 16mm;
+  height: 16mm;
+}
+.card-back-crest .ico, .card-back-crest svg {
+  width: 16mm;
+  height: 16mm;
 }
 .card-back-brand {
   font-family: "Palatino Linotype", Palatino, serif;
