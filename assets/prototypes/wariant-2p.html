@@ -21,28 +21,29 @@
 body {
   font-family: 'EB Garamond', 'Palatino Linotype', Palatino, Georgia, serif;
   color: var(--ink);
-  background: #c8bda8;
+  background: var(--parch);
   margin: 0;
-  padding: 20px;
+  padding: 0;
   font-size: 9.5pt;
   line-height: 1.32;
 }
 
 @page {
   size: A4 portrait;
-  margin: 10mm 10mm 12mm 10mm;
+  margin: 0;
 }
 
 .page {
   position: relative;
   width: 210mm;
   height: 297mm;
+  min-height: 297mm;
   max-height: 297mm;
   background: var(--parch);
   border: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-  margin: 0 auto 15mm;
-  padding: 8mm 8mm 8mm 8mm;
+  box-shadow: none;
+  margin: 0 auto;
+  padding: 10mm 12mm 10mm 12mm;
   box-sizing: border-box;
   page-break-after: always;
   display: flex;
@@ -153,9 +154,9 @@ li { margin-bottom: 1mm; }
 }
 
 @media print {
-  body { background: none; padding: 0; }
-  .page { box-shadow: none; margin: 0; }
-  .top-nav { display: none; }
+  body { background: var(--parch) !important; padding: 0 !important; margin: 0 !important; }
+  .page { box-shadow: none !important; margin: 0 !important; width: 210mm !important; height: 297mm !important; max-height: 297mm !important; }
+  .top-nav { display: none !important; }
 }
 </style>
 </head>

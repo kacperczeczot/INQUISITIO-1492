@@ -1898,7 +1898,7 @@ body.mode-trim .crop-line-h-right {
   margin: 0;
 }
 @media print {
-  body { background: white !important; padding: 0 !important; margin: 0 !important; }
+  body { background: var(--parch) !important; padding: 0 !important; margin: 0 !important; }
   .nav, .print-toolbar { display: none !important; }
   .sheet { page-break-after: always; margin: 0; }
   .page-a4 {
@@ -1907,11 +1907,13 @@ body.mode-trim .crop-line-h-right {
     min-height: 297mm; max-height: 297mm;
     margin: 0;
     border: none;
+    background: var(--parch);
     page-break-after: always;
-    padding: 4mm;
+    padding: 6mm;
     box-sizing: border-box;
   }
   .page-a4.cards-master-sheet {
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -2422,9 +2424,15 @@ def render_player_boards(layer: str) -> str:
             f"</div>"
         )
 
-    t_4p = cfg.get("system", {}).get("accusation_threshold", {}).get("4p", 7)
-    t_3p = cfg.get("system", {}).get("accusation_threshold", {}).get("3p", 6)
-    t_5p = cfg.get("system", {}).get("accusation_threshold", {}).get("5p", 8)
+    acc_raw = cfg.get("system", {}).get("accusation_threshold", 7)
+    if isinstance(acc_raw, dict):
+        t_4p = acc_raw.get("4p", 7)
+        t_3p = acc_raw.get("3p", 6)
+        t_5p = acc_raw.get("5p", 8)
+    else:
+        t_4p = int(acc_raw) if acc_raw else 7
+        t_3p = max(t_4p - 1, 6)
+        t_5p = t_4p + 1
 
     for slug, name, goal, note, progress_label, progress_n, progress_icon in factions_data:
         pips = "".join(
@@ -2512,12 +2520,12 @@ def render_player_boards(layer: str) -> str:
       <p class="pb-goal">{goal_html}</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥{t_3p}, 4p ≥{t_4p}, 5p ≥{t_5p})</span></div>
+      <div class="pb-section-title">Herezja</div>
       <div class="heresy-track">{pips}</div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–4</span>
         <span class="hz-z2">Obserw. 5–{t_4p - 1}</span>
-        <span class="hz-z3">Krytyczna ≥{t_4p}*</span>
+        <span class="hz-z3">Krytyczna ≥{t_4p} (Oskarżenie)</span>
       </div>
     </section>
     {body}
