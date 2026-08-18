@@ -1382,7 +1382,7 @@ body.mode-trim .crop-line-h-right {
   margin: 0;
 }
 @media print {
-  body { background: white !important; padding: 0 !important; margin: 0 !important; }
+  body { background: var(--parch) !important; padding: 0 !important; margin: 0 !important; }
   .nav, .print-toolbar { display: none !important; }
   .sheet { page-break-after: always; margin: 0; }
   .page-a4 {
@@ -1391,11 +1391,13 @@ body.mode-trim .crop-line-h-right {
     min-height: 297mm; max-height: 297mm;
     margin: 0;
     border: none;
+    background: var(--parch);
     page-break-after: always;
-    padding: 4mm;
+    padding: 6mm;
     box-sizing: border-box;
   }
   .page-a4.cards-master-sheet {
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
   }

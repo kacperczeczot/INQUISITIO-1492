@@ -1382,7 +1382,7 @@ body.mode-trim .crop-line-h-right {
   margin: 0;
 }
 @media print {
-  body { background: white !important; padding: 0 !important; margin: 0 !important; }
+  body { background: var(--parch) !important; padding: 0 !important; margin: 0 !important; }
   .nav, .print-toolbar { display: none !important; }
   .sheet { page-break-after: always; margin: 0; }
   .page-a4 {
@@ -1391,11 +1391,13 @@ body.mode-trim .crop-line-h-right {
     min-height: 297mm; max-height: 297mm;
     margin: 0;
     border: none;
+    background: var(--parch);
     page-break-after: always;
-    padding: 4mm;
+    padding: 6mm;
     box-sizing: border-box;
   }
   .page-a4.cards-master-sheet {
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -1426,12 +1428,12 @@ body.mode-trim .crop-line-h-right {
       <p class="pb-goal"><strong>Cel:</strong> 6 Stosy lub 3 Skazania Werdyktem</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥6, 4p ≥7, 5p ≥8)</span></div>
+      <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–4</span>
         <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7*</span>
+        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
       </div>
     </section>
     
@@ -1472,12 +1474,12 @@ body.mode-trim .crop-line-h-right {
       <p class="pb-goal"><strong>Cel:</strong> 2 Relikwie + ścieżka (od Ery 1)</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥6, 4p ≥7, 5p ≥8)</span></div>
+      <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–4</span>
         <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7*</span>
+        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
       </div>
     </section>
     
@@ -1519,12 +1521,12 @@ body.mode-trim .crop-line-h-right {
       <p class="pb-goal"><strong>Cel:</strong> 2 Dekrety</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥6, 4p ≥7, 5p ≥8)</span></div>
+      <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–4</span>
         <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7*</span>
+        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
       </div>
     </section>
     
@@ -1565,12 +1567,12 @@ body.mode-trim .crop-line-h-right {
       <p class="pb-goal"><strong>Cel:</strong> 2 Fragmenty (od Ery 6)</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥6, 4p ≥7, 5p ≥8)</span></div>
+      <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–4</span>
         <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7*</span>
+        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
       </div>
     </section>
     
@@ -1612,12 +1614,12 @@ body.mode-trim .crop-line-h-right {
       <p class="pb-goal"><strong>Cel:</strong> 8 Upadki</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥6, 4p ≥7, 5p ≥8)</span></div>
+      <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
         <span class="hz-z1">Czysta 0–4</span>
         <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7*</span>
+        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
       </div>
     </section>
     
