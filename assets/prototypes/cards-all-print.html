@@ -368,7 +368,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .cards {
   display: grid;
   grid-template-columns: repeat(3, var(--card-w));
-  gap: 0;
+  gap: 3mm;
   justify-content: start;
 }
 .card-proto {
@@ -1356,8 +1356,9 @@ body.mode-trim .cards-print-grid {
   width: 189mm;
   height: 264mm;
 }
-body.mode-trim .card-proto.card-print-cell {
-  padding: 1.5mm !important;
+body.mode-trim .card-proto.card-print-cell .card-inner-flow,
+body.mode-trim .card-proto.card-print-cell .card-back-content {
+  margin: 1.5mm !important;
 }
 body.mode-trim .crop-line-v-top,
 body.mode-trim .crop-line-v-bot,

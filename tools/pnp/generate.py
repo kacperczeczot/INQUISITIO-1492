@@ -893,7 +893,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .cards {
   display: grid;
   grid-template-columns: repeat(3, var(--card-w));
-  gap: 0;
+  gap: 3mm;
   justify-content: start;
 }
 .card-proto {
@@ -1881,8 +1881,9 @@ body.mode-trim .cards-print-grid {
   width: 189mm;
   height: 264mm;
 }
-body.mode-trim .card-proto.card-print-cell {
-  padding: 1.5mm !important;
+body.mode-trim .card-proto.card-print-cell .card-inner-flow,
+body.mode-trim .card-proto.card-print-cell .card-back-content {
+  margin: 1.5mm !important;
 }
 body.mode-trim .crop-line-v-top,
 body.mode-trim .crop-line-v-bot,
@@ -2219,37 +2220,63 @@ def render_board(layer: str) -> str:
 # ---------------------------------------------------------------------------
 
 def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug: str = "", version: str = "v0.35") -> str:
-    fac = faction_slug or "time"
+    fac = _escape(faction_slug or "time")
+    items = []
+    for c in cards:
+        effect = (c.effect or "").strip()
+        heresy_text = (getattr(c, "heresy_text", None) or "").strip()
+        lore = (c.lore or "").strip()
+        cost = int(getattr(c, "cost_gold", None) or c.cost or 0)
+        heresy = c.heresy or 0
+        badges = _gold_badge(cost) + _heresy_badge(heresy)
+        type_label = getattr(c, "type_label", None) or c.type
+        type_cls = _type_badge_class(c.type)
+        name_cls = "name name-long" if len(c.name or "") > 28 else "name"
+        caption_html = ""
+        if heresy != 0 and heresy_text:
+            caption_html = (
+                f'<div class="heresy-caption">{_escape(heresy_text)}</div>'
+            )
+        _note_effect_overflow(
+            c.id,
+            effect,
+            lore=lore,
+            heresy_caption=heresy_text if heresy != 0 else "",
+        )
+        lore_html = (
+            f'<div class="card-lore">{_escape(lore)}</div>' if lore else ""
+        )
+        stats_html = f'<div class="stat-row">{badges}</div>' if badges else ""
+        items.append(f"""
+<article class="card-proto faction-{fac}" data-faction="{fac}">
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="{name_cls}">{_escape(c.name)}</div>
+      <span class="type-badge {type_cls}">{_escape(type_label)}</span>
+    </div>
+    {stats_html}
+    {caption_html}
+  </div>
+  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+  <div class="card-main">
+    <div class="card-effect">{_format_effect_html(effect)}</div>
+    {lore_html}
+    <div class="card-footer-meta"><span>{_escape(c.id.upper())}</span><span>{_escape(version)}</span></div>
+  </div>
+</article>
+""")
+
     pages = []
     per_page = 9
-    for i in range(0, max(len(cards), 1), per_page):
-        chunk = cards[i : i + per_page]
+    for i in range(0, max(len(items), 1), per_page):
+        chunk = items[i : i + per_page]
         title = _escape(faction_label) if i == 0 else f"{_escape(faction_label)} (cd.)"
-        
-        cells: list[str] = []
-        for idx in range(9):
-            row = idx // 3
-            col = idx % 3
-            if idx < len(chunk):
-                c = chunk[idx]
-                cells.append(render_card_print_cell(c, fac, row=row, col=col, version=version))
-            else:
-                cells.append(f'<div class="card-proto card-print-cell empty-cell pos-r{row}-c{col}" style="background:transparent;border:none;"></div>')
-        
-        pages.append(f"""
-<div class="page-a4 cards-master-sheet" data-page-mm="210x297">
-  <div class="sheet-meta-header">
-    <span>INQUISITIO 1492 · {title}</span>
-    <span>Układ 3×3 (Bez przerw, wspólne linie cięcia) · Spad obwodowy 2.5 mm</span>
-  </div>
-  <div class="cards-print-block">
-    {_render_crop_lines_html()}
-    <div class="cards-print-grid">
-      {"".join(cells)}
-    </div>
-  </div>
-</div>
-""")
+        pages.append(
+            f'<div class="page-a4" data-page-mm="210x297">'
+            f"<h1>{title}</h1>"
+            f'<div class="cards">{"".join(chunk)}</div>'
+            f"</div>"
+        )
     return "\n".join(pages)
 
 
