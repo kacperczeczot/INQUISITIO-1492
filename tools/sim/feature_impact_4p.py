@@ -528,21 +528,14 @@ def run_full_ablation_audit_4p(
             "layer": card.layer,
         }
 
-    # 3. Build Time Deck Ablation Tasks (8 cards)
-    time_cards = [
-        ("tc-01", "Kres Średniowiecza"),
-        ("tc-02", "Płonący Stos"),
-        ("tc-03", "Królewski Podatek"),
-        ("tc-04", "Spisek w Cieniu"),
-        ("tc-05", "Złoty Wiek"),
-        ("tc-06", "Czystka w Mieście"),
-        ("tc-07", "Druga Szansa"),
-        ("tc-08", "Zaćmienie Słońca"),
-    ]
+    # 3. Build Time Deck Ablation Tasks (dynamic from game/cards/time-deck)
+    from inquisitio.cards.loader import time_cards as get_time_cards
+    actual_time_cards = get_time_cards(max_layer="C")
+    time_cards = [(tc.id, tc.name) for tc in actual_time_cards]
     time_tasks = []
     for t_id, t_name in time_cards:
         time_tasks.append((
-            f"TIME_{t_id.upper()}",
+            f"TIME_{t_id.upper().replace('-', '_')}",
             f"Brak wydarzenia {t_id} ({t_name})",
             {"disabled_cards": [t_id]},
             games_per_setup,
@@ -641,7 +634,7 @@ def run_full_ablation_audit_4p(
     # 6. Process Time Cards
     analyzed_time_cards = []
     for t_id, t_name in time_cards:
-        t_key = f"TIME_{t_id.upper()}"
+        t_key = f"TIME_{t_id.upper().replace('-', '_')}"
         res = results_map[t_key]
         d_4p = round(res["score_4p"] - base_res["score_4p"], 1)
         if abs(d_4p) <= 0.4:
