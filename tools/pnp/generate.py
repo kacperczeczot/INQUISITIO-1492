@@ -144,7 +144,32 @@ ICON_SHORT = {
     "decree": "🔏",
     "fall": "☠️",
     "spent": "✕",
+    "patrol": "🛡",
+    "autodafe_state": "🔥",
 }
+
+
+# PnP / 4p SSOT — żetony puli i cut sheet (playtesting/setups.md, game_config.yaml)
+PNP_TOKEN_COUNTS: dict[str, int] = {
+    "inquisitor": 1,
+    "inquisitor_patrol": 1,
+    "inquisitor_autodafe": 1,
+    "heresy": 4,
+    "gold": 40,
+    "stack": 6,
+    "relic": 6,
+    "fragment": 6,
+    "decree": 2,
+    "fall": 8,
+    "spent": 15,
+    "hook": 12,
+    "double": 8,
+}
+PNP_POOL_SLOTS = {"relic": 6, "stack": 6, "fragment": 6}
+
+
+def _pool_slot_spans(n: int) -> str:
+    return "".join('<span class="sq"></span>' for _ in range(n))
 
 
 def _escape(s: str) -> str:
@@ -751,6 +776,48 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   border: 0.5mm solid var(--blood);
   background: #f5e4e4; border-radius: 50%;
   box-sizing: border-box; flex: 0 0 auto;
+}
+.inquisitor-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1mm;
+  flex: 0 0 auto;
+}
+.inquisitor-fig {
+  width: calc(var(--agent-d) * 1.12);
+  height: calc(var(--agent-d) * 1.12);
+  border-radius: 50%;
+  border: 0.55mm solid var(--blood);
+  background: #fff5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13pt;
+  box-sizing: border-box;
+}
+.inquisitor-states {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1mm;
+  max-width: 22mm;
+}
+.inq-state {
+  font-size: 6.5pt;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  padding: 0.4mm 1mm;
+  border: 0.35mm solid var(--line);
+  border-radius: 1mm;
+  background: #fff;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.inq-state.is-active {
+  background: var(--blood);
+  color: #fff;
+  border-color: var(--blood);
 }
 /* Jeden slot 63×88 = stos do 3 kart */
 .card-row {
@@ -1805,19 +1872,19 @@ def render_board(layer: str) -> str:
     <div class="pool-box">
       <div class="pool-title">Relikwie</div>
       <div class="pool-body pool-slots" title="Żetony Relikwii 20×20 mm">
-        <span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span>
+        {_pool_slot_spans(PNP_POOL_SLOTS["relic"])}
       </div>
     </div>
     <div class="pool-box">
       <div class="pool-title">Stosy</div>
       <div class="pool-body pool-slots" title="Żetony Stosu 20×20 mm">
-        <span class="sq"></span><span class="sq"></span>
+        {_pool_slot_spans(PNP_POOL_SLOTS["stack"])}
       </div>
     </div>
     <div class="pool-box">
       <div class="pool-title">Fragmenty</div>
       <div class="pool-body pool-slots" title="Żetony Fragmentu 20×20 mm">
-        <span class="sq"></span><span class="sq"></span>
+        {_pool_slot_spans(PNP_POOL_SLOTS["fragment"])}
       </div>
     </div>
   </div>
@@ -1838,16 +1905,28 @@ def render_board(layer: str) -> str:
 """
 
     nodes_html = []
+    inq_icon = _escape(ICON_SHORT.get("inquisitor", "✝"))
     for num, short, full, _hint, left, top, slug in LOCATIONS:
         agents = "".join('<span class="agent" title="Agent Ø20 mm"></span>' for _ in range(4))
         arrest = ""
         if num == "3":
             arrest = "".join('<span class="arrest" title="Areszt Ø20 mm (Agent)"></span>' for _ in range(4))
+        inquisitor = ""
+        if slug == "trybunal":
+            inquisitor = (
+                '<div class="inquisitor-wrap" title="Wielki Inkwizytor — start: Trybunał, Patrol">'
+                f'<span class="inquisitor-fig" aria-label="Inkwizytor">{inq_icon}</span>'
+                '<div class="inquisitor-states">'
+                '<span class="inq-state is-active" title="Patrol">Patrol</span>'
+                '<span class="inq-state" title="Autodafé">Autodafé</span>'
+                "</div></div>"
+            )
         nodes_html.append(f"""
 <section class="loc-node" data-loc="{_escape(num)}" data-slug="{_escape(slug)}"
   title="{_escape(full)}" style="left:{left}%;top:{top}%">
   <h2 class="loc-head">{_escape(num)} · {_escape(short)}</h2>
   <div class="token-row">
+    {inquisitor}
     {agents}
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     {arrest}
@@ -2211,7 +2290,7 @@ def render_player_boards(layer: str) -> str:
 
     for slug, name, goal, note, progress_label, progress_n, progress_icon in factions_data:
         pips = "".join(
-            f'<span class="heresy-pip {"z1" if i <= 3 else "z2" if i < t_4p else "z3"}">{i}</span>'
+            f'<span class="heresy-pip {"z1" if i <= 4 else "z2" if i < t_4p else "z3"}">{i}</span>'
             for i in range(11)
         )
         agents = "".join('<span class="agent-slot" title="Agent Ø20 mm"></span>' for _ in range(3))
@@ -2294,11 +2373,11 @@ def render_player_boards(layer: str) -> str:
       <p class="pb-goal">{goal_html}</p>
     </header>
     <section class="pb-heresy">
-      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥{t_3p}, 5p ≥{t_5p})</span></div>
+      <div class="pb-section-title">Herezja <span class="pb-heresy-note">(*próg oskarżenia: 3p ≥{t_3p}, 4p ≥{t_4p}, 5p ≥{t_5p})</span></div>
       <div class="heresy-track">{pips}</div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–3</span>
-        <span class="hz-z2">Obserw. 4–{t_4p - 1}</span>
+        <span class="hz-z1">Czysta 0–4</span>
+        <span class="hz-z2">Obserw. 5–{t_4p - 1}</span>
         <span class="hz-z3">Krytyczna ≥{t_4p}*</span>
       </div>
     </section>
@@ -2345,21 +2424,24 @@ def render_verdict() -> str:
 def render_tokens(layer: str) -> str:
     """Cut sheet: 20×20 mm rounded-square chips with temporary emoji faces."""
     # (icon_key, Polish label, count to print)
+    c = PNP_TOKEN_COUNTS
     specs: list[tuple[str, str, int]] = [
-        ("inquisitor", "Inkwizytor", 1),
-        ("heresy", "Herezja", 5),
-        ("gold", "Złoto", 12),
-        ("stack", "Stos", 4),
-        ("relic", "Relikwia", 6),
-        ("fragment", "Fragment", 6),
-        ("decree", "Dekret", 4),
-        ("fall", "Upadek", 4),
-        ("spent", "Piętno", 15),
+        ("inquisitor", "Inkwizytor (figurka)", c["inquisitor"]),
+        ("patrol", "Patrol (stan Inkwizytora)", c["inquisitor_patrol"]),
+        ("autodafe_state", "Autodafé (stan Inkwizytora)", c["inquisitor_autodafe"]),
+        ("heresy", "Herezja (tor 0–10)", c["heresy"]),
+        ("gold", "Złoto", c["gold"]),
+        ("stack", "Stos / Autodafé", c["stack"]),
+        ("relic", "Relikwia", c["relic"]),
+        ("fragment", "Fragment Kodeksu", c["fragment"]),
+        ("decree", "Dekret", c["decree"]),
+        ("fall", "Upadek", c["fall"]),
+        ("spent", "Piętno", c["spent"]),
     ]
     if layer in ("B", "C"):
         specs.extend([
-            ("hook", "Hak", 10),
-            ("double", "Marionetka", 6),
+            ("hook", "Hak", c["hook"]),
+            ("double", "Marionetka", c["double"]),
         ])
 
     # Split across A4 pages when groups exceed one sheet
@@ -2532,15 +2614,19 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
         written.append(path)
         index_entries.append((fn, title))
 
-    teach_md = REPO_ROOT / "docs" / "rules" / "teach-sheet.md"
-    fn = "teach-sheet.html"
-    path = out_dir / fn
-    if teach_md.exists():
-        path.write_text(render_teach_html(teach_md.read_text(encoding="utf-8"), layer), encoding="utf-8")
-    else:
-        path.write_text(_page("Teach", "<p>Brak teach-sheet.md</p>"), encoding="utf-8")
-    written.append(path)
-    index_entries.append((fn, "Teach sheet"))
+    if (out_dir / "ksiega-zasad.html").exists():
+        index_entries.append(("ksiega-zasad.html", "📖 Księga Zasad 4P (Druk HTML / PDF)"))
+    if (out_dir / "slownik.html").exists():
+        index_entries.append(("slownik.html", "📚 Słownik Pojęć A–Z (Druk HTML / PDF)"))
+    if (out_dir / "wariant-2p.html").exists():
+        index_entries.append(("wariant-2p.html", "⚔️ Wariant 2-osobowy 2P (Druk HTML / PDF)"))
+    if (out_dir / "ksiega-zasad.pdf").exists():
+        index_entries.append(("ksiega-zasad.pdf", "📄 Księga Zasad 4P (Plik PDF)"))
+    if (out_dir / "slownik.pdf").exists():
+        index_entries.append(("slownik.pdf", "📄 Słownik Pojęć A–Z (Plik PDF)"))
+    if (out_dir / "wariant-2p.pdf").exists():
+        index_entries.append(("wariant-2p.pdf", "📄 Wariant 2-osobowy 2P (Plik PDF)"))
+
     if (out_dir / "card-editor.html").exists():
         index_entries.append(("card-editor.html", "🛠️ Interaktywny Generator & Podgląd Kart (Live Editor)"))
 

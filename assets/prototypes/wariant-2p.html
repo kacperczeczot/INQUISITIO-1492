@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>INQUISITIO 1492 — Wojna Cieni (Wariant 2x2p Dual Control)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --ink: #1a120c;
+  --parch: #fbf7ee;
+  --parch-card: #f4ead7;
+  --blood: #7a1f1f;
+  --gold: #946c23;
+  --line: #3a2618;
+  --border-gold: #bfa15f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'EB Garamond', 'Palatino Linotype', Palatino, Georgia, serif;
+  color: var(--ink);
+  background: #c8bda8;
+  margin: 0;
+  padding: 20px;
+  font-size: 9.5pt;
+  line-height: 1.32;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 10mm 10mm 12mm 10mm;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  max-height: 297mm;
+  background: var(--parch);
+  border: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  margin: 0 auto 15mm;
+  padding: 8mm 8mm 8mm 8mm;
+  box-sizing: border-box;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+header.rulebook-header {
+  text-align: center;
+  border-bottom: 0.6mm solid var(--blood);
+  padding-bottom: 2mm;
+  margin-bottom: 3.5mm;
+}
+
+.top-nav {
+  text-align: center;
+  margin-bottom: 15px;
+  font-family: 'Cinzel', serif;
+  font-size: 9pt;
+}
+.top-nav a {
+  color: var(--blood);
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 10px;
+}
+.top-nav a:hover { text-decoration: underline; }
+
+h1 {
+  font-family: 'Cinzel', Georgia, serif;
+  color: var(--blood);
+  font-size: 18pt;
+  letter-spacing: 2px;
+  margin: 0 0 1mm;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 9pt;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 1.5mm;
+}
+
+h2 {
+  font-family: 'Cinzel', Georgia, serif;
+  color: var(--blood);
+  font-size: 10.5pt;
+  margin: 2.5mm 0 1.2mm;
+  border-bottom: 0.3mm solid var(--line);
+  padding-bottom: 0.6mm;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+h3 {
+  font-family: 'Cinzel', serif;
+  color: #2b1a11;
+  font-size: 9pt;
+  margin: 1.5mm 0 0.8mm;
+}
+
+p { margin: 0 0 1.5mm; text-align: justify; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5.5mm;
+}
+
+.box {
+  background: var(--parch-card);
+  border: 0.35mm solid var(--line);
+  border-radius: 1mm;
+  padding: 2.5mm 3.5mm;
+  margin-bottom: 2mm;
+}
+
+.box-gold {
+  border-color: var(--gold);
+  background: rgba(194, 155, 56, 0.08);
+}
+
+.box-blood {
+  border-color: var(--blood);
+  background: rgba(122, 31, 31, 0.06);
+}
+
+ul, ol {
+  margin: 0 0 1.5mm 3.5mm;
+  padding: 0;
+  font-size: 8.8pt;
+}
+
+li { margin-bottom: 1mm; }
+
+.page-footer {
+  margin-top: auto;
+  border-top: 0.3mm solid var(--gold);
+  padding-top: 1.2mm;
+  font-size: 7.5pt;
+  display: flex;
+  justify-content: space-between;
+  color: #665544;
+  font-family: 'Cinzel', serif;
+}
+
+@media print {
+  body { background: none; padding: 0; }
+  .page { box-shadow: none; margin: 0; }
+  .top-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <a href="index.html">← POWRÓT DO HUBU PNP</a> |
+  <a href="ksiega-zasad.html">← KSIĘGA ZASAD</a> |
+  <a href="slownik.html">SŁOWNIK POJĘĆ →</a> |
+  <a href="javascript:window.print()">🖨️ DRUKUJ / ZAPISZ PDF</a>
+</div>
+
+<div class="page">
+  <header class="rulebook-header">
+    <h1>INQUISITIO 1492</h1>
+    <div class="subtitle">WARIANT 2-OSOBOWY: „WOJNA CIENI” (2x2p — DUAL CONTROL)</div>
+  </header>
+
+  <div class="two-col">
+    <div>
+      <h2>1. Założenia Wariantu 2x2p</h2>
+      <p style="font-size: 8.8pt;">Kanonem gry jest skład 4-osobowy. W wariancie 2-osobowym (<strong>Wojna Cieni</strong>) dwóch graczy kontroluje łącznie <strong>4 frakcje</strong> (po 2 frakcje na gracza) z zachowaniem 100% kanonicznych talii, mechanik i celów.</p>
+      
+      <div class="box box-gold">
+        <h3 style="color: var(--gold); margin-top: 0;">1. Snake Draft Frakcji</h3>
+        <p style="font-size: 8.3pt; margin-bottom: 0;">Wybór 4 frakcji następuje naprzemiennie:<br/>
+        • <strong>Gracz 1:</strong> wybiera 1. frakcję.<br/>
+        • <strong>Gracz 2:</strong> wybiera 2. oraz 3. frakcję.<br/>
+        • <strong>Gracz 1:</strong> dobiera 4. frakcję.<br/>
+        <em>(Jedna z 5 frakcji zostaje odrzucona przed draftem).</em></p>
+      </div>
+
+      <div class="box">
+        <h3 style="color: var(--blood); margin-top: 0;">2. Separacja Zasobów</h3>
+        <p style="font-size: 8.3pt; margin-bottom: 0;">Złoto, karty na ręce (limit 5), tor Herezji (0–10) oraz Haki są <strong>całkowicie niezależne</strong> dla każdej z 4 frakcji. Nie wolno łączyć ani przekazywać zasobów między swoimi frakcjami (np. Korona nie może opłacać kart Świętego Oficjum).</p>
+      </div>
+
+      <div class="box box-blood">
+        <h3 style="color: var(--blood); margin-top: 0;">3. Brak Auto-Agresji</h3>
+        <p style="font-size: 8.3pt; margin-bottom: 0;">Twoja frakcja <strong>nie może</strong> przesłuchiwać w Lochach, aresztować ani zakładać Haków na Twoją drugą kontrolowaną frakcję. Wszystkie wrogie akcje muszą być wymierzone we frakcje rywala.</p>
+      </div>
+    </div>
+
+    <div>
+      <h2>2. Przebieg Faz w 2x2p</h2>
+      
+      <div class="box box-blood">
+        <h3 style="color: var(--blood); margin-top: 0;">Faza I: Intryga (Kolejność Frakcji)</h3>
+        <p style="font-size: 8.3pt;">Karty i akcje zagrywane są ściśle naprzemiennie:<br/>
+        <strong>Gracz 1 (Frakcja A1)</strong> → <strong>Gracz 2 (Frakcja B1)</strong> → <strong>Gracz 1 (Frakcja A2)</strong> → <strong>Gracz 2 (Frakcja B2)</strong>.<br/>
+        <em>Cykl powtarza się 2 razy (łącznie 8 zakrytych kart na stole w Fazie I).</em></p>
+      </div>
+
+      <div class="box">
+        <h3 style="color: var(--blood); margin-top: 0;">Faza II: Sąd i Werdykt</h3>
+        <p style="font-size: 8.3pt;">Gdy oskarżona zostaje np. Frakcja A1:<br/>
+        • Oskarżona frakcja <strong>nie głosuje</strong>.<br/>
+        • Głosują pozostałe 3 frakcje: oskarżyciel + 2 neutralne frakcje (jedna Gracza 1, jedna Gracza 2).<br/>
+        • Remis oznacza Uniewinnienie. Do Skazania potrzebna jest przewaga (np. uzyskana poprzez Wymuszenie Haka lub kartę o wadze głosu 2).</p>
+      </div>
+
+      <h2>3. Warunek Zwycięstwa: Podwójne Zwycięstwo</h2>
+      <div class="box box-gold">
+        <p style="font-size: 8.5pt; margin-bottom: 1.5mm;">Wygrywa gracz, którego <strong>OBIE frakcje</strong> jednocześnie spełnią swoje pełne cele kanoniczne w Fazie III.</p>
+        <p style="font-size: 8pt; margin-bottom: 0;"><strong>Tie-breaker po 12. Erze:</strong><br/>
+        1. 1 zrealizowany cel + większy postęp 2. frakcji.<br/>
+        2. Niższa łączna suma Herezji obu frakcji.<br/>
+        3. Wyższa łączna suma złota obu frakcji.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>INQUISITIO 1492 · WARIANT 2-OSOBOWY: WOJNA CIENI (2x2p)</span>
+    <span>DOKUMENTACJA ZASAD · STRONA 1 / 1</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -289,6 +289,48 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   background: #f5e4e4; border-radius: 50%;
   box-sizing: border-box; flex: 0 0 auto;
 }
+.inquisitor-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1mm;
+  flex: 0 0 auto;
+}
+.inquisitor-fig {
+  width: calc(var(--agent-d) * 1.12);
+  height: calc(var(--agent-d) * 1.12);
+  border-radius: 50%;
+  border: 0.55mm solid var(--blood);
+  background: #fff5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13pt;
+  box-sizing: border-box;
+}
+.inquisitor-states {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1mm;
+  max-width: 22mm;
+}
+.inq-state {
+  font-size: 6.5pt;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  padding: 0.4mm 1mm;
+  border: 0.35mm solid var(--line);
+  border-radius: 1mm;
+  background: #fff;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.inq-state.is-active {
+  background: var(--blood);
+  color: #fff;
+  border-color: var(--blood);
+}
 /* Jeden slot 63×88 = stos do 3 kart */
 .card-row {
   display: flex;
@@ -1308,19 +1350,19 @@ body.mode-trim .crop-mark { display: none; }
     <div class="pool-box">
       <div class="pool-title">Relikwie</div>
       <div class="pool-body pool-slots" title="Żetony Relikwii 20×20 mm">
-        <span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span>
+        <span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span>
       </div>
     </div>
     <div class="pool-box">
       <div class="pool-title">Stosy</div>
       <div class="pool-body pool-slots" title="Żetony Stosu 20×20 mm">
-        <span class="sq"></span><span class="sq"></span>
+        <span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span>
       </div>
     </div>
     <div class="pool-box">
       <div class="pool-title">Fragmenty</div>
       <div class="pool-body pool-slots" title="Żetony Fragmentu 20×20 mm">
-        <span class="sq"></span><span class="sq"></span>
+        <span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span><span class="sq"></span>
       </div>
     </div>
   </div>
@@ -1350,6 +1392,7 @@ body.mode-trim .crop-mark { display: none; }
   title="Trybunał Inkwizycji" style="left:16%;top:48%">
   <h2 class="loc-head">1 · Trybunał</h2>
   <div class="token-row">
+    <div class="inquisitor-wrap" title="Wielki Inkwizytor — start: Trybunał, Patrol"><span class="inquisitor-fig" aria-label="Inkwizytor">✝️</span><div class="inquisitor-states"><span class="inq-state is-active" title="Patrol">Patrol</span><span class="inq-state" title="Autodafé">Autodafé</span></div></div>
     <span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span>
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     
@@ -1363,6 +1406,7 @@ body.mode-trim .crop-mark { display: none; }
   title="Pałac Gubernatora" style="left:48%;top:16%">
   <h2 class="loc-head">2 · Pałac</h2>
   <div class="token-row">
+    
     <span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span>
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     
@@ -1376,6 +1420,7 @@ body.mode-trim .crop-mark { display: none; }
   title="Lochy &amp; Podziemia" style="left:34%;top:82%">
   <h2 class="loc-head">3 · Lochy</h2>
   <div class="token-row">
+    
     <span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span>
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     <span class="arrest" title="Areszt Ø20 mm (Agent)"></span><span class="arrest" title="Areszt Ø20 mm (Agent)"></span><span class="arrest" title="Areszt Ø20 mm (Agent)"></span><span class="arrest" title="Areszt Ø20 mm (Agent)"></span>
@@ -1389,6 +1434,7 @@ body.mode-trim .crop-mark { display: none; }
   title="Rynek i Plac" style="left:84%;top:40%">
   <h2 class="loc-head">4 · Rynek</h2>
   <div class="token-row">
+    
     <span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span>
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     
@@ -1402,6 +1448,7 @@ body.mode-trim .crop-mark { display: none; }
   title="Gildia / Dzielnica Garbarzy" style="left:76%;top:70%">
   <h2 class="loc-head">5 · Gildia</h2>
   <div class="token-row">
+    
     <span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span><span class="agent" title="Agent Ø20 mm"></span>
     <span class="relic-slot" title="Relikwia 20×20 mm"></span>
     

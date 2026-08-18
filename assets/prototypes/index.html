@@ -289,6 +289,48 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   background: #f5e4e4; border-radius: 50%;
   box-sizing: border-box; flex: 0 0 auto;
 }
+.inquisitor-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1mm;
+  flex: 0 0 auto;
+}
+.inquisitor-fig {
+  width: calc(var(--agent-d) * 1.12);
+  height: calc(var(--agent-d) * 1.12);
+  border-radius: 50%;
+  border: 0.55mm solid var(--blood);
+  background: #fff5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13pt;
+  box-sizing: border-box;
+}
+.inquisitor-states {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1mm;
+  max-width: 22mm;
+}
+.inq-state {
+  font-size: 6.5pt;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  padding: 0.4mm 1mm;
+  border: 0.35mm solid var(--line);
+  border-radius: 1mm;
+  background: #fff;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.inq-state.is-active {
+  background: var(--blood);
+  color: #fff;
+  border-color: var(--blood);
+}
 /* Jeden slot 63×88 = stos do 3 kart */
 .card-row {
   display: flex;
@@ -1294,7 +1336,7 @@ body.mode-trim .crop-mark { display: none; }
 
 <div class="page-a4" data-page-mm="210x297">
   <h1>INQUISITIO 1492 — PnP</h1>
-  <ol><li><a href="cards-all-print.html">🖨️ Wszystkie Karty — Druk PDF (Spady / Bleed &amp; Crop Marks)</a></li><li><a href="cards-swiete-oficjum.html">Karty — Święte Oficjum (12)</a></li><li><a href="cards-cienie-al-andalus.html">Karty — Cienie Al-Andalus (12)</a></li><li><a href="cards-korona-borgiowie.html">Karty — Korona &amp; Borgiowie (12)</a></li><li><a href="cards-kabala-toledo.html">Karty — Kabała z Toledo (12)</a></li><li><a href="cards-gildia-cieni.html">Karty — Gildia Cieni (12)</a></li><li><a href="cards-time-deck.html">Kronika Dziejów (10)</a></li><li><a href="board.html">Plansza</a></li><li><a href="player-boards.html">Planszetki</a></li><li><a href="verdict.html">Werdykt</a></li><li><a href="tokens.html">Żetony</a></li><li><a href="teach-sheet.html">Teach sheet</a></li><li><a href="card-editor.html">🛠️ Interaktywny Generator &amp; Podgląd Kart (Live Editor)</a></li></ol>
+  <ol><li><a href="cards-all-print.html">🖨️ Wszystkie Karty — Druk PDF (Spady / Bleed &amp; Crop Marks)</a></li><li><a href="cards-swiete-oficjum.html">Karty — Święte Oficjum (12)</a></li><li><a href="cards-cienie-al-andalus.html">Karty — Cienie Al-Andalus (12)</a></li><li><a href="cards-korona-borgiowie.html">Karty — Korona &amp; Borgiowie (12)</a></li><li><a href="cards-kabala-toledo.html">Karty — Kabała z Toledo (12)</a></li><li><a href="cards-gildia-cieni.html">Karty — Gildia Cieni (12)</a></li><li><a href="cards-time-deck.html">Kronika Dziejów (10)</a></li><li><a href="board.html">Plansza</a></li><li><a href="player-boards.html">Planszetki</a></li><li><a href="verdict.html">Werdykt</a></li><li><a href="tokens.html">Żetony</a></li><li><a href="ksiega-zasad.html">📖 Księga Zasad 4P (Druk HTML / PDF)</a></li><li><a href="slownik.html">📚 Słownik Pojęć A–Z (Druk HTML / PDF)</a></li><li><a href="wariant-2p.html">⚔️ Wariant 2-osobowy 2P (Druk HTML / PDF)</a></li><li><a href="ksiega-zasad.pdf">📄 Księga Zasad 4P (Plik PDF)</a></li><li><a href="slownik.pdf">📄 Słownik Pojęć A–Z (Plik PDF)</a></li><li><a href="wariant-2p.pdf">📄 Wariant 2-osobowy 2P (Plik PDF)</a></li><li><a href="card-editor.html">🛠️ Interaktywny Generator &amp; Podgląd Kart (Live Editor)</a></li></ol>
 </div>
 
 </body>

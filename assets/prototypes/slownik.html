@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>INQUISITIO 1492 — Słownik Pojęć A–Z (PnP)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --ink: #1a120c;
+  --parch: #fbf7ee;
+  --parch-card: #f4ead7;
+  --blood: #7a1f1f;
+  --gold: #946c23;
+  --line: #3a2618;
+  --border-gold: #bfa15f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'EB Garamond', 'Palatino Linotype', Palatino, Georgia, serif;
+  color: var(--ink);
+  background: #c8bda8;
+  margin: 0;
+  padding: 20px;
+  font-size: 9pt;
+  line-height: 1.25;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 10mm 10mm 12mm 10mm;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  max-height: 297mm;
+  background: var(--parch);
+  border: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  margin: 0 auto 15mm;
+  padding: 8mm 8mm 8mm 8mm;
+  box-sizing: border-box;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+header.glossary-header {
+  text-align: center;
+  border-bottom: 0.6mm solid var(--blood);
+  padding-bottom: 2mm;
+  margin-bottom: 3.5mm;
+}
+
+.top-nav {
+  text-align: center;
+  margin-bottom: 15px;
+  font-family: 'Cinzel', serif;
+  font-size: 9pt;
+}
+.top-nav a {
+  color: var(--blood);
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 10px;
+}
+.top-nav a:hover { text-decoration: underline; }
+
+h1 {
+  font-family: 'Cinzel', Georgia, serif;
+  color: var(--blood);
+  font-size: 17pt;
+  letter-spacing: 2px;
+  margin: 0 0 0.8mm;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5pt;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.two-col-flow {
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-rule: 0.3mm solid #d9cdb8;
+  flex-grow: 1;
+}
+
+.entry {
+  break-inside: avoid;
+  margin-bottom: 2.8mm;
+  padding-bottom: 1.6mm;
+  border-bottom: 0.2mm dashed #d1c4ae;
+}
+
+.entry:last-child {
+  border-bottom: none;
+}
+
+.entry-head {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 9.2pt;
+  color: var(--blood);
+  margin-bottom: 0.6mm;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.entry-badge {
+  background: var(--blood);
+  color: #fff;
+  font-size: 7pt;
+  padding: 0.2mm 1.3mm;
+  border-radius: 0.4mm;
+  font-family: 'Cinzel', serif;
+}
+
+.entry p {
+  margin: 0 0 1mm;
+  text-align: justify;
+  font-size: 8.5pt;
+}
+
+.see-also {
+  font-size: 7.5pt;
+  color: #6a5749;
+  font-style: italic;
+}
+
+.see-also strong {
+  font-style: normal;
+  color: var(--line);
+}
+
+.page-footer {
+  margin-top: auto;
+  border-top: 0.3mm solid var(--gold);
+  padding-top: 1.2mm;
+  font-size: 7.5pt;
+  display: flex;
+  justify-content: space-between;
+  color: #665544;
+  font-family: 'Cinzel', serif;
+}
+
+@media print {
+  body { background: none; padding: 0; }
+  .page { box-shadow: none; margin: 0; }
+  .top-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <a href="index.html">← POWRÓT DO HUBU PNP</a> |
+  <a href="ksiega-zasad.html">← KSIĘGA ZASAD</a> |
+  <a href="javascript:window.print()">🖨️ DRUKUJ / ZAPISZ PDF</a>
+</div>
+
+<!-- ================= STRONA 1 ================= -->
+<div class="page">
+
+  
+  <header class="glossary-header">
+    <h1>INQUISITIO 1492</h1>
+    <div class="subtitle">LEKSYKON I SŁOWNIK POJĘĆ A–Z (WARIANT 4P)</div>
+  </header>
+
+  <div class="two-col-flow">
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">A</span> Agent</div>
+      <p>Figurka frakcji na planszy (3 / gracza). Porusza się o max 1 krawędź grafu w turze Intrygi. Kontroluje lokacje, wchodzi w Autodafé, areszt w Lochach i wyroki Werdyktu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Lokacja, Marionetka, Areszt</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">A</span> Areszt</div>
+      <p>Stan Agenta umieszczonego w strefie Aresztu lokacji Lochy. Uwięziony Agent nie wykonuje ruchów ani nie kontroluje lokacji, dopóki nie zostanie uwolniony. Może być celem Przesłuchania.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Lochy, Przesłuchanie</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">A</span> Autodafé (procedura)</div>
+      <p>Czystka wiary w lokacji Inkwizytora (od Ery 3, cooldown co ≥ 3 Ery). Wrogowie o Herezji 0–4 trafiają do Aresztu (+1 Herezja, bez Stosu); o Herezji ≥ 5 płoną na Stosie (+1 Herezja, +1 Stos dla Oficjum). Relikwia w lokacji wraca do banku.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Inkwizytor, Stos, Herezja</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">C</span> Czystka (Faza III)</div>
+      <p>Faza podsumowania Ery: sprawdzenie warunków zwycięstwa, dobór kart do limitu 5, pobranie dochodu +1 złoto, odkrycie Edyktu Kroniki Dziejów oraz rotacja 1. gracza.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Era, Kronika Dziejów, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">D</span> Dekret</div>
+      <p>Znacznik i cel zwycięstwa Korony & Borgiów. Warunek wygranej: 2 Dekrety wprowadzone kartami signature (Dekret Królewski i Pieczęć Korony).</p>
+      <div class="see-also"><strong>Patrz także:</strong> Zwycięstwo, Hak</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">E</span> Edykt</div>
+      <p>Karta Kroniki Dziejów odkrywana w Fazie III. Jej treść wprowadza ogólne prawo obowiązujące wszystkich graczy w nadchodzącej Erze.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Kronika Dziejów, Edykt karty</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">E</span> Edykt Karty (Złote Prawo)</div>
+      <p>Zasada nadrzędności: tekst na karcie (np. <code>Łamie regułę …</code>) ma bezwzględne pierwszeństwo przed ogólnymi regułami z Księgi Zasad.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Złote prawa, Karty</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">E</span> Era</div>
+      <p>Pojedyncza runda gry złożona z 3 Faz (I Intryga, II Sąd, III Kronika & Czystka). Maksymalny limit rozgrywki wynosi 12 Er.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Czystka, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">F</span> Fiasko</div>
+      <p>Gdy warunek zagrania karty nie jest spełniony przy odkryciu w Fazie II (np. brak Agenta). Karta nie wywołuje efektu i nie dodaje Herezji.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Odkrycie</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">F</span> Fragment Kodeksu</div>
+      <p>Znacznik i cel Kabały z Toledo. Warunek wygranej: 2 Fragmenty odblokowywane najwcześniej od Ery 6 (lub 3 Fragmenty z kartą signature).</p>
+      <div class="see-also"><strong>Patrz także:</strong> Herezja, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">H</span> Hak</div>
+      <p>Żeton prywatnego nacisku na rywala (max 2 aktywne na gracza). Używany do Wymuszenia (limit 1×/Erę): ofiara spełnia żądanie albo odmawia i otrzymuje +2 Herezji.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Wymuszenie, Przesłuchanie</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">H</span> Herezja</div>
+      <p>Tor 0–10: <strong>0–4 (Czysta)</strong> — brak Stosu w Autodafé; <strong>5–6 (Obserwowana)</strong> — zagrożenie Stosem; <strong>7–10 (Krytyczna)</strong> — próg oskarżenia przed Trybunałem.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Krytyczna, Oskarżenie, Werdykt</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">I</span> Inkwizytor (Wielki Inkwizytor)</div>
+      <p>Neutralna figurka NPC poruszająca się o 0–1 krawędź grafu w Fazie II. Może dokonać Autodafé. Nasłanie Oficjum ma zawsze pierwszeństwo ruchu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Nasłanie, Autodafé</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">K</span> Karty (Typy)</div>
+      <p><strong>Akcja:</strong> zagrywana zakryta w Fazie I. <strong>Reakcja:</strong> zagrywana natychmiast przy warunku. <strong>Signature:</strong> unikalna karta frakcyjna łamiąca regułę stołu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Edykt karty, Okno reakcji</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>INQUISITIO 1492 · SŁOWNIK POJĘĆ A–Z</span>
+    <span>STRONA 1 / 2</span>
+  </div>
+</div>
+
+<!-- ================= STRONA 2 ================= -->
+<div class="page">
+
+
+  <div class="two-col-flow">
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">K</span> Kronika Dziejów</div>
+      <p>Talia 10 kart Edyktów Toledo 1492. Na koniec każdej Ery odkrywana jest 1 karta modyfikująca reguły na kolejną rundę.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Edykt, Czystka</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">K</span> Krytyczna (Strefa Krytyczna)</div>
+      <p>Przedział Herezji 7–10. Gracze w tej strefie mogą zostać oskarżeni w Fazie Dworu i poddani procedurze Werdyktu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Herezja, Oskarżenie, Werdykt</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">L</span> Limit na Erę (Anti-AP)</div>
+      <p>Główne limity: max 2 akcje Fazy I na gracza; max 1 Wymuszenie Haka / Erę; max 1 Nasłanie / Erę; max 1 Przesłuchanie / Erę; Autodafé max co 3 Ery.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Era, Wymuszenie</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">L</span> Lokacja</div>
+      <p>Jeden z 5 węzłów Toledo (1. Trybunał, 2. Pałac, 3. Lochy, 4. Rynek, 5. Gildia). Ruch odbywa się po grafie; rozpatrywanie kart ściśle 1→5.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Agent, Odkrycie</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">L</span> Lochy</div>
+      <p>Lokacja #3. Zawiera strefę Aresztu dla uwięzionych Agentów oraz jest miejscem wykonywania Przesłuchań w Fazie Sądu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Areszt, Przesłuchanie</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">M</span> Marionetka</div>
+      <p>Nakładka na figurkę rywala z Przesłuchania. Kontroler rusza nią o 1 krawędź raz/Erę jak swoim pionkiem (bez głosu w Werdykcie). Wykrycie = +2 Herezji dla właściciela.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Przesłuchanie, Agent</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">N</span> Nasłanie</div>
+      <p>Wskazanie kierunku dla Inkwizytora w Fazie II (1×/gracza). W przypadku sporu Święte Oficjum ma zawsze bezwzględny priorytet.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Inkwizytor</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">O</span> Odkrycie</div>
+      <p>Krok 2 Fazy Sądu: karty odkrywane są lokacja po lokacji (1→5), od 1. gracza. Rozpatrywane są efekty, Herezja i areszty.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Fiasko, Lokacja</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">O</span> Oskarżenie</div>
+      <p>Postawienie przed Trybunałem rywala o Herezji ≥ 7 w Fazie Dworu (max 1 oskarżenie na dany cel na Erę). Uruchamia procedurę Werdyktu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Krytyczna, Werdykt</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">P</span> Przesłuchanie (procedura)</div>
+      <p>Akcja w Lochach (dla gracza z Agentem w Lochach). Wybór na uwięzionym rywalu: Marionetka, Hak lub +2 Herezji.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Lochy, Marionetka, Hak</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">R</span> Relikwia</div>
+      <p>Żeton ewakuowany przez Cienie Al-Andalus (cel: 2 Relikwie). Przy Autodafé w jej lokacji Relikwia wraca do banku.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Autodafé, Szlak Morski, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">R</span> Remis</div>
+      <p>W Werdykcie: remis oznacza Uniewinnienie. W sporach reguł: rozstrzygaj na niekorzyść zyskującego. Po 12 Erach: wygrywa najniższa Herezja.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Werdykt, Wyrok surowy, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">S</span> Stos</div>
+      <p>Żeton eliminacji i cel Oficjum. Zdobywany przez Autodafé na rywalu ≥ 5 Herezji lub Werdykt wniesiony przez Oficjum.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Autodafé, Werdykt, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">S</span> Szlak Morski</div>
+      <p>Ścieżka ucieczki otwierana edyktem (Flota Odkrywców) lub kartami Cieni. Umożliwia stałą ewakuację Relikwii poza planszę.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Relikwia, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">U</span> Upadek</div>
+      <p>Żeton klęski politycznej i cel Gildii Cieni (cel: 8 Upadków). Zdobywany przez odmowy Haków, Marionetki i wyroki sądu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Hak, Zwycięstwo</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">W</span> Werdykt (procedura)</div>
+      <p>Jawne głosowanie stołu (bez oskarżonego): Skazanie (Agent do Lochów, cel +1 Herezja, nazwisko na tor Oficjum); Uniewinnienie/Remis (oskarżyciel +1 Herezja).</p>
+      <div class="see-also"><strong>Patrz także:</strong> Oskarżenie, Krytyczna</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">W</span> Wymuszenie (procedura)</div>
+      <p>Zużycie Haka (1×/Erę): ogłoszenie żądania. Spełnienie zużywa Hak; odmowa daje ofierze +2 Herezji i również zużywa Hak.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Hak, Limit na Erę</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">W</span> Wyrok Surowy</div>
+      <p>Złote prawo: brak zapisu lub konflikt kolejności rozstrzygaj na niekorzyść gracza zyskującego; przy remisie spór przegrywa wyższa Herezja.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Złote prawa, Remis</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">Z</span> Złoto</div>
+      <p>Waluta gry. Start: 4 złota; dochód: +1 zł w Fazie III; Akcja Gospodarcza: +1 zł. Koszty kart płaci się natychmiast przy zagraniu.</p>
+      <div class="see-also"><strong>Patrz także:</strong> Czystka, Karty</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head"><span class="entry-badge">Z</span> Zwycięstwo</div>
+      <p>Następuje natychmiast w Fazie III po spełnieniu celu: Oficjum (6 Stosów / 3 Skazania), Cienie (2 Relikwie), Korona (2 Dekrety), Kabała (2 Fragmenty od Ery 6), Gildia (8 Upadków).</p>
+      <div class="see-also"><strong>Patrz także:</strong> Era, Herezja</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>INQUISITIO 1492 · SŁOWNIK POJĘĆ A–Z</span>
+    <span>STRONA 2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>
