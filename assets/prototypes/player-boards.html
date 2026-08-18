@@ -831,12 +831,6 @@ body.bw .card-proto {
   overflow: hidden;
   white-space: nowrap;
 }
-.pb-title-hint {
-  font-size: 9pt;
-  font-weight: normal;
-  color: #5c4c3e;
-  margin-left: 1mm;
-}
 .pb-slots {
   display: flex;
   flex-wrap: nowrap;
@@ -870,23 +864,6 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.pb-tray-content {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.5mm;
-  opacity: 0.55;
-  pointer-events: none;
-}
-.pb-tray-hint {
-  font-size: 9pt;
-  font-weight: bold;
-  color: #7a5a18;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -1219,32 +1196,35 @@ body.bw .card-proto {
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
-  border: none;
-  background: var(--faction-edge, var(--blood));
+  border-right: 0.25mm solid rgba(42, 28, 18, 0.5);
+  border-bottom: 0.25mm solid rgba(42, 28, 18, 0.5);
+  background: var(--parch) !important;
   display: flex;
   flex-direction: column;
+  padding: 0;
   box-shadow: none;
 }
+.card-proto.card-print-cell:nth-child(3n) { border-right: none; }
+.card-proto.card-print-cell:nth-child(n+7) { border-bottom: none; }
 .card-proto.card-print-cell::before {
   display: none !important;
 }
 
-/* Position-dependent padding: outer edges have 2.5mm bleed + 1.5mm border = 4.0mm */
-.pos-r0-c0 { padding: 4mm 1.5mm 1.5mm 4mm; }
-.pos-r0-c1 { padding: 4mm 1.5mm 1.5mm 1.5mm; }
-.pos-r0-c2 { padding: 4mm 4mm 1.5mm 1.5mm; }
+/* Outer perimeter bleed margin (2.5mm) */
+.pos-r0-c0 { padding: 2.5mm 0 0 2.5mm; }
+.pos-r0-c1 { padding: 2.5mm 0 0 0; }
+.pos-r0-c2 { padding: 2.5mm 2.5mm 0 0; }
 
-.pos-r1-c0 { padding: 1.5mm 1.5mm 1.5mm 4mm; }
-.pos-r1-c1 { padding: 1.5mm 1.5mm 1.5mm 1.5mm; }
-.pos-r1-c2 { padding: 1.5mm 4mm 1.5mm 1.5mm; }
+.pos-r1-c0 { padding: 0 0 0 2.5mm; }
+.pos-r1-c1 { padding: 0; }
+.pos-r1-c2 { padding: 0 2.5mm 0 0; }
 
-.pos-r2-c0 { padding: 1.5mm 1.5mm 4mm 4mm; }
-.pos-r2-c1 { padding: 1.5mm 1.5mm 4mm 1.5mm; }
-.pos-r2-c2 { padding: 1.5mm 4mm 4mm 1.5mm; }
+.pos-r2-c0 { padding: 0 0 2.5mm 2.5mm; }
+.pos-r2-c1 { padding: 0 0 2.5mm 0; }
+.pos-r2-c2 { padding: 0 2.5mm 2.5mm 0; }
 
-/* Inner parchment canvas inside the faction frame */
-.card-proto.card-print-cell .card-inner-flow,
-.card-proto.card-print-cell .card-back-content {
+/* Inner parchment canvas */
+.card-proto.card-print-cell .card-inner-flow {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -1254,7 +1234,26 @@ body.bw .card-proto {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 0.25mm solid rgba(166, 124, 45, 0.55);
+  border: none;
+}
+
+.card-proto.card-print-cell.card-back-cell {
+  background: var(--back-accent, var(--blood)) !important;
+  color: #ffffff;
+}
+.card-proto.card-print-cell .card-back-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--back-accent, var(--blood));
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: none;
 }
 
 /* Header */
@@ -1535,24 +1534,24 @@ body.mode-trim .crop-line-h-right {
       <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–4</span>
-        <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
+        <span class="hz-z1">Czysta</span>
+        <span class="hz-z2">Obserwowana</span>
+        <span class="hz-z3">Krytyczna (Oskarżenie)</span>
       </div>
     </section>
     
   <div class="pb-body layer-c">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+        <div class="pb-box-title">Agenci</div>
         <div class="pb-slots"><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span></div>
       </section>
       <section class="pb-box gold">
         <div class="pb-box-title">Złoto</div>
-        <div class="pb-tray" title="Tacka na żetony złota (start 3)"><div class="pb-tray-content"><span class="coin"></span><span class="pb-tray-hint">Start: 3</span></div></div>
+        <div class="pb-tray" title="Tacka na żetony złota"></div>
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
+        <div class="pb-box-title">Haki</div>
         <div class="pb-slots"><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
       </section>
     </div>
@@ -1575,30 +1574,30 @@ body.mode-trim .crop-line-h-right {
   <div class="player-ui">
     <header class="pb-head">
       <h2><span class="ico pb-fac-icon" title="Cienie Al-Andalus"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M15.5 3.5a9 9 0 1 0 5 15.5 9 9 0 0 1-5-15.5z" fill="#1b4d3e" stroke="#d4af37" stroke-width="1"/><polygon points="16,9 17.5,10.5 19.5,10.5 18,12 18.8,14 17,13 15.2,14 16,12 14.5,10.5 16.5,10.5" fill="#d4af37"/></svg></span>Cienie Al-Andalus</h2>
-      <p class="pb-goal"><strong>Cel:</strong> 2 Relikwie + ścieżka (od Ery 1)</p>
+      <p class="pb-goal"><strong>Cel:</strong> 2 Relikwie + ścieżka</p>
     </header>
     <section class="pb-heresy">
       <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–4</span>
-        <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
+        <span class="hz-z1">Czysta</span>
+        <span class="hz-z2">Obserwowana</span>
+        <span class="hz-z3">Krytyczna (Oskarżenie)</span>
       </div>
     </section>
     
   <div class="pb-body layer-c">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+        <div class="pb-box-title">Agenci</div>
         <div class="pb-slots"><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span></div>
       </section>
       <section class="pb-box gold">
         <div class="pb-box-title">Złoto</div>
-        <div class="pb-tray" title="Tacka na żetony złota (start 3)"><div class="pb-tray-content"><span class="coin"></span><span class="pb-tray-hint">Start: 3</span></div></div>
+        <div class="pb-tray" title="Tacka na żetony złota"></div>
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
+        <div class="pb-box-title">Haki</div>
         <div class="pb-slots"><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
       </section>
     </div>
@@ -1628,24 +1627,24 @@ body.mode-trim .crop-line-h-right {
       <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–4</span>
-        <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
+        <span class="hz-z1">Czysta</span>
+        <span class="hz-z2">Obserwowana</span>
+        <span class="hz-z3">Krytyczna (Oskarżenie)</span>
       </div>
     </section>
     
   <div class="pb-body layer-c">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+        <div class="pb-box-title">Agenci</div>
         <div class="pb-slots"><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span></div>
       </section>
       <section class="pb-box gold">
         <div class="pb-box-title">Złoto</div>
-        <div class="pb-tray" title="Tacka na żetony złota (start 3)"><div class="pb-tray-content"><span class="coin"></span><span class="pb-tray-hint">Start: 3</span></div></div>
+        <div class="pb-tray" title="Tacka na żetony złota"></div>
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
+        <div class="pb-box-title">Haki</div>
         <div class="pb-slots"><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
       </section>
     </div>
@@ -1674,24 +1673,24 @@ body.mode-trim .crop-line-h-right {
       <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–4</span>
-        <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
+        <span class="hz-z1">Czysta</span>
+        <span class="hz-z2">Obserwowana</span>
+        <span class="hz-z3">Krytyczna (Oskarżenie)</span>
       </div>
     </section>
     
   <div class="pb-body layer-c">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+        <div class="pb-box-title">Agenci</div>
         <div class="pb-slots"><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span></div>
       </section>
       <section class="pb-box gold">
         <div class="pb-box-title">Złoto</div>
-        <div class="pb-tray" title="Tacka na żetony złota (start 3)"><div class="pb-tray-content"><span class="coin"></span><span class="pb-tray-hint">Start: 3</span></div></div>
+        <div class="pb-tray" title="Tacka na żetony złota"></div>
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
+        <div class="pb-box-title">Haki</div>
         <div class="pb-slots"><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
       </section>
     </div>
@@ -1721,24 +1720,24 @@ body.mode-trim .crop-line-h-right {
       <div class="pb-section-title">Herezja</div>
       <div class="heresy-track"><span class="heresy-pip z1">0</span><span class="heresy-pip z1">1</span><span class="heresy-pip z1">2</span><span class="heresy-pip z1">3</span><span class="heresy-pip z1">4</span><span class="heresy-pip z2">5</span><span class="heresy-pip z2">6</span><span class="heresy-pip z3">7</span><span class="heresy-pip z3">8</span><span class="heresy-pip z3">9</span><span class="heresy-pip z3">10</span></div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–4</span>
-        <span class="hz-z2">Obserw. 5–6</span>
-        <span class="hz-z3">Krytyczna ≥7 (Oskarżenie)</span>
+        <span class="hz-z1">Czysta</span>
+        <span class="hz-z2">Obserwowana</span>
+        <span class="hz-z3">Krytyczna (Oskarżenie)</span>
       </div>
     </section>
     
   <div class="pb-body layer-c">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+        <div class="pb-box-title">Agenci</div>
         <div class="pb-slots"><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span><span class="agent-slot" title="Agent Ø20 mm"></span></div>
       </section>
       <section class="pb-box gold">
         <div class="pb-box-title">Złoto</div>
-        <div class="pb-tray" title="Tacka na żetony złota (start 3)"><div class="pb-tray-content"><span class="coin"></span><span class="pb-tray-hint">Start: 3</span></div></div>
+        <div class="pb-tray" title="Tacka na żetony złota"></div>
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
+        <div class="pb-box-title">Haki</div>
         <div class="pb-slots"><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span><span class="pb-token hook-slot" title="Hak"><span class="ico" title="Hak"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg></span></span></div>
       </section>
     </div>
