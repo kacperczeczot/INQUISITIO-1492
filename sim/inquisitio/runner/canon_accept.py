@@ -117,13 +117,8 @@ def table_has_share_foundation(res: dict) -> bool:
 
 
 def canon_should_stop(base: dict, *, mode: str) -> bool:
-    """Autonomous halt: shares in band and the table is already healthy."""
-    if mode != "band":
-        return False
-    shares = base.get("setup_shares") or {}
-    if not setup_shares_in_range(shares, *TARGET_BAND_PCT):
-        return False
-    return table_is_healthy(base)
+    """Always False — auditor runs until no candidate improves the score."""
+    return False
 
 
 def rank_key(res: dict, *, mode: str, base_in_band: bool) -> tuple:
@@ -174,11 +169,26 @@ def accept_candidate(
     climbing = not setup_shares_in_range(base_shares, *TARGET_BAND_PCT)
 
     if not table_has_share_foundation(base):
-        return AcceptDecision(
-            False,
-            "fundament: 4P poza czerwoną linią 15–35%, nie wdrażaj z dołu",
-            "foundation",
-        )
+        # Base is outside 15–35% red line.  Accept any candidate that doesn't
+        # regress — when deep in the red zone, every small step counts.
+        safe_f, msg_f = telemetry_is_safe(cand, relax_era=True)
+        if not safe_f:
+            return AcceptDecision(False, f"fundament: {msg_f}", "foundation")
+        if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
+            return AcceptDecision(False, "fundament: witalność gorsza niż baza", "foundation")
+        # Accept if candidate enters the red-line band
+        if table_has_share_foundation(cand):
+            return AcceptDecision(True, "fundament: kandydat wciąga frakcje w 15–35%", "foundation")
+        # Accept any non-regressing candidate (no min_delta — incremental climb)
+        dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+        dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+        if dscore < -1e-9 and dmin < -1e-9:
+            return AcceptDecision(
+                False,
+                f"fundament: Δscore {dscore:+.2f} i Δmin {dmin:+.2f} oba ujemne",
+                "foundation",
+            )
+        return AcceptDecision(True, f"fundament: wspinaczka Δmin {dmin:+.2f} Δscore {dscore:+.2f}", "foundation")
 
     safe, msg = telemetry_is_safe(cand, relax_era=climbing)
     if not safe:
@@ -228,8 +238,13 @@ def accept_candidate(
         return AcceptDecision(False, "higiena: wyszedł z pasma 20–30%", "hygiene")
     if health_improved(cand, base):
         return AcceptDecision(True, "higiena: poprawa zdrowia, pasmo utrzymane", "hygiene")
+    # Accept any score improvement while in band — keep pushing toward optimum
+    dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+    dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+    if dscore >= min_delta or dmin >= min_delta:
+        return AcceptDecision(True, f"higiena: Δscore {dscore:+.2f} Δmin {dmin:+.2f} w paśmie", "hygiene")
     return AcceptDecision(
         False,
-        "higiena: brak poprawy zdrowia (kosmetyka score odrzucona)",
+        f"higiena: Δscore {dscore:+.2f} Δmin {dmin:+.2f} < {min_delta} i brak poprawy zdrowia",
         "hygiene",
     )
