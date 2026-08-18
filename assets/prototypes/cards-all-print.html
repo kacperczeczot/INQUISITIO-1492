@@ -521,26 +521,6 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   line-height: 1.25;
   color: #6e1818;
   font-weight: 600;
-}
-.card-art {
-  flex: 0 0 12mm;
-  height: 12mm;
-  margin: 0;
-  border-bottom: 0.35mm solid var(--line);
-  border-top: none;
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 2mm,
-      rgba(42,28,18,0.04) 2mm,
-      rgba(42,28,18,0.04) 4mm
-    );
-  box-shadow: inset 0 0 0 0.25mm dashed rgba(42,28,18,0.35);
-  outline: 0.25mm dashed rgba(42,28,18,0.28);
-  outline-offset: -1.2mm;
-  box-sizing: border-box;
-}
 .card-main {
   flex: 1 1 auto;
   min-height: 0;
@@ -1272,14 +1252,8 @@ body.bw .card-proto {
   border-bottom: 0.35mm solid var(--line);
 }
 
-.card-proto.card-print-cell .card-art {
-  margin: 1.5mm 2mm 1mm 2mm;
-  position: relative;
-  z-index: 5;
-}
-
 .card-proto.card-print-cell .card-main {
-  padding: 1mm 2.2mm 1.8mm 2.2mm;
+  padding: 1.8mm 2.2mm 1.8mm 2.2mm;
   position: relative;
   z-index: 5;
 }
@@ -1637,7 +1611,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt.</div>
@@ -1657,7 +1630,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.</div>
@@ -1677,7 +1649,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.</div>
@@ -1697,7 +1668,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 lokację w stronę lokacji swojego Agenta.</div><div class="fx-block"><strong>Limit:</strong> 1 nasłanie / gracza / Erę.</div></div>
       <div class="card-lore">Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel.</div>
@@ -1717,7 +1687,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Jeśli rywal zagrywa kartę z Herezją ≥ 1:<br><strong>Wskaż</strong> tego rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.</div>
@@ -1737,7 +1706,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w lokacji swojego Agenta.</div></div>
       <div class="card-lore">Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem.</div>
@@ -1757,7 +1725,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wykonaj</strong> <em>Przesłuchanie</em> na aresztowanego Agenta rywala.</div><div class="fx-block"><strong>Limit:</strong> 1 / gracza / Erę.</div></div>
       <div class="card-lore">Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję.</div>
@@ -1777,7 +1744,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji ze swoim Agentem.</div><div class="fx-block"><strong>Limit:</strong> 1 nasłanie / gracza / Erę.</div></div>
       <div class="card-lore">Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.</div>
@@ -1797,7 +1763,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w Lochach lub w lokacji <em>Inkwizytora</em>.</div></div>
       <div class="card-lore">Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.</div>
@@ -1966,7 +1931,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 5</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
       <div class="heresy-caption">Autodafé z rozkazu trybunału pali strach, nie tylko drewno.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Autodafé</em> / 3 Ery”</div><div class="fx-block"><strong>Ogłoś</strong> <em>Autodafé</em> w lokacji <em>Inkwizytora</em>.</div><div class="fx-block">Jeśli Agent rywala jest w lokacji <em>Inkwizytora</em>:<br><strong>Zyskaj</strong> <em>Stos</em>.</div></div>
       <div class="card-lore">Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.</div>
@@ -1986,7 +1950,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
       <div class="card-lore">Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń.</div>
@@ -2006,7 +1969,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom.</div>
@@ -2026,7 +1988,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec.</div>
@@ -2046,7 +2007,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.</div></div>
       <div class="card-lore">Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację.</div>
@@ -2066,7 +2026,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Kupcy rozpoznają obce oblicze w tłumie na placu.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień.</div>
@@ -2086,7 +2045,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę.</div>
@@ -2106,7 +2064,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Jeśli masz Agenta w lokacji z Relikwią:<br><strong>Ewakuuj</strong> <em>Relikwię</em> z tej lokacji.</div><div class="fx-block"><strong>Limit:</strong> 1 / Erę.</div></div>
       <div class="card-lore">Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar.</div>
@@ -2126,7 +2083,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Uwolnij</strong> swojego aresztowanego Agenta z Lochów.<br><strong>Przesuń</strong> tego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą.</div>
@@ -2295,7 +2251,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Agentem w sąsiedniej lokacji swojego Agenta.</div></div>
       <div class="card-lore">Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni.</div>
@@ -2315,7 +2270,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Jeśli masz <em>Marionetkę</em>:<br><strong>Przesuń</strong> <em>Marionetkę</em> o 1 lokację.</div></div>
       <div class="card-lore">Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę.</div>
@@ -2335,7 +2289,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przenieś</strong> <em>Relikwię</em> z lokacji swojego Agenta do sąsiedniej lokacji.</div></div>
       <div class="card-lore">Bluff kierunku Relikwii jest połową gry Cieni.</div>
@@ -2355,7 +2308,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Relikwia</em> tylko ze Szlaku Morskiego”</div><div class="fx-block">Jeśli nie ma <em>Inkwizytora</em> w lokacji lub masz <em>Marionetkę</em> lub Szlak jest otwarty:<br><strong>Ewakuuj</strong> do 2 <em>Relikwii</em> z lokacji Twoich Agentów.</div></div>
       <div class="card-lore">As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.</div>
@@ -2375,7 +2327,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div><div class="fx-block">Jeśli <em>Inkwizytor</em> jest w Twojej lokacji docelowej:<br><strong>przesuń</strong> go o 1 lokację.</div></div>
       <div class="card-lore">Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku.</div>
@@ -2395,7 +2346,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.</div></div>
       <div class="card-lore">Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień.</div>
@@ -2415,7 +2365,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Królewski nakaz wiąże bez pytania biskupów o zgodę.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu.</div>
@@ -2435,7 +2384,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 2 złota.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną.</div>
@@ -2455,7 +2403,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Szept z sali tronowej dociera do familiariusza szybciej niż msza.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4).</div>
@@ -2624,7 +2571,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Faworyzm dworu budzi zazdrość kortegan i biskupów.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.</div>
@@ -2644,7 +2590,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.</div>
@@ -2664,7 +2609,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Pałacu lub w lokacji ze swoim Agentem.</div></div>
       <div class="card-lore">Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba aresztu.</div>
@@ -2684,7 +2628,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div></div>
       <div class="card-lore">Korona poluje na już brudnych. Dwa Haki zaczynają się tu.</div>
@@ -2704,7 +2647,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">W następnym Werdykcie Twój głos ma wagę 2.<br><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone.</div>
@@ -2724,7 +2666,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 4</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-break"><strong>DEKRET 1</strong> — Łamie regułę „1 wymuszenie <em>Haka</em> / gracza / Erę”</div><div class="fx-block"><strong>Wymuś</strong> spełnienie <em>Haka</em>.</div><div class="fx-block"><strong>Odmowa:</strong> +3 <em>Herezja</em>.</div></div>
       <div class="card-lore">Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.</div>
@@ -2744,7 +2685,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 3</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
       <div class="heresy-caption">Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-break"><strong>DEKRET 2</strong> — Łamie regułę „zwycięstwo tylko po Erze”</div><div class="fx-block">Jeśli masz aktywne <em>Haki</em> na ≥ 2 graczach: zwycięstwo.</div></div>
       <div class="card-lore">Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.</div>
@@ -2764,7 +2704,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Złote pierścienie i listy polecające otwierają każde drzwi w Toledo.</div>
@@ -2784,7 +2723,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą.</div>
@@ -2953,7 +2891,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę.</div>
@@ -2973,7 +2910,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 2 złota.</div></div>
       <div class="card-lore">Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.</div>
@@ -2993,7 +2929,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> <em>Fragment</em>.</div></div>
       <div class="card-lore">Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną.</div>
@@ -3013,7 +2948,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.</div>
@@ -3033,7 +2967,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Jeśli masz Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div><div class="fx-block">Jeśli nie masz Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> 1 złoto.</div></div>
       <div class="card-lore">Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale.</div>
@@ -3053,7 +2986,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wykonaj</strong> <em>Przesłuchanie</em>.</div><div class="fx-block">Jeśli +2 <em>Herezja</em> lub <em>Hak</em>:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div><div class="fx-block"><strong>Limit:</strong> 1 / Erę.</div></div>
       <div class="card-lore">Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Marionetki.</div>
@@ -3073,7 +3005,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala z Herezją ≥ 5.</div></div>
       <div class="card-lore">Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze.</div>
@@ -3093,7 +3024,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Lochach lub w Trybunale.</div></div>
       <div class="card-lore">Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem.</div>
@@ -3113,7 +3043,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Pergamin Salomona brudzi palce i sumienie.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Jeśli masz ≥1 <em>Fragment</em> i Agenta w Lochach lub Trybunale:<br><strong>Zyskaj</strong> <em>Fragment</em>.</div></div>
       <div class="card-lore">Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko.</div>
@@ -3282,7 +3211,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Herezja</em> tylko z karty”</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> i <em>Herezję</em> 4–6: zwycięstwo.</div><div class="fx-block">Jeśli masz 3 <em>Fragmenty</em> bez <em>Herezji</em> 4–6:<br><strong>Ustaw</strong> swoją <em>Herezję</em> na 5.</div></div>
       <div class="card-lore">Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.</div>
@@ -3302,7 +3230,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Zmniejsz swoją <em>Herezję</em> o 1.<br><strong>Zyskaj</strong> 1 złoto.</div></div>
       <div class="card-lore">Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony.</div>
@@ -3322,7 +3249,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach.</div>
@@ -3342,7 +3268,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Strażnik zna cenę milczenia lepiej niż modlitwy.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż.</div>
@@ -3362,7 +3287,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 3 złota.</div></div>
       <div class="card-lore">Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.</div>
@@ -3382,7 +3306,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Klasyczny frame: zakazana księga ląduje w cudzej komnacie.</div>
@@ -3402,7 +3325,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       <div class="heresy-caption">Donosiciel pamięta twarz i zapach srebra.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.</div>
@@ -3422,7 +3344,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Podczas <em>Werdyktu</em>, po ujawnieniu większości:<br><strong>Zmień</strong> swój głos.</div><div class="fx-block"><strong>Limit:</strong> 1 / Erę.</div></div>
       <div class="card-lore">Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.</div>
@@ -3442,7 +3363,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div></div>
       <div class="card-lore">Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek.</div>
@@ -3611,7 +3531,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Aresztuj</strong> Agenta rywala w Gildii lub na Rynku.</div></div>
       <div class="card-lore">Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.</div>
@@ -3631,7 +3550,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Zyskaj</strong> 1 złoto.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.</div>
@@ -3651,7 +3569,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 3</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div><div class="fx-block">Jeśli Odmowa tego <em>Haka</em> w tej Erze:<br><strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
       <div class="card-lore">Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole.</div>
@@ -3671,7 +3588,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 4</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
       <div class="heresy-caption">Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.</div>
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”</div><div class="fx-block">Jeśli rywal ma ujawniony <em>Hak</em>, <em>Marionetkę</em> lub <em>Autodafé</em> w lokacji kluczowej:<br><strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
       <div class="card-lore">Egzekucja domu. Stół boi się trzymać ujawnione brudy.</div>
@@ -3691,7 +3607,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div></div>
       <div class="card-lore">Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu.</div>
@@ -3711,7 +3626,6 @@ body.mode-trim .crop-line-h-right {
       <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div></div>
       <div class="card-lore">Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę.</div>
@@ -3731,7 +3645,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Każdy gracz z Agentem w Pałacu zyskuje +1 złoto.<br><strong>Przesuń</strong> <em>Inkwizytora</em> o 1 krok w stronę Trybunału.</div></div>
       <div class="card-lore">Świętowanie na Dworze. Korona nagradza dyplomatów, a Inkwizytor powraca do centrum władzy kościelnej.</div>
@@ -3751,7 +3664,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Każde zagranie karty pod Rynek lub Gildię kosztuje +1 złoto dodatkowo.</div></div>
       <div class="card-lore">Straż miejska blokuje plebejskie zaułki. Ukryte operacje i handel stają się znacznie kosztowniejsze.</div>
@@ -3771,7 +3683,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Otwórz</strong> <em>Szlak Morski</em>.<br>Każdy gracz z Agentem na Rynku lub w Gildii zyskuje +1 złoto.</div></div>
       <div class="card-lore">Wyprawa za ocean otwiera szlak ucieczki, a portowe rynki i warsztaty zalewa fala nowych zleceń.</div>
@@ -3940,7 +3851,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Gracz o najwyższej <em>Herezji</em>: +1 <em>Herezja</em>.<br>Gracz o najniższej <em>Herezji</em>: Zyskuje +1 złoto.</div></div>
       <div class="card-lore">Inkwizycja zaostrza śledztwa wobec najbardziej podejrzanych, sowicie nagradzając lojalnych mieszczan.</div>
@@ -3960,7 +3870,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Próg Krytycznej <em>Herezji</em> (oskarżenia na Dworze) jest obniżony o 1.</div></div>
       <div class="card-lore">Paranoja w Toledo sięga zenitu. Wystarczy cień podejrzenia, by stanąć przed trybunałem sądu.</div>
@@ -3980,7 +3889,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Przesuń</strong> <em>Inkwizytora</em> do lokacji z największą liczbą Agentów.<br>Przy remisie wybiera Pierwszy Gracz.</div></div>
       <div class="card-lore">Straż i inkwizytorzy uderzają w najludniejsze zgromadzenie w mieście, siejąc postrach.</div>
@@ -4000,7 +3908,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block"><strong>Uwolnij</strong> 1 uwięzionego Agenta do Gildii.</div><div class="fx-block">Jeśli w Lochach nie ma uwięzionych Agentów:<br><strong>Umieść</strong> <em>Relikwię</em> w Lochach.</div></div>
       <div class="card-lore">Zamieszki w kazamatach otwierają drogę ucieczki dla więźnia lub ujawniają ukrytą w murach relikwię.</div>
@@ -4020,7 +3927,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Faza Dworu zostaje zawieszona (brak możliwości rzucenia Oskarżenia).</div></div>
       <div class="card-lore">Tymczasowy rozejm polityczny na szczytach władzy zamraża publiczne procesy i egzekucje.</div>
@@ -4040,7 +3946,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-banner fx-edykt"><strong>EDYKT Ery</strong></div><div class="fx-block">W tej Erze: Akcja Gospodarcza na Rynku przynosi +2 złote zamiast +1 zł.</div></div>
       <div class="card-lore">Królewski przywilej targowy ściąga kupców z całej Kastylii, napędzając miejski handel.</div>
@@ -4060,7 +3965,6 @@ body.mode-trim .crop-line-h-right {
       
       
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect"><div class="fx-block">Każdy gracz w Strefie Obserwowanej zmniejsza swoją <em>Herezję</em> o 1.</div></div>
       <div class="card-lore">Biskup ogłasza wielki jubileusz i powszechne rozgrzeszenie, dając wytchnienie podejrzanym.</div>

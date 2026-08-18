@@ -1070,26 +1070,6 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   line-height: 1.25;
   color: #6e1818;
   font-weight: 600;
-}
-.card-art {
-  flex: 0 0 12mm;
-  height: 12mm;
-  margin: 0;
-  border-bottom: 0.35mm solid var(--line);
-  border-top: none;
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 2mm,
-      rgba(42,28,18,0.04) 2mm,
-      rgba(42,28,18,0.04) 4mm
-    );
-  box-shadow: inset 0 0 0 0.25mm dashed rgba(42,28,18,0.35);
-  outline: 0.25mm dashed rgba(42,28,18,0.28);
-  outline-offset: -1.2mm;
-  box-sizing: border-box;
-}
 .card-main {
   flex: 1 1 auto;
   min-height: 0;
@@ -1821,14 +1801,8 @@ body.bw .card-proto {
   border-bottom: 0.35mm solid var(--line);
 }
 
-.card-proto.card-print-cell .card-art {
-  margin: 1.5mm 2mm 1mm 2mm;
-  position: relative;
-  z-index: 5;
-}
-
 .card-proto.card-print-cell .card-main {
-  padding: 1mm 2.2mm 1.8mm 2.2mm;
+  padding: 1.8mm 2.2mm 1.8mm 2.2mm;
   position: relative;
   z-index: 5;
 }
@@ -2372,7 +2346,6 @@ def render_card_print_cell(c: Card, faction_slug: str, row: int = 0, col: int = 
       {stats_html}
       {caption_html}
     </div>
-    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
     <div class="card-main">
       <div class="card-effect">{_format_effect_html(effect)}</div>
       {lore_html}
