@@ -505,20 +505,39 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   color: #5c4010;
   background: #f0dfa8;
   border-color: #a67c2d;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8mm;
+}
+.card-proto .badge-gold .ico,
+.card-proto .badge-gold svg {
+  width: 3.6mm;
+  height: 3.6mm;
+  display: inline-block;
+  vertical-align: middle;
 }
 .card-proto .badge-heresy {
-  color: #3a3028;
-  background: rgba(255,255,255,0.7);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8mm;
+  font-weight: bold;
+}
+.card-proto .badge-heresy .ico,
+.card-proto .badge-heresy svg {
+  width: 3.6mm;
+  height: 3.6mm;
+  display: inline-block;
+  vertical-align: middle;
 }
 .card-proto .badge-heresy-hot {
-  color: #fff8f4;
-  background: #6e1818;
-  border-color: #3a0c0c;
+  color: #8b1d24;
+  background: #fae6e6;
+  border-color: #b83a3a;
 }
 .card-proto .badge-heresy-cool {
-  color: #1e3a2e;
-  background: #cfe0d6;
-  border-color: #2d5a45;
+  color: #1b4d3e;
+  background: #e6f4ed;
+  border-color: #2d6a4f;
 }
 .card-proto .heresy-caption {
   margin-top: 0.8mm;
@@ -1564,7 +1583,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Rytuał Przejścia</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1581,7 +1600,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Transmutacja Złota</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1615,7 +1634,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Zwierciadło Herezji</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1632,7 +1651,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Wskazówka Cyklu</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1649,7 +1668,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Przesłuchanie Imienia</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1666,7 +1685,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Archiwum Ukryte</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1683,7 +1702,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Areszt Wiedzy</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1700,7 +1719,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Fragment Kodeksu</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
     <div class="heresy-caption">Pergamin Salomona brudzi palce i sumienie.</div>
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1718,7 +1737,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Pieczęć Salomona</div>
       <span class="type-badge type-specjalna">Specjalna</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
@@ -1735,7 +1754,7 @@ body.mode-trim .crop-line-h-right {
       <div class="name">Medytacja Sefirot</div>
       <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="ico" title="gold"><svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg></span> 1</span></div>
     
   </div>
   <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>

@@ -165,6 +165,7 @@ ICONS_SVG: dict[str, str] = {
     "decree": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M4 3h11l5 5v13H4z" fill="#f0e6cf" stroke="#3a2618" stroke-width="1.2"/><circle cx="14" cy="14" r="5" fill="#8b1d24" stroke="#a67c2d" stroke-width="1"/><path d="M11.5 14.5l1.5-2 1.5 2" stroke="#fff" stroke-width="1" fill="none"/></svg>',
     "fall": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg>',
     "spent": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="none" stroke="#6e1818" stroke-width="1.5" stroke-dasharray="3 1.5"/><path d="M7 7l10 10M17 7L7 17" stroke="#6e1818" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    "gold": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f3c642" stroke="#684a0c" stroke-width="1.2"/><circle cx="12" cy="12" r="7.8" fill="none" stroke="#946c18" stroke-width="0.7" stroke-dasharray="1.2 0.8"/><path d="M12 5.5v13M5.5 12h13" stroke="#684a0c" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.2" cy="9.2" r="1" fill="#684a0c"/><circle cx="14.8" cy="9.2" r="1" fill="#684a0c"/><circle cx="9.2" cy="14.8" r="1" fill="#684a0c"/><circle cx="14.8" cy="14.8" r="1" fill="#684a0c"/><circle cx="12" cy="12" r="2.2" fill="#f3c642" stroke="#684a0c" stroke-width="0.9"/></svg>',
     "swiete-oficjum": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M10 2h4v5h5v4h-5v11h-4V11H5V7h5V2z" fill="#7a1f1f" stroke="#d4af37" stroke-width="1.2"/><circle cx="12" cy="9" r="1.8" fill="#d4af37"/></svg>',
     "cienie-al-andalus": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M15.5 3.5a9 9 0 1 0 5 15.5 9 9 0 0 1-5-15.5z" fill="#1b4d3e" stroke="#d4af37" stroke-width="1"/><polygon points="16,9 17.5,10.5 19.5,10.5 18,12 18.8,14 17,13 15.2,14 16,12 14.5,10.5 16.5,10.5" fill="#d4af37"/></svg>',
     "korona-borgiowie": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 18h18v2H3zM4 16l2-10 4.5 5L12 4l1.5 7 4.5-5 2 10z" fill="#a67c2d" stroke="#3a2618" stroke-width="1.1"/><circle cx="6" cy="6" r="1.2" fill="#8b1d24"/><circle cx="12" cy="4" r="1.5" fill="#8b1d24"/><circle cx="18" cy="6" r="1.2" fill="#8b1d24"/></svg>',
@@ -394,7 +395,7 @@ def _gold_badge(cost: int) -> str:
         return ""
     return (
         f'<span class="badge badge-gold" title="Koszt złota">'
-        f'<span class="coin" aria-hidden="true"></span>'
+        f'{_icon("gold")}'
         f" {cost}</span>"
     )
 
@@ -511,20 +512,11 @@ def _note_effect_overflow(
 
 def _icon(key: str, alt: str = "", extra_cls: str = "") -> str:
     label = alt or key
-    if key == "gold":
-        return (
-            f'<span class="coin {extra_cls}" title="{_escape(label)}" aria-hidden="true"></span>'
-        )
     svg = ICONS_SVG.get(key)
     if svg:
         cls = f"ico {extra_cls}".strip()
         return f'<span class="{cls}" title="{_escape(label)}">{svg}</span>'
     short = ICON_SHORT.get(key, (label[:1] or "?").upper())
-    return f'<span class="ico-fallback {extra_cls}" title="{_escape(label)}">{_escape(short)}</span>'
-
-
-# ---------------------------------------------------------------------------
-# CSS — print dimensions
 # ---------------------------------------------------------------------------
 
 def _css() -> str:
@@ -1030,6 +1022,16 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   color: #5c4010;
   background: #f0dfa8;
   border-color: #a67c2d;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8mm;
+}
+.card-proto .badge-gold .ico,
+.card-proto .badge-gold svg {
+  width: 3.6mm;
+  height: 3.6mm;
+  display: inline-block;
+  vertical-align: middle;
 }
 .card-proto .badge-heresy {
   color: #3a3028;
