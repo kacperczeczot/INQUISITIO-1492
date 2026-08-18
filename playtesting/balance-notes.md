@@ -13,7 +13,7 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v0.99.5**
+## Gwarancja silnika — `game_config.yaml` **v0.99.6**
 
 **Zakres:** pętla ery gra te same procedury stołu co księga / słownik / `game/mechanics/` (Intryga, Sąd, Kronika). Każda **nazwana mechanika L4 i pole karty z `config_reference.md`** jest wpięta — nie martwy YAML.
 
