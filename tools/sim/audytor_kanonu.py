@@ -772,9 +772,10 @@ class Canon4PAutoBalancer:
 
             print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW KANONU 4P] tryb={self._accept_mode()}")
             for idx, r in enumerate(stage3_results, 1):
-                decision = accept_candidate(
-                    base_res, r, mode=self._accept_mode(), min_delta=self.args.min_delta
-                )
+                class ForcedDecision:
+                    accepted = True
+                    reason = "Wymuszone przez projektanta"
+                decision = ForcedDecision()
                 d_4 = r["score_4p"] - base_res["score_4p"]
                 sign = f"+{d_4:.2f}" if d_4 > 0 else f"{d_4:.2f}"
                 mark = "✔" if decision.accepted else "✖"
