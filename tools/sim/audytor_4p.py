@@ -178,6 +178,8 @@ def _skip_apply_candidate(tid: str, params: dict) -> bool:
     return is_frozen_identity_knob(tid, params) or is_ablation_off(tid, params)
 
 
+
+
 def generate_all_atomic_candidates_macro() -> list[tuple[str, str, dict]]:
     """L1/L2/L4 ±1 from audit_level*. No L3, no feature_impact extremes/off."""
     tests: list[tuple[str, str, dict]] = []
@@ -332,6 +334,8 @@ def _reject_identity_or_ablation(cand: dict) -> AcceptDecision | None:
             False, "ablacja: wyłączenie podsystemu (raport użyteczności, nie patch)", "hygiene"
         )
     return None
+
+
 
 
 def accept_macro_candidate(base: dict, cand: dict, **kwargs) -> AcceptDecision:

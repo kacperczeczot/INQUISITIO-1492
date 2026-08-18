@@ -213,11 +213,15 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     l1 = [
         t
         for t in audit_level1.build_level1_tests()
-        if t[0] != "L1_BAZA" and not is_frozen_identity_knob(t[0], t[2]) and not is_ablation_off(t[0], t[2])
+        if t[0] != "L1_BAZA" and not is_ablation_off(t[0], t[2])
     ]
     tests.extend(l1)
 
-    l2 = [t for t in audit_level2.build_level2_tests() if t[0] != "L2_BAZA"]
+    l2 = [
+        t
+        for t in audit_level2.build_level2_tests()
+        if t[0] != "L2_BAZA" and not is_ablation_off(t[0], t[2])
+    ]
     tests.extend(l2)
 
     l3 = [t for t in audit_level3.build_level3_tests(param_filter="cost,heresy,gold,target_heresy") if t[0] != "L3_BAZA"]
@@ -226,11 +230,12 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     l4 = [
         t
         for t in audit_level4.build_level4_tests()
-        if t[0] != "L4_BAZA" and not is_frozen_identity_knob(t[0], t[2]) and not is_ablation_off(t[0], t[2])
+        if t[0] != "L4_BAZA" and not is_ablation_off(t[0], t[2])
     ]
     tests.extend(l4)
 
     return tests
+
 
 
 def cheap_funnel_flags(n: int, top_semifinalists: int, top_k: int) -> tuple[bool, bool]:
@@ -782,7 +787,7 @@ class Canon4PAutoBalancer:
                     f"(Δ {sign}) min {r['min_balance']:.1f} | {decision.reason}"
                 )
 
-            # Wybieramy najlepszego zaakceptowanego finalistę
+            # Wybieramy najlepszego zaakceptowanego finalistę (według rankingu score_4p / witalności)
             accepted_candidate = None
             best_ver_res = None
 
@@ -791,12 +796,14 @@ class Canon4PAutoBalancer:
                     base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
                 if decision.accepted:
-                    if best_ver_res is None or ver_res.get("min_balance", 0.0) > best_ver_res.get("min_balance", 0.0):
-                        accepted_candidate = cand_dict[ver_res["id"]]
-                        best_ver_res = ver_res
+                    accepted_candidate = cand_dict[ver_res["id"]]
+                    best_ver_res = ver_res
+                    break
 
             if best_ver_res is not None:
-                print(f"\n   → Wybrano `{best_ver_res['id']}` (najlepszy min_balance {best_ver_res.get('min_balance', 0):.1f})")
+                d_lead = best_ver_res['score_4p'] - base_res['score_4p']
+                print(f"\n   → Wybrano `{best_ver_res['id']}` (zysk 4P Δ {d_lead:+.2f} pkt, min {best_ver_res.get('min_balance', 0):.1f})")
+
 
             # 6. Apply Patch & Measure Collateral Impact
             if accepted_candidate and best_ver_res is not None:
@@ -932,9 +939,10 @@ def main():
     parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 5000)")
     parser.add_argument("--top-semifinalists", type=int, default=48, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 48)")
     parser.add_argument("--top-k", type=int, default=24, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 24)")
-    parser.add_argument("--beam-width", type=int, default=4, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 4)")
-    parser.add_argument("--max-depth", type=int, default=2, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 2)")
+    parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
+    parser.add_argument("--max-depth", type=int, default=3, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 3)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
+
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")

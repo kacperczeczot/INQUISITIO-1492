@@ -121,16 +121,20 @@ def canon_should_stop(base: dict, *, mode: str) -> bool:
     return False
 
 
-def rank_key(res: dict, *, mode: str, base_in_band: bool) -> tuple:
+def rank_key(res: dict, *, mode: str = "band", base_in_band: bool = False) -> tuple:
     """Sort key (lower is better) for the 4P funnel.
 
-    Hygiene must not promote wrecked tables just because deadlock/accusations
-    look slightly 'healthier' — stay in band and keep 4p-core ≥ 90 first.
+    Ranks by score_4p descending (highest setup score with vitality),
+    then min_balance descending, then vitality penalty ascending.
     """
-    score_4p = float(res.get("score_4p_balance", res.get("score_4p", 0.0)))
-    min_b = float(res.get("min_balance", score_4p))
-    vit = float(res.get("vitality_penalty", 0.0))
+    raw_score = res.get("score_4p")
+    if raw_score is None:
+        raw_score = res.get("score_4p_balance", 0.0)
+    score_4p = float(raw_score or 0.0)
+    min_b = float(res.get("min_balance") or score_4p)
+    vit = float(res.get("vitality_penalty") or 0.0)
     return (-score_4p, -min_b, vit)
+
 
 
 def accept_candidate(
@@ -158,17 +162,15 @@ def accept_candidate(
     climbing = not setup_shares_in_range(base_shares, *TARGET_BAND_PCT)
 
     if not table_has_share_foundation(base):
-        # Base is outside 15–35% red line.  Accept any candidate that doesn't
+        # Base is outside 15–35% red line. Accept any candidate that doesn't
         # regress — when deep in the red zone, every small step counts.
         safe_f, msg_f = telemetry_is_safe(cand, relax_era=True)
         if not safe_f:
             return AcceptDecision(False, f"fundament: {msg_f}", "foundation")
         if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
             return AcceptDecision(False, "fundament: witalność gorsza niż baza", "foundation")
-        # Accept if candidate enters the red-line band
         if table_has_share_foundation(cand):
             return AcceptDecision(True, "fundament: kandydat wciąga frakcje w 15–35%", "foundation")
-        # Accept any non-regressing candidate (no min_delta — incremental climb)
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
         dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
         if dscore < -1e-9 and dmin < -1e-9:
@@ -181,10 +183,7 @@ def accept_candidate(
 
     safe, msg = telemetry_is_safe(cand, relax_era=climbing)
     if not safe:
-        return AcceptDecision(False, msg, "climb")
-
-    if canon_should_stop(base, mode="band"):
-        return AcceptDecision(False, "higiena: stół zdrowy, nie ruszaj mechaniki", "hygiene")
+        return AcceptDecision(False, msg, "climb" if climbing else "hygiene")
 
     if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
         return AcceptDecision(False, "witalność gorsza niż baza", "climb")
@@ -192,10 +191,13 @@ def accept_candidate(
     if not setup_shares_in_range(cand_shares, *RED_LINE_PCT):
         return AcceptDecision(False, "frakcja poza czerwoną linią 15–35%", "climb")
 
-    base_scores = base.get("setup_scores_balance") or {}
-    cand_scores = cand.get("setup_scores_balance") or {}
-    base_core = float(base_scores.get(CORE_SETUP, 0.0))
-    cand_core = float(cand_scores.get(CORE_SETUP, 0.0))
+    base_scores = base.get("setup_scores_balance") or base.get("setup_scores") or {}
+    cand_scores = cand.get("setup_scores_balance") or cand.get("setup_scores") or {}
+    raw_base_core = base.get("core") if base.get("core") is not None else base_scores.get(CORE_SETUP, 0.0)
+    raw_cand_core = cand.get("core") if cand.get("core") is not None else cand_scores.get(CORE_SETUP, 0.0)
+    base_core = float(raw_base_core or 0.0)
+    cand_core = float(raw_cand_core or 0.0)
+
     if base_core >= CORE_SCORE_FLOOR and cand_core < CORE_SCORE_FLOOR:
         return AcceptDecision(
             False,
@@ -203,13 +205,16 @@ def accept_candidate(
             "hygiene",
         )
 
+
+    dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+    dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+
     base_in_band = setup_shares_in_range(base_shares, *TARGET_BAND_PCT)
     cand_in_band = setup_shares_in_range(cand_shares, *TARGET_BAND_PCT)
 
     if not base_in_band:
-        dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
-        dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
-        if dscore >= min_delta or (dmin >= min_delta and dscore >= 0.01):
+        # Wspinaczka: stół poza pasmem 20-30%
+        if dscore >= min_delta or (dmin >= min_delta and dscore >= 0.0):
             return AcceptDecision(True, f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f}", "climb")
         return AcceptDecision(
             False,
@@ -217,13 +222,11 @@ def accept_candidate(
             "climb",
         )
 
-    if not cand_in_band:
+    # Baza jest w paśmie 20-30% (Higiena i dopracowanie optimum)
+    if not cand_in_band and dscore < min_delta:
         return AcceptDecision(False, "higiena: wyszedł z pasma 20–30%", "hygiene")
     if health_improved(cand, base):
         return AcceptDecision(True, "higiena: poprawa zdrowia, pasmo utrzymane", "hygiene")
-    # Accept any score improvement while in band — keep pushing toward optimum
-    dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
-    dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
     if dscore >= min_delta or dmin >= min_delta:
         return AcceptDecision(True, f"higiena: Δscore {dscore:+.2f} Δmin {dmin:+.2f} w paśmie", "hygiene")
     return AcceptDecision(
@@ -231,3 +234,5 @@ def accept_candidate(
         f"higiena: Δscore {dscore:+.2f} Δmin {dmin:+.2f} < {min_delta} i brak poprawy zdrowia",
         "hygiene",
     )
+
+
