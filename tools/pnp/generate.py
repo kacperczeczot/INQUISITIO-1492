@@ -57,11 +57,15 @@ def get_factions_data(cfg: dict | None = None) -> list[tuple[str, str, str, str,
     # 2. Cienie Al-Andalus
     caa_v = v.get("cienie_al_andalus", {})
     caa_r = caa_v.get("relics", 2)
-    caa_p = caa_v.get("path_era", 5)
-    caa_p4 = caa_p.get("4p", 5) if isinstance(caa_p, dict) else caa_p
-    caa_p3 = caa_p.get("3p", 5) if isinstance(caa_p, dict) else caa_p
-    caa_goal = f"{caa_r} Relikwie + ścieżka (od Ery {caa_p4})"
-    caa_note = f"*w 3p: od Ery {caa_p3}" if caa_p3 != caa_p4 else ""
+    caa_p = caa_v.get("path_era", 1)
+    caa_p4 = caa_p.get("4p", 1) if isinstance(caa_p, dict) else caa_p
+    caa_p3 = caa_p.get("3p", 1) if isinstance(caa_p, dict) else caa_p
+    if caa_p4 and caa_p4 > 1:
+        caa_goal = f"{caa_r} Relikwie + ścieżka (od Ery {caa_p4})"
+        caa_note = f"*w 3p: od Ery {caa_p3}" if caa_p3 != caa_p4 else ""
+    else:
+        caa_goal = f"{caa_r} Relikwie + ścieżka"
+        caa_note = ""
 
     # 3. Korona & Borgiowie
     kb_v = v.get("korona_borgiowie", {})
@@ -1352,12 +1356,6 @@ body.bw .card-proto {
   overflow: hidden;
   white-space: nowrap;
 }
-.pb-title-hint {
-  font-size: 9pt;
-  font-weight: normal;
-  color: #5c4c3e;
-  margin-left: 1mm;
-}
 .pb-slots {
   display: flex;
   flex-wrap: nowrap;
@@ -1391,23 +1389,6 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.pb-tray-content {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.5mm;
-  opacity: 0.55;
-  pointer-events: none;
-}
-.pb-tray-hint {
-  font-size: 9pt;
-  font-weight: bold;
-  color: #7a5a18;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -1740,32 +1721,35 @@ body.bw .card-proto {
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
-  border: none;
-  background: var(--faction-edge, var(--blood));
+  border-right: 0.25mm solid rgba(42, 28, 18, 0.5);
+  border-bottom: 0.25mm solid rgba(42, 28, 18, 0.5);
+  background: var(--parch) !important;
   display: flex;
   flex-direction: column;
+  padding: 0;
   box-shadow: none;
 }
+.card-proto.card-print-cell:nth-child(3n) { border-right: none; }
+.card-proto.card-print-cell:nth-child(n+7) { border-bottom: none; }
 .card-proto.card-print-cell::before {
   display: none !important;
 }
 
-/* Position-dependent padding: outer edges have 2.5mm bleed + 1.5mm border = 4.0mm */
-.pos-r0-c0 { padding: 4mm 1.5mm 1.5mm 4mm; }
-.pos-r0-c1 { padding: 4mm 1.5mm 1.5mm 1.5mm; }
-.pos-r0-c2 { padding: 4mm 4mm 1.5mm 1.5mm; }
+/* Outer perimeter bleed margin (2.5mm) */
+.pos-r0-c0 { padding: 2.5mm 0 0 2.5mm; }
+.pos-r0-c1 { padding: 2.5mm 0 0 0; }
+.pos-r0-c2 { padding: 2.5mm 2.5mm 0 0; }
 
-.pos-r1-c0 { padding: 1.5mm 1.5mm 1.5mm 4mm; }
-.pos-r1-c1 { padding: 1.5mm 1.5mm 1.5mm 1.5mm; }
-.pos-r1-c2 { padding: 1.5mm 4mm 1.5mm 1.5mm; }
+.pos-r1-c0 { padding: 0 0 0 2.5mm; }
+.pos-r1-c1 { padding: 0; }
+.pos-r1-c2 { padding: 0 2.5mm 0 0; }
 
-.pos-r2-c0 { padding: 1.5mm 1.5mm 4mm 4mm; }
-.pos-r2-c1 { padding: 1.5mm 1.5mm 4mm 1.5mm; }
-.pos-r2-c2 { padding: 1.5mm 4mm 4mm 1.5mm; }
+.pos-r2-c0 { padding: 0 0 2.5mm 2.5mm; }
+.pos-r2-c1 { padding: 0 0 2.5mm 0; }
+.pos-r2-c2 { padding: 0 2.5mm 2.5mm 0; }
 
-/* Inner parchment canvas inside the faction frame */
-.card-proto.card-print-cell .card-inner-flow,
-.card-proto.card-print-cell .card-back-content {
+/* Inner parchment canvas */
+.card-proto.card-print-cell .card-inner-flow {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -1775,7 +1759,26 @@ body.bw .card-proto {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 0.25mm solid rgba(166, 124, 45, 0.55);
+  border: none;
+}
+
+.card-proto.card-print-cell.card-back-cell {
+  background: var(--back-accent, var(--blood)) !important;
+  color: #ffffff;
+}
+.card-proto.card-print-cell .card-back-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--back-accent, var(--blood));
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: none;
 }
 
 /* Header */
@@ -2543,18 +2546,14 @@ def render_player_boards(layer: str) -> str:
             f'<span class="pb-token hook-slot" title="Hak">{hook_face}</span>' for _ in range(2)
         )
 
-        gold_tray = (
-            '<div class="pb-tray" title="Tacka na żetony złota (start 3)">'
-            '<div class="pb-tray-content"><span class="coin"></span>'
-            '<span class="pb-tray-hint">Start: 3</span></div></div>'
-        )
+        gold_tray = '<div class="pb-tray" title="Tacka na żetony złota"></div>'
 
         if layer == "A":
             limits = limit_well("Nasłanie")
             body = f"""
   <div class="pb-body {body_cls}">
     <section class="pb-box agents">
-      <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+      <div class="pb-box-title">Agenci</div>
       <div class="pb-slots">{agents}</div>
     </section>
     <section class="pb-box gold">
@@ -2581,7 +2580,7 @@ def render_player_boards(layer: str) -> str:
   <div class="pb-body {body_cls}">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
+        <div class="pb-box-title">Agenci</div>
         <div class="pb-slots">{agents}</div>
       </section>
       <section class="pb-box gold">
@@ -2589,7 +2588,7 @@ def render_player_boards(layer: str) -> str:
         {gold_tray}
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
+        <div class="pb-box-title">Haki</div>
         <div class="pb-slots">{hooks}</div>
       </section>
     </div>
@@ -2622,9 +2621,9 @@ def render_player_boards(layer: str) -> str:
       <div class="pb-section-title">Herezja</div>
       <div class="heresy-track">{pips}</div>
       <div class="heresy-zones">
-        <span class="hz-z1">Czysta 0–4</span>
-        <span class="hz-z2">Obserw. 5–{t_4p - 1}</span>
-        <span class="hz-z3">Krytyczna ≥{t_4p} (Oskarżenie)</span>
+        <span class="hz-z1">Czysta</span>
+        <span class="hz-z2">Obserwowana</span>
+        <span class="hz-z3">Krytyczna (Oskarżenie)</span>
       </div>
     </section>
     {body}
