@@ -168,6 +168,11 @@ ICONS_SVG: dict[str, str] = {
     "gildia-cieni": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2l2 6-2 11-2-11z" fill="#2a2030" stroke="#a67c2d" stroke-width="1"/><path d="M8 7h8v2H8zM12 19v3" stroke="#a67c2d" stroke-width="1.5"/><path d="M5 10l4 3M19 10l-4 3" stroke="#8b1d24" stroke-width="1.2" stroke-linecap="round"/></svg>',
     "first_player": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#f4ead7" stroke="#946c23" stroke-width="1.2"/><polygon points="12,4 14,9 19,9 15,13 16.5,18 12,15 7.5,18 9,13 5,9 10,9" fill="#d4af37" stroke="#7a1f1f" stroke-width="0.8"/></svg>',
     "sea_route": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#2d6a7a" stroke="#d4af37" stroke-width="1.2"/><path d="M4 17c2-1 4-1 6 0s4 1 6 0 4-1 4-1" stroke="#f4ead7" stroke-width="1.2" fill="none"/><path d="M12 4v11M12 4l5 3-5 3" fill="#f4ead7" stroke="#f4ead7" stroke-width="0.8"/><path d="M7 15h10l-1.5 3H8.5z" fill="#a67c2d"/></svg>',
+    "agent_swiete_oficjum": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#7a1f1f" stroke="#d4af37" stroke-width="1.2"/><path d="M10 5h4v4h4v3h-4v7h-4v-7H6V9h4V5z" fill="#f4ead7"/><circle cx="12" cy="10.5" r="1.5" fill="#7a1f1f"/></svg>',
+    "agent_cienie_al_andalus": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#1b4d3e" stroke="#d4af37" stroke-width="1.2"/><path d="M14 6a6 6 0 1 0 3 10.5 6 6 0 0 1-3-10.5z" fill="#f4ead7"/><polygon points="14,10 15,11 16.5,11 15.5,12 16,13.5 14.5,12.8 13,13.5 13.5,12 12.5,11 14,11" fill="#d4af37"/></svg>',
+    "agent_korona_borgiowie": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#946c23" stroke="#f4ead7" stroke-width="1.2"/><path d="M6 16h12v1.5H6zM6.5 14.5l1.5-6 3 3.5 1-4.5 1 4.5 3-3.5 1.5 6z" fill="#f4ead7"/></svg>',
+    "agent_kabala_toledo": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#1f2d5a" stroke="#d4af37" stroke-width="1.2"/><polygon points="12,5 14,9 18.5,9.5 15,13 16,17.5 12,15 8,17.5 9,13 5.5,9.5 10,9" fill="#f4ead7"/><circle cx="12" cy="11.5" r="1.8" fill="#1f2d5a"/></svg>',
+    "agent_gildia_cieni": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="#2a2030" stroke="#a67c2d" stroke-width="1.2"/><path d="M12 5l1.5 4.5-1.5 8-1.5-8z" fill="#f4ead7"/><path d="M9 8.5h6v1.5H9zM12 17.5v2" stroke="#d4af37" stroke-width="1.2"/></svg>',
 }
 
 
@@ -1493,59 +1498,120 @@ body.bw .card-proto {
   flex: 1 1 auto;
   min-height: 0;
 }
-.token-group {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 2mm;
-  margin: 0;
-  flex-shrink: 0;
-}
-.token-group h3 {
-  flex: 0 0 28mm;
-  width: 28mm;
-  font-size: 8.5pt;
-  margin: 0;
-  padding-top: 3mm;
+.token-page h1 {
+  text-align: center;
+  font-size: 13pt;
+  margin: 0 0 1.5mm;
   color: var(--blood);
-  line-height: 1.15;
-  font-weight: bold;
 }
-.token-sheet {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5mm;
-  flex: 1 1 auto;
-  min-width: 0;
-  justify-content: start;
+.token-page .token-meta {
+  text-align: center;
+  font-size: 7.5pt;
+  color: #665544;
+  margin-bottom: 3.5mm;
+  font-family: 'Cinzel', serif;
 }
-.token-disc {
-  width: var(--token-d); height: var(--token-d);
-  min-width: var(--token-d); min-height: var(--token-d);
-  border-radius: var(--token-r);
-  border: 0.55mm solid var(--line);
+.tokens-print-block {
+  position: relative;
+  width: 180mm;
+  height: 160mm;
+  margin: 0 auto;
+}
+.tokens-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 20mm);
+  grid-template-rows: repeat(8, 20mm);
+  gap: 0;
+  width: 180mm;
+  height: 160mm;
+  border: 0.35mm solid var(--line);
   background: var(--parch);
-  display: flex; align-items: center; justify-content: center;
+  box-sizing: border-box;
+}
+.token-cell {
+  position: relative;
+  width: 20mm;
+  height: 20mm;
+  box-sizing: border-box;
+  border-right: 0.25mm solid rgba(42, 28, 18, 0.6);
+  border-bottom: 0.25mm solid rgba(42, 28, 18, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  box-shadow: inset 0 0 0 0.35mm var(--gold);
-  flex-shrink: 0;
+  padding: 0.8mm;
+  background: var(--parch-card);
+  text-align: center;
 }
-.token-disc .ico {
-  width: 14mm;
-  height: 14mm;
+.token-cell:nth-child(9n) { border-right: none; }
+.token-cell:nth-child(n+64) { border-bottom: none; }
+.token-cell .ico, .token-cell svg {
+  width: 12mm;
+  height: 12mm;
+  display: block;
 }
-.token-disc img {
-  width: 14mm; height: 14mm; object-fit: cover; border-radius: 1mm;
+.token-cell .token-lbl {
+  font-family: 'Cinzel', serif;
+  font-size: 4.5pt;
+  font-weight: 700;
+  color: var(--line);
+  margin-top: 0.6mm;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
-.token-disc .ico-fallback {
-  min-width: 0; min-height: 0;
-  font-size: 22pt; line-height: 1;
+
+/* Faction agent cards */
+.token-cell.agent-so { background: #7a1f1f; }
+.token-cell.agent-caa { background: #1b4d3e; }
+.token-cell.agent-kb { background: #946c23; }
+.token-cell.agent-kt { background: #1f2d5a; }
+.token-cell.agent-gc { background: #2a2030; }
+.token-cell.agent-so .token-lbl,
+.token-cell.agent-caa .token-lbl,
+.token-cell.agent-kb .token-lbl,
+.token-cell.agent-kt .token-lbl,
+.token-cell.agent-gc .token-lbl {
+  color: #f4ead7;
 }
-.token-disc .coin {
-  width: 12mm; height: 12mm; flex: 0 0 12mm;
-  border-width: 0.55mm;
-  box-shadow: inset 0 0 0 0.55mm rgba(255, 236, 160, 0.55);
+
+.token-cell.token-gold { background: #fffcf4; }
+.token-cell.token-spent { background: #fdf2f2; }
+.token-cell.token-fall { background: #f0ecf4; }
+.token-cell.token-empty { background: transparent; }
+
+/* Perimeter crop marks for token sheet */
+.token-crop-v-top {
+  position: absolute;
+  top: -5mm;
+  width: 0.25mm;
+  height: 4mm;
+  background: var(--line);
 }
+.token-crop-v-bot {
+  position: absolute;
+  bottom: -5mm;
+  width: 0.25mm;
+  height: 4mm;
+  background: var(--line);
+}
+.token-crop-h-left {
+  position: absolute;
+  left: -5mm;
+  width: 4mm;
+  height: 0.25mm;
+  background: var(--line);
+}
+.token-crop-h-right {
+  position: absolute;
+  right: -5mm;
+  width: 4mm;
+  height: 0.25mm;
+  background: var(--line);
+}
+
 .pb-token .ico {
   width: 12mm;
   height: 12mm;
@@ -2568,57 +2634,92 @@ def render_verdict() -> str:
 """
 
 
+def _render_token_crop_marks() -> str:
+    v_marks = "".join(
+        f'<div class="token-crop-v-top" style="left:{col * 20}mm;"></div><div class="token-crop-v-bot" style="left:{col * 20}mm;"></div>'
+        for col in range(10)
+    )
+    h_marks = "".join(
+        f'<div class="token-crop-h-left" style="top:{row * 20}mm;"></div><div class="token-crop-h-right" style="top:{row * 20}mm;"></div>'
+        for row in range(9)
+    )
+    return v_marks + h_marks
+
+
 def render_tokens(layer: str) -> str:
-    """Cut sheet: 20×20 mm rounded-square chips with temporary emoji faces."""
-    # (icon_key, Polish label, count to print)
-    c = PNP_TOKEN_COUNTS
-    specs: list[tuple[str, str, int]] = [
-        ("inquisitor", "Inkwizytor (figurka)", c["inquisitor"]),
-        ("patrol", "Patrol (stan Inkwizytora)", c["inquisitor_patrol"]),
-        ("autodafe_state", "Autodafé (stan Inkwizytora)", c["inquisitor_autodafe"]),
-        ("first_player", "Znacznik 1. Gracza", c["first_player"]),
-        ("sea_route", "Szlak Morski (Otwarty)", c["sea_route"]),
-        ("heresy", "Herezja (tor 0–10)", c["heresy"]),
-        ("gold", "Złoto", c["gold"]),
-        ("stack", "Stos / Autodafé", c["stack"]),
-        ("relic", "Relikwia", c["relic"]),
-        ("fragment", "Fragment Kodeksu", c["fragment"]),
-        ("decree", "Dekret", c["decree"]),
-        ("fall", "Upadek", c["fall"]),
-        ("spent", "Piętno (Zużycie)", c["spent"]),
+    """Cut sheet: 20×20 mm single-cut dense grid (0 gap, shared cutlines)."""
+    # 1. Sheet 1 tokens (72 tokens: Agents, Inquisitor, Faction goals, Intrigues)
+    sheet1_items: list[tuple[str, str, str]] = []
+    
+    # 15 Agents (3 per faction)
+    sheet1_items.extend([("agent_swiete_oficjum", "Oficjum", "agent-so")] * 3)
+    sheet1_items.extend([("agent_cienie_al_andalus", "Al-Andalus", "agent-caa")] * 3)
+    sheet1_items.extend([("agent_korona_borgiowie", "Korona", "agent-kb")] * 3)
+    sheet1_items.extend([("agent_kabala_toledo", "Kabała", "agent-kt")] * 3)
+    sheet1_items.extend([("agent_gildia_cieni", "Gildia", "agent-gc")] * 3)
+
+    # Inquisitor & markers
+    sheet1_items.append(("inquisitor", "Inkwizytor", "token-inq"))
+    sheet1_items.append(("patrol", "Patrol", "token-patrol"))
+    sheet1_items.append(("autodafe_state", "Autodafé", "token-auto"))
+    sheet1_items.append(("first_player", "1. Gracz", "token-p1"))
+    sheet1_items.append(("sea_route", "Szlak", "token-sea"))
+
+    # Herezja
+    sheet1_items.extend([("heresy", "Herezja", "token-heresy")] * 4)
+
+    # Cele frakcji
+    sheet1_items.extend([("stack", "Stos", "token-stack")] * 6)
+    sheet1_items.extend([("relic", "Relikwia", "token-relic")] * 6)
+    sheet1_items.extend([("fragment", "Fragment", "token-fragment")] * 6)
+    sheet1_items.extend([("decree", "Dekret", "token-decree")] * 2)
+    sheet1_items.extend([("fall", "Upadek", "token-fall")] * 8)
+
+    # Intryga
+    sheet1_items.extend([("hook", "Hak", "token-hook")] * 12)
+    sheet1_items.extend([("double", "Marionetka", "token-double")] * 8)
+
+    # Pad to 72 if needed
+    while len(sheet1_items) < 72:
+        sheet1_items.append(("gold", "1 złoto", "token-gold"))
+
+    # 2. Sheet 2 tokens (72 tokens: Piętno + Złoto + zapasowe)
+    sheet2_items: list[tuple[str, str, str]] = []
+    sheet2_items.extend([("spent", "Piętno", "token-spent")] * 15)
+    sheet2_items.extend([("gold", "1 złoto", "token-gold")] * 40)
+    # 1 dodatkowa Herezja (dla wariantu 5p) + zapasowe monety złota do pełnego arkusza 72
+    sheet2_items.append(("heresy", "Herezja", "token-heresy"))
+    while len(sheet2_items) < 72:
+        sheet2_items.append(("gold", "1 złoto", "token-gold"))
+
+    sheets = [
+        ("Arkusz Żetonów 1/2 — Agenci, Frakcje, Intryga", sheet1_items[:72]),
+        ("Arkusz Żetonów 2/2 — Piętno, Skarbiec Złota", sheet2_items[:72]),
     ]
-    if layer in ("B", "C"):
-        specs.extend([
-            ("hook", "Hak", c["hook"]),
-            ("double", "Marionetka", c["double"]),
-        ])
 
-    # Split across A4 pages when groups exceed one sheet
-    groups_html: list[str] = []
-    for key, label, count in specs:
-        face = _icon(key, label)
-        discs = "".join(f'<div class="token-disc" title="{_escape(label)}">{face}</div>' for _ in range(count))
-        groups_html.append(
-            f'<div class="token-group"><h3>{_escape(label)} ×{count}</h3>'
-            f'<div class="token-sheet">{discs}</div></div>'
-        )
-
-    # Page 1: core; page 2 (C): hooks/double if needed — keep simple: pack all, allow 2 pages
-    mid = len(groups_html)
-    # Heuristic: first 7 groups on page 1, rest on page 2 when layer C
-    if layer in ("B", "C") and len(groups_html) > 8:
-        mid = 7
     pages = []
-    chunks = [groups_html[:mid], groups_html[mid:]] if mid < len(groups_html) else [groups_html]
-    for i, chunk in enumerate(chunks):
-        if not chunk:
-            continue
-        title = "Żetony" if i == 0 else "Żetony (cd.)"
+    crop_marks_html = _render_token_crop_marks()
+
+    for idx, (title, items) in enumerate(sheets, start=1):
+        cells_html: list[str] = []
+        for key, label, css_cls in items:
+            face = _icon(key, label)
+            cells_html.append(
+                f'<div class="token-cell {css_cls}" title="{_escape(label)}">'
+                f'{face}'
+                f'<span class="token-lbl">{_escape(label)}</span>'
+                f'</div>'
+            )
+
         pages.append(f"""
 <div class="page-a4 token-page" data-page-mm="210x297">
-  <h1>{title}</h1>
-  <div class="token-cut">
-  {"".join(chunk)}
+  <h1>INQUISITIO 1492 · {title}</h1>
+  <div class="token-meta">Siatka 9×8 (Wymiar 20×20 mm · Bez przerw · Wspólne linie cięcia nożem / linijką)</div>
+  <div class="tokens-print-block">
+    {crop_marks_html}
+    <div class="tokens-grid">
+      {"".join(cells_html)}
+    </div>
   </div>
 </div>
 """)
