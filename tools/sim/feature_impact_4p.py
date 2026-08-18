@@ -316,6 +316,8 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
 
 
 def _n4(item) -> int:
+    if hasattr(item, "raw"):
+        item = item.raw()
     if isinstance(item, dict):
         return int(item.get("4p", next(iter(item.values()))))
     return int(item)
