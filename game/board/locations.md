@@ -20,7 +20,7 @@ Figurka **Wielkiego Inkwizytora** stoi w jednej lokacji (Patrol / Autodafé).
 | 4 | **Rynek i Plac Publiczny** | Handel, najemnicy, nastroje ludu | Zamieszki, herezja publiczna, samosądy |
 | 5 | **Dzielnica Garbarzy / Gildia** | Unikalne dobra, informatorzy | Skrytobójstwa, szantaż, handel Relikwiami |
 
-## Kolejność rozpatrywania (Faza III)
+## Kolejność rozpatrywania (Faza II: Sąd)
 
 Lokacje odkrywane i rozpatrywane **od 1 do 5**.  
 To **nie** jest graf ruchu — tylko kolejność odkrywania kart.
@@ -28,7 +28,7 @@ To **nie** jest graf ruchu — tylko kolejność odkrywania kart.
 ## Inkwizytor
 
 - Start: **Trybunał**, stan Patrol.
-- Faza I: nasłania → ruch **0–1 wzdłuż krawędzi grafu** → opcjonalne Autodafé.
+- Faza II (Krok 1): nasłania → ruch **0–1 wzdłuż krawędzi grafu** → opcjonalne Autodafé.
 - Autodafé: +1 Herezja właścicielom Agentów w lokacji; +1 Stos; Relikwia → pula.
 - Nasłanie / edykt „w stronę X”: jeden krok po **najkrótszej ścieżce** w grafie.
 
@@ -90,7 +90,7 @@ Diagram gry, nie mapa miasta. W każdym węźle: **stos ≤3 kart** 63×88 mm (j
 
   W każdym węźle: ○○○○ Agenci · Relikwia □ · ▭ stos ≤3
   Lochy +: Areszt ○○○○
-  Faza III: odkrywaj 1 → 2 → 3 → 4 → 5 (niezależnie od ulic)
+  Faza II: odkrywaj 1 → 2 → 3 → 4 → 5 (niezależnie od ulic)
 ```
 
 ### Legenda slotów
@@ -99,7 +99,7 @@ Diagram gry, nie mapa miasta. W każdym węźle: **stos ≤3 kart** 63×88 mm (j
 | :--- | :--- |
 | Agenci ○ | Pionki frakcji (+ nakładka Marionetka jeśli aktywna) |
 | Relikwia [ ] | Żeton Relikwii w lokacji |
-| Karty zakryte ▭ | Zagrane w Fazie II, odkrywane w Fazie III |
+| Karty zakryte ▭ | Zagrane w Fazie I, odkrywane w Fazie II |
 | Areszt ○ (Lochy) | Agenci uwięzieni przed Przesłuchaniem |
 | Inkwizytor ● | Figurka NPC + stan Patrol/Autodafé (stoi **w** lokacji) |
 | Ulice | Tylko krawędzie grafu — legalny ruch o 1 |

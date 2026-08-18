@@ -27,7 +27,7 @@ Publiczna twarz prawa Bożego. Wszyscy wiedzą, kim jesteś — i dlatego boją 
 
 ## Słabości
 
-- Stół łatwo się sprzymierza, gdy Oficjum jest **1 przed** wygraną (4. Stos / 2. unikalne Skazanie)
+- Stół łatwo się sprzymierza, gdy Oficjum jest **1 przed** wygraną (5. Stos / 2. unikalne Skazanie)
 - Słabszy transport Relikwii i gra w Cieniu
 - Uniewinnienie na Werdykcie boli (+Herezja na Ciebie jako oskarżyciela)
 - Edykt *Auto-da-fé Toledo* pali lokację **bez** darmowego Stosu

@@ -52,7 +52,7 @@ Zasada nadrzędności: tekst karty (`Łamie regułę …`) ma bezwzględne pierw
 ---
 
 ## Era
-Pojedyncza runda gry złożona z 3 Faz (I Intryga, II Sąd, III Kronika & Czystka). Maksymalny czas gry wynosi **12 Er**.  
+Pojedyncza runda gry złożona z 3 Faz (I Intryga, II Sąd, III Kronika & Czystka). Maksymalny czas gry wynosi **11 Er**.  
 **Patrz także:** [Zwycięstwo](#zwycięstwo), [Czystka](#czystka)
 
 ---

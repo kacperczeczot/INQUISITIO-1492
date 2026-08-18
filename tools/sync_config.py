@@ -284,6 +284,12 @@ def sync_ksiega(cfg: dict) -> list[str]:
     text = re.sub(r"Autodafé \(max co \d+ Ery\)", f"Autodafé (max co {cd} Ery)", text)
     text = re.sub(r"Autodafé max \*\*co \d+ Ery\*\*", f"Autodafé max **co {cd} Ery**", text)
     me = cfg["system"]["max_eras"]
+    ver = cfg.get("version", "")
+    if ver:
+        text = re.sub(r"### Wariant kanoniczny: 4 graczy · wersja .*", f"### Wariant kanoniczny: 4 graczy · wersja {ver}", text)
+    text = re.sub(r"\| Maksymalna liczba Er \| \d+ \|", f"| Maksymalna liczba Er | {me} |", text)
+    text = re.sub(r"Rozgrywka trwa maksymalnie \d+ Er\.", f"Rozgrywka trwa maksymalnie {me} Er.", text)
+    text = re.sub(r"Jeśli po zakończeniu Ery \d+ nikt nie osiągnął", f"Jeśli po zakończeniu Ery {me} nikt nie osiągnął", text)
     text = re.sub(r"\*\*Limit Er: \d+\.\*\*", f"**Limit Er: {me}.**", text)
     text = re.sub(
         r"\| Limit Er / remis \| \*\*\d+\*\* Er;",
@@ -299,6 +305,22 @@ def sync_ksiega(cfg: dict) -> list[str]:
     ksiega_path.write_text(text, encoding="utf-8")
     changes.append("Zsynchronizowano docs/rules/ksiega.md")
     return changes
+
+
+def sync_wariant_2p(cfg: dict) -> list[str]:
+    """Sync wariant-2p.md with game_config.yaml."""
+    path = PROJECT_ROOT / "docs" / "rules" / "wariant-2p.md"
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    ver = cfg.get("version", "")
+    me = cfg["system"]["max_eras"]
+    if ver:
+        text = re.sub(r"### Suplement do Księgi Zasad · Wersja .*", f"### Suplement do Księgi Zasad · Wersja {ver}", text)
+    text = re.sub(r"Gra trwa maksymalnie \*\*\d+ Er\*\*", f"Gra trwa maksymalnie **{me} Er**", text)
+    text = re.sub(r"Rozstrzyganie remisów po \d+\. Erze", f"Rozstrzyganie remisów po {me}. Erze", text)
+    path.write_text(text, encoding="utf-8")
+    return ["Zsynchronizowano docs/rules/wariant-2p.md"]
 
 
 def sync_teach_sheet(cfg: dict) -> list[str]:
@@ -622,6 +644,9 @@ def sync_slownik(cfg: dict) -> list[str]:
     else:
         gold_str = f"Start **{g4}** (w 5p: **{g5}**); dochód **+{income} złoto** w Fazie III (Kronika) + opcja Akcji Gospodarczej (+{ig} zł) w Fazie I (Intryga)."
     text = re.sub(r"Start \*\*.*?\*\*; dochód \*\*.*?\*\* w Fazie III.*?\.", gold_str, text)
+    text = re.sub(r"Maksymalny czas gry wynosi \*\*\d+ Er\*\*\.", f"Maksymalny czas gry wynosi **{s['max_eras']} Er**.", text)
+    text = re.sub(r"Po \d+ Erach:", f"Po {s['max_eras']} Erach:", text)
+    text = re.sub(r"Po \d+ Erach wygrywa", f"Po {s['max_eras']} Erach wygrywa", text)
     text = re.sub(r"Limit gry: \*\*\d+\*\* Er", f"Limit gry: **{s['max_eras']}** Er", text)
     text = re.sub(r"Limit \d+ Er → najbliższy celowi", f"Limit {s['max_eras']} Er → najbliższy celowi", text)
     text = re.sub(r"Remis postępu po \*\*\d+\*\* Er", f"Remis postępu po **{s['max_eras']}** Er", text)
@@ -663,6 +688,9 @@ def sync_setups(cfg: dict) -> list[str]:
 
     hand_pattern = re.compile(r"Dobierz .*? kart z talii")
     text = hand_pattern.sub(f"Dobierz **{cfg['system']['hand_limit']}** kart z talii", text)
+
+    me = cfg["system"]["max_eras"]
+    text = re.sub(r"\| Limit Er \| \*\*\d+\*\* \| \*\*\d+\*\* \|", f"| Limit Er | **{me}** | **{me}** |", text)
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano playtesting/setups.md"]
@@ -815,6 +843,8 @@ def main():
     for ch in sync_readme(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_ksiega(cfg):
+        print(f"   ✅ {ch}")
+    for ch in sync_wariant_2p(cfg):
         print(f"   ✅ {ch}")
     for ch in sync_teach_sheet(cfg):
         print(f"   ✅ {ch}")

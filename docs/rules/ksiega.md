@@ -4,7 +4,7 @@
 
 # INQUISITIO 1492 — Księga Zasad
 
-### Wariant kanoniczny: 4 graczy · wersja v0.99.10
+### Wariant kanoniczny: 4 graczy · wersja v1.0-alpha.1
 
 > *„Toledo, Rok Pański 1492. Grenada upadła. Na starym moście Alcántara spotykają się ci, którzy wierzą w ogień, ci, którzy uciekają z relikwiami, mędrcy składający zakazany kodeks i królewscy poborcy. W tym mieście nikt nie jest bez winy — chodzi jedynie o to, kto spłonie pierwszy."*
 
@@ -28,7 +28,7 @@
 | Limit kart na ręce | 5 |
 | Tury Intrygi na Erę | 2 (na gracza) |
 | Dochód końca Ery | +1 złoto |
-| Maksymalna liczba Er | 12 |
+| Maksymalna liczba Er | 11 |
 | Próg Strefy Obserwowanej | **5–6** Herezji |
 | Próg Strefy Krytycznej (Oskarżenia) | **7–10** Herezji |
 | Pierwsze Autodafé | najwcześniej od **Ery 3** |
@@ -90,7 +90,7 @@ Ruch Agentów i Inkwizytora odbywa się wzdłuż krawędzi grafu (ruch o 1 = prz
 
 ## 6. Przebieg Gry — 3 Fazy Ery
 
-Rozgrywka trwa maksymalnie 12 Er. Każda Era składa się z 3 następujących po sobie Faz:
+Rozgrywka trwa maksymalnie 11 Er. Każda Era składa się z 3 następujących po sobie Faz:
 
 ```
 Era N
