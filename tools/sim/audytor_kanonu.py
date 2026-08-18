@@ -228,6 +228,17 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     return tests
 
 
+def cheap_funnel_flags(n: int, top_semifinalists: int, top_k: int) -> tuple[bool, bool]:
+    """Skip cheap screens when they wouldn't cut the pool. Confirm always runs.
+
+    Returns (run_fast, run_screen). If n ≤ top_k both are False — jump straight to ultra.
+    """
+    run_fast = n > top_semifinalists
+    after_fast = min(n, top_semifinalists) if run_fast else n
+    run_screen = after_fast > top_k
+    return run_fast, run_screen
+
+
 def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tuple[str, str, dict] | None:
     """Merges two mutations into a composite mutation (e.g. 2D pair or 3D triple)."""
     id1, name1, p1 = m1
@@ -701,32 +712,37 @@ class Canon4PAutoBalancer:
             print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Kanonu 4P.")
             cand_dict = {c[0]: c for c in candidate_pool}
 
-            # 3. ETAP 1/3: Szybki Przesiew na 5 setupach 4P
-            print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(candidate_pool)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
-            stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in candidate_pool]
-            stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label=f"Przesiew 4P 1/3")
+            run_fast, run_screen = cheap_funnel_flags(
+                len(candidate_pool), self.args.top_semifinalists, self.args.top_k
+            )
+            survivors = list(candidate_pool)
 
-            stage1_results.sort(key=self._rank)
+            # 3. ETAP 1/3: Szybki Przesiew (tylko jeśli pula > top_semifinalists)
+            if run_fast:
+                print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(survivors)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
+                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in survivors]
+                stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label="Przesiew 4P 1/3")
+                stage1_results.sort(key=self._rank)
+                n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+                survivors = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
+            else:
+                print(f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): {len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie.")
 
-            n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-            semifinalist_results = stage1_results[:n_semifinalists]
-            semifinalist_candidates = [cand_dict[r["id"]] for r in semifinalist_results]
-
-            # 4. ETAP 2/3: Głęboki Przesiew 4P
-            print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam TOP {len(semifinalist_candidates)} półfinalistów ({self.args.screen_games} gier/setup × 5 setupów) ---")
-            stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in semifinalist_candidates]
-            stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label=f"Przesiew 4P 2/3")
-
-            stage2_results.sort(key=self._rank)
-
-            n_finalists = min(self.args.top_k, len(stage2_results))
-            finalist_results = stage2_results[:n_finalists]
-            finalist_candidates = [cand_dict[r["id"]] for r in finalist_results]
+            # 4. ETAP 2/3: Głęboki Przesiew (tylko jeśli pula po etapie 1 > top_k)
+            if run_screen:
+                print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam {len(survivors)} półfinalistów ({self.args.screen_games} gier/setup × 5 setupów) ---")
+                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in survivors]
+                stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label="Przesiew 4P 2/3")
+                stage2_results.sort(key=self._rank)
+                n_finalists = min(self.args.top_k, len(stage2_results))
+                survivors = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
+            else:
+                print(f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): {len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra.")
 
             # 5. ETAP 3/3: Weryfikacja Ultra 4P
-            print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję TOP {len(finalist_candidates)} finalistów ({self.args.confirm_games} gier/setup × 5 setupów) ---")
-            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in finalist_candidates]
-            stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label=f"Weryfikacja 4P 3/3")
+            print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję {len(survivors)} finalistów ({self.args.confirm_games} gier/setup × 5 setupów) ---")
+            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in survivors]
+            stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label="Weryfikacja 4P 3/3")
 
             stage3_results.sort(key=self._rank)
 
@@ -743,6 +759,7 @@ class Canon4PAutoBalancer:
                     f"(Δ {sign}) min {r['min_balance']:.1f} | {decision.reason}"
                 )
 
+            # Wybieramy najlepszego zaakceptowanego finalistę (max min_balance), nie first-fit
             accepted_candidate = None
             best_ver_res = None
 
@@ -751,10 +768,12 @@ class Canon4PAutoBalancer:
                     base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
                 if decision.accepted:
-                    accepted_candidate = cand_dict[ver_res["id"]]
-                    best_ver_res = ver_res
-                    print(f"\n   → Wybrano `{ver_res['id']}` ({decision.phase}): {decision.reason}")
-                    break
+                    if best_ver_res is None or ver_res.get("min_balance", 0.0) > best_ver_res.get("min_balance", 0.0):
+                        accepted_candidate = cand_dict[ver_res["id"]]
+                        best_ver_res = ver_res
+
+            if best_ver_res is not None:
+                print(f"\n   → Wybrano `{best_ver_res['id']}` (najlepszy min_balance {best_ver_res.get('min_balance', 0):.1f})")
 
             # 6. Apply Patch & Measure Collateral Impact
             if accepted_candidate and best_ver_res is not None:
