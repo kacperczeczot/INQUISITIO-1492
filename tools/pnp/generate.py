@@ -889,7 +889,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .cards {
   display: grid;
   grid-template-columns: repeat(3, var(--card-w));
-  gap: 3mm;
+  gap: 0;
   justify-content: start;
 }
 .card-proto {
@@ -1282,7 +1282,7 @@ body.bw .card-proto {
 .heresy-pip.z3 { background: #e8b8b8; }
 .heresy-zones {
   display: grid;
-  grid-template-columns: 4fr 3fr 4fr;
+  grid-template-columns: 5fr 2fr 4fr; /* 0-4 (5), 5-6 (2), 7-10 (4) - exact 11 pips match */
   margin: 0; /* tuż pod torem — nigdy margin-top: auto */
   flex: 0 0 auto;
   font-size: 11pt;
@@ -1319,10 +1319,10 @@ body.bw .card-proto {
   min-width: 0;
 }
 .pb-row-top {
-  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Haki: 2×20 + pad */
+  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Agenci: 3×20 | Złoto flex | Haki: 2×20 */
 }
 .pb-row-bot {
-  grid-template-columns: minmax(0, 1fr) auto; /* Postęp: auto width pod liczbę żetonów */
+  grid-template-columns: 116mm minmax(0, 1fr); /* Limity: 116mm (3 kolumny ~37mm) | Postęp: reszta ~86mm */
 }
 .pb-box {
   box-sizing: border-box;
@@ -1352,6 +1352,12 @@ body.bw .card-proto {
   overflow: hidden;
   white-space: nowrap;
 }
+.pb-title-hint {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #5c4c3e;
+  margin-left: 1mm;
+}
 .pb-slots {
   display: flex;
   flex-wrap: nowrap;
@@ -1361,6 +1367,22 @@ body.bw .card-proto {
   min-height: 0;
   overflow: hidden;
 }
+.pb-slots.progress-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 14mm);
+  grid-template-rows: repeat(2, 14mm);
+  gap: 1.5mm;
+  justify-content: center;
+  align-content: center;
+}
+.pb-slots.progress-grid-8 {
+  display: grid;
+  grid-template-columns: repeat(4, 14mm);
+  grid-template-rows: repeat(2, 14mm);
+  gap: 1.5mm;
+  justify-content: center;
+  align-content: center;
+}
 .pb-tray {
   width: 100%;
   height: 100%;
@@ -1369,6 +1391,23 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pb-tray-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.pb-tray-hint {
+  font-size: 9pt;
+  font-weight: bold;
+  color: #7a5a18;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -1389,6 +1428,18 @@ body.bw .card-proto {
   align-items: center;
   justify-content: center;
 }
+.pb-token.token-compact {
+  width: 14mm;
+  height: 14mm;
+  flex: 0 0 14mm;
+}
+.pb-token.token-compact .ico {
+  width: 9.5mm;
+  height: 9.5mm;
+}
+.pb-token.token-compact .ico-fallback {
+  font-size: 11pt;
+}
 .pb-token.hook-slot { border-color: var(--line); }
 .pb-token.progress-slot {
   border-style: dashed;
@@ -1402,7 +1453,7 @@ body.bw .card-proto {
   min-height: 0;
   opacity: 0.32; /* ghost w odcisku — odróżnić od prawdziwego żetonu */
 }
-/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — mieści się w ~130×41 mm */
+/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — szerokość 116mm */
 .pb-body.layer-c .pb-box.limits {
   grid-template-columns: 1fr;
   grid-template-rows: 7mm minmax(0, 1fr);
@@ -1443,7 +1494,7 @@ body.bw .card-proto {
 }
 .pb-limit .pb-token .ico-fallback { font-size: 11pt; }
 .pb-limit-lbl {
-  font-size: 12pt;
+  font-size: 11.5pt;
   font-weight: bold;
   color: var(--ink);
   line-height: 1.1;
@@ -1464,6 +1515,7 @@ body.bw .card-proto {
 .pb-body.layer-a .pb-limit-lbl { font-size: 11pt; }
 
 .page-a4.player-page {
+  position: relative;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -1477,6 +1529,16 @@ body.bw .card-proto {
 }
 .page-a4.player-page .player-stack + .player-stack {
   border-top: none;
+}
+.player-cut-mark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 148mm;
+  height: 0;
+  border-top: 0.35mm dashed rgba(42, 28, 18, 0.4);
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* tokens — 20×20 mm rounded squares packed onto one A4 */
@@ -2140,63 +2202,37 @@ def render_board(layer: str) -> str:
 # ---------------------------------------------------------------------------
 
 def render_cards(cards: list[Card], faction_label: str, layer: str, faction_slug: str = "", version: str = "v0.35") -> str:
-    fac = _escape(faction_slug or "time")
-    items = []
-    for c in cards:
-        effect = (c.effect or "").strip()
-        heresy_text = (getattr(c, "heresy_text", None) or "").strip()
-        lore = (c.lore or "").strip()
-        cost = int(getattr(c, "cost_gold", None) or c.cost or 0)
-        heresy = c.heresy or 0
-        badges = _gold_badge(cost) + _heresy_badge(heresy)
-        type_label = getattr(c, "type_label", None) or c.type
-        type_cls = _type_badge_class(c.type)
-        name_cls = "name name-long" if len(c.name or "") > 28 else "name"
-        caption_html = ""
-        if heresy != 0 and heresy_text:
-            caption_html = (
-                f'<div class="heresy-caption">{_escape(heresy_text)}</div>'
-            )
-        _note_effect_overflow(
-            c.id,
-            effect,
-            lore=lore,
-            heresy_caption=heresy_text if heresy != 0 else "",
-        )
-        lore_html = (
-            f'<div class="card-lore">{_escape(lore)}</div>' if lore else ""
-        )
-        stats_html = f'<div class="stat-row">{badges}</div>' if badges else ""
-        items.append(f"""
-<article class="card-proto faction-{fac}" data-faction="{fac}">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="{name_cls}">{_escape(c.name)}</div>
-      <span class="type-badge {type_cls}">{_escape(type_label)}</span>
-    </div>
-    {stats_html}
-    {caption_html}
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect">{_format_effect_html(effect)}</div>
-    {lore_html}
-    <div class="card-footer-meta"><span>{_escape(c.id.upper())}</span><span>{_escape(version)}</span></div>
-  </div>
-</article>
-""")
-
+    fac = faction_slug or "time"
     pages = []
     per_page = 9
-    for i in range(0, max(len(items), 1), per_page):
-        chunk = items[i : i + per_page]
+    for i in range(0, max(len(cards), 1), per_page):
+        chunk = cards[i : i + per_page]
         title = _escape(faction_label) if i == 0 else f"{_escape(faction_label)} (cd.)"
-        pages.append(
-            f'<div class="page-a4" data-page-mm="210x297">'
-            f"<h1>{title}</h1>"
-            f'<div class="cards">{"".join(chunk)}</div>'
-            f"</div>"
-        )
+        
+        cells: list[str] = []
+        for idx in range(9):
+            row = idx // 3
+            col = idx % 3
+            if idx < len(chunk):
+                c = chunk[idx]
+                cells.append(render_card_print_cell(c, fac, row=row, col=col, version=version))
+            else:
+                cells.append(f'<div class="card-proto card-print-cell empty-cell pos-r{row}-c{col}" style="background:transparent;border:none;"></div>')
+        
+        pages.append(f"""
+<div class="page-a4 cards-master-sheet" data-page-mm="210x297">
+  <div class="sheet-meta-header">
+    <span>INQUISITIO 1492 · {title}</span>
+    <span>Układ 3×3 (Bez przerw, wspólne linie cięcia) · Spad obwodowy 2.5 mm</span>
+  </div>
+  <div class="cards-print-block">
+    {_render_crop_lines_html()}
+    <div class="cards-print-grid">
+      {"".join(cells)}
+    </div>
+  </div>
+</div>
+""")
     return "\n".join(pages)
 
 
@@ -2507,8 +2543,18 @@ def render_player_boards(layer: str) -> str:
         )
         agents = "".join('<span class="agent-slot" title="Agent Ø20 mm"></span>' for _ in range(3))
         prog_face = _icon(progress_icon, progress_label)
+        if progress_n == 6:
+            progress_slots_cls = "pb-slots progress-grid-6"
+            token_extra_cls = " token-compact"
+        elif progress_n >= 8:
+            progress_slots_cls = "pb-slots progress-grid-8"
+            token_extra_cls = " token-compact"
+        else:
+            progress_slots_cls = "pb-slots"
+            token_extra_cls = ""
+
         progress = "".join(
-            f'<span class="pb-token progress-slot" title="{_escape(progress_label)}">{prog_face}</span>'
+            f'<span class="pb-token progress-slot{token_extra_cls}" title="{_escape(progress_label)}">{prog_face}</span>'
             for _ in range(progress_n)
         )
         hook_face = _icon("hook", "Hak")
@@ -2516,17 +2562,23 @@ def render_player_boards(layer: str) -> str:
             f'<span class="pb-token hook-slot" title="Hak">{hook_face}</span>' for _ in range(2)
         )
 
+        gold_tray = (
+            '<div class="pb-tray" title="Tacka na żetony złota (start 3)">'
+            '<div class="pb-tray-content"><span class="coin"></span>'
+            '<span class="pb-tray-hint">Start: 3</span></div></div>'
+        )
+
         if layer == "A":
             limits = limit_well("Nasłanie")
             body = f"""
   <div class="pb-body {body_cls}">
     <section class="pb-box agents">
-      <div class="pb-box-title">Agenci</div>
+      <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
       <div class="pb-slots">{agents}</div>
     </section>
     <section class="pb-box gold">
       <div class="pb-box-title">Złoto</div>
-      <div class="pb-tray" title="Tacka na żetony złota (start 3)"></div>
+      {gold_tray}
     </section>
     <section class="pb-box limits">
       <div class="pb-box-title">Limit Ery</div>
@@ -2534,7 +2586,7 @@ def render_player_boards(layer: str) -> str:
     </section>
     <section class="pb-box progress">
       <div class="pb-box-title">{_escape(progress_label)}</div>
-      <div class="pb-slots">{progress}</div>
+      <div class="{progress_slots_cls}">{progress}</div>
     </section>
   </div>
 """
@@ -2548,15 +2600,15 @@ def render_player_boards(layer: str) -> str:
   <div class="pb-body {body_cls}">
     <div class="pb-row pb-row-top">
       <section class="pb-box agents">
-        <div class="pb-box-title">Agenci</div>
+        <div class="pb-box-title">Agenci <span class="pb-title-hint">(start 3)</span></div>
         <div class="pb-slots">{agents}</div>
       </section>
       <section class="pb-box gold">
         <div class="pb-box-title">Złoto</div>
-        <div class="pb-tray" title="Tacka na żetony złota (start 3)"></div>
+        {gold_tray}
       </section>
       <section class="pb-box hooks">
-        <div class="pb-box-title">Haki</div>
+        <div class="pb-box-title">Haki <span class="pb-title-hint">(max 2)</span></div>
         <div class="pb-slots">{hooks}</div>
       </section>
     </div>
@@ -2567,7 +2619,7 @@ def render_player_boards(layer: str) -> str:
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">{_escape(progress_label)}</div>
-        <div class="pb-slots">{progress}</div>
+        <div class="{progress_slots_cls}">{progress}</div>
       </section>
     </div>
   </div>
@@ -2603,9 +2655,11 @@ def render_player_boards(layer: str) -> str:
     per_page = 2
     for i in range(0, len(boards), per_page):
         chunk = boards[i : i + per_page]
+        cut_mark = '<div class="player-cut-mark"></div>' if len(chunk) > 1 else ''
         pages.append(
             f'<div class="page-a4 player-page" data-page-mm="210x297">'
             f'{"".join(chunk)}'
+            f'{cut_mark}'
             f"</div>"
         )
     return "\n".join(pages)

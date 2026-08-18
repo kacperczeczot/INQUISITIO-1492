@@ -368,7 +368,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
 .cards {
   display: grid;
   grid-template-columns: repeat(3, var(--card-w));
-  gap: 3mm;
+  gap: 0;
   justify-content: start;
 }
 .card-proto {
@@ -761,7 +761,7 @@ body.bw .card-proto {
 .heresy-pip.z3 { background: #e8b8b8; }
 .heresy-zones {
   display: grid;
-  grid-template-columns: 4fr 3fr 4fr;
+  grid-template-columns: 5fr 2fr 4fr; /* 0-4 (5), 5-6 (2), 7-10 (4) - exact 11 pips match */
   margin: 0; /* tuż pod torem — nigdy margin-top: auto */
   flex: 0 0 auto;
   font-size: 11pt;
@@ -798,10 +798,10 @@ body.bw .card-proto {
   min-width: 0;
 }
 .pb-row-top {
-  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Haki: 2×20 + pad */
+  grid-template-columns: 70mm minmax(0, 1fr) 48mm; /* Agenci: 3×20 | Złoto flex | Haki: 2×20 */
 }
 .pb-row-bot {
-  grid-template-columns: minmax(0, 1fr) auto; /* Postęp: auto width pod liczbę żetonów */
+  grid-template-columns: 116mm minmax(0, 1fr); /* Limity: 116mm (3 kolumny ~37mm) | Postęp: reszta ~86mm */
 }
 .pb-box {
   box-sizing: border-box;
@@ -831,6 +831,12 @@ body.bw .card-proto {
   overflow: hidden;
   white-space: nowrap;
 }
+.pb-title-hint {
+  font-size: 9pt;
+  font-weight: normal;
+  color: #5c4c3e;
+  margin-left: 1mm;
+}
 .pb-slots {
   display: flex;
   flex-wrap: nowrap;
@@ -840,6 +846,22 @@ body.bw .card-proto {
   min-height: 0;
   overflow: hidden;
 }
+.pb-slots.progress-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 14mm);
+  grid-template-rows: repeat(2, 14mm);
+  gap: 1.5mm;
+  justify-content: center;
+  align-content: center;
+}
+.pb-slots.progress-grid-8 {
+  display: grid;
+  grid-template-columns: repeat(4, 14mm);
+  grid-template-rows: repeat(2, 14mm);
+  gap: 1.5mm;
+  justify-content: center;
+  align-content: center;
+}
 .pb-tray {
   width: 100%;
   height: 100%;
@@ -848,6 +870,23 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pb-tray-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.pb-tray-hint {
+  font-size: 9pt;
+  font-weight: bold;
+  color: #7a5a18;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -868,6 +907,18 @@ body.bw .card-proto {
   align-items: center;
   justify-content: center;
 }
+.pb-token.token-compact {
+  width: 14mm;
+  height: 14mm;
+  flex: 0 0 14mm;
+}
+.pb-token.token-compact .ico {
+  width: 9.5mm;
+  height: 9.5mm;
+}
+.pb-token.token-compact .ico-fallback {
+  font-size: 11pt;
+}
 .pb-token.hook-slot { border-color: var(--line); }
 .pb-token.progress-slot {
   border-style: dashed;
@@ -881,7 +932,7 @@ body.bw .card-proto {
   min-height: 0;
   opacity: 0.32; /* ghost w odcisku — odróżnić od prawdziwego żetonu */
 }
-/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — mieści się w ~130×41 mm */
+/* Limity C: tytuł u góry, 3 kolumny (✕ nad etykietą) — szerokość 116mm */
 .pb-body.layer-c .pb-box.limits {
   grid-template-columns: 1fr;
   grid-template-rows: 7mm minmax(0, 1fr);
@@ -922,7 +973,7 @@ body.bw .card-proto {
 }
 .pb-limit .pb-token .ico-fallback { font-size: 11pt; }
 .pb-limit-lbl {
-  font-size: 12pt;
+  font-size: 11.5pt;
   font-weight: bold;
   color: var(--ink);
   line-height: 1.1;
@@ -943,6 +994,7 @@ body.bw .card-proto {
 .pb-body.layer-a .pb-limit-lbl { font-size: 11pt; }
 
 .page-a4.player-page {
+  position: relative;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -956,6 +1008,16 @@ body.bw .card-proto {
 }
 .page-a4.player-page .player-stack + .player-stack {
   border-top: none;
+}
+.player-cut-mark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 148mm;
+  height: 0;
+  border-top: 0.35mm dashed rgba(42, 28, 18, 0.4);
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* tokens — 20×20 mm rounded squares packed onto one A4 */
@@ -977,59 +1039,120 @@ body.bw .card-proto {
   flex: 1 1 auto;
   min-height: 0;
 }
-.token-group {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 2mm;
-  margin: 0;
-  flex-shrink: 0;
-}
-.token-group h3 {
-  flex: 0 0 28mm;
-  width: 28mm;
-  font-size: 8.5pt;
-  margin: 0;
-  padding-top: 3mm;
+.token-page h1 {
+  text-align: center;
+  font-size: 13pt;
+  margin: 0 0 1.5mm;
   color: var(--blood);
-  line-height: 1.15;
-  font-weight: bold;
 }
-.token-sheet {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5mm;
-  flex: 1 1 auto;
-  min-width: 0;
-  justify-content: start;
+.token-page .token-meta {
+  text-align: center;
+  font-size: 7.5pt;
+  color: #665544;
+  margin-bottom: 3.5mm;
+  font-family: 'Cinzel', serif;
 }
-.token-disc {
-  width: var(--token-d); height: var(--token-d);
-  min-width: var(--token-d); min-height: var(--token-d);
-  border-radius: var(--token-r);
-  border: 0.55mm solid var(--line);
+.tokens-print-block {
+  position: relative;
+  width: 180mm;
+  height: 160mm;
+  margin: 0 auto;
+}
+.tokens-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 20mm);
+  grid-template-rows: repeat(8, 20mm);
+  gap: 0;
+  width: 180mm;
+  height: 160mm;
+  border: 0.35mm solid var(--line);
   background: var(--parch);
-  display: flex; align-items: center; justify-content: center;
+  box-sizing: border-box;
+}
+.token-cell {
+  position: relative;
+  width: 20mm;
+  height: 20mm;
+  box-sizing: border-box;
+  border-right: 0.25mm solid rgba(42, 28, 18, 0.6);
+  border-bottom: 0.25mm solid rgba(42, 28, 18, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  box-shadow: inset 0 0 0 0.35mm var(--gold);
-  flex-shrink: 0;
+  padding: 0.8mm;
+  background: var(--parch-card);
+  text-align: center;
 }
-.token-disc .ico {
-  width: 14mm;
-  height: 14mm;
+.token-cell:nth-child(9n) { border-right: none; }
+.token-cell:nth-child(n+64) { border-bottom: none; }
+.token-cell .ico, .token-cell svg {
+  width: 12mm;
+  height: 12mm;
+  display: block;
 }
-.token-disc img {
-  width: 14mm; height: 14mm; object-fit: cover; border-radius: 1mm;
+.token-cell .token-lbl {
+  font-family: 'Cinzel', serif;
+  font-size: 4.5pt;
+  font-weight: 700;
+  color: var(--line);
+  margin-top: 0.6mm;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
-.token-disc .ico-fallback {
-  min-width: 0; min-height: 0;
-  font-size: 22pt; line-height: 1;
+
+/* Faction agent cards */
+.token-cell.agent-so { background: #7a1f1f; }
+.token-cell.agent-caa { background: #1b4d3e; }
+.token-cell.agent-kb { background: #946c23; }
+.token-cell.agent-kt { background: #1f2d5a; }
+.token-cell.agent-gc { background: #2a2030; }
+.token-cell.agent-so .token-lbl,
+.token-cell.agent-caa .token-lbl,
+.token-cell.agent-kb .token-lbl,
+.token-cell.agent-kt .token-lbl,
+.token-cell.agent-gc .token-lbl {
+  color: #f4ead7;
 }
-.token-disc .coin {
-  width: 12mm; height: 12mm; flex: 0 0 12mm;
-  border-width: 0.55mm;
-  box-shadow: inset 0 0 0 0.55mm rgba(255, 236, 160, 0.55);
+
+.token-cell.token-gold { background: #fffcf4; }
+.token-cell.token-spent { background: #fdf2f2; }
+.token-cell.token-fall { background: #f0ecf4; }
+.token-cell.token-empty { background: transparent; }
+
+/* Perimeter crop marks for token sheet */
+.token-crop-v-top {
+  position: absolute;
+  top: -5mm;
+  width: 0.25mm;
+  height: 4mm;
+  background: var(--line);
 }
+.token-crop-v-bot {
+  position: absolute;
+  bottom: -5mm;
+  width: 0.25mm;
+  height: 4mm;
+  background: var(--line);
+}
+.token-crop-h-left {
+  position: absolute;
+  left: -5mm;
+  width: 4mm;
+  height: 0.25mm;
+  background: var(--line);
+}
+.token-crop-h-right {
+  position: absolute;
+  right: -5mm;
+  width: 4mm;
+  height: 0.25mm;
+  background: var(--line);
+}
+
 .pb-token .ico {
   width: 12mm;
   height: 12mm;
@@ -1420,211 +1543,313 @@ body.mode-trim .crop-line-h-right {
 </head>
 <body>
 <nav class="nav"><a href="index.html">← Indeks PnP</a></nav>
-<div class="page-a4" data-page-mm="210x297"><h1>Gildia Cieni</h1><div class="cards">
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Przekupiony Strażnik</div>
-      <span class="type-badge type-akcja">Akcja</span>
-    </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
-    <div class="heresy-caption">Strażnik zna cenę milczenia lepiej niż modlitwy.</div>
+
+<div class="page-a4 cards-master-sheet" data-page-mm="210x297">
+  <div class="sheet-meta-header">
+    <span>INQUISITIO 1492 · Gildia Cieni</span>
+    <span>Układ 3×3 (Bez przerw, wspólne linie cięcia) · Spad obwodowy 2.5 mm</span>
   </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
-    <div class="card-lore">Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż.</div>
-    <div class="card-footer-meta"><span>GC-01</span><span>v0.99.12</span></div>
+  <div class="cards-print-block">
+    
+  <div class="crop-line-v-top cut-col-0"></div>
+  <div class="crop-line-v-top cut-col-1"></div>
+  <div class="crop-line-v-top cut-col-2"></div>
+  <div class="crop-line-v-top cut-col-3"></div>
+
+  <div class="crop-line-v-bot cut-col-0"></div>
+  <div class="crop-line-v-bot cut-col-1"></div>
+  <div class="crop-line-v-bot cut-col-2"></div>
+  <div class="crop-line-v-bot cut-col-3"></div>
+
+  <div class="crop-line-h-left cut-row-0"></div>
+  <div class="crop-line-h-left cut-row-1"></div>
+  <div class="crop-line-h-left cut-row-2"></div>
+  <div class="crop-line-h-left cut-row-3"></div>
+
+  <div class="crop-line-h-right cut-row-0"></div>
+  <div class="crop-line-h-right cut-row-1"></div>
+  <div class="crop-line-h-right cut-row-2"></div>
+  <div class="crop-line-h-right cut-row-3"></div>
+
+    <div class="cards-print-grid">
+      
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r0-c0" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Przekupiony Strażnik</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+      <div class="heresy-caption">Strażnik zna cenę milczenia lepiej niż modlitwy.</div>
+    </div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-lore">Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż.</div>
+      <div class="card-footer-meta"><span>GC-01</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Czarny Rynek</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r0-c1" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Czarny Rynek</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Zyskaj</strong> 3 złota.</div>
-    <div class="card-lore">Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.</div>
-    <div class="card-footer-meta"><span>GC-02</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Zyskaj</strong> 3 złota.</div>
+      <div class="card-lore">Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.</div>
+      <div class="card-footer-meta"><span>GC-02</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Podrzucenie Księgi</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r0-c2" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Podrzucenie Księgi</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
-    <div class="card-lore">Klasyczny frame: zakazana księga ląduje w cudzej komnacie.</div>
-    <div class="card-footer-meta"><span>GC-03</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-lore">Klasyczny frame: zakazana księga ląduje w cudzej komnacie.</div>
+      <div class="card-footer-meta"><span>GC-03</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Informator</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r1-c0" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Informator</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+      <div class="heresy-caption">Donosiciel pamięta twarz i zapach srebra.</div>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
-    <div class="heresy-caption">Donosiciel pamięta twarz i zapach srebra.</div>
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
-    <div class="card-lore">Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.</div>
-    <div class="card-footer-meta"><span>GC-04</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-lore">Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.</div>
+      <div class="card-footer-meta"><span>GC-04</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Fałszywy Świadek</div>
-      <span class="type-badge type-reakcja">Reakcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r1-c1" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Fałszywy Świadek</div>
+        <span class="type-badge type-reakcja">Reakcja</span>
+      </div>
+      
+      
     </div>
-    
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><div class="fx-block">Podczas <em>Werdyktu</em>, po ujawnieniu większości:<br><strong>Zmień</strong> swój głos.</div><div class="fx-block"><strong>Limit:</strong> 1 / Erę.</div></div>
-    <div class="card-lore">Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.</div>
-    <div class="card-footer-meta"><span>GC-05</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><div class="fx-block">Podczas <em>Werdyktu</em>, po ujawnieniu większości:<br><strong>Zmień</strong> swój głos.</div><div class="fx-block"><strong>Limit:</strong> 1 / Erę.</div></div>
+      <div class="card-lore">Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.</div>
+      <div class="card-footer-meta"><span>GC-05</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Szantaż</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r1-c2" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Szantaż</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
-    <div class="card-lore">Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek.</div>
-    <div class="card-footer-meta"><span>GC-06</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Załóż</strong> <em>Hak</em> na rywala.</div>
+      <div class="card-lore">Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek.</div>
+      <div class="card-footer-meta"><span>GC-06</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Skrytobójstwo</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r2-c0" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Skrytobójstwo</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w Gildii lub na Rynku.</div>
-    <div class="card-lore">Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.</div>
-    <div class="card-footer-meta"><span>GC-07</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Aresztuj</strong> Agenta rywala w Gildii lub na Rynku.</div>
+      <div class="card-lore">Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.</div>
+      <div class="card-footer-meta"><span>GC-07</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Zatrute Złoto</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r2-c1" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Zatrute Złoto</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 2</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Zyskaj</strong> 1 złoto.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
-    <div class="card-lore">Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.</div>
-    <div class="card-footer-meta"><span>GC-08</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Zyskaj</strong> 1 złoto.<br><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-lore">Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.</div>
+      <div class="card-footer-meta"><span>GC-08</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Lista Dłużników</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r2-c2" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Lista Dłużników</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 3</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 3</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +1</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div><div class="fx-block">Jeśli Odmowa tego <em>Haka</em> w tej Erze:<br><strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
-    <div class="card-lore">Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole.</div>
-    <div class="card-footer-meta"><span>GC-09</span><span>v0.99.12</span></div>
-  </div>
-</article>
-</div></div>
-<div class="page-a4" data-page-mm="210x297"><h1>Gildia Cieni (cd.)</h1><div class="cards">
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Upadek Domu</div>
-      <span class="type-badge type-specjalna">Specjalna</span>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><div class="fx-block"><strong>Załóż</strong> <em>Hak</em> na rywala.</div><div class="fx-block">Jeśli Odmowa tego <em>Haka</em> w tej Erze:<br><strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
+      <div class="card-lore">Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole.</div>
+      <div class="card-footer-meta"><span>GC-09</span><span>v0.99.12</span></div>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 4</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
-    <div class="heresy-caption">Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.</div>
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”: Jeśli rywal ma ujawniony <em>Hak</em>, <em>Marionetkę</em> lub <em>Autodafé</em> w lokacji kluczowej: <strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
-    <div class="card-lore">Egzekucja domu. Stół boi się trzymać ujawnione brudy.</div>
-    <div class="card-footer-meta"><span>GC-10</span><span>v0.99.12</span></div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Fałszywe Świadectwo Cechu</div>
-      <span class="type-badge type-akcja">Akcja</span>
     </div>
-    <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
-    
   </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
-    <div class="card-lore">Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu.</div>
-    <div class="card-footer-meta"><span>GC-11</span><span>v0.99.12</span></div>
+</div>
+
+
+<div class="page-a4 cards-master-sheet" data-page-mm="210x297">
+  <div class="sheet-meta-header">
+    <span>INQUISITIO 1492 · Gildia Cieni (cd.)</span>
+    <span>Układ 3×3 (Bez przerw, wspólne linie cięcia) · Spad obwodowy 2.5 mm</span>
+  </div>
+  <div class="cards-print-block">
+    
+  <div class="crop-line-v-top cut-col-0"></div>
+  <div class="crop-line-v-top cut-col-1"></div>
+  <div class="crop-line-v-top cut-col-2"></div>
+  <div class="crop-line-v-top cut-col-3"></div>
+
+  <div class="crop-line-v-bot cut-col-0"></div>
+  <div class="crop-line-v-bot cut-col-1"></div>
+  <div class="crop-line-v-bot cut-col-2"></div>
+  <div class="crop-line-v-bot cut-col-3"></div>
+
+  <div class="crop-line-h-left cut-row-0"></div>
+  <div class="crop-line-h-left cut-row-1"></div>
+  <div class="crop-line-h-left cut-row-2"></div>
+  <div class="crop-line-h-left cut-row-3"></div>
+
+  <div class="crop-line-h-right cut-row-0"></div>
+  <div class="crop-line-h-right cut-row-1"></div>
+  <div class="crop-line-h-right cut-row-2"></div>
+  <div class="crop-line-h-right cut-row-3"></div>
+
+    <div class="cards-print-grid">
+      
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r0-c0" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Upadek Domu</div>
+        <span class="type-badge type-specjalna">Specjalna</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 4</span><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
+      <div class="heresy-caption">Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.</div>
+    </div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><div class="fx-break"><strong>Łamie regułę</strong> „<em>Upadek</em> tylko z odmowy <em>Haka</em>”: Jeśli rywal ma ujawniony <em>Hak</em>, <em>Marionetkę</em> lub <em>Autodafé</em> w lokacji kluczowej: <strong>Oznacz</strong> <em>Upadek</em> wobec tego rywala.</div></div>
+      <div class="card-lore">Egzekucja domu. Stół boi się trzymać ujawnione brudy.</div>
+      <div class="card-footer-meta"><span>GC-10</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
 
-<article class="card-proto faction-gildia-cieni" data-faction="gildia-cieni">
-  <div class="hdr">
-    <div class="hdr-top">
-      <div class="name">Złodziejski Zwiad</div>
-      <span class="type-badge type-akcja">Akcja</span>
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r0-c1" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Fałszywe Świadectwo Cechu</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-gold" title="Koszt złota"><span class="coin" aria-hidden="true"></span> 1</span></div>
+      
     </div>
-    <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
-    
-  </div>
-  <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
-  <div class="card-main">
-    <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
-    <div class="card-lore">Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę.</div>
-    <div class="card-footer-meta"><span>GC-12</span><span>v0.99.12</span></div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Wskaż</strong> rywala: +1 <em>Herezja</em>.</div>
+      <div class="card-lore">Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu.</div>
+      <div class="card-footer-meta"><span>GC-11</span><span>v0.99.12</span></div>
+    </div>
   </div>
 </article>
-</div></div>
+
+<article class="card-proto card-print-cell faction-gildia-cieni pos-r0-c2" data-faction="gildia-cieni">
+  <div class="safe-zone-guide" title="Strefa Bezpieczna (3 mm od linii cięcia)"></div>
+  <div class="card-inner-flow">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="name">Złodziejski Zwiad</div>
+        <span class="type-badge type-akcja">Akcja</span>
+      </div>
+      <div class="stat-row"><span class="badge badge-heresy badge-heresy-hot" title="Herezja"><span class="ico" title="Herezja"><svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg></span> +2</span></div>
+      
+    </div>
+    <div class="card-art" aria-hidden="true" title="Slot ilustracji"></div>
+    <div class="card-main">
+      <div class="card-effect"><strong>Przesuń</strong> swojego Agenta o 1 lokację.</div>
+      <div class="card-lore">Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę.</div>
+      <div class="card-footer-meta"><span>GC-12</span><span>v0.99.12</span></div>
+    </div>
+  </div>
+</article>
+<div class="card-proto card-print-cell empty-cell pos-r1-c0" style="background:transparent;border:none;"></div><div class="card-proto card-print-cell empty-cell pos-r1-c1" style="background:transparent;border:none;"></div><div class="card-proto card-print-cell empty-cell pos-r1-c2" style="background:transparent;border:none;"></div><div class="card-proto card-print-cell empty-cell pos-r2-c0" style="background:transparent;border:none;"></div><div class="card-proto card-print-cell empty-cell pos-r2-c1" style="background:transparent;border:none;"></div><div class="card-proto card-print-cell empty-cell pos-r2-c2" style="background:transparent;border:none;"></div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
