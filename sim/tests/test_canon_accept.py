@@ -187,9 +187,9 @@ def test_no_cienie_88_with_shares_in_band_optimizes_score():
     assert d.phase == "hygiene"
 
 
-def test_rank_key_band_climb_prefers_higher_min():
-    low = {"min_balance": 80.0, "score_4p_balance": 92.0, "score_4p": 92.0}
-    high = {"min_balance": 85.0, "score_4p_balance": 88.0, "score_4p": 88.0}
+def test_rank_key_prefers_higher_score():
+    low = {"min_balance": 85.0, "score_4p_balance": 88.0, "score_4p": 88.0}
+    high = {"min_balance": 80.0, "score_4p_balance": 92.0, "score_4p": 92.0}
     assert rank_key(high, mode="band", base_in_band=False) < rank_key(
         low, mode="band", base_in_band=False
     )

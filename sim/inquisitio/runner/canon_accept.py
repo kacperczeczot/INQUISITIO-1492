@@ -127,21 +127,10 @@ def rank_key(res: dict, *, mode: str, base_in_band: bool) -> tuple:
     Hygiene must not promote wrecked tables just because deadlock/accusations
     look slightly 'healthier' — stay in band and keep 4p-core ≥ 90 first.
     """
-    if mode != "band":
-        return (-float(res.get("score_4p", 0.0)),)
-    min_b = float(res.get("min_balance", res.get("score_4p_balance", 0.0)))
-    mean_b = float(res.get("score_4p_balance", res.get("score_4p", 0.0)))
-    if not base_in_band:
-        return (-min_b, -mean_b)
-    in_band = setup_shares_in_range(res.get("setup_shares") or {}, *TARGET_BAND_PCT)
-    core = float((res.get("setup_scores_balance") or {}).get(CORE_SETUP, 0.0))
-    return (
-        0 if in_band else 1,
-        0 if core >= CORE_SCORE_FLOOR else 1,
-        float(res.get("vitality_penalty", 0.0)),
-        telemetry_distance(res),
-        -min_b,
-    )
+    score_4p = float(res.get("score_4p_balance", res.get("score_4p", 0.0)))
+    min_b = float(res.get("min_balance", score_4p))
+    vit = float(res.get("vitality_penalty", 0.0))
+    return (-score_4p, -min_b, vit)
 
 
 def accept_candidate(
