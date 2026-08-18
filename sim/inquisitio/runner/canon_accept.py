@@ -209,7 +209,7 @@ def accept_candidate(
     if not base_in_band:
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
         dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
-        if dmin >= min_delta or dscore >= min_delta:
+        if dscore >= min_delta or (dmin >= min_delta and dscore >= 0.01):
             return AcceptDecision(True, f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f}", "climb")
         return AcceptDecision(
             False,

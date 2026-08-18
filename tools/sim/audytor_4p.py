@@ -31,6 +31,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 # Ensure sim and tools/sim directories are on path
 TOOLS_SIM_DIR = Path(__file__).resolve().parent
@@ -222,6 +223,7 @@ _FROZEN_ID_MARKERS = (
     "KB_ERA",
     "KT_HERESY",
     "TIME_DECK",
+    "MAX_ERAS",
 )
 _FROZEN_PARAM_KEYS = (
     "agents_offset",
@@ -232,6 +234,8 @@ _FROZEN_PARAM_KEYS = (
     "kt_heresy_band",
     "time_deck_freq",
     "no_time_deck",
+    "max_eras_offset",
+    "max_eras",
 )
 _ABLATION_OFF_ID_MARKERS = (
     "NO_TIME_DECK",
@@ -302,7 +306,7 @@ def is_ablation_off(tid: str, params: dict) -> bool:
     return False
 
 
-def is_dead_path_crutch(base: dict, params: dict) -> bool:
+def is_dead_path_crutch(base: dict[str, Any] | Any, params: dict[str, Any] | Any) -> bool:
     """True if params lower a dual-win threshold that vitality already flags as dead."""
     warns = " ".join(base.get("vitality_warnings") or [])
     for label, key in _DEAD_PATH_CRUTCH:
@@ -400,7 +404,7 @@ def macro_vector_beats(challenger: dict, held: dict, min_delta: float) -> bool:
     d_vit = float(held.get("vitality_penalty", 0) or 0) - float(challenger.get("vitality_penalty", 0) or 0)
     if d_vit > 1e-9:
         return True
-    return d_score >= float(min_delta)
+    return d_score >= min_delta
 
 
 def lookahead_next_action(
@@ -458,9 +462,9 @@ def update_balance_notes_4p(
 
     content = BALANCE_NOTES_PATH.read_text(encoding="utf-8")
     today = datetime.now().strftime("%Y-%m-%d")
-    d_4p = best_res_4p.get("score_4p_balance", best_res_4p["score_4p"]) - base_res_4p.get(
-        "score_4p_balance", base_res_4p["score_4p"]
-    )
+    score_best = float(best_res_4p.get("score_4p_balance") or best_res_4p.get("score_4p") or 0.0)
+    score_base = float(base_res_4p.get("score_4p_balance") or base_res_4p.get("score_4p") or 0.0)
+    d_4p = score_best - score_base
     delta_4p_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
 
     patch_note_block = (
@@ -509,9 +513,9 @@ def log_4p_iteration(
         ]
         log_path.write_text("\n".join(headers) + "\n", encoding="utf-8")
 
-    d_4p = best_res_4p.get("score_4p_balance", best_res_4p["score_4p"]) - base_res_4p.get(
-        "score_4p_balance", base_res_4p["score_4p"]
-    )
+    score_best = float(best_res_4p.get("score_4p_balance") or best_res_4p.get("score_4p") or 0.0)
+    score_base = float(base_res_4p.get("score_4p_balance") or base_res_4p.get("score_4p") or 0.0)
+    d_4p = score_best - score_base
     d4_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
 
     d_3p = diag_after["cat_scores"].get("3p", 0) - diag_before["cat_scores"].get("3p", 0)
@@ -629,12 +633,12 @@ class Macro4PAutoBalancer:
         d3_sign = f"+{d_3:.1f}" if d_3 > 0 else f"{d_3:.1f}"
         d5_sign = f"+{d_5:.1f}" if d_5 > 0 else f"{d_5:.1f}"
         dg_sign = f"+{d_g:.1f}" if d_g > 0 else f"{d_g:.1f}"
-        d_ws = best_ver_res.get("score_4p_balance", best_ver_res["score_4p"]) - base_res.get(
-            "score_4p_balance", base_res["score_4p"]
-        )
+        sc_best = float(best_ver_res.get("score_4p_balance") or best_ver_res.get("score_4p") or 0.0)
+        sc_base = float(base_res.get("score_4p_balance") or base_res.get("score_4p") or 0.0)
+        d_ws = sc_best - sc_base
         print(
-            f"   🎯 4P win share: {base_res.get('score_4p_balance', base_res['score_4p']):.1f} → "
-            f"**{best_ver_res.get('score_4p_balance', best_ver_res['score_4p']):.1f} pkt** (Δ {d_ws:+.2f})"
+            f"   🎯 4P win share: {sc_base:.1f} → "
+            f"**{sc_best:.1f} pkt** (Δ {d_ws:+.2f})"
         )
         print(
             f"   💤 Witalność:   {base_res.get('vitality_penalty', 0):.3f} → "
@@ -888,13 +892,14 @@ class Macro4PAutoBalancer:
                     [cand_dict[r["id"]] for r in stage3_results[: self.args.beam_width] if r["id"] in cand_dict],
                 )
 
-                if action == "hold_and_deeper":
+                if action == "hold_and_deeper" and accepted_candidate is not None:
                     pending_cand = accepted_candidate
                     pending_res = best_ver_res
                     pending_phase = current_phase
                     beam_seeds = top_beam
+                    cand_id_str = pending_cand[0] if pending_cand else ""
                     print(
-                        f"\n✨ Nowe optimum na {current_phase}D (`{pending_cand[0]}`) — "
+                        f"\n✨ Nowe optimum na {current_phase}D (`{cand_id_str}`) — "
                         f"NIE wdrażam, lookahead {current_phase + 1}D ({len(beam_seeds)} nasion)."
                     )
                     current_phase += 1

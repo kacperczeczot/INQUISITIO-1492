@@ -315,20 +315,22 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
     }
 
 
-def _n4(item) -> int:
+def _n4(item: Any) -> int:
     if hasattr(item, "raw"):
         item = item.raw()
     if isinstance(item, dict):
-        return int(item.get("4p", next(iter(item.values()))))
-    return int(item)
+        val = item.get("4p", next(iter(item.values()), 0))
+        return int(val) if val is not None else 0
+    return int(item) if item is not None else 0
 
 
-def _falls_n(falls) -> int:
+def _falls_n(falls: Any) -> int:
     if hasattr(falls, "default"):
         return int(falls.default)
     if isinstance(falls, dict):
-        return int(falls.get("default", falls.get("no_oficjum", 4)))
-    return int(falls)
+        val = falls.get("default", falls.get("no_oficjum", 4))
+        return int(val) if val is not None else 4
+    return int(falls) if falls is not None else 4
 
 
 def _win_extremes(cur: int, min_val: int = 1) -> list[tuple[str, int, int]]:

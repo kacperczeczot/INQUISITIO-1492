@@ -667,13 +667,14 @@ class AutoBalancer5P:
                     [cand_dict[r["id"]] for r in stage3_results[: self.args.beam_width] if r["id"] in cand_dict],
                 )
 
-                if action == "hold_and_deeper":
+                if action == "hold_and_deeper" and accepted_candidate is not None:
                     pending_cand = accepted_candidate
                     pending_res = best_ver_res
                     pending_phase = current_phase
                     beam_seeds = top_beam
+                    cand_id_str = pending_cand[0] if pending_cand else ""
                     print(
-                        f"\n✨ Nowe optimum na {current_phase}D (`{pending_cand[0]}`) — "
+                        f"\n✨ Nowe optimum na {current_phase}D (`{cand_id_str}`) — "
                         f"NIE wdrażam, lookahead {current_phase + 1}D ({len(beam_seeds)} nasion)."
                     )
                     current_phase += 1
