@@ -148,6 +148,26 @@ ICON_SHORT = {
     "autodafe_state": "🔥",
 }
 
+ICONS_SVG: dict[str, str] = {
+    "heresy": '<svg viewBox="0 0 24 24" class="ico-svg"><path fill="#9e2b2b" d="M12 2C10.5 5 7.5 7.5 7.5 12c0 3.3 2 6 4.5 6s4.5-2.7 4.5-6c0-2-1-4-2.5-5.5.5 1.5 0 3-.8 3.5-.8.5-1.7-.3-1.7-1.5 0-1.8 1-3.5 1.5-4.5-.5.2-1 .5-1 1z"/><path fill="#f3ba42" d="M12 9c-1 2-2 3-2 5 0 1.7 1 3 2 3s2-1.3 2-3c0-1.2-.5-2.2-1.2-3-.3.8-.8 1.2-1.3 1.2s-.7-.6-.5-1.2c.5-.7 1-1.3 1-2z"/></svg>',
+    "hook": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="4.5" r="2.2" fill="none" stroke="#2a1c12" stroke-width="1.8"/><path d="M12 6.7v7.3c0 2.5-2 4.5-4.5 4.5s-4.5-2-4.5-4.5c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4c0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8V6.7" fill="none" stroke="#2a1c12" stroke-width="2" stroke-linecap="round"/><path d="M4.2 13.5l1.8-2" stroke="#7a1f1f" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    "double": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 8c1-4 6-5 9-5s8 1 9 5c0 6-3 12-9 14C5 20 3 14 3 8z" fill="#4a1c32" stroke="#a67c2d" stroke-width="1.2"/><ellipse cx="8" cy="9.5" rx="2" ry="1.3" fill="#f4ead7"/><ellipse cx="16" cy="9.5" rx="2" ry="1.3" fill="#f4ead7"/><path d="M8 15c2.5 1.5 5.5 1.5 8 0" stroke="#a67c2d" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="4.5" r="1" fill="#a67c2d"/></svg>',
+    "stack": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg>',
+    "relic": '<svg viewBox="0 0 24 24" class="ico-svg"><polygon points="12,2 19,8 15,21 9,21 5,8" fill="#a67c2d" stroke="#3a2618" stroke-width="1.2"/><polygon points="12,4 17,9 14,19 10,19 7,9" fill="#d4af37"/><polygon points="12,6 15,10 13,17 11,17 9,10" fill="#2d6a7a"/><circle cx="12" cy="11.5" r="1.5" fill="#f4ead7"/></svg>',
+    "fragment": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#e8dcbe" stroke="#3a2618" stroke-width="1.4"/><path d="M15 3v5h5" fill="#c8ba96" stroke="#3a2618" stroke-width="1.2"/><path d="M8 11h8M8 14h8M8 17h5" stroke="#5a3d24" stroke-width="1.3" stroke-linecap="round"/><circle cx="15.5" cy="17" r="1.6" fill="#7a1f1f"/></svg>',
+    "inquisitor": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M10 2h4v5h5v4h-5v11h-4V11H5V7h5V2z" fill="#7a1f1f" stroke="#a67c2d" stroke-width="1.2"/><circle cx="12" cy="9" r="1.5" fill="#f4ead7"/></svg>',
+    "patrol": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2L4 5v7c0 5.5 3.5 10 8 11 4.5-1 8-5.5 8-11V5l-8-3z" fill="#3a4b5c" stroke="#a67c2d" stroke-width="1.3"/><path d="M12 5v14M7 10h10" stroke="#f4ead7" stroke-width="1.5"/></svg>',
+    "autodafe_state": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9" fill="#7a1f1f" stroke="#d4af37" stroke-width="1.4"/><path d="M12 4v16M4 12h16M6.5 6.5l11 11M6.5 17.5l11-11" stroke="#d4af37" stroke-width="1.2"/><circle cx="12" cy="12" r="3.5" fill="#e8b84b"/></svg>',
+    "decree": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M4 3h11l5 5v13H4z" fill="#f0e6cf" stroke="#3a2618" stroke-width="1.2"/><circle cx="14" cy="14" r="5" fill="#8b1d24" stroke="#a67c2d" stroke-width="1"/><path d="M11.5 14.5l1.5-2 1.5 2" stroke="#fff" stroke-width="1" fill="none"/></svg>',
+    "fall": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg>',
+    "spent": '<svg viewBox="0 0 24 24" class="ico-svg"><circle cx="12" cy="12" r="9.5" fill="none" stroke="#6e1818" stroke-width="1.5" stroke-dasharray="3 1.5"/><path d="M7 7l10 10M17 7L7 17" stroke="#6e1818" stroke-width="2.5" stroke-linecap="round"/></svg>',
+    "swiete-oficjum": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M10 2h4v5h5v4h-5v11h-4V11H5V7h5V2z" fill="#7a1f1f" stroke="#d4af37" stroke-width="1.2"/><circle cx="12" cy="9" r="1.8" fill="#d4af37"/></svg>',
+    "cienie-al-andalus": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M15.5 3.5a9 9 0 1 0 5 15.5 9 9 0 0 1-5-15.5z" fill="#1b4d3e" stroke="#d4af37" stroke-width="1"/><polygon points="16,9 17.5,10.5 19.5,10.5 18,12 18.8,14 17,13 15.2,14 16,12 14.5,10.5 16.5,10.5" fill="#d4af37"/></svg>',
+    "korona-borgiowie": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 18h18v2H3zM4 16l2-10 4.5 5L12 4l1.5 7 4.5-5 2 10z" fill="#a67c2d" stroke="#3a2618" stroke-width="1.1"/><circle cx="6" cy="6" r="1.2" fill="#8b1d24"/><circle cx="12" cy="4" r="1.5" fill="#8b1d24"/><circle cx="18" cy="6" r="1.2" fill="#8b1d24"/></svg>',
+    "kabala-toledo": '<svg viewBox="0 0 24 24" class="ico-svg"><polygon points="12,2 15,8 22,9 17,14 18,21 12,17.5 6,21 7,14 2,9 9,8" fill="#1f2d5a" stroke="#d4af37" stroke-width="1"/><circle cx="12" cy="11.5" r="2.5" fill="#d4af37"/></svg>',
+    "gildia-cieni": '<svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2l2 6-2 11-2-11z" fill="#2a2030" stroke="#a67c2d" stroke-width="1"/><path d="M8 7h8v2H8zM12 19v3" stroke="#a67c2d" stroke-width="1.5"/><path d="M5 10l4 3M19 10l-4 3" stroke="#8b1d24" stroke-width="1.2" stroke-linecap="round"/></svg>',
+}
+
 
 # PnP / 4p SSOT — żetony puli i cut sheet (playtesting/setups.md, game_config.yaml)
 PNP_TOKEN_COUNTS: dict[str, int] = {
@@ -349,10 +369,10 @@ def _heresy_badge(heresy: int) -> str:
     else:
         label = str(heresy)
         cls = "badge badge-heresy badge-heresy-cool"
+    ico = _icon("heresy", "Herezja")
     return (
         f'<span class="{cls}" title="Herezja">'
-        f'<span class="badge-ico" aria-hidden="true">🔥</span>'
-        f" {_escape(label)}</span>"
+        f'{ico} {_escape(label)}</span>'
     )
 
 
@@ -476,14 +496,18 @@ def _note_effect_overflow(
         )
 
 
-def _icon(key: str, alt: str = "") -> str:
+def _icon(key: str, alt: str = "", extra_cls: str = "") -> str:
     label = alt or key
     if key == "gold":
         return (
-            f'<span class="coin" title="{_escape(label)}" aria-hidden="true"></span>'
+            f'<span class="coin {extra_cls}" title="{_escape(label)}" aria-hidden="true"></span>'
         )
+    svg = ICONS_SVG.get(key)
+    if svg:
+        cls = f"ico {extra_cls}".strip()
+        return f'<span class="{cls}" title="{_escape(label)}">{svg}</span>'
     short = ICON_SHORT.get(key, (label[:1] or "?").upper())
-    return f'<span class="ico-fallback" title="{_escape(label)}">{_escape(short)}</span>'
+    return f'<span class="ico-fallback {extra_cls}" title="{_escape(label)}">{_escape(short)}</span>'
 
 
 # ---------------------------------------------------------------------------
@@ -558,7 +582,20 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   min-height: var(--page-a4-h);
   overflow: visible;
 }
-.ico { width: 5mm; height: 5mm; object-fit: cover; vertical-align: middle; border-radius: 1mm; }
+.ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5mm;
+  height: 5.5mm;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.ico svg, .ico-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 .ico-fallback {
   display: inline-flex; align-items: center; justify-content: center;
   width: auto; height: auto; min-width: 5mm; min-height: 5mm;
@@ -1489,6 +1526,10 @@ body.bw .card-proto {
   box-shadow: inset 0 0 0 0.35mm var(--gold);
   flex-shrink: 0;
 }
+.token-disc .ico {
+  width: 14mm;
+  height: 14mm;
+}
 .token-disc img {
   width: 14mm; height: 14mm; object-fit: cover; border-radius: 1mm;
 }
@@ -1500,6 +1541,22 @@ body.bw .card-proto {
   width: 12mm; height: 12mm; flex: 0 0 12mm;
   border-width: 0.55mm;
   box-shadow: inset 0 0 0 0.55mm rgba(255, 236, 160, 0.55);
+}
+.pb-token .ico {
+  width: 12mm;
+  height: 12mm;
+  opacity: 0.45;
+}
+.pb-limit .pb-token .ico {
+  width: 10mm;
+  height: 10mm;
+  opacity: 0.45;
+}
+.pb-fac-icon {
+  width: 7.5mm;
+  height: 7.5mm;
+  vertical-align: middle;
+  margin-right: 1.5mm;
 }
 .verdict { font-size: 11pt; }
 .verdict ol { margin: 2mm 0 3mm 6mm; font-size: 11pt; line-height: 1.35; }
@@ -2365,11 +2422,12 @@ def render_player_boards(layer: str) -> str:
         if note:
             goal_html += f' <span class="pb-goal-note">({_escape(note)})</span>'
 
+        fac_icon = _icon(slug, name, extra_cls="pb-fac-icon")
         boards.append(f"""
 <div class="player-stack faction-{_escape(slug)}" data-player-mm="210x148" data-faction="{_escape(slug)}">
   <div class="player-ui">
     <header class="pb-head">
-      <h2>{_escape(name)}</h2>
+      <h2>{fac_icon}{_escape(name)}</h2>
       <p class="pb-goal">{goal_html}</p>
     </header>
     <section class="pb-heresy">

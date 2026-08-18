@@ -70,7 +70,20 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   min-height: var(--page-a4-h);
   overflow: visible;
 }
-.ico { width: 5mm; height: 5mm; object-fit: cover; vertical-align: middle; border-radius: 1mm; }
+.ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5mm;
+  height: 5.5mm;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.ico svg, .ico-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 .ico-fallback {
   display: inline-flex; align-items: center; justify-content: center;
   width: auto; height: auto; min-width: 5mm; min-height: 5mm;
@@ -1001,6 +1014,10 @@ body.bw .card-proto {
   box-shadow: inset 0 0 0 0.35mm var(--gold);
   flex-shrink: 0;
 }
+.token-disc .ico {
+  width: 14mm;
+  height: 14mm;
+}
 .token-disc img {
   width: 14mm; height: 14mm; object-fit: cover; border-radius: 1mm;
 }
@@ -1012,6 +1029,22 @@ body.bw .card-proto {
   width: 12mm; height: 12mm; flex: 0 0 12mm;
   border-width: 0.55mm;
   box-shadow: inset 0 0 0 0.55mm rgba(255, 236, 160, 0.55);
+}
+.pb-token .ico {
+  width: 12mm;
+  height: 12mm;
+  opacity: 0.45;
+}
+.pb-limit .pb-token .ico {
+  width: 10mm;
+  height: 10mm;
+  opacity: 0.45;
+}
+.pb-fac-icon {
+  width: 7.5mm;
+  height: 7.5mm;
+  vertical-align: middle;
+  margin-right: 1.5mm;
 }
 .verdict { font-size: 11pt; }
 .verdict ol { margin: 2mm 0 3mm 6mm; font-size: 11pt; line-height: 1.35; }
@@ -1335,7 +1368,7 @@ body.mode-trim .crop-mark { display: none; }
 <nav class="nav"><a href="index.html">← Indeks PnP</a></nav>
 
 <div class="page-a4 verdict" data-page-mm="210x297">
-<h1>Arkusz Werdyktu <span class="ico-fallback" title="stack">🪵</span></h1>
+<h1>Arkusz Werdyktu <span class="ico" title="stack"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></h1>
 <ol>
 <li>Cel ma Herezję ≥ progu (domyślnie <strong>7</strong>).</li>
 <li>Oskarżyciel ogłasza cel (1× przeciw temu graczowi / Erę).</li>
