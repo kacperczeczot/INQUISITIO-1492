@@ -1,11 +1,11 @@
-version: v0.99.24
+version: v0.99.27
 date: '2026-08-18'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 4
   agents_per_player: 3
   hand_limit: 5
-  max_eras: 13
+  max_eras: 11
   autodafe_cooldown: 3
   cards_per_era: 2
   era_income: 1
@@ -408,6 +408,7 @@ cards:
     - signature
     - decree
     - heresy
+    target_heresy: 1
   kb-11:
     name: Tajny Emisariusz
     type: akcja

@@ -22,7 +22,7 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 | `start_gold` | `int` | `1 .. 10` | `4` | Złoto na starcie gry dla każdego gracza |
 | `agents_per_player` | `int` | `1 .. 5` | `3` | Liczba figurków agentów w puli gracza |
 | `hand_limit` | `int` | `3 .. 10` | `5` | Maksymalna liczba kart na ręce na koniec tury |
-| `max_eras` | `int` | `3 .. 16` | `12` | Limit Er; po nim tie-break (najbliższy celowi, potem najniższa Herezja). |
+| `max_eras` | `int` | `3 .. 16` | `11` | Limit Er; po nim tie-break (najbliższy celowi, potem najniższa Herezja). |
 | `autodafe_cooldown` | `int` | `1 .. 4` | `3` | Co ile Er Inkwizytor ogłasza rutynowe Autodafé |
 | `cards_per_era` | `int` | `1 .. 4` | `2` | Rundy Intrygi (karta **lub** Akcja Gospodarcza) na Erę. |
 | `era_income` | `int` | `0 .. 3` | `1` | Złoto w Fazie III (Kronika). |

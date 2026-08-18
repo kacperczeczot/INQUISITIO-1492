@@ -35,7 +35,7 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 
 - **Limit kart na ręce:** `5 kart`
 - **Ekonomia:** `4 złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)
-- **Maksymalny limit Er:** `13 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
+- **Maksymalny limit Er:** `11 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
 - **Strefy Herezji:** Czysta `0–4`; Obserwowana od `5` do `T−1`; Krytyczna `≥T`
 - **Próg Obserwowanej:** `≥5` (Autodafé: Stos zamiast aresztu)
 - **Próg Oskarżenia na Dworze:** `Herezja ≥ 7`

@@ -41,7 +41,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
-| **Maksymalna Liczba Er** | **13** | **13** | **13** | Fus / tiebreak; partie 4P kończą się ~6 Er. |
+| **Maksymalna Liczba Er** | **11** | **11** | **11** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
 | **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
@@ -89,6 +89,24 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v0.99.27 (2026-08-18) — Kanon 4P: Kanoniczna Blokada Limitu Er (`max_eras` = 11) i Trwałe Zamrożenie w Narzędziach Audytu
+- **Problem:** Automatyczny optymalizator balansu sztucznie podbijał parametr `max_eras` (8 → ... → 14) jako drogę na skróty do redukcji deadlocków bez rozwiązywania realnych problemów ekonomii kart. W `v0.99.26` błędnie zaakceptowano podbicie limitu do 14 Er przy zerowym zysku 4P ($\Delta = 0.00$ pkt).
+- **Modyfikacja:**
+  1. Ustalono i zablokowano kanoniczny limit: **`max_eras: 11`** (idealne wyczerpanie pełnej talii 11 kart edyktów czasu / Kroniki Dziejów).
+  2. Wprowadzono trwałą blokadę tożsamości (`_FROZEN_ID_MARKERS` + `_FROZEN_PARAM_KEYS` w `audytor_4p.py` i `audytor_kanonu.py`), uniemożliwiając optymalizatorom jakąkolwiek ingerencję w limit er.
+  3. Załatano warunek akceptacji w `canon_accept.py`, blokując akceptowanie zmian z zerowym zyskiem $\Delta\text{score}$.
+- **Synchronizacja reguł:** Zsynchronizowano `game_config.yaml`, `docs/rules/ksiega.md`, `docs/rules/slownik.md` oraz testy jednostkowe.
+
+### 🟢 Patch v0.99.26 (2026-08-18) — Kanon 4P: Limit Er: offset +1 (nowy: 14) (Zysk 4P Δ 0.0 pkt) — [WYCOFANY W v0.99.27]
+- **Wynik 4P:** Kanon **`75.8`** → **`75.8 pkt`** | Global **`46.1`** | 3p **`22.8`** | 5p **`38.4`**
+- **Modyfikacja (`L1_MAX_ERAS_PLUS1`):** Limit Er: offset +1 (nowy: 14).
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.25 (2026-08-18) — Kanon 4P: Karta `kb-10` (Pieczęć Korony): `target_heresy` → `1` (Zysk 4P Δ -0.4 pkt)
+- **Wynik 4P:** Kanon **`76.2`** → **`75.8 pkt`** | Global **`45.5`** | 3p **`21.0`** | 5p **`38.4`**
+- **Modyfikacja (`L3_KB-10_TARGET_HERESY_PLUS1`):** Karta `kb-10` (Pieczęć Korony): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.20, Deadlocks 0.5%, Pas Biedy 1.5%.
 
 ### 🟢 Patch v0.99.24 (2026-08-18) — Kanon 4P: Karta `gc-04` (Informator): `target_heresy` → `1` (Zysk 4P Δ +0.7 pkt)
 - **Wynik 4P:** Kanon **`75.5`** → **`76.2 pkt`** | Global **`45.4`** | 3p **`21.2`** | 5p **`37.6`**

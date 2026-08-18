@@ -222,7 +222,7 @@ Warunki zwycięstwa sprawdzane są na początku Fazy III (kolejno od 1. gracza):
 ## 9. Koniec Gry i Rozstrzyganie Remisów
 
 * Jeśli w Fazie III którykolwiek gracz spełnia swój cel — gra kończy się **natychmiast**. Jeśli warunek spełnia kilku graczy jednocześnie, wygrywa ten, który siedzi bliżej 1. gracza (zgodnie z kolejnością rundy).
-* Jeśli po zakończeniu **Ery 12** nikt nie osiągnął pełnego celu:
+* Jeśli po zakończeniu **Ery 11** nikt nie osiągnął pełnego celu:
   1. Wygrywa gracz **najbliższy realizacji swojego warunku** (procentowo / logicznie).
   2. Przy remisie: wygrywa gracz z **najniższym poziomem Herezji**.
   3. Dalszy remis oznacza wspólne zwycięstwo.

@@ -181,7 +181,7 @@ Akcja w Fazie II (Lochy) dostępna dla gracza posiadającego Agenta w Lochach:
 ## Remis
 * **W głosowaniu Werdyktu:** remis oznacza Uniewinnienie.
 * **W interpretacji reguł:** rozstrzygaj na niekorzyść gracza najwięcej zyskującego ([Wyrok surowy](#wyrok-surowy)).
-* **Po 12 Erach:** wygrywa gracz najbliższy swojemu celowi, a przy dalszym remisie ten o najniższej Herezji.  
+* **Po 11 Erach:** wygrywa gracz najbliższy swojemu celowi, a przy dalszym remisie ten o najniższej Herezji.  
 **Patrz także:** [Werdykt](#werdykt), [Wyrok surowy](#wyrok-surowy), [Zwycięstwo](#zwycięstwo)
 
 ---
@@ -246,5 +246,5 @@ Gra kończy się natychmiast w Fazie III, jeśli którykolwiek gracz spełnia sw
 * **Korona & Borgiowie:** 2 Dekrety.
 * **Kabała z Toledo:** 2 Fragmenty (od Ery 6).
 * **Gildia Cieni:** 8 Upadków.  
-Po 12 Erach wygrywa gracz najbliższy celowi / z najniższą Herezją.  
+Po 11 Erach wygrywa gracz najbliższy celowi / z najniższą Herezją.  
 **Patrz także:** [Era](#era), [Herezja](#herezja)
