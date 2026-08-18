@@ -1598,31 +1598,19 @@ body.bw .card-proto {
   border-right: 0.25mm solid rgba(42, 28, 18, 0.6);
   border-bottom: 0.25mm solid rgba(42, 28, 18, 0.6);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 0.8mm;
+  padding: 1.5mm;
   background: var(--parch-card);
   text-align: center;
 }
 .token-cell:nth-child(9n) { border-right: none; }
 .token-cell:nth-child(n+64) { border-bottom: none; }
 .token-cell .ico, .token-cell svg {
-  width: 12mm;
-  height: 12mm;
+  width: 14.5mm;
+  height: 14.5mm;
   display: block;
-}
-.token-cell .token-lbl {
-  font-family: 'Cinzel', serif;
-  font-size: 4.5pt;
-  font-weight: 700;
-  color: var(--line);
-  margin-top: 0.6mm;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
 }
 
 /* Faction agent cards */
@@ -1631,13 +1619,6 @@ body.bw .card-proto {
 .token-cell.agent-kb { background: #946c23; }
 .token-cell.agent-kt { background: #1f2d5a; }
 .token-cell.agent-gc { background: #2a2030; }
-.token-cell.agent-so .token-lbl,
-.token-cell.agent-caa .token-lbl,
-.token-cell.agent-kb .token-lbl,
-.token-cell.agent-kt .token-lbl,
-.token-cell.agent-gc .token-lbl {
-  color: #f4ead7;
-}
 
 .token-cell.token-gold { background: #fffcf4; }
 .token-cell.token-spent { background: #fdf2f2; }
@@ -2761,7 +2742,6 @@ def render_tokens(layer: str) -> str:
             cells_html.append(
                 f'<div class="token-cell {css_cls}" title="{_escape(label)}">'
                 f'{face}'
-                f'<span class="token-lbl">{_escape(label)}</span>'
                 f'</div>'
             )
 
