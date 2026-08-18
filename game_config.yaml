@@ -1,4 +1,4 @@
-version: v0.99.13
+version: v0.99.18
 date: '2026-08-18'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -68,6 +68,7 @@ cards:
     inquisitor_send_limit: 1
     tags:
     - inquisitor
+    gold: 1
   so-05:
     name: Wezwanie do Trybunału
     type: reakcja
@@ -285,7 +286,7 @@ cards:
     type: akcja
     layer: A
     cost: 0
-    heresy: 1
+    heresy: 0
     gold: 3
     action: gain_gold
     tags:
@@ -301,6 +302,7 @@ cards:
     tags:
     - move
     heresy: 1
+    target_heresy: 1
   kb-02:
     name: Pobór Podatków
     type: akcja
@@ -557,7 +559,7 @@ cards:
     name: Przekupiony Strażnik
     type: akcja
     layer: A
-    cost: 1
+    cost: 2
     agents: 1
     action: move_agent
     tags:
@@ -632,7 +634,7 @@ cards:
     name: Zatrute Złoto
     type: akcja
     layer: B
-    cost: 2
+    cost: 1
     target_heresy: 1
     gold: 1
     action: gain_gold

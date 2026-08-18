@@ -4,7 +4,7 @@ name: Przekupiony Strażnik
 faction: gildia-cieni
 type: akcja
 layer: A
-cost: 1
+cost: 2
 heresy: 1
 tags:
 - move
@@ -13,5 +13,6 @@ heresy_text: Strażnik zna cenę milczenia lepiej niż modlitwy.
 lore: Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż.
 agents: 1
 ---
+
 
 

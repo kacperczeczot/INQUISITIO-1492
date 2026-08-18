@@ -430,7 +430,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
 | `lore` | Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień. |
@@ -872,7 +872,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
@@ -991,7 +991,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |

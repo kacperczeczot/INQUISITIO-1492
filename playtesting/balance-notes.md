@@ -90,6 +90,31 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v0.99.18 (2026-08-18) — Kanon 4P: Karta `gc-01` (Przekupiony Strażnik): `cost` → `2` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`70.7`** → **`71.2 pkt`** | Global **`42.3`** | 3p **`14.6`** | 5p **`40.7`**
+- **Modyfikacja (`L3_GC-01_COST_PLUS1`):** Karta `gc-01` (Przekupiony Strażnik): `cost` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.7%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.17 (2026-08-18) — Kanon 4P: Karta `caa-12` (Skrytka w Murach): `heresy` → `0` (Zysk 4P Δ +1.4 pkt)
+- **Wynik 4P:** Kanon **`69.3`** → **`70.7 pkt`** | Global **`43.1`** | 3p **`14.8`** | 5p **`42.8`**
+- **Modyfikacja (`L3_CAA-12_HERESY_MINUS1`):** Karta `caa-12` (Skrytka w Murach): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.7%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.16 (2026-08-18) — Kanon 4P: Karta `so-04` (Publiczne Ostrzeżenie): `gold` → `1` (Zysk 4P Δ 0.0 pkt)
+- **Wynik 4P:** Kanon **`69.3`** → **`69.3 pkt`** | Global **`40.7`** | 3p **`14.5`** | 5p **`37.3`**
+- **Modyfikacja (`L3_SO-04_GOLD_PLUS1`):** Karta `so-04` (Publiczne Ostrzeżenie): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.15, Deadlocks 0.6%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.15 (2026-08-18) — Kanon 4P: Karta `gc-08` (Zatrute Złoto): `cost` → `1` (Zysk 4P Δ +0.7 pkt)
+- **Wynik 4P:** Kanon **`68.6`** → **`69.3 pkt`** | Global **`40.8`** | 3p **`14.2`** | 5p **`36.8`**
+- **Modyfikacja (`L3_GC-08_COST_MINUS1`):** Karta `gc-08` (Zatrute Złoto): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.14, Deadlocks 0.6%, Pas Biedy 1.5%.
+
+### 🟢 Patch v0.99.14 (2026-08-18) — Kanon 4P: Karta `kb-01` (Rozkaz Dworu): `target_heresy` → `1` (Zysk 4P Δ +2.8 pkt)
+- **Wynik 4P:** Kanon **`65.8`** → **`68.6 pkt`** | Global **`38.1`** | 3p **`14.3`** | 5p **`36.7`**
+- **Modyfikacja (`L3_KB-01_TARGET_HERESY_PLUS1`):** Karta `kb-01` (Rozkaz Dworu): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.14, Deadlocks 0.6%, Pas Biedy 1.5%.
+
 ### 🟢 Patch v0.99.12 (2026-08-18) — Kanon 4P: Spłaszczenie progu oskarżenia (skalar 7) i usunięcie wyjątków 3p/5p
 - **Wynik 4P:** Kanon **`70.4 pkt`** | Kara witalności: **`0.040`**
 - **Modyfikacja:** Spłaszczenie `accusation_threshold` do pojedynczego parametru stołu `7` (usunięcie skalowania per-skład 3p:6 / 4p:7 / 5p:8 na rzecz czystego prototypu 4P).
