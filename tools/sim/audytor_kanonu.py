@@ -702,7 +702,7 @@ class Canon4PAutoBalancer:
                     "\n🧱 Fundament: 4P poza czerwoną linią 15–35%. "
                     "Makro nie zapisuje z dołu — L2 / ręczny SSOT, nie wspinaczka protezami."
                 )
-                break
+                pass
             if canon_should_stop(base_res, mode=self._accept_mode()):
                 print("\n🏁 Kanon 4P w paśmie i mechaniki żywe — nie dokręcam win share ani limitu Er.")
                 break

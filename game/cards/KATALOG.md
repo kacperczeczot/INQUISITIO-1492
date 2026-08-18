@@ -537,7 +537,7 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Królewski areszt ma precedens starszy niż bulla papieska. |
 | `effect` | Aresztuj Agenta rywala w Pałacu lub w lokacji ze swoim Agentem. |

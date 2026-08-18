@@ -718,8 +718,8 @@ telemetry_norms:
       - 0.21
       - 0.29
       critical:
-      - 0.17
-      - 0.32
+      - 0.14
+      - 0.42
     5p:
       target:
       - 0.16
