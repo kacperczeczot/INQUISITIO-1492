@@ -700,11 +700,10 @@ class Canon4PAutoBalancer:
             if self._accept_mode() == "band" and not table_has_share_foundation(base_res):
                 print(
                     "\n🧱 Fundament: 4P poza czerwoną linią 15–35%. "
-                    "Makro nie zapisuje z dołu — L2 / ręczny SSOT, nie wspinaczka protezami."
+                    "Wspinaczka aktywna — akceptuję kandydatów poprawiających rozkład frakcji."
                 )
-                pass
             if canon_should_stop(base_res, mode=self._accept_mode()):
-                print("\n🏁 Kanon 4P w paśmie i mechaniki żywe — nie dokręcam win share ani limitu Er.")
+                print(f"\n🏁 Kanon 4P: {base_res['score_4p']:.1f} pkt — optimum osiągnięte.")
                 break
             for sname, sc in sorted(base_res["setup_scores"].items()):
                 bal = base_res["setup_scores_balance"].get(sname, sc)
@@ -772,10 +771,9 @@ class Canon4PAutoBalancer:
 
             print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW KANONU 4P] tryb={self._accept_mode()}")
             for idx, r in enumerate(stage3_results, 1):
-                class ForcedDecision:
-                    accepted = True
-                    reason = "Wymuszone przez projektanta"
-                decision = ForcedDecision()
+                decision = accept_candidate(
+                    base_res, r, mode=self._accept_mode(), min_delta=self.args.min_delta
+                )
                 d_4 = r["score_4p"] - base_res["score_4p"]
                 sign = f"+{d_4:.2f}" if d_4 > 0 else f"{d_4:.2f}"
                 mark = "✔" if decision.accepted else "✖"
@@ -784,19 +782,18 @@ class Canon4PAutoBalancer:
                     f"(Δ {sign}) min {r['min_balance']:.1f} | {decision.reason}"
                 )
 
-            # Wybieramy najlepszego zaakceptowanego finalistę (max min_balance), nie first-fit
+            # Wybieramy najlepszego zaakceptowanego finalistę
             accepted_candidate = None
             best_ver_res = None
 
             for ver_res in stage3_results:
-                if ver_res["score_4p"] >= base_res["score_4p"]:
+                decision = accept_candidate(
+                    base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
+                )
+                if decision.accepted:
                     if best_ver_res is None or ver_res.get("min_balance", 0.0) > best_ver_res.get("min_balance", 0.0):
                         accepted_candidate = cand_dict[ver_res["id"]]
                         best_ver_res = ver_res
-
-            if accepted_candidate is None and stage3_results:
-                best_ver_res = stage3_results[0]
-                accepted_candidate = cand_dict[best_ver_res["id"]]
 
             if best_ver_res is not None:
                 print(f"\n   → Wybrano `{best_ver_res['id']}` (najlepszy min_balance {best_ver_res.get('min_balance', 0):.1f})")
