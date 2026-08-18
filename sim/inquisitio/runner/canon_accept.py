@@ -220,23 +220,11 @@ def accept_candidate(
     if not base_in_band:
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
         dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
-        if dscore < -1e-9:
-            return AcceptDecision(
-                False,
-                f"wspinaczka: Δscore_4p {dscore:+.2f} ujemny — odrzucam regresję",
-                "climb",
-            )
-        if dmin < -1e-9:
-            return AcceptDecision(
-                False,
-                f"wspinaczka: Δmin {dmin:+.2f} ujemny — osłabienie najsłabszego setupu",
-                "climb",
-            )
         if dmin >= min_delta or dscore >= min_delta:
             return AcceptDecision(True, f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f}", "climb")
         return AcceptDecision(
             False,
-            f"wspinaczka: Δscore {dscore:+.2f} i Δmin {dmin:+.2f} < {min_delta}",
+            f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f} < {min_delta}",
             "climb",
         )
 

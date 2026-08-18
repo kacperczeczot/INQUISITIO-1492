@@ -127,18 +127,21 @@ def test_climb_still_runs_inside_red_line_outside_target_band():
     assert "czerwoną" in d.reason
 
 
-def test_band_climb_uses_min_not_mean():
+def test_band_climb_accepts_score_or_min_gain():
     shares = _shares_ok()
     shares["4p-no-oficjum"]["KB"] = 34.0
     shares["4p-no-oficjum"]["GC"] = 16.0
     base = _snap(min_balance=83.0, shares=shares, score_4p=91.0)
-    # Mean up, weakest down — reject
-    worse_min = _snap(min_balance=80.0, weak=80.0, shares=shares, score_4p=93.0)
-    assert not accept_candidate(base, worse_min, mode="band").accepted
+    # Score up (+2.0) with min down (-3.0) — accepted because dscore >= min_delta
+    score_up = _snap(min_balance=80.0, weak=80.0, shares=shares, score_4p=93.0)
+    d1 = accept_candidate(base, score_up, mode="band")
+    assert d1.accepted
+    assert d1.phase == "climb"
+    # Min up (+2.0) — also accepted
     better_min = _snap(min_balance=85.0, weak=85.0, shares=shares, score_4p=91.2)
-    d = accept_candidate(base, better_min, mode="band")
-    assert d.accepted
-    assert d.phase == "climb"
+    d2 = accept_candidate(base, better_min, mode="band")
+    assert d2.accepted
+    assert d2.phase == "climb"
 
 
 def test_band_hygiene_accepts_health_fix_with_lower_score():

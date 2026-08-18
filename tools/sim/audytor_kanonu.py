@@ -906,7 +906,16 @@ class Canon4PAutoBalancer:
                 top_beam_results = stage3_results[: self.args.beam_width]
                 beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
                 current_phase += 1
-                print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
+                max_depth = getattr(self.args, "max_depth", 2)
+                if current_phase > max_depth:
+                    print(
+                        f"\n🔄 Osiągnięto limit głębokości {max_depth}D bez zysku w tej iteracji. "
+                        f"Resetuję do Fazy 1D i ponawiam próbę z nową bazą..."
+                    )
+                    current_phase = 1
+                    beam_seeds.clear()
+                else:
+                    print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
         self._emit_manual_ablation_review()
         print(f"\n═══════════════════════════════════════════════════════════════════════")
@@ -924,6 +933,7 @@ def main():
     parser.add_argument("--top-semifinalists", type=int, default=48, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 48)")
     parser.add_argument("--top-k", type=int, default=24, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 24)")
     parser.add_argument("--beam-width", type=int, default=4, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 4)")
+    parser.add_argument("--max-depth", type=int, default=2, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 2)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
