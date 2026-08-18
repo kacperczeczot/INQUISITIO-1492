@@ -1365,22 +1365,6 @@ body.bw .card-proto {
   min-height: 0;
   overflow: hidden;
 }
-.pb-slots.progress-grid-6 {
-  display: grid;
-  grid-template-columns: repeat(3, 14mm);
-  grid-template-rows: repeat(2, 14mm);
-  gap: 1.5mm;
-  justify-content: center;
-  align-content: center;
-}
-.pb-slots.progress-grid-8 {
-  display: grid;
-  grid-template-columns: repeat(4, 14mm);
-  grid-template-rows: repeat(2, 14mm);
-  gap: 1.5mm;
-  justify-content: center;
-  align-content: center;
-}
 .pb-tray {
   width: 100%;
   height: 100%;
@@ -1389,6 +1373,30 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pb-tray.progress-tray {
+  background: rgba(255, 252, 245, 0.7);
+}
+.pb-tray-goal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2mm;
+  user-select: none;
+}
+.pb-tray-goal .ico {
+  width: 7.5mm;
+  height: 7.5mm;
+}
+.pb-target-count {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 13pt;
+  font-weight: bold;
+  color: var(--blood);
+  letter-spacing: 0.02em;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -2527,19 +2535,10 @@ def render_player_boards(layer: str) -> str:
         )
         agents = "".join('<span class="agent-slot" title="Agent Ø20 mm"></span>' for _ in range(3))
         prog_face = _icon(progress_icon, progress_label)
-        if progress_n == 6:
-            progress_slots_cls = "pb-slots progress-grid-6"
-            token_extra_cls = " token-compact"
-        elif progress_n >= 8:
-            progress_slots_cls = "pb-slots progress-grid-8"
-            token_extra_cls = " token-compact"
-        else:
-            progress_slots_cls = "pb-slots"
-            token_extra_cls = ""
-
-        progress = "".join(
-            f'<span class="pb-token progress-slot{token_extra_cls}" title="{_escape(progress_label)}">{prog_face}</span>'
-            for _ in range(progress_n)
+        prog_tray = (
+            f'<div class="pb-tray progress-tray" title="{_escape(progress_label)}: Cel {progress_n}">'
+            f'<div class="pb-tray-goal">{prog_face}'
+            f'<span class="pb-target-count">Cel: {progress_n}</span></div></div>'
         )
         hook_face = _icon("hook", "Hak")
         hooks = "".join(
@@ -2566,7 +2565,7 @@ def render_player_boards(layer: str) -> str:
     </section>
     <section class="pb-box progress">
       <div class="pb-box-title">{_escape(progress_label)}</div>
-      <div class="{progress_slots_cls}">{progress}</div>
+      {prog_tray}
     </section>
   </div>
 """
@@ -2599,7 +2598,7 @@ def render_player_boards(layer: str) -> str:
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">{_escape(progress_label)}</div>
-        <div class="{progress_slots_cls}">{progress}</div>
+        {prog_tray}
       </section>
     </div>
   </div>

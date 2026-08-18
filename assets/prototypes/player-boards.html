@@ -840,22 +840,6 @@ body.bw .card-proto {
   min-height: 0;
   overflow: hidden;
 }
-.pb-slots.progress-grid-6 {
-  display: grid;
-  grid-template-columns: repeat(3, 14mm);
-  grid-template-rows: repeat(2, 14mm);
-  gap: 1.5mm;
-  justify-content: center;
-  align-content: center;
-}
-.pb-slots.progress-grid-8 {
-  display: grid;
-  grid-template-columns: repeat(4, 14mm);
-  grid-template-rows: repeat(2, 14mm);
-  gap: 1.5mm;
-  justify-content: center;
-  align-content: center;
-}
 .pb-tray {
   width: 100%;
   height: 100%;
@@ -864,6 +848,30 @@ body.bw .card-proto {
   border-radius: var(--token-r);
   background: rgba(255, 248, 232, 0.65);
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pb-tray.progress-tray {
+  background: rgba(255, 252, 245, 0.7);
+}
+.pb-tray-goal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2mm;
+  user-select: none;
+}
+.pb-tray-goal .ico {
+  width: 7.5mm;
+  height: 7.5mm;
+}
+.pb-target-count {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 13pt;
+  font-weight: bold;
+  color: var(--blood);
+  letter-spacing: 0.02em;
 }
 .agent-slot {
   width: var(--agent-d); height: var(--agent-d);
@@ -1562,7 +1570,7 @@ body.mode-trim .crop-line-h-right {
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">Stosy</div>
-        <div class="pb-slots progress-grid-6"><span class="pb-token progress-slot token-compact" title="Stosy"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Stosy"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Stosy"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Stosy"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Stosy"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Stosy"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span></span></div>
+        <div class="pb-tray progress-tray" title="Stosy: Cel 6"><div class="pb-tray-goal"><span class="ico" title="Stosy"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M3 19.5l18-4M3 15.5l18 4" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/><path d="M12 3c-2 4-5 6.5-5 10.5 0 3 2.2 5.5 5 5.5s5-2.5 5-5.5C17 9.5 14 7 12 3z" fill="#9e2b2b"/><path d="M12 8c-1.2 2.5-3 4-3 6.5 0 1.8 1.3 3.5 3 3.5s3-1.7 3-3.5c0-2.5-1.8-4-3-6.5z" fill="#e8b84b"/></svg></span><span class="pb-target-count">Cel: 6</span></div></div>
       </section>
     </div>
   </div>
@@ -1608,7 +1616,7 @@ body.mode-trim .crop-line-h-right {
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">Relikwie</div>
-        <div class="pb-slots"><span class="pb-token progress-slot" title="Relikwie"><span class="ico" title="Relikwie"><svg viewBox="0 0 24 24" class="ico-svg"><polygon points="12,2 19,8 15,21 9,21 5,8" fill="#a67c2d" stroke="#3a2618" stroke-width="1.2"/><polygon points="12,4 17,9 14,19 10,19 7,9" fill="#d4af37"/><polygon points="12,6 15,10 13,17 11,17 9,10" fill="#2d6a7a"/><circle cx="12" cy="11.5" r="1.5" fill="#f4ead7"/></svg></span></span><span class="pb-token progress-slot" title="Relikwie"><span class="ico" title="Relikwie"><svg viewBox="0 0 24 24" class="ico-svg"><polygon points="12,2 19,8 15,21 9,21 5,8" fill="#a67c2d" stroke="#3a2618" stroke-width="1.2"/><polygon points="12,4 17,9 14,19 10,19 7,9" fill="#d4af37"/><polygon points="12,6 15,10 13,17 11,17 9,10" fill="#2d6a7a"/><circle cx="12" cy="11.5" r="1.5" fill="#f4ead7"/></svg></span></span></div>
+        <div class="pb-tray progress-tray" title="Relikwie: Cel 2"><div class="pb-tray-goal"><span class="ico" title="Relikwie"><svg viewBox="0 0 24 24" class="ico-svg"><polygon points="12,2 19,8 15,21 9,21 5,8" fill="#a67c2d" stroke="#3a2618" stroke-width="1.2"/><polygon points="12,4 17,9 14,19 10,19 7,9" fill="#d4af37"/><polygon points="12,6 15,10 13,17 11,17 9,10" fill="#2d6a7a"/><circle cx="12" cy="11.5" r="1.5" fill="#f4ead7"/></svg></span><span class="pb-target-count">Cel: 2</span></div></div>
       </section>
     </div>
   </div>
@@ -1655,7 +1663,7 @@ body.mode-trim .crop-line-h-right {
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">Dekrety</div>
-        <div class="pb-slots"><span class="pb-token progress-slot" title="Dekrety"><span class="ico" title="Dekrety"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M4 3h11l5 5v13H4z" fill="#f0e6cf" stroke="#3a2618" stroke-width="1.2"/><circle cx="14" cy="14" r="5" fill="#8b1d24" stroke="#a67c2d" stroke-width="1"/><path d="M11.5 14.5l1.5-2 1.5 2" stroke="#fff" stroke-width="1" fill="none"/></svg></span></span><span class="pb-token progress-slot" title="Dekrety"><span class="ico" title="Dekrety"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M4 3h11l5 5v13H4z" fill="#f0e6cf" stroke="#3a2618" stroke-width="1.2"/><circle cx="14" cy="14" r="5" fill="#8b1d24" stroke="#a67c2d" stroke-width="1"/><path d="M11.5 14.5l1.5-2 1.5 2" stroke="#fff" stroke-width="1" fill="none"/></svg></span></span></div>
+        <div class="pb-tray progress-tray" title="Dekrety: Cel 2"><div class="pb-tray-goal"><span class="ico" title="Dekrety"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M4 3h11l5 5v13H4z" fill="#f0e6cf" stroke="#3a2618" stroke-width="1.2"/><circle cx="14" cy="14" r="5" fill="#8b1d24" stroke="#a67c2d" stroke-width="1"/><path d="M11.5 14.5l1.5-2 1.5 2" stroke="#fff" stroke-width="1" fill="none"/></svg></span><span class="pb-target-count">Cel: 2</span></div></div>
       </section>
     </div>
   </div>
@@ -1701,7 +1709,7 @@ body.mode-trim .crop-line-h-right {
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">Fragmenty</div>
-        <div class="pb-slots"><span class="pb-token progress-slot" title="Fragmenty"><span class="ico" title="Fragmenty"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#e8dcbe" stroke="#3a2618" stroke-width="1.4"/><path d="M15 3v5h5" fill="#c8ba96" stroke="#3a2618" stroke-width="1.2"/><path d="M8 11h8M8 14h8M8 17h5" stroke="#5a3d24" stroke-width="1.3" stroke-linecap="round"/><circle cx="15.5" cy="17" r="1.6" fill="#7a1f1f"/></svg></span></span><span class="pb-token progress-slot" title="Fragmenty"><span class="ico" title="Fragmenty"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#e8dcbe" stroke="#3a2618" stroke-width="1.4"/><path d="M15 3v5h5" fill="#c8ba96" stroke="#3a2618" stroke-width="1.2"/><path d="M8 11h8M8 14h8M8 17h5" stroke="#5a3d24" stroke-width="1.3" stroke-linecap="round"/><circle cx="15.5" cy="17" r="1.6" fill="#7a1f1f"/></svg></span></span></div>
+        <div class="pb-tray progress-tray" title="Fragmenty: Cel 2"><div class="pb-tray-goal"><span class="ico" title="Fragmenty"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M6 3h9l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="#e8dcbe" stroke="#3a2618" stroke-width="1.4"/><path d="M15 3v5h5" fill="#c8ba96" stroke="#3a2618" stroke-width="1.2"/><path d="M8 11h8M8 14h8M8 17h5" stroke="#5a3d24" stroke-width="1.3" stroke-linecap="round"/><circle cx="15.5" cy="17" r="1.6" fill="#7a1f1f"/></svg></span><span class="pb-target-count">Cel: 2</span></div></div>
       </section>
     </div>
   </div>
@@ -1748,7 +1756,7 @@ body.mode-trim .crop-line-h-right {
       </section>
       <section class="pb-box progress">
         <div class="pb-box-title">Upadki</div>
-        <div class="pb-slots progress-grid-8"><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span><span class="pb-token progress-slot token-compact" title="Upadki"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span></span></div>
+        <div class="pb-tray progress-tray" title="Upadki: Cel 8"><div class="pb-tray-goal"><span class="ico" title="Upadki"><svg viewBox="0 0 24 24" class="ico-svg"><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 5 3 6.5V18h8v-2.5c1.5-1.5 3-3.5 3-6.5a7 7 0 0 0-7-7z" fill="#2b262d" stroke="#a67c2d" stroke-width="1.2"/><circle cx="9" cy="9.5" r="1.5" fill="#e8dcbe"/><circle cx="15" cy="9.5" r="1.5" fill="#e8dcbe"/><path d="M9 15h6M10 18v2M12 18v2M14 18v2" stroke="#a67c2d" stroke-width="1"/></svg></span><span class="pb-target-count">Cel: 8</span></div></div>
       </section>
     </div>
   </div>

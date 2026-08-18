@@ -32,7 +32,7 @@ def load_config() -> dict:
 def _threshold_text(cfg: dict) -> str:
     t = cfg["system"]["accusation_threshold"]
     if isinstance(t, dict):
-        return f"**{t['3p']}** dla 3p, **{t['4p']}** dla 4p, **{t['5p']}** dla 5p"
+        return f"**{t.get('4p', 7)}**"
     return f"**{t}**"
 
 
@@ -224,7 +224,7 @@ def _balance_rule(cfg: dict) -> str:
     """Generate the balance rule text."""
     t = cfg["system"]["accusation_threshold"]
     t4 = t["4p"] if isinstance(t, dict) else t
-    return f"**Zasada Balansu:** bazowy próg oskarżenia wynosi **{t4}** (w 3p: **{t['3p']}**, w 5p: **{t['5p']}**)."
+    return f"**Zasada Balansu:** bazowy próg oskarżenia wynosi **{t4}**."
 
 
 def _system_summary(cfg: dict) -> str:
@@ -446,15 +446,12 @@ def sync_hierarchia(cfg: dict) -> list[str]:
         gold_hier = f"- **Ekonomia:** `{g4} złote` na start (w 5p: `{g5} złote`) · Dochód `+{income} złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+{ig} zł) w Fazie I (Intryga)"
     text = re.sub(r"- \*\*Ekonomia:\*\* .*", gold_hier, text)
 
-    t3, t4, t5 = t["3p"], t["4p"], t["5p"]
-    text = re.sub(r"- \*\*Maksymalny limit Er:\*\* `\d+ Er`", f"- **Maksymalny limit Er:** `{s['max_eras']} Er`", text)
-    if t3 == t4 == t5:
-        prog_hier = f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t4}`"
+    if isinstance(t, dict):
+        t4 = t.get("4p", 7)
     else:
-        prog_hier = (
-            f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t4}` "
-            f"(Kanon 4p; w 3p: `≥{t3}`, w 5p: `≥{t5}`)"
-        )
+        t4 = int(t)
+    text = re.sub(r"- \*\*Maksymalny limit Er:\*\* `\d+ Er`", f"- **Maksymalny limit Er:** `{s['max_eras']} Er`", text)
+    prog_hier = f"- **Próg Oskarżenia na Dworze:** `Herezja ≥ {t4}`"
     strefy_prog = (
         f"- **Strefy Herezji:** Czysta `0–{ot - 1}`; Obserwowana od `{ot}` do `T−1`; Krytyczna `≥T`\n"
         + f"- **Próg Obserwowanej:** `≥{ot}` (Autodafé: Stos zamiast aresztu)\n"
@@ -539,7 +536,12 @@ def sync_balance_notes(cfg: dict) -> list[str]:
     text = path.read_text(encoding="utf-8")
     s = cfg["system"]
     t = s["accusation_threshold"]
-    t3, t4, t5 = t["3p"], t["4p"], t["5p"]
+    if isinstance(t, dict):
+        t3, t4, t5 = t.get("3p", 6), t.get("4p", 7), t.get("5p", 8)
+        prog_why = f"Kanon 4p = **{t4}**. Obserwowana kończy się na T−1."
+    else:
+        t3 = t4 = t5 = int(t)
+        prog_why = f"Kanon 4p = **{t4}**. Obserwowana kończy się na T−1."
     ot = int(s.get("observed_threshold", 4))
     g = s["start_gold"]
     g4 = g["4p"] if isinstance(g, dict) else g
@@ -550,14 +552,6 @@ def sync_balance_notes(cfg: dict) -> list[str]:
     kt = cfg["victory"]["kabala_toledo"]
     kt_e = kt["era"]
     kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
-
-    if t3 == t4 == t5:
-        prog_why = "Kanon. Obserwowana kończy się na T−1."
-    else:
-        prog_why = (
-            f"Kanon 4p = **{t4}**. Wyjątki składu: 3p={t3}, 5p={t5}. "
-            f"Obserwowana kończy się na T−1."
-        )
     text = re.sub(
         r"\| \*\*Próg Obserwowanej\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \|.*",
         f"| **Próg Obserwowanej** | **{ot}** | **{ot}** | **{ot}** | Czysta to 0–{ot-1}. Od **{ot}** Autodafé pali na Stos (nie areszt). |",
@@ -714,10 +708,15 @@ def sync_readme(cfg: dict) -> list[str]:
             else f"**{kb_d4} Dekrety** (od Ery {kb_4p})"
         )
 
-    caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
+    caa_era = v.get("cienie_al_andalus", {}).get("path_era", 1)
     if isinstance(caa_era, dict):
-        caa_era = caa_era.get("4p", 5)
+        caa_era = caa_era.get("4p", 1)
     caa_r = v.get("cienie_al_andalus", {}).get("relics", 2)
+    if caa_era and caa_era > 1:
+        caa_readme_text = f"**{caa_r} Relikwie** + ścieżka (od Ery {caa_era})"
+    else:
+        caa_readme_text = f"**{caa_r} Relikwie** + ścieżka"
+
     kt_hb = v.get("kabala_toledo", {}).get("heresy_band")
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
     kt_4p = kt_e.get("4p", 6) if isinstance(kt_e, dict) else kt_e
@@ -747,7 +746,7 @@ def sync_readme(cfg: dict) -> list[str]:
 | Frakcja | Cel (Kanon 4p) |
 | :--- | :--- |
 | **Święte Oficjum** | {so_readme_text} |
-| **Cienie Al-Andalus** | **{caa_r} Relikwie** + ścieżka (od Ery {caa_era}) |
+| **Cienie Al-Andalus** | {caa_readme_text} |
 | **Korona & Borgiowie** | {kb_readme_text} |
 | **Kabała z Toledo** | {kt_readme_text} |
 | **Gildia Cieni** | {gc_readme_text} |
