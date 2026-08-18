@@ -937,14 +937,14 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   content: "";
   position: absolute;
   inset: 0.6mm;
-  border: 0.25mm solid rgba(166, 124, 45, 0.5);
+  border: 0.25mm solid #b8961e;
   pointer-events: none;
   z-index: 2;
 }
 .card-proto .hdr {
   padding: 1.6mm 2mm 1.2mm 2mm;
   border-bottom: 0.35mm solid var(--line);
-  background: rgba(255,255,255,0.32);
+  background: #ede0d0;
   flex-shrink: 0;
   position: relative;
   z-index: 3;
@@ -975,7 +975,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   user-select: none;
-  opacity: 0.75;
+  color: #8a7e6e;
   line-height: 1;
 }
 .card-proto .name.name-long {
@@ -991,14 +991,14 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   padding: 0.4mm 1.1mm;
   white-space: nowrap;
   line-height: 1.2;
-  border: 0.25mm solid rgba(42,28,18,0.45);
+  border: 0.25mm solid #5a4830;
   color: #3a3028;
-  background: rgba(255,255,255,0.55);
+  background: #f0e8d8;
 }
 .card-proto .type-badge.type-akcja {
   color: #2a1c12;
-  background: rgba(255,255,255,0.7);
-  border-color: rgba(42,28,18,0.55);
+  background: #f0e8d8;
+  border-color: #5a4830;
 }
 .card-proto .type-badge.type-reakcja {
   color: #1a3348;
@@ -1031,8 +1031,8 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   line-height: 1;
   padding: 0.5mm 1.3mm;
   border-radius: 1.2mm;
-  border: 0.25mm solid rgba(42,28,18,0.4);
-  background: rgba(255,255,255,0.85);
+  border: 0.25mm solid #5a4830;
+  background: #f5ede0;
   white-space: nowrap;
   height: 4.8mm;
   box-sizing: border-box;
@@ -1070,6 +1070,7 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   line-height: 1.25;
   color: #6e1818;
   font-weight: 600;
+}
 .card-main {
   flex: 1 1 auto;
   min-height: 0;
@@ -1139,18 +1140,30 @@ h2 { font-size: 13pt; margin: 3mm 0 2mm; border-bottom: 0.4mm solid var(--line);
   opacity: 0.72;
 }
 /* Card tints + faction edge */
-.card-proto.faction-swiete-oficjum { background: #f1ddd6; --faction-edge: #7a1f1f; }
+/* ── Frakcja: Święte Oficjum — głęboka inkwizytorska czerwień ── */
+.card-proto.faction-swiete-oficjum { background: #f5dcd5; --faction-edge: #7a1f1f; --faction-bg: #f5dcd5; }
 .card-proto.faction-swiete-oficjum .name { color: #7a1f1f; }
-.card-proto.faction-cienie-al-andalus { background: #dde8e2; --faction-edge: #1e4d3a; }
+.card-proto.faction-swiete-oficjum .hdr { background: #e9c5bc; }
+/* ── Frakcja: Cienie Al-Andalus — ciemna malachitowa zieleń ── */
+.card-proto.faction-cienie-al-andalus { background: #cfe0d8; --faction-edge: #1e4d3a; --faction-bg: #cfe0d8; }
 .card-proto.faction-cienie-al-andalus .name { color: #1e4d3a; }
-.card-proto.faction-korona-borgiowie { background: #f2e6c8; --faction-edge: #8a6420; }
-.card-proto.faction-korona-borgiowie .name { color: #8a6420; }
-.card-proto.faction-kabala-toledo { background: #e6dde8; --faction-edge: #4a2d5c; }
+.card-proto.faction-cienie-al-andalus .hdr { background: #b8d2c8; }
+/* ── Frakcja: Korona & Borgiowie — kastylijski złoty ── */
+.card-proto.faction-korona-borgiowie { background: #f0e0b0; --faction-edge: #8a6420; --faction-bg: #f0e0b0; }
+.card-proto.faction-korona-borgiowie .name { color: #7a5518; }
+.card-proto.faction-korona-borgiowie .hdr { background: #e0ca8a; }
+/* ── Frakcja: Kabała z Toledo — purpurowy ── */
+.card-proto.faction-kabala-toledo { background: #e0d0e8; --faction-edge: #4a2d5c; --faction-bg: #e0d0e8; }
 .card-proto.faction-kabala-toledo .name { color: #4a2d5c; }
-.card-proto.faction-gildia-cieni { background: #e5dfd2; --faction-edge: #4a3c28; }
-.card-proto.faction-gildia-cieni .name { color: #4a3c28; }
-.card-proto.faction-time { background: #e8e2d4; --faction-edge: #3a2e1c; }
+.card-proto.faction-kabala-toledo .hdr { background: #ccb8dc; }
+/* ── Frakcja: Gildia Cieni — dymna brązowoszarość ── */
+.card-proto.faction-gildia-cieni { background: #d8cebb; --faction-edge: #4a3c28; --faction-bg: #d8cebb; }
+.card-proto.faction-gildia-cieni .name { color: #3c2e18; }
+.card-proto.faction-gildia-cieni .hdr { background: #c4b89e; }
+/* ── Kronika Dziejów — pergaminowy brąz ── */
+.card-proto.faction-time { background: #e4d8b8; --faction-edge: #3a2e1c; --faction-bg: #e4d8b8; }
 .card-proto.faction-time .name { color: #3a2e1c; }
+.card-proto.faction-time .hdr { background: #d0c090; }
 body.bw .card-proto {
   filter: grayscale(1);
   border-width: 0.7mm;
@@ -1730,7 +1743,16 @@ body.bw .card-proto {
   background: transparent;
 }
 
-/* Card cell: single cut inside, outer bleed on perimeter */
+/* Pusta komórka siatki — neutralna, bez ramki, bez kolorów */
+.print-cell-empty {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: none;
+  display: block;
+}
+
 .card-proto.card-print-cell {
   position: relative;
   width: 100% !important;
@@ -1742,7 +1764,7 @@ body.bw .card-proto {
   box-sizing: border-box;
   overflow: hidden;
   border: none;
-  background: var(--faction-edge, var(--blood)) !important;
+  background: var(--faction-bg, #f4ead7) !important;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -1797,7 +1819,7 @@ body.bw .card-proto {
   width: 100%;
   box-sizing: border-box;
   padding: 1.6mm 2.2mm 1.2mm 2.2mm;
-  background: rgba(255, 255, 255, 0.35);
+  background: #ede0d0;
   border-bottom: 0.35mm solid var(--line);
 }
 
@@ -2448,7 +2470,7 @@ def render_all_cards_print(layer: str) -> str:
                 c, fac, _label = chunk[idx]
                 front_cells.append(render_card_print_cell(c, fac, row=row, col=col, version=version))
             else:
-                front_cells.append(f'<div class="card-proto card-print-cell empty-cell pos-r{row}-c{col}" style="background:transparent;border:none;"></div>')
+                front_cells.append(f'<div class="print-cell-empty pos-r{row}-c{col}"></div>')
 
         card_range = f"{start + 1}–{min(start + per_page, total_cards)}"
         front_sheet_html = f"""
@@ -2482,7 +2504,7 @@ def render_all_cards_print(layer: str) -> str:
                 if f_slug:
                     mirrored_back_cells.append(render_card_back_cell(f_slug, row=row, col=col))
                 else:
-                    mirrored_back_cells.append(f'<div class="card-proto card-print-cell empty-cell pos-r{row}-c{col}" style="background:transparent;border:none;"></div>')
+                    mirrored_back_cells.append(f'<div class="print-cell-empty pos-r{row}-c{col}"></div>')
 
         back_sheet_html = f"""
 <div class="page-a4 cards-master-sheet card-back-sheet" data-page-mm="210x297">
