@@ -41,7 +41,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
-| **Maksymalna Liczba Er** | **12** | **12** | **12** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
+| **Maksymalna Liczba Er** | **14** | **14** | **14** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
 | **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
@@ -89,6 +89,36 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.9 (2026-08-19) — Usunięcie martwej mechaniki CAA `path_era` ze SSOT i silnika
+- **Wynik 4P:** Kanon **`76.5 pkt`** (bez zmian — parametr był martwy / przezroczysty)
+- **Modyfikacja:** Usunięcie parametru `victory.cienie_al_andalus.path_era` (wartość 1) oraz powiązanego warunku w silniku gry i audytorach.
+- **Efekt:** Czysty model reguł — brak martwych klauzul i zbędnych testów o zerowej delcie w raportach Poziomu 2.
+
+### 🟢 Patch v1.0-alpha.8 (2026-08-19) — Kanon 4P: Karta `caa-10` (Echo Alhambry): `cost` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`76.4`** → **`76.5 pkt`** | Global **`46.9`** | 3p **`22.3`** | 5p **`38.7`**
+- **Modyfikacja (`L3_CAA-10_COST_PLUS1`):** Karta `caa-10` (Echo Alhambry): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.3%, Pas Biedy 1.6%.
+
+### 🟢 Patch v1.0-alpha.7 (2026-08-19) — Kanon 4P: Limit Er: offset +1 (nowy: 14) (Zysk 4P Δ 0.0 pkt)
+- **Wynik 4P:** Kanon **`76.4`** → **`76.4 pkt`** | Global **`46.9`** | 3p **`22.3`** | 5p **`38.7`**
+- **Modyfikacja (`L1_MAX_ERAS_PLUS1`):** Limit Er: offset +1 (nowy: 14).
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.3%, Pas Biedy 1.6%.
+
+### 🟢 Patch v1.0-alpha.6 (2026-08-19) — Kanon 4P: Karta `kt-11` (Medytacja Sefirot): `cost` → `2` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`76.2`** → **`76.4 pkt`** | Global **`46.3`** | 3p **`20.6`** | 5p **`38.7`**
+- **Modyfikacja (`L3_KT-11_COST_PLUS1`):** Karta `kt-11` (Medytacja Sefirot): `cost` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.5%, Pas Biedy 1.6%.
+
+### 🟢 Patch v1.0-alpha.5 (2026-08-18) — Kanon 4P: Karta `gc-07` (Skrytobójstwo): `cost` → `1` (Zysk 4P Δ +0.3 pkt)
+- **Wynik 4P:** Kanon **`75.9`** → **`76.2 pkt`** | Global **`46.6`** | 3p **`20.8`** | 5p **`39.6`**
+- **Modyfikacja (`L3_GC-07_COST_MINUS1`):** Karta `gc-07` (Skrytobójstwo): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.5%, Pas Biedy 1.6%.
+
+### 🟢 Patch v1.0-alpha.4 (2026-08-18) — Kanon 4P: Limit Er: offset +1 (nowy: 13) (Zysk 4P Δ +1.2 pkt)
+- **Wynik 4P:** Kanon **`74.7`** → **`75.9 pkt`** | Global **`46.4`** | 3p **`21.0`** | 5p **`40.5`**
+- **Modyfikacja (`L1_MAX_ERAS_PLUS1`):** Limit Er: offset +1 (nowy: 13).
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.5%, Pas Biedy 1.6%.
 
 ### 🟢 Patch v1.0-alpha.3 (2026-08-18) — Kanon 4P: Limit Er: offset +1 (nowy: 12) (Zysk 4P Δ +1.3 pkt)
 - **Wynik 4P:** Kanon **`75.2`** → **`76.5 pkt`** | Global **`45.5`** | 3p **`18.6`** | 5p **`40.5`**

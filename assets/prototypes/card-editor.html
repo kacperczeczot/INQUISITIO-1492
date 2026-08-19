@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.3</span>
+              <span id="prev-meta-ver">v1.0-alpha.9</span>
             </div>
           </div>
         </div>
@@ -1434,7 +1434,7 @@
     "name": "Echo Alhambry",
     "type": "signature",
     "layer": "C",
-    "cost": 0,
+    "cost": 1,
     "heresy": 0,
     "evacuate_relic": 2,
     "action": "evacuate_relic",
@@ -1806,7 +1806,7 @@
     "name": "Medytacja Sefirot",
     "type": "akcja",
     "layer": "B",
-    "cost": 1,
+    "cost": 2,
     "gold": 1,
     "heresy_decrease": 1,
     "action": "heresy_adjust",
@@ -1919,7 +1919,7 @@
     "name": "Skrytobójstwo",
     "type": "akcja",
     "layer": "B",
-    "cost": 2,
+    "cost": 1,
     "heresy": 0,
     "arrest": true,
     "action": "arrest",
@@ -2369,7 +2369,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.3';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.9';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

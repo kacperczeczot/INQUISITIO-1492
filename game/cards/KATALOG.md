@@ -395,7 +395,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
@@ -832,7 +832,7 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. |
@@ -974,7 +974,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Ciało w kanałach Gildii mówi więcej niż świadek na rynku. |
 | `effect` | Aresztuj Agenta rywala w Gildii lub na Rynku. |

@@ -1,11 +1,11 @@
-version: v1.0-alpha.9
-date: '2026-08-19'
+version: v1.0-alpha.4
+date: '2026-08-18'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 4
   agents_per_player: 3
   hand_limit: 5
-  max_eras: 14
+  max_eras: 13
   autodafe_cooldown: 3
   cards_per_era: 2
   era_income: 1
@@ -21,6 +21,7 @@ victory:
       5p: 3
   cienie_al_andalus:
     relics: 2
+    path_era: 1
   korona_borgiowie:
     decrees: 2
   kabala_toledo:
@@ -262,7 +263,7 @@ cards:
     name: Echo Alhambry
     type: signature
     layer: C
-    cost: 1
+    cost: 0
     heresy: 0
     evacuate_relic: 2
     action: evacuate_relic
@@ -544,7 +545,7 @@ cards:
     name: Medytacja Sefirot
     type: akcja
     layer: B
-    cost: 2
+    cost: 1
     gold: 1
     heresy_decrease: 1
     action: heresy_adjust
@@ -630,7 +631,7 @@ cards:
     name: Skrytobójstwo
     type: akcja
     layer: B
-    cost: 1
+    cost: 2
     heresy: 0
     arrest: true
     action: arrest

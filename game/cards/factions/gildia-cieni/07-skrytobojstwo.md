@@ -4,7 +4,7 @@ name: Skrytobójstwo
 faction: gildia-cieni
 type: akcja
 layer: B
-cost: 2
+cost: 1
 heresy: 0
 tags:
 - arrest
@@ -14,4 +14,5 @@ heresy_text: Ciało w kanałach Gildii mówi więcej niż świadek na rynku.
 lore: Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.
 arrest: true
 ---
+
 

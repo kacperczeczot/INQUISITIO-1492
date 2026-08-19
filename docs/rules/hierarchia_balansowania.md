@@ -35,7 +35,7 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 
 - **Limit kart na ręce:** `5 kart`
 - **Ekonomia:** `4 złote` na start · Dochód `+1 złoty` w Fazie III (Kronika) + opcja Akcji Gospodarczej (+1 zł) w Fazie I (Intryga)
-- **Maksymalny limit Er:** `12 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
+- **Maksymalny limit Er:** `14 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
 - **Strefy Herezji:** Czysta `0–4`; Obserwowana od `5` do `T−1`; Krytyczna `≥T`
 - **Próg Obserwowanej:** `≥5` (Autodafé: Stos zamiast aresztu)
 - **Próg Oskarżenia na Dworze:** `Herezja ≥ 7`
@@ -51,7 +51,7 @@ Progi wygranej. Różnice 3p/4p/5p poniżej to wyjątki pod zasadą spłaszczani
 | Frakcja | Rozgrywka 3-osobowa (3p) | Rozgrywka 4-osobowa (4p) | Rozgrywka 5-osobowa (5p) |
 | :--- | :--- | :--- | :--- |
 | **Święte Oficjum** | **6 Stosy** lub 3 Skazania | **6 Stosy** lub 3 Skazania | **6 Stosy** lub 3 Skazania |
-| **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka (Era 1+) | **2 Relikwie** + Ścieżka (Era 1+) | **2 Relikwie** + Ścieżka (Era 1+) |
+| **Cienie Al-Andalus** | **2 Relikwie** + Ścieżka | **2 Relikwie** + Ścieżka | **2 Relikwie** + Ścieżka |
 | **Korona & Borgiowie** | **2 Dekrety** | **2 Dekrety** | **2 Dekrety** |
 | **Kabała z Toledo** | **2 Fragmenty** (Era 6+) | **2 Fragmenty** (Era 6+) | **2 Fragmenty** (Era 6+) |
 | **Gildia Cieni** | **8 Upadki** | **8 Upadki** | **8 Upadki** |

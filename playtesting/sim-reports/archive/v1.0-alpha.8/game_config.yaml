@@ -1,4 +1,4 @@
-version: v1.0-alpha.9
+version: v1.0-alpha.8
 date: '2026-08-19'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -21,6 +21,7 @@ victory:
       5p: 3
   cienie_al_andalus:
     relics: 2
+    path_era: 1
   korona_borgiowie:
     decrees: 2
   kabala_toledo:
