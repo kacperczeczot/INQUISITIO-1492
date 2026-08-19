@@ -82,18 +82,17 @@ def test_caa_shadow_exit_and_sea_route_win_paths():
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 
 
-def test_path_era_offset_blocks_early_caa():
+def test_caa_relics_offset_controls_victory():
     st = new_game(setup="3p-cienie-korona-kabala", seed=1, layer="C")
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]
     caa.relics_evacuated = 2
     caa.path_via_double = True
-    st.era = 1
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
-    assert check_winner_details(st, {"caa_era_offset": 1}) is None or (
-        check_winner_details(st, {"caa_era_offset": 1})[0] != FactionId.CIENIE_AL_ANDALUS
+    assert check_winner_details(st, {"caa_relics_offset": 1}) is None or (
+        check_winner_details(st, {"caa_relics_offset": 1})[0] != FactionId.CIENIE_AL_ANDALUS
     )
-    st.era = 2
-    assert check_winner_details(st, {"caa_era_offset": 1}) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
+    caa.relics_evacuated = 3
+    assert check_winner_details(st, {"caa_relics_offset": 1}) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 
 
 def test_heresy_zone_observed_min_moves():

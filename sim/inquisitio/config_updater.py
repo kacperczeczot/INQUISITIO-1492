@@ -129,10 +129,6 @@ def apply_mutation_to_config(
         off = rule_params["caa_relics_offset"]
         vic_cfg["cienie_al_andalus"]["relics"] = _apply_offset_to_item(vic_cfg["cienie_al_andalus"]["relics"], off, min_val=1)
         descriptions.append(f"Cienie Al-Andalus: Relikwie offset {off:+d}")
-    if "caa_era_offset" in rule_params:
-        off = rule_params["caa_era_offset"]
-        vic_cfg["cienie_al_andalus"]["path_era"] = _apply_offset_to_item(vic_cfg["cienie_al_andalus"]["path_era"], off, min_val=1)
-        descriptions.append(f"Cienie Al-Andalus: Minimalna Era offset {off:+d}")
     if "kb_era_offset" in rule_params:
         kb = vic_cfg["korona_borgiowie"]
         if "era" in kb:
@@ -198,9 +194,6 @@ def apply_mutation_to_config(
     if "inquisitor_speed" in rule_params:
         var_cfg["inquisitor_speed"] = rule_params["inquisitor_speed"]
         descriptions.append(f"Wariant: Prędkość Ruchu Inkwizytora = {var_cfg['inquisitor_speed']}")
-    if "verdict_secret" in rule_params:
-        var_cfg["verdict_secret"] = bool(rule_params["verdict_secret"])
-        descriptions.append(f"Wariant: Werdykt Tajny = {var_cfg['verdict_secret']}")
     if "no_time_deck" in rule_params:
         var_cfg["no_time_deck"] = bool(rule_params["no_time_deck"])
         descriptions.append(f"Wariant: Kronika Dziejów wyłączona = {var_cfg['no_time_deck']}")

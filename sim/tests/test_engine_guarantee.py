@@ -60,14 +60,6 @@ def test_sea_route_scheduled_without_time_deck():
     assert st.sea_route_open
 
 
-def test_verdict_secret_reads_sys_override():
-    st = new_game(setup="4p-core", seed=13, layer="C", sys_overrides={"verdict_secret": True})
-    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
-    caa.heresy = st.accusation_threshold
-    run_verdict(st, FactionId.SWIETE_OFICJUM, FactionId.CIENIE_AL_ANDALUS, random.Random(1))
-    assert any("Verdict" in msg for msg in st.log)
-
-
 def test_caa10_fiasco_when_inquisitor_present():
     st = new_game(setup="4p-core", seed=19, layer="C")
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]

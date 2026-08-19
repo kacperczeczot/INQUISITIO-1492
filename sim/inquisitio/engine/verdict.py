@@ -5,7 +5,6 @@ import random
 from typing import Any
 
 from inquisitio.config import CONFIG
-from inquisitio.engine.variants import variant_bool
 from inquisitio.engine.heresy import add_heresy, is_critical
 from inquisitio.engine.state import FactionId, GameState
 
@@ -69,15 +68,12 @@ def run_verdict(
     votes_spare = 0
     so_near_win = oficjum_snowball_threat(state)
     sys = state.sys_overrides or {}
-    secret_verdict = variant_bool(state, "verdict_secret", False)
     for fid in state.turn_order:
         if fid == accused:
             continue
         accused_h = state.players[accused].heresy
         # Table politics: cut Oficjum snowball; pile on Oficjum when they lead
-        if secret_verdict:
-            prefer_burn = accused_h >= 7 or rng.random() < 0.40
-        elif accused == FactionId.SWIETE_OFICJUM and so_near_win:
+        if accused == FactionId.SWIETE_OFICJUM and so_near_win:
             prefer_burn = accused_h >= 7 or rng.random() < 0.65
         elif so_near_win and accused != FactionId.SWIETE_OFICJUM:
             prefer_burn = accused_h >= 9 or rng.random() < 0.22

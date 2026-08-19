@@ -109,8 +109,6 @@ def _victory_table(cfg: dict) -> str:
     so_condemns = so_c["4p"] if isinstance(so_c, dict) else so_c
 
     caa_r = v["cienie_al_andalus"]["relics"]
-    caa_p = v["cienie_al_andalus"]["path_era"]
-    caa_era = caa_p["4p"] if isinstance(caa_p, dict) else caa_p
 
     kb_d = v["korona_borgiowie"]["decrees"]
     kb_dec = kb_d["4p"] if isinstance(kb_d, dict) else kb_d
@@ -412,8 +410,6 @@ def sync_teach_sheet(cfg: dict) -> list[str]:
         kt_core = f"**{kt_frag} Fragmenty**"
     kt_teach_text = f"{kt_core} (od Ery {kt_4p}; w 3p: od Ery {kt_3p})" if kt_4p != kt_3p else f"{kt_core} (od Ery {kt_4p})"
 
-    caa_era = v.get("cienie_al_andalus", {}).get("path_era", 5)
-
     gc_f = v.get("gildia_cieni", {}).get("falls", {"default": 4, "no_oficjum": 4})
     gc_def = gc_f.get("default", 4) if isinstance(gc_f, dict) else gc_f
     gc_noso = gc_f.get("no_oficjum", gc_def) if isinstance(gc_f, dict) else gc_f
@@ -501,13 +497,11 @@ def sync_hierarchia(cfg: dict) -> list[str]:
     so_c = v["swiete_oficjum"]["condemns"]
     so_co = so_c["4p"] if isinstance(so_c, dict) else so_c
     caa_r = v["cienie_al_andalus"]["relics"]
-    caa_p = v["cienie_al_andalus"]["path_era"]
-    caa_era = caa_p["4p"] if isinstance(caa_p, dict) else caa_p
     kb_d = v["korona_borgiowie"]["decrees"]
     kb_dec = kb_d["4p"] if isinstance(kb_d, dict) else kb_d
     gc_n, _gc_extra = _gc_falls_pair(cfg)
     so_cell = f"**{so_st} Stosy** lub {so_co} Skazania"
-    caa_cell = f"**{caa_r} Relikwie** + Ścieżka (Era {caa_era}+)"
+    caa_cell = f"**{caa_r} Relikwie** + Ścieżka"
     kb_cell = f"**{kb_dec} Dekrety**"
     gc_cell = f"**{gc_n} Upadki**"
     text = re.sub(
@@ -736,14 +730,8 @@ def sync_readme(cfg: dict) -> list[str]:
             else f"**{kb_d4} Dekrety** (od Ery {kb_4p})"
         )
 
-    caa_era = v.get("cienie_al_andalus", {}).get("path_era", 1)
-    if isinstance(caa_era, dict):
-        caa_era = caa_era.get("4p", 1)
     caa_r = v.get("cienie_al_andalus", {}).get("relics", 2)
-    if caa_era and caa_era > 1:
-        caa_readme_text = f"**{caa_r} Relikwie** + ścieżka (od Ery {caa_era})"
-    else:
-        caa_readme_text = f"**{caa_r} Relikwie** + ścieżka"
+    caa_readme_text = f"**{caa_r} Relikwie** + ścieżka"
 
     kt_hb = v.get("kabala_toledo", {}).get("heresy_band")
     kt_e = v.get("kabala_toledo", {}).get("era", 6)
@@ -829,7 +817,7 @@ def main():
 
     v = cfg["victory"]
     print(f"   ⚔️ Oficjum: Stosy {v['swiete_oficjum']['stacks']} | Skazania {v['swiete_oficjum']['condemns']}")
-    print(f"   ⚔️ Cienie: {v['cienie_al_andalus']['relics']} Relikwii | Ery {v['cienie_al_andalus']['path_era']}")
+    print(f"   ⚔️ Cienie: {v['cienie_al_andalus']['relics']} Relikwii")
     kb = v["korona_borgiowie"]
     kb_era = kb.get("era")
     kb_era_txt = f" | Ery {kb_era}" if kb_era is not None else ""

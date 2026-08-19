@@ -46,7 +46,6 @@ Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gol
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
 | :--- | :--- | :--- | :--- |
 | `relics` | `int` | `1 .. 3` | `2` | Liczba Relikwii wymagana do ewakuacji |
-| `path_era` | `int` | `1 .. 12` | `1` | Minimalna Era na ukończenie ewakuacji (szlak / Marionetka / cichy exit) |
 
 ### 3. Korona Borgiowie (`korona_borgiowie`)
 | Klucz w YAML | Typ | Dopuszczalne wartości | Opis |
