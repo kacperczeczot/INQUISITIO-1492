@@ -121,16 +121,19 @@ def canon_should_stop(base: dict, *, mode: str) -> bool:
     return False
 
 
+def _score(res: dict) -> float:
+    """4P canon score: pure win-share balance. Vitality is a separate veto."""
+    return float(res.get("score_4p_balance") or res.get("score_4p") or 0.0)
+
+
 def rank_key(res: dict, *, mode: str = "band", base_in_band: bool = False) -> tuple:
     """Sort key (lower is better) for the 4P funnel.
 
-    Ranks by score_4p descending (highest setup score with vitality),
+    Ranks by pure win-share balance descending,
     then min_balance descending, then vitality penalty ascending.
+    Vitality is a veto gate, not part of the ranking number.
     """
-    raw_score = res.get("score_4p")
-    if raw_score is None:
-        raw_score = res.get("score_4p_balance", 0.0)
-    score_4p = float(raw_score or 0.0)
+    score_4p = _score(res)
     min_b = float(res.get("min_balance") or score_4p)
     vit = float(res.get("vitality_penalty") or 0.0)
     return (-score_4p, -min_b, vit)
@@ -149,7 +152,7 @@ def accept_candidate(
         safe, msg = telemetry_is_safe(cand)
         if not safe:
             return AcceptDecision(False, msg, "legacy")
-        d = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+        d = _score(cand) - _score(base)
         if d >= min_delta:
             return AcceptDecision(True, f"legacy Δ {d:+.2f} ≥ {min_delta}", "legacy")
         return AcceptDecision(False, f"legacy Δ {d:+.2f} < {min_delta}", "legacy")
@@ -172,7 +175,7 @@ def accept_candidate(
         if table_has_share_foundation(cand):
             return AcceptDecision(True, "fundament: kandydat wciąga frakcje w 15–35%", "foundation")
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
-        dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+        dscore = _score(cand) - _score(base)
         if dscore < -1e-9 and dmin < -1e-9:
             return AcceptDecision(
                 False,
@@ -206,7 +209,7 @@ def accept_candidate(
         )
 
 
-    dscore = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+    dscore = _score(cand) - _score(base)
     dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
 
     base_in_band = setup_shares_in_range(base_shares, *TARGET_BAND_PCT)

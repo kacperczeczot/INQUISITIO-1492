@@ -61,8 +61,8 @@ def _snap(
 
 def test_legacy_accepts_mean_gain_rejects_small_loss():
     base = _snap(score_4p=90.0)
-    gain = _snap(score_4p=90.2)
-    loss = _snap(score_4p=89.9)
+    gain = _snap(score_4p=90.2, core=97.0, weak=84.0)  # balance ≈ 91.0 vs base 90.4
+    loss = _snap(score_4p=89.9, core=95.0, weak=82.0)  # balance ≈ 89.8 vs base 90.4
     assert accept_candidate(base, gain, mode="legacy").accepted
     assert not accept_candidate(base, loss, mode="legacy").accepted
 
@@ -132,13 +132,13 @@ def test_band_climb_accepts_score_or_min_gain():
     shares["4p-no-oficjum"]["KB"] = 34.0
     shares["4p-no-oficjum"]["GC"] = 16.0
     base = _snap(min_balance=83.0, shares=shares, score_4p=91.0)
-    # Score up (+2.0) with min down (-3.0) — accepted because dscore >= min_delta
-    score_up = _snap(min_balance=80.0, weak=80.0, shares=shares, score_4p=93.0)
+    # Score up: core=98.0, weak=85.0 → balance ≈ 91.6 vs base 90.4 → Δ +1.2
+    score_up = _snap(min_balance=80.0, weak=85.0, core=98.0, shares=shares, score_4p=93.0)
     d1 = accept_candidate(base, score_up, mode="band")
     assert d1.accepted
     assert d1.phase == "climb"
     # Min up (+2.0) — also accepted
-    better_min = _snap(min_balance=85.0, weak=85.0, shares=shares, score_4p=91.2)
+    better_min = _snap(min_balance=85.0, weak=85.0, core=97.0, shares=shares, score_4p=91.2)
     d2 = accept_candidate(base, better_min, mode="band")
     assert d2.accepted
     assert d2.phase == "climb"
