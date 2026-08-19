@@ -1,6 +1,7 @@
 """Batch runner — multi-threaded parallel execution across all CPU cores."""
 from __future__ import annotations
 
+import gc
 import os
 import random
 import multiprocessing
@@ -165,34 +166,42 @@ def run_batch(
             totals["gold_end"] += res["gold_sum"]
             totals["heresy_end"] += res["heresy_sum"]
     else:
-        for i in range(games):
-            res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer, win_overrides))
-            wins[res["winner"]] += 1
-            win_paths[res["win_path"]] += 1
+        gc_was_enabled = gc.isenabled()
+        if gc_was_enabled:
+            gc.disable()
+        try:
+            for i in range(games):
+                res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer, win_overrides))
+                wins[res["winner"]] += 1
+                win_paths[res["win_path"]] += 1
 
-            eras_list.append(res["eras"])
-            autodafe_list.append(res["autodafe"])
-            accusations_list.append(res["accusations"])
-            n_pl = len(SETUP_PRESETS[setup_name])
-            gold_list.append(res["gold_sum"] / n_pl)
-            heresy_list.append(res["heresy_sum"] / n_pl)
+                eras_list.append(res["eras"])
+                autodafe_list.append(res["autodafe"])
+                accusations_list.append(res["accusations"])
+                n_pl = len(SETUP_PRESETS[setup_name])
+                gold_list.append(res["gold_sum"] / n_pl)
+                heresy_list.append(res["heresy_sum"] / n_pl)
 
-            if res["is_limit"]:
-                totals["limit_games"] += 1
+                if res["is_limit"]:
+                    totals["limit_games"] += 1
 
-            totals["autodafe"] += res["autodafe"]
-            totals["accusations"] += res["accusations"]
-            totals["convictions"] += res["convictions"]
-            totals["hooks"] += res["hooks"]
-            totals["hooks_forced"] += res["hooks_forced"]
-            totals["doubles"] += res["doubles"]
-            totals["deadlocks"] += res["deadlocks"]
-            totals["legal"] += res["legal"]
-            totals["eras"] += res["eras"]
-            totals["cards"] += res["cards"]
-            totals["forced_passes"] += res["forced_passes"]
-            totals["gold_end"] += res["gold_sum"]
-            totals["heresy_end"] += res["heresy_sum"]
+                totals["autodafe"] += res["autodafe"]
+                totals["accusations"] += res["accusations"]
+                totals["convictions"] += res["convictions"]
+                totals["hooks"] += res["hooks"]
+                totals["hooks_forced"] += res["hooks_forced"]
+                totals["doubles"] += res["doubles"]
+                totals["deadlocks"] += res["deadlocks"]
+                totals["legal"] += res["legal"]
+                totals["eras"] += res["eras"]
+                totals["cards"] += res["cards"]
+                totals["forced_passes"] += res["forced_passes"]
+                totals["gold_end"] += res["gold_sum"]
+                totals["heresy_end"] += res["heresy_sum"]
+        finally:
+            if gc_was_enabled:
+                gc.enable()
+
 
     n = max(games, 1)
     tot_players = sum(len(SETUP_PRESETS[setup_name]) for _ in range(games))
