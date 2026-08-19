@@ -156,16 +156,22 @@ def main():
     parser.add_argument("--faction", type=str, default="all", help="Filter faction: so, caa, kb, kt, gc, or all")
     parser.add_argument("--card", type=str, default=None, help="Filter specific card ID, e.g. so-04")
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
+    parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
     games_per_setup = args.games
-    setups = sorted(SETUP_PRESETS.keys())
+    if args.players:
+        setups = [s for s in sorted(SETUP_PRESETS.keys()) if len(SETUP_PRESETS[s]) == args.players]
+        setup_tag = f"{len(setups)} setupów ({args.players}P)"
+    else:
+        setups = sorted(SETUP_PRESETS.keys())
+        setup_tag = "16 setupów"
     tests = build_level3_tests(param_filter=args.param, faction_filter=args.faction, card_filter=args.card)
 
     print("========================================================")
     print("ROZPOCZYNAM PRECYZYJNY AUDYT POZIOMU 3: EKONOMIA I PARAMETRY KART")
-    print(f"Testów w serii: {len(tests)} | Próba: {games_per_setup} gier × 16 setupów | Ziarno: {args.seed}")
+    print(f"Testów w serii: {len(tests)} | Próba: {games_per_setup} gier × {setup_tag} | Ziarno: {args.seed}")
     print(f"Filtry: parametry={args.param} | frakcja={args.faction} | karta={args.card or 'wszystkie'}")
     print(f"Równoległe procesy: {args.workers}")
     print("========================================================\n", flush=True)
@@ -288,7 +294,8 @@ def main():
             "</details>",
         ])
 
-    out_path, archive_path = save_and_archive_report(report_lines, "audyt_level3_raport.md", args.output)
+    default_report_name = f"audyt_level3_raport_{args.players}p.md" if args.players else "audyt_level3_raport.md"
+    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output)
 
     print("========================================================")
     print(f"PRECYZYJNY AUDYT POZIOMU 3 ZAKOŃCZONY W {elapsed}s!")

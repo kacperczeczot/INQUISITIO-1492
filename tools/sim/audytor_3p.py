@@ -243,8 +243,6 @@ def apply_mutation_to_3p_config(raw_cfg: dict[str, Any], rule_params: dict[str, 
         _set_3p(vic.setdefault("swiete_oficjum", {}), "condemns", 2, rule_params["so_condemns_offset"], "SO Skazania")
     if "caa_relics_offset" in rule_params:
         _set_3p(vic.setdefault("cienie_al_andalus", {}), "relics", 2, rule_params["caa_relics_offset"], "CAA Relikwie")
-    if "caa_era_offset" in rule_params:
-        _set_3p(vic.setdefault("cienie_al_andalus", {}), "path_era", 5, rule_params["caa_era_offset"], "CAA Era")
     if "kb_decrees_offset" in rule_params:
         _set_3p(vic.setdefault("korona_borgiowie", {}), "decrees", 2, rule_params["kb_decrees_offset"], "KB Dekrety")
     if "kt_frags_offset" in rule_params:

@@ -57,15 +57,8 @@ def get_factions_data(cfg: dict | None = None) -> list[tuple[str, str, str, str,
     # 2. Cienie Al-Andalus
     caa_v = v.get("cienie_al_andalus", {})
     caa_r = caa_v.get("relics", 2)
-    caa_p = caa_v.get("path_era", 1)
-    caa_p4 = caa_p.get("4p", 1) if isinstance(caa_p, dict) else caa_p
-    caa_p3 = caa_p.get("3p", 1) if isinstance(caa_p, dict) else caa_p
-    if caa_p4 and caa_p4 > 1:
-        caa_goal = f"{caa_r} Relikwie + ścieżka (od Ery {caa_p4})"
-        caa_note = f"*w 3p: od Ery {caa_p3}" if caa_p3 != caa_p4 else ""
-    else:
-        caa_goal = f"{caa_r} Relikwie + ścieżka"
-        caa_note = ""
+    caa_goal = f"{caa_r} Relikwie + ścieżka"
+    caa_note = ""
 
     # 3. Korona & Borgiowie
     kb_v = v.get("korona_borgiowie", {})

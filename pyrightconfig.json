@@ -1,4 +1,16 @@
 {
+  "include": [
+    "sim",
+    "tools"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/__pyrefly_virtual__/**",
+    "sim/.venv"
+  ],
+  "ignore": [
+    "**/__pyrefly_virtual__/**"
+  ],
   "pythonVersion": "3.9",
   "venvPath": "sim",
   "venv": ".venv",

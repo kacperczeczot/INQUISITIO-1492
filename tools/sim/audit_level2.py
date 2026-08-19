@@ -61,8 +61,6 @@ def build_level2_tests():
         ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, -1)}", {"so_condemns_offset": -1}),
         ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: {caa.relics} → {caa.relics + 1}", {"caa_relics_offset": 1}),
         ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: {caa.relics} → {caa.relics - 1}", {"caa_relics_offset": -1}),
-        ("L2_CAA_ERA_PLUS1", f"Cienie Era ścieżki: {caa.path_era} → {caa.path_era + 1}", {"caa_era_offset": 1}),
-        ("L2_CAA_ERA_MINUS1", f"Cienie Era ścieżki: {caa.path_era} → {caa.path_era - 1}", {"caa_era_offset": -1}),
         ("L2_KB_DECREES_PLUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, 1)}", {"kb_decrees_offset": 1}),
         ("L2_KB_DECREES_MINUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
         ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
@@ -140,15 +138,21 @@ def main():
     parser.add_argument("--games", type=int, default=300, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
+    parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
     games_per_setup = args.games
-    setups = sorted(SETUP_PRESETS.keys())
+    if args.players:
+        setups = [s for s in sorted(SETUP_PRESETS.keys()) if len(SETUP_PRESETS[s]) == args.players]
+        setup_tag = f"{len(setups)} setupów ({args.players}P)"
+    else:
+        setups = sorted(SETUP_PRESETS.keys())
+        setup_tag = "16 setupów"
 
     print("========================================================")
     print("ROZPOCZYNAM PEŁNY AUDYT POZIOMU 2: WARUNKI ZWYCIĘSTWA I SKALOWANIE")
-    print(f"Próba: {games_per_setup} gier × 16 setupów | Ziarno: {args.seed}")
+    print(f"Próba: {games_per_setup} gier × {setup_tag} | Ziarno: {args.seed}")
     print(f"Równoległe procesy: {args.workers}")
     print("========================================================\n", flush=True)
 
@@ -281,7 +285,8 @@ def main():
         "- **⚖️ Oskarżenia na Dworze / Partię:** Optymalna częstotliwość procesów politycznych: **1.5 – 4.5** oskarżeń na grę.",
     ])
 
-    out_path, archive_path = save_and_archive_report(report_lines, "audyt_level2_raport.md", args.output)
+    default_report_name = f"audyt_level2_raport_{args.players}p.md" if args.players else "audyt_level2_raport.md"
+    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output)
 
     print("========================================================")
     print(f"AUDYT POZIOMU 2 ZAKOŃCZONY W {elapsed}s!")

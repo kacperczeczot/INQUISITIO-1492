@@ -334,13 +334,15 @@ def _falls_n(falls: Any) -> int:
 
 
 def _win_extremes(cur: int, min_val: int = 1) -> list[tuple[str, int, int]]:
-    """Offsets that are not ±1: floor (if |Δ|≥2), double (if |Δ|≥2), or 0→2."""
+    """Offsets that are not ±1: floor (if |Δ|≥2), double (if |Δ|≥2), or 0→2 / 1→3."""
     rows: list[tuple[str, int, int]] = []
     lo_off = min_val - cur
     if abs(lo_off) >= 2:
         rows.append(("LO", lo_off, min_val))
     if cur == 0:
         rows.append(("HI", 2, 2))
+    elif cur == 1:
+        rows.append(("HI", 2, 3))
     else:
         hi_val = cur * 2
         hi_off = hi_val - cur
@@ -430,7 +432,6 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
         )
 
     add("L4_NO_TIME_DECK", "Kronika Dziejów: całkowite wyłączenie", cat4, {"no_time_deck": True})
-    add("L4_VERDICT_SECRET", "Werdykt Sądu: tajny (wyłączenie jawnej koordynacji)", cat4, {"verdict_secret": True})
     inq = int(getattr(nv, "inquisitor_speed", 1))
     if inq != 0:
         add("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {inq} → 0 (wyłączenie)", cat4, {"inquisitor_speed": 0})

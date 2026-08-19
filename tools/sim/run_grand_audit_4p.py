@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Master script to run a Grand Monte Carlo Audit across all 7 simulation reports.
+"""Master script to run a Grand Monte Carlo Audit across all 7 simulation reports for 4P setups only.
 
-- Raport Główny (Telemetria i Win Shares 16 setupów): 10 000 gier / setup (160 000 partii)
-- Poziomy 1–4 oraz Testy Stresu: 3 000 gier / setup (48 000 partii per test)
+- Raport Główny (Telemetria i Win Shares 5 setupów 4P): 10 000 gier / setup (50 000 partii)
+- Poziomy 1–4 oraz Testy Stresu: 3 000 gier / setup (15 000 partii per test)
 - Badanie Użyteczności i Wpływu (Feature Impact 4P): 5 000 gier / setup (25 000 partii per wariant)
-- Łączna próba: ~12.5 miliona partii
-- Szacowany czas wykonania: ~35-40 minut na 10 rdzeniach
+- Łączna próba: ~5.3 miliona partii
+- Szacowany czas wykonania: ~15-18 minut na 10 rdzeniach
 """
 import argparse
 import os
@@ -19,25 +19,25 @@ SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
 PYTHON_BIN = sys.executable
 
 AUDIT_PIPELINE = [
-    ("1. Raport Główny (Telemetria i Win Shares 16 setupów)", TOOLS_SIM_DIR / "generate_report.py", ["--games", "10000", "--seed", "42"]),
-    ("2. Poziom 1 (Mechaniki Systemowe i Offsety)", TOOLS_SIM_DIR / "audit_level1.py", ["--games", "3000", "--seed", "42"]),
-    ("3. Poziom 2 (Warunki Zwycięstwa i Skalowanie)", TOOLS_SIM_DIR / "audit_level2.py", ["--games", "3000", "--seed", "42"]),
-    ("4. Poziom 3 (Parametry Wszystkich 50 Kart - Koszt/Herezja)", TOOLS_SIM_DIR / "audit_level3.py", ["--games", "3000", "--param", "cost,heresy", "--seed", "42"]),
-    ("5. Poziom 4 (Warianty Niszowe i Edykty)", TOOLS_SIM_DIR / "audit_level4.py", ["--games", "3000", "--seed", "42"]),
-    ("6. Testy Stresu Ekonomicznego (Poverty Stress)", TOOLS_SIM_DIR / "audit_stress_tests.py", ["--games", "3000", "--seed", "42"]),
+    ("1. Raport Główny (Telemetria i Win Shares 5 setupów 4P)", TOOLS_SIM_DIR / "generate_report.py", ["--games", "10000", "--players", "4", "--seed", "42"]),
+    ("2. Poziom 1 (Mechaniki Systemowe i Offsety 4P)", TOOLS_SIM_DIR / "audit_level1.py", ["--games", "3000", "--players", "4", "--seed", "42"]),
+    ("3. Poziom 2 (Warunki Zwycięstwa i Skalowanie 4P)", TOOLS_SIM_DIR / "audit_level2.py", ["--games", "3000", "--players", "4", "--seed", "42"]),
+    ("4. Poziom 3 (Parametry Wszystkich 50 Kart - Koszt/Herezja 4P)", TOOLS_SIM_DIR / "audit_level3.py", ["--games", "3000", "--players", "4", "--param", "cost,heresy", "--seed", "42"]),
+    ("5. Poziom 4 (Warianty Niszowe i Edykty 4P)", TOOLS_SIM_DIR / "audit_level4.py", ["--games", "3000", "--players", "4", "--seed", "42"]),
+    ("6. Testy Stresu Ekonomicznego (Poverty Stress 4P)", TOOLS_SIM_DIR / "audit_stress_tests.py", ["--games", "3000", "--players", "4", "--seed", "42"]),
     ("7. Badanie Użyteczności i Wpływu Elementów (Feature & Card Impact 4P)", TOOLS_SIM_DIR / "feature_impact_4p.py", ["--games", "5000", "--seed", "42"]),
 ]
 
 
 def main():
-    parser = argparse.ArgumentParser(description="INQUISITIO-1492 — Grand Monte Carlo Audit (10k Główny, 3k L1-L4, 5k Feature Impact)")
+    parser = argparse.ArgumentParser(description="INQUISITIO-1492 — Grand Monte Carlo Audit 4P (10k Główny, 3k L1-L4, 5k Feature Impact)")
     parser.add_argument("--seed", type=int, default=42, help="Globalne ziarno losowości (default: 42)")
     args = parser.parse_args()
 
     print("═══════════════════════════════════════════════════════════════")
-    print("      INQUISITIO-1492 — GRAND MONTE CARLO AUDIT (35 MIN)       ")
+    print("    INQUISITIO-1492 — GRAND MONTE CARLO AUDIT 4P (15 MIN)     ")
     print("      Raport Główny: 10 000 gier | Poziomy L1–L4: 3 000 gier    ")
-    print("      Feature & Card Impact: 5 000 gier | Łącznie: ~12.5M partii")
+    print("      Feature & Card Impact: 5 000 gier | Łącznie: ~5.3M partii ")
     print(f"      Ziarno losowości: {args.seed}                            ")
     print("═══════════════════════════════════════════════════════════════\n")
 
@@ -64,8 +64,8 @@ def main():
 
     elapsed = round(time.time() - t_start, 1)
     print("\n═══════════════════════════════════════════════════════════════")
-    print(f"✅ GRAND MONTE CARLO AUDIT ZAKOŃCZONY W {elapsed}s ({round(elapsed/60, 1)} min)!")
-    print("Wszystkie raporty zarchiwizowane w: playtesting/sim-reports/archive/{wersja}/")
+    print(f"✅ GRAND MONTE CARLO AUDIT 4P ZAKOŃCZONY W {elapsed}s ({round(elapsed/60, 1)} min)!")
+    print("Wszystkie raporty 4P zarchiwizowane w: playtesting/sim-reports/archive/{wersja}/")
     print("═══════════════════════════════════════════════════════════════")
 
 

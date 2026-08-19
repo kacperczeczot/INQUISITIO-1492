@@ -7,6 +7,8 @@ from pathlib import Path
 
 # Fix path to include sim directory
 SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
+sys.path.insert(0, str(SIM_DIR))
+
 from datetime import datetime
 from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS
@@ -19,10 +21,11 @@ from inquisitio.runner.scoring import (
 )
 from inquisitio.runner.audit_facts import save_and_archive_report
 
-def run_poverty_stress_test(games_per_setup, seed):
+def run_poverty_stress_test(games_per_setup, seed, setups=None):
     print("--- 1. POVERTY STRESS TEST (Wpływ startowego złota na pas biedy i płynność) ---")
     gold_options = [1, 2, 3, 4, 5]
-    setups = sorted(SETUP_PRESETS.keys())
+    if setups is None:
+        setups = sorted(SETUP_PRESETS.keys())
     lines = [
         "## 1. Poverty Stress Test (Stres Ekonomiczny)",
         "",
@@ -63,13 +66,21 @@ def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Economic Stress and Resilience Tests")
     parser.add_argument("--games", type=int, default=150, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
+    parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
+
+    if args.players:
+        setups = [s for s in sorted(SETUP_PRESETS.keys()) if len(SETUP_PRESETS[s]) == args.players]
+        setup_tag = f"{len(setups)} setupów ({args.players}P)"
+    else:
+        setups = sorted(SETUP_PRESETS.keys())
+        setup_tag = "16 setupów"
 
     t0 = time.time()
     print("========================================================")
     print("ROZPOCZYNAM DODATKOWE TESTY STRESU I ODPORNOŚCI")
-    print(f"Próba: {args.games} gier × 16 setupów | Ziarno: {args.seed}")
+    print(f"Próba: {args.games} gier × {setup_tag} | Ziarno: {args.seed}")
     print("========================================================\n")
 
     report_lines = [
@@ -79,7 +90,7 @@ def main():
         "",
     ]
 
-    poverty_report = run_poverty_stress_test(args.games, args.seed)
+    poverty_report = run_poverty_stress_test(args.games, args.seed, setups=setups)
     report_lines.extend(poverty_report)
 
     report_lines.extend([
@@ -88,7 +99,8 @@ def main():
         "- **Poverty Stress Test:** Pomaga określić punkt przegięcia, przy którym gospodarka gry staje się zbyt ciasna (wysoki Pas Biedy) lub zbyt luźna (nadmiar złota usuwający trudne wybory). Optymalne startowe złoto to 3zł.",
     ])
 
-    out_path, archive_path = save_and_archive_report(report_lines, "audyt_stress_raport.md", args.output)
+    default_report_name = f"audyt_stress_raport_{args.players}p.md" if args.players else "audyt_stress_raport.md"
+    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output)
 
     elapsed = round(time.time() - t0, 2)
     print("\n========================================================")

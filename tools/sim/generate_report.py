@@ -7,6 +7,8 @@ from pathlib import Path
 
 # Fix path to include sim directory
 SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
+sys.path.insert(0, str(SIM_DIR))
+
 from datetime import datetime
 from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
@@ -26,14 +28,20 @@ def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Generate Telemetry Report")
     parser.add_argument("--games", type=int, default=500, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
+    parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
     games_per_setup = args.games
-    setups = sorted(SETUP_PRESETS.keys())
+    if args.players:
+        setups = [s for s in sorted(SETUP_PRESETS.keys()) if len(SETUP_PRESETS[s]) == args.players]
+        title_tag = f"DLA {len(setups)} SETUPÓW ({args.players}P)"
+    else:
+        setups = sorted(SETUP_PRESETS.keys())
+        title_tag = "DLA 16 SETUPÓW"
 
     print("========================================================")
-    print("GENEROWANIE PEŁNEJ TELEMETRII I WIN-SHARE DLA 16 SETUPÓW")
+    print(f"GENEROWANIE PEŁNEJ TELEMETRII I WIN-SHARE {title_tag}")
     print(f"Próba: {games_per_setup} gier per setup | Ziarno: {args.seed}")
     print("========================================================\n")
 
@@ -229,7 +237,8 @@ def main():
         "- **📊 Status Setupu:** 🟢 Score ≥ 90 | 🟡 ≥ 75 | 🟠 ≥ 60 | 🔴 < 60",
     ])
 
-    out_path, archive_path = save_and_archive_report(report_lines, "raport_telemetrii.md", args.output)
+    default_report_name = f"raport_telemetrii_{args.players}p.md" if args.players else "raport_telemetrii.md"
+    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output)
 
     print("========================================================")
     print(f"RAPORT TELEMETRII WYGENEROWANY W {elapsed}s!")

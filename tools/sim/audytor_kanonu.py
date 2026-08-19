@@ -118,7 +118,7 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
     setup_shares: dict[str, dict[str, float]] = {}
     vitality_penalties = []
     vitality_warnings: list[str] = []
-    for sname in setups:
+    for idx_s, sname in enumerate(setups):
         summary = run_batch(
             games=games_per_setup,
             setup=sname,
@@ -136,6 +136,15 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
         vitality_penalties.append(vit.vitality_penalty)
         for msg in vit.warnings:
             vitality_warnings.append(f"{sname}: {msg}")
+
+        # Wczesne odrzucanie w Etapie 1 (gdy po 2 setupach wariant jest skrajnie nieoptymalny < 30 pkt)
+        if games_per_setup <= 200 and idx_s == 1:
+            if (sum(setup_scores.values()) / 2.0) < 30.0:
+                for rem_sname in setups[2:]:
+                    setup_scores[rem_sname] = 0.0
+                    setup_scores_balance[rem_sname] = 0.0
+                break
+
 
     score_4p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
     score_4p_balance = (
@@ -238,7 +247,138 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
 
 
 
+def classify_card_mutation_intent(mut_tuple: tuple[str, str, dict]) -> str:
+    """Classify whether an atomic mutation is a BUFF, NERF, or SYSTEM/NEUTRAL."""
+    tag, _, params = mut_tuple
+    card_overrides = params.get("card_overrides")
+    if not card_overrides:
+        return "SYSTEM"
+    cid = list(card_overrides.keys())[0]
+    param = list(card_overrides[cid].keys())[0]
+    val = card_overrides[cid][param]
+
+    cards = load_all_cards()
+    c_obj = cards.get(cid)
+    if not c_obj:
+        return "NEUTRAL"
+    orig = getattr(c_obj, param, 0)
+
+    if param in ("cost", "heresy"):
+        return "BUFF" if val < orig else "NERF"
+    elif param in ("gold", "target_heresy"):
+        return "BUFF" if val > orig else "NERF"
+    return "NEUTRAL"
+
+
+def get_mutation_faction(mut_tuple: tuple[str, str, dict]) -> str | None:
+    """Returns faction code (SO, CAA, KB, KT, GC) for a card mutation, or None."""
+    tag, _, params = mut_tuple
+    card_overrides = params.get("card_overrides")
+    if card_overrides:
+        cid = list(card_overrides.keys())[0]
+        prefix = cid.split("-")[0].upper()
+        return prefix
+    if tag.startswith("L3_"):
+        parts = tag.split("_")
+        if len(parts) >= 2:
+            prefix = parts[1].split("-")[0].upper()
+            return prefix
+    return None
+
+
+def generate_antagonistic_and_hybrid_candidates(
+    base_res: dict, atomic_pool: list[tuple[str, str, dict]]
+) -> list[tuple[str, str, dict]]:
+    """Generates targeted 2D candidates (Antagonistic pairs, Hybrids, Intra-faction shifts)
+    focused on directly solving the weakest setups in the 4P canon.
+    """
+    setup_scores = base_res.get("setup_scores", {})
+    setup_shares = base_res.get("setup_shares", {})
+    out: list[tuple[str, str, dict]] = []
+
+    for sname in sorted(setup_scores.keys(), key=lambda k: setup_scores[k]):
+        score = setup_scores[sname]
+        shares = setup_shares.get(sname, {})
+        if not shares:
+            continue
+
+        ideal_share = 25.0
+        dominant_prefixes = []
+        struggling_prefixes = []
+
+        for f_code, pct in shares.items():
+            dev = pct - ideal_share
+            if dev >= 1.5:
+                dominant_prefixes.append((f_code, dev))
+            elif dev <= -1.5:
+                struggling_prefixes.append((f_code, dev))
+
+        if not dominant_prefixes or not struggling_prefixes:
+            sorted_f = sorted(shares.items(), key=lambda x: x[1])
+            struggling_prefixes = [(sorted_f[0][0], sorted_f[0][1] - ideal_share)]
+            dominant_prefixes = [(sorted_f[-1][0], sorted_f[-1][1] - ideal_share)]
+
+        # 1. Antagonistic Pairs: Nerf Dominant + Buff Deficit
+        for dom_f, _ in dominant_prefixes:
+            dom_nerfs = [
+                m for m in atomic_pool
+                if get_mutation_faction(m) == dom_f and classify_card_mutation_intent(m) == "NERF"
+            ]
+            for strug_f, _ in struggling_prefixes:
+                strug_buffs = [
+                    m for m in atomic_pool
+                    if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "BUFF"
+                ]
+
+                for m_nerf in dom_nerfs:
+                    for m_buff in strug_buffs:
+                        merged = merge_mutations(m_nerf, m_buff)
+                        if merged:
+                            out.append(merged)
+
+        # 2. Hybrids: L3 Buff/Nerf + L1/L2 System Rules
+        sys_rules = [
+            m for m in atomic_pool
+            if classify_card_mutation_intent(m) == "SYSTEM" and not m[0].startswith("L4_")
+        ]
+        for strug_f, _ in struggling_prefixes:
+            strug_buffs = [
+                m for m in atomic_pool
+                if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "BUFF"
+            ]
+            for m_buff in strug_buffs:
+                for s_rule in sys_rules:
+                    merged = merge_mutations(m_buff, s_rule)
+                    if merged:
+                        out.append(merged)
+
+        # 3. Intra-faction Rebalance
+        for strug_f, _ in struggling_prefixes:
+            f_buffs = [
+                m for m in atomic_pool
+                if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "BUFF"
+            ]
+            f_nerfs = [
+                m for m in atomic_pool
+                if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "NERF"
+            ]
+            for mb in f_buffs:
+                for mn in f_nerfs:
+                    merged = merge_mutations(mb, mn)
+                    if merged:
+                        out.append(merged)
+
+    seen = set()
+    unique_out = []
+    for c in out:
+        if c[0] not in seen:
+            seen.add(c[0])
+            unique_out.append(c)
+    return unique_out
+
+
 def cheap_funnel_flags(n: int, top_semifinalists: int, top_k: int) -> tuple[bool, bool]:
+
     """Skip cheap screens when they wouldn't cut the pool. Confirm always runs.
 
     Returns (run_fast, run_screen). If n ≤ top_k both are False — jump straight to ultra.
@@ -420,7 +560,7 @@ def generate_and_save_canon_optimization_report(
     elapsed_iter: float,
 ) -> tuple[Path, Path | None]:
     """Generates and archives a detailed iteration report for the newly created version."""
-    d_4p = best_res_4p["score_4p"] - base_res_4p["score_4p"]
+    d_4p = best_res_4p["score_4p_balance"] - base_res_4p["score_4p_balance"]
     delta_4p_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
 
     d_glob = diag_after["global_score"] - diag_before["global_score"]
@@ -429,19 +569,19 @@ def generate_and_save_canon_optimization_report(
     lines = [
         f"# Raport Optymalizacji Kanonu 4P (Anchor-Based 4P Optimizer) — Wersja {new_version} (Iteracja #{iteration}, Faza {phase}D)",
         "",
-        f"**Wersja Poprzednia:** `{old_version}` (4P: `{base_res_4p['score_4p']:.1f} pkt`) → **Nowa Wersja:** `{new_version}` (4P: `{best_res_4p['score_4p']:.1f} pkt`)",
+        f"**Wersja Poprzednia:** `{old_version}` (4P: `{base_res_4p['score_4p_balance']:.1f} pkt`) → **Nowa Wersja:** `{new_version}` (4P: `{best_res_4p['score_4p_balance']:.1f} pkt`)",
         f"**Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Czas Trwania Iteracji:** {elapsed_iter:.1f}s | **Zysk 4P:** `{delta_4p_str} pkt` | **Zysk Global:** `{delta_glob_str} pkt`",
         "",
         "## 1. Wprowadzona Zmiana i Wynik Balansu Kanonu 4P",
         f"- **Wybrany Wariant ({phase}D):** `{rule_id}` — **{best_res_4p['name']}**",
         f"- **Opis Modyfikacji:** {change_desc}",
-        f"- **Wynik Kanonu 4P Score:** {score_pair(base_res_4p['score_4p'], best_res_4p['score_4p'], colored=True)} pkt",
+        f"- **Wynik Kanonu 4P Balance:** {score_pair(base_res_4p['score_4p_balance'], best_res_4p['score_4p_balance'], colored=True)} pkt",
         f"- **Rozbicie Setupów Kanonu 4P:**",
     ]
 
-    for sname in sorted(base_res_4p["setup_scores"].keys()):
-        b_sc = base_res_4p["setup_scores"][sname]
-        n_sc = best_res_4p["setup_scores"].get(sname, 0.0)
+    for sname in sorted(base_res_4p["setup_scores_balance"].keys()):
+        b_sc = base_res_4p["setup_scores_balance"][sname]
+        n_sc = best_res_4p["setup_scores_balance"].get(sname, 0.0)
         lines.append(f"  - `{sname}`: {score_pair(b_sc, n_sc)} pkt")
 
     lines.extend([
@@ -466,10 +606,10 @@ def generate_and_save_canon_optimization_report(
     ])
 
     for idx, c in enumerate(all_ranked_candidates, 1):
-        d_diff = c["score_4p"] - base_res_4p["score_4p"]
+        d_diff = c["score_4p_balance"] - base_res_4p["score_4p_balance"]
         status = "🌟 ZWYCIĘZCA" if c["id"] == best_res_4p["id"] else ("🟢 ZYSK" if d_diff > 0.0 else "⚪ STRATA/NEUTRALNY")
         lines.append(
-            f"| #{idx} | `{c['id']}` | {c['name']} | {score_pair(base_res_4p['score_4p'], c['score_4p'], colored=True)} | "
+            f"| #{idx} | `{c['id']}` | {c['name']} | {score_pair(base_res_4p['score_4p_balance'], c['score_4p_balance'], colored=True)} | "
             f"{c['deadlock_pct']:.1f}% | {c['poverty_pct']:.1f}% | {status} |"
         )
 
@@ -492,12 +632,12 @@ def update_balance_notes(
 
     content = BALANCE_NOTES_PATH.read_text(encoding="utf-8")
     today = datetime.now().strftime("%Y-%m-%d")
-    d_4p = best_res_4p["score_4p"] - base_res_4p["score_4p"]
+    d_4p = best_res_4p["score_4p_balance"] - base_res_4p["score_4p_balance"]
     delta_4p_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
 
     patch_note_block = (
         f"### 🟢 Patch {new_version} ({today}) — Kanon 4P: {change_desc} (Zysk 4P Δ {delta_4p_str} pkt)\n"
-        f"- **Wynik 4P:** Kanon **`{base_res_4p['score_4p']:.1f}`** → **`{best_res_4p['score_4p']:.1f} pkt`** | Global **`{diag_after['global_score']:.1f}`** | 3p **`{diag_after['cat_scores'].get('3p',0.0):.1f}`** | 5p **`{diag_after['cat_scores'].get('5p',0.0):.1f}`**\n"
+        f"- **Wynik 4P:** Kanon **`{base_res_4p['score_4p_balance']:.1f}`** → **`{best_res_4p['score_4p_balance']:.1f} pkt`** | Global **`{diag_after['global_score']:.1f}`** | 3p **`{diag_after['cat_scores'].get('3p',0.0):.1f}`** | 5p **`{diag_after['cat_scores'].get('5p',0.0):.1f}`**\n"
         f"- **Modyfikacja (`{rule_id}`):** {change_desc}.\n"
         f"- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er {best_res_4p['eras_avg']:.2f}, Deadlocks {best_res_4p['deadlock_pct']:.1f}%, Pas Biedy {best_res_4p['poverty_pct']:.1f}%.\n\n"
     )
@@ -536,7 +676,7 @@ def log_canon_iteration(
         ]
         log_path.write_text("\n".join(headers) + "\n", encoding="utf-8")
 
-    d_4p = best_res_4p["score_4p"] - base_res_4p["score_4p"]
+    d_4p = best_res_4p["score_4p_balance"] - base_res_4p["score_4p_balance"]
     d4_str = f"+{d_4p:.1f}" if d_4p > 0 else f"{d_4p:.1f}"
 
     d_3p = diag_after["cat_scores"].get("3p", 0) - diag_before["cat_scores"].get("3p", 0)
@@ -548,7 +688,7 @@ def log_canon_iteration(
     d_glob = diag_after["global_score"] - diag_before["global_score"]
     dg_str = f"+{d_glob:.1f}" if d_glob > 0 else f"{d_glob:.1f}"
 
-    score_4p_col = f"{base_res_4p['score_4p']:.1f} → **{best_res_4p['score_4p']:.1f}** (`{d4_str}`)"
+    score_4p_col = f"{base_res_4p['score_4p_balance']:.1f} → **{best_res_4p['score_4p_balance']:.1f}** (`{d4_str}`)"
     p3_col = f"{diag_before['cat_scores'].get('3p',0):.1f} → {diag_after['cat_scores'].get('3p',0):.1f} (`{d3_str}`)"
     p5_col = f"{diag_before['cat_scores'].get('5p',0):.1f} → {diag_after['cat_scores'].get('5p',0):.1f} (`{d5_str}`)"
     glob_col = f"{diag_before['global_score']:.1f} → **{diag_after['global_score']:.1f}** (`{dg_str}`)"
@@ -640,7 +780,7 @@ class Canon4PAutoBalancer:
                 eta_s = (total - idx) / rate if rate > 0 else 0
                 eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
                 lead_id = best_so_far['id'][:26] if best_so_far else "-"
-                lead_sc = f"{best_so_far['score_4p']:.1f}" if best_so_far else "-"
+                lead_sc = f"{best_so_far['score_4p_balance']:.1f}" if best_so_far else "-"
                 sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<7s} | Lider 4P: {lead_id} ({lead_sc} pkt)  ")
                 sys.stdout.flush()
 
@@ -688,7 +828,7 @@ class Canon4PAutoBalancer:
             base_res = self._execute_pool(_run_single_test_task_4p, [base_task[0]], label="Baza 4P")[0]
             self._last_base_res = base_res
 
-            print(f"   🎯 Wynik Kanonu 4P Score: {color_score(base_res['score_4p'], bold=True)} pkt")
+            print(f"   🎯 Wynik Kanonu 4P Balance: {color_score(base_res['score_4p_balance'], bold=True)} pkt")
             print(
                 f"   📐 Balance (win share): {color_score(base_res['score_4p_balance'])} pkt | "
                 f"min `{base_res['min_balance_setup']}` {color_score(base_res['min_balance'])} | "
@@ -708,7 +848,7 @@ class Canon4PAutoBalancer:
                     "Wspinaczka aktywna — akceptuję kandydatów poprawiających rozkład frakcji."
                 )
             if canon_should_stop(base_res, mode=self._accept_mode()):
-                print(f"\n🏁 Kanon 4P: {base_res['score_4p']:.1f} pkt — optimum osiągnięte.")
+                print(f"\n🏁 Kanon 4P: {base_res['score_4p_balance']:.1f} pkt — optimum osiągnięte.")
                 break
             for sname, sc in sorted(base_res["setup_scores"].items()):
                 bal = base_res["setup_scores_balance"].get(sname, sc)
@@ -722,13 +862,18 @@ class Canon4PAutoBalancer:
                 print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna pula atomowa L1–L4...")
                 candidate_pool = atomic_pool
             else:
-                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Wiązki 4P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik)...")
+                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Wiązki 4P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik) + Pary Antagonistyczne Outlierów...")
                 composite_pool = []
                 for seed_mut in beam_seeds:
                     for atomic_mut in atomic_pool:
                         merged = merge_mutations(seed_mut, atomic_mut)
                         if merged:
                             composite_pool.append(merged)
+
+                # Celowane pary antagonistyczne (Nerf Dominanta + Buff Deficytu dla najsłabszych setupów)
+                if current_phase == 2:
+                    antag_pairs = generate_antagonistic_and_hybrid_candidates(base_res, atomic_pool)
+                    composite_pool.extend(antag_pairs)
 
                 seen_ids = set()
                 candidate_pool = []
@@ -779,11 +924,11 @@ class Canon4PAutoBalancer:
                 decision = accept_candidate(
                     base_res, r, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
-                d_4 = r["score_4p"] - base_res["score_4p"]
+                d_4 = r["score_4p_balance"] - base_res["score_4p_balance"]
                 sign = f"+{d_4:.2f}" if d_4 > 0 else f"{d_4:.2f}"
                 mark = "✔" if decision.accepted else "✖"
                 print(
-                    f"   #{idx:2d} {mark} [{r['id'][:42]}...] 4P {base_res['score_4p']:.1f} → {r['score_4p']:.1f} "
+                    f"   #{idx:2d} {mark} [{r['id'][:42]}...] 4P {base_res['score_4p_balance']:.1f} → {r['score_4p_balance']:.1f} "
                     f"(Δ {sign}) min {r['min_balance']:.1f} | {decision.reason}"
                 )
 
@@ -801,7 +946,7 @@ class Canon4PAutoBalancer:
                     break
 
             if best_ver_res is not None:
-                d_lead = best_ver_res['score_4p'] - base_res['score_4p']
+                d_lead = best_ver_res['score_4p_balance'] - base_res['score_4p_balance']
                 print(f"\n   → Wybrano `{best_ver_res['id']}` (zysk 4P Δ {d_lead:+.2f} pkt, min {best_ver_res.get('min_balance', 0):.1f})")
 
 
@@ -829,7 +974,7 @@ class Canon4PAutoBalancer:
                 d5_sign = f"+{d_5:.1f}" if d_5 > 0 else f"{d_5:.1f}"
                 dg_sign = f"+{d_g:.1f}" if d_g > 0 else f"{d_g:.1f}"
 
-                print(f"   🎯 4P Kanon:  {base_res['score_4p']:.1f} → **{best_ver_res['score_4p']:.1f} pkt** (Δ {best_ver_res['score_4p'] - base_res['score_4p']:+.2f} pkt)")
+                print(f"   🎯 4P Kanon:  {base_res['score_4p_balance']:.1f} → **{best_ver_res['score_4p_balance']:.1f} pkt** (Δ {best_ver_res['score_4p_balance'] - base_res['score_4p_balance']:+.2f} pkt)")
                 print(f"   👥 Wpływ 3p:  {diag_before['cat_scores'].get('3p',0):.1f} → {diag_after['cat_scores'].get('3p',0):.1f} pkt (`{d3_sign} pkt`)")
                 print(f"   👥 Wpływ 5p:  {diag_before['cat_scores'].get('5p',0):.1f} → {diag_after['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
                 print(f"   🌐 Globalny:  {diag_before['global_score']:.1f} → {diag_after['global_score']:.1f} pkt (`{dg_sign} pkt`)")
@@ -913,16 +1058,7 @@ class Canon4PAutoBalancer:
                 top_beam_results = stage3_results[: self.args.beam_width]
                 beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
                 current_phase += 1
-                max_depth = getattr(self.args, "max_depth", 2)
-                if current_phase > max_depth:
-                    print(
-                        f"\n🔄 Osiągnięto limit głębokości {max_depth}D bez zysku w tej iteracji. "
-                        f"Resetuję do Fazy 1D i ponawiam próbę z nową bazą..."
-                    )
-                    current_phase = 1
-                    beam_seeds.clear()
-                else:
-                    print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
+                print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
         self._emit_manual_ablation_review()
         print(f"\n═══════════════════════════════════════════════════════════════════════")

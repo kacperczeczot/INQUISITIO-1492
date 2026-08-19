@@ -32,7 +32,6 @@ def build_level4_tests():
     tests = [
         ("L4_BAZA", "Baza (Bieżące warianty niszowe i zasady edyktów)", {}),
         ("L4_NO_TIME_DECK", "Kronika Dziejów: Całkowite wyłączenie edyktów", {"no_time_deck": True}),
-        ("L4_VERDICT_SECRET", "Werdykt: jawny → tajny (brak koordynacji anty-snowball)", {"verdict_secret": True}),
     ]
     cur_freq = getattr(nv, "time_deck_freq", 1)
     if cur_freq != 1:
@@ -123,15 +122,21 @@ def main():
     parser.add_argument("--games", type=int, default=300, help="Number of games per setup")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
+    parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
     args = parser.parse_args()
 
     games_per_setup = args.games
-    setups = sorted(SETUP_PRESETS.keys())
+    if args.players:
+        setups = [s for s in sorted(SETUP_PRESETS.keys()) if len(SETUP_PRESETS[s]) == args.players]
+        setup_tag = f"{len(setups)} setupów ({args.players}P)"
+    else:
+        setups = sorted(SETUP_PRESETS.keys())
+        setup_tag = "16 setupów"
 
     print("========================================================")
     print("ROZPOCZYNAM PEŁNY AUDYT POZIOMU 4: WARIANTY NISZOWE I MODYFIKATORY")
-    print(f"Próba: {games_per_setup} gier × 16 setupów | Ziarno: {args.seed}")
+    print(f"Próba: {games_per_setup} gier × {setup_tag} | Ziarno: {args.seed}")
     print(f"Równoległe procesy: {args.workers}")
     print("========================================================\n", flush=True)
 
@@ -263,7 +268,8 @@ def main():
         "- **⚖️ Oskarżenia na Dworze / Partię:** Optymalna częstotliwość procesów politycznych: **1.5 – 4.5** oskarżeń na grę.",
     ])
 
-    out_path, archive_path = save_and_archive_report(report_lines, "audyt_level4_raport.md", args.output)
+    default_report_name = f"audyt_level4_raport_{args.players}p.md" if args.players else "audyt_level4_raport.md"
+    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output)
 
     print("========================================================")
     print(f"AUDYT POZIOMU 4 ZAKOŃCZONY W {elapsed}s!")
