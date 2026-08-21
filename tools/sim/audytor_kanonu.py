@@ -139,7 +139,7 @@ def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, l
 
         # Wczesne odrzucanie w Etapie 1 (gdy po 2 setupach wariant jest skrajnie nieoptymalny < 30 pkt)
         if games_per_setup <= 200 and idx_s == 1:
-            if (sum(setup_scores.values()) / 2.0) < 30.0:
+            if (sum(setup_scores_balance.values()) / 2.0) < 30.0:
                 for rem_sname in setups[2:]:
                     setup_scores[rem_sname] = 0.0
                     setup_scores_balance[rem_sname] = 0.0
@@ -1070,11 +1070,11 @@ def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor Kanonu 4P (Anchor-Based 4P Optimizer)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
-    parser.add_argument("--fast-games", type=int, default=200, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 200)")
-    parser.add_argument("--screen-games", type=int, default=1000, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 1000)")
+    parser.add_argument("--fast-games", type=int, default=1000, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 1000)")
+    parser.add_argument("--screen-games", type=int, default=2500, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 2500)")
     parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 5000)")
-    parser.add_argument("--top-semifinalists", type=int, default=48, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 48)")
-    parser.add_argument("--top-k", type=int, default=24, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 24)")
+    parser.add_argument("--top-semifinalists", type=int, default=24, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 24)")
+    parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 12)")
     parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
     parser.add_argument("--max-depth", type=int, default=3, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 3)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
@@ -1085,11 +1085,10 @@ def main():
     parser.add_argument(
         "--accept-mode",
         choices=("legacy", "band"),
-        default="band",
+        default="legacy",
         help=(
-            "band (domyślnie): wspinaczka maximin poza pasmem 20–30%%, "
-            "higiena zdrowia w paśmie, stop gdy stół już żywy. "
-            "legacy: max średniej 4P jak dawniej (kosmetyka +0.1)."
+            "legacy (domyślnie): max średniej balansu 4P jak dawny auto_balancer (czysty gradient). "
+            "band: wspinaczka maximin poza pasmem 20–30%%, higiena zdrowia w paśmie."
         ),
     )
 
