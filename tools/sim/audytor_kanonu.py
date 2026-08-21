@@ -862,18 +862,25 @@ class Canon4PAutoBalancer:
                 print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna pula atomowa L1–L4...")
                 candidate_pool = atomic_pool
             else:
-                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Wiązki 4P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik) + Pary Antagonistyczne Outlierów...")
+                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Celowane pary antagonistyczne (Nerf Dominanta + Buff Deficytu) i komplementarne wiązki...")
                 composite_pool = []
+
+                # 1. Celowane pary antagonistyczne i hybrydowe
+                antag_pairs = generate_antagonistic_and_hybrid_candidates(base_res, atomic_pool)
+                composite_pool.extend(antag_pairs)
+
+                # 2. Komplementarne łączenie nasion wiązki z regułami L1/L2 i kartami deficytowych frakcji
                 for seed_mut in beam_seeds:
-                    for atomic_mut in atomic_pool:
+                    # Łączymy nasiona tylko z atomowymi zmianami systemowymi L1/L2 lub kartami innej frakcji
+                    seed_f = get_mutation_faction(seed_mut)
+                    filtered_atomic = [
+                        m for m in atomic_pool
+                        if get_mutation_faction(m) != seed_f or classify_card_mutation_intent(m) == "SYSTEM"
+                    ]
+                    for atomic_mut in filtered_atomic[:30]:
                         merged = merge_mutations(seed_mut, atomic_mut)
                         if merged:
                             composite_pool.append(merged)
-
-                # Celowane pary antagonistyczne (Nerf Dominanta + Buff Deficytu dla najsłabszych setupów)
-                if current_phase == 2:
-                    antag_pairs = generate_antagonistic_and_hybrid_candidates(base_res, atomic_pool)
-                    composite_pool.extend(antag_pairs)
 
                 seen_ids = set()
                 candidate_pool = []
@@ -881,6 +888,10 @@ class Canon4PAutoBalancer:
                     if c[0] not in seen_ids:
                         seen_ids.add(c[0])
                         candidate_pool.append(c)
+
+                # Limit wielkości puli złożonej dla zachowania błyskawicznego przesiewu (max 250 wariantów)
+                if len(candidate_pool) > 250:
+                    candidate_pool = candidate_pool[:250]
 
             print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Kanonu 4P.")
             cand_dict = {c[0]: c for c in candidate_pool}
@@ -1070,8 +1081,8 @@ def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor Kanonu 4P (Anchor-Based 4P Optimizer)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
-    parser.add_argument("--fast-games", type=int, default=1000, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 1000)")
-    parser.add_argument("--screen-games", type=int, default=2500, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 2500)")
+    parser.add_argument("--fast-games", type=int, default=300, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 300)")
+    parser.add_argument("--screen-games", type=int, default=1500, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 1500)")
     parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 5000)")
     parser.add_argument("--top-semifinalists", type=int, default=24, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 24)")
     parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 12)")
