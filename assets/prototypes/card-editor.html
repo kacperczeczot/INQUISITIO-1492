@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.9</span>
+              <span id="prev-meta-ver">v1.0-alpha.22</span>
             </div>
           </div>
         </div>
@@ -1160,11 +1160,12 @@
     "type": "akcja",
     "layer": "A",
     "cost": 2,
-    "target_heresy": 1,
+    "target_heresy": 3,
     "action": "frame_rival",
     "tags": [
       "heresy"
     ],
+    "heresy": 2,
     "heresy_text": "Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.",
     "lore": "Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie."
   },
@@ -1208,6 +1209,7 @@
     "tags": [
       "arrest"
     ],
+    "target_heresy": 1,
     "heresy_text": "Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie.",
     "lore": "Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem."
   },
@@ -1245,7 +1247,7 @@
     "name": "Świadek Koronny",
     "type": "akcja",
     "layer": "B",
-    "cost": 2,
+    "cost": 1,
     "creates_hook": true,
     "action": "creates_hook",
     "condition": "rival_in_dungeon_or_inquisitor",
@@ -1259,7 +1261,7 @@
     "type": "signature",
     "layer": "C",
     "cost": 5,
-    "heresy": 2,
+    "heresy": 1,
     "autodafe": true,
     "action": "autodafe",
     "breaks_rule": "Autodafé / 3 Ery",
@@ -1623,7 +1625,7 @@
       "decree",
       "heresy"
     ],
-    "target_heresy": 1,
+    "target_heresy": 0,
     "heresy_text": "Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.",
     "lore": "Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie."
   },
@@ -1850,7 +1852,7 @@
     "type": "akcja",
     "layer": "A",
     "cost": 1,
-    "gold": 3,
+    "gold": 4,
     "action": "gain_gold",
     "tags": [
       "gold",
@@ -1919,7 +1921,7 @@
     "name": "Skrytobójstwo",
     "type": "akcja",
     "layer": "B",
-    "cost": 1,
+    "cost": 0,
     "heresy": 0,
     "arrest": true,
     "action": "arrest",
@@ -1960,6 +1962,7 @@
       "hook",
       "fall"
     ],
+    "gold": 1,
     "lore": "Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole."
   },
   "gc-10": {
@@ -1984,13 +1987,14 @@
     "name": "Fałszywe Świadectwo Cechu",
     "type": "akcja",
     "layer": "B",
-    "cost": 1,
+    "cost": 0,
     "target_heresy": 1,
     "action": "frame_rival",
     "tags": [
       "heresy",
       "hook"
     ],
+    "heresy": 2,
     "lore": "Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu."
   },
   "gc-12": {
@@ -2369,7 +2373,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.9';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.22';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

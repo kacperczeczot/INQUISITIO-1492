@@ -1,5 +1,5 @@
-version: v1.0-alpha.22
-date: '2026-08-21'
+version: v1.0-alpha.12
+date: '2026-08-20'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 4
@@ -56,11 +56,10 @@ cards:
     type: akcja
     layer: A
     cost: 2
-    target_heresy: 3
+    target_heresy: 2
     action: frame_rival
     tags:
     - heresy
-    heresy: 2
   so-04:
     name: Publiczne Ostrzeżenie
     type: akcja
@@ -93,7 +92,6 @@ cards:
     target_loc: same_location
     tags:
     - arrest
-    target_heresy: 1
   so-07:
     name: Przesłuchanie Oficjum
     type: akcja
@@ -121,7 +119,7 @@ cards:
     name: Świadek Koronny
     type: akcja
     layer: B
-    cost: 1
+    cost: 2
     creates_hook: true
     action: creates_hook
     condition: rival_in_dungeon_or_inquisitor
@@ -132,7 +130,7 @@ cards:
     type: signature
     layer: C
     cost: 5
-    heresy: 1
+    heresy: 2
     autodafe: true
     action: autodafe
     breaks_rule: Autodafé / 3 Ery
@@ -409,7 +407,7 @@ cards:
     - signature
     - decree
     - heresy
-    target_heresy: 0
+    target_heresy: 1
   kb-11:
     name: Tajny Emisariusz
     type: akcja
@@ -580,7 +578,7 @@ cards:
     type: akcja
     layer: A
     cost: 1
-    gold: 4
+    gold: 3
     action: gain_gold
     tags:
     - gold
@@ -632,7 +630,7 @@ cards:
     name: Skrytobójstwo
     type: akcja
     layer: B
-    cost: 0
+    cost: 1
     heresy: 0
     arrest: true
     action: arrest
@@ -690,7 +688,6 @@ cards:
     tags:
     - heresy
     - hook
-    heresy: 2
   gc-12:
     name: Złodziejski Zwiad
     type: akcja

@@ -67,9 +67,9 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 2 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
-| `effect` | Wskaż rywala: +1 Herezja. |
+| `effect` | Wskaż rywala: +3 Herezja. |
 | `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -168,7 +168,7 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora. |
@@ -186,7 +186,7 @@ Kart: **12**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 5 |
-| `heresy` | 2 |
+| `heresy` | 1 |
 | `heresy_text` | Autodafé z rozkazu trybunału pali strach, nie tylko drewno. |
 | `effect` | Łamie regułę „Autodafé / 3 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos. |
 | `lore` | Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika. |
@@ -892,7 +892,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 3 złota. |
+| `effect` | Zyskaj 4 złota. |
 | `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
@@ -974,7 +974,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Ciało w kanałach Gildii mówi więcej niż świadek na rynku. |
 | `effect` | Aresztuj Agenta rywala w Gildii lub na Rynku. |
@@ -1042,8 +1042,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
-| `heresy` | 0 |
+| `cost_gold` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu. |

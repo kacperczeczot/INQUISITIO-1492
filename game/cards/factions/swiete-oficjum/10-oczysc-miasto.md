@@ -5,7 +5,7 @@ faction: swiete-oficjum
 type: signature
 layer: C
 cost: 5
-heresy: 2
+heresy: 1
 tags:
 - signature
 - autodafe
@@ -16,5 +16,6 @@ heresy_text: Autodafé z rozkazu trybunału pali strach, nie tylko drewno.
 lore: Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.
 breaks_rule: true
 ---
+
 
 

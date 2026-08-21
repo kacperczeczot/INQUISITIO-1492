@@ -90,6 +90,71 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.22 (2026-08-21) — Kanon 4P: Karta `so-10` (Oczyść Miasto): `heresy` → `1` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`80.1`** → **`80.3 pkt`** | Global **`45.7`** | 3p **`24.3`** | 5p **`29.2`**
+- **Modyfikacja (`L3_SO-10_HERESY_MINUS1`):** Karta `so-10` (Oczyść Miasto): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.24, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.21 (2026-08-21) — Kanon 4P: Karta `so-09` (Świadek Koronny): `cost` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`80.0`** → **`80.1 pkt`** | Global **`46.1`** | 3p **`24.4`** | 5p **`30.5`**
+- **Modyfikacja (`L3_SO-09_COST_MINUS1`):** Karta `so-09` (Świadek Koronny): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.20 (2026-08-21) — Kanon 4P: Karta `so-06` (Areszt Trybunalski): `target_heresy` → `1` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `2` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`79.9`** → **`80.0 pkt`** | Global **`45.9`** | 3p **`24.4`** | 5p **`30.2`**
+- **Modyfikacja (`L3_SO-06_TARGET_HERESY_PLUS1__L3_GC-11_HERESY_PLUS1`):** Karta `so-06` (Areszt Trybunalski): `target_heresy` → `1` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.19 (2026-08-21) — Kanon 4P: Karta `so-03` (Podejrzenie): `heresy` → `2` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`79.7`** → **`79.9 pkt`** | Global **`44.8`** | 3p **`24.1`** | 5p **`28.9`**
+- **Modyfikacja (`L3_SO-03_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.18 (2026-08-21) — Kanon 4P: Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `1` (Zysk 4P Δ +0.3 pkt)
+- **Wynik 4P:** Kanon **`79.4`** → **`79.7 pkt`** | Global **`44.9`** | 3p **`24.4`** | 5p **`29.0`**
+- **Modyfikacja (`L3_GC-11_HERESY_PLUS1`):** Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.17 (2026-08-21) — Kanon 4P: Karta `gc-02` (Czarny Rynek): `gold` → `4` (Zysk 4P Δ +0.6 pkt)
+- **Wynik 4P:** Kanon **`78.8`** → **`79.4 pkt`** | Global **`45.9`** | 3p **`23.9`** | 5p **`32.5`**
+- **Modyfikacja (`L3_GC-02_GOLD_PLUS1`):** Karta `gc-02` (Czarny Rynek): `gold` → `4`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.24, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.16 (2026-08-20) — Kanon 4P: Karta `so-03` (Podejrzenie): `target_heresy` → `3` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`78.6`** → **`78.8 pkt`** | Global **`46.2`** | 3p **`23.1`** | 5p **`34.3`**
+- **Modyfikacja (`L3_SO-03_TARGET_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `target_heresy` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.15 (2026-08-20) — Kanon 4P: Karta `so-03` (Podejrzenie): `heresy` → `1` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`78.4`** → **`78.6 pkt`** | Global **`46.1`** | 3p **`22.8`** | 5p **`34.7`**
+- **Modyfikacja (`L3_SO-03_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.14 (2026-08-20) — Kanon 4P: Karta `kb-10` (Pieczęć Korony): `target_heresy` → `0` (Zysk 4P Δ +0.3 pkt)
+- **Wynik 4P:** Kanon **`78.1`** → **`78.4 pkt`** | Global **`45.9`** | 3p **`22.8`** | 5p **`34.4`**
+- **Modyfikacja (`L3_KB-10_TARGET_HERESY_MINUS1`):** Karta `kb-10` (Pieczęć Korony): `target_heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.23, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.13 (2026-08-20) — Kanon 4P: Karta `gc-07` (Skrytobójstwo): `cost` → `0` (Zysk 4P Δ +0.3 pkt)
+- **Wynik 4P:** Kanon **`77.8`** → **`78.1 pkt`** | Global **`45.6`** | 3p **`22.6`** | 5p **`33.6`**
+- **Modyfikacja (`L3_GC-07_COST_MINUS1`):** Karta `gc-07` (Skrytobójstwo): `cost` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.20, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.12 (2026-08-20) — Kanon 4P: Karta `gc-09` (Lista Dłużników): `gold` → `1` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`77.4`** → **`77.8 pkt`** | Global **`45.4`** | 3p **`22.6`** | 5p **`33.3`**
+- **Modyfikacja (`L3_GC-09_GOLD_PLUS1`):** Karta `gc-09` (Lista Dłużników): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.20, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.11 (2026-08-20) — Kanon 4P: Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `0` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`76.9`** → **`77.4 pkt`** | Global **`44.8`** | 3p **`22.6`** | 5p **`31.8`**
+- **Modyfikacja (`L3_GC-11_COST_MINUS1`):** Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.20, Deadlocks 0.3%, Pas Biedy 1.5%.
+
+### 🟢 Patch v1.0-alpha.10 (2026-08-19) — Kanon 4P: Karta `so-03` (Podejrzenie): `target_heresy` → `2` (Zysk 4P Δ +0.4 pkt)
+- **Wynik 4P:** Kanon **`76.5`** → **`76.9 pkt`** | Global **`45.6`** | 3p **`22.9`** | 5p **`34.2`**
+- **Modyfikacja (`L3_SO-03_TARGET_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.21, Deadlocks 0.3%, Pas Biedy 1.6%.
+
 ### 🟢 Patch v1.0-alpha.9 (2026-08-19) — Usunięcie martwej mechaniki CAA `path_era` ze SSOT i silnika
 - **Wynik 4P:** Kanon **`76.5 pkt`** (bez zmian — parametr był martwy / przezroczysty)
 - **Modyfikacja:** Usunięcie parametru `victory.cienie_al_andalus.path_era` (wartość 1) oraz powiązanego warunku w silniku gry i audytorach.

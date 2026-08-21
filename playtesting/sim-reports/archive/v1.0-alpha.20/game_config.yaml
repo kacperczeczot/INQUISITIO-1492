@@ -1,4 +1,4 @@
-version: v1.0-alpha.22
+version: v1.0-alpha.20
 date: '2026-08-21'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -121,7 +121,7 @@ cards:
     name: Świadek Koronny
     type: akcja
     layer: B
-    cost: 1
+    cost: 2
     creates_hook: true
     action: creates_hook
     condition: rival_in_dungeon_or_inquisitor
@@ -132,7 +132,7 @@ cards:
     type: signature
     layer: C
     cost: 5
-    heresy: 1
+    heresy: 2
     autodafe: true
     action: autodafe
     breaks_rule: Autodafé / 3 Ery
