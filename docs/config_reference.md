@@ -22,13 +22,13 @@ Plik podzielony jest na 4 poziomy modyfikacji balansowych oraz sekcje pomocnicze
 | `start_gold` | `int` | `1 .. 10` | `4` | Złoto na starcie gry dla każdego gracza |
 | `agents_per_player` | `int` | `1 .. 5` | `3` | Liczba figurków agentów w puli gracza |
 | `hand_limit` | `int` | `3 .. 10` | `5` | Maksymalna liczba kart na ręce na koniec tury |
-| `max_eras` | `int` | `3 .. 16` | `11` | Limit Er; po nim tie-break (najbliższy celowi, potem najniższa Herezja). |
+| `max_eras` | `int` | `3 .. 16` | `14` | Limit Er; po nim tie-break (najbliższy celowi, potem najniższa Herezja). |
 | `autodafe_cooldown` | `int` | `1 .. 4` | `3` | Co ile Er Inkwizytor ogłasza rutynowe Autodafé |
 | `cards_per_era` | `int` | `1 .. 4` | `2` | Rundy Intrygi (karta **lub** Akcja Gospodarcza) na Erę. |
 | `era_income` | `int` | `0 .. 3` | `1` | Złoto w Fazie III (Kronika). |
 | `intrigue_gold` | `int` | `0 .. 3` | `1` | Złoto z Akcji Gospodarczej w Fazie I. Jarmark (`time-09`) na Rynku: **+2** zamiast tej wartości (min. 2). |
 | `observed_threshold` | `int` | `1 .. 9` | `5` | Start Obserwowanej; Autodafé pali na Stos od tej wartości (po +1 Herezji). Czysta = poniżej. |
-| `accusation_threshold` | `dict` | `3p: 5..10`, `4p: 5..10`, `5p: 5..10` | `3p:6, 4p:7, 5p:8` | Próg Herezji = Krytyczna / Oskarżenie / Werdykt. Obserwowana kończy się na T−1. |
+| `accusation_threshold` | `int \| dict` | `int: 5..10` lub `3p/4p/5p` | `7` | Próg Herezji = Krytyczna / Oskarżenie / Werdykt. Obserwowana kończy się na T−1. |
 
 Skalary bez `3p`/`4p`/`5p` (`observed_threshold`, `cards_per_era`, `intrigue_gold`, `max_eras`, `autodafe_cooldown`, `era_income`, `hand_limit`) to **jedna liczba na stół**. Zapisuje je tylko `audytor_4p.py`. `audytor_3p.py` / `audytor_5p.py` mogą splitować `start_gold`, `accusation_threshold` i cele `victory`.
 

@@ -85,7 +85,7 @@ Raporty zawierają dwie kluczowe sekcje: **Szanse Wygranych (Win Shares)** oraz 
 
 ### B. Telemetria 5 Filarów
 - **Średnia Er (Tempo Gry):** Normatyw to **5.0 – 7.0 Er**. Zbyt niska średnia oznacza zbyt szybką wygraną (snowball). Zbyt wysoka to paraliż.
-- **Deadlock % (Remisy):** Procent partii, które osiągnęły limit 8 Er bez wyłonienia zwycięzcy. Tolerowany próg to **< 15.0%**.
+- **Deadlock % (Remisy):** Procent partii, które osiągnęły limit Er (`max_eras`) bez wyłonienia zwycięzcy. Tolerowany próg to **< 5.0%** (krytyczny < 15.0%).
 - **Pas Biedy % (Poverty Rate):** Procent tur, w których gracze zmuszeni byli spasować z braku złota. Tolerowany próg to **< 30.0%**.
 - **Autodafé na grę:** Wskaźnik agresji Inkwizytora. Normatyw: **0.5 – 2.0** Autodafé na partię.
 - **Oskarżenia na grę:** Wskaźnik interakcji politycznej na Dworze. Normatyw: **1.5 – 4.5** oskarżeń na partię.

@@ -13,4 +13,4 @@ Wszystkie talii kart w grze.
 | [KATALOG](KATALOG.md) | Zbiorczy katalog wszystkich kart |
 | [SCHEMA](SCHEMA.md) | Anatomia pól karty (frontmatter) |
 | [Frakcje](factions/README.md) | 5 talii frakcyjnych (po 10 kart) |
-| [Kronika Dziejów](time-deck/README.md) | 8 kart edyktów / wydarzeń |
+| [Kronika Dziejów](time-deck/README.md) | 10 kart edyktów / wydarzeń |

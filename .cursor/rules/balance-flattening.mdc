@@ -7,9 +7,9 @@ alwaysApply: true
 
 Unikamy skalowania parametrów po liczbie graczy (`3p` / `4p` / `5p`).
 
-- Jedna liczba na cały stół jest domyślna (jak relikwie Cieni = 2, fragmenty Kabały = 3).
+- Jedna liczba na cały stół jest domyślna (jak relikwie Cieni = 2, fragmenty Kabały = 2, upadki Gildii = 8).
 - Jeśli spłaszczenie daje **lepszy** wynik sim, **podobny**, albo gorszy tylko **małym kosztem** — rezygnujemy ze skalowania.
 - V-kształt (np. `2/3/2`) i osobny próg tylko dla 4p to proteza, nie balans. Nie dodawaj nowych `3p`/`4p`/`5p` bez pomiaru, który pokazuje że jedna liczba pada.
-- Skalowanie składu stołu (np. Gildia 3 upadki bez Oficjum) to nie to samo co skalowanie liczby graczy — skład zostaje.
+- Wyjątki są dopuszczalne wyłącznie przy twardym uzasadnieniu geometrią stołu (np. skalowanie skazań Świętego Oficjum: 2 w 3p vs 3 w 4p/5p z powodu mniejszej liczby rywali).
 
 Źródło: [`docs/rules/hierarchia_balansowania.md`](docs/rules/hierarchia_balansowania.md).

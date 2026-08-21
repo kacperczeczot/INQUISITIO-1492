@@ -10,6 +10,5 @@
 
 3. **Ścisłe uzasadnienie dopuszczalnych wyjątków:**
    Każdy wyjątek dla liczby graczy musi być w 100% uzasadniony fizyczną geometrią i logiką stołu:
-   - **Skalowanie puli celów:** Liczba agentów rywali rośnie z liczbą graczy ($N=3 \rightarrow 6$, $N=4 \rightarrow 9$, $N=5 \rightarrow 12$), co uzasadnia proporcjonalny wymóg Stosów ($3\text{p}: 4$, $4\text{p}: 4$, $5\text{p}: 5$).
-   - **Tożsamość stołu:** Nieobecność kluczowej frakcji (np. brak Świętego Oficjum naturalnie zwiększa wymóg Upadków dla Gildii Cieni z 2 do 3).
+   - **Skalowanie puli celów:** Liczba agentów rywali rośnie z liczbą graczy ($N=3 \rightarrow 6$, $N=4 \rightarrow 9$, $N=5 \rightarrow 12$), co uzasadnia skalowanie celów zależnych od liczby unikalnych rywali (np. Skazania Świętego Oficjum: $3\text{p}: 2$, $4\text{p}: 3$, $5\text{p}: 3$).
    - **Przejrzystość reguł:** Wyjątek musi być natychmiast zrozumiały dla człowieka czytającego kartę pomocy gracza.

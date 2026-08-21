@@ -20,8 +20,7 @@ Struktura hierarchiczna określająca ścisłą kolejność optymalizacji i dost
 
 3. **Kryteria dopuszczalności wyjątku — Ścisłe Uzasadnienie Fizyką Stołu:**
    Każdy wyjątek dla liczby graczy musi być **ściśle i logicznie uzasadniony fizyczną geometrią rozgrywki**:
-   - **Skalowanie puli celów:** Liczba obcych agentów na planszy ($N=3 \rightarrow 6$ agentów, $N=4 \rightarrow 9$ agentów, $N=5 \rightarrow 12$ agentów) — wymóg stosów lub celów może rosnąć proporcjonalnie do puli rywali, aby zachować symetryczny wysiłek wygranej.
-   - **Tożsamość obecności frakcji:** Np. brak Świętego Oficjum przy stole naturalnie zmienia warunki Gildii Cieni (3 Upadki zamiast 2).
+   - **Skalowanie puli celów:** Liczba obcych agentów na planszy ($N=3 \rightarrow 6$ agentów, $N=4 \rightarrow 9$ agentów, $N=5 \rightarrow 12$ agentów) — wymóg stosów lub celów może rosnąć proporcjonalnie do puli rywali, aby zachować symetryczny wysiłek wygranej (np. skalowanie skazań Oficjum w 3p: 2 vs 4p/5p: 3).
    - **Zrozumiałość dla człowieka:** Wyjątek musi być prosty, elegancki i intuicyjny dla gracza czytającego instrukcję przy stole (np. w tabeli pomocy gracza), a nie stanowić ukrytego, zawiłego algorytmu.
 
 4. **Ablacja ≠ gałka audytora:**
@@ -65,17 +64,13 @@ Koszty złotowe oraz przydział efektów kart w poszczególnych warstwach:
 - **Koszt zagrania kart:** Dociąg, alchemia, areszty i wymuszenia zbalansowane w Warstwach A, B i C.
 - **Karty Signature (Warstwa C):**
   - Święte Oficjum `so-10`: koszt 5zł
-  - Cienie Al-Andalus `caa-10`: koszt 0zł
+  - Cienie Al-Andalus `caa-10`: koszt 1zł
   - Korona & Borgiowie `kb-10`: koszt 3zł
   - Kabała z Toledo `kt-10`: koszt 2zł
   - Gildia Cieni `gc-10`: koszt 4zł
 
 ---
 
-## 4. Poziom 4: Mikro-Symetria i Warianty Setupów (Setup Edge-Cases)
+## 4. Poziom 4: Warianty Setupów (Setup-Specific Tuning)
 
-Dostrajanie unikalnych zestawień frakcji przy stole:
-
-- Warianty bez Oficjum (np. `3p-cienie-korona-gildia` / `4p-no-oficjum`)
-- Warianty bez Korony / bez Cieni / bez Kabały
-- Analityka 5 filarów (Pas Biedy < 30%, Deadlocki < 15%, Autodafé > 0.5)
+Miejsce na ewentualne dostrojenia specyficzne dla konkretnych zestawień frakcji przy stole. Obecnie brak — wszystkie 16 presetów gra tymi samymi, jednolitymi regułami.
