@@ -150,7 +150,7 @@ def _drag_relic_toward_harbor(
 
 
 def _mark_gc10_fall_if_legal(state: GameState, fid: FactionId) -> None:
-    """Upadek Domu: tylko rywal z Hakiem Gildii lub Marionetką (nie sam krytyczny próg)."""
+    """Upadek Domu: rywal z Hakiem Gildii, Marionetką lub pod Inkwizytorem."""
     pl_gc = state.players[fid]
     for rival in state.turn_order:
         if rival == fid:
@@ -158,7 +158,11 @@ def _mark_gc10_fall_if_legal(state: GameState, fid: FactionId) -> None:
         rp = state.players[rival]
         hooked = pl_gc.hooks_on.get(rival, 0) > 0 or rival in pl_gc.hook_victims_ever
         marionette = any(ag.double_agent for ag in rp.agents)
-        if hooked or marionette:
+        at_inquisitor = (
+            rival != FactionId.SWIETE_OFICJUM
+            and any(ag.location == state.inquisitor_location and not ag.arrested for ag in rp.agents)
+        )
+        if hooked or marionette or at_inquisitor:
             pl_gc.falls += 1
             state.add_log(f"{fid.value} fall on {rival.value} (total={pl_gc.falls})")
             break
@@ -266,8 +270,11 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
         # Finisher assist: +1 Fragment only when already on the path (≥1)
         if pl.fragments >= 1:
             pl.fragments += 1
-        if pl.fragments >= 3 and not (4 <= pl.heresy <= 6):
-            pl.heresy = 5
+        raw = card.raw if isinstance(card.raw, dict) else {}
+        band = raw.get("target_heresy_band", [4, 6])
+        fallback = raw.get("fallback_heresy", 5)
+        if pl.fragments >= 3 and not (band[0] <= pl.heresy <= band[1]):
+            pl.heresy = fallback
         state.add_log(f"{fid.value} fragments={pl.fragments} heresy={pl.heresy}")
 
 

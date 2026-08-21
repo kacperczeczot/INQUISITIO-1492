@@ -1,15 +1,17 @@
-"""v0.99.4 — YAML knobs and card fields must reach the engine (gwarancja silnika)."""
+"""v1.0-alpha.22 — YAML knobs, card fields, and rule mechanics must reach the engine (gwarancja silnika)."""
 from __future__ import annotations
 
 import random
 
 from inquisitio.cards.loader import load_all_cards
-from inquisitio.engine.effects.registry import resolve_card_effects
-from inquisitio.engine.inquisitor import era_start_inquisitor, move_inquisitor
+from inquisitio.config import CONFIG
+from inquisitio.engine.card_conditions import card_condition_met
+from inquisitio.engine.effects.registry import resolve_card_effects, resolve_time_edict
+from inquisitio.engine.inquisitor import move_inquisitor, resolve_autodafe
 from inquisitio.engine.setup import new_game
 from inquisitio.engine.state import FactionId
 from inquisitio.engine.turn import _maybe_open_sea_route
-from inquisitio.engine.verdict import run_verdict
+from inquisitio.engine.win import check_winner_details
 
 
 def test_kt11_heresy_decrease_from_yaml():
@@ -88,3 +90,132 @@ def test_kb10_fiasco_without_two_hooks():
     _signature(st, FactionId.KORONA_BORGIOWIE, card, random.Random(5))
     assert kb.decrees_played == before_decrees
     assert any("fiasko" in msg for msg in st.log)
+
+
+def test_so05_reaction_triggers_on_heresy_play():
+    st = new_game(setup="4p-core", seed=21, layer="C")
+    so = st.players[FactionId.SWIETE_OFICJUM]
+    so.hand = ["so-05"]
+    so.gold = 3
+    kt = st.players[FactionId.KABALA_TOLEDO]
+    kt.gold = 5
+    # kt-04 has heresy: 1 (or gc-11/so-03)
+    card = load_all_cards()["so-03"]  # heresy: 2, target_heresy: 3
+    resolve_card_effects(st, FactionId.KABALA_TOLEDO, card, random.Random(7))
+    assert "so-05" not in so.hand
+    assert "so-05" in so.discard
+    assert any("so-05" in msg for msg in st.log)
+
+
+def test_so10_forces_autodafe():
+    st = new_game(setup="4p-core", seed=23, layer="C")
+    so = st.players[FactionId.SWIETE_OFICJUM]
+    so.gold = 5
+    st.inquisitor_location = "palac"
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+    caa.agents[0].location = "palac"
+    caa.agents[0].arrested = False
+    caa.heresy = 5  # observed
+    card = load_all_cards()["so-10"]
+    resolve_card_effects(st, FactionId.SWIETE_OFICJUM, card, random.Random(8))
+    assert any("Autodafé" in msg for msg in st.log)
+
+
+def test_caa05_evacuates_relic_and_sets_shadow_exit():
+    st = new_game(setup="4p-core", seed=25, layer="C")
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+    caa.gold = 3
+    loc = caa.agents[0].location
+    st.inquisitor_location = "trybunal" if loc != "trybunal" else "palac"
+    st.relics_on_board[loc] = 1
+    card = load_all_cards()["caa-05"]
+    resolve_card_effects(st, FactionId.CIENIE_AL_ANDALUS, card, random.Random(9))
+    assert caa.relics_evacuated == 1
+    assert caa.shadow_exit is True
+
+
+def test_caa06_frees_prisoner():
+    from inquisitio.engine.dungeon import arrest_agent
+    st = new_game(setup="4p-core", seed=27, layer="C")
+    caa = st.players[FactionId.CIENIE_AL_ANDALUS]
+    arrest_agent(st, FactionId.CIENIE_AL_ANDALUS)
+    assert any(ag.arrested and ag.location == "lochy" for ag in caa.agents)
+    card = load_all_cards()["caa-06"]
+    resolve_card_effects(st, FactionId.CIENIE_AL_ANDALUS, card, random.Random(10))
+    assert not any(ag.arrested for ag in caa.agents)
+
+
+def test_kt10_respects_heresy_band_and_fallback():
+    st = new_game(setup="4p-core", seed=29, layer="C")
+    kt = st.players[FactionId.KABALA_TOLEDO]
+    kt.fragments = 2
+    kt.heresy = 0  # with card heresy 2 => 2 (outside [4, 6] band)
+    card = load_all_cards()["kt-10"]
+    from inquisitio.engine.effects.registry import _signature
+    _signature(st, FactionId.KABALA_TOLEDO, card, random.Random(11))
+    assert kt.fragments == 3
+    assert kt.heresy == 5  # fallback applied
+
+
+def test_gc10_fiasco_and_success():
+    st = new_game(setup="5p-full", seed=31, layer="C")
+    gc = st.players[FactionId.GILDIA_CIENI]
+    card = load_all_cards()["gc-10"]
+
+    # Fiasco when no hook/marionette/inquisitor
+    from inquisitio.engine.effects.registry import _gc_extra
+    before_falls = gc.falls
+    _gc_extra(st, FactionId.GILDIA_CIENI, card, random.Random(12))
+    assert gc.falls == before_falls
+
+    # Success when hook is present on rival
+    gc.hooks_on[FactionId.CIENIE_AL_ANDALUS] = 1
+    _gc_extra(st, FactionId.GILDIA_CIENI, card, random.Random(13))
+    assert gc.falls == before_falls + 1
+
+
+def test_all_ten_time_edicts_execute_cleanly():
+    cards = load_all_cards()
+    for tid in [f"time-0{i}" for i in range(1, 10)] + ["time-10"]:
+        st = new_game(setup="4p-core", seed=42, layer="C")
+        resolve_time_edict(st, tid, random.Random(42))
+        assert any(tid in msg for msg in st.log), f"Edict {tid} did not log"
+
+
+def test_victory_conditions_strictly_follow_ssot_config():
+    st = new_game(setup="5p-full", seed=99, layer="C")
+    cfg_v = CONFIG.victory
+
+    # SO Stacks
+    st.players[FactionId.SWIETE_OFICJUM].stacks = int(cfg_v.swiete_oficjum.stacks)
+    assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
+    st.players[FactionId.SWIETE_OFICJUM].stacks = 0
+
+    # SO Condemns
+    condemns_5p = int(cfg_v.swiete_oficjum.condemns.get("5p", 3))
+    st.players[FactionId.SWIETE_OFICJUM].condemned_rivals = set(list([FactionId.CIENIE_AL_ANDALUS, FactionId.KORONA_BORGIOWIE, FactionId.KABALA_TOLEDO])[:condemns_5p])
+    assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
+    st.players[FactionId.SWIETE_OFICJUM].condemned_rivals.clear()
+
+    # CAA Relics
+    st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = int(cfg_v.cienie_al_andalus.relics)
+    st.players[FactionId.CIENIE_AL_ANDALUS].shadow_exit = True
+    assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
+    st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = 0
+
+    # KB Decrees
+    st.players[FactionId.KORONA_BORGIOWIE].decrees_played = int(cfg_v.korona_borgiowie.decrees)
+    assert check_winner_details(st) == (FactionId.KORONA_BORGIOWIE, "kb_main")
+    st.players[FactionId.KORONA_BORGIOWIE].decrees_played = 0
+
+    # KT Fragments
+    st.players[FactionId.KABALA_TOLEDO].fragments = int(cfg_v.kabala_toledo.fragments)
+    st.era = int(cfg_v.kabala_toledo.era)
+    assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
+    st.players[FactionId.KABALA_TOLEDO].fragments = 0
+
+    # GC Falls
+    st.players[FactionId.GILDIA_CIENI].falls = int(cfg_v.gildia_cieni.falls)
+    assert check_winner_details(st) == (FactionId.GILDIA_CIENI, "gc_falls")
+    st.players[FactionId.GILDIA_CIENI].falls = 0
+

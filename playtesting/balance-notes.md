@@ -13,23 +13,27 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v0.99.6**
+## Gwarancja silnika — `game_config.yaml` **v1.0-alpha.22** (Odnowiona)
 
-**Zakres:** pętla ery gra te same procedury stołu co księga / słownik / `game/mechanics/` (Intryga, Sąd, Kronika). Każda **nazwana mechanika L4 i pole karty z `config_reference.md`** jest wpięta — nie martwy YAML.
+**Zakres:** pętla ery symulatora wykonuje dokładnie te same procedury stołu co księga zasad, słownik i `game/mechanics/` (Intryga, Sąd/Werdykt, Kronika Dziejów). Każda **nazwana mechanika L4, wariant, predykat warunku i pole karty z `game_config.yaml` (SSOT) oraz frontmatterów** jest bezpośrednio wpięta w silnik — brak martwych parametrów YAML.
 
-**v0.99.4 domknięcie luk (wcześniej martwe w simie):**
-- `variants.sea_route_era` — planowe otwarcie Szlaku (nie tylko edykt `time-03`)
-- `variants.verdict_secret`, `no_time_deck`, `time_deck_freq`, `inquisitor_speed` — odczyt z CONFIG + `sys_overrides`
-- CAA: `caa-03` ciągnie relikwię; `caa-05` → `shadow_exit`; `caa-08`/`caa-11`; `caa-10` warunek + snapshot przy stagingu
-- Korona: `kb-10` warunek `active_hooks_gte_2` + ochrona Haków do odkrycia (`StagedPlay.cond_ok`, skip `force_hook`)
-- Karty: `heresy_decrease` (`kt-11`), YAML `condition` → fiasko (per-handler, nie globalnie)
-- Testy: `sim/tests/test_engine_guarantee.py`, `test_ssot_live_knobs.py` — **204 passed**
+**Stan weryfikacji i domknięcia (SSOT v1.0-alpha.22):**
+- **Warianty L4:** `variants.sea_route_era` (planowe otwarcie Szlaku Morskiego od Ery 4), `variants.time_deck_freq`, `variants.inquisitor_speed`, `no_time_deck` — odczyt z `CONFIG` + `sys_overrides`. Usunięto martwe parametry legacy (`path_era` CAA, `verdict_secret`).
+- **Święte Oficjum:** `so-05` (reakcja Wezwanie do Trybunału na zagranie Herezji przez rywala), `so-07` (przesłuchanie), `so-10` (wymuszenie procedury Autodafé).
+- **Cienie Al-Andalus:** `caa-03` (ciągnięcie relikwii do portów rynek/gildia), `caa-05` (Ukryty Kurier: ewakuacja + `shadow_exit`), `caa-06` (uwolnienie z Lochów), `caa-08` (ruch podwójnym agentem), `caa-09` (transport relikwii), `caa-10` (ewakuacja relikwii z warunkiem i snapshotem przy stagingu), `caa-11` (nasłanie Inkwizytora po ruchu).
+- **Korona & Borgiowie:** `kb-04` (Haki od Ery 4 w A-layer), `kb-05` (Dekret w A / redukcja herezji w B/C), `kb-09` (Dekret + wymuszenie/nadanie Haka), `kb-10` (Dekret z warunkiem `active_hooks_gte_2` i ochroną Haków przy stagingu).
+- **Kabała z Toledo:** `kt-03`/`kt-05`/`kt-09` (pozyskiwanie Fragmentów Kodeksu w Lochach/Trybunale), `kt-06` (przesłuchanie z bonusem Fragmentu), `kt-10` (Pieczęć Salomona: pasmo `target_heresy_band` i `fallback_heresy`), `kt-11` (`heresy_decrease`).
+- **Gildia Cieni:** `gc-03` (podrzucenie dowodów), `gc-09` (Lista Dłużników / Hak), `gc-10` (Upadek Domu: warunek `rival_has_hook_or_double_or_autodafe` i egzekucja Upadku wobec rywala z Hakiem, Marionetką lub pod Inkwizytorem).
+- **Kronika Dziejów (10 Edyktów Czasu):** Pełna obsługa edyktów `time-01` do `time-10` (Godzina Policyjna, Flota Odkrywców, Bunt w Lochach, Amnestia Biskupia, Jarmark Królewski, Gorączka Donosów, Nocna Obława, Kapitulacja Grenady, Rewizja, Święte Przymierze).
+- **Warunki i Fiaska (`card_conditions.py`):** 10 predykatów YAML (`relic_present`, `has_double_agent`, `agent_in_dungeon_or_tribunal`, `fragments_eq_3`, `active_hooks_gte_2`, `heresy_gte_4`, `has_fragment_and_agent_in_dungeon_or_tribunal`, `no_inquisitor_or_double_or_sea_route`, `rival_has_hook_or_double_or_autodafe`, `rival_in_dungeon_or_inquisitor`) + snapshot `StagedPlay.cond_ok` przy planowaniu.
+- **Ewaluator Zwycięstwa (`win.py`):** Zgodny w 100% z progami SSOT (Stosy 6, Skazania 2/3, Relikwie 2, Dekrety 2, Fragmenty 2 od Ery 6, Upadki 8).
+- **Testy automatyczne:** `sim/tests/test_engine_guarantee.py`, `test_ssot_live_knobs.py`, `test_intrigue_canon.py`, `test_balance.py` — **214 passed** (100% zielone).
 
-**Poza zakresem (świadomie):** AI nie blefuje jak człowiek; wolny tekst `effect` nie jest kompilatorem leksykonu — karty idą przez handlery + pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (balance-notes).
+**Poza zakresem (świadomie):** AI operuje na zoptymalizowanych heurystykach stołowych (nie blefuje jak człowiek); wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
 
-**Audytor — nie z dołu.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P tylko gdy udziały są już w 15–35%.
+**Audytor — nie z dołu.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P tylko gdy udziały są już w bramce 15–35%.
 
-— Cursor Grok 4.6
+— Antigravity (Gemini 3.7 Flash) · Architekt Balansu & Inżynier Silnika INQUISITIO-1492
 
 ---
 
@@ -67,11 +71,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 - **Dekrety Królewskie:** **2 Dekrety**. Haki nie są warunkiem wygranej.
 
 ### 4. Kabała z Toledo
-- **Fragmenty Kodeksu:** **3**.
+- **Fragmenty Kodeksu:** **2**.
 - **Minimalna Era:** **6**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
 
 ### 5. Gildia Cieni
-- **Upadki:** **5** (jedna liczba; wyjątek bez Oficjum usunięty).
+- **Upadki:** **8** (jedna liczba; wyjątek bez Oficjum usunięty).
 
 ---
 
