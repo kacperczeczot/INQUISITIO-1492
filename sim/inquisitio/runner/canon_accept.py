@@ -153,9 +153,13 @@ def accept_candidate(
         if not safe:
             return AcceptDecision(False, msg, "legacy")
         d = _score(cand) - _score(base)
+        dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+        # Akceptujemy zysk w globalnym score LUB istotną poprawę najsłabszego setupu (Maximin) bez zapaści średniej
         if d >= min_delta:
-            return AcceptDecision(True, f"legacy Δ {d:+.2f} ≥ {min_delta}", "legacy")
-        return AcceptDecision(False, f"legacy Δ {d:+.2f} < {min_delta}", "legacy")
+            return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta}", "legacy")
+        if dmin >= 0.5 and d >= -0.1:
+            return AcceptDecision(True, f"legacy Maximin Δmin {dmin:+.2f} (Δscore {d:+.2f})", "legacy")
+        return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} < {min_delta}", "legacy")
 
     if mode != "band":
         raise ValueError(f"Unknown accept mode: {mode!r}")

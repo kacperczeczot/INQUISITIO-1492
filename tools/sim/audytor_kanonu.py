@@ -427,6 +427,42 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
     return (combined_id, combined_name, merged_params)
 
 
+def select_diverse_survivors(results: list[dict], cand_dict: dict, target_count: int) -> list[tuple[str, str, dict]]:
+    """Select a diverse set of candidates: global leaders + maximin leaders + setup champions."""
+    if len(results) <= target_count:
+        return [cand_dict[r["id"]] for r in results]
+
+    selected_ids = []
+
+    # 1. Top by global score_4p_balance (50% quota)
+    by_score = sorted(results, key=lambda r: -r.get("score_4p_balance", 0))
+    quota_global = max(1, target_count // 2)
+    for r in by_score:
+        if r["id"] not in selected_ids and len(selected_ids) < quota_global:
+            selected_ids.append(r["id"])
+
+    # 2. Top by weakest setup improvement (min_balance) (30% quota)
+    by_min = sorted(results, key=lambda r: -r.get("min_balance", 0))
+    quota_min = quota_global + max(1, int(target_count * 0.3))
+    for r in by_min:
+        if r["id"] not in selected_ids and len(selected_ids) < quota_min:
+            selected_ids.append(r["id"])
+
+    # 3. Setup champions for struggling setups (4p-core, 4p-no-kabala, 4p-no-oficjum)
+    for sname in ["4p-no-kabala", "4p-core", "4p-no-oficjum"]:
+        by_setup = sorted(results, key=lambda r: -r.get("setup_scores_balance", {}).get(sname, 0))
+        for r in by_setup[:2]:
+            if r["id"] not in selected_ids and len(selected_ids) < target_count:
+                selected_ids.append(r["id"])
+
+    # 4. Fill remaining slots from global sort
+    for r in by_score:
+        if r["id"] not in selected_ids and len(selected_ids) < target_count:
+            selected_ids.append(r["id"])
+
+    return [cand_dict[cid] for cid in selected_ids]
+
+
 def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000, seed: int = 42) -> tuple[Path, Path | None]:
     """Generates and archives raport_telemetrii.md for the given version across all 16 setups."""
     setups = sorted(SETUP_PRESETS.keys())
@@ -908,7 +944,7 @@ class Canon4PAutoBalancer:
                 stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label="Przesiew 4P 1/3")
                 stage1_results.sort(key=self._rank)
                 n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-                survivors = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
+                survivors = select_diverse_survivors(stage1_results, cand_dict, n_semifinalists)
             else:
                 print(f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): {len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie.")
 
@@ -919,7 +955,7 @@ class Canon4PAutoBalancer:
                 stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label="Przesiew 4P 2/3")
                 stage2_results.sort(key=self._rank)
                 n_finalists = min(self.args.top_k, len(stage2_results))
-                survivors = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
+                survivors = select_diverse_survivors(stage2_results, cand_dict, n_finalists)
             else:
                 print(f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): {len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra.")
 
@@ -1063,13 +1099,26 @@ class Canon4PAutoBalancer:
 
             else:
                 print(
-                    f"\n⚪ Brak wariantu do przyjęcia (tryb {self._accept_mode()}, "
-                    f"legacy min_delta={self.args.min_delta}) w Fazie {current_phase}D."
+                    f"\n⚪ Brak bezpośredniego zwycięzcy w Fazie {current_phase}D. "
+                    f"Buduję zaawansowane wiązki synergii dla słabych setupów..."
                 )
-                top_beam_results = stage3_results[: self.args.beam_width]
-                beam_seeds = [cand_dict[r["id"]] for r in top_beam_results]
+                diverse_seeds = []
+                by_score = sorted(stage3_results, key=lambda r: -r.get("score_4p_balance", 0))
+                for r in by_score[:4]:
+                    diverse_seeds.append(cand_dict[r["id"]])
+                by_min = sorted(stage3_results, key=lambda r: -r.get("min_balance", 0))
+                for r in by_min[:4]:
+                    if cand_dict[r["id"]] not in diverse_seeds:
+                        diverse_seeds.append(cand_dict[r["id"]])
+                for sname in ["4p-no-kabala", "4p-core", "4p-no-oficjum"]:
+                    by_s = sorted(stage3_results, key=lambda r: -r.get("setup_scores_balance", {}).get(sname, 0))
+                    for r in by_s[:2]:
+                        if cand_dict[r["id"]] not in diverse_seeds:
+                            diverse_seeds.append(cand_dict[r["id"]])
+
+                beam_seeds = diverse_seeds[: self.args.beam_width]
                 current_phase += 1
-                print(f"🔄 Kwalifikuję TOP {len(beam_seeds)} nasion wiązki i ESKALUJĘ DO FAZY {current_phase}D...\n")
+                print(f"🔄 Zakwalifikowano {len(beam_seeds)} nasion synergii i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
         self._emit_manual_ablation_review()
         print(f"\n═══════════════════════════════════════════════════════════════════════")
