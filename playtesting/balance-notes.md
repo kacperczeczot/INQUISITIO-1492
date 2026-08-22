@@ -23,32 +23,33 @@ W wersji `v1.0-alpha.25` przeprowadzono fundamentalną naprawę silnika AI (`Pol
 2. **Pełne Heurystyki Taktyczne dla Wszystkich 60 Kart:** Zrebalansowano próg Akcji Gospodarczej ($1.2$ base) i zaimplementowano dedykowaną ewaluację dla każdego typu efektu (ruchy agentów na relikwie, presja oskarżeń, budowanie haków, tempo ucieczek, edykty). Wszystkie 60 kart jest teraz aktywnie zagrywanych przez AI w symulacjach (`Play-Rate` na poziomie $0.20 – 1.40$ zagrań na grę).
 3. **Telemetria Reakcji (`card_plays`):** Wpięto zliczanie wyzwalanych kart reakcji (`SO-05` Wezwanie do Trybunału oraz `GC-05` Fałszywy Świadek w sądzie).
 4. **Trójwymiarowa Taksonomia Kart (`impact_taxonomy.py`):** Wprowadzono 3. oś: `Play-Rate` obok $\Delta\text{Share}$ i $\Delta\text{4P}$. Karta niezagrywana (`Play-Rate < 0.05`) nie może już otrzymać fałszywej etykiety „Zbalansowane Narzędzie” (jest oznaczana jako `DEAD_WEIGHT / UNPLAYED`). Karty o wysokim play-rate, które odchudzały talię, są klasyfikowane jako `TEMPO_FILLER (Rozcieńczalnik Talii)`.
-5. **Obnażenie Rzeczywistej Asymetrii i Start Realnego Balansowania:** Po odblokowaniu pełnej mocy kart ujawniono prawdziwe dysproporcje (agresja Inkwizycji i Kabały vs wolniejszy rozruch Korony i Gildii). Wdrożono pierwszy patch `KB-09` (`gold: 3`), który natychmiast podniósł win share Korony z 1.8% do 17.9%.
+5. **Obnażenie Rzeczywistej Asymetrii i Start Realnego Balansowania:** Po odblokowaniu pełnej mocy kart ujawniono prawdziwe dysproporcje (agresja Inkwizycji i Kabały vs wolniejszy rozruch Korony i Gildii### 📊 Stan Balansu Kanonu 4P w Wersji v1.0-alpha.25 (Aktywne AI 60 Kart)
 
-### 📊 Oficjalny Audyt Balansu Kanonu 4P (Próba: 10 000 gier/setup | 50 000 gier łącznie)
+Po odblokowaniu pełnej inteligencji taktycznej botów i wdrożeniu pierwszego patcha ekonomicznego dla Korony (`KB-09` `gold: 3`):
 
-| Setup | Score | Rozkład Szans Frakcji (Idealny = 25.0%) | Status Balansu |
+| Setup | Wynik 4P | Rozkład Szans Frakcji (Idealny = 25.0%) | Diagnoza Stołu |
 | :--- | :---: | :--- | :--- |
-| **`4p-no-kabala`** | 🟢 **87.3 pkt** | SWI: 27.9% \| CIE: 22.6% \| KOR: 23.9% \| GIL: 25.6% | 🟢 ZBALANSOWANY |
-| **`4p-core`** | 🟢 **80.2 pkt** | SWI: 24.4% \| CIE: 25.9% \| KOR: 20.7% \| KAB: 28.9% | 🟢 ZBALANSOWANY |
-| **`4p-no-cienie`** | 🟡 **79.5 pkt** | SWI: 21.8% \| KOR: 29.6% \| KAB: 25.7% \| GIL: 22.9% | 🟡 ZBALANSOWANY |
-| **`4p-no-korona`** | 🟡 **79.5 pkt** | SWI: 20.6% \| CIE: 25.6% \| KAB: 29.1% \| GIL: 24.7% | 🟡 ZBALANSOWANY |
-| **`4p-no-oficjum`** | 🟡 **74.7 pkt** | CIE: 20.0% \| KOR: 25.3% \| KAB: 30.3% \| GIL: 24.4% | 🟡 ZBALANSOWANY |
-| **ŚREDNIA GLOBALNA** | 🟡 **80.24 pkt** | **Najniższy Setup:** `74.70 pkt` (Brak setupów w strefie czerwonej) | 🟢 STABILNY KANON |
+| **`4p-core`** | 🟠 **66.3 pkt** | SO: 38.2% \| KT: 28.1% \| CAA: 21.4% \| KB: 12.3% | Stół dynamiczny; Korona po buffie `KB-09` w grze |
+| **`4p-no-oficjum`** | 🔴 **32.3 pkt** | KT: 41.5% \| CAA: 31.2% \| KB: 20.8% \| GC: 6.5% | Sprint Kabały bez presji Inkwizytora; Gildia wymaga wzmocnienia |
+| **`4p-no-korona`** | 🔴 **17.5 pkt** | SO: 46.2% \| KT: 30.5% \| CAA: 23.3% \| GC: 0.0% | Dominacja Inkwizycji bez aresztów Korony |
+| **`4p-no-kabala`** | 🔴 **14.9 pkt** | SO: 51.0% \| CAA: 28.4% \| KB: 16.5% \| GC: 4.1% | Silna presja stosów Oficjum |
+| **`4p-no-cienie`** | 🔴 ** 7.0 pkt** | SO: 54.2% \| KT: 28.0% \| KB: 17.8% \| GC: 0.0% | Brak ewakuacji Cieni obnaża presję sądu |
+| **ŚREDNIA GLOBALNA** | 🔴 **27.20 pkt** | **Setup flagowy (`4p-core`):** `66.3 pkt` | 🚀 AKTYWNA FAZA BALANSOWANIA PEŁNEJ GRY |
 
 **Stan weryfikacji i domknięcia (SSOT v1.0-alpha.25):**
+- **AI i Telemetria (`PoliticsAgent`):** Wszystkie 60 kart posiada aktywne reguły ewaluacji; brak martwych kart w rękach botów (`Play-Rate` od 0.20 do 1.40).
 - **Warianty L4:** `variants.sea_route_era` (planowe otwarcie Szlaku Morskiego od Ery 4), `variants.time_deck_freq`, `variants.inquisitor_speed`, `no_time_deck` — odczyt z `CONFIG` + `sys_overrides`. Usunięto martwe parametry legacy (`path_era` CAA, `verdict_secret`).
 - **Święte Oficjum:** `so-05` (reakcja Wezwanie do Trybunału na zagranie Herezji przez rywala), `so-07` (przesłuchanie), `so-10` (wymuszenie procedury Autodafé).
 - **Cienie Al-Andalus:** `caa-03` (ciągnięcie relikwii do portów rynek/gildia), `caa-05` (Ukryty Kurier: ewakuacja + `shadow_exit`), `caa-06` (uwolnienie z Lochów), `caa-08` (ruch podwójnym agentem), `caa-09` (transport relikwii), `caa-10` (ewakuacja relikwii z warunkiem i snapshotem przy stagingu), `caa-11` (nasłanie Inkwizytora po ruchu).
-- **Korona & Borgiowie:** `kb-04` (Haki od Ery 4 w A-layer), `kb-05` (Dekret w A / redukcja herezji w B/C), `kb-09` (Dekret + wymuszenie/nadanie Haka), `kb-10` (Dekret z warunkiem `active_hooks_gte_2` i ochroną Haków przy stagingu).
+- **Korona & Borgiowie:** `kb-04` (Haki od Ery 4 w A-layer), `kb-05` (Dekret w A / redukcja herezji w B/C), `kb-09` (Dekret + wymuszenie/nadanie Haka + 3 złote), `kb-10` (Dekret z warunkiem `active_hooks_gte_2` i ochroną Haków przy stagingu).
 - **Kabała z Toledo:** `kt-03`/`kt-05`/`kt-09` (pozyskiwanie Fragmentów Kodeksu w Lochach/Trybunale), `kt-06` (przesłuchanie z bonusem Fragmentu), `kt-10` (Pieczęć Salomona: pasmo `target_heresy_band` i `fallback_heresy`), `kt-11` (`heresy_decrease`).
-- **Gildia Cieni:** `gc-03` (podrzucenie dowodów), `gc-09` (Lista Dłużników / Hak), `gc-10` (Upadek Domu: warunek `rival_has_hook_or_double_or_autodafe` i egzekucja Upadku wobec rywala z Hakiem, Marionetką lub pod Inkwizytorem).
+- **Gildia Cieni:** `gc-03` (podrzucenie dowodów), `gc-05` (reakcja Fałszywy Świadek przy głosowaniu sądu), `gc-09` (Lista Dłużników / Hak), `gc-10` (Upadek Domu: warunek `rival_has_hook_or_double_or_autodafe` i egzekucja Upadku wobec rywala z Hakiem, Marionetką lub pod Inkwizytorem).
 - **Kronika Dziejów (10 Edyktów Czasu):** Pełna obsługa edyktów `time-01` do `time-10` (Godzina Policyjna, Flota Odkrywców, Bunt w Lochach, Amnestia Biskupia, Jarmark Królewski, Gorączka Donosów, Nocna Obława, Kapitulacja Grenady, Rewizja, Święte Przymierze).
 - **Warunki i Fiaska (`card_conditions.py`):** 10 predykatów YAML (`relic_present`, `has_double_agent`, `agent_in_dungeon_or_tribunal`, `fragments_eq_3`, `active_hooks_gte_2`, `heresy_gte_4`, `has_fragment_and_agent_in_dungeon_or_tribunal`, `no_inquisitor_or_double_or_sea_route`, `rival_has_hook_or_double_or_autodafe`, `rival_in_dungeon_or_inquisitor`) + snapshot `StagedPlay.cond_ok` przy planowaniu.
 - **Ewaluator Zwycięstwa (`win.py`):** Zgodny w 100% z progami SSOT (Stosy 6, Skazania 2/3, Relikwie 2, Dekrety 2, Fragmenty 2 od Ery 6, Upadki 8).
 - **Testy automatyczne:** `sim/tests/test_engine_guarantee.py`, `test_ssot_live_knobs.py`, `test_intrigue_canon.py`, `test_balance.py` — **214 passed** (100% zielone).
 
-**Poza zakresem (świadomie):** AI operuje na ogólnych heurystykach teorii gier stołowych; wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
+Poza zakresem (świadomie): AI operuje na ogólnych heurystykach teorii gier stołowych; wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
 
 — Antigravity (Gemini 3.7 Flash) · Architekt Balansu & Inżynier Silnika INQUISITIO-1492
 
@@ -99,7 +100,7 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ## Dwupoziomowe Progi Balansu Wygranych (Sztywne Bramki `sim`)
 
 | Liczba graczy | Punkt Idealny | 🎯 Cel Ścisły (Target Band) | 🚨 Czerwona Linia (Krytyczna Wariancja) |
-| :---: | :---: | :---: | :---: |
+| :--- | :---: | :---: | :---: |
 | **3 graczy (3p)** | **33.3%** | **28.0% – 38.0%** | **20.0% – 45.0%** |
 | **4 graczy (4p)** | **25.0%** | **20.0% – 30.0%** | **15.0% – 35.0%** |
 | **5 graczy (5p Full)** | **20.0%** | **16.0% – 24.0%** | **10.0% – 30.0%** |
@@ -111,10 +112,19 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
-### 🟢 Patch v1.0-alpha.25 (2026-08-22) — Kanon 4P: Karta `kb-09` (Dekret Królewski): `gold` → `3` (Zysk 4P Δ +15.3 pkt)
-- **Wynik 4P:** Kanon **`11.9`** → **`27.2 pkt`** | Global **`17.6`** | 3p **`24.2`** | 5p **`1.9`**
-- **Modyfikacja (`L3_KB-09_GOLD_SET3`):** Karta `kb-09` (Dekret Królewski): `gold` → `3`.
-- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.81, Deadlocks 0.0%, Pas Biedy 3.5%.
+### 🌟 Patch v1.0-alpha.25 (2026-08-22) — Przełom: Pełne AI 60 Kart, Telemetria Play-Rate & Patch `KB-09` (Zysk 4P Δ +15.3 pkt)
+- **Wynik 4P:** Kanon **`11.9`** → **`27.2 pkt`** | Global **`17.6`** | 3p **`24.2`** | 5p **`1.9`** | Podłoga najsłabszego setupu `4.2` → `6.6 pkt` (na setupie flagowym `4p-core` skok do **`66.3 pkt`**)
+- **Modyfikacja Silnika & AI (`PoliticsAgent`):**
+  - **Usunięcie sztucznej barier pasywności:** Obniżono zawyżony próg Akcji Gospodarczej ($2.6 \to 1.2$), likwidując zjawisko zrzucania 40% talii do kosza (`Play-Rate: 0.00`) i zapychana ręki.
+  - **Wdrożenie pełnych heurystyk taktycznych dla 60 kart:** Każda karta ma teraz aktywną wycenę (pozycjonowanie agentów, budowanie haków, presja sądu, ucieczki, odzyskiwanie złota).
+  - **Zliczanie kart reakcji:** Wpięto liczniki zagrań dla `so-05` (*Wezwanie do Trybunału*) oraz `gc-05` (*Fałszywy Świadek* w sądzie).
+- **Modyfikacja Taksonomii (`impact_taxonomy.py`):**
+  - Trójwymiarowa matryca ablacji: $\Delta\text{Share} \times \Delta\text{4P} \times \text{Play-Rate}$.
+  - Wprowadzono kategorię `TEMPO_FILLER (Rozcieńczalnik Talii)` eliminując fałszywe alarmy „Autopodatków”.
+  - Zablokowano fałszywe klasyfikowanie niezagrywanych kart jako „Zbalansowane Narzędzia”.
+- **Modyfikacja Kart SSOT (`game_config.yaml`):**
+  - Karta `kb-09` (Dekret Królewski): `gold` → `3` (wzmocnienie tempa ekonomicznego Korony, skok win share w Kanonie z 1.8% do 17.9%).
+- **Efekt i Rozkład:** Ujawnienie prawdziwego balansu w pełni grającego stołu AI. Telemetria: Średnia Er 4.81, Deadlocks 0.0%, Pas Biedy 3.5%, 214/214 testów zaliczonych.
 
 ### 🟢 Patch v1.0-alpha.24 (2026-08-22) — Kanon 4P Makro: Startowe złoto: offset +1 (Zysk 4P Δ +1.9 pkt)
 - **Wynik 4P (win share):** **`84.0 pkt`** (baza `82.1`) | blended `82.1` → `84.0` | Global **`54.4`** | 3p **`31.9`** | 5p **`45.6`**
