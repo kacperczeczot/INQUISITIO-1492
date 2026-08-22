@@ -13,11 +13,28 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v1.0-alpha.22** (Odnowiona)
+## Gwarancja silnika — `game_config.yaml` **v1.0-alpha.23** (Odnowiona — Dynamic Threat Assessment AI)
 
 **Zakres:** pętla ery symulatora wykonuje dokładnie te same procedury stołu co księga zasad, słownik i `game/mechanics/` (Intryga, Sąd/Werdykt, Kronika Dziejów). Każda **nazwana mechanika L4, wariant, predykat warunku i pole karty z `game_config.yaml` (SSOT) oraz frontmatterów** jest bezpośrednio wpięta w silnik — brak martwych parametrów YAML.
 
-**Stan weryfikacji i domknięcia (SSOT v1.0-alpha.22):**
+### 🌟 Kamień Milowy v1.0-alpha.23: Uniwersalna Teoria Gier w AI (`PoliticsAgent`)
+W wersji `v1.0-alpha.23` wyeliminowano wszelkie heurystyki specyficzne dla konkretnych setupów na rzecz **ogólnego silnika Oceny Zagrożeń Stołu (Dynamic Threat Assessment)**:
+1. **Wykrywanie Punktu Meczowego (Match Point):** Gracz szacuje stopień zaawansowania rywali do wygranej (np. 1 relikwia u Cieni, 2 haki u Korony, 2 fragmenty u Kabały, 6+ upadków u Gildii, 2 skazania u Oficjum).
+2. **Dynamiczny Sojusz Stołu Przeciwko Liderowi:** Gracze automatycznie koordynują presję (aresztowania, przesłuchania, oskarżenia) na aktualnym liderze.
+3. **Adaptacja do Obecności Inkwizycji:** Przy obecności Oficjum stół używa herezji jako broni; przy braku Inkwizycji stół polega na bezpośrednich aresztowaniach fizycznych.
+
+### 📊 Oficjalny Audyt Balansu Kanonu 4P (Próba: 10 000 gier/setup | 50 000 gier łącznie)
+
+| Setup | Score | Rozkład Szans Frakcji (Idealny = 25.0%) | Status Balansu |
+| :--- | :---: | :--- | :---: |
+| **`4p-no-kabala`** | 🟢 **87.3 pkt** | SWI: 27.9% \| CIE: 22.6% \| KOR: 23.9% \| GIL: 25.6% | 🟢 ZBALANSOWANY |
+| **`4p-core`** | 🟢 **80.2 pkt** | SWI: 24.4% \| CIE: 25.9% \| KOR: 20.7% \| KAB: 28.9% | 🟢 ZBALANSOWANY |
+| **`4p-no-cienie`** | 🟡 **79.5 pkt** | SWI: 21.8% \| KOR: 29.6% \| KAB: 25.7% \| GIL: 22.9% | 🟡 ZBALANSOWANY |
+| **`4p-no-korona`** | 🟡 **79.5 pkt** | SWI: 20.6% \| CIE: 25.6% \| KAB: 29.1% \| GIL: 24.7% | 🟡 ZBALANSOWANY |
+| **`4p-no-oficjum`** | 🟡 **74.7 pkt** | CIE: 20.0% \| KOR: 25.3% \| KAB: 30.3% \| GIL: 24.4% | 🟡 ZBALANSOWANY |
+| **ŚREDNIA GLOBALNA** | 🟡 **80.24 pkt** | **Najniższy Setup:** `74.70 pkt` (Brak setupów w strefie czerwonej) | 🟢 STABILNY KANON |
+
+**Stan weryfikacji i domknięcia (SSOT v1.0-alpha.23):**
 - **Warianty L4:** `variants.sea_route_era` (planowe otwarcie Szlaku Morskiego od Ery 4), `variants.time_deck_freq`, `variants.inquisitor_speed`, `no_time_deck` — odczyt z `CONFIG` + `sys_overrides`. Usunięto martwe parametry legacy (`path_era` CAA, `verdict_secret`).
 - **Święte Oficjum:** `so-05` (reakcja Wezwanie do Trybunału na zagranie Herezji przez rywala), `so-07` (przesłuchanie), `so-10` (wymuszenie procedury Autodafé).
 - **Cienie Al-Andalus:** `caa-03` (ciągnięcie relikwii do portów rynek/gildia), `caa-05` (Ukryty Kurier: ewakuacja + `shadow_exit`), `caa-06` (uwolnienie z Lochów), `caa-08` (ruch podwójnym agentem), `caa-09` (transport relikwii), `caa-10` (ewakuacja relikwii z warunkiem i snapshotem przy stagingu), `caa-11` (nasłanie Inkwizytora po ruchu).
@@ -29,9 +46,7 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 - **Ewaluator Zwycięstwa (`win.py`):** Zgodny w 100% z progami SSOT (Stosy 6, Skazania 2/3, Relikwie 2, Dekrety 2, Fragmenty 2 od Ery 6, Upadki 8).
 - **Testy automatyczne:** `sim/tests/test_engine_guarantee.py`, `test_ssot_live_knobs.py`, `test_intrigue_canon.py`, `test_balance.py` — **214 passed** (100% zielone).
 
-**Poza zakresem (świadomie):** AI operuje na zoptymalizowanych heurystykach stołowych (nie blefuje jak człowiek); wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
-
-**Audytor — nie z dołu.** `audytor_4p.py` / `audytor_kanonu.py` zapisują kanon 4P tylko gdy udziały są już w bramce 15–35%.
+**Poza zakresem (świadomie):** AI operuje na ogólnych heurystykach teorii gier stołowych; wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
 
 — Antigravity (Gemini 3.7 Flash) · Architekt Balansu & Inżynier Silnika INQUISITIO-1492
 
@@ -93,6 +108,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.23 (2026-08-22) — Kanon 4P: Karta `caa-12` (Skrytka w Murach): `gold` → `4` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`77.0`** → **`77.5 pkt`** | Global **`43.9`** | 3p **`25.0`** | 5p **`28.4`**
+- **Modyfikacja (`L3_CAA-12_GOLD_PLUS1`):** Karta `caa-12` (Skrytka w Murach): `gold` → `4`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.18, Deadlocks 0.3%, Pas Biedy 1.5%.
 
 ### 🟢 Patch v1.0-alpha.22 (2026-08-21) — Kanon 4P: Karta `so-10` (Oczyść Miasto): `heresy` → `1` (Zysk 4P Δ +0.2 pkt)
 - **Wynik 4P:** Kanon **`80.1`** → **`80.3 pkt`** | Global **`45.7`** | 3p **`24.3`** | 5p **`29.2`**

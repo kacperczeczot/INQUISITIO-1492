@@ -95,32 +95,95 @@ class PoliticsAgent:
                     u -= 0.5  # Emptying vault carries friction
 
             # ── B. Heresy Risk & Zone Dynamics ──
-            # Kabała nie ma pasma wygranej — Herezja to ten sam sąd co u reszty.
             post_h = pl.heresy + c.heresy
-            if post_h >= threshold:
-                u -= c.heresy * 4.0  # Walking into Court execution
-            elif post_h >= threshold - 1:
-                u -= c.heresy * 2.0  # Observed danger
-            else:
-                u -= c.heresy * 0.4  # Minor stain
+            has_so = FactionId.SWIETE_OFICJUM in state.players and faction != FactionId.SWIETE_OFICJUM
+            autodafe_near = has_so and state.eras_since_autodafe >= (state.autodafe_cooldown - 1)
 
-            # ── C. Target Heresy & Table Politics (Anti-Snowballing) ──
-            if c.target_heresy > 0:
-                u += c.target_heresy * 1.5
-                so = state.players.get(FactionId.SWIETE_OFICJUM)
-                if so and faction != FactionId.SWIETE_OFICJUM and oficjum_snowball_threat(state):
-                    # Oficjum 1 shy of win — don't spend heresy framing random rivals
-                    u -= c.target_heresy * 1.2
-                # If Kabała is near win with 2+ fragments:
-                kt = state.players.get(FactionId.KABALA_TOLEDO)
-                if kt and faction != FactionId.KABALA_TOLEDO and kt.fragments >= 2:
-                    # Near Codex: push them into Court range
-                    u += c.target_heresy * 1.8
+            if post_h >= threshold:
+                u -= c.heresy * 4.5  # Direct Court Execution
+            elif post_h >= threshold - 1:
+                u -= c.heresy * 2.5  # Critical 1 step from execution
+            elif has_so and post_h >= state.observed_threshold:
+                # Danger of Autodafe burning & condemnation
+                if autodafe_near:
+                    u -= c.heresy * 3.0  # Autodafe is ready — do not enter observed zone!
+                else:
+                    u -= c.heresy * 1.2  # Monitored by Inquisition
+            else:
+                u -= c.heresy * 0.35  # Safe zone heresy
+
+            # ── C. Dynamic Threat Assessment & Table Politics (Anti-Leader Defense) ──
+            threats: dict[FactionId, float] = {}
+            for r_fid, r_pl in state.players.items():
+                if r_fid == faction:
+                    continue
+                th = 0.0
+                if r_fid == FactionId.SWIETE_OFICJUM:
+                    condemns = len(r_pl.condemned_rivals)
+                    if condemns >= 2:
+                        th += 0.85  # 1 condemnation from victory
+                    elif condemns == 1:
+                        th += 0.4
+                    if r_pl.stacks >= 5:
+                        th += 0.75
+                elif r_fid == FactionId.CIENIE_AL_ANDALUS:
+                    if r_pl.relics_evacuated >= 1:
+                        th += 0.85  # 1 relic from victory
+                        if state.sea_route_open:
+                            th += 0.25
+                    elif any(state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested for ag in r_pl.agents):
+                        th += 0.35
+                elif r_fid == FactionId.KORONA_BORGIOWIE:
+                    from inquisitio.engine.hooks import distinct_hook_victims
+                    r_hooks = distinct_hook_victims(state, r_fid)
+                    if r_hooks >= 2:
+                        th += 0.85  # Threat of Pieczęć Korony (kb-10)
+                    elif r_hooks == 1:
+                        th += 0.35
+                    if r_pl.decrees_played >= 1:
+                        th += 0.3
+                elif r_fid == FactionId.KABALA_TOLEDO:
+                    if r_pl.fragments >= 2:
+                        th += 0.75  # Full Codex held — impending Era 6 check
+                    elif r_pl.fragments == 1 and state.era >= 4:
+                        th += 0.30
+                elif r_fid == FactionId.GILDIA_CIENI:
+                    if r_pl.falls >= 7:
+                        th += 0.85  # 1 fall from victory
+                    elif r_pl.falls >= 5:
+                        th += 0.45
+
+                threats[r_fid] = th
+
+            max_threat = max(threats.values()) if threats else 0.0
+
+            # Table reacts against threatening leaders:
+            if max_threat >= 0.5:
+                # Confront leader via arrests, framing, and disruption
+                if has_so:
+                    # Inquisitor is present — heresy framing pushes leader into burning range
+                    if c.target_heresy > 0:
+                        u += 1.8 * max_threat
+                    if c.arrest:
+                        u += 2.2 * max_threat
+                else:
+                    # No Inquisition — physical arrests & interrogation are the true stop to leaders
+                    if c.arrest:
+                        u += 3.5 * max_threat
+                    if "interrogation" in c.tags or c.creates_hook:
+                        u += 2.2 * max_threat
+
+                if "interrogation" in c.tags or c.creates_hook:
+                    u += 1.2 * max_threat
+
+            # Anti-snowball: If Oficjum is threatening, do not feed heresy
+            so_threat = threats.get(FactionId.SWIETE_OFICJUM, 0.0)
+            if so_threat >= 0.5 and c.target_heresy > 0:
+                u -= c.target_heresy * 1.5
 
             # ── D. Board Presence & Agent Movement ──
             if c.agents > 0:
                 u += c.agents * 0.8
-                # Cienie Al-Andalus: prioritize moving toward relics or harbor
                 if faction == FactionId.CIENIE_AL_ANDALUS:
                     u += c.agents * 1.2
 
@@ -131,39 +194,48 @@ class PoliticsAgent:
                 u += 2.2
             if c.creates_hook:
                 if faction == FactionId.GILDIA_CIENI:
-                    u += 3.5  # Upadki often need a Hak
+                    u += 3.8  # Upadki engine
                 else:
                     u += 2.0
 
-            # ── F. Faction-Specific Win Proximity ──
+            # ── F. Faction-Specific Win Proximity (Pure Self-Pacing) ──
             if faction == FactionId.SWIETE_OFICJUM:
                 if "autodafe" in c.tags:
                     if state.eras_since_autodafe >= state.autodafe_cooldown:
-                        u += 6.0 if pl.gold >= eff_cost else 1.0
+                        condemnable = sum(1 for f_id, p in state.players.items() if f_id != faction and p.heresy >= state.observed_threshold)
+                        if condemnable >= 1:
+                            u += 4.2 if pl.gold >= eff_cost else 1.5
+                        else:
+                            u += 2.2 if pl.gold >= eff_cost else 0.5
                     else:
-                        u += 1.0
+                        u += 0.5
                 if "inquisitor" in c.tags and not pl.used_inquisitor_send:
-                    u += 2.5
+                    u += 2.0
+                    # Inquisitor urgency scales if clandestine rivals (CAA, KT) threaten victory
+                    clandestine_threat = max(threats.get(FactionId.CIENIE_AL_ANDALUS, 0.0), threats.get(FactionId.KABALA_TOLEDO, 0.0))
+                    if clandestine_threat >= 0.5:
+                        u += 1.2 * clandestine_threat
 
             elif faction == FactionId.CIENIE_AL_ANDALUS:
+                relics_left = max(0, 2 - pl.relics_evacuated)
                 if "relic" in c.tags:
-                    u += 4.0
+                    u += 3.5
                     if pl.relics_evacuated >= 1:
-                        u += 3.5
+                        u += 2.2
                     if state.sea_route_open and pl.relics_evacuated < 2:
-                        u += 2.0
+                        u += 1.5
                 if c.id == "caa-03":
                     on_relic = any(
                         state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested
                         for ag in pl.agents
                     )
                     if on_relic:
-                        u += 4.0
+                        u += 3.5
                 if c.id == "caa-09" and pl.relics_evacuated < 2:
-                    u += 3.0
+                    u += 2.5
                 if c.id == "caa-10":
                     if card_condition_met(state, faction, c) or state.sea_route_open:
-                        u += 9.0 if pl.relics_evacuated >= 1 else 6.0
+                        u += 6.2 if pl.relics_evacuated >= 1 else 3.8
                     else:
                         u -= 18.0
                 if c.id == "caa-05":  # Odnalezienie Relikwii
@@ -172,42 +244,72 @@ class PoliticsAgent:
                             state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested
                             for ag in pl.agents
                         )
-                        u += 6.0 if on_relic else 4.0
-                if c.id == "caa-06":  # Bunt
+                        u += 4.5 if on_relic else 3.0
+                if c.id == "caa-06":  # Bunt / Ucieczka z lochów
                     arrested_cnt = sum(1 for ag in pl.agents if ag.arrested)
-                    if arrested_cnt > 0:
-                        u += 3.0
+                    if arrested_cnt >= 2:
+                        u += 5.0
+                    elif arrested_cnt == 1:
+                        u += 3.5
+                if c.id == "caa-02" and pl.gold <= 2:
+                    u += 2.5  # Critical economic injection
 
             elif faction == FactionId.KORONA_BORGIOWIE:
                 from inquisitio.engine.hooks import distinct_hook_victims
 
                 active_hooks = distinct_hook_victims(state, faction)
+                decrees_left = max(0, 2 - pl.decrees_played)
+
                 if "decree" in c.tags:
-                    u += 4.0
-                    if pl.decrees_played < 2:
+                    u += 3.8
+                    if decrees_left == 1 and active_hooks >= 2:
+                        u += 3.5  # Decisive decree to win
+                    elif decrees_left == 1:
                         u += 2.0
+
                 if c.id == "kb-10":
                     if active_hooks >= 2:
-                        u += 6.0
+                        u += 6.5 if pl.decrees_played >= 1 else 4.0
                     else:
-                        u -= 20.0
+                        u -= 20.0  # Need hooks first
+
+                if c.id == "kb-09":
+                    if pl.decrees_played < 2:
+                        u += 2.5
+
                 if c.creates_hook:
                     if active_hooks < 2:
-                        u += 3.5
+                        u += 3.8 if active_hooks == 0 else 2.5
                     elif len(pl.hook_victims_ever) < 2:
-                        u += 2.0
+                        u += 1.8
 
             elif faction == FactionId.KABALA_TOLEDO:
+                frags_left = max(0, 2 - pl.fragments)
                 if "fragment" in c.tags:
-                    u += 4.5
-                    if pl.fragments >= 2 and c.id == "kt-10":
-                        u += 6.0  # Decisive Finisher
+                    u += 3.8
+                    if frags_left == 1:
+                        u += 1.8
+
+                if c.id == "kt-10":
+                    if pl.fragments >= 2:
+                        u += 6.2 if state.era >= 6 else 3.2
+                    else:
+                        u += 1.0
 
             elif faction == FactionId.GILDIA_CIENI:
+                falls_left = max(0, 8 - pl.falls)
                 if "fall" in c.tags or c.id == "gc-10":
-                    u += 4.5
+                    u += 4.8
+                    if falls_left <= 2:
+                        u += 3.5  # Near victory (match point)
+                    elif falls_left <= 4:
+                        u += 1.5
                 if c.creates_hook or c.id in ("gc-04", "gc-06", "gc-09"):
-                    u += 3.0
+                    u += 3.5
+                if c.id == "gc-07":
+                    u += 1.5
+                if c.id == "gc-02" and pl.gold <= 2:
+                    u += 2.5  # Fund expensive falls
 
             if c.type == "signature":
                 u += 2.0

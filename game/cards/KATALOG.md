@@ -432,7 +432,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 3 złota. |
+| `effect` | Zyskaj 4 złota. |
 | `lore` | Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
