@@ -865,6 +865,7 @@ class Canon4PAutoBalancer:
         current_phase = 1
         beam_seeds: list[tuple[str, str, dict]] = []
         consecutive_stalls = 0  # ile iteracji z rzędu bez patcha
+        loop_iteration = 0  # zawsze rośnie, niezależnie od sukcesu patcha
 
         while not self.stop_requested:
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -880,8 +881,9 @@ class Canon4PAutoBalancer:
             # 1. Measure 4P Baseline
             print(f"\n{'='*71}")
             print(f"🔍 [POMIAR BAZOWY KANONU 4P] Diagnoza 5 setupów 4p (Próba: {self.args.confirm_games} gier/setup)...")
-            # Seed rotuje z każdą iteracją, żeby nie mierzyć ciągle tego samego szumu
-            iter_seed = self.args.seed + self.total_iterations
+            # Seed rotuje z każdą iteracją pętli (nie z patchem!), żeby nie mierzyć ciągle tego samego szumu
+            iter_seed = self.args.seed + loop_iteration
+            loop_iteration += 1
             base_task = ((("BASE", "Bieżący stan Kanonu 4P", {}), self.args.confirm_games, iter_seed, setups),)
             base_res = self._execute_pool(_run_single_test_task_4p, [base_task[0]], label="Baza 4P")[0]
             self._last_base_res = base_res
