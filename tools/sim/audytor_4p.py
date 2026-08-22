@@ -249,6 +249,7 @@ _FROZEN_ID_MARKERS = (
     "KT_HERESY",
     "TIME_DECK",
     "MAX_ERAS",
+    "INTRIGUE_GOLD",
 )
 _FROZEN_PARAM_KEYS = (
     "agents_offset",
@@ -261,6 +262,8 @@ _FROZEN_PARAM_KEYS = (
     "no_time_deck",
     "max_eras_offset",
     "max_eras",
+    "intrigue_gold_offset",
+    "intrigue_gold",
 )
 _ABLATION_OFF_ID_MARKERS = (
     "NO_TIME_DECK",
@@ -318,13 +321,10 @@ def is_ablation_off(tid: str, params: dict) -> bool:
         return True
     if params.get("start_gold") == 0:
         return True
-    # Gospodarcza 1→0 wyłącza akcję Fazy I. Kwotę (1↔2) makro może ruszać;
-    # skasowanie mechaniki to decyzja po raporcie użyteczności, nie patch ±1.
-    if "intrigue_gold" in params and int(params["intrigue_gold"]) <= 0:
+    # Akcja Gospodarcza (intrigue_gold) jest zamrożona na stałe na 1 zł (Kanon SSOT).
+    # Audytorzy nie mogą jej modyfikować, aby nie tworzyć sztucznej inflacji i zachęty do bierności.
+    if "intrigue_gold" in params or "intrigue_gold_offset" in params:
         return True
-    if "intrigue_gold_offset" in params:
-        if CONFIG.intrigue_gold() + int(params["intrigue_gold_offset"]) <= 0:
-            return True
     cd = params.get("autodafe_cooldown")
     if cd is not None and int(cd) in (0, 99):
         return True

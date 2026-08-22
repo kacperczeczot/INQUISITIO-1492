@@ -169,26 +169,26 @@ def test_max_eras_pm1_is_frozen_identity():
     assert "L1_AUTODAFE_COOLDOWN_PLUS1" in ids
     assert "L1_OBSERVED_PLUS1" in ids
     assert "L1_CARDS_PER_ERA_PLUS1" in ids
-    assert "L1_INTRIGUE_GOLD_PLUS1" in ids
+    assert "L1_INTRIGUE_GOLD_PLUS1" not in ids
     assert "L1_INTRIGUE_GOLD_MINUS1" not in ids
 
 
-def test_zeroing_gospodarcza_is_ablation_not_pm1():
+def test_gospodarcza_is_frozen_identity_knob():
     assert is_ablation_off("L1_INTRIGUE_GOLD_MINUS1", {"intrigue_gold_offset": -1})
-    assert not is_ablation_off("L1_INTRIGUE_GOLD_PLUS1", {"intrigue_gold_offset": 1})
+    assert is_ablation_off("L1_INTRIGUE_GOLD_PLUS1", {"intrigue_gold_offset": 1})
     base = _dead_skazania_base()
     base["vitality_penalty"] = 0.0
     base["vitality_warnings"] = []
     cand = {
         **base,
-        "id": "L1_INTRIGUE_GOLD_MINUS1",
-        "params": {"intrigue_gold_offset": -1},
+        "id": "L1_INTRIGUE_GOLD_PLUS1",
+        "params": {"intrigue_gold_offset": 1},
         "score_4p": 90.0,
         "min_balance": 90.0,
     }
     d = accept_macro_candidate(base, cand, mode="band", min_delta=0.05)
     assert not d.accepted
-    assert "ablacja" in d.reason
+    assert "zamrożona" in d.reason or "tożsamość" in d.reason or "ablacja" in d.reason
 
 
 def test_macro_vector_beats_requires_score_or_vitality():
