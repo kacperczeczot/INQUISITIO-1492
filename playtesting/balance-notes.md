@@ -13,20 +13,22 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v1.0-alpha.23** (Odnowiona — Dynamic Threat Assessment AI)
+## Gwarancja silnika — `game_config.yaml` **v1.0-alpha.25** (Odnowiona — Pełne AI 60 Kart & Play-Rate Telemetry)
 
 **Zakres:** pętla ery symulatora wykonuje dokładnie te same procedury stołu co księga zasad, słownik i `game/mechanics/` (Intryga, Sąd/Werdykt, Kronika Dziejów). Każda **nazwana mechanika L4, wariant, predykat warunku i pole karty z `game_config.yaml` (SSOT) oraz frontmatterów** jest bezpośrednio wpięta w silnik — brak martwych parametrów YAML.
 
-### 🌟 Kamień Milowy v1.0-alpha.23: Uniwersalna Teoria Gier w AI (`PoliticsAgent`)
-W wersji `v1.0-alpha.23` wyeliminowano wszelkie heurystyki specyficzne dla konkretnych setupów na rzecz **ogólnego silnika Oceny Zagrożeń Stołu (Dynamic Threat Assessment)**:
-1. **Wykrywanie Punktu Meczowego (Match Point):** Gracz szacuje stopień zaawansowania rywali do wygranej (np. 1 relikwia u Cieni, 2 haki u Korony, 2 fragmenty u Kabały, 6+ upadków u Gildii, 2 skazania u Oficjum).
-2. **Dynamiczny Sojusz Stołu Przeciwko Liderowi:** Gracze automatycznie koordynują presję (aresztowania, przesłuchania, oskarżenia) na aktualnym liderze.
-3. **Adaptacja do Obecności Inkwizycji:** Przy obecności Oficjum stół używa herezji jako broni; przy braku Inkwizycji stół polega na bezpośrednich aresztowaniach fizycznych.
+### 🌟 Kamień Milowy v1.0-alpha.25: Pełna Inteligencja AI (60/60 Kart) & Trójwymiarowa Taksonomia Użyteczności (Play-Rate)
+W wersji `v1.0-alpha.25` przeprowadzono fundamentalną naprawę silnika AI (`PoliticsAgent`) oraz metodologii audytu ablacyjnego:
+1. **Diagnoza Pasywności AI (Hand Clog & Fake Autopodatek):** Poprzedni bot sztucznie przeceniał Akcję Gospodarczą (wartość bazowa $2.6$ vs $\le 0.0$ dla 24 kart narzędziowych). W rezultacie AI w 100% partii wyrzucało do kosza 40% talii (`Play-Rate: 0.00`), traktując je jak śmieci blokujące rękę. W testach ablacji usunięcie tych kart sztucznie odtykało rękę bota, co generowało masowe fałszywe alarmy „Autopodatków (Self-Harm Tax)” i zniekształcało ocenę balansu.
+2. **Pełne Heurystyki Taktyczne dla Wszystkich 60 Kart:** Zrebalansowano próg Akcji Gospodarczej ($1.2$ base) i zaimplementowano dedykowaną ewaluację dla każdego typu efektu (ruchy agentów na relikwie, presja oskarżeń, budowanie haków, tempo ucieczek, edykty). Wszystkie 60 kart jest teraz aktywnie zagrywanych przez AI w symulacjach (`Play-Rate` na poziomie $0.20 – 1.40$ zagrań na grę).
+3. **Telemetria Reakcji (`card_plays`):** Wpięto zliczanie wyzwalanych kart reakcji (`SO-05` Wezwanie do Trybunału oraz `GC-05` Fałszywy Świadek w sądzie).
+4. **Trójwymiarowa Taksonomia Kart (`impact_taxonomy.py`):** Wprowadzono 3. oś: `Play-Rate` obok $\Delta\text{Share}$ i $\Delta\text{4P}$. Karta niezagrywana (`Play-Rate < 0.05`) nie może już otrzymać fałszywej etykiety „Zbalansowane Narzędzie” (jest oznaczana jako `DEAD_WEIGHT / UNPLAYED`). Karty o wysokim play-rate, które odchudzały talię, są klasyfikowane jako `TEMPO_FILLER (Rozcieńczalnik Talii)`.
+5. **Obnażenie Rzeczywistej Asymetrii i Start Realnego Balansowania:** Po odblokowaniu pełnej mocy kart ujawniono prawdziwe dysproporcje (agresja Inkwizycji i Kabały vs wolniejszy rozruch Korony i Gildii). Wdrożono pierwszy patch `KB-09` (`gold: 3`), który natychmiast podniósł win share Korony z 1.8% do 17.9%.
 
 ### 📊 Oficjalny Audyt Balansu Kanonu 4P (Próba: 10 000 gier/setup | 50 000 gier łącznie)
 
 | Setup | Score | Rozkład Szans Frakcji (Idealny = 25.0%) | Status Balansu |
-| :--- | :---: | :--- | :---: |
+| :--- | :---: | :--- | :--- |
 | **`4p-no-kabala`** | 🟢 **87.3 pkt** | SWI: 27.9% \| CIE: 22.6% \| KOR: 23.9% \| GIL: 25.6% | 🟢 ZBALANSOWANY |
 | **`4p-core`** | 🟢 **80.2 pkt** | SWI: 24.4% \| CIE: 25.9% \| KOR: 20.7% \| KAB: 28.9% | 🟢 ZBALANSOWANY |
 | **`4p-no-cienie`** | 🟡 **79.5 pkt** | SWI: 21.8% \| KOR: 29.6% \| KAB: 25.7% \| GIL: 22.9% | 🟡 ZBALANSOWANY |
@@ -34,7 +36,7 @@ W wersji `v1.0-alpha.23` wyeliminowano wszelkie heurystyki specyficzne dla konkr
 | **`4p-no-oficjum`** | 🟡 **74.7 pkt** | CIE: 20.0% \| KOR: 25.3% \| KAB: 30.3% \| GIL: 24.4% | 🟡 ZBALANSOWANY |
 | **ŚREDNIA GLOBALNA** | 🟡 **80.24 pkt** | **Najniższy Setup:** `74.70 pkt` (Brak setupów w strefie czerwonej) | 🟢 STABILNY KANON |
 
-**Stan weryfikacji i domknięcia (SSOT v1.0-alpha.23):**
+**Stan weryfikacji i domknięcia (SSOT v1.0-alpha.25):**
 - **Warianty L4:** `variants.sea_route_era` (planowe otwarcie Szlaku Morskiego od Ery 4), `variants.time_deck_freq`, `variants.inquisitor_speed`, `no_time_deck` — odczyt z `CONFIG` + `sys_overrides`. Usunięto martwe parametry legacy (`path_era` CAA, `verdict_secret`).
 - **Święte Oficjum:** `so-05` (reakcja Wezwanie do Trybunału na zagranie Herezji przez rywala), `so-07` (przesłuchanie), `so-10` (wymuszenie procedury Autodafé).
 - **Cienie Al-Andalus:** `caa-03` (ciągnięcie relikwii do portów rynek/gildia), `caa-05` (Ukryty Kurier: ewakuacja + `shadow_exit`), `caa-06` (uwolnienie z Lochów), `caa-08` (ruch podwójnym agentem), `caa-09` (transport relikwii), `caa-10` (ewakuacja relikwii z warunkiem i snapshotem przy stagingu), `caa-11` (nasłanie Inkwizytora po ruchu).
