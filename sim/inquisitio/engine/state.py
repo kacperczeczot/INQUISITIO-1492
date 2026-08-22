@@ -104,6 +104,7 @@ class DramaMetrics:
     hooks_forced: int = 0
     doubles_created: int = 0
     cards_played: int = 0
+    card_plays: dict[str, int] = field(default_factory=dict)  # per-card play count
     legal_moves_sampled: int = 0
     deadlocks: int = 0  # eras where a player had zero legal plays
     forced_passes: int = 0  # turns where player had no affordable cards

@@ -47,6 +47,7 @@ class BatchSummary:
     avg_gold_end: float = 0.0
     avg_heresy_end: float = 0.0
     passes_forced_pct: float = 0.0
+    card_plays_total: dict[str, int] = field(default_factory=dict)
 
 def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict:
     setup_name, gseed, threshold, layer, win_overrides = args
@@ -78,6 +79,7 @@ def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict
         "deadlocks": m.deadlocks,
         "legal": m.legal_moves_sampled,
         "cards": m.cards_played,
+        "card_plays": dict(m.card_plays),
         "forced_passes": m.forced_passes,
         "gold_sum": gold_sum,
         "heresy_sum": heresy_sum,
@@ -105,6 +107,7 @@ def run_batch(
 
     wins: Counter[str] = Counter()
     win_paths: Counter[str] = Counter()
+    card_plays_agg: Counter[str] = Counter()
 
     totals = dict(
         autodafe=0,
@@ -165,6 +168,8 @@ def run_batch(
             totals["forced_passes"] += res["forced_passes"]
             totals["gold_end"] += res["gold_sum"]
             totals["heresy_end"] += res["heresy_sum"]
+            for cid, cnt in res.get("card_plays", {}).items():
+                card_plays_agg[cid] += cnt
     else:
         gc_was_enabled = gc.isenabled()
         if gc_was_enabled:
@@ -198,6 +203,8 @@ def run_batch(
                 totals["forced_passes"] += res["forced_passes"]
                 totals["gold_end"] += res["gold_sum"]
                 totals["heresy_end"] += res["heresy_sum"]
+                for cid, cnt in res.get("card_plays", {}).items():
+                    card_plays_agg[cid] += cnt
         finally:
             if gc_was_enabled:
                 gc.enable()
@@ -239,6 +246,7 @@ def run_batch(
         avg_gold_end=totals["gold_end"] / tot_players if tot_players else 0.0,
         avg_heresy_end=totals["heresy_end"] / tot_players if tot_players else 0.0,
         passes_forced_pct=totals["forced_passes"] / tot_turns if tot_turns else 0.0,
+        card_plays_total=dict(card_plays_agg),
     )
 
 

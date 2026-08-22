@@ -507,6 +507,7 @@ def play_card(
     gold_before = pl.gold
     pl.gold -= cost
     pl.hand.remove(card_id)
+    state.metrics.card_plays[card_id] = state.metrics.card_plays.get(card_id, 0) + 1
     loc = _play_location(state, fid, card)
     name = card.name
     suffix = " [signature]" if card.breaks_rule or card.type == "signature" else ""
