@@ -89,6 +89,25 @@ from manual_ablation_hints import (
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
+LIVE_LOG_PATH = REPORTS_DIR / "audytor_live.log"
+
+class _LiveTee:
+    def __init__(self, filename: Path):
+        self.terminal = sys.stdout
+        filename.parent.mkdir(parents=True, exist_ok=True)
+        self.log = open(filename, "w", encoding="utf-8")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.terminal.flush()
+        self.log.write(message)
+        self.log.flush()
+
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+sys.stdout = _LiveTee(LIVE_LOG_PATH)
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -907,13 +926,19 @@ class Canon4PAutoBalancer:
 
                 # 2. Komplementarne łączenie nasion wiązki z regułami L1/L2 i kartami deficytowych frakcji
                 for seed_mut in beam_seeds:
-                    # Łączymy nasiona tylko z atomowymi zmianami systemowymi L1/L2 lub kartami innej frakcji
+                    # Łączymy nasiona z kartami INNYCH frakcji (L3) oraz reprezentacją reguł systemowych (L1/L2)
                     seed_f = get_mutation_faction(seed_mut)
-                    filtered_atomic = [
+                    other_cards = [
                         m for m in atomic_pool
-                        if get_mutation_faction(m) != seed_f or classify_card_mutation_intent(m) == "SYSTEM"
+                        if get_mutation_faction(m) is not None and get_mutation_faction(m) != seed_f
                     ]
-                    for atomic_mut in filtered_atomic[:30]:
+                    sys_muts = [
+                        m for m in atomic_pool
+                        if classify_card_mutation_intent(m) == "SYSTEM"
+                    ]
+                    # Bierzemy próbkę kart innych frakcji + reguły systemowe
+                    selected_atomic = other_cards[:100] + sys_muts[:10]
+                    for atomic_mut in selected_atomic:
                         merged = merge_mutations(seed_mut, atomic_mut)
                         if merged:
                             composite_pool.append(merged)
@@ -925,9 +950,9 @@ class Canon4PAutoBalancer:
                         seen_ids.add(c[0])
                         candidate_pool.append(c)
 
-                # Limit wielkości puli złożonej dla zachowania błyskawicznego przesiewu (max 250 wariantów)
-                if len(candidate_pool) > 250:
-                    candidate_pool = candidate_pool[:250]
+                # Zachowujemy pełną pulę celowanych wariantów złożonych dla Etapu 1
+                if len(candidate_pool) > 1500:
+                    candidate_pool = candidate_pool[:1500]
 
             print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Kanonu 4P.")
             cand_dict = {c[0]: c for c in candidate_pool}
@@ -1137,7 +1162,7 @@ def main():
     parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 12)")
     parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
     parser.add_argument("--max-depth", type=int, default=3, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 3)")
-    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
+    parser.add_argument("--min-delta", type=float, default=0.50, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.50)")
 
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
@@ -1166,4 +1191,9 @@ def main():
 
 
 if __name__ == "__main__":
+    import multiprocessing
+    try:
+        multiprocessing.set_start_method("fork")
+    except RuntimeError:
+        pass
     main()

@@ -300,26 +300,36 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
     apply_generic(state, fid, card, rng)
     pl = state.players[fid]
     if card.id == "caa-05":
-        # caa-05 Ukryty Kurier: If agent at location with relic, evacuate 1 relic. Limit 1/era.
+        # caa-05 Odnalezienie Relikwii: If agent at location with relic, evacuate 1 relic. Otherwise discover relic at agent's location.
         limit = card.raw.get("kurier_limit", 1) if isinstance(card.raw, dict) else 1
         if pl.kurier_count >= limit:
             return
+        evacuated = False
         for ag in pl.agents:
             if ag.arrested:
                 continue
             loc = ag.location
-            if state.relics_on_board.get(loc, 0) <= 0:
-                continue
-            state.relics_on_board[loc] -= 1
-            pl.relics_evacuated += 1
-            pl.kurier_count += 1
-            pl.used_kurier = True
-            state.add_log(
-                f"{fid.value} caa-05 evacuated relic from {loc} (total={pl.relics_evacuated})"
-            )
-            if state.inquisitor_location != loc:
-                pl.shadow_exit = True
-            break
+            if state.relics_on_board.get(loc, 0) > 0:
+                state.relics_on_board[loc] -= 1
+                pl.relics_evacuated += 1
+                pl.kurier_count += 1
+                pl.used_kurier = True
+                state.add_log(
+                    f"{fid.value} caa-05 evacuated relic from {loc} (total={pl.relics_evacuated})"
+                )
+                if state.inquisitor_location != loc:
+                    pl.shadow_exit = True
+                evacuated = True
+                break
+        if not evacuated:
+            for ag in pl.agents:
+                if not ag.arrested:
+                    loc = ag.location
+                    state.relics_on_board[loc] = state.relics_on_board.get(loc, 0) + 1
+                    pl.kurier_count += 1
+                    pl.used_kurier = True
+                    state.add_log(f"{fid.value} caa-05 discovered relic at {loc}")
+                    break
     elif card.id == "caa-03":
         for ag in pl.agents:
             if not ag.arrested and state.relics_on_board.get(ag.location, 0) > 0:
@@ -335,12 +345,17 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
         if not card_condition_met(state, fid, card):
             state.add_log(f"{fid.value} {card.id} fiasko (condition unmet)")
             return
-        for ag in pl.agents:
-            if ag.double_agent and ag.controller == fid:
-                opts = _neighbors(ag.location)
-                if opts:
-                    ag.location = rng.choice(opts)
+        moved = False
+        for other in state.players.values():
+            if moved:
                 break
+            for ag in other.agents:
+                if ag.double_agent and ag.controller == fid:
+                    opts = _neighbors(ag.location)
+                    if opts:
+                        ag.location = rng.choice(opts)
+                    moved = True
+                    break
     elif card.id in ("caa-09", "caa-10"):
         _signature(state, fid, card, rng)
     elif card.id == "caa-11":

@@ -19,7 +19,11 @@ def card_condition_met(state: GameState, fid: FactionId, card: Card) -> bool:
             for ag in pl.agents
         )
     if cond == "has_double_agent":
-        return any(ag.double_agent and ag.controller == fid for ag in pl.agents)
+        return any(
+            ag.double_agent and ag.controller == fid
+            for other in state.players.values()
+            for ag in other.agents
+        )
     if cond == "agent_in_dungeon_or_tribunal":
         return any(ag.location in ("lochy", "trybunal") and not ag.arrested for ag in pl.agents)
     if cond == "fragments_eq_3":
@@ -33,9 +37,18 @@ def card_condition_met(state: GameState, fid: FactionId, card: Card) -> bool:
             ag.location in ("lochy", "trybunal") and not ag.arrested for ag in pl.agents
         )
     if cond == "no_inquisitor_or_double_or_sea_route":
-        locs = {ag.location for ag in pl.agents if not ag.arrested}
-        quiet = state.inquisitor_location not in locs
-        via_double = any(ag.double_agent and ag.controller == fid for ag in pl.agents)
+        relic_locs = {
+            ag.location for ag in pl.agents
+            if not ag.arrested and state.relics_on_board.get(ag.location, 0) > 0
+        }
+        quiet = any(loc != state.inquisitor_location for loc in relic_locs) if relic_locs else any(
+            ag.location != state.inquisitor_location for ag in pl.agents if not ag.arrested
+        )
+        via_double = any(
+            ag.double_agent and ag.controller == fid
+            for other in state.players.values()
+            for ag in other.agents
+        )
         return quiet or via_double or state.sea_route_open
     if cond == "rival_has_hook_or_double_or_autodafe":
         for rival in state.turn_order:

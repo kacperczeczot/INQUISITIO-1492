@@ -67,7 +67,7 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
         if card_filter and cid.lower() != card_filter.lower():
             continue
 
-        # Generate ±1 parameter tests for this card
+        # Generate parameter tests for this card
         for p in params_to_test:
             curr_val = getattr(c, p, 0)
 
@@ -76,6 +76,30 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
             name_p = f"{cid.upper()} ({c.name}): {p} {curr_val} → {curr_val + 1}"
             overrides_p = {"card_overrides": {cid: {p: curr_val + 1}}}
             tests.append((test_id_p, name_p, overrides_p))
+
+            # Test extended values for gold if curr_val == 0
+            if p == "gold" and curr_val == 0:
+                for ext_val in [1, 2, 3]:
+                    test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                    name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                    overrides_ext = {"card_overrides": {cid: {p: ext_val}}}
+                    tests.append((test_id_ext, name_ext, overrides_ext))
+
+            # Test extended values for target_heresy if curr_val == 0
+            if p == "target_heresy" and curr_val == 0:
+                for ext_val in [1, 2]:
+                    test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                    name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                    overrides_ext = {"card_overrides": {cid: {p: ext_val}}}
+                    tests.append((test_id_ext, name_ext, overrides_ext))
+
+            # Test extended values for heresy if curr_val == 0
+            if p == "heresy" and curr_val == 0:
+                for ext_val in [1, 2]:
+                    test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                    name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                    overrides_ext = {"card_overrides": {cid: {p: ext_val}}}
+                    tests.append((test_id_ext, name_ext, overrides_ext))
 
             # Test -1 (if curr_val > 0)
             if curr_val > 0:

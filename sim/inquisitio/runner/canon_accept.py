@@ -154,12 +154,12 @@ def accept_candidate(
             return AcceptDecision(False, msg, "legacy")
         d = _score(cand) - _score(base)
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
-        # Akceptujemy zysk w globalnym score LUB istotną poprawę najsłabszego setupu (Maximin) bez zapaści średniej
-        if d >= min_delta:
-            return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta}", "legacy")
-        if dmin >= 0.5 and d >= -0.1:
+        # Akceptujemy tylko statystycznie istotny zysk bez regresji podłogi (dmin >= -0.1) LUB istotną poprawę podłogi (Maximin)
+        if d >= min_delta and dmin >= -0.1:
+            return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta} (dmin {dmin:+.2f})", "legacy")
+        if dmin >= 0.75 and d >= 0.0:
             return AcceptDecision(True, f"legacy Maximin Δmin {dmin:+.2f} (Δscore {d:+.2f})", "legacy")
-        return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} < {min_delta}", "legacy")
+        return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} nie spełniają kryteriów bezpieczeństwa", "legacy")
 
     if mode != "band":
         raise ValueError(f"Unknown accept mode: {mode!r}")
@@ -221,7 +221,8 @@ def accept_candidate(
 
     if not base_in_band:
         # Wspinaczka: stół poza pasmem 20-30%
-        if dscore >= min_delta or (dmin >= min_delta and dscore >= 0.0):
+        # Akceptujemy wzrost globalnego wyniku LUB solidną poprawę najsłabszego setupu (z tolerancją na szum statystyczny)
+        if dscore >= min_delta or (dmin >= 0.3 and dscore >= -0.3):
             return AcceptDecision(True, f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f}", "climb")
         return AcceptDecision(
             False,

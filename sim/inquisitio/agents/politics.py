@@ -166,15 +166,13 @@ class PoliticsAgent:
                         u += 9.0 if pl.relics_evacuated >= 1 else 6.0
                     else:
                         u -= 18.0
-                if c.id == "caa-05":  # Ukryty Kurier
-                    on_relic = any(
-                        state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested
-                        for ag in pl.agents
-                    )
-                    if on_relic and not pl.used_kurier and pl.relics_evacuated < 2:
-                        u += 5.5
-                    else:
-                        u -= 2.5
+                if c.id == "caa-05":  # Odnalezienie Relikwii
+                    if not pl.used_kurier and pl.relics_evacuated < 2:
+                        on_relic = any(
+                            state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested
+                            for ag in pl.agents
+                        )
+                        u += 6.0 if on_relic else 4.0
                 if c.id == "caa-06":  # Bunt
                     arrested_cnt = sum(1 for ag in pl.agents if ag.arrested)
                     if arrested_cnt > 0:
