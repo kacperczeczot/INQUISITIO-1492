@@ -23,20 +23,15 @@ W wersji `v1.0-alpha.25` przeprowadzono fundamentalną naprawę silnika AI (`Pol
 2. **Pełne Heurystyki Taktyczne dla Wszystkich 60 Kart:** Zrebalansowano próg Akcji Gospodarczej ($1.2$ base) i zaimplementowano dedykowaną ewaluację dla każdego typu efektu (ruchy agentów na relikwie, presja oskarżeń, budowanie haków, tempo ucieczek, edykty). Wszystkie 60 kart jest teraz aktywnie zagrywanych przez AI w symulacjach (`Play-Rate` na poziomie $0.20 – 1.40$ zagrań na grę).
 3. **Telemetria Reakcji (`card_plays`):** Wpięto zliczanie wyzwalanych kart reakcji (`SO-05` Wezwanie do Trybunału oraz `GC-05` Fałszywy Świadek w sądzie).
 4. **Trójwymiarowa Taksonomia Kart (`impact_taxonomy.py`):** Wprowadzono 3. oś: `Play-Rate` obok $\Delta\text{Share}$ i $\Delta\text{4P}$. Karta niezagrywana (`Play-Rate < 0.05`) nie może już otrzymać fałszywej etykiety „Zbalansowane Narzędzie” (jest oznaczana jako `DEAD_WEIGHT / UNPLAYED`). Karty o wysokim play-rate, które odchudzały talię, są klasyfikowane jako `TEMPO_FILLER (Rozcieńczalnik Talii)`.
-5. **Obnażenie Rzeczywistej Asymetrii i Start Realnego Balansowania:** Po odblokowaniu pełnej mocy kart ujawniono prawdziwe dysproporcje (agresja Inkwizycji i Kabały vs wolniejszy rozruch Korony i Gildii### 📊 Stan Balansu Kanonu 4P w Wersji v1.0-alpha.25 (Aktywne AI 60 Kart)
+### 📊 Raporty Telemetrii i Stan Balansu (Ciągłe Generowanie)
 
-Po odblokowaniu pełnej inteligencji taktycznej botów i wdrożeniu pierwszego patcha ekonomicznego dla Korony (`KB-09` `gold: 3`):
+Wszystkie szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane w sposób ciągły przez zautomatyzowane narzędzia symulatora. Aktualne raporty dla bieżącego stanu gry znajdują się w:
+- 📊 **Raport Telemetrii Stołu (16 Setupów):** [`playtesting/sim-reports/current/raport_telemetrii.md`](sim-reports/current/raport_telemetrii.md)
+- 🃏 **Raport Użyteczności i Wpływu 60 Kart (Ablacja 4P):** [`playtesting/sim-reports/current/raport_uzytecznosci_i_wplywu_4p.md`](sim-reports/current/raport_uzytecznosci_i_wplywu_4p.md)
+- 📜 **Dziennik Optymalizacji Kanonu 4P:** [`playtesting/sim-reports/current/canon_4p_log.md`](sim-reports/current/canon_4p_log.md)
+- 📁 **Archiwum Wszystkich Wydań:** [`playtesting/sim-reports/archive/`](sim-reports/archive/)
 
-| Setup | Wynik 4P | Rozkład Szans Frakcji (Idealny = 25.0%) | Diagnoza Stołu |
-| :--- | :---: | :--- | :--- |
-| **`4p-core`** | 🟠 **66.3 pkt** | SO: 38.2% \| KT: 28.1% \| CAA: 21.4% \| KB: 12.3% | Stół dynamiczny; Korona po buffie `KB-09` w grze |
-| **`4p-no-oficjum`** | 🔴 **32.3 pkt** | KT: 41.5% \| CAA: 31.2% \| KB: 20.8% \| GC: 6.5% | Sprint Kabały bez presji Inkwizytora; Gildia wymaga wzmocnienia |
-| **`4p-no-korona`** | 🔴 **17.5 pkt** | SO: 46.2% \| KT: 30.5% \| CAA: 23.3% \| GC: 0.0% | Dominacja Inkwizycji bez aresztów Korony |
-| **`4p-no-kabala`** | 🔴 **14.9 pkt** | SO: 51.0% \| CAA: 28.4% \| KB: 16.5% \| GC: 4.1% | Silna presja stosów Oficjum |
-| **`4p-no-cienie`** | 🔴 ** 7.0 pkt** | SO: 54.2% \| KT: 28.0% \| KB: 17.8% \| GC: 0.0% | Brak ewakuacji Cieni obnaża presję sądu |
-| **ŚREDNIA GLOBALNA** | 🔴 **27.20 pkt** | **Setup flagowy (`4p-core`):** `66.3 pkt` | 🚀 AKTYWNA FAZA BALANSOWANIA PEŁNEJ GRY |
-
-**Stan weryfikacji i domknięcia (SSOT v1.0-alpha.25):**
+**Stan weryfikacji i domknięcia mechanicznego (SSOT v1.0-alpha.25):**
 - **AI i Telemetria (`PoliticsAgent`):** Wszystkie 60 kart posiada aktywne reguły ewaluacji; brak martwych kart w rękach botów (`Play-Rate` od 0.20 do 1.40).
 - **Warianty L4:** `variants.sea_route_era` (planowe otwarcie Szlaku Morskiego od Ery 4), `variants.time_deck_freq`, `variants.inquisitor_speed`, `no_time_deck` — odczyt z `CONFIG` + `sys_overrides`. Usunięto martwe parametry legacy (`path_era` CAA, `verdict_secret`).
 - **Święte Oficjum:** `so-05` (reakcja Wezwanie do Trybunału na zagranie Herezji przez rywala), `so-07` (przesłuchanie), `so-10` (wymuszenie procedury Autodafé).
