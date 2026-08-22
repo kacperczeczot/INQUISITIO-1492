@@ -64,7 +64,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
 | **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
-| **Złoto Startowe** | **4 zł** | **4 zł** | **4 zł** | Zunifikowane 4 zł dla wszystkich składów graczy. |
+| **Złoto Startowe** | **5 zł** | **5 zł** | **5 zł** | Zunifikowane 5 zł dla wszystkich składów graczy. |
 | **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **5 Kart** | Zunifikowany limit 5 kart dla wszystkich składów graczy. |
 | **Otwarcie Szlaku Morskiego (Cienie)** | **Era 4** | **Era 4** | **Era 4** | Szlak w oknie partii (wcześniej era 6 = po końcu gry). |
 
@@ -108,6 +108,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.24 (2026-08-22) — Kanon 4P Makro: Startowe złoto: offset +1 (Zysk 4P Δ +1.9 pkt)
+- **Wynik 4P (win share):** **`84.0 pkt`** (baza `82.1`) | blended `82.1` → `84.0` | Global **`54.4`** | 3p **`31.9`** | 5p **`45.6`**
+- **Modyfikacja (`L1_START_GOLD_PLUS1`):** Startowe złoto: offset +1.
+- **Efekt:** Makro L1/L2/L4. Telemetria: Średnia Er 5.98, Deadlocks 0.1%, Pas Biedy 1.0%. Witalność `0.000` → `0.000`.
 
 ### 🌟 Patch v1.0-alpha.23 (2026-08-22) — Przełom: Dynamic Threat Assessment AI & Skok Balansu Kanonu 4P (80.24 pkt)
 - **Wynik 4P:** Kanon **`74.9 pkt`** → **`80.24 pkt`** | Podłoga najsłabszego setupu **`61.5 pkt`** → **`74.70 pkt`** (Próba: 10 000 gier/setup | 50 000 gier łącznie)
