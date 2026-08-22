@@ -196,6 +196,7 @@ def test_cards_load():
 
 
 def test_ssot_win_paths_match_yaml():
+    from inquisitio.config import CONFIG
     from inquisitio.engine.win import check_winner_details
     from inquisitio.engine.state import heresy_zone
 
@@ -223,16 +224,17 @@ def test_ssot_win_paths_match_yaml():
     gc = st5.players[FactionId.GILDIA_CIENI]
     caa5.relics_evacuated = 0
     st5.era = 1
-    gc.falls = 7
+    req_falls = int(CONFIG.victory.gildia_cieni.falls)
+    gc.falls = req_falls - 1
     assert check_winner_details(st5) is None
-    gc.falls = 8
+    gc.falls = req_falls
     assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     st_noso = new_game(setup="4p-no-oficjum", seed=1, layer="C")
     gc2 = st_noso.players[FactionId.GILDIA_CIENI]
-    gc2.falls = 7
+    gc2.falls = req_falls - 1
     assert check_winner_details(st_noso) is None
-    gc2.falls = 8
+    gc2.falls = req_falls
     assert check_winner_details(st_noso) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     assert heresy_zone(3, critical_min=7, observed_min=4) == "czysta"
