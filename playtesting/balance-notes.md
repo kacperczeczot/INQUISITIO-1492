@@ -95,6 +95,12 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.35 (2026-08-23) — Kanon 4P: Usunięcie Dublowania Akcji Gospodarczej na `gc-02` i `kt-02` (Zysk 4P: 59.2 pkt)
+- **Modyfikacja Kart Frakcyjnych L3 (`game_config.yaml`):**
+  - `gc-02` (*Czarny Rynek*): koszt obniżony z **`1` $\to$ `0` zł** (`gold: 2`, `heresy: 1`). Zapewnia natychmiastowy zysk netto **`+2 zł`** bez wpisowego za cenę podejrzeń (+1 Herezja za brudny handel).
+  - `kt-02` (*Transmutacja Złota*): koszt obniżony z **`1` $\to$ `0` zł** (`gold: 2`, `heresy: 0`). Alchemiczna transmutacja tworzy **`+2 zł`** netto bez dublowania zwykłego pasu gospodarczego.
+- **Efekt:** Pełna unikalność ekonomiczna wszystkich 5 frakcji — każda karta ekonomiczna daje wyraźną przewagę strategiczną i tożsamość klimatyczną względem bazowej Akcji Gospodarczej.
+
 ### 🟢 Patch v1.0-alpha.34 (2026-08-23) — Kanon 4P: Cięcie Inflacji Złota na Kartach-Bankomatach (Zysk 4P Δ +2.1 pkt, Śr. Złoto End 5.92 zł → 4.85 zł)
 - **Wynik 4P:** Kanon **`57.3`** → **`59.4 pkt`** | Podłoga najsłabszego setupu (`4p-no-cienie`) **`22.5`** → **`34.9 pkt`** (Δ +12.4 pkt).
 - **Modyfikacja Kart Frakcyjnych L3 (`game_config.yaml`):**

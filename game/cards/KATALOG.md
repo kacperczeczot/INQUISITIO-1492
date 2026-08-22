@@ -679,7 +679,7 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. |
@@ -889,7 +889,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. |
