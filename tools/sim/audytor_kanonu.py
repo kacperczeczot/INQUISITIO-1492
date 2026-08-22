@@ -262,6 +262,29 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     ]
     tests.extend(l4)
 
+    # Align candidate count to a multiple of 10 for 100% CPU parallelization across 10 cores
+    remainder = len(tests) % 10
+    if remainder != 0:
+        needed = 10 - remainder
+        extra_pool = [
+            ("L1_START_GOLD_PLUS2", "Złoto startowe: offset +2", {"start_gold_offset": 2}),
+            ("L1_START_GOLD_MINUS2", "Złoto startowe: offset -2", {"start_gold_offset": -2}),
+            ("L1_OBSERVED_PLUS2", "Próg Obserwowanej: offset +2", {"observed_threshold_offset": 2}),
+            ("L1_THRESHOLD_PLUS2", "Próg Oskarżenia: offset +2", {"threshold_offset": 2}),
+            ("L1_THRESHOLD_MINUS2", "Próg Oskarżenia: offset -2", {"threshold_offset": -2}),
+            ("L2_SO_STACKS_MINUS2", "Oficjum Stosy: offset -2", {"so_stacks_offset": -2}),
+            ("L2_CAA_RELICS_MINUS2", "Cienie Relikwie: offset -2", {"caa_relics_offset": -2}),
+            ("L2_KT_FRAGS_PLUS2", "Kabała Fragmenty: offset +2", {"kt_frags_offset": 2}),
+            ("L2_GC_FALLS_MINUS2", "Gildia Upadki: offset -2", {"gc_falls_offset": -2}),
+        ]
+        seen = {t[0] for t in tests}
+        for cid, cname, cparams in extra_pool:
+            if cid not in seen:
+                seen.add(cid)
+                tests.append((cid, cname, cparams))
+                if len(tests) % 10 == 0:
+                    break
+
     return tests
 
 

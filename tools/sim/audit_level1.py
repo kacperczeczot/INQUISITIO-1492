@@ -62,6 +62,7 @@ def build_level1_tests():
         ("L1_HAND_LIMIT_MINUS1", f"Limit ręki: {_pc(h)} → {_pc(h, -1)}", {"hand_limit_offset": -1}),
         ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: {s.autodafe_cooldown} → {s.autodafe_cooldown + 1} Ery", {"cooldown_offset": 1}),
         ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: {s.autodafe_cooldown} → {s.autodafe_cooldown - 1} Ery", {"cooldown_offset": -1}),
+        ("L1_INTRIGUE_GOLD_DOUBLE", f"Akcja Gospodarcza: {s.intrigue_gold} → {s.intrigue_gold * 2} (podwojenie)", {"intrigue_gold": s.intrigue_gold * 2}),
     ]
 
 

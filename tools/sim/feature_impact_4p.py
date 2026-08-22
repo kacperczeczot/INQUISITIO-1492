@@ -431,10 +431,16 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
             {"gc_falls_offset": off},
         )
 
+    add("L1_INTRIGUE_GOLD_0", "Akcja Gospodarcza: 0zł (brak zysku złota)", cat1, {"intrigue_gold": 0})
+    add("L1_INTRIGUE_GOLD_DOUBLE", f"Akcja Gospodarcza: {sys_cfg.intrigue_gold} → {sys_cfg.intrigue_gold * 2} (podwojenie)", cat1, {"intrigue_gold": sys_cfg.intrigue_gold * 2})
+    add("L1_OBSERVED_LO", f"Próg Obserwowanej: {sys_cfg.observed_threshold} → 2 (skrajna presja)", cat1, {"observed_threshold": 2})
+
     add("L4_NO_TIME_DECK", "Kronika Dziejów: całkowite wyłączenie", cat4, {"no_time_deck": True})
+    add("L4_TIME_DECK_EVERY_3ERAS", "Kronika Dziejów: co 3 Ery (spowolniony zegar)", cat4, {"time_deck_freq": 3})
     inq = int(getattr(nv, "inquisitor_speed", 1))
     if inq != 0:
         add("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {inq} → 0 (wyłączenie)", cat4, {"inquisitor_speed": 0})
+    add("L4_INQUISITOR_SPEED_DOUBLE", "Inkwizytor Patrol: ruch x2 (podwojona prędkość)", cat4, {"inquisitor_speed": 2})
     sea = int(nv.sea_route_era)
     if sea < 90:
         add("L4_SEA_ROUTE_OFF", f"Szlak Morski: era {sea} → nigdy (99)", cat4, {"sea_route_era": 99})

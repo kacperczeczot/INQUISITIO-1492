@@ -21,9 +21,36 @@ from inquisitio.runner.scoring import (
 )
 from inquisitio.runner.audit_facts import save_and_archive_report
 
+from concurrent.futures import ProcessPoolExecutor
+
+
+def _run_single_stress_gold(task_args: tuple[int, int, int, list[str]]) -> tuple[int, float, float, float, float, float]:
+    gold, games_per_setup, seed, setups = task_args
+    t_start = time.time()
+    summaries = []
+    for sname in setups:
+        summary = run_batch(
+            games=games_per_setup,
+            setup=sname,
+            seed=seed,
+            layer="C",
+            win_overrides={"start_gold": gold},
+        )
+        summaries.append(summary)
+
+    cat_scores = calculate_category_scores(summaries)
+    global_score = calculate_global_score(cat_scores)
+
+    avg_eras = sum(s.eras_avg for s in summaries) / len(summaries)
+    poverty_pct = (sum(s.passes_forced_pct for s in summaries) / len(summaries)) * 100.0
+    deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / len(summaries)) * 100.0
+    dt = round(time.time() - t_start, 2)
+    return gold, global_score, avg_eras, poverty_pct, deadlock_pct, dt
+
+
 def run_poverty_stress_test(games_per_setup, seed, setups=None):
     print("--- 1. POVERTY STRESS TEST (Wpływ startowego złota na pas biedy i płynność) ---")
-    gold_options = [1, 2, 3, 4, 5]
+    gold_options = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10]
     if setups is None:
         setups = sorted(SETUP_PRESETS.keys())
     lines = [
@@ -33,29 +60,15 @@ def run_poverty_stress_test(games_per_setup, seed, setups=None):
         "| :---: | :---: | :---: | :---: | :---: |",
     ]
 
-    for gold in gold_options:
-        t_start = time.time()
-        summaries = []
-        for sname in setups:
-            summary = run_batch(
-                games=games_per_setup,
-                setup=sname,
-                seed=seed,
-                layer="C",
-                win_overrides={"start_gold": gold},
-            )
-            summaries.append(summary)
+    tasks = [(g, games_per_setup, seed, setups) for g in gold_options]
+    num_workers = min(10, len(tasks), os.cpu_count() or 4)
 
-        cat_scores = calculate_category_scores(summaries)
-        global_score = calculate_global_score(cat_scores)
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        results = list(executor.map(_run_single_stress_gold, tasks))
 
-        avg_eras = sum(s.eras_avg for s in summaries) / len(summaries)
-        poverty_pct = (sum(s.passes_forced_pct for s in summaries) / len(summaries)) * 100.0
-        deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / len(summaries)) * 100.0
-
-        dt = round(time.time() - t_start, 2)
-        print(f"Startowe złoto {gold}zł -> Score: {global_score:5.1f} pkt | Pas Biedy: {poverty_pct:.1f}% | Czas: {dt}s")
-
+    results.sort(key=lambda r: r[0])
+    for gold, global_score, avg_eras, poverty_pct, deadlock_pct, dt in results:
+        print(f"Startowe złoto {gold:2d}zł -> Score: {global_score:5.1f} pkt | Pas Biedy: {poverty_pct:.1f}% | Czas: {dt}s")
         lines.append(
             f"| {gold}zł | {color_score(global_score, bold=True)} | {avg_eras:.2f} | {poverty_pct:.1f}% | {deadlock_pct:.1f}% |"
         )

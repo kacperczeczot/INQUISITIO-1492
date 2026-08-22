@@ -69,6 +69,11 @@ def build_level2_tests():
         ("L2_KT_ERA_MINUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, -1)}", {"kt_era_offset": -1}),
         ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) + 1}", {"gc_falls_offset": 1}),
         ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) - 1}", {"gc_falls_offset": -1}),
+        ("L2_SO_STACKS_PLUS2", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, 2)}", {"so_stacks_offset": 2}),
+        ("L2_SO_CONDEMNS_PLUS2", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, 2)}", {"so_condemns_offset": 2}),
+        ("L2_CAA_RELICS_PLUS2", f"Cienie Relikwie: {caa.relics} → {caa.relics + 2}", {"caa_relics_offset": 2}),
+        ("L2_KT_ERA_MINUS2", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, -2)}", {"kt_era_offset": -2}),
+        ("L2_GC_FALLS_PLUS2", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) + 2}", {"gc_falls_offset": 2}),
     ]
     return tests
 

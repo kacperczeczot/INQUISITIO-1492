@@ -38,20 +38,24 @@ def build_level4_tests():
         tests.append(("L4_TIME_DECK_EVERY_ERA", f"Edykty Czasu: co {cur_freq} Erę → co 1 Erę", {"time_deck_freq": 1}))
     if cur_freq != 2:
         tests.append(("L4_TIME_DECK_EVERY_2ERAS", f"Edykty Czasu: co {cur_freq} Erę → co 2 Ery", {"time_deck_freq": 2}))
+    tests.append(("L4_TIME_DECK_EVERY_3ERAS", f"Edykty Czasu: co {cur_freq} Erę → co 3 Ery", {"time_deck_freq": 3}))
 
-    cur_sea = getattr(nv, "sea_route_era", 5)
+    cur_sea = getattr(nv, "sea_route_era", 4)
     tests.append(
         ("L4_SEA_ROUTE_ERA_PLUS1", f"Szlak Morski: Era {cur_sea} → {cur_sea + 1}", {"sea_route_era_offset": 1})
     )
     tests.append(
         ("L4_SEA_ROUTE_ERA_MINUS1", f"Szlak Morski: Era {cur_sea} → {cur_sea - 1}", {"sea_route_era_offset": -1})
     )
-    if cur_sea != 4:
-        tests.append(("L4_SEA_ROUTE_ERA4", f"Szlak Morski: Era {cur_sea} → Era 4", {"sea_route_era": 4}))
+    tests.append(
+        ("L4_SEA_ROUTE_ERA_PLUS2", f"Szlak Morski: Era {cur_sea} → {cur_sea + 2}", {"sea_route_era_offset": 2})
+    )
+    tests.append(("L4_SEA_ROUTE_OFF", f"Szlak Morski: Era {cur_sea} → Wyłączony (99)", {"sea_route_era": 99}))
 
     cur_inq = getattr(nv, "inquisitor_speed", 1)
     if cur_inq != 0:
-        tests.append(("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {cur_inq} → 0", {"inquisitor_speed": 0}))
+        tests.append(("L4_INQUISITOR_SPEED0", f"Inkwizytor Patrol: ruch {cur_inq} → 0 (wyłączenie)", {"inquisitor_speed": 0}))
+    tests.append(("L4_INQUISITOR_SPEED2", f"Inkwizytor Patrol: ruch {cur_inq} → 2 (podwojenie)", {"inquisitor_speed": 2}))
 
     return tests
 

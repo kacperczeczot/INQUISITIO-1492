@@ -108,6 +108,25 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
                 overrides_m = {"card_overrides": {cid: {p: curr_val - 1}}}
                 tests.append((test_id_m, name_m, overrides_m))
 
+    # Ensure total candidate count is aligned to a multiple of 10 for 100% CPU core efficiency (no idle worker tail)
+    remainder = len(tests) % 10
+    if remainder != 0:
+        needed = 10 - remainder
+        sig_cards = [cid for cid, card in sorted(cards.items()) if card.type == "signature" or card.breaks_rule or cid.endswith("-10") or cid.endswith("-05") or cid.endswith("-01")]
+        extra_tests = []
+        for cid in sig_cards:
+            c = cards[cid]
+            for p in params_to_test:
+                curr_val = getattr(c, p, 0)
+                test_id_p2 = f"L3_{cid.upper()}_{p.upper()}_PLUS2"
+                if not any(t[0] == test_id_p2 for t in tests) and not any(t[0] == test_id_p2 for t in extra_tests):
+                    extra_tests.append((test_id_p2, f"{cid.upper()} ({c.name}): {p} {curr_val} → {curr_val + 2} (+2)", {"card_overrides": {cid: {p: curr_val + 2}}}))
+                    if len(extra_tests) == needed:
+                        break
+            if len(extra_tests) == needed:
+                break
+        tests.extend(extra_tests)
+
     return tests
 
 
