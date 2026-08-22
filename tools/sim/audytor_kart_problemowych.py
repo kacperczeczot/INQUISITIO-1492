@@ -137,6 +137,13 @@ def parse_or_detect_problematic_cards(games_screen: int = 1000, seed: int = 42) 
     ablation_report = REPORTS_DIR / "archive" / CONFIG.version / "raport_uzytecznosci_i_wplywu_4p.md"
     if not ablation_report.exists():
         ablation_report = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
+    if not ablation_report.exists():
+        archives = sorted((REPORTS_DIR / "archive").glob("v1.0-alpha.*"), reverse=True)
+        for arc in archives:
+            candidate = arc / "raport_uzytecznosci_i_wplywu_4p.md"
+            if candidate.exists():
+                ablation_report = candidate
+                break
 
     cards = load_all_cards()
     problem_cards: dict[str, dict[str, Any]] = {}
@@ -199,7 +206,7 @@ def generate_targeted_candidate_mutations(
     include_2d_combos: bool = False,
     base_res: dict[str, Any] | None = None,
 ) -> list[tuple[str, str, dict]]:
-    """Generates focused mutations strictly for problematic cards."""
+    """Generates deep, multi-parameter, and compound reworks strictly for problematic cards."""
     candidates: list[tuple[str, str, dict]] = []
 
     for cid, info in sorted(problem_cards.items()):
@@ -207,79 +214,141 @@ def generate_targeted_candidate_mutations(
         cat = info["category"]
 
         if cat == "SELF_HARM":
+            # 1. Cost Reductions
             if c.cost > 0:
                 candidates.append((
-                    f"MUT_{cid.upper()}_COST_MINUS1",
-                    f"{cid.upper()} ({c.name}) [Buff Autopodatku]: koszt {c.cost} → {c.cost - 1}",
+                    f"REWORK_{cid.upper()}_COST_MINUS1",
+                    f"{cid.upper()} ({c.name}) [Buff Kosztu]: koszt {c.cost} → {c.cost - 1}",
                     {"card_overrides": {cid: {"cost": c.cost - 1}}},
                 ))
+            if c.cost >= 2:
+                candidates.append((
+                    f"REWORK_{cid.upper()}_COST_MINUS2",
+                    f"{cid.upper()} ({c.name}) [Głęboka Obniżka Kosztu]: koszt {c.cost} → {c.cost - 2}",
+                    {"card_overrides": {cid: {"cost": c.cost - 2}}},
+                ))
+
+            # 2. Heresy Relief (removing toxic self-penalty)
             if c.heresy > 0:
                 candidates.append((
-                    f"MUT_{cid.upper()}_HERESY_MINUS1",
-                    f"{cid.upper()} ({c.name}) [Buff Autopodatku]: herezja {c.heresy} → {c.heresy - 1}",
-                    {"card_overrides": {cid: {"heresy": c.heresy - 1}}},
+                    f"REWORK_{cid.upper()}_HERESY_ZERO",
+                    f"{cid.upper()} ({c.name}) [Usunięcie Auto-Herezji]: herezja {c.heresy} → 0",
+                    {"card_overrides": {cid: {"heresy": 0}}},
                 ))
-            if c.gold == 0 and c.cost >= 1:
+                if c.heresy >= 2:
+                    candidates.append((
+                        f"REWORK_{cid.upper()}_HERESY_MINUS1",
+                        f"{cid.upper()} ({c.name}) [Zmniejszenie Herezji]: herezja {c.heresy} → {c.heresy - 1}",
+                        {"card_overrides": {cid: {"heresy": c.heresy - 1}}},
+                    ))
+
+            # 3. Framing / Target Heresy (giving active table interaction)
+            if c.target_heresy == 0:
                 candidates.append((
-                    f"MUT_{cid.upper()}_GOLD_SET1",
-                    f"{cid.upper()} ({c.name}) [Buff Autopodatku]: dodaj złoto = 1",
+                    f"REWORK_{cid.upper()}_TARGET_HERESY_1",
+                    f"{cid.upper()} ({c.name}) [Dodanie Wrabiania]: target_heresy → 1",
+                    {"card_overrides": {cid: {"target_heresy": 1}}},
+                ))
+            else:
+                candidates.append((
+                    f"REWORK_{cid.upper()}_TARGET_HERESY_PLUS1",
+                    f"{cid.upper()} ({c.name}) [Zwiększenie Wrabiania]: target_heresy {c.target_heresy} → {c.target_heresy + 1}",
+                    {"card_overrides": {cid: {"target_heresy": c.target_heresy + 1}}},
+                ))
+
+            # 4. Economic / Gold Yield
+            if c.gold == 0:
+                candidates.append((
+                    f"REWORK_{cid.upper()}_GOLD_1",
+                    f"{cid.upper()} ({c.name}) [Dodanie Złota]: złoto → 1",
                     {"card_overrides": {cid: {"gold": 1}}},
                 ))
-            if c.gold > 0:
                 candidates.append((
-                    f"MUT_{cid.upper()}_GOLD_PLUS1",
-                    f"{cid.upper()} ({c.name}) [Buff Autopodatku]: złoto {c.gold} → {c.gold + 1}",
+                    f"REWORK_{cid.upper()}_GOLD_2",
+                    f"{cid.upper()} ({c.name}) [Dochód Złota]: złoto → 2",
+                    {"card_overrides": {cid: {"gold": 2}}},
+                ))
+            else:
+                candidates.append((
+                    f"REWORK_{cid.upper()}_GOLD_PLUS1",
+                    f"{cid.upper()} ({c.name}) [Zwiększenie Złota]: złoto {c.gold} → {c.gold + 1}",
                     {"card_overrides": {cid: {"gold": c.gold + 1}}},
+                ))
+
+            # 5. Compound Reworks on Single Problem Card (Cost + Heresy / Cost + Gold)
+            if c.cost >= 1 and c.heresy >= 1:
+                candidates.append((
+                    f"REWORK_{cid.upper()}_COST_AND_HERESY",
+                    f"{cid.upper()} ({c.name}) [Compound Rework]: koszt {c.cost}→{c.cost-1} + herezja {c.heresy}→0",
+                    {"card_overrides": {cid: {"cost": c.cost - 1, "heresy": 0}}},
+                ))
+            if c.cost >= 1 and c.gold == 0:
+                candidates.append((
+                    f"REWORK_{cid.upper()}_COST_AND_GOLD",
+                    f"{cid.upper()} ({c.name}) [Compound Rework]: koszt {c.cost}→{c.cost-1} + złoto→1",
+                    {"card_overrides": {cid: {"cost": c.cost - 1, "gold": 1}}},
                 ))
 
         elif cat == "DISRUPTOR":
             candidates.append((
-                f"MUT_{cid.upper()}_COST_PLUS1",
-                f"{cid.upper()} ({c.name}) [Nerf Disruptora]: koszt {c.cost} → {c.cost + 1}",
+                f"REWORK_{cid.upper()}_NERF_COST_PLUS1",
+                f"{cid.upper()} ({c.name}) [Nerf Kosztu]: koszt {c.cost} → {c.cost + 1}",
                 {"card_overrides": {cid: {"cost": c.cost + 1}}},
             ))
             candidates.append((
-                f"MUT_{cid.upper()}_HERESY_PLUS1",
-                f"{cid.upper()} ({c.name}) [Nerf Disruptora]: herezja {c.heresy} → {c.heresy + 1}",
+                f"REWORK_{cid.upper()}_NERF_HERESY_PLUS1",
+                f"{cid.upper()} ({c.name}) [Nerf Herezji]: herezja {c.heresy} → {c.heresy + 1}",
                 {"card_overrides": {cid: {"heresy": c.heresy + 1}}},
             ))
-            if c.gold > 0:
+            if c.cost > 0 and c.heresy >= 0:
                 candidates.append((
-                    f"MUT_{cid.upper()}_GOLD_MINUS1",
-                    f"{cid.upper()} ({c.name}) [Nerf Disruptora]: złoto {c.gold} → {c.gold - 1}",
-                    {"card_overrides": {cid: {"gold": c.gold - 1}}},
+                    f"REWORK_{cid.upper()}_NERF_COMPOUND",
+                    f"{cid.upper()} ({c.name}) [Compound Nerf]: koszt {c.cost}→{c.cost+1} + herezja {c.heresy}→{c.heresy+1}",
+                    {"card_overrides": {cid: {"cost": c.cost + 1, "heresy": c.heresy + 1}}},
                 ))
 
         elif cat == "DEAD_WEIGHT":
-            if c.cost > 0:
-                candidates.append((
-                    f"MUT_{cid.upper()}_COST_MINUS1",
-                    f"{cid.upper()} ({c.name}) [Aktywacja Dead Weight]: koszt {c.cost} → {c.cost - 1}",
-                    {"card_overrides": {cid: {"cost": c.cost - 1}}},
-                ))
-            if c.heresy > 0:
-                candidates.append((
-                    f"MUT_{cid.upper()}_HERESY_MINUS1",
-                    f"{cid.upper()} ({c.name}) [Aktywacja Dead Weight]: herezja {c.heresy} → {c.heresy - 1}",
-                    {"card_overrides": {cid: {"heresy": c.heresy - 1}}},
-                ))
-            if c.gold == 0:
-                candidates.append((
-                    f"MUT_{cid.upper()}_GOLD_SET1",
-                    f"{cid.upper()} ({c.name}) [Aktywacja Dead Weight]: dodaj złoto = 1",
-                    {"card_overrides": {cid: {"gold": 1}}},
-                ))
+            # Activate dead weight
+            candidates.append((
+                f"REWORK_{cid.upper()}_ACTIVATE_HERESY_ZERO",
+                f"{cid.upper()} ({c.name}) [Aktywacja]: herezja {c.heresy} → 0",
+                {"card_overrides": {cid: {"heresy": 0}}},
+            ))
+            candidates.append((
+                f"REWORK_{cid.upper()}_ACTIVATE_GOLD_2",
+                f"{cid.upper()} ({c.name}) [Aktywacja Złotem]: herezja 0 + złoto → 2",
+                {"card_overrides": {cid: {"heresy": 0, "gold": 2}}},
+            ))
+            candidates.append((
+                f"REWORK_{cid.upper()}_ACTIVATE_TARGET_HERESY",
+                f"{cid.upper()} ({c.name}) [Aktywacja Wrabianiem]: herezja 0 + target_heresy → 1",
+                {"card_overrides": {cid: {"heresy": 0, "target_heresy": 1}}},
+            ))
 
-    # 2D Combos between problematic cards
+    # 2D Combos (Antagonistic & Complementary) between Problem Cards
     if include_2d_combos and len(candidates) >= 2:
+        shares = base_res.get("faction_shares", {}) if base_res else {}
+        dominant_prefixes = [k.split("-")[0] for k, v in shares.items() if v >= 21.0]
+        struggling_prefixes = [k.split("-")[0] for k, v in shares.items() if v <= 19.5]
+
         combos = []
-        for i in range(min(15, len(candidates))):
-            for j in range(i + 1, min(20, len(candidates))):
-                m1 = candidates[i]
+        for i in range(len(candidates)):
+            m1 = candidates[i]
+            cid1 = list(m1[2]["card_overrides"].keys())[0]
+            pref1 = cid1.split("-")[0]
+            for j in range(i + 1, len(candidates)):
                 m2 = candidates[j]
-                c1_id = list(m1[2]["card_overrides"].keys())[0]
-                c2_id = list(m2[2]["card_overrides"].keys())[0]
-                if c1_id != c2_id:
+                cid2 = list(m2[2]["card_overrides"].keys())[0]
+                pref2 = cid2.split("-")[0]
+
+                if cid1 == cid2:
+                    continue
+
+                # Prioritize: (Buff struggling + Nerf dominant) OR (Buff 2 struggling factions)
+                is_antag = (pref1 in struggling_prefixes and pref2 in dominant_prefixes) or (pref2 in struggling_prefixes and pref1 in dominant_prefixes)
+                is_strug_pair = (pref1 in struggling_prefixes and pref2 in struggling_prefixes)
+
+                if is_antag or is_strug_pair or len(combos) < 60:
                     comb_id = f"{m1[0]}__{m2[0]}"
                     comb_name = f"{m1[1]} + {m2[1]}"
                     comb_ov = {
@@ -289,6 +358,10 @@ def generate_targeted_candidate_mutations(
                         }
                     }
                     combos.append((comb_id, comb_name, comb_ov))
+                    if len(combos) >= 120:
+                        break
+            if len(combos) >= 120:
+                break
         candidates.extend(combos)
 
     # Align candidate count to a multiple of 10 for 100% CPU thread efficiency
@@ -298,9 +371,9 @@ def generate_targeted_candidate_mutations(
         extra = []
         for cid, info in sorted(problem_cards.items()):
             c = info["card"]
-            p2 = f"MUT_{cid.upper()}_COST_PLUS2"
+            p2 = f"REWORK_{cid.upper()}_EXTRA_GOLD_3"
             if not any(t[0] == p2 for t in candidates) and not any(t[0] == p2 for t in extra):
-                extra.append((p2, f"{cid.upper()} ({c.name}) [Tuning]: koszt {c.cost} → {c.cost + 2}", {"card_overrides": {cid: {"cost": c.cost + 2}}}))
+                extra.append((p2, f"{cid.upper()} ({c.name}) [Ekonomia +3]: złoto {c.gold} → {c.gold + 3}", {"card_overrides": {cid: {"gold": c.gold + 3}}}))
                 if len(extra) == needed:
                     break
         candidates.extend(extra)
