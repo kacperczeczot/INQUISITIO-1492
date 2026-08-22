@@ -864,6 +864,7 @@ class Canon4PAutoBalancer:
 
         current_phase = 1
         beam_seeds: list[tuple[str, str, dict]] = []
+        consecutive_stalls = 0  # ile iteracji z rzędu bez patcha
 
         while not self.stop_requested:
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -879,7 +880,9 @@ class Canon4PAutoBalancer:
             # 1. Measure 4P Baseline
             print(f"\n{'='*71}")
             print(f"🔍 [POMIAR BAZOWY KANONU 4P] Diagnoza 5 setupów 4p (Próba: {self.args.confirm_games} gier/setup)...")
-            base_task = ((("BASE", "Bieżący stan Kanonu 4P", {}), self.args.confirm_games, self.args.seed, setups),)
+            # Seed rotuje z każdą iteracją, żeby nie mierzyć ciągle tego samego szumu
+            iter_seed = self.args.seed + self.total_iterations
+            base_task = ((("BASE", "Bieżący stan Kanonu 4P", {}), self.args.confirm_games, iter_seed, setups),)
             base_res = self._execute_pool(_run_single_test_task_4p, [base_task[0]], label="Baza 4P")[0]
             self._last_base_res = base_res
 
@@ -965,7 +968,7 @@ class Canon4PAutoBalancer:
             # 3. ETAP 1/3: Szybki Przesiew (tylko jeśli pula > top_semifinalists)
             if run_fast:
                 print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(survivors)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
-                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in survivors]
+                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, iter_seed, setups) for c in survivors]
                 stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label="Przesiew 4P 1/3")
                 stage1_results.sort(key=self._rank)
                 n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
@@ -976,7 +979,7 @@ class Canon4PAutoBalancer:
             # 4. ETAP 2/3: Głęboki Przesiew (tylko jeśli pula po etapie 1 > top_k)
             if run_screen:
                 print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam {len(survivors)} półfinalistów ({self.args.screen_games} gier/setup × 5 setupów) ---")
-                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in survivors]
+                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, iter_seed, setups) for c in survivors]
                 stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label="Przesiew 4P 2/3")
                 stage2_results.sort(key=self._rank)
                 n_finalists = min(self.args.top_k, len(stage2_results))
@@ -986,7 +989,7 @@ class Canon4PAutoBalancer:
 
             # 5. ETAP 3/3: Weryfikacja Ultra 4P
             print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję {len(survivors)} finalistów ({self.args.confirm_games} gier/setup × 5 setupów) ---")
-            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in survivors]
+            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, iter_seed, setups) for c in survivors]
             stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label="Weryfikacja 4P 3/3")
 
             stage3_results.sort(key=self._rank)
@@ -1024,7 +1027,7 @@ class Canon4PAutoBalancer:
 
             # 5b. WALIDACJA KRZYŻOWA — potwierdzenie na niezależnym seedzie
             if accepted_candidate and best_ver_res is not None:
-                cross_seed = self.args.seed + 9999  # Niezależne ziarno losowości
+                cross_seed = iter_seed + 9999  # Niezależne ziarno losowości
                 print(f"\n🔀 [WALIDACJA KRZYŻOWA] Potwierdzam zwycięzcę na niezależnym seedzie ({cross_seed})...")
                 print(f"   Testuję bazę i kandydata na {self.args.confirm_games} gier/setup × 5 setupów...")
 
@@ -1163,6 +1166,7 @@ class Canon4PAutoBalancer:
 
                     current_phase = 1
                     beam_seeds.clear()
+                    consecutive_stalls = 0
 
             else:
                 print(
@@ -1184,8 +1188,20 @@ class Canon4PAutoBalancer:
                             diverse_seeds.append(cand_dict[r["id"]])
 
                 beam_seeds = diverse_seeds[: self.args.beam_width]
-                current_phase += 1
-                print(f"🔄 Zakwalifikowano {len(beam_seeds)} nasion synergii i ESKALUJĘ DO FAZY {current_phase}D...\n")
+                consecutive_stalls += 1
+
+                if current_phase >= self.args.max_depth:
+                    print(f"\n🛑 Osiągnięto maksymalną głębokość wiązek ({self.args.max_depth}D) bez znalezienia patcha.")
+                    if consecutive_stalls >= 3:
+                        print(f"   ⛔ {consecutive_stalls} iteracji z rzędu bez efektu. Przestrzeń mutacji wyczerpana. Kończę.")
+                        break
+                    else:
+                        print(f"   🔄 Resetuję do Fazy 1D z nową bazą (próba {consecutive_stalls}/3 przed zatrzymaniem).")
+                        current_phase = 1
+                        beam_seeds.clear()
+                else:
+                    current_phase += 1
+                    print(f"🔄 Zakwalifikowano {len(beam_seeds)} nasion synergii i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
         self._emit_manual_ablation_review()
         print(f"\n═══════════════════════════════════════════════════════════════════════")
