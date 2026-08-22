@@ -386,8 +386,8 @@ class ProblemCardOptimizer:
             print(f"   🎯 Bieżący 4P Score: {color_score(base_score, bold=True)} pkt")
             print(f"   📊 Udziały: {', '.join(f'{k}: {v:.1f}%' for k, v in sorted(base_res['faction_shares'].items()))}\n")
 
-            if base_score >= 95.0:
-                print(f"🏆 Wynik Kanonu 4P osiągnął {base_score:.1f} pkt (docelowe 95+). Sukces!")
+            if base_score >= 100.0:
+                print(f"🏆 Wynik Kanonu 4P osiągnął absolutne 100.0 pkt! Balans doskonały.")
                 break
 
             # 3. Generate Candidate Mutations
