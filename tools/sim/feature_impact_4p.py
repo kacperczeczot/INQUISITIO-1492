@@ -258,6 +258,8 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
     faction_total_games: dict[str, int] = {}
     vitality_penalties: list[float] = []
     vitality_warnings: list[str] = []
+    card_plays_agg: dict[str, int] = {}
+    total_games_all_setups = 0
 
     for sname in setups:
         summary = run_batch(
@@ -274,6 +276,9 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
         vitality_penalties.append(vit.vitality_penalty)
         for msg in vit.warnings:
             vitality_warnings.append(f"{sname}: {msg}")
+        total_games_all_setups += summary.games
+        for cid, cnt in summary.card_plays_total.items():
+            card_plays_agg[cid] = card_plays_agg.get(cid, 0) + cnt
 
         factions = SETUP_PRESETS[sname]
         for fid in factions:
@@ -306,6 +311,8 @@ def _run_ablation_task_4p(task_args: tuple[str, str, dict, int, int, list[str]])
         "vitality_penalty": max(vitality_penalties) if vitality_penalties else 0.0,
         "vitality_warnings": vitality_warnings,
         "faction_shares": faction_shares,
+        "card_plays_total": card_plays_agg,
+        "total_games": total_games_all_setups,
         "eras_avg": eras_avg,
         "deadlock_pct": deadlock_pct,
         "poverty_pct": poverty_pct,
@@ -615,7 +622,13 @@ def run_full_ablation_audit_4p(
         # d_4p > 0 means removing card increased 4P score (card was destabilizing 4P)
         d_4p = round(res["score_4p"] - base_res["score_4p"], 1)
 
-        sub_id, role_name, group_id = classify_card_impact_4p(d_share, d_4p)
+        # Compute play_rate: total plays of this card / total games across all setups
+        base_card_plays = base_res.get("card_plays_total", {})
+        base_total_games = base_res.get("total_games", 1)
+        card_play_count = base_card_plays.get(meta["id"], 0)
+        play_rate = round(card_play_count / max(base_total_games, 1), 3)
+
+        sub_id, role_name, group_id = classify_card_impact_4p(d_share, d_4p, play_rate=play_rate)
 
         analyzed_cards.append({
             "id": meta["id"],
@@ -632,6 +645,8 @@ def run_full_ablation_audit_4p(
             "d_share": d_share,
             "score_4p": res["score_4p"],
             "d_4p": d_4p,
+            "play_rate": play_rate,
+            "play_count": card_play_count,
             "sub_id": sub_id,
             "role_name": role_name,
             "group_id": group_id,
@@ -740,11 +755,13 @@ def run_full_ablation_audit_4p(
             "DISRUPTOR": len([c for c in analyzed_cards if c["group_id"] == "DISRUPTOR"]),
             "DEAD_WEIGHT": len([c for c in analyzed_cards if c["group_id"] == "DEAD_WEIGHT"]),
             "SELF_HARM": len([c for c in analyzed_cards if c["group_id"] == "SELF_HARM"]),
+            "TEMPO_FILLER": len([c for c in analyzed_cards if c["group_id"] == "TEMPO_FILLER"]),
             "BALANCED": len([c for c in analyzed_cards if c["group_id"] == "BALANCED"]),
         }
 
         lines.extend([
             f"| 🩸 **Autopodatek (Self-Harm)** | **{group_counts['SELF_HARM']}** | {_deck_share(group_counts['SELF_HARM'])} | Wyłączenie **podnosi** win share własnej frakcji — karta jest haraczem, nie silnikiem | **Rework / osłabienie kosztu, nie filar** |",
+            f"| 🔄 **Rozcieńczalnik Talii (Tempo Filler)** | **{group_counts['TEMPO_FILLER']}** | {_deck_share(group_counts['TEMPO_FILLER'])} | Normalna karta tempa — ablacja fałszywie flaguje ją jako autopodatek z powodu odchudzenia talii | **Normalny element deckbuildingu** |",
             f"| 💤 **Karta Pasywna (Dead Weight)** | **{group_counts['DEAD_WEIGHT']}** | {_deck_share(group_counts['DEAD_WEIGHT'])} | Znikomy wpływ na tempo i wynik partii w 4P | **Kandydaci do wzmocnienia lub wycięcia** |",
             f"| ⚠️ **Karta Destabilizująca (Disruptor)** | **{group_counts['DISRUPTOR']}** | {_deck_share(group_counts['DISRUPTOR'])} | Ich usunięcie podnosi 4P Score | **Kandydaci do osłabienia/reworku** |",
             f"| ⚖️ **Zbalansowane Narzędzie** | **{group_counts['BALANCED']}** | {_deck_share(group_counts['BALANCED'])} | Płynne narzędzia taktyczne o zrównoważonym profilu w 4P | **Narzędzie, nie złoty środek całego kanonu** |",
@@ -813,17 +830,62 @@ def run_full_ablation_audit_4p(
             "",
             f"### 2.3. 📋 Pełny Wykaz Ablacji Wszystkich {n_cards} Kart Frakcji w Kanonie 4P",
             "",
-            "| ID | Nazwa Karty | Frakcja | Koszt | Herezja | Faction Win Share 4P | $\\Delta$ Frakcji | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Rola w Matrycy 4P |",
-            "| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+            "| ID | Nazwa Karty | Frakcja | Koszt | Herezja | Play-Rate | Faction Win Share 4P | $\\Delta$ Frakcji | 4P Score | $\\Delta$ 4P | Śr. Er | Deadlock % | Rola w Matrycy 4P |",
+            "| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
         ])
 
         for c in analyzed_cards:
             ds_sign = f"-{c['d_share']:.1f}%" if c['d_share'] > 0 else f"+{abs(c['d_share']):.1f}%"
             d4_sign = f"+{c['d_4p']:.1f}" if c['d_4p'] > 0 else f"{c['d_4p']:.1f}"
+            pr = c.get('play_rate', 0.0)
+            pr_str = f"{pr:.2f}"
             lines.append(
                 f"| `{c['id']}` | **{c['name']}** | {c['faction_name']} | {c['cost']} | {c['heresy']} | "
+                f"{pr_str} | "
                 f"{c['base_share']:.1f}% → {c['ablated_share']:.1f}% | `{ds_sign}` | "
                 f"{c['score_4p']:.1f} | `{d4_sign}` | {c['eras_avg']:.2f} | {c['deadlock_pct']:.1f}% | {c['role_name']} |"
+            )
+
+        # --- Sekcja Monokultury Talii (Deck Concentration Index) ---
+        lines.extend([
+            "",
+            f"### 2.4. 🎯 Monokultura Talii (Deck Concentration Index)",
+            "",
+            "Jak mocno skoncentrowane jest zagrywanie kart w obrębie każdej frakcji.",
+            "Wskaźnik HHI (Herfindahl–Hirschman Index) mierzy koncentrację: HHI = 1.0 oznacza, że 100% zagrań to 1 karta; HHI ≈ 1/N oznacza idealnie równomierny rozkład.",
+            "",
+            "| Frakcja | Kart w Talii | Top Karta (Play-Rate) | Top 2 (%) | HHI | Ocena |",
+            "| :--- | :---: | :--- | :---: | :---: | :--- |",
+        ])
+        faction_cards: dict[str, list[dict]] = {}
+        for c in analyzed_cards:
+            fc = c["faction_code"]
+            faction_cards.setdefault(fc, []).append(c)
+        for fc in sorted(faction_cards.keys()):
+            cards_in_faction = faction_cards[fc]
+            total_plays = sum(c.get("play_count", 0) for c in cards_in_faction)
+            if total_plays == 0:
+                lines.append(f"| {FACTION_FULL_NAMES.get(fc, fc)} | {len(cards_in_faction)} | — | — | — | 💤 Brak danych |") 
+                continue
+            sorted_by_plays = sorted(cards_in_faction, key=lambda x: x.get("play_count", 0), reverse=True)
+            top1 = sorted_by_plays[0]
+            top1_pct = (top1.get("play_count", 0) / total_plays * 100.0) if total_plays else 0.0
+            top2_pct = top1_pct
+            if len(sorted_by_plays) > 1:
+                top2_pct += (sorted_by_plays[1].get("play_count", 0) / total_plays * 100.0)
+            # HHI = sum of squared shares
+            hhi = sum((c.get("play_count", 0) / total_plays) ** 2 for c in cards_in_faction) if total_plays else 0.0
+            n_cards_faction = len(cards_in_faction)
+            ideal_hhi = 1.0 / n_cards_faction if n_cards_faction else 1.0
+            if hhi >= 0.25:
+                verdict = "⚠️ Monokultura (>25% HHI)"
+            elif hhi >= 0.18:
+                verdict = "🟡 Nierównomierny"
+            else:
+                verdict = "🟢 Zdrowy rozkład"
+            lines.append(
+                f"| {FACTION_FULL_NAMES.get(fc, fc)} | {n_cards_faction} | "
+                f"`{top1['id']}` ({top1.get('play_rate', 0.0):.2f}) | {top2_pct:.1f}% | {hhi:.3f} | {verdict} |"
             )
 
         lines.extend([

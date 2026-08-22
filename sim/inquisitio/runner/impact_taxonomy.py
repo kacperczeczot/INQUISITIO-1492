@@ -8,13 +8,30 @@ even if removing it wrecks 4P equality (the table was balanced *by* the tax).
 from __future__ import annotations
 
 
-def classify_card_impact_4p(d_share: float, d_4p: float) -> tuple[str, str, str]:
+def classify_card_impact_4p(
+    d_share: float,
+    d_4p: float,
+    play_rate: float | None = None,
+) -> tuple[str, str, str]:
     """Classifies card impact into the 4P ablation matrix.
 
     d_share: base faction win% minus ablated win% (positive = card helps the faction).
     d_4p: ablated 4P score minus base (positive = removing the card improves 4P).
+    play_rate: fraction of games where this card was played (0.0–1.0+).
+               When available, prevents false Self-Harm labels caused by
+               deck-thinning artifact (removing any card from a 12-card deck
+               speeds up draws of the faction's payoff cards).
     """
     if d_share <= -2.0:
+        # Deck-thinning correction: if the bot actively plays this card,
+        # the ablation delta is an artifact of a smaller deck, not real harm.
+        if play_rate is not None and play_rate >= 0.6:
+            # High play-rate: bot wants this card — it's a utility tool, not a tax.
+            return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
+        if play_rate is not None and play_rate >= 0.3:
+            # Moderate play-rate: normal tempo card, deck filler, not a bug.
+            return "TEMPO_FILLER", "🔄 ROZCIEŃCZALNIK TALII (Tempo Filler)", "TEMPO_FILLER"
+        # Low / unknown play-rate: genuine self-harm or dead weight with ablation artifact.
         return "SELF_HARM", "🩸 AUTOPODATEK FRAKCJI (Self-Harm Tax)", "SELF_HARM"
 
     if d_4p >= 1.2:
