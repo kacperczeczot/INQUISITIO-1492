@@ -1025,6 +1025,8 @@ class Canon4PAutoBalancer:
                 stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label="Przesiew 4P 1/3")
                 stage1_results.sort(key=self._rank)
                 n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+                if n_semifinalists >= 10:
+                    n_semifinalists = (n_semifinalists // 10) * 10
                 survivors = select_diverse_survivors(stage1_results, cand_dict, n_semifinalists)
             else:
                 print(f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): {len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie.")
@@ -1036,6 +1038,8 @@ class Canon4PAutoBalancer:
                 stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label="Przesiew 4P 2/3")
                 stage2_results.sort(key=self._rank)
                 n_finalists = min(self.args.top_k, len(stage2_results))
+                if n_finalists >= 10:
+                    n_finalists = (n_finalists // 10) * 10
                 survivors = select_diverse_survivors(stage2_results, cand_dict, n_finalists)
             else:
                 print(f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): {len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra.")
@@ -1269,9 +1273,9 @@ def main():
     parser.add_argument("--fast-games", type=int, default=300, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 300)")
     parser.add_argument("--screen-games", type=int, default=1500, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 1500)")
     parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 5000)")
-    parser.add_argument("--top-semifinalists", type=int, default=24, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 24)")
-    parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 12)")
-    parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
+    parser.add_argument("--top-semifinalists", type=int, default=40, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 40, wielokrotność 10)")
+    parser.add_argument("--top-k", type=int, default=20, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 20, wielokrotność 10)")
+    parser.add_argument("--beam-width", type=int, default=10, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 10, wielokrotność 10)")
     parser.add_argument("--max-depth", type=int, default=3, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 3)")
     parser.add_argument("--min-delta", type=float, default=0.50, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.50)")
 

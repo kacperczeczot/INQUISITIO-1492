@@ -593,6 +593,8 @@ class AutoBalancer5P:
                     stage1_results = self._execute_pool(_run_single_test_task_5p, stage1_tasks, label="Przesiew 5P 1/3")
                     stage1_results.sort(key=lambda r: r["score_5p"], reverse=True)
                     n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
+                    if n_semifinalists >= 10:
+                        n_semifinalists = (n_semifinalists // 10) * 10
                     survivors = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
                 else:
                     print(
@@ -606,6 +608,8 @@ class AutoBalancer5P:
                     stage2_results = self._execute_pool(_run_single_test_task_5p, stage2_tasks, label="Przesiew 5P 2/3")
                     stage2_results.sort(key=lambda r: r["score_5p"], reverse=True)
                     n_finalists = min(self.args.top_k, len(stage2_results))
+                    if n_finalists >= 10:
+                        n_finalists = (n_finalists // 10) * 10
                     survivors = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
                 else:
                     print(
@@ -738,9 +742,9 @@ def main():
     parser.add_argument("--fast-games", type=int, default=500, help="Liczba gier w Etapie 1 na 5p-full (domyślnie: 500)")
     parser.add_argument("--screen-games", type=int, default=1500, help="Liczba gier w Etapie 2 na 5p-full (domyślnie: 1500)")
     parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5p-full (domyślnie: 5000)")
-    parser.add_argument("--top-semifinalists", type=int, default=24, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 24)")
-    parser.add_argument("--top-k", type=int, default=12, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 12)")
-    parser.add_argument("--beam-width", type=int, default=8, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 8)")
+    parser.add_argument("--top-semifinalists", type=int, default=40, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 40, wielokrotność 10)")
+    parser.add_argument("--top-k", type=int, default=20, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 20, wielokrotność 10)")
+    parser.add_argument("--beam-width", type=int, default=10, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 10, wielokrotność 10)")
     parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość Lookahead +1D (domyślnie: 4)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 5P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
