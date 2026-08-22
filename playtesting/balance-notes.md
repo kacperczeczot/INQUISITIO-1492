@@ -23,13 +23,12 @@ W wersji `v1.0-alpha.25` przeprowadzono fundamentalną naprawę silnika AI (`Pol
 2. **Pełne Heurystyki Taktyczne dla Wszystkich 60 Kart:** Zrebalansowano próg Akcji Gospodarczej ($1.2$ base) i zaimplementowano dedykowaną ewaluację dla każdego typu efektu (ruchy agentów na relikwie, presja oskarżeń, budowanie haków, tempo ucieczek, edykty). Wszystkie 60 kart jest teraz aktywnie zagrywanych przez AI w symulacjach (`Play-Rate` na poziomie $0.20 – 1.40$ zagrań na grę).
 3. **Telemetria Reakcji (`card_plays`):** Wpięto zliczanie wyzwalanych kart reakcji (`SO-05` Wezwanie do Trybunału oraz `GC-05` Fałszywy Świadek w sądzie).
 4. **Trójwymiarowa Taksonomia Kart (`impact_taxonomy.py`):** Wprowadzono 3. oś: `Play-Rate` obok $\Delta\text{Share}$ i $\Delta\text{4P}$. Karta niezagrywana (`Play-Rate < 0.05`) nie może już otrzymać fałszywej etykiety „Zbalansowane Narzędzie” (jest oznaczana jako `DEAD_WEIGHT / UNPLAYED`). Karty o wysokim play-rate, które odchudzały talię, są klasyfikowane jako `TEMPO_FILLER (Rozcieńczalnik Talii)`.
-### 📊 Raporty Telemetrii i Stan Balansu (Ciągłe Generowanie)
+### 📊 Raporty Telemetrii i Stan Balansu (Struktura Archiwum)
 
-Wszystkie szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane w sposób ciągły przez zautomatyzowane narzędzia symulatora. Aktualne raporty dla bieżącego stanu gry znajdują się w:
-- 📊 **Raport Telemetrii Stołu (16 Setupów):** [`playtesting/sim-reports/current/raport_telemetrii.md`](sim-reports/current/raport_telemetrii.md)
-- 🃏 **Raport Użyteczności i Wpływu 60 Kart (Ablacja 4P):** [`playtesting/sim-reports/current/raport_uzytecznosci_i_wplywu_4p.md`](sim-reports/current/raport_uzytecznosci_i_wplywu_4p.md)
-- 📜 **Dziennik Optymalizacji Kanonu 4P:** [`playtesting/sim-reports/current/canon_4p_log.md`](sim-reports/current/canon_4p_log.md)
-- 📁 **Archiwum Wszystkich Wydań:** [`playtesting/sim-reports/archive/`](sim-reports/archive/)
+Wszystkie szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane automatycznie per wersja do katalogu [`playtesting/sim-reports/archive/`](sim-reports/archive/):
+- 📁 **Struktura i Opis Raportów:** [`playtesting/sim-reports/README.md`](sim-reports/README.md)
+- 📁 **Katalog Wszystkich Wydań:** [`playtesting/sim-reports/archive/`](sim-reports/archive/) (np. `archive/v1.0-alpha.25/`, `archive/v1.0-alpha.24/`)
+- 📜 **Dziennik Zmian Balansu:** Szczegółowe wpisy i historia każdego patcha znajdują się poniżej w sekcji [Patch Notes](#-chronologiczna-historia-zmian-balansu-faza-prototypowa--patch-notes).
 
 **Stan weryfikacji i domknięcia mechanicznego (SSOT v1.0-alpha.25):**
 - **AI i Telemetria (`PoliticsAgent`):** Wszystkie 60 kart posiada aktywne reguły ewaluacji; brak martwych kart w rękach botów (`Play-Rate` od 0.20 do 1.40).
