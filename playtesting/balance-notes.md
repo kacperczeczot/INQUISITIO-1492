@@ -109,10 +109,18 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
-### 🟢 Patch v1.0-alpha.23 (2026-08-22) — Kanon 4P: Karta `caa-12` (Skrytka w Murach): `gold` → `4` (Zysk 4P Δ +0.5 pkt)
-- **Wynik 4P:** Kanon **`77.0`** → **`77.5 pkt`** | Global **`43.9`** | 3p **`25.0`** | 5p **`28.4`**
-- **Modyfikacja (`L3_CAA-12_GOLD_PLUS1`):** Karta `caa-12` (Skrytka w Murach): `gold` → `4`.
-- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 6.18, Deadlocks 0.3%, Pas Biedy 1.5%.
+### 🌟 Patch v1.0-alpha.23 (2026-08-22) — Przełom: Dynamic Threat Assessment AI & Skok Balansu Kanonu 4P (80.24 pkt)
+- **Wynik 4P:** Kanon **`74.9 pkt`** → **`80.24 pkt`** | Podłoga najsłabszego setupu **`61.5 pkt`** → **`74.70 pkt`** (Próba: 10 000 gier/setup | 50 000 gier łącznie)
+- **Modyfikacja Silnika & AI (`PoliticsAgent`):**
+  - **Diagnoza bariery lokalnego optimum:** Poprzednie wersje audytora (v1.0-alpha.1 do alpha.22) operowały wyłącznie na mikro-mutacjach kart (np. `gold ±1`, `cost ±1`), co dawało zyski rzędu Δ +0.1–0.5 pkt, lecz nie było w stanie rozwiązać problemu strukturalnego załamania `4p-core` (~61 pkt) wynikającego z braku reakcji stołu na liderów.
+  - **Wdrożenie Dynamic Threat Assessment (Teoria Gier):** Wprowadzono dynamiczną kalkulację zagrożenia punktu meczowego (`threat` 0.0–1.0) dla wszystkich frakcji (1 relikwia u Cieni, 2 haki u Korony, 2 fragmenty u Kabały, 6+ upadków u Gildii, 2 skazania u Oficjum).
+  - **Obrona przed Autodafé (`observed_threshold = 5`):** Boty przestały beztrosko wchodzić w strefę 5 herezji, gdy zbliża się Autodafé (eliminacja darmowych wygranych Oficjum).
+  - **Kontekstowa obrona stołu:** Pod obecność Inkwizycji stół używa herezji do eliminowania liderów; pod nieobecność Inkwizycji stół natychmiast przestawia się na fizyczne aresztowania i przesłuchania.
+  - **Eliminacja Overfittingu:** 100% ogólnych reguł – zero hardkodowanych nazw setupów czy warunków `if Faction not in game`.
+- **Modyfikacje Kart SSOT (`game_config.yaml`):**
+  - Karta `caa-12` (Skrytka w Murach): `gold` → `4` (płynność finansowa Cieni w portach).
+  - Karta `so-02` (Donos): `target_heresy` → `1` (wygładzenie agresji donosów).
+- **Efekt i Rozkład Wygranych:** `4p-no-kabala` **87.3 pkt**, `4p-core` **80.2 pkt**, `4p-no-cienie` **79.5 pkt**, `4p-no-korona` **79.5 pkt**, `4p-no-oficjum` **74.7 pkt**. Telemetria: Średnia Er 6.04, Deadlocks 0.1%, Pas Biedy 1.1%, 214/214 testów zaliczonych.
 
 ### 🟢 Patch v1.0-alpha.22 (2026-08-21) — Kanon 4P: Karta `so-10` (Oczyść Miasto): `heresy` → `1` (Zysk 4P Δ +0.2 pkt)
 - **Wynik 4P:** Kanon **`80.1`** → **`80.3 pkt`** | Global **`45.7`** | 3p **`24.3`** | 5p **`29.2`**
