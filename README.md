@@ -41,7 +41,7 @@ tools/          # Generator PnP, katalog kart
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka |
 | **Korona & Borgiowie** | **2 Dekrety** |
 | **Kabała z Toledo** | **2 Fragmenty** (od Ery 6) |
-| **Gildia Cieni** | **8 Upadki** |
+| **Gildia Cieni** | **6 Upadki** |
 
 Szczegóły: [`game/factions/`](game/factions/) · [`docs/rules/ksiega.md`](docs/rules/ksiega.md).
 

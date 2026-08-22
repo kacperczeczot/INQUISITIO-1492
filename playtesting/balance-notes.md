@@ -95,6 +95,31 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.30 (2026-08-22) — Zamrożenie Akcji Gospodarczej na 1 zł (Reset `intrigue_gold: 1` & Blokada Audytorów)
+- **Modyfikacja Systemowa SSOT (`game_config.yaml`):** `intrigue_gold` zresetowane z `2` do **`1`** (przywrócenie bazowej reguły Księgi Zasad: Akcja Gospodarcza = +1 zł, na Rynku z Jarmarkiem = +2 zł).
+- **Blokada w Audytorach (`audytor_4p.py`):** Parametr `intrigue_gold` został na stałe dodany do `_FROZEN_ID_MARKERS` i `_FROZEN_PARAM_KEYS`. Żaden automatyczny optymalizator nie może modyfikować złota z akcji gospodarczej.
+- **Uzasadnienie Projektowe:** Podbijanie złota za pas (Opcja B Fazy I) było sztuczną inflacyjną protezą makro, która zachęcała boty i graczy do bierności zamiast zagrywania kart frakcyjnych. Strojenie balansu finansowego i tempa odbywa się w 100% na kartach frakcyjnych (poziom L3).
+
+### 🟢 Patch v1.0-alpha.29 (2026-08-22) — Kanon 4P Makro: Akcja Gospodarcza: offset +1 (nowy: 2) (Zysk 4P Δ +5.6 pkt)
+- **Wynik 4P (win share):** **`54.5 pkt`** (baza `48.9`) | blended `48.9` → `54.5` | Global **`27.6`** | 3p **`20.2`** | 5p **`7.3`**
+- **Modyfikacja (`L1_INTRIGUE_GOLD_PLUS1`):** Akcja Gospodarcza: offset +1 (nowy: 2).
+- **Efekt:** Makro L1/L2/L4. Telemetria: Średnia Er 4.67, Deadlocks 0.0%, Pas Biedy 2.8%. Witalność `0.000` → `0.000`.
+
+### 🟢 Patch v1.0-alpha.28 (2026-08-22) — Kanon 4P Makro: Zastosowano regułę L1_INTRIGUE_GOLD_DOUBLE (Zysk 4P Δ +5.6 pkt)
+- **Wynik 4P (win share):** **`54.5 pkt`** (baza `48.9`) | blended `48.9` → `54.5` | Global **`27.6`** | 3p **`20.2`** | 5p **`7.3`**
+- **Modyfikacja (`L1_INTRIGUE_GOLD_DOUBLE`):** Zastosowano regułę L1_INTRIGUE_GOLD_DOUBLE.
+- **Efekt:** Makro L1/L2/L4. Telemetria: Średnia Er 4.67, Deadlocks 0.0%, Pas Biedy 2.8%. Witalność `0.000` → `0.000`.
+
+### 🟢 Patch v1.0-alpha.27 (2026-08-22) — Kanon 4P: Gildia Cieni: Upadki offset -1 (Zysk 4P Δ +13.4 pkt)
+- **Wynik 4P:** Kanon **`35.3`** → **`48.7 pkt`** | Global **`24.4`** | 3p **`16.9`** | 5p **`6.1`**
+- **Modyfikacja (`L2_GC_FALLS_MINUS1`):** Gildia Cieni: Upadki offset -1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.68, Deadlocks 0.0%, Pas Biedy 3.4%.
+
+### 🟢 Patch v1.0-alpha.26 (2026-08-22) — Kanon 4P: Gildia Cieni: Upadki offset -1 (Zysk 4P Δ +7.9 pkt)
+- **Wynik 4P:** Kanon **`27.6`** → **`35.5 pkt`** | Global **`20.9`** | 3p **`25.8`** | 5p **`2.9`**
+- **Modyfikacja (`L2_GC_FALLS_MINUS1`):** Gildia Cieni: Upadki offset -1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.78, Deadlocks 0.0%, Pas Biedy 3.4%.
+
 ### 🌟 Patch v1.0-alpha.25 (2026-08-22) — Przełom: Pełne AI 60 Kart, Telemetria Play-Rate & Patch `KB-09` (Zysk 4P Δ +15.3 pkt)
 - **Wynik 4P:** Kanon **`11.9`** → **`27.2 pkt`** | Global **`17.6`** | 3p **`24.2`** | 5p **`1.9`** | Podłoga najsłabszego setupu `4.2` → `6.6 pkt` (na setupie flagowym `4p-core` skok do **`66.3 pkt`**)
 - **Modyfikacja Silnika & AI (`PoliticsAgent`):**

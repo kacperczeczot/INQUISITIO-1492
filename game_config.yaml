@@ -1,4 +1,4 @@
-version: v1.0-alpha.25
+version: v1.0-alpha.30
 date: '2026-08-22'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -27,7 +27,7 @@ victory:
     fragments: 2
     era: 6
   gildia_cieni:
-    falls: 8
+    falls: 6
 economy:
   card_cost_offset: 0
   sig_cost_offset: 0
