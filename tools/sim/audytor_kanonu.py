@@ -1022,6 +1022,48 @@ class Canon4PAutoBalancer:
                 print(f"\n   → Wybrano `{best_ver_res['id']}` (zysk 4P Δ {d_lead:+.2f} pkt, min {best_ver_res.get('min_balance', 0):.1f})")
 
 
+            # 5b. WALIDACJA KRZYŻOWA — potwierdzenie na niezależnym seedzie
+            if accepted_candidate and best_ver_res is not None:
+                cross_seed = self.args.seed + 9999  # Niezależne ziarno losowości
+                print(f"\n🔀 [WALIDACJA KRZYŻOWA] Potwierdzam zwycięzcę na niezależnym seedzie ({cross_seed})...")
+                print(f"   Testuję bazę i kandydata na {self.args.confirm_games} gier/setup × 5 setupów...")
+
+                cross_base_task = (("CROSS_BASE", "Baza krzyżowa", {}), self.args.confirm_games, cross_seed, setups)
+                cross_cand_task = (accepted_candidate, self.args.confirm_games, cross_seed, setups)
+                cross_results = self._execute_pool(
+                    _run_single_test_task_4p,
+                    [cross_base_task, cross_cand_task],
+                    label="Walidacja krzyżowa"
+                )
+
+                cross_base_res = None
+                cross_cand_res = None
+                for cr in cross_results:
+                    if cr["id"] == "CROSS_BASE":
+                        cross_base_res = cr
+                    else:
+                        cross_cand_res = cr
+
+                if cross_base_res and cross_cand_res:
+                    cross_decision = accept_candidate(
+                        cross_base_res, cross_cand_res,
+                        mode=self._accept_mode(), min_delta=self.args.min_delta
+                    )
+                    cross_d = cross_cand_res['score_4p_balance'] - cross_base_res['score_4p_balance']
+                    cross_dmin = float(cross_cand_res.get('min_balance', 0)) - float(cross_base_res.get('min_balance', 0))
+                    print(f"   🔀 Wynik krzyżowy: Δscore {cross_d:+.2f} pkt, Δmin {cross_dmin:+.2f} pkt")
+                    print(f"   🔀 Decyzja krzyżowa: {'✔ POTWIERDZONE' if cross_decision.accepted else '✖ ODRZUCONE'} — {cross_decision.reason}")
+
+                    if not cross_decision.accepted:
+                        print(f"\n   ⛔ ODRZUCONO PATCH — walidacja krzyżowa na seedzie {cross_seed} nie potwierdziła zysku.")
+                        print(f"      Kandydat `{best_ver_res['id']}` to szum statystyczny, a nie realna poprawa.")
+                        accepted_candidate = None
+                        best_ver_res = None
+                else:
+                    print(f"\n   ⛔ ODRZUCONO PATCH — błąd walidacji krzyżowej.")
+                    accepted_candidate = None
+                    best_ver_res = None
+
             # 6. Apply Patch & Measure Collateral Impact
             if accepted_candidate and best_ver_res is not None:
                 self.total_iterations += 1
