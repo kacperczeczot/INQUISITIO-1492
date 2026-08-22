@@ -109,6 +109,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.25 (2026-08-22) — Kanon 4P: Karta `kb-09` (Dekret Królewski): `gold` → `3` (Zysk 4P Δ +15.3 pkt)
+- **Wynik 4P:** Kanon **`11.9`** → **`27.2 pkt`** | Global **`17.6`** | 3p **`24.2`** | 5p **`1.9`**
+- **Modyfikacja (`L3_KB-09_GOLD_SET3`):** Karta `kb-09` (Dekret Królewski): `gold` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.81, Deadlocks 0.0%, Pas Biedy 3.5%.
+
 ### 🟢 Patch v1.0-alpha.24 (2026-08-22) — Kanon 4P Makro: Startowe złoto: offset +1 (Zysk 4P Δ +1.9 pkt)
 - **Wynik 4P (win share):** **`84.0 pkt`** (baza `82.1`) | blended `82.1` → `84.0` | Global **`54.4`** | 3p **`31.9`** | 5p **`45.6`**
 - **Modyfikacja (`L1_START_GOLD_PLUS1`):** Startowe złoto: offset +1.
