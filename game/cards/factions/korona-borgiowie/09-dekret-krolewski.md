@@ -5,7 +5,7 @@ faction: korona-borgiowie
 type: signature
 layer: C
 cost: 4
-heresy: 1
+heresy: 0
 tags:
 - signature
 - decree
@@ -16,4 +16,5 @@ heresy_text: Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie n
 lore: Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.
 breaks_rule: true
 ---
+
 

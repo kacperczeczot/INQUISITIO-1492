@@ -589,7 +589,7 @@ Kart: **12**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 4 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać. |
 | `effect` | DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie Haka. Odmowa: +3 Herezja. |
 | `lore` | Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru. |

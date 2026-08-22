@@ -95,6 +95,16 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.32 (2026-08-22) — Kanon 4P: Karta `kb-09` (Dekret Królewski): `heresy` → `0` (Zysk 4P Δ +8.1 pkt)
+- **Wynik 4P:** Kanon **`62.2`** → **`70.3 pkt`** | Global **`24.7`** | 3p **`19.9`** | 5p **`23.5`**
+- **Modyfikacja (`L3_KB-09_HERESY_MINUS1`):** Karta `kb-09` (Dekret Królewski): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.79, Deadlocks 0.0%, Pas Biedy 3.4%.
+
+### 🟢 Patch v1.0-alpha.31 (2026-08-22) — Kanon 4P: Święte Oficjum: Skazania offset +1 (Zysk 4P Δ +16.8 pkt)
+- **Wynik 4P:** Kanon **`48.9`** → **`65.7 pkt`** | Global **`23.4`** | 3p **`16.5`** | 5p **`20.5`**
+- **Modyfikacja (`L2_SO_CONDEMNS_PLUS1`):** Święte Oficjum: Skazania offset +1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.82, Deadlocks 0.0%, Pas Biedy 3.4%.
+
 ### 🟢 Patch v1.0-alpha.30 (2026-08-22) — Zamrożenie Akcji Gospodarczej na 1 zł (Reset `intrigue_gold: 1` & Blokada Audytorów)
 - **Modyfikacja Systemowa SSOT (`game_config.yaml`):** `intrigue_gold` zresetowane z `2` do **`1`** (przywrócenie bazowej reguły Księgi Zasad: Akcja Gospodarcza = +1 zł, na Rynku z Jarmarkiem = +2 zł).
 - **Blokada w Audytorach (`audytor_4p.py`):** Parametr `intrigue_gold` został na stałe dodany do `_FROZEN_ID_MARKERS` i `_FROZEN_PARAM_KEYS`. Żaden automatyczny optymalizator nie może modyfikować złota z akcji gospodarczej.

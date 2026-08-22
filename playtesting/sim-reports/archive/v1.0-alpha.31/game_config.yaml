@@ -1,5 +1,5 @@
-version: v1.0-alpha.33
-date: '2026-08-23'
+version: v1.0-alpha.31
+date: '2026-08-22'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 5
@@ -16,9 +16,9 @@ victory:
   swiete_oficjum:
     stacks: 6
     condemns:
-      3p: 2
-      4p: 3
-      5p: 3
+      3p: 3
+      4p: 4
+      5p: 4
   cienie_al_andalus:
     relics: 2
   korona_borgiowie:
@@ -386,7 +386,7 @@ cards:
     type: signature
     layer: C
     cost: 4
-    heresy: 0
+    heresy: 1
     decree: 1
     penalty_heresy: 3
     action: creates_hook
