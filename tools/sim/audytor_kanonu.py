@@ -234,30 +234,8 @@ def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: i
     }
 
 
-def get_problem_card_ids() -> set[str]:
-    """Returns the set of card IDs classified as SELF_HARM, DISRUPTOR, or DEAD_WEIGHT in the ablation report."""
-    ablation_report = REPORTS_DIR / "archive" / CONFIG.version / "raport_uzytecznosci_i_wplywu_4p.md"
-    if not ablation_report.exists():
-        ablation_report = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
-
-    problem_ids = set()
-    if ablation_report.exists():
-        for line in ablation_report.read_text(encoding="utf-8").splitlines():
-            if line.startswith("| `") and "` | **" in line:
-                parts = [p.strip() for p in line.split("|")[1:-1]]
-                if len(parts) >= 12:
-                    cid = parts[0].replace("`", "").strip()
-                    role = parts[11]
-                    if any(k in role for k in ("AUTOPODATEK", "DISRUPTOR", "TOKSYCZNY", "DEAD", "NISKIEGO WPŁYWU", "Pasywna")):
-                        problem_ids.add(cid)
-    return problem_ids
-
-
-def generate_all_atomic_candidates(only_problem_cards: bool = True) -> list[tuple[str, str, dict]]:
-    """Builds the pool of atomic candidates across L1, L2, L3, and L4.
-    If only_problem_cards is True, filters L3 card mutations strictly to problematic cards
-    (Autopodatki, Disruptory, Dead Weight), keeping Filary and Kotwice safe and untouched.
-    """
+def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
+    """Builds the full pool of atomic candidates across L1, L2, L3, and L4."""
     tests = []
 
     l1 = [
@@ -275,10 +253,6 @@ def generate_all_atomic_candidates(only_problem_cards: bool = True) -> list[tupl
     tests.extend(l2)
 
     l3 = [t for t in audit_level3.build_level3_tests(param_filter="cost,heresy,gold,target_heresy") if t[0] != "L3_BAZA"]
-    if only_problem_cards:
-        prob_ids = get_problem_card_ids()
-        if prob_ids:
-            l3 = [t for t in l3 if any(f"_{cid.upper()}_" in t[0] for cid in prob_ids)]
     tests.extend(l3)
 
     l4 = [
@@ -965,12 +939,10 @@ class Canon4PAutoBalancer:
             print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
 
             # 2. Candidate Pool
-            only_prob = getattr(self.args, "only_problem_cards", True)
-            atomic_pool = generate_all_atomic_candidates(only_problem_cards=only_prob)
+            atomic_pool = generate_all_atomic_candidates()
 
             if current_phase == 1 or not beam_seeds:
-                tag_scope = "tylko karty problematyczne: Autopodatki/Disruptory/Dead" if only_prob else "wszystkie 50 kart"
-                print(f"\n🌐 [FAZA 1D — KANON 4P] Pula atomowa L1–L4 ({tag_scope}, {len(atomic_pool)} kandydatów)...")
+                print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna pula atomowa L1–L4 ({len(atomic_pool)} kandydatów)...")
                 candidate_pool = atomic_pool
             else:
                 print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Celowane pary antagonistyczne (Nerf Dominanta + Buff Deficytu) i komplementarne wiązki...")
@@ -1282,18 +1254,6 @@ def main():
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
-    parser.add_argument(
-        "--only-problem-cards",
-        action="store_true",
-        default=True,
-        help="Ogranicz przestrzeń mutacji kart L3 wyłącznie do kart problematycznych (Autopodatki, Disruptory, Dead Weight). Domyślnie: True.",
-    )
-    parser.add_argument(
-        "--all-cards",
-        action="store_false",
-        dest="only_problem_cards",
-        help="Przeszukuj wszystkie 50 kart bez filtrowania problematycznych.",
-    )
     parser.add_argument(
         "--accept-mode",
         choices=("legacy", "band"),
