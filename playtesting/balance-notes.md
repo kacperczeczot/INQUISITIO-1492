@@ -13,13 +13,15 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## 🛡️ Gwarancja Silnika (Engine Guarantee & SSOT Contract)
+## 🛡️ Gwarancja Silnika (Engine Guarantee & SSOT Contract — od wersji v1.0-alpha.25)
 
-Silnik symulacyjny `INQUISITIO-1492` (`sim/inquisitio/`) spełnia ścisłą gwarancję proceduralną i mechaniczną:
-1. **Wierność Zasadom Gry:** Pętla partii wykonuje w 100% te same procedury stołu co księga zasad ([`docs/rules/ksiega.md`](../docs/rules/ksiega.md)), słownik pojęć ([`docs/rules/slownik.md`](../docs/rules/slownik.md)) i mechaniki stołowe ([`game/mechanics/`](../game/mechanics/)): Faza I Intrygi, Faza II Sądu i Werdyktu, Faza III Kroniki Dziejów, procedury Autodafé, mechanika Haków, Marionetek, Lochów i Szlaków Morskich.
-2. **Single Source of Truth (SSOT):** Wszystkie wartości kosztów, statystyk kart, progów zwycięstwa i modyfikatorów globalnych są w 100% zsynchronizowane centralnie z plikiem [`game_config.yaml`](../game_config.yaml). Brak martwych parametrów YAML lub ukrytych stałych w kodzie silnika.
-3. **Autonomiczna Inteligencja AI:** Boty symulacyjne (`PoliticsAgent`) operują na uniwersalnych heurystykach teorii gier i pełnej ewaluacji wszystkich 60 kart frakcyjnych, bez hardkodowanych założeń pod konkretne setupy.
-4. **Weryfikacja Automatyczna:** 100% testów jednostkowych, integracyjnych i regresyjnych (`sim/tests/`) musi przechodzić (214/214 passed) przed jakimkolwiek wdrożeniem zmian balansu.
+Wersja **`v1.0-alpha.25`** stanowi punkt zwrotny projektu — to od tego wydania silnik symulacyjny `INQUISITIO-1492` (`sim/inquisitio/`) osiągnął **pełną, bezkompromisową zgodność mechaniczną i taktyczną** ze stołem fizycznym:
+1. **Pełna Inteligencja AI (60/60 Kart):** Do wersji `v1.0-alpha.24` boty w symulacji sztucznie przeceniały Akcję Gospodarczą ($2.6$ base), przez co w 100% partii odrzucały 24 z 60 kart (`Play-Rate: 0.00`) i zapychały sobie rękę, co fałszowało testy ablacji. Od `v1.0-alpha.25` bot (`PoliticsAgent`) posiada pełne, aktywne heurystyki dla wszystkich 60 kart frakcyjnych (pozycjonowanie, presja sądu, haki, tempo).
+2. **Telemetria Reakcji i Zagrań:** Zliczanie wyzwalanych kart reakcji (`SO-05` Wezwanie do Trybunału oraz `GC-05` Fałszywy Świadek w sądzie) w liczniku `card_plays`.
+3. **Trójwymiarowa Taksonomia Ablacji:** Eliminacja fałszywych etykiet „Zbalansowane Narzędzie” dla niezagrywanych kart i zastąpienie ich ścisłą klasyfikacją opartą o $\Delta\text{Share} \times \Delta\text{4P} \times \text{Play-Rate}$.
+4. **Wierność Zasadom Gry:** Pętla partii wykonuje w 100% procedury stołu z księgi zasad ([`docs/rules/ksiega.md`](../docs/rules/ksiega.md)), słownika ([`docs/rules/slownik.md`](../docs/rules/slownik.md)) i mechanik ([`game/mechanics/`](../game/mechanics/)): Intryga, Sąd/Werdykt, Kronika Dziejów, Autodafé, Haki, Marionetki, Lochy, Szlak Morski.
+5. **Single Source of Truth (SSOT):** Wszystkie wartości kosztów, parametrów kart, progów zwycięstwa i modyfikatorów globalnych są w 100% zsynchronizowane z plikiem [`game_config.yaml`](../game_config.yaml).
+6. **Weryfikacja Automatyczna:** 100% testów jednostkowych, integracyjnych i regresyjnych (`sim/tests/`) musi przechodzić (214/214 passed) przed jakimkolwiek wdrożeniem zmian balansu.
 
 ---
 
