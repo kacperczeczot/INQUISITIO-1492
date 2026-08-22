@@ -100,6 +100,7 @@ def run_verdict(
                     gc_pl.gold -= gc_cost
                     gc_pl.hand.remove("gc-05")
                     gc_pl.discard.append("gc-05")
+                    state.metrics.card_plays["gc-05"] = state.metrics.card_plays.get("gc-05", 0) + 1
                     votes_burn -= 1
                     votes_spare += 1
                     state.add_log(
@@ -110,6 +111,7 @@ def run_verdict(
                     gc_pl.gold -= gc_cost
                     gc_pl.hand.remove("gc-05")
                     gc_pl.discard.append("gc-05")
+                    state.metrics.card_plays["gc-05"] = state.metrics.card_plays.get("gc-05", 0) + 1
                     votes_spare -= 1
                     votes_burn += 1
                     state.add_log(

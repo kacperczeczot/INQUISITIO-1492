@@ -477,6 +477,7 @@ def resolve_card_effects(
                     so_pl.gold -= so_cost
                     so_pl.hand.remove("so-05")
                     so_pl.discard.append("so-05")
+                    state.metrics.card_plays["so-05"] = state.metrics.card_plays.get("so-05", 0) + 1
                     target_h = so_card.target_heresy if so_card else 2
                     add_heresy(state, fid, target_h, reason="so-05:reaction")
                     so_pl.frames_dealt += target_h
