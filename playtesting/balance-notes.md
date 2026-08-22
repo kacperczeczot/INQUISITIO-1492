@@ -13,35 +13,22 @@ Setupy: [`setups.md`](setups.md) · Hierarchia Balansowania: [`../docs/rules/hie
 
 ---
 
-## Gwarancja silnika — `game_config.yaml` **v1.0-alpha.25** (Odnowiona — Pełne AI 60 Kart & Play-Rate Telemetry)
+## 🛡️ Gwarancja Silnika (Engine Guarantee & SSOT Contract)
 
-**Zakres:** pętla ery symulatora wykonuje dokładnie te same procedury stołu co księga zasad, słownik i `game/mechanics/` (Intryga, Sąd/Werdykt, Kronika Dziejów). Każda **nazwana mechanika L4, wariant, predykat warunku i pole karty z `game_config.yaml` (SSOT) oraz frontmatterów** jest bezpośrednio wpięta w silnik — brak martwych parametrów YAML.
+Silnik symulacyjny `INQUISITIO-1492` (`sim/inquisitio/`) spełnia ścisłą gwarancję proceduralną i mechaniczną:
+1. **Wierność Zasadom Gry:** Pętla partii wykonuje w 100% te same procedury stołu co księga zasad ([`docs/rules/ksiega.md`](../docs/rules/ksiega.md)), słownik pojęć ([`docs/rules/slownik.md`](../docs/rules/slownik.md)) i mechaniki stołowe ([`game/mechanics/`](../game/mechanics/)): Faza I Intrygi, Faza II Sądu i Werdyktu, Faza III Kroniki Dziejów, procedury Autodafé, mechanika Haków, Marionetek, Lochów i Szlaków Morskich.
+2. **Single Source of Truth (SSOT):** Wszystkie wartości kosztów, statystyk kart, progów zwycięstwa i modyfikatorów globalnych są w 100% zsynchronizowane centralnie z plikiem [`game_config.yaml`](../game_config.yaml). Brak martwych parametrów YAML lub ukrytych stałych w kodzie silnika.
+3. **Autonomiczna Inteligencja AI:** Boty symulacyjne (`PoliticsAgent`) operują na uniwersalnych heurystykach teorii gier i pełnej ewaluacji wszystkich 60 kart frakcyjnych, bez hardkodowanych założeń pod konkretne setupy.
+4. **Weryfikacja Automatyczna:** 100% testów jednostkowych, integracyjnych i regresyjnych (`sim/tests/`) musi przechodzić (214/214 passed) przed jakimkolwiek wdrożeniem zmian balansu.
 
-### 🌟 Kamień Milowy v1.0-alpha.25: Pełna Inteligencja AI (60/60 Kart) & Trójwymiarowa Taksonomia Użyteczności (Play-Rate)
-W wersji `v1.0-alpha.25` przeprowadzono fundamentalną naprawę silnika AI (`PoliticsAgent`) oraz metodologii audytu ablacyjnego:
-1. **Diagnoza Pasywności AI (Hand Clog & Fake Autopodatek):** Poprzedni bot sztucznie przeceniał Akcję Gospodarczą (wartość bazowa $2.6$ vs $\le 0.0$ dla 24 kart narzędziowych). W rezultacie AI w 100% partii wyrzucało do kosza 40% talii (`Play-Rate: 0.00`), traktując je jak śmieci blokujące rękę. W testach ablacji usunięcie tych kart sztucznie odtykało rękę bota, co generowało masowe fałszywe alarmy „Autopodatków (Self-Harm Tax)” i zniekształcało ocenę balansu.
-2. **Pełne Heurystyki Taktyczne dla Wszystkich 60 Kart:** Zrebalansowano próg Akcji Gospodarczej ($1.2$ base) i zaimplementowano dedykowaną ewaluację dla każdego typu efektu (ruchy agentów na relikwie, presja oskarżeń, budowanie haków, tempo ucieczek, edykty). Wszystkie 60 kart jest teraz aktywnie zagrywanych przez AI w symulacjach (`Play-Rate` na poziomie $0.20 – 1.40$ zagrań na grę).
-3. **Telemetria Reakcji (`card_plays`):** Wpięto zliczanie wyzwalanych kart reakcji (`SO-05` Wezwanie do Trybunału oraz `GC-05` Fałszywy Świadek w sądzie).
-4. **Trójwymiarowa Taksonomia Kart (`impact_taxonomy.py`):** Wprowadzono 3. oś: `Play-Rate` obok $\Delta\text{Share}$ i $\Delta\text{4P}$. Karta niezagrywana (`Play-Rate < 0.05`) nie może już otrzymać fałszywej etykiety „Zbalansowane Narzędzie” (jest oznaczana jako `DEAD_WEIGHT / UNPLAYED`). Karty o wysokim play-rate, które odchudzały talię, są klasyfikowane jako `TEMPO_FILLER (Rozcieńczalnik Talii)`.
-### 📊 Raporty Telemetrii i Stan Balansu (Struktura Archiwum)
+---
 
-Wszystkie szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane automatycznie per wersja do katalogu [`playtesting/sim-reports/archive/`](sim-reports/archive/):
+### 📊 Raporty Telemetrii i Archiwum Symulacji
+
+Szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane automatycznie per wersja do katalogu [`playtesting/sim-reports/archive/`](sim-reports/archive/):
 - 📁 **Struktura i Opis Raportów:** [`playtesting/sim-reports/README.md`](sim-reports/README.md)
 - 📁 **Katalog Wszystkich Wydań:** [`playtesting/sim-reports/archive/`](sim-reports/archive/) (np. `archive/v1.0-alpha.25/`, `archive/v1.0-alpha.24/`)
 - 📜 **Dziennik Zmian Balansu:** Szczegółowe wpisy i historia każdego patcha znajdują się poniżej w sekcji [Patch Notes](#-chronologiczna-historia-zmian-balansu-faza-prototypowa--patch-notes).
-
-**Stan weryfikacji i domknięcia mechanicznego (SSOT v1.0-alpha.25):**
-- **AI i Telemetria (`PoliticsAgent`):** Wszystkie 60 kart posiada aktywne reguły ewaluacji; brak martwych kart w rękach botów (`Play-Rate` od 0.20 do 1.40).
-- **Warianty L4:** `variants.sea_route_era` (planowe otwarcie Szlaku Morskiego od Ery 4), `variants.time_deck_freq`, `variants.inquisitor_speed`, `no_time_deck` — odczyt z `CONFIG` + `sys_overrides`. Usunięto martwe parametry legacy (`path_era` CAA, `verdict_secret`).
-- **Święte Oficjum:** `so-05` (reakcja Wezwanie do Trybunału na zagranie Herezji przez rywala), `so-07` (przesłuchanie), `so-10` (wymuszenie procedury Autodafé).
-- **Cienie Al-Andalus:** `caa-03` (ciągnięcie relikwii do portów rynek/gildia), `caa-05` (Ukryty Kurier: ewakuacja + `shadow_exit`), `caa-06` (uwolnienie z Lochów), `caa-08` (ruch podwójnym agentem), `caa-09` (transport relikwii), `caa-10` (ewakuacja relikwii z warunkiem i snapshotem przy stagingu), `caa-11` (nasłanie Inkwizytora po ruchu).
-- **Korona & Borgiowie:** `kb-04` (Haki od Ery 4 w A-layer), `kb-05` (Dekret w A / redukcja herezji w B/C), `kb-09` (Dekret + wymuszenie/nadanie Haka + 3 złote), `kb-10` (Dekret z warunkiem `active_hooks_gte_2` i ochroną Haków przy stagingu).
-- **Kabała z Toledo:** `kt-03`/`kt-05`/`kt-09` (pozyskiwanie Fragmentów Kodeksu w Lochach/Trybunale), `kt-06` (przesłuchanie z bonusem Fragmentu), `kt-10` (Pieczęć Salomona: pasmo `target_heresy_band` i `fallback_heresy`), `kt-11` (`heresy_decrease`).
-- **Gildia Cieni:** `gc-03` (podrzucenie dowodów), `gc-05` (reakcja Fałszywy Świadek przy głosowaniu sądu), `gc-09` (Lista Dłużników / Hak), `gc-10` (Upadek Domu: warunek `rival_has_hook_or_double_or_autodafe` i egzekucja Upadku wobec rywala z Hakiem, Marionetką lub pod Inkwizytorem).
-- **Kronika Dziejów (10 Edyktów Czasu):** Pełna obsługa edyktów `time-01` do `time-10` (Godzina Policyjna, Flota Odkrywców, Bunt w Lochach, Amnestia Biskupia, Jarmark Królewski, Gorączka Donosów, Nocna Obława, Kapitulacja Grenady, Rewizja, Święte Przymierze).
-- **Warunki i Fiaska (`card_conditions.py`):** 10 predykatów YAML (`relic_present`, `has_double_agent`, `agent_in_dungeon_or_tribunal`, `fragments_eq_3`, `active_hooks_gte_2`, `heresy_gte_4`, `has_fragment_and_agent_in_dungeon_or_tribunal`, `no_inquisitor_or_double_or_sea_route`, `rival_has_hook_or_double_or_autodafe`, `rival_in_dungeon_or_inquisitor`) + snapshot `StagedPlay.cond_ok` przy planowaniu.
-- **Ewaluator Zwycięstwa (`win.py`):** Zgodny w 100% z progami SSOT (Stosy 6, Skazania 2/3, Relikwie 2, Dekrety 2, Fragmenty 2 od Ery 6, Upadki 8).
-- **Testy automatyczne:** `sim/tests/test_engine_guarantee.py`, `test_ssot_live_knobs.py`, `test_intrigue_canon.py`, `test_balance.py` — **214 passed** (100% zielone).
 
 Poza zakresem (świadomie): AI operuje na ogólnych heurystykach teorii gier stołowych; wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
 
