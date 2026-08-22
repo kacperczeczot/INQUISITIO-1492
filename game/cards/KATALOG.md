@@ -52,7 +52,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Konfiskata majątku skazańców to prawny obowiązek trybunału. |
-| `effect` | Zyskaj 3 złota. Wskaż rywala: +1 Herezja. |
+| `effect` | Zyskaj 2 złota. Wskaż rywala: +1 Herezja. |
 | `lore` | Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -262,7 +262,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 3 złota. |
+| `effect` | Zyskaj 2 złota. |
 | `lore` | Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -892,7 +892,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 4 złota. |
+| `effect` | Zyskaj 2 złota. |
 | `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
 | `tags` | gold, heresy |
 | `status` | prototyp |

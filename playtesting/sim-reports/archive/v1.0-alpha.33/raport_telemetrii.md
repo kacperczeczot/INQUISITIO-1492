@@ -1,6 +1,6 @@
 # Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: v1.0-alpha.33
 
-**Wersja Balansu:** `v1.0-alpha.33` | **Data:** 2026-08-23 00:02 | **Wielkość Próby:** 10000 gier/setup (160000 gier łącznie) | **Czas Symulacji:** 52.43s
+**Wersja Balansu:** `v1.0-alpha.33` | **Data:** 2026-08-23 00:12 | **Wielkość Próby:** 10000 gier/setup (160000 gier łącznie) | **Czas Symulacji:** 43.3s
 
 ## 1. Tabela Szans Wygranych Frakcji (Win Share %) vs Punkt Idealny
 
@@ -16,10 +16,10 @@
 | `3p-oficjum-kabala-gildia` | 3 | 🔴 **  0.8** | 33.3% | 85.4% | - | - | 5.5% | 9.1% | 🔴 ODCHYLONY |
 | `3p-oficjum-korona-gildia` | 3 | 🔴 **  3.7** | 33.3% | 66.8% | - | 17.4% | - | 15.8% | 🔴 ODCHYLONY |
 | `3p-oficjum-korona-kabala` | 3 | 🔴 **  9.2** | 33.3% | 50.5% | - | 13.9% | 35.6% | - | 🔴 ODCHYLONY |
-| `4p-core` | 4 | 🔴 **  1.9** | 25.0% | 63.2% | 18.0% | 9.6% | 9.2% | - | 🔴 ODCHYLONY |
-| `4p-no-cienie` | 4 | 🔴 **  0.2** | 25.0% | 87.2% | - | 6.9% | 3.0% | 2.9% | 🔴 ODCHYLONY |
-| `4p-no-kabala` | 4 | 🔴 **  0.9** | 25.0% | 70.9% | 16.3% | 7.9% | - | 4.9% | 🔴 ODCHYLONY |
-| `4p-no-korona` | 4 | 🔴 **  0.3** | 25.0% | 84.0% | 11.7% | - | 1.9% | 2.3% | 🔴 ODCHYLONY |
+| `4p-core` | 4 | 🟡 ** 78.8** | 25.0% | 21.0% | 27.1% | 23.0% | 28.8% | - | 🟡 AKCEPTOWALNY |
+| `4p-no-cienie` | 4 | 🔴 ** 23.7** | 25.0% | 47.8% | - | 18.4% | 17.8% | 15.9% | 🔴 ODCHYLONY |
+| `4p-no-kabala` | 4 | 🟠 ** 61.1** | 25.0% | 33.8% | 24.1% | 18.2% | - | 23.8% | 🟠 WYMAGA UWAGI |
+| `4p-no-korona` | 4 | 🔴 ** 37.0** | 25.0% | 40.3% | 26.6% | - | 18.5% | 14.7% | 🔴 ODCHYLONY |
 | `4p-no-oficjum` | 4 | 🟡 ** 83.7** | 25.0% | - | 25.9% | 28.6% | 22.1% | 23.5% | 🟡 AKCEPTOWALNY |
 | `5p-full` | 5 | 🔴 **  9.1** | 20.0% | 49.7% | 18.0% | 11.2% | 2.8% | 18.4% | 🔴 ODCHYLONY |
 
@@ -37,10 +37,10 @@
 | `3p-oficjum-kabala-gildia` | 4.18 🔴 | 0.0% 🟢 | 1.8% 🟢 | 1.61 🟢 | 4.14 🟢 | 3.75zł | 8.69 | ⚠️ WARTOŚCI BRZEGOWE |
 | `3p-oficjum-korona-gildia` | 4.6 🟡 | 0.0% 🟢 | 5.0% 🟢 | 1.69 🟢 | 4.41 🟢 | 4.17zł | 9.12 | ⚠️ WARTOŚCI BRZEGOWE |
 | `3p-oficjum-korona-kabala` | 4.81 🟡 | 0.0% 🟢 | 5.9% 🟢 | 1.86 🟡 | 3.86 🟢 | 2.33zł | 8.72 | ⚠️ WARTOŚCI BRZEGOWE |
-| `4p-core` | 4.18 🔴 | 0.0% 🟢 | 3.5% 🟢 | 1.68 🟢 | 3.15 🟢 | 5.3zł | 7.42 | ⚠️ WARTOŚCI BRZEGOWE |
-| `4p-no-cienie` | 3.6 🔴 | 0.0% 🟢 | 3.7% 🟢 | 1.48 🟢 | 3.14 🟢 | 3.25zł | 7.96 | ⚠️ WARTOŚCI BRZEGOWE |
-| `4p-no-kabala` | 3.77 🔴 | 0.0% 🟢 | 2.8% 🟢 | 1.52 🟢 | 3.0 🟢 | 6.24zł | 7.35 | ⚠️ WARTOŚCI BRZEGOWE |
-| `4p-no-korona` | 3.48 🔴 | 0.0% 🟢 | 1.0% 🟢 | 1.48 🟢 | 2.82 🟢 | 5.99zł | 7.36 | ⚠️ WARTOŚCI BRZEGOWE |
+| `4p-core` | 4.93 🟡 | 0.0% 🟢 | 4.1% 🟢 | 1.96 🟡 | 4.49 🟢 | 5.76zł | 7.86 | ⚠️ WARTOŚCI BRZEGOWE |
+| `4p-no-cienie` | 4.65 🟡 | 0.0% 🟢 | 4.5% 🟢 | 1.79 🟢 | 5.09 🔴 | 3.47zł | 8.65 | ⚠️ WARTOŚCI BRZEGOWE |
+| `4p-no-kabala` | 4.63 🟡 | 0.0% 🟢 | 3.4% 🟢 | 1.79 🟢 | 4.53 🟡 | 6.92zł | 7.99 | ⚠️ WARTOŚCI BRZEGOWE |
+| `4p-no-korona` | 4.57 🟡 | 0.0% 🟢 | 1.1% 🟢 | 1.82 🟡 | 4.77 🟡 | 6.88zł | 8.05 | ⚠️ WARTOŚCI BRZEGOWE |
 | `4p-no-oficjum` | 4.74 🟡 | 0.0% 🟢 | 3.3% 🟢 | 1.2 🟢 | 4.71 🟡 | 6.8zł | 7.94 | ⚠️ WARTOŚCI BRZEGOWE |
 | `5p-full` | 4.21 🔴 | 0.0% 🟢 | 3.2% 🟢 | 1.66 🟢 | 4.48 🟢 | 5.59zł | 7.72 | ⚠️ WARTOŚCI BRZEGOWE |
 
@@ -48,31 +48,31 @@
 
 | Frakcja | Śr. Win Share (wszystkie setupy) | Najgorszy Setup | Max Odchylenie od Ideału | Status |
 | :--- | :---: | :--- | :---: | :--- |
-| **SO** | 64.2% | `4p-no-cienie` | +62.2% | 🟡 DOMINUJE |
-| **KT** | 19.3% | `3p-oficjum-kabala-gildia` | -27.8% | 🟡 SŁABA |
-| **GC** | 22.4% | `3p-korona-kabala-gildia` | +24.2% | 🟡 DOMINUJE |
-| **KB** | 17.4% | `3p-oficjum-korona-kabala` | -19.4% | 🟡 SŁABA |
-| **CAA** | 22.1% | `3p-oficjum-alandalus-kabala` | -14.0% | 🟡 SŁABA |
+| **SO** | 49.5% | `3p-oficjum-kabala-gildia` | +52.1% | 🟡 DOMINUJE |
+| **KT** | 23.9% | `3p-oficjum-kabala-gildia` | -27.8% | 🟡 SŁABA |
+| **GC** | 26.4% | `3p-korona-kabala-gildia` | +24.2% | 🟡 DOMINUJE |
+| **KB** | 20.6% | `3p-oficjum-korona-kabala` | -19.4% | 🟡 SŁABA |
+| **CAA** | 25.0% | `3p-oficjum-alandalus-kabala` | -14.0% | 🟡 SŁABA |
 
 ### Setupy poniżej Score 90 (wymagające poprawy):
 
 | Setup | Score | Główny problem |
 | :--- | :---: | :--- |
-| `4p-no-cienie` | 🔴 **  0.2** | SO dominuje (87.2% vs ideal 25.0%) |
-| `4p-no-korona` | 🔴 **  0.3** | SO dominuje (84.0% vs ideal 25.0%) |
 | `3p-oficjum-kabala-gildia` | 🔴 **  0.8** | SO dominuje (85.4% vs ideal 33.3%) |
-| `4p-no-kabala` | 🔴 **  0.9** | SO dominuje (70.9% vs ideal 25.0%) |
-| `4p-core` | 🔴 **  1.9** | SO dominuje (63.2% vs ideal 25.0%) |
 | `3p-oficjum-korona-gildia` | 🔴 **  3.7** | SO dominuje (66.8% vs ideal 33.3%) |
 | `5p-full` | 🔴 **  9.1** | SO dominuje (49.7% vs ideal 20.0%) |
 | `3p-oficjum-korona-kabala` | 🔴 **  9.2** | KB za słaba (13.9% vs ideal 33.3%) |
 | `3p-oficjum-alandalus-kabala` | 🔴 ** 14.6** | CAA za słaba (19.3% vs ideal 33.3%) |
 | `3p-oficjum-alandalus-gildia` | 🔴 ** 16.8** | SO dominuje (61.9% vs ideal 33.3%) |
+| `4p-no-cienie` | 🔴 ** 23.7** | SO dominuje (47.8% vs ideal 25.0%) |
 | `3p-korona-kabala-gildia` | 🔴 ** 24.6** | GC dominuje (57.5% vs ideal 33.3%) |
 | `3p-cienie-korona-kabala` | 🔴 ** 29.7** | KT dominuje (55.1% vs ideal 33.3%) |
 | `3p-cienie-kabala-gildia` | 🔴 ** 30.0** | GC dominuje (53.1% vs ideal 33.3%) |
+| `4p-no-korona` | 🔴 ** 37.0** | SO dominuje (40.3% vs ideal 25.0%) |
 | `3p-oficjum-alandalus-korona` | 🔴 ** 43.1** | SO dominuje (49.1% vs ideal 33.3%) |
 | `3p-cienie-korona-gildia` | 🔴 ** 53.2** | GC dominuje (46.2% vs ideal 33.3%) |
+| `4p-no-kabala` | 🟠 ** 61.1** | SO dominuje (33.8% vs ideal 25.0%) |
+| `4p-core` | 🟡 ** 78.8** | SO za słaba (21.0% vs ideal 25.0%) |
 | `4p-no-oficjum` | 🟡 ** 83.7** | KB dominuje (28.6% vs ideal 25.0%) |
 
 ## 4. Legenda Wskaźników Telemetrii i Norm Balansowych

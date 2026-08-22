@@ -9,8 +9,9 @@ heresy: 1
 tags:
 - gold
 - heresy
-effect: Zyskaj 4 złota.
+effect: Zyskaj 2 złota.
 lore: Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.
 gold: 3
 ---
+
 

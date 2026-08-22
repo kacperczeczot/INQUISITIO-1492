@@ -95,6 +95,17 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.34 (2026-08-23) — Kanon 4P: Cięcie Inflacji Złota na Kartach-Bankomatach (Zysk 4P Δ +2.1 pkt, Śr. Złoto End 5.92 zł → 4.85 zł)
+- **Wynik 4P:** Kanon **`57.3`** → **`59.4 pkt`** | Podłoga najsłabszego setupu (`4p-no-cienie`) **`22.5`** → **`34.9 pkt`** (Δ +12.4 pkt).
+- **Modyfikacja Kart Frakcyjnych L3 (`game_config.yaml`):**
+  - `so-02` (*Skarbiec Trybunału*): zysk złota `gold` obniżony z **`3` $\to$ `2` zł**.
+  - `caa-02` (*Złoto z Kryjówki*): zysk złota `gold` obniżony z **`3` $\to$ `2` zł**.
+  - `gc-02` (*Czarny Rynek*): zysk złota `gold` obniżony z **`4` $\to$ `2` zł**.
+- **Efekt i Telemetria:**
+  - Średnia ilość złota w sakiewkach na koniec gry spadła z **`5.92 zł`** do **`4.85 zł`** (spadek o ponad 1 monetę na gracza).
+  - Wskaźnik wymuszonych pasów biedy pozostał na optymalnym poziomie **`3.6%`** (płynny obieg bez zatorów).
+  - Wzrost równości szans w setupach pobocznych (`4p-no-kabala` do 68.3 pkt, `4p-no-korona` do 56.7 pkt).
+
 ### 🟢 Patch v1.0-alpha.32 (2026-08-22) — Kanon 4P: Karta `kb-09` (Dekret Królewski): `heresy` → `0` (Zysk 4P Δ +8.1 pkt)
 - **Wynik 4P:** Kanon **`62.2`** → **`70.3 pkt`** | Global **`24.7`** | 3p **`19.9`** | 5p **`23.5`**
 - **Modyfikacja (`L3_KB-09_HERESY_MINUS1`):** Karta `kb-09` (Dekret Królewski): `heresy` → `0`.

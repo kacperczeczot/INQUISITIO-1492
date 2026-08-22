@@ -1,4 +1,4 @@
-version: v1.0-alpha.33
+version: v1.0-alpha.34
 date: '2026-08-23'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -46,7 +46,7 @@ cards:
     type: akcja
     layer: A
     cost: 1
-    gold: 3
+    gold: 2
     action: gain_gold
     tags:
     - gold
@@ -177,7 +177,7 @@ cards:
     type: akcja
     layer: A
     cost: 0
-    gold: 3
+    gold: 2
     action: gain_gold
     tags:
     - gold
@@ -581,7 +581,7 @@ cards:
     type: akcja
     layer: A
     cost: 1
-    gold: 4
+    gold: 2
     action: gain_gold
     tags:
     - gold
