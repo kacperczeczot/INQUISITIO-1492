@@ -173,7 +173,12 @@ def parse_or_detect_problematic_cards(games_screen: int = 1000, seed: int = 42) 
                 continue
             cid = parts[0].replace("`", "").strip()
             name = parts[1].replace("*", "").strip()
-            role = parts[11]
+            play_rate = 0.0
+            try:
+                play_rate = float(parts[5])
+            except (ValueError, IndexError):
+                pass
+            role = parts[-1].strip()
 
             if cid not in cards:
                 continue
@@ -182,11 +187,13 @@ def parse_or_detect_problematic_cards(games_screen: int = 1000, seed: int = 42) 
             pref = cid.split("-")[0]
 
             if "AUTOPODATEK" in role:
-                problem_cards[cid] = {"id": cid, "name": name, "category": "SELF_HARM", "role": role, "card": c, "faction": pref, "severity": 1}
+                # If the card has healthy play-rate (>=0.30), it's a tempo filler, not a severe problem
+                severity = 3 if play_rate >= 0.30 else 1
+                problem_cards[cid] = {"id": cid, "name": name, "category": "SELF_HARM", "role": role, "card": c, "faction": pref, "severity": severity, "play_rate": play_rate}
             elif "DISRUPTOR" in role or "TOKSYCZNY" in role or "SZUM" in role:
-                problem_cards[cid] = {"id": cid, "name": name, "category": "DISRUPTOR", "role": role, "card": c, "faction": pref, "severity": 2}
-            elif "DEAD" in role or "NISKIEGO WPŁYWU" in role or "Pasywna" in role:
-                problem_cards[cid] = {"id": cid, "name": name, "category": "DEAD_WEIGHT", "role": role, "card": c, "faction": pref, "severity": 3}
+                problem_cards[cid] = {"id": cid, "name": name, "category": "DISRUPTOR", "role": role, "card": c, "faction": pref, "severity": 2, "play_rate": play_rate}
+            elif "DEAD" in role or "NISKIEGO WPŁYWU" in role or "Pasywna" in role or "NIEZAGRYWANA" in role:
+                problem_cards[cid] = {"id": cid, "name": name, "category": "DEAD_WEIGHT", "role": role, "card": c, "faction": pref, "severity": 3, "play_rate": play_rate}
 
     if not problem_cards:
         print("⚡ Przeprowadzam szybki screening ablacyjny 60 kart...")

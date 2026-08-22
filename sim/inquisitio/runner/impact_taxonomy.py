@@ -18,20 +18,21 @@ def classify_card_impact_4p(
     d_share: base faction win% minus ablated win% (positive = card helps the faction).
     d_4p: ablated 4P score minus base (positive = removing the card improves 4P).
     play_rate: fraction of games where this card was played (0.0–1.0+).
-               When available, prevents false Self-Harm labels caused by
-               deck-thinning artifact (removing any card from a 12-card deck
-               speeds up draws of the faction's payoff cards).
     """
+    # ── 0. Unplayed / Dead card check ──
+    # If the card is virtually never played (play_rate < 0.05), it cannot be classified as utility/balanced
+    if play_rate is not None and play_rate < 0.05:
+        if d_share <= -2.0:
+            return "SELF_HARM", "🩸 AUTOPODATEK FRAKCJI (Self-Harm Tax)", "SELF_HARM"
+        return "DEAD_WEIGHT", "💤 KARTA NIEZAGRYWANA (Dead / Unplayed)", "DEAD_WEIGHT"
+
     if d_share <= -2.0:
         # Deck-thinning correction: if the bot actively plays this card,
         # the ablation delta is an artifact of a smaller deck, not real harm.
-        if play_rate is not None and play_rate >= 0.6:
-            # High play-rate: bot wants this card — it's a utility tool, not a tax.
+        if play_rate is not None and play_rate >= 0.50:
             return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
-        if play_rate is not None and play_rate >= 0.3:
-            # Moderate play-rate: normal tempo card, deck filler, not a bug.
+        if play_rate is not None and play_rate >= 0.20:
             return "TEMPO_FILLER", "🔄 ROZCIEŃCZALNIK TALII (Tempo Filler)", "TEMPO_FILLER"
-        # Low / unknown play-rate: genuine self-harm or dead weight with ablation artifact.
         return "SELF_HARM", "🩸 AUTOPODATEK FRAKCJI (Self-Harm Tax)", "SELF_HARM"
 
     if d_4p >= 1.2:
@@ -51,6 +52,8 @@ def classify_card_impact_4p(
             return "ANCHOR", "⚓ KOTWICA KANONU (Balance Anchor)", "STABILIZER"
 
     if abs(d_share) <= 0.4 and abs(d_4p) <= 0.4:
+        if play_rate is not None and play_rate >= 0.50:
+            return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
         return "DEAD_WEIGHT", "💤 KARTA NISKIEGO WPŁYWU (Dead / Passive)", "DEAD_WEIGHT"
 
     if d_share >= 1.0:
@@ -58,6 +61,8 @@ def classify_card_impact_4p(
     elif d_share <= -1.0:
         return "BRAKE", "🛑 HAMULEC FRAKCJI (Control Tool)", "BALANCED"
     else:
+        if play_rate is not None and play_rate < 0.20:
+            return "DEAD_WEIGHT", "💤 KARTA NISKIEGO WPŁYWU (Dead / Passive)", "DEAD_WEIGHT"
         return "UTILITY", "⚖️ ZBALANSOWANE NARZĘDZIE (Utility)", "BALANCED"
 
 
