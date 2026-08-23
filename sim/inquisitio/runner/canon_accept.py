@@ -129,14 +129,15 @@ def _score(res: dict) -> float:
 def rank_key(res: dict, *, mode: str = "band", base_in_band: bool = False) -> tuple:
     """Sort key (lower is better) for the 4P funnel.
 
-    Ranks by pure win-share balance descending,
-    then min_balance descending, then vitality penalty ascending.
-    Vitality is a veto gate, not part of the ranking number.
+    Prioritizes vitality compliance (vit penalty == 0), then win-share balance descending,
+    then min_balance descending.
     """
     score_4p = _score(res)
     min_b = float(res.get("min_balance") or score_4p)
     vit = float(res.get("vitality_penalty") or 0.0)
-    return (-score_4p, -min_b, vit)
+    vit_flag = 1 if vit > 1e-9 else 0
+    return (vit_flag, vit, -score_4p, -min_b)
+
 
 
 
@@ -152,6 +153,8 @@ def accept_candidate(
         safe, msg = telemetry_is_safe(cand)
         if not safe:
             return AcceptDecision(False, msg, "legacy")
+        if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
+            return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand.get('vitality_penalty', 0.0):.2f} > {base.get('vitality_penalty', 0.0):.2f})", "legacy")
         d = _score(cand) - _score(base)
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
         # 1. Zysk ogólny bez istotnego psucia podłogi
