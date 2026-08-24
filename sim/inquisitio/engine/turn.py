@@ -320,8 +320,7 @@ def play_era(
     # 2. Odkrycie Edyktu Kroniki Dziejów (obowiązującego w nadchodzącej Erze)
     freq = variant_int(state, "time_deck_freq", int(CONFIG.variants.time_deck_freq))
     if (
-        state.layer == "C"
-        and state.time_deck
+        state.time_deck
         and (state.era % freq == 0)
         and not variant_bool(state, "no_time_deck", False)
     ):

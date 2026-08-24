@@ -187,14 +187,8 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
 
 
 def cards_for_faction(faction: str, max_layer: str = "C") -> list[Card]:
-    order = {"A": 0, "B": 1, "C": 2}
-    cap = order.get(max_layer, 2)
     all_c = load_all_cards()
-    out = [
-        c
-        for c in all_c.values()
-        if c.faction == faction and order.get(c.layer, 2) <= cap
-    ]
+    out = [c for c in all_c.values() if c.faction == faction]
     out.sort(key=lambda c: c.id)
     return out
 

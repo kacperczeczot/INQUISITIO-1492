@@ -103,35 +103,18 @@ def apply_generic(state: GameState, fid: FactionId, card: Card, rng: random.Rand
         rival = _pick_rival(state, fid, rng)
         if rival:
             amt = card.target_heresy
-            # A teach: Gildia Podrzucenie hits harder without breaking B/C
-            if state.layer == "A" and card.id == "gc-03":
-                amt = max(amt, 2)
             add_heresy(state, rival, amt, reason=f"{card.id}:frame")
             pl.frames_dealt += amt
     if card.agents:
         _move_agent(state, fid, rng, card.agents)
-    if card.arrest and state.layer in ("B", "C"):
+    if card.arrest:
         rival = _pick_rival(state, fid, rng)
         if rival:
             arrest_agent(state, rival)
-    # Hooks: A-layer teach cards only when playing layer A; B/C cards on B/C
     if card.creates_hook:
-        card_layer = (card.layer or "A").upper()
-        allowed = (state.layer == "A" and card_layer == "A") or (
-            state.layer in ("B", "C") and card_layer in ("B", "C")
-        )
-        # A: Faworyt Haki dopiero od Ery 4 (Korona nie domyka stołu za wcześnie)
-        if (
-            allowed
-            and state.layer == "A"
-            and card.id == "kb-04"
-            and state.era < 4
-        ):
-            allowed = False
-        if allowed:
-            rival = _pick_rival(state, fid, rng)
-            if rival:
-                grant_hook(state, fid, rival)
+        rival = _pick_rival(state, fid, rng)
+        if rival:
+            grant_hook(state, fid, rival)
 
 
 def _drag_relic_toward_harbor(
@@ -168,22 +151,12 @@ def _mark_gc10_fall_if_legal(state: GameState, fid: FactionId) -> None:
             break
 
 
-def _staged_condition_ok(state: GameState, fid: FactionId, card_id: str) -> bool | None:
-    for sp in state.pending_plays:
-        if sp.owner == fid and sp.card_id == card_id:
-            return sp.cond_ok
-    return None
-
-
 def _card_condition_satisfied(
     state: GameState, fid: FactionId, card: Card, *, staged: bool = False
 ) -> bool:
     raw = card.raw if isinstance(card.raw, dict) else {}
     if not raw.get("condition"):
         return True
-    snap = _staged_condition_ok(state, fid, card.id) if staged else None
-    if snap is not None:
-        return snap
     return card_condition_met(state, fid, card)
 
 
@@ -210,41 +183,26 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
             return
         evacuated_n = 0
         for ag in pl.agents:
-            if evacuated_n >= 2:
-                break
-            if ag.arrested:
+            if ag.arrested or evacuated_n >= 1:
                 continue
             loc = ag.location
-            if state.relics_on_board.get(loc, 0) <= 0:
-                continue
-            via_double = bool(ag.double_agent or ag.controller or pl.path_via_double)
-            quiet = state.inquisitor_location != loc
-            if via_double or pl.avoided_autodafe or quiet or state.sea_route_open:
-                state.relics_on_board[loc] -= 1
-                pl.relics_evacuated += 1
-                evacuated_n += 1
-                if via_double:
-                    pl.path_via_double = True
-                # BUG-1 FIX: only set avoided_autodafe when Inquisitor was
-                # actually nearby (at location or neighboring), meaning genuine
-                # danger was dodged. Sea route is its own bypass path.
-                if not quiet:
-                    # Inquisitor IS at this location — agent survived Autodafé
-                    pl.avoided_autodafe = True
-                elif loc in neighbors(state.inquisitor_location):
-                    # Inquisitor is one step away — narrow escape
-                    pl.avoided_autodafe = True
-        if state.sea_route_open and evacuated_n < 2:
-            for loc in ("rynek", "gildia"):
-                if evacuated_n >= 2:
-                    break
-                while state.relics_on_board.get(loc, 0) > 0 and evacuated_n < 2:
-                    if not any(ag.location == loc and not ag.arrested for ag in pl.agents):
-                        break
+            if state.relics_on_board.get(loc, 0) > 0:
+                via_double = bool(ag.double_agent or ag.controller or pl.path_via_double)
+                in_port = loc in ("rynek", "gildia")
+                quiet = in_port and (state.inquisitor_location != loc)
+                if via_double or (state.sea_route_open and in_port) or quiet:
                     state.relics_on_board[loc] -= 1
                     pl.relics_evacuated += 1
-                    # Sea route bypass — no need to set avoided_autodafe
                     evacuated_n += 1
+                    if via_double:
+                        pl.path_via_double = True
+                    if quiet:
+                        pl.shadow_exit = True
+                    else:
+                        pl.avoided_autodafe = True
+                    state.add_log(
+                        f"{fid.value} caa-10 evacuated relic from {loc} (total={pl.relics_evacuated})"
+                    )
         if evacuated_n:
             state.add_log(
                 f"{fid.value} evacuated {evacuated_n} relic(s) (total={pl.relics_evacuated})"
@@ -267,15 +225,11 @@ def _signature(state: GameState, fid: FactionId, card: Card, rng: random.Random)
         pl.decrees_played += 1
         state.add_log(f"{fid.value} decree played (total={pl.decrees_played})")
     elif card.id == "kt-10":
-        # Finisher assist: +1 Fragment only when already on the path (≥1)
-        if pl.fragments >= 1:
-            pl.fragments += 1
-        raw = card.raw if isinstance(card.raw, dict) else {}
-        band = raw.get("target_heresy_band", [4, 6])
-        fallback = raw.get("fallback_heresy", 5)
-        if pl.fragments >= 3 and not (band[0] <= pl.heresy <= band[1]):
-            pl.heresy = fallback
-        state.add_log(f"{fid.value} fragments={pl.fragments} heresy={pl.heresy}")
+        if not _card_condition_satisfied(state, fid, card, staged=True):
+            state.add_log(f"{fid.value} {card.id} fiasko (condition unmet)")
+            return
+        pl.kt10_played = True
+        state.add_log(f"{fid.value} Pieczęć Salomona activated! fragments={pl.fragments} heresy={pl.heresy}")
 
 
 def _so_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) -> None:
@@ -310,17 +264,27 @@ def _caa_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random)
                 continue
             loc = ag.location
             if state.relics_on_board.get(loc, 0) > 0:
-                state.relics_on_board[loc] -= 1
-                pl.relics_evacuated += 1
-                pl.kurier_count += 1
-                pl.used_kurier = True
-                state.add_log(
-                    f"{fid.value} caa-05 evacuated relic from {loc} (total={pl.relics_evacuated})"
-                )
-                if state.inquisitor_location != loc:
-                    pl.shadow_exit = True
-                evacuated = True
-                break
+                via_double = bool(ag.double_agent or ag.controller or pl.path_via_double)
+                if state.sea_route_open or via_double:
+                    state.relics_on_board[loc] -= 1
+                    pl.relics_evacuated += 1
+                    pl.kurier_count += 1
+                    pl.used_kurier = True
+                    if via_double:
+                        pl.path_via_double = True
+                    state.add_log(
+                        f"{fid.value} caa-05 evacuated relic from {loc} (total={pl.relics_evacuated})"
+                    )
+                    evacuated = True
+                    break
+        if not evacuated:
+            for ag in pl.agents:
+                if not ag.arrested and state.relics_on_board.get(ag.location, 0) > 0:
+                    _drag_relic_toward_harbor(state, fid, ag.location, rng)
+                    pl.kurier_count += 1
+                    pl.used_kurier = True
+                    evacuated = True
+                    break
         if not evacuated:
             for ag in pl.agents:
                 if not ag.arrested:
@@ -371,14 +335,9 @@ def _kb_extra(state: GameState, fid: FactionId, card: Card, rng: random.Random) 
     apply_generic(state, fid, card, rng)
     pl = state.players[fid]
     if card.id == "kb-05":
-        if state.layer == "A":
-            if pl.decrees_played < 1:
-                pl.decrees_played += 1
-                state.add_log(f"{fid.value} decree played (total={pl.decrees_played})")
-        else:
-            if pl.heresy > 0:
-                pl.heresy -= 1
-                state.add_log(f"{fid.value} list-zelazny heresy→{pl.heresy}")
+        if pl.heresy > 0:
+            pl.heresy -= 1
+            state.add_log(f"{fid.value} list-zelazny heresy→{pl.heresy}")
     elif card.id in ("kb-09", "kb-10"):
         _signature(state, fid, card, rng)
 

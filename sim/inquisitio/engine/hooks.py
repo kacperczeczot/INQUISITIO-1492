@@ -52,8 +52,8 @@ def force_hook(
             state.add_log(f"Hook complied {target.value} under {holder.value}")
         return True
     add_heresy(state, target, 2, reason="hook_reveal")
-    # Gildia fall on refuse — A teach + C (B awards falls mainly via verdict)
-    if holder == FactionId.GILDIA_CIENI and state.layer in ("A", "C"):
+    # Gildia fall on refuse
+    if holder == FactionId.GILDIA_CIENI:
         holder_pl.falls += 1
         state.add_log(f"Gildia fall -> {holder_pl.falls}")
     state.add_log(f"Hook revealed on {target.value}")

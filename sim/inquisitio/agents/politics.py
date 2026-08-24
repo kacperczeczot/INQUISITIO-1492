@@ -192,7 +192,11 @@ class PoliticsAgent:
                     if state.sea_route_open and pl.relics_evacuated < 2:
                         u += 1.8
                 if c.id == "caa-01":  # Przejście Podziemiami
-                    u += 1.5  # Reliable 0-cost agent relocation
+                    # Agent relocation: highly valuable if any agent is far from port/relic
+                    u += 3.2
+                if c.id == "caa-02":  # Złoto z Kryjówki
+                    # Gold liquidity: valuable if poor or preparing for caa-10/caa-05
+                    u += 3.6 if pl.gold < 3 else 1.8
                 if c.id == "caa-03":
                     on_relic = any(state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested for ag in pl.agents)
                     if on_relic:
@@ -257,31 +261,36 @@ class PoliticsAgent:
                         u += 2.0
 
             elif faction == FactionId.KABALA_TOLEDO:
-                frags_left = max(0, 2 - pl.fragments)
+                frags_left = max(0, 3 - pl.fragments)
                 if "fragment" in c.tags:
-                    u += 4.0
-                    if frags_left == 1:
-                        u += 2.2
+                    u += 4.5
+                    if frags_left <= 1:
+                        u += 3.0
 
                 if c.id == "kt-03":  # Zakazana Wiedza
-                    u += 3.5
+                    u += 5.5
                 if c.id == "kt-05":  # Wskazówka Cyklu
-                    u += 3.2
+                    u += 5.0
                 if c.id == "kt-06":  # Przesłuchanie Imienia
-                    u += 3.8
+                    u += 5.0
                 if c.id == "kt-09":  # Fragment Kodeksu
-                    u += 3.5
+                    u += 5.0
                 if c.id == "kt-10":  # Pieczęć Salomona
-                    if pl.fragments >= 2:
-                        u += 6.5 if state.era >= 6 else 3.5
+                    if pl.fragments >= 3:
+                        u += 12.0
                     else:
-                        u += 1.8
+                        u -= 20.0  # Cannot complete rite without 3 fragments
                 if c.id in ("kt-01", "kt-02", "kt-04", "kt-07", "kt-08", "kt-11", "kt-12"):
-                    u += 1.6  # Tactical Kabala tools
+                    u += 2.0  # Tactical Kabala tools
 
             elif faction == FactionId.GILDIA_CIENI:
                 falls_left = max(0, 8 - pl.falls)
-                if "fall" in c.tags or c.id == "gc-10":
+                if c.id == "gc-10":  # Upadek Domu
+                    if card_condition_met(state, faction, c):
+                        u += 9.5 if falls_left <= 2 else 6.5
+                    else:
+                        u -= 15.0
+                elif "fall" in c.tags:
                     u += 4.8
                     if falls_left <= 2:
                         u += 4.0

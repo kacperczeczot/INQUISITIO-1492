@@ -63,6 +63,7 @@ class PlayerState:
     relics_evacuated: int = 0  # Cienie
     decrees_played: int = 0  # Korona
     fragments: int = 0  # Kabala
+    kt10_played: bool = False  # Kabala signature ritual (Pieczęć Salomona)
     falls: int = 0  # Gildia
     # hooks this player HOLDS on others: target faction -> count
     hooks_on: dict[FactionId, int] = field(default_factory=dict)

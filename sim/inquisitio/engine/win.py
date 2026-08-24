@@ -22,18 +22,18 @@ def _val(item: Any, pc: str) -> int:
     return int(item)
 
 
-def _gc_falls_need(falls: Any, ov: dict, *, no_oficjum: bool, layer: str) -> int:
+def _gc_falls_need(falls: Any, ov: dict, *, no_oficjum: bool, layer: str = "C") -> int:
     """One table-wide number. Legacy default/no_oficjum dict still reads for old YAML."""
     unified = int(ov.get("gc_falls_offset", 0) or 0)
     split_default = int(ov.get("gc_falls_default_offset", 0) or 0)
     split_noso = int(ov.get("gc_falls_no_oficjum_offset", 0) or 0)
     if hasattr(falls, "default"):
-        raw = falls.no_oficjum if (layer == "B" or no_oficjum) else falls.default
-        split = split_noso if (layer == "B" or no_oficjum) else split_default
+        raw = falls.no_oficjum if no_oficjum else falls.default
+        split = split_noso if no_oficjum else split_default
         return max(1, int(raw) + split + unified)
     if isinstance(falls, dict):
-        raw = falls["no_oficjum"] if (layer == "B" or no_oficjum) else falls["default"]
-        split = split_noso if (layer == "B" or no_oficjum) else split_default
+        raw = falls["no_oficjum"] if no_oficjum else falls["default"]
+        split = split_noso if no_oficjum else split_default
         return max(1, int(raw) + split + unified)
     return max(1, int(falls) + unified + split_default + split_noso)
 
@@ -49,18 +49,12 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
         pl = state.players[fid]
 
         if fid == FactionId.SWIETE_OFICJUM:
-            if state.layer == "C":
-                base_stack = _val(cfg_v.swiete_oficjum.stacks, pc)
-            else:
-                base_stack = 3 if state.layer == "A" else (2 if n_players <= 3 else 3)
+            base_stack = _val(cfg_v.swiete_oficjum.stacks, pc)
             stack_need = max(1, base_stack + ov.get("so_stacks_offset", 0))
 
-            if state.layer == "C":
-                base_condemn = _val(cfg_v.swiete_oficjum.condemns, pc)
-            else:
-                base_condemn = 2
+            base_condemn = _val(cfg_v.swiete_oficjum.condemns, pc)
             condemn_need = max(1, base_condemn + ov.get("so_condemns_offset", 0))
-            condemn_ok = (state.layer != "B" and len(pl.condemned_rivals) >= condemn_need)
+            condemn_ok = len(pl.condemned_rivals) >= condemn_need
 
             if condemn_ok:
                 return (fid, "so_condemns")
@@ -86,7 +80,7 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
 
         elif fid == FactionId.KORONA_BORGIOWIE:
             cfg_kb = cfg_v.korona_borgiowie
-            hooks_ever = distinct_hook_victims_ever(state, fid)
+            hooks_active = distinct_hook_victims(state, fid)
             if "kb_decrees_3p" in ov and n_players <= 3:
                 decrees_need = ov["kb_decrees_3p"]
             else:
@@ -98,9 +92,8 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
                 hooks_need = max(0, _val(raw_hooks, pc) + ov.get("kb_hooks_offset", 0))
 
             if (
-                state.layer == "C"
-                and pl.decrees_played >= decrees_need
-                and hooks_ever >= hooks_need
+                pl.decrees_played >= decrees_need
+                and hooks_active >= hooks_need
             ):
                 return (fid, "kb_main")
 
@@ -112,25 +105,25 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
             elif "kt_fragments_5p" in ov and n_players >= 5:
                 frag_need = _val(ov["kt_fragments_5p"], pc)
 
-            band = ov.get("kt_heresy_band", cfg_kt.get("heresy_band"))
+            band = ov.get("kt_heresy_band", cfg_kt.get("heresy_band") or [4, 6])
             if band:
                 h_low, h_high = int(band[0]), int(band[1])
                 heresy_ok = h_low <= pl.heresy <= h_high
             else:
                 heresy_ok = True
-            if "kt_era" in ov:
-                base_era = _val(ov["kt_era"], pc)
-            else:
-                base_era = _val(cfg_kt.era, pc) + ov.get("kt_era_offset", 0)
 
-            if pl.fragments >= frag_need and heresy_ok and state.era >= max(1, base_era):
+            if (
+                getattr(pl, "kt10_played", False)
+                and pl.fragments >= frag_need
+                and heresy_ok
+            ):
                 return (fid, "kt_codex")
 
         elif fid == FactionId.GILDIA_CIENI:
             cfg_gc = cfg_v.gildia_cieni
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
             falls_need = _gc_falls_need(
-                cfg_gc.falls, ov, no_oficjum=no_oficjum, layer=state.layer
+                cfg_gc.falls, ov, no_oficjum=no_oficjum, layer=getattr(state, "layer", "C")
             )
 
             if pl.falls >= falls_need:
@@ -160,21 +153,11 @@ def end_game_tiebreak(state: GameState) -> FactionId:
         elif fid == FactionId.CIENIE_AL_ANDALUS:
             progress = pl.relics_evacuated
         elif fid == FactionId.KORONA_BORGIOWIE:
-            if state.layer == "A":
-                progress = min(pl.decrees_played, 1) + min(
-                    distinct_hook_victims_ever(state, fid), 1
-                )
-            elif state.layer == "B":
-                progress = min(distinct_hook_victims(state, fid), 2)
-            else:
-                progress = pl.decrees_played + distinct_hook_victims_ever(state, fid)
+            progress = pl.decrees_played + distinct_hook_victims(state, fid)
         elif fid == FactionId.KABALA_TOLEDO:
             progress = pl.fragments
         else:
-            if state.layer == "B":
-                progress = min(pl.falls, 2)
-            else:
-                progress = pl.falls
+            progress = pl.falls
         scores.append((progress, -pl.heresy, fid))
     scores.sort(reverse=True)
     return scores[0][2]

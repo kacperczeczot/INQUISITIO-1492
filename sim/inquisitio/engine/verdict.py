@@ -136,10 +136,7 @@ def run_verdict(
             # dobija 5 stosów przy okazji.
             if accused != FactionId.SWIETE_OFICJUM:
                 so_pl.condemned_rivals.add(accused)
-            if state.layer == "C":
-                if accuser == FactionId.SWIETE_OFICJUM and accused != FactionId.SWIETE_OFICJUM:
-                    so_pl.stacks += 1
-            elif state.layer != "B" or accuser == FactionId.SWIETE_OFICJUM:
+            if accuser == FactionId.SWIETE_OFICJUM and accused != FactionId.SWIETE_OFICJUM:
                 so_pl.stacks += 1
         # Gildia fall: Hak-victim convicted → Upadek
         if FactionId.GILDIA_CIENI in state.players and accused != FactionId.GILDIA_CIENI:
