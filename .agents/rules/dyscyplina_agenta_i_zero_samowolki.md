@@ -61,3 +61,10 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
   1. Jeśli audytor forsuje problematyczną zmianę (np. próbuje „naprawić” balans przez kastrację lub uśmiercenie mechaniki), asystent **MUSI natychmiast zatrzymać proces i ręcznie zablokować ten wektor w kodzie (`scoring.py`)**.
   2. Asystent **MUSI manualnie wprowadzić właściwą korektę zgodną z Game Designem (np. precyzyjne dostrojenie kart L3 w YAML)**, zsynchronizować SSOT (`sync_config.py`), sprawdzić testy `pytest` i zrestartować proces symulacyjny na czystym stanie.
   3. Każda taka interwencja musi zostać natychmiast odnotowana i skodyfikowana w `.agents/rules/` lub `docs/adr/`.
+
+---
+
+## 9. Bezwzględna Zasada Próby Minimalnej (Zasada 5000 / ADR-0014)
+- **Kategoryczny zakaz zapisu raportów na małych próbach:** Żaden raport zapisywany jako plik markdown (`raport_telemetrii.md`, `raport_optymalizacji.md`, archiwa) **NIE MOŻE** opierać się na próbie mniejszej niż **5 000 partii na setup** (dla pełnych raportów telemetrii wydania: **10 000 partii na setup** = 160 000 partii dla 16 setupów).
+- **Twarda blokada programowa w silniku:** Funkcja `save_and_archive_report()` w `sim/inquisitio/runner/audit_facts.py` oraz wszystkie skrypty narzędziowe posiadają twardy warunek zgłaszający `ValueError` i przerywający wykonanie, jeśli próba zapisu nastąpi dla próby $< 5000$ gier/setup.
+- **Zero kompromisów statystycznych:** Pomiar balansu gry asymetrycznej na próbach rzędu 500 czy 1000 gier generuje niedopuszczalny szum statystyczny ($\pm 2.5\%$) i jest traktowany jako krytyczne naruszenie dyscypliny inżynierskiej.
