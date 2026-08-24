@@ -418,8 +418,9 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
             add(f"L2_KB_HOOKS_{tag}", f"Korona: wymóg haków {kb_hooks_val} → {new}", cat2, {"kb_hooks_offset": off})
     for tag, off, new in _win_extremes(_n4(kt.fragments)):
         add(f"L2_KT_FRAGS_{tag}", f"Kabała: fragmenty {_n4(kt.fragments)} → {new}", cat2, {"kt_frags_offset": off})
-    for tag, off, new in _win_extremes(_n4(kt.era)):
-        add(f"L2_KT_ERA_{tag}", f"Kabała: era {_n4(kt.era)} → {new}", cat2, {"kt_era_offset": off})
+    if hasattr(kt, "era"):
+        for tag, off, new in _win_extremes(_n4(kt.era)):
+            add(f"L2_KT_ERA_{tag}", f"Kabała: era {_n4(kt.era)} → {new}", cat2, {"kt_era_offset": off})
 
     hb = kt.get("heresy_band")
     if hb:

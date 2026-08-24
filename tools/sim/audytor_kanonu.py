@@ -57,6 +57,7 @@ from inquisitio.config_updater import apply_mutation_to_config, save_config_and_
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.audit_facts import score_pair, save_and_archive_report
 from inquisitio.runner.batch import run_batch
+from inquisitio.runner.era_analytics import generate_era_distribution_markdown
 from inquisitio.runner.balance import faction_shares as win_shares
 from inquisitio.runner.canon_accept import (
     TARGET_BAND_PCT,
@@ -510,9 +511,11 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
     setups = sorted(SETUP_PRESETS.keys())
     t0 = time.time()
     setup_data = []
+    all_summaries = []
 
     for sname in setups:
         summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=8)
+        all_summaries.append(summary)
         score = calculate_setup_score(summary)
         balance = calculate_balance_score(summary)
         factions = SETUP_PRESETS[sname]
@@ -619,6 +622,10 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
         report_lines.append(
             f"| `{d['setup']}` | {d['vitality_status']} | {d['vitality_penalty']:.3f} | {warn_str} |"
         )
+
+    # --- Section 4: Era & Timing Distribution ---
+    report_lines.extend([""])
+    report_lines.extend(generate_era_distribution_markdown(all_summaries))
 
     return save_and_archive_report(report_lines, "raport_telemetrii.md")
 
@@ -1216,19 +1223,19 @@ class Canon4PAutoBalancer:
                         if cand_dict[r["id"]] not in diverse_seeds:
                             diverse_seeds.append(cand_dict[r["id"]])
 
-                beam_seeds = diverse_seeds[: self.args.beam_width]
-                consecutive_stalls += 1
-
                 if current_phase >= self.args.max_depth:
+                    consecutive_stalls += 1
                     print(f"\n🛑 Osiągnięto maksymalną głębokość wiązek ({self.args.max_depth}D) bez znalezienia patcha.")
-                    if consecutive_stalls >= 3:
-                        print(f"   ⛔ {consecutive_stalls} iteracji z rzędu bez efektu. Przestrzeń mutacji wyczerpana. Kończę.")
+                    if consecutive_stalls >= 5:
+                        print(f"   ⛔ {consecutive_stalls} pełnych cykli 1D-3D bez efektu. Przestrzeń mutacji wyczerpana. Kończę.")
                         break
                     else:
-                        print(f"   🔄 Resetuję do Fazy 1D z nową bazą (próba {consecutive_stalls}/3 przed zatrzymaniem).")
+                        print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}/5).")
                         current_phase = 1
+                        self.args.seed += 137
                         beam_seeds.clear()
                 else:
+                    beam_seeds = diverse_seeds[:self.args.beam_width]
                     current_phase += 1
                     print(f"🔄 Zakwalifikowano {len(beam_seeds)} nasion synergii i ESKALUJĘ DO FAZY {current_phase}D...\n")
 

@@ -21,6 +21,11 @@ _DEAD_PATH_MIN_WINS = 20
 _DEAD_PATH_MIN_SHARE = 0.08
 _DEAD_PATH_PENALTY = 1.2
 
+# Game duration floor — games shorter than this feel underdeveloped on a real table.
+# Auditor should steer card costs toward longer, richer games.
+_ERA_MIN_THRESHOLD = 5.0
+_ERA_PENALTY_SCALE = 1.5
+
 
 @dataclass
 class VitalityReport:
@@ -46,11 +51,50 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
         penalty += excess
         warnings.append(f"Zator Monetarny / Pas Biedy {summary.passes_forced_pct*100:.1f}% (>15%)")
 
-    # 2. Deadlock Stress (Threshold > 5.0%)
+    # 2. Deadlock Stress (Threshold > 5.0% or Era 10+ > 1.0%)
     if summary.eras_limit_pct > 0.05:
         excess = (summary.eras_limit_pct - 0.05) * 10.0
         penalty += excess
         warnings.append(f"Paraliż Gry / Deadlocks {summary.eras_limit_pct*100:.1f}% (>5%)")
+
+    # 2b. Game Duration & Tempo Gates
+    # (A) Absolute Minimum Floor: 0% in Era 1-2, max 6% in Era 1-3.
+    # No game should finish at the very start before other players develop their board.
+    if summary.era_hist and summary.games > 0:
+        games_e1_2 = summary.era_hist.get(1, 0) + summary.era_hist.get(2, 0)
+        pct_e1_2 = games_e1_2 / summary.games
+        if pct_e1_2 > 0.005:  # Over 0.5% in Era 1-2 is unacceptable sprint
+            penalty += pct_e1_2 * 25.0
+            warnings.append(
+                f"Przedwczesne Zwycięstwa (Era 1-2): {pct_e1_2*100:.1f}% gier (>0.5%)"
+            )
+
+        games_e3_4 = summary.era_hist.get(3, 0) + summary.era_hist.get(4, 0)
+        pct_e3_4 = games_e3_4 / summary.games
+        if pct_e3_4 > 0.25:  # Max 25.0% for early games according to ADR-0004
+            penalty += (pct_e3_4 - 0.25) * 10.0
+            warnings.append(
+                f"Nadmiar Wczesnych Zakończeń (Era 3-4): {pct_e3_4*100:.1f}% gier (>25.0%)"
+            )
+
+        games_e11_plus = sum(cnt for era, cnt in summary.era_hist.items() if era >= 11)
+        pct_e11_plus = games_e11_plus / summary.games
+        if pct_e11_plus > 0.005:  # Max 0.5% for extreme late deadlock outliers (Era 11+)
+            penalty += pct_e11_plus * 20.0
+            warnings.append(
+                f"Ekstremalny Deadlock (Era 11+): {pct_e11_plus*100:.1f}% gier (>0.5%)"
+            )
+
+    # (B) Average Game Duration Floor (Threshold >= 5.0 Er)
+    # The majority of games must develop into Era 4-6+.
+    if summary.eras_avg < _ERA_MIN_THRESHOLD:
+        shortfall = _ERA_MIN_THRESHOLD - summary.eras_avg
+        era_penalty = shortfall * _ERA_PENALTY_SCALE
+        penalty += era_penalty
+        warnings.append(
+            f"Zbyt Krótka Średnia Rozgrywka {summary.eras_avg:.2f} Er "
+            f"(<{_ERA_MIN_THRESHOLD:.1f} Er)"
+        )
 
     # 3. Faction Mechanic Vitality Gates
     # Święte Oficjum: requires active court accusations and executions/stacks
@@ -61,6 +105,12 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
         if summary.convictions_avg < 0.1 and summary.autodafe_avg < 0.1:
             penalty += 2.5
             warnings.append("Kastracja Wyroków Oficjum (brak Skazań i Stosów)")
+        if summary.autodafe_avg < 1.4:
+            penalty += 2.0
+            warnings.append(
+                f"Zbyt rzadkie Autodafé ({summary.autodafe_avg:.2f}/partię < 1.40) "
+                f"— naruszenie ADR-0016 (~2 Autodafé na partię)"
+            )
 
     # Korona Borgiowie: requires active extortion network (hooks)
     if "korona-borgiowie" in factions:

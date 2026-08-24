@@ -158,13 +158,16 @@ def accept_candidate(
         d = _score(cand) - _score(base)
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
         # 1. Zysk ogólny bez istotnego psucia podłogi
-        if d >= min_delta and dmin >= -0.30:
+        if d >= min_delta and dmin >= -0.50:
             return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta} (dmin {dmin:+.2f})", "legacy")
-        # 2. Bardzo duży zysk ogólny dopuszczający lekki trade-off
+        # 2. Jednoczesna poprawa średniej i podłogi (Pareto improvement)
+        if d >= 0.15 and dmin >= 0.15:
+            return AcceptDecision(True, f"legacy Pareto Δscore {d:+.2f} & Δmin {dmin:+.2f}", "legacy")
+        # 3. Bardzo duży zysk ogólny dopuszczający lekki trade-off
         if d >= 1.50 and dmin >= -0.75:
             return AcceptDecision(True, f"legacy Duży skok Δscore {d:+.2f} (dmin {dmin:+.2f})", "legacy")
-        # 3. Istotna poprawa podłogi (Maximin)
-        if dmin >= 0.75 and d >= 0.0:
+        # 4. Istotna poprawa podłogi (Maximin)
+        if dmin >= 0.50 and d >= 0.0:
             return AcceptDecision(True, f"legacy Maximin Δmin {dmin:+.2f} (Δscore {d:+.2f})", "legacy")
         return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} nie spełniają kryteriów bezpieczeństwa", "legacy")
 

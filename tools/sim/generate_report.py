@@ -13,8 +13,9 @@ from datetime import datetime
 from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.batch import run_batch
-from inquisitio.runner.scoring import calculate_setup_score, color_score
+from inquisitio.runner.scoring import calculate_setup_score, calculate_balance_score, evaluate_vitality, color_score
 from inquisitio.runner.audit_facts import save_and_archive_report
+from inquisitio.runner.era_analytics import generate_era_distribution_markdown
 
 FACTION_NAMES = {
     FactionId.SWIETE_OFICJUM: "SO",
@@ -47,10 +48,14 @@ def main():
 
     t0 = time.time()
     setup_data = []
+    all_summaries = []
 
     for sname in setups:
         summary = run_batch(games=games_per_setup, setup=sname, seed=args.seed, layer="C", threshold=8)
+        all_summaries.append(summary)
         score = calculate_setup_score(summary)
+        balance = calculate_balance_score(summary)
+        vit = evaluate_vitality(summary)
         factions = SETUP_PRESETS[sname]
         n_players = len(factions)
         ideal_share = round(100.0 / n_players, 1)
@@ -108,6 +113,7 @@ def main():
             "setup": sname,
             "n_players": n_players,
             "score": score,
+            "balance": balance,
             "ideal_share": ideal_share,
             "shares": faction_shares,
             "avg_eras": avg_eras,
@@ -122,6 +128,9 @@ def main():
             "acc_opt": acc_opt,
             "end_gold": round(summary.avg_gold_end, 2),
             "end_heresy": round(summary.avg_heresy_end, 2),
+            "vitality_status": vit.status,
+            "vitality_warnings": vit.warnings,
+            "vitality_penalty": round(vit.vitality_penalty, 3),
         })
 
     elapsed = round(time.time() - t0, 2)
@@ -131,10 +140,13 @@ def main():
         "",
         f"**Wersja Balansu:** `{CONFIG.version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Wielkość Próby:** {games_per_setup} gier/setup ({games_per_setup * 16} gier łącznie) | **Czas Symulacji:** {elapsed}s",
         "",
+        "*Score* = ogólny wskaźnik zdrowia (win share skorygowany o kary witalności i minimalnej długości gry ≥ 5.0 Er).",
+        "*Balance* = czysta symetria szans wygranych frakcji (win share vs ideal).",
+        "",
         "## 1. Tabela Szans Wygranych Frakcji (Win Share %) vs Punkt Idealny",
         "",
-        "| Setup | Gr. | Score | Ideal % | SO % | CAA % | KB % | KT % | GC % | Status Rozkładu Frakcji |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+        "| Setup | Gr. | Score | Balance | Ideal % | SO % | CAA % | KB % | KT % | GC % | Status Rozkładu Frakcji |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
     ]
 
     for d in setup_data:
@@ -153,7 +165,7 @@ def main():
         else:
             eval_str = "🔴 ODCHYLONY"
         report_lines.append(
-            f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
+            f"| `{d['setup']}` | {d['n_players']} | {color_score(d['score'], bold=True)} | {color_score(d['balance'])} | {d['ideal_share']:.1f}% | {so_s} | {caa_s} | {kb_s} | {kt_s} | {gc_s} | {eval_str} |"
         )
 
     report_lines.extend([
@@ -172,7 +184,21 @@ def main():
             f"| `{d['setup']}` | {d['avg_eras']} {d['eras_opt']} | {d['deadlock_pct']}% {d['deadlock_opt']} | {d['poverty_pct']}% {d['poverty_opt']} | {d['autodafe_avg']} {d['autodafe_opt']} | {d['accusations_avg']} {d['acc_opt']} | {d['end_gold']}zł | {d['end_heresy']} | {status_icon} |"
         )
 
-    # --- Section 3: Faction Attention Report ---
+    report_lines.extend([
+        "",
+        "## 3. Witalność Mechanik Frakcji (Mechanic Vitality & Degeneration Gate)",
+        "",
+        "| Setup | Status Witalności | Kara | Zidentyfikowane Ostrzeżenia / Degradacje Mechanik |",
+        "| :--- | :---: | :---: | :--- |",
+    ])
+
+    for d in setup_data:
+        warn_str = ", ".join(d['vitality_warnings']) if d['vitality_warnings'] else "Brak — wszystkie mechaniki aktywne i płynne"
+        report_lines.append(
+            f"| `{d['setup']}` | {d['vitality_status']} | {d['vitality_penalty']:.3f} | {warn_str} |"
+        )
+
+    # --- Section 3.1: Faction Attention Report ---
     faction_stats: dict[str, list[tuple[str, float, float]]] = {}
     for d in setup_data:
         ideal = d['ideal_share'] / 100.0
@@ -182,7 +208,7 @@ def main():
 
     report_lines.extend([
         "",
-        "## 3. Frakcje Wymagające Uwagi",
+        "## 3.1. Frakcje Wymagające Uwagi",
         "",
     ])
 
@@ -223,10 +249,14 @@ def main():
     else:
         report_lines.extend(["", "### ✅ Wszystkie setupy mają Score ≥ 90 — brak setupów wymagających poprawy."])
 
-    # --- Section 4: Legend ---
+    # --- Section 4: Era & Timing Distribution ---
+    report_lines.extend([""])
+    report_lines.extend(generate_era_distribution_markdown(all_summaries))
+
+    # --- Section 5: Legend ---
     report_lines.extend([
         "",
-        "## 4. Legenda Wskaźników Telemetrii i Norm Balansowych",
+        "## 5. Legenda Wskaźników Telemetrii i Norm Balansowych",
         "",
         "- **🎯 Punkt Idealny (Ideal Share):** 33.3% w 3p | 25.0% w 4p | 20.0% w 5p",
         "- **⏱️ Średnia Er (Tempo Gry):** 🟢 **5.0 – 6.5 Er** | 🟡 4.5–5.0 / 6.5–7.0 | 🔴 poza zakresem",

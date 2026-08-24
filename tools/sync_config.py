@@ -115,14 +115,17 @@ def _victory_table(cfg: dict) -> str:
 
     kt_f = v["kabala_toledo"]["fragments"]
     kt_frag = kt_f["4p"] if isinstance(kt_f, dict) else kt_f
-    kt_e = v["kabala_toledo"]["era"]
-    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    kt_e = v["kabala_toledo"].get("era")
+    kt_era = (kt_e["4p"] if isinstance(kt_e, dict) else kt_e) if kt_e else None
     kt_hb = v["kabala_toledo"].get("heresy_band")
-    kt_cell = (
-        f"**{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery **{kt_era}**)"
-        if kt_hb
-        else f"**{kt_frag} Fragmenty** (od Ery **{kt_era}**)"
-    )
+    if kt_era:
+        kt_cell = (
+            f"**{kt_frag} Fragmenty** + Herezja **{kt_hb[0]}–{kt_hb[1]}** (od Ery **{kt_era}**)"
+            if kt_hb
+            else f"**{kt_frag} Fragmenty** (od Ery **{kt_era}**)"
+        )
+    else:
+        kt_cell = f"**{kt_frag} Fragmenty** (Pieczęć Salomona: Herezja 4–6)"
 
     gc_n, gc_extra = _gc_falls_pair(cfg)
     gc_cell = (
@@ -525,13 +528,14 @@ def sync_hierarchia(cfg: dict) -> list[str]:
         text,
     )
     kt = v["kabala_toledo"]
-    kt_e = kt["era"]
-    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    kt_e = kt.get("era")
+    kt_era = (kt_e["4p"] if isinstance(kt_e, dict) else kt_e) if kt_e else None
     kt_f = kt["fragments"]
     kt_frag = kt_f["4p"] if isinstance(kt_f, dict) else kt_f
+    kt_sub = f"**{kt_frag} Fragmenty** (Era {kt_era}+)" if kt_era else f"**{kt_frag} Fragmenty** (Pieczęć Salomona)"
     text = re.sub(
         r"\| \*\*Kabała z Toledo\*\* \|.*",
-        f"| **Kabała z Toledo** | **{kt_frag} Fragmenty** (Era {kt_era}+) | **{kt_frag} Fragmenty** (Era {kt_era}+) | **{kt_frag} Fragmenty** (Era {kt_era}+) |",
+        f"| **Kabała z Toledo** | {kt_sub} | {kt_sub} | {kt_sub} |",
         text,
     )
     text = re.sub(
@@ -566,8 +570,8 @@ def sync_balance_notes(cfg: dict) -> list[str]:
     cd = s["autodafe_cooldown"]
     me = s["max_eras"]
     kt = cfg["victory"]["kabala_toledo"]
-    kt_e = kt["era"]
-    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    kt_e = kt.get("era")
+    kt_era = (kt_e["4p"] if isinstance(kt_e, dict) else kt_e) if kt_e else None
     text = re.sub(
         r"\| \*\*Próg Obserwowanej\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \| \*\*\d+\*\* \|.*",
         f"| **Próg Obserwowanej** | **{ot}** | **{ot}** | **{ot}** | Czysta to 0–{ot-1}. Od **{ot}** Autodafé pali na Stos (nie areszt). |",
@@ -610,12 +614,13 @@ def sync_balance_notes(cfg: dict) -> list[str]:
         text,
         count=1,
     )
-    text = re.sub(
-        r"(- \*\*Minimalna Era:\*\* \*\*)\d+",
-        rf"\g<1>{kt_era}",
-        text,
-        count=1,
-    )
+    if kt_era:
+        text = re.sub(
+            r"(- \*\*Minimalna Era:\*\* \*\*)\d+",
+            rf"\g<1>{kt_era}",
+            text,
+            count=1,
+        )
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano playtesting/balance-notes.md (snapshot SSOT)"]
@@ -650,14 +655,21 @@ def sync_slownik(cfg: dict) -> list[str]:
     kb_dec = kb_d["4p"] if isinstance(kb_d, dict) else kb_d
     kt_f = v["kabala_toledo"]["fragments"]
     kt_frag = kt_f["4p"] if isinstance(kt_f, dict) else kt_f
-    kt_e = v["kabala_toledo"]["era"]
-    kt_era = kt_e["4p"] if isinstance(kt_e, dict) else kt_e
+    kt_e = v["kabala_toledo"].get("era")
+    kt_era = (kt_e["4p"] if isinstance(kt_e, dict) else kt_e) if kt_e else None
     text = re.sub(r"Warunek zwycięstwa: \*\*\d+ Dekrety\*\*", f"Warunek zwycięstwa: **{kb_dec} Dekrety**", text)
-    text = re.sub(
-        r"Warunek: \*\*\d+ Fragmenty\*\* od Ery \*\*\d+\*\*",
-        f"Warunek: **{kt_frag} Fragmenty** od Ery **{kt_era}**",
-        text,
-    )
+    if kt_era:
+        text = re.sub(
+            r"Warunek: \*\*\d+ Fragmenty\*\* od Ery \*\*\d+\*\*",
+            f"Warunek: **{kt_frag} Fragmenty** od Ery **{kt_era}**",
+            text,
+        )
+    else:
+        text = re.sub(
+            r"Warunek: \*\*\d+ Fragmenty\*\* od Ery \*\*\d+\*\*",
+            f"Warunek: **{kt_frag} Fragmenty** (Pieczęć Salomona)",
+            text,
+        )
 
     path.write_text(text, encoding="utf-8")
     return ["Zsynchronizowano docs/rules/slownik.md"]
@@ -822,7 +834,8 @@ def main():
     kb_era = kb.get("era")
     kb_era_txt = f" | Ery {kb_era}" if kb_era is not None else ""
     print(f"   ⚔️ Korona: Dekrety {kb['decrees']}{kb_era_txt}")
-    print(f"   ⚔️ Kabała: Fragmenty {v['kabala_toledo']['fragments']} | Ery {v['kabala_toledo']['era']}")
+    kt_e_txt = f" | Ery {v['kabala_toledo']['era']}" if "era" in v['kabala_toledo'] else " (Pieczęć Salomona)"
+    print(f"   ⚔️ Kabała: Fragmenty {v['kabala_toledo']['fragments']}{kt_e_txt}")
     print(f"   ⚔️ Gildia: Upadki {v['gildia_cieni']['falls']}")
     print()
 

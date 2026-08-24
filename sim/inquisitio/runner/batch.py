@@ -48,6 +48,8 @@ class BatchSummary:
     avg_heresy_end: float = 0.0
     passes_forced_pct: float = 0.0
     card_plays_total: dict[str, int] = field(default_factory=dict)
+    era_hist: dict[int, int] = field(default_factory=dict)
+    era_faction_wins: dict[int, dict[str, int]] = field(default_factory=dict)
 
 def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict:
     setup_name, gseed, threshold, layer, win_overrides = args
@@ -107,8 +109,9 @@ def run_batch(
 
     wins: Counter[str] = Counter()
     win_paths: Counter[str] = Counter()
-    card_plays_agg: Counter[str] = Counter()
-
+    card_plays_agg = Counter()
+    era_hist = Counter()
+    era_faction_wins: dict[int, Counter] = {}
     totals = dict(
         autodafe=0,
         accusations=0,
@@ -142,9 +145,16 @@ def run_batch(
             game_results = list(executor.map(_run_single_game_tuple, task_args, chunksize=max(10, games // (max_workers * 4))))
 
         for res in game_results:
-            wins[res["winner"]] += 1
+            winner = res["winner"]
+            era = res["eras"]
+            wins[winner] += 1
             win_paths[res["win_path"]] += 1
-            eras_list.append(res["eras"])
+            era_hist[era] += 1
+            if era not in era_faction_wins:
+                era_faction_wins[era] = Counter()
+            era_faction_wins[era][winner] += 1
+
+            eras_list.append(era)
 
             autodafe_list.append(res["autodafe"])
             accusations_list.append(res["accusations"])
@@ -163,7 +173,7 @@ def run_batch(
             totals["doubles"] += res["doubles"]
             totals["deadlocks"] += res["deadlocks"]
             totals["legal"] += res["legal"]
-            totals["eras"] += res["eras"]
+            totals["eras"] += era
             totals["cards"] += res["cards"]
             totals["forced_passes"] += res["forced_passes"]
             totals["gold_end"] += res["gold_sum"]
@@ -177,10 +187,16 @@ def run_batch(
         try:
             for i in range(games):
                 res = _run_single_game_tuple((setup_name, seed + i * 17, threshold, layer, win_overrides))
-                wins[res["winner"]] += 1
+                winner = res["winner"]
+                era = res["eras"]
+                wins[winner] += 1
                 win_paths[res["win_path"]] += 1
+                era_hist[era] += 1
+                if era not in era_faction_wins:
+                    era_faction_wins[era] = Counter()
+                era_faction_wins[era][winner] += 1
 
-                eras_list.append(res["eras"])
+                eras_list.append(era)
                 autodafe_list.append(res["autodafe"])
                 accusations_list.append(res["accusations"])
                 n_pl = len(SETUP_PRESETS[setup_name])
@@ -198,7 +214,7 @@ def run_batch(
                 totals["doubles"] += res["doubles"]
                 totals["deadlocks"] += res["deadlocks"]
                 totals["legal"] += res["legal"]
-                totals["eras"] += res["eras"]
+                totals["eras"] += era
                 totals["cards"] += res["cards"]
                 totals["forced_passes"] += res["forced_passes"]
                 totals["gold_end"] += res["gold_sum"]
@@ -247,6 +263,8 @@ def run_batch(
         avg_heresy_end=totals["heresy_end"] / tot_players if tot_players else 0.0,
         passes_forced_pct=totals["forced_passes"] / tot_turns if tot_turns else 0.0,
         card_plays_total=dict(card_plays_agg),
+        era_hist={k: era_hist[k] for k in sorted(era_hist.keys())},
+        era_faction_wins={k: dict(v) for k, v in sorted(era_faction_wins.items())},
     )
 
 
