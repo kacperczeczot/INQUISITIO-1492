@@ -47,36 +47,35 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **14** | **14** | **14** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
-| **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
+| **Cooldown Autodafé** | **4 Ery** | **4 Ery** | **4 Ery** | Zunifikowany cooldown co 4 Ery (pierwsze możliwe od Ery 4). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
 | **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
-| **Złoto Startowe** | **5 zł** | **5 zł** | **5 zł** | Zunifikowane 5 zł dla wszystkich składów graczy. |
+| **Złoto Startowe** | **4 zł** | **4 zł** | **4 zł** | Zunifikowane 4 zł dla wszystkich składów graczy. |
 | **Limit Kart na Ręce** | **5 Kart** | **5 Kart** | **5 Kart** | Zunifikowany limit 5 kart dla wszystkich składów graczy. |
 | **Otwarcie Szlaku Morskiego (Cienie)** | **Era 4** | **Era 4** | **Era 4** | Szlak w oknie partii (wcześniej era 6 = po końcu gry). |
 
 ---
 
-## 🏆 Warunki Zwycięstwa Frakcji (Unifikacja Globalna 4P)
+## 🏆 Warunki Zwycięstwa Frakcji (Unifikacja Globalna 4P — v1.0-alpha.44)
 
-Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P:
+Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P (zgodnie z ADR-0001, ADR-0003 i SSOT `game_config.yaml`):
 
 ### 1. Święte Oficjum
 - **Ścieżka A (Stosy):** **6 Stosów**.
-- **Ścieżka B (Skazania):** **3 Skazania** (w 3p: **2 Skazania**; Werdykt; unikalne nazwiska). Stos z Werdyktu tylko gdy Oficjum oskarża.
+- **Ścieżka B (Skazania):** **3 Skazania** (w 3p: **2 Skazania**; Werdykt Trybunału; unikalne nazwiska skazanych rywali).
 
 ### 2. Cienie Al-Andalus
 - **Ewakuacja Relikwii:** **2 Relikwie**.
-- **Ścieżka:** Marionetka / cichy exit / **szlak morski** (otwarcie od Ery **4**). Brak darmowej wygranej „sama era”.
+- **Legalne Drogi Ucieczki:** Płatny kurier (`caa-05`), podwójny agent, ucieczka ze stosu lub otwarty od Ery **4** Szlak Morski. Brak darmowej wygranej „sama era”.
 
-### 3. Korona & Borgiowie
-- **Dekrety Królewskie:** **2 Dekrety**. Haki nie są warunkiem wygranej.
+### 3. Korona Borgiowie
+- **Królewskie Dekrety:** **2 Dekrety** + Haki polityczne na rywalach.
 
 ### 4. Kabała z Toledo
-- **Fragmenty Kodeksu:** **2**.
-- **Minimalna Era:** **6**. Brak pasma Herezji w zwycięstwie (`kt-10` może mieć własne okno na karcie).
+- **Święty Manuskrypt & Rytuał:** Zgromadzenie **3 Fragmentów Kodeksu** i zagranie karty sygnaturowej `kt-10 Pieczęć Salomona` (koszt 3 zł, Złote Pasmo Herezji **[4, 6]**). Brak sztucznej blokady er.
 
 ### 5. Gildia Cieni
-- **Upadki:** **8** (jedna liczba; wyjątek bez Oficjum usunięty).
+- **Upadki:** **6 Upadków** narzuconych rywalom (przez Haki, Marionetki, lichwę i wyroki).
 
 ---
 
@@ -94,6 +93,182 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.61 (2026-08-23) — Kanon 4P: Karta `so-03` (Podejrzenie): `heresy` → `3` (Zysk 4P Δ +7.4 pkt)
+- **Wynik 4P:** Kanon **`59.4`** → **`66.8 pkt`** | Global **`37.9`** | 3p **`28.1`** | 5p **`20.1`**
+- **Modyfikacja (`L3_SO-03_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `heresy` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.83, Deadlocks 0.0%, Pas Biedy 5.9%.
+
+### 🟢 Patch v1.0-alpha.60 (2026-08-23) — Kanon 4P: Gildia Cieni: Upadki offset +1 (Zysk 4P Δ +4.4 pkt)
+- **Wynik 4P:** Kanon **`56.0`** → **`60.4 pkt`** | Global **`27.7`** | 3p **`21.4`** | 5p **`7.3`**
+- **Modyfikacja (`L2_GC_FALLS_PLUS1`):** Gildia Cieni: Upadki offset +1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.82, Deadlocks 0.0%, Pas Biedy 5.6%.
+
+### 🟢 Patch v1.0-alpha.59 (2026-08-23) — Przywrócenie Zrównoważonej Gry: Stabilizacja Rytuału Salomona (kt-10: -2☣), Wymóg 2 Haków Korony i Symetria 4P
+- **Cel i Uzasadnienie:** Likwidacja asymetrii matematycznej i przywrócenie pełnej grywalności wszystkich 5 frakcji w Kanonie 4P z zachowaniem czystego silnika (Zero Hacks):
+  1. **Kabała z Toledo (`kt-10 Pieczęć Salomona`):** Karta sygnaturowa legalnie zmniejsza Herezję o 2 (`heresy_decrease: 2`, `heresy: 0`, `cost: 4 zł`), dając graczowi naturalne narzędzie do zniwelowania wrogich oskarżeń i stabilizacji pasma `[4, 6]`.
+  2. **Korona i Borgiowie:** Wymóg zwycięstwa oparty na **2 Dekretach oraz 2 Aktywnych Hakach** (`decrees: 2`, `hooks: 2`). Kalibracja kosztu kart: `kb-08: 3 zł`, `kb-09: 2 zł` (0 zł zysku), `kb-10: 4 zł` (+1☣), co naturalnie przesuwa dominację dworu z Ery 3 do Er 5–6.
+  3. **Cienie Al-Andalus:** Utrzymanie wymogu **2 Relikwii** (`relics: 2`) przy zasileniu gospodarczym (`caa-02: 3 zł`, `caa-07: 3 zł`, `caa-08: 3 zł`), co wspiera ewakuację 2. Relikwii przez Szlak Morski w Erach 5–7.
+  4. **Gildia Cieni:** Stonowanie darmowego zysku złota (`gc-08: 1 zł`, `gc-09 cost: 1 zł`), co stabilizuje win-share Gildii na poziomie 25–35%.
+- **Efekt Telemetrii (50 000 partii 4P):**
+  * **Ery 1–2 (Sprint):** **`0.1%`** (zablokowany)
+  * **Era 3 (Wczesna):** **`2.5%`** (rzadka wygrana tylko przy idealnym układzie)
+  * **Era 4 (Wczesna):** **`16.8%`**
+  * **Ery 5–7 (Głębokie Złote Okno):** **`68.5%`** gier (szczyt w Erze 6: `27.8%`)
+  * **Pełna Równowaga Frakcji:** Wszystkie 5 frakcji osiąga zdrowy, stabilny udział w zwycięstwach (~18–33%).
+
+### 🟢 Patch v1.0-alpha.58 (2026-08-23) — Harmonizacja Warunków Zwycięstwa (Korona 3 Dekrety, Cienie 3 Relikwie, kt-03 +2☣) i Pacing Wczesnej Gry
+- **Cel i Uzasadnienie:** Likwidacja asymetrii tempa gry i wczesnych sprintów w Erach 2–4. Zrównanie dojrzałości celów Korony i Cieni do wzorcowego profilu czasowego Gildii Cieni (8 Upadków):
+  1. **Korona i Borgiowie:** Podniesienie wymogu dekretów z 2 do **3 Dekrety** (`victory.korona_borgiowie.decrees: 3`), eliminujące natychmiastowe zakończenie gry w Erze 3 dwoma kartami.
+  2. **Cienie Al-Andalus:** Podniesienie wymogu relikwii z 2 do **3 Relikwie** (`victory.cienie_al_andalus.relics: 3`), wymagające wykorzystania pełnego szlaku morskiego.
+  3. **Kabała z Toledo (`kt-03 Zakazana Wiedza`):** Nadanie karcie klimatycznego kosztu ryzyka `heresy: 2` (zamiast 0☣), realizujące zamysł lore (*„świadome wejście w Obserwowaną”*).
+  4. **Kabała z Toledo (`kt-10 Pieczęć Salomona`):** Usunięcie automatycznego dopasowania Herezji (`fallback_heresy = 5`). Kabała musi aktywnie kontrolować swoje pasmo 4–6☣.
+- **Efekt Telemetrii:**
+  * **Ery 1–2 (Sprint):** **`0.0%`** (całkowicie zablokowany).
+  * **Era 3 (Wczesna):** **`0.6%`** (zredukowana z 6.5% — wygrana w Erze 3 jest teraz unikalnym, rzadkim wydarzeniem).
+  * **Era 4 (Wczesna):** **`9.4%`** (zredukowana z 18.8%).
+  * **Ery 5–7 (Złote Okno):** **`72.3%`** gier (szczyt w Erze 6: `27.9%` oraz Erze 7: `23.3%`).
+
+### 🟢 Patch v1.0-alpha.57 (2026-08-23) — Oczyszczenie Silnika Symulacji (Engine Integrity & Zero Hacks Audit)
+- **Cel i Uzasadnienie:** Całkowite wyeliminowanie ukrytych protez, skrótów i zafałszowań w silniku symulacji ([`sim/inquisitio/engine/effects/registry.py`](../sim/inquisitio/engine/effects/registry.py)), aby telemetria w 100% odzwierciedlała fizyczne karty na stole bez „sztucznego” sterowania rozkładem:
+  1. **Usunięcie sztucznego ograniczenia ery dla Korony:** Usunięto kod `if card.id == "kb-04" and state.era < 4: allowed = False`. Karta `kb-04 Faworyt Dworu` działa teraz w 100% zgodnie z danymi YAML.
+  2. **Usunięcie ukrytego mnożnika podrzucenia dla Gildii:** Usunięto kod `if state.layer == "A" and card.id == "gc-03": amt = max(amt, 2)`. Efekt `target_heresy` czyta dokładnie wartość z karty.
+  3. **Kabała (`kt-10 Pieczęć Salomona`):** Wprowadzono bezwzględne sprawdzanie warunku `fragments_eq_3` (`_card_condition_satisfied`) przed aktywacją pieczęci — zlikwidowano błąd pozwalający na nielegalne zaliczanie sygnatury z wyprzedzeniem.
+  4. **Cienie (`caa-10 Echo Alhambry`):** Zredukowano limit ewakuacji przez `caa-10` do maksymalnie **1 Relikwii na zagranie** (zamiast natychmiastowej podwójnej ewakuacji kończącej grę jednym ruchem) oraz poprawnie ustawiono flagę `shadow_exit`.
+  5. **Korona (`kb-05 List Żelazny`):** Usunięto historyczny relikt naliczający punkt Dekretu przy zagraniu karty w Warstwie A (dekrety wynikają wyłącznie z kart dekretowych `kb-09` i `kb-10`).
+- **Efekt Telemetrii:** Prawdziwy, niezafałszowany rozkład tempa gry:
+  * **Ery 1–2 (Sprint):** **`0.2%`** (zablokowany sprint anomalii).
+  * **Era 3 (Wczesna):** **`6.5%`** (bardzo trudna).
+  * **Era 4 (Wczesna):** **`18.8%`** (trudna faza dojrzewania stołu).
+  * **Ery 5–7 (Złote Okno):** **`68.1%`** (właściwy środek ciężkości gry ze szczytem w Erze 5–6).
+  * **Odsłonięcie prawdziwego balansu kart:** Zidentyfikowano realne odchylenia kart: Korona (33.1%) i Gildia (29.7%) są zbyt silne po zdjęciu blokad, natomiast Kabała (19.8%) i Cienie (15.3%) wymagają właściwego dostrojenia w kartach `game_config.yaml`.
+
+### 🟢 Patch v1.0-alpha.56 (2026-08-23) — Wzmocnienie Finiszerów Gildii (gc-10: 3 zł, gc-08: 2 zł) i Tonowanie Skarbca Oficjum (so-02: 2 zł)
+- **Cel i Uzasadnienie:** Likwidacja asymetrii win-share w Kanonie 4P (podciągnięcie Gildii Cieni z 21.1% i stonowanie dominacji Oficjum z 30.1%):
+  1. **Gildia Cieni:** Karta sygnaturowa `gc-10 Upadek Domu` kosztuje **3 zł** (z 4 na 3 zł), a `gc-08 Zatrute Złoto` generuje **2 zł** (z 1 na 2 zł), co ożywia finiszer Gildii i pozwala domykać Upadki w Erze 6–7.
+  2. **Święte Oficjum:** Karta `so-02 Skarbiec Trybunału` generuje **2 zł** (z 3 na 2 zł), co zapobiega nadmiernej kumulacji kapitału na natychmiastowe oskarżenia i procesy.
+  3. **Heurystyka AI:** Zaktualizowano priorytety AI dla `gc-10` oraz mobilności Cieni `caa-01` i płynności `caa-02`.
+- **Efekt Telemetrii:** Win share Gildii Cieni wzrósł z 21.1% do **`23.9%`** (zbliżając się do 25.0% ideału), win share Oficjum ustabilizował się na poziomie **`25.7%`**, udział Złotego Okna (Ery 5–7) wzrósł do **`67.8%`**, a szczyt partii wypada pewnie w **Erze 6 (`28.7%`)**.
+
+### 🟢 Patch v1.0-alpha.55 (2026-08-23) — Harmonizacja Stosów Oficjum (7 Stosów) i Balans Finiszera Cieni (caa-10: 3 zł)
+- **Cel i Uzasadnienie:** Usunięcie degradacji witalności zidentyfikowanych w audycie 4P:
+  1. **Święte Oficjum:** Przywrócenie progu `victory.swiete_oficjum.stacks: 7` (z 8 na 7), co ożywia ścieżkę Autodafé w setupach `4p-no-cienie` oraz `4p-no-korona`, przywracając status **🟢 Pełna Witalność** (0 kar).
+  2. **Cienie Al-Andalus:** Zwiększenie kosztu karty sygnaturowej `caa-10 Echo Alhambry` z 2 zł do **3 zł**, co wymaga przygotowania ekonomicznego i ogranicza wczesne podwójne ewakuacje w Erze 1–2.
+- **Efekt Telemetrii:** W setupie `4p-no-cienie` całkowicie zlikwidowano ostrzeżenie o martwej ścieżce stosów. Udział Złotego Okna (Ery 5–7) wynosi **`66.6%`**, a szczyt rozkładu stabilnie przypada na Erę 6 (`27.9%`).
+
+### 🟢 Patch v1.0-alpha.54 (2026-08-23) — Kanon 4P: Karta `so-03` (Podejrzenie): `gold` → `1` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`75.5`** → **`75.6 pkt`** | Global **`18.5`** | 3p **`13.5`** | 5p **`2.7`**
+- **Modyfikacja (`L3_SO-03_GOLD_SET1`):** Karta `so-03` (Podejrzenie): `gold` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.62, Deadlocks 0.0%, Pas Biedy 5.0%.
+
+### 🟢 Patch v1.0-alpha.53 (2026-08-23) — Rzeczywiste Przesunięcie Krzywej Gry do Złotego Okna (Ery 5–7): Cykl Autodafé (4 Ery), Próg Stosów (8 Stosów) i Koszt Pieczęci Salomona (5 zł)
+- **Cel i Uzasadnienie:** Rzeczywiste i trwałe przesunięcie rozkładu końca partii do standardu ADR-0004 (Ery 5–7 jako serce gry, z redukcją Er 1–4 do < 23% i wzrostem Er 6–7).
+- **Modyfikacje SSOT:**
+  1. **Cykl Autodafé:** `system.autodafe_cooldown: 4` (z 3 na 4 Ery) — opóźnia pierwszą falę procesów do Ery 4, synchronizując rozstrzygnięcia z dojrzałą fazą gry.
+  2. **Święte Oficjum:** `victory.swiete_oficjum.stacks: 8` (z 7 na 8) — synchronizuje wygraną Inkwizycji z 2. cyklem Autodafé.
+  3. **Kabała Toledo:** `kt-10 Pieczęć Salomona: cost 5` (z 4 na 5 zł) — wymaga pełnego przygotowania ekonomicznego przed rzuceniem finiszera.
+  4. **Gildia Cieni:** `victory.gildia_cieni.falls: default: 7, no_oficjum: 8` — stabilizuje dynamikę upadków majątkowych przy braku procesów Inkwizycji.
+- **Efekt Telemetrii:** Gry wczesne (Ery 1–4) spadły z 31.5% do **`22.7%`**, udział Złotego Okna (Ery 5–7) wynosi **`66.4%`**, udział Ery 7 wzrósł niemal dwukrotnie do **`13.9%`**, a szczyt partii wypada pewnie w **Erze 6 (`28.5%`)**.
+
+### 🟢 Patch v1.0-alpha.52 (2026-08-23) — Złoto Startowe 4 zł i Pieczęć Salomona 4 zł
+- **Cel i Uzasadnienie:** Przesunięcie szczytu rozkładu partii z Ery 5 na Erę 6 oraz synchronizacja krzywej gry ze standardem ADR-0004 poprzez kalibrację zasobów otwarcia.
+- **Modyfikacje SSOT:**
+  1. **Złoto Startowe:** `system.start_gold: 4` (z 5 na 4 zł) — eliminuje natychmiastowe zagrania drogich kart ofensywnych w Turze 1, wymuszając 1 turę pozycjonowania i budowania przewagi ekonomicznej.
+  2. **Pieczęć Salomona:** `kt-10.cost: 4` (z 3 na 4 zł) — zapobiega wczesnym sprintom Kabały w Erze 3.
+- **Efekt Telemetrii:** Szczyt rozkładu partii przesuwa się na **Erę 6 (`28.8%`)**, Złote Okno Rozgrywki (Ery 5–7) osiąga **65.0%**, a gry w Erze 1–2 spadają do **< 0.9%**.
+
+### 🟢 Patch v1.0-alpha.51 (2026-08-23) — Korekta Logistyki Portowej Cieni (caa-10) i Pacing Złotego Okna Rozgrywki (Ery 5–7)
+- **Cel i Uzasadnienie:** Usunięcie błędu logicznego w karcie `caa-10 Echo Alhambry` (wymóg obecności w Porcie: Rynek/Gildia dla cichej ewakuacji morskiej poza miasto) w celu definitywnej eliminacji nienaturalnych zwycięstw w Erze 1–2 oraz synchronizacja szczytu rozgrywki w Złotym Oknie (Ery 5–7).
+- **Modyfikacje Silnika i Kart:**
+  1. **Logistyka Cieni:** `caa-10` wymaga lokacji portowej (`rynek`/`gildia`) dla cichej ewakuacji morskiej bez Inkwizytora (lub otwartego Szlaku Morskiego).
+  2. **Ekonomia i Płynność:** Utrzymano `so_stacks: 7`, `kt-02: 3 zł`, `caa-05: 1 zł`, `caa-08: 2 zł`, `kb-08: 3 zł`.
+- **Efekt Telemetrii:** Gry w Erze 1 zredukowane do 0.0%, Gry w Erze 2 zredukowane do < 1.0%, Złote Okno Rozgrywki (Ery 5–7) obejmuje ponad 63% wszystkich partii.
+
+### 🟢 Patch v1.0-alpha.50 (2026-08-23) — Harmonizacja Kanonu 4P: Próg Stosów Oficjum (7 Stosów), Płynność Kabały i Logistyka Cieni
+- **Cel i Uzasadnienie:** Ręczna harmonizacja 5 setupów Kanonu 4P z zachowaniem 3 agentów na gracza:
+  1. **Święte Oficjum:** Podniesienie progu stosów z 6 do **7 Stosów** (`victory.swiete_oficjum.stacks: 7`), co zapobiega zdominowaniu stołu przez łatwe wyroki przy 3 agentach.
+  2. **Kabała Toledo:** Karta `kt-02 Transmutacja Złota` generuje **3 zł** (z 2 na 3 zł), zapewniając budżet na opłacenie Pieczęci Salomona w late-game.
+  3. **Cienie Al-Andalus:** Karta `caa-05 Ukryty Kurier` kosztuje **1 zł** (z 2 na 1 zł), a `caa-08 Kaptur Nocy` generuje **2 zł** (z 1 na 2 zł), co wspiera logistykę portową.
+  4. **Korona Borgiowie:** Karta `kb-08 Przekupstwo Sędziego` kosztuje **3 zł** (z 2 na 3 zł), co tonuje dominację dekretów w setupach bez Oficjum.
+
+### 🟢 Patch v1.0-alpha.49 (2026-08-23) — Przywrócenie Kanonicznej Liczby Agentów (3 Agenci) i Twarda Blokada Niezmienników Fizycznych
+- **Cel i Uzasadnienie:** Bezwzględne przywrócenie kanonicznej liczby agentów `system.agents_per_player: 3` (revert samowolnej próby redukcji do 2 z v47). Liczba figurek (3 pionki agentów na gracza) jest nienaruszalnym filarem fizycznego wydania gry.
+- **Modyfikacja SSOT:** `system.agents_per_player: 3`.
+- **Zabezpieczenie Audytora (FROZEN):** Wprowadzenie twardej blokady `_FROZEN_ID_MARKERS` na parametr `agents_per_player` i `agents_offset`, uniemożliwiającej automatycznym skryptom jakąkolwiek modyfikację liczby agentów.
+
+### 🟢 Patch v1.0-alpha.48 (2026-08-23) — Kanon 4P: Karta `caa-06` (Ucieczka z Lochów): `target_heresy` → `2` (Zysk 4P Δ +10.9 pkt)
+- **Wynik 4P:** Kanon **`61.1`** → **`72.0 pkt`** | Global **`22.5`** | 3p **`16.2`** | 5p **`4.9`**
+- **Modyfikacja (`L3_CAA-06_TARGET_HERESY_SET2`):** Karta `caa-06` (Ucieczka z Lochów): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.40, Deadlocks 0.0%, Pas Biedy 3.9%.
+
+### 🟢 Patch v1.0-alpha.47 (2026-08-23) — Kanon 4P: Liczba agentów: offset -1 (nowa: 2) (Zysk 4P Δ +8.1 pkt)
+- **Wynik 4P:** Kanon **`51.6`** → **`59.7 pkt`** | Global **`18.7`** | 3p **`13.5`** | 5p **`5.7`**
+- **Modyfikacja (`L1_AGENTS_MINUS1`):** Liczba agentów: offset -1 (nowa: 2).
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.43, Deadlocks 0.0%, Pas Biedy 4.0%.
+
+### 🟢 Patch v1.0-alpha.46 (2026-08-23) — Równowaga Organiczna Kanonu 4P: Rytuał Pieczęci Salomona, Logistyka Ucieczki Relikwii i Kalibracja Gildii Cieni
+- **Wynik 4P:** Kanon 4P Balance **`63.0`** – **`72.0 pkt`** | Stabilizacja Er 5–7 (58% partii w Złotym Oknie)
+- **Modyfikacje Mechanik i SSOT (`ADR-0001`, `ADR-0003`, `ADR-0004`):**
+  - **Kabała Toledo:** Zagranie `kt-10 Pieczęć Salomona` przy posiadaniu 3 Fragmentów Kodeksu aktywnie stabilizuje Herezję w Paśmie `[4, 6]` i domyka rytuał zwycięstwa.
+  - **Cienie Al-Andalus:** Urealnienie logistyki ucieczki — karta `caa-05 Ukryty Kurier` przemieszcza relikwie w stronę bezpiecznych traktów, a ewakuację poza planszę przeprowadza w warunkach cichej operacji (`inquisitor != location`). Karta sygnaturowa `caa-10` ewakuuje 1 relikwię.
+  - **Gildia Cieni:** Podniesienie progu upadków w 4P z 6 do **7 Upadków** (`gildia_cieni.falls: 7`), synchronizując tempo przewrotu ze zbalansowanym oknem Er 5–7.
+  - **Gwarancja Systemowa:** Zachowanie `autodafe_cooldown: 3` (lokalne oczyszczenie w lokacji Inkwizytora) oraz tożsamości ekonomicznej `so-02 Skarbiec Trybunału` (3 zł).
+
+### 🟢 Patch v1.0-alpha.45 (2026-08-23) — Wdrożenie Ścieżki A: Naturalna Kalibracja Finisherów i Złote Okno Er 5–7
+- **Wynik 4P:** Zrównoważenie tempa rozgrywki, eliminacja nadpłynności wczesnych finisherów
+- **Modyfikacje SSOT (`ADR-0001`, `ADR-0003`, `ADR-0004`):**
+  - **Cienie Al-Andalus:** Podniesienie kosztu karty sygnaturowej `caa-10 Echo Alhambry` (`cost` 1 → 2 zł), co zapobiega darmowej podwójnej ewakuacji relikwii w otwarciu.
+  - **Kabała Toledo:** Wymóg aktywnego zagrania `kt-10 Pieczęć Salomona` (`cost: 3 zł`, 3 fragmenty, Herezja `[4, 6]`) bez sztucznych blokad er.
+  - **Klasyfikacja Tempa:** Dostosowanie modułu `era_analytics.py` do pełnej zgodności z ADR-0004 (Ery 5–7 jako Złote Okno Rozgrywki).
+
+### 🟢 Patch v1.0-alpha.44 (2026-08-23) — Wdrożenie ADR-0001/0003: Organiczna Progresja Er, Złote Okno Er 5–7 i Pieczęć Salomona jako Aktywny Finisher
+- **Wynik 4P:** Kanon **`76.2`** → **`78.5 pkt`** | Zrównoważenie Er 5–7
+- **Modyfikacje SSOT (`ADR-0001`, `ADR-0003`, `ADR-0004`):**
+  - **Zwycięstwo Kabały Toledo:** Zastąpienie sztucznej bramki `era: 6` aktywnym wymogiem zgromadzenia 3 fragmentów i zagrania karty `kt-10 Pieczęć Salomona` (koszt 3 zł, pasmo `[4, 6]`).
+  - **Święte Oficjum:** Dofinansowanie skarbca `so-02` (dochód `gold` 2 → 3 zł) na prowadzenie procesów inkwizycyjnych.
+  - **Cienie Al-Andalus:** Urealnienie logistyki ucieczki `caa-05 Ukryty Kurier` (koszt `cost` 0 → 2 zł) zapobiegające natychmiastowej ewakuacji w 1. turze i wspierające late-game szlaku morskiego.
+  - **Eliminacja Sztucznych Blokad:** Usunięcie twardych bramek `state.era >= X` z silnika `win.py` per ADR-0001.
+- **Efekt:** Likwidacja monopolu Kabały w Erze 6 i zapaści Cieni. Wyrównana rywalizacja 4 frakcji w dojrzałym oknie Er 5–7.
+
+### 🟢 Patch v1.0-alpha.43 (2026-08-23) — Kanon 4P: Karta `gc-01` (Przekupiony Strażnik): `cost` → `1` + Karta `caa-08` (Kaptur Nocy): `gold` → `1` + Karta `caa-01` (Przejście Podziemiami): `target_heresy` → `1` (Zysk 4P Δ +1.8 pkt)
+- **Wynik 4P:** Kanon **`74.4`** → **`76.2 pkt`** | Global **`28.1`** | 3p **`22.6`** | 5p **`7.6`**
+- **Modyfikacja (`L3_GC-01_COST_MINUS1__L3_CAA-08_GOLD_PLUS1__L3_CAA-01_TARGET_HERESY_PLUS1`):** Karta `gc-01` (Przekupiony Strażnik): `cost` → `1` + Karta `caa-08` (Kaptur Nocy): `gold` → `1` + Karta `caa-01` (Przejście Podziemiami): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.78, Deadlocks 0.0%, Pas Biedy 3.5%.
+
+### 🟢 Patch v1.0-alpha.42 (2026-08-23) — Kanon 4P: Karta `caa-11` (Nocna Zmiana Warty): `gold` → `3` + Karta `gc-09` (Lista Dłużników): `gold` → `0` (Zysk 4P Δ +3.4 pkt)
+- **Wynik 4P:** Kanon **`72.1`** → **`75.5 pkt`** | Global **`39.9`** | 3p **`25.9`** | 5p **`21.6`**
+- **Modyfikacja (`L3_CAA-11_GOLD_SET3__L3_GC-09_GOLD_MINUS1`):** Karta `caa-11` (Nocna Zmiana Warty): `gold` → `3` + Karta `gc-09` (Lista Dłużników): `gold` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.79, Deadlocks 0.0%, Pas Biedy 3.5%.
+
+### 🟢 Patch v1.0-alpha.41 (2026-08-23) — Kanon 4P: Karta `kt-11` (Medytacja Sefirot): `target_heresy` → `1` (Zysk 4P Δ +1.3 pkt)
+- **Wynik 4P:** Kanon **`73.7`** → **`75.0 pkt`** | Global **`39.3`** | 3p **`22.8`** | 5p **`22.6`**
+- **Modyfikacja (`L3_KT-11_TARGET_HERESY_PLUS1`):** Karta `kt-11` (Medytacja Sefirot): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.83, Deadlocks 0.0%, Pas Biedy 3.5%.
+
+### 🟢 Patch v1.0-alpha.40 (2026-08-23) — Kanon 4P: Karta `caa-04` (Fałszywy Trop): `gold` → `3` + Karta `gc-02` (Czarny Rynek): `heresy` → `0` (Zysk 4P Δ +2.2 pkt)
+- **Wynik 4P:** Kanon **`69.1`** → **`71.3 pkt`** | Global **`39.9`** | 3p **`23.6`** | 5p **`22.4`**
+- **Modyfikacja (`L3_CAA-04_GOLD_SET3__L3_GC-02_HERESY_MINUS1`):** Karta `caa-04` (Fałszywy Trop): `gold` → `3` + Karta `gc-02` (Czarny Rynek): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.83, Deadlocks 0.0%, Pas Biedy 3.5%.
+
+### 🟢 Patch v1.0-alpha.39 (2026-08-23) — Kanon 4P: Karta `gc-09` (Lista Dłużników): `heresy` → `0` (Zysk 4P Δ +3.7 pkt)
+- **Wynik 4P:** Kanon **`65.2`** → **`68.9 pkt`** | Global **`38.8`** | 3p **`27.4`** | 5p **`19.0`**
+- **Modyfikacja (`L3_GC-09_HERESY_MINUS1`):** Karta `gc-09` (Lista Dłużników): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.78, Deadlocks 0.0%, Pas Biedy 3.4%.
+
+### 🟢 Patch v1.0-alpha.38 (2026-08-23) — Kanon 4P: Karta `gc-04` (Informator): `heresy` → `0` (Zysk 4P Δ +4.0 pkt)
+- **Wynik 4P:** Kanon **`62.4`** → **`66.4 pkt`** | Global **`36.7`** | 3p **`25.5`** | 5p **`17.4`**
+- **Modyfikacja (`L3_GC-04_HERESY_MINUS1`):** Karta `gc-04` (Informator): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.78, Deadlocks 0.0%, Pas Biedy 3.4%.
+
+### 🟢 Patch v1.0-alpha.37 (2026-08-23) — Kanon 4P: Karta `caa-07` (Szantaż Bractwa): `gold` → `3` (Zysk 4P Δ +3.7 pkt)
+- **Wynik 4P:** Kanon **`62.0`** → **`65.7 pkt`** | Global **`33.9`** | 3p **`24.7`** | 5p **`13.6`**
+- **Modyfikacja (`L3_CAA-07_GOLD_SET3`):** Karta `caa-07` (Szantaż Bractwa): `gold` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.77, Deadlocks 0.0%, Pas Biedy 3.4%.
+
+### 🟢 Patch v1.0-alpha.36 (2026-08-23) — Kanon 4P: Karta `kb-04` (Faworyt Dworu): `heresy` → `0` (Zysk 4P Δ +3.7 pkt)
+- **Wynik 4P:** Kanon **`59.5`** → **`63.2 pkt`** | Global **`35.0`** | 3p **`27.2`** | 5p **`16.9`**
+- **Modyfikacja (`L3_KB-04_HERESY_MINUS1`):** Karta `kb-04` (Faworyt Dworu): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 4.74, Deadlocks 0.0%, Pas Biedy 3.3%.
 
 ### 🟢 Patch v1.0-alpha.35 (2026-08-23) — Kanon 4P: Usunięcie Dublowania Akcji Gospodarczej na `gc-02` i `kt-02` (Zysk 4P: 59.2 pkt)
 - **Modyfikacja Kart Frakcyjnych L3 (`game_config.yaml`):**

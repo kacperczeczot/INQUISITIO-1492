@@ -1,12 +1,12 @@
-version: v1.0-alpha.35
+version: v1.0-alpha.61
 date: '2026-08-23'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
-  start_gold: 5
+  start_gold: 4
   agents_per_player: 3
   hand_limit: 5
   max_eras: 14
-  autodafe_cooldown: 3
+  autodafe_cooldown: 4
   cards_per_era: 2
   era_income: 1
   intrigue_gold: 1
@@ -14,7 +14,7 @@ system:
   accusation_threshold: 7
 victory:
   swiete_oficjum:
-    stacks: 6
+    stacks: 7
     condemns:
       3p: 2
       4p: 3
@@ -23,11 +23,11 @@ victory:
     relics: 2
   korona_borgiowie:
     decrees: 2
+    hooks: 2
   kabala_toledo:
-    fragments: 2
-    era: 6
+    fragments: 3
   gildia_cieni:
-    falls: 6
+    falls: 9
 economy:
   card_cost_offset: 0
   sig_cost_offset: 0
@@ -35,7 +35,6 @@ cards:
   so-01:
     name: Patrol Familiariuszy
     type: akcja
-    layer: A
     cost: 1
     agents: 1
     action: move_agent
@@ -44,7 +43,6 @@ cards:
   so-02:
     name: Skarbiec Trybunału
     type: akcja
-    layer: A
     cost: 1
     gold: 2
     action: gain_gold
@@ -54,17 +52,16 @@ cards:
   so-03:
     name: Podejrzenie
     type: akcja
-    layer: A
     cost: 2
     target_heresy: 3
     action: frame_rival
     tags:
     - heresy
-    heresy: 2
+    heresy: 3
+    gold: 1
   so-04:
     name: Publiczne Ostrzeżenie
     type: akcja
-    layer: A
     cost: 1
     action: send_inquisitor
     target_loc: agent_location
@@ -75,7 +72,6 @@ cards:
   so-05:
     name: Wezwanie do Trybunału
     type: reakcja
-    layer: A
     cost: 0
     target_heresy: 1
     action: frame_rival
@@ -86,7 +82,6 @@ cards:
   so-06:
     name: Areszt Trybunalski
     type: akcja
-    layer: B
     cost: 2
     arrest: true
     action: arrest
@@ -97,7 +92,6 @@ cards:
   so-07:
     name: Przesłuchanie Oficjum
     type: akcja
-    layer: B
     cost: 2
     interrogate: true
     action: interrogate
@@ -108,7 +102,6 @@ cards:
   so-08:
     name: Nasłanie Inkwizytora
     type: akcja
-    layer: B
     cost: 0
     heresy: 0
     action: send_inquisitor
@@ -120,7 +113,6 @@ cards:
   so-09:
     name: Świadek Koronny
     type: akcja
-    layer: B
     cost: 1
     creates_hook: true
     action: creates_hook
@@ -130,7 +122,6 @@ cards:
   so-10:
     name: Oczyść Miasto
     type: signature
-    layer: C
     cost: 5
     heresy: 1
     autodafe: true
@@ -143,7 +134,6 @@ cards:
   so-11:
     name: Dekret Czystości Wiary
     type: akcja
-    layer: B
     cost: 1
     target_heresy: 1
     gold: 1
@@ -155,7 +145,6 @@ cards:
   so-12:
     name: Straż Trybunalska
     type: akcja
-    layer: A
     cost: 1
     agents: 1
     gold: 1
@@ -166,25 +155,23 @@ cards:
   caa-01:
     name: Przejście Podziemiami
     type: akcja
-    layer: A
     cost: 0
     agents: 1
     action: move_agent
     tags:
     - move
+    target_heresy: 1
   caa-02:
     name: Złoto z Kryjówki
     type: akcja
-    layer: A
     cost: 0
-    gold: 2
+    gold: 3
     action: gain_gold
     tags:
     - gold
   caa-03:
     name: Cień na Rynku
     type: akcja
-    layer: A
     cost: 0
     heresy: 1
     agents: 1
@@ -197,27 +184,26 @@ cards:
   caa-04:
     name: Fałszywy Trop
     type: akcja
-    layer: A
     cost: 0
     target_heresy: 1
     action: frame_rival
     tags:
     - heresy
+    gold: 3
   caa-05:
     name: Ukryty Kurier
     type: akcja
-    layer: A
-    cost: 0
+    cost: 1
     evacuate_relic: 1
     action: evacuate_relic
     condition: relic_present
     kurier_limit: 1
     tags:
     - relic
+    gold: 0
   caa-06:
     name: Ucieczka z Lochów
     type: akcja
-    layer: B
     cost: 0
     agents: 1
     free_agent: true
@@ -227,20 +213,20 @@ cards:
     - move
     - arrest
     heresy: 0
+    target_heresy: 2
   caa-07:
     name: Szantaż Bractwa
     type: akcja
-    layer: B
     cost: 0
     creates_hook: true
     action: creates_hook
     target_loc: neighbor_location
     tags:
     - hook
+    gold: 3
   caa-08:
     name: Kaptur Nocy
     type: akcja
-    layer: B
     cost: 1
     heresy: 0
     action: move_agent
@@ -249,10 +235,10 @@ cards:
     - double
     - heresy
     target_heresy: 2
+    gold: 3
   caa-09:
     name: Kurier Relikwii
     type: akcja
-    layer: C
     cost: 0
     move_relic: true
     action: move_agent
@@ -263,8 +249,7 @@ cards:
   caa-10:
     name: Echo Alhambry
     type: signature
-    layer: C
-    cost: 1
+    cost: 3
     heresy: 0
     evacuate_relic: 2
     action: evacuate_relic
@@ -278,7 +263,6 @@ cards:
   caa-11:
     name: Nocna Zmiana Warty
     type: akcja
-    layer: B
     cost: 1
     agents: 1
     move_inquisitor: true
@@ -286,10 +270,10 @@ cards:
     tags:
     - move
     - inquisitor
+    gold: 3
   caa-12:
     name: Skrytka w Murach
     type: akcja
-    layer: A
     cost: 0
     heresy: 0
     gold: 4
@@ -300,7 +284,6 @@ cards:
   kb-01:
     name: Rozkaz Dworu
     type: akcja
-    layer: A
     cost: 1
     agents: 1
     action: move_agent
@@ -311,7 +294,6 @@ cards:
   kb-02:
     name: Pobór Podatków
     type: akcja
-    layer: A
     cost: 1
     gold: 2
     action: gain_gold
@@ -321,7 +303,6 @@ cards:
   kb-03:
     name: Plotka Dworska
     type: akcja
-    layer: A
     cost: 1
     target_heresy: 1
     action: frame_rival
@@ -331,9 +312,8 @@ cards:
   kb-04:
     name: Faworyt Dworu
     type: akcja
-    layer: A
     cost: 2
-    heresy: 1
+    heresy: 0
     agents: 1
     creates_hook: true
     action: creates_hook
@@ -344,7 +324,6 @@ cards:
   kb-05:
     name: List Żelazny
     type: akcja
-    layer: A
     cost: 2
     creates_hook: true
     action: creates_hook
@@ -354,7 +333,6 @@ cards:
   kb-06:
     name: Areszt Królewski
     type: akcja
-    layer: B
     cost: 2
     arrest: true
     action: arrest
@@ -364,7 +342,6 @@ cards:
   kb-07:
     name: Szantaż Pieczęcią
     type: akcja
-    layer: B
     cost: 2
     creates_hook: true
     action: creates_hook
@@ -374,8 +351,7 @@ cards:
   kb-08:
     name: Przekupstwo Sędziego
     type: akcja
-    layer: B
-    cost: 2
+    cost: 3
     creates_hook: true
     verdict_weight: 2
     action: creates_hook
@@ -384,8 +360,7 @@ cards:
   kb-09:
     name: Dekret Królewski
     type: signature
-    layer: C
-    cost: 4
+    cost: 2
     heresy: 0
     decree: 1
     penalty_heresy: 3
@@ -395,13 +370,12 @@ cards:
     - signature
     - decree
     - heresy
-    gold: 3
+    gold: 0
   kb-10:
     name: Pieczęć Korony
     type: signature
-    layer: C
-    cost: 3
-    heresy: 2
+    cost: 4
+    heresy: 1
     decree: 2
     action: check_victory
     condition: active_hooks_gte_2
@@ -414,7 +388,6 @@ cards:
   kb-11:
     name: Tajny Emisariusz
     type: akcja
-    layer: A
     cost: 1
     agents: 1
     action: move_agent
@@ -426,7 +399,6 @@ cards:
   kb-12:
     name: Szantaż Salonowy
     type: akcja
-    layer: B
     cost: 1
     creates_hook: true
     action: creates_hook
@@ -435,7 +407,6 @@ cards:
   kt-01:
     name: Rytuał Przejścia
     type: akcja
-    layer: A
     cost: 1
     agents: 1
     action: move_agent
@@ -444,18 +415,16 @@ cards:
   kt-02:
     name: Transmutacja Złota
     type: akcja
-    layer: A
     cost: 0
-    gold: 2
+    gold: 3
     action: gain_gold
     tags:
     - gold
   kt-03:
     name: Zakazana Wiedza
     type: akcja
-    layer: A
     cost: 0
-    heresy: 0
+    heresy: 2
     grant_fragment: 1
     action: grant_fragment
     tags:
@@ -464,7 +433,6 @@ cards:
   kt-04:
     name: Zwierciadło Herezji
     type: akcja
-    layer: A
     cost: 1
     target_heresy: 1
     action: frame_rival
@@ -473,7 +441,6 @@ cards:
   kt-05:
     name: Wskazówka Cyklu
     type: akcja
-    layer: A
     cost: 1
     grant_fragment: 1
     action: grant_fragment
@@ -484,7 +451,6 @@ cards:
   kt-06:
     name: Przesłuchanie Imienia
     type: akcja
-    layer: B
     cost: 2
     interrogate: true
     grant_fragment: 1
@@ -497,7 +463,6 @@ cards:
   kt-07:
     name: Archiwum Ukryte
     type: akcja
-    layer: B
     cost: 1
     creates_hook: true
     action: creates_hook
@@ -508,7 +473,6 @@ cards:
   kt-08:
     name: Areszt Wiedzy
     type: akcja
-    layer: B
     cost: 1
     arrest: true
     action: arrest
@@ -518,8 +482,7 @@ cards:
   kt-09:
     name: Fragment Kodeksu
     type: akcja
-    layer: C
-    cost: 2
+    cost: 1
     heresy: 1
     grant_fragment: 1
     action: grant_fragment
@@ -530,23 +493,21 @@ cards:
   kt-10:
     name: Pieczęć Salomona
     type: signature
-    layer: C
-    cost: 2
+    cost: 4
     action: check_victory
     condition: fragments_eq_3
     target_heresy_band:
     - 4
     - 6
-    fallback_heresy: 5
     breaks_rule: Herezja tylko z karty
     tags:
     - signature
     - fragment
-    heresy: 2
+    heresy: 0
+    heresy_decrease: 2
   kt-11:
     name: Medytacja Sefirot
     type: akcja
-    layer: B
     cost: 2
     gold: 1
     heresy_decrease: 1
@@ -554,10 +515,10 @@ cards:
     tags:
     - gold
     - heresy
+    target_heresy: 1
   kt-12:
     name: Strażnik Archiwum
     type: akcja
-    layer: A
     cost: 0
     heresy: 1
     agents: 1
@@ -568,8 +529,7 @@ cards:
   gc-01:
     name: Przekupiony Strażnik
     type: akcja
-    layer: A
-    cost: 2
+    cost: 1
     agents: 1
     action: move_agent
     tags:
@@ -579,18 +539,16 @@ cards:
   gc-02:
     name: Czarny Rynek
     type: akcja
-    layer: A
     cost: 0
     gold: 2
     action: gain_gold
     tags:
     - gold
     - heresy
-    heresy: 1
+    heresy: 0
   gc-03:
     name: Podrzucenie Księgi
     type: akcja
-    layer: A
     cost: 1
     target_heresy: 1
     action: frame_rival
@@ -599,7 +557,6 @@ cards:
   gc-04:
     name: Informator
     type: akcja
-    layer: A
     cost: 1
     heresy: 1
     creates_hook: true
@@ -611,7 +568,6 @@ cards:
   gc-05:
     name: Fałszywy Świadek
     type: reakcja
-    layer: A
     cost: 0
     change_vote: true
     vote_change_limit: 1
@@ -622,7 +578,6 @@ cards:
   gc-06:
     name: Szantaż
     type: akcja
-    layer: B
     cost: 2
     heresy: 1
     creates_hook: true
@@ -632,7 +587,6 @@ cards:
   gc-07:
     name: Skrytobójstwo
     type: akcja
-    layer: B
     cost: 0
     heresy: 0
     arrest: true
@@ -644,7 +598,6 @@ cards:
   gc-08:
     name: Zatrute Złoto
     type: akcja
-    layer: B
     cost: 1
     target_heresy: 1
     gold: 1
@@ -656,9 +609,8 @@ cards:
   gc-09:
     name: Lista Dłużników
     type: akcja
-    layer: C
-    cost: 3
-    heresy: 1
+    cost: 1
+    heresy: 0
     creates_hook: true
     mark_fall: true
     action: creates_hook
@@ -666,11 +618,10 @@ cards:
     tags:
     - hook
     - fall
-    gold: 1
+    gold: 0
   gc-10:
     name: Upadek Domu
     type: signature
-    layer: C
     cost: 4
     heresy: 2
     mark_fall: true
@@ -684,7 +635,6 @@ cards:
   gc-11:
     name: Fałszywe Świadectwo Cechu
     type: akcja
-    layer: B
     cost: 0
     target_heresy: 1
     action: frame_rival
@@ -695,7 +645,6 @@ cards:
   gc-12:
     name: Złodziejski Zwiad
     type: akcja
-    layer: A
     cost: 0
     heresy: 2
     agents: 1
