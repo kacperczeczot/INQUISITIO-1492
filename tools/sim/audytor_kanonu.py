@@ -514,7 +514,7 @@ def generate_and_save_telemetry_report(
 ) -> tuple[Path, Path | None]:
     """Generates and archives raport_telemetrii.md for the given version across Kanon 4P setups."""
     if setups is None:
-        setups = CANON_4P_SETUPS
+        setups = CANONICAL_4P_SETUPS
     t0 = time.time()
     setup_data = []
     all_summaries = []
@@ -1227,8 +1227,8 @@ class Canon4PAutoBalancer:
                     # Snapshot game_config.yaml in version archive
                     shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
 
-                    print("   📊 Generuję pełny raport telemetrii 16 setupów i archiwum...")
-                    generate_and_save_telemetry_report(new_version, games_per_setup=1000, seed=self.args.seed)
+                    print("   📊 Generuję pełny raport telemetrii Kanonu 4P (10 000 gier/setup)...")
+                    generate_and_save_telemetry_report(new_version, games_per_setup=10000, seed=self.args.seed)
 
                     print("   📝 Generuję szczegółowy raport optymalizacji Kanonu 4P...")
                     generate_and_save_canon_optimization_report(

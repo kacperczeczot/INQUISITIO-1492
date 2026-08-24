@@ -5,7 +5,7 @@ faction: swiete-oficjum
 type: akcja
 layer: A
 cost: 1
-heresy: 0
+heresy: 2
 tags:
 - gold
 effect: 'Zyskaj 2 złota. Wskaż rywala: +1 Herezja.'

@@ -4,7 +4,7 @@ name: Kaptur Nocy
 faction: cienie-al-andalus
 type: akcja
 layer: B
-cost: 2
+cost: 3
 heresy: 0
 tags:
 - double
