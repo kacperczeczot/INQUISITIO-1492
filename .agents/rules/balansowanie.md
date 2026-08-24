@@ -1,14 +1,42 @@
-# Reguła Projektowa: Organiczne Balansowanie i Zakaz Sztucznych Protez (Anti-Crutch)
+# Reguła Projektowa: Organiczne Balansowanie, Integralność Silnika (Anti-Cheat) i Nadzór ADR
 
-1. **Punkt odniesienia (Kanon 4p):**
-   Kanonem gry jest rozgrywka 4-osobowa. Wszystkie reguły systemowe (L1) i warunki zwycięstwa (L2) muszą być w pierwszej kolejności zbalansowane i eleganckie dla 4 graczy.
+Każdy model AI / asystent pracujący w tym repozytorium **MUSI** bezwzględnie przestrzegać poniższych reguł przy projektowaniu, badaniu i modyfikacji balansu gry:
 
-2. **Zakaz sztucznych protez konfiguracyjnych:**
-   Kategorycznie zabrania się wprowadzania wyjątków w parametrach dla 3p lub 5p tylko po to, by sztucznie podbić wynik punktowy (*Score*) i zatuszować uszkodzoną mechanikę gry.
-   - Niedozwolone są arbitralne skoki progów (np. nagły skok progu oskarżenia z 7 do 9 w 5p, arbitralne bonusy złota na start).
-   - Wszelkie anomalie w 3p lub 5p należy rozwiązywać poprzez diagnozę i naprawę mechaniki źródłowej.
+---
 
-3. **Ścisłe uzasadnienie dopuszczalnych wyjątków:**
-   Każdy wyjątek dla liczby graczy musi być w 100% uzasadniony fizyczną geometrią i logiką stołu:
-   - **Skalowanie puli celów:** Liczba agentów rywali rośnie z liczbą graczy ($N=3 \rightarrow 6$, $N=4 \rightarrow 9$, $N=5 \rightarrow 12$), co uzasadnia skalowanie celów zależnych od liczby unikalnych rywali (np. Skazania Świętego Oficjum: $3\text{p}: 2$, $4\text{p}: 3$, $5\text{p}: 3$).
-   - **Przejrzystość reguł:** Wyjątek musi być natychmiast zrozumiały dla człowieka czytającego kartę pomocy gracza.
+## 1. Zgodność z Konstytucją Architektoniczną (ADR-0001 do ADR-0005)
+Wszystkie propozycje, zmiany parametrów i kod silnika muszą być w 100% zgodne z dokumentami w `docs/adr/`:
+- **ADR-0001 (Organiczna Progresja Er):** Kategoryczny zakaz wprowadzania sztucznych bramek czasowych `if state.era < X` lub `state.era >= X` w warunkach zwycięstwa, efektach kart i silniku. Pacing gry musi wynikać w 100% z fizycznych ograniczeń planszy (koszty złota, liczba ruchów, liczba wymaganych kroków/zasobów).
+- **ADR-0002 (Kanon 4P jako Kotwica):** Wszystkie decyzje i oceny telemetrii są weryfikowane na 5 kanonicznych setupach 4P (50 000 partii).
+- **ADR-0003 (Asymetria Warunków Zwycięstwa):** Każda frakcja ma unikalną, nienaruszalną tożsamość ścieżki do wygranej.
+- **ADR-0004 (Złote Okno Rozgrywki):** Cel to >65% gier kończących się w Erach 5–7 ze szczytem w Erze 6. Gry w Erze 1–2 są zablokowane (<0.3%), w Erze 3 bardzo trudne i rzadkie (<3%), w Erze 4 dojrzałe (~10-18%).
+- **ADR-0005 (Zasady Nadzoru & SSOT):** Wszystkie zmienne balansu żyją wyłącznie w `game_config.yaml`.
+
+---
+
+## 2. Bezwzględny Zakaz Oszukiwania Silnika (Zero Engine Hacks / Zero Fake Guarantees)
+- Kategorycznie zabrania się wprowadzania w kodzie Pythona (`sim/inquisitio/engine/`) jakichkolwiek:
+  1. Ukrytych modyfikatorów, których nie ma na fizycznej karcie lub w `game_config.yaml`.
+  2. Sztucznych blokad er na kartach (np. `if card.id == "kb-04" and state.era < 4: allowed = False`).
+  3. Ukrytych mnożników wartości (np. sztuczne podwajanie oskarżeń lub haków).
+- Silnik symulacji musi być w 100% przezroczysty – telemetria ma odzwierciedlać nagą prawdę o fizycznych kartach na stole.
+
+---
+
+## 3. Zakaz Samowolnego Wdrażania Zmian (Wymagana Zgoda Użytkownika)
+- Asystent **NIE MOŻE** samowolnie edytować `game_config.yaml`, podbijać wersji i generować raportów w ramach odpowiedzi na luźne pytanie lub hipotezę.
+- Wszelkie pomysły muszą zostać najpierw przedstawione użytkownikowi w formie przejrzystej propozycji z uzasadnieniem.
+- Wdrożenie następuje **WYŁĄCZNIE** po wyraźnym poleceniu użytkownika (np. „wprowadź”, „zastosuj”, „napraw”).
+
+---
+
+## 4. Matematyczna Weryfikacja Fizyczna przed Propozycją
+- Przed zaproponowaniem zmiany progu zwycięstwa asystent **MUSI** sprawdzić fizyczną zawartość talii frakcji:
+  - Przykład: Zakaz ustawiania wymogu `decrees: 3`, jeśli w talii są fizycznie tylko 2 karty dekretu.
+  - Przykład: Zakaz usuwania mechanizmów pasmowych, jeśli finiszer sam z siebie wyrzuca gracza z pasma.
+
+---
+
+## 5. Pełna Przejrzystość i Rzetelność Dokumentacji
+- Wszelkie zmiany parametrów i poprawki silnika muszą być szczegółowo, bez pomijania niewygodnych faktów, odnotowane w `playtesting/balance-notes.md`.
+- Każda zmiana w `game_config.yaml` wymaga uruchomienia `./sim/.venv/bin/python3 tools/sync_config.py` oraz przejścia 100% testów `./sim/.venv/bin/pytest`.
