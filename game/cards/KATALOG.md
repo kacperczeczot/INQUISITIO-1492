@@ -33,7 +33,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | Familiariusze obchodzą miasto pod szyldem porządku i prawa. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt. |
@@ -134,7 +134,7 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Wykonaj Przesłuchanie na aresztowanego Agenta rywala. Limit: 1 / gracza / Erę. |
@@ -242,8 +242,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
-| `heresy` | 0 |
+| `cost_gold` | 1 |
+| `heresy` | 1 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec. |
@@ -361,7 +361,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
@@ -557,7 +557,7 @@ Kart: **12**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala z Herezją ≥ 5. |
+| `effect` | Załóż Hak na rywala z Herezją ≥ 4. |
 | `lore` | Korona poluje na już brudnych. Dwa Haki zaczynają się tu. |
 | `tags` | hook |
 | `status` | prototyp |
@@ -767,7 +767,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala z Herezją ≥ 5. |
+| `effect` | Załóż Hak na rywala z Herezją ≥ 4. |
 | `lore` | Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze. |
 | `tags` | hook |
 | `status` | prototyp |
@@ -907,7 +907,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | Zakazana księga ląduje w cudzej komnacie o świcie. |
 | `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Klasyczny frame: zakazana księga ląduje w cudzej komnacie. |
@@ -957,7 +957,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 3 |
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
@@ -992,7 +992,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |

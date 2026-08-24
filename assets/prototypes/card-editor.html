@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.61</span>
+              <span id="prev-meta-ver">v1.0-alpha.78</span>
             </div>
           </div>
         </div>
@@ -1137,6 +1137,8 @@
     "tags": [
       "move"
     ],
+    "gold": 2,
+    "heresy": 2,
     "heresy_text": "Familiariusze obchodzą miasto pod szyldem porządku i prawa.",
     "lore": "Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt."
   },
@@ -1178,6 +1180,7 @@
       "inquisitor"
     ],
     "gold": 1,
+    "target_heresy": 1,
     "heresy_text": "Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.",
     "lore": "Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel."
   },
@@ -1211,7 +1214,7 @@
   "so-07": {
     "name": "Przesłuchanie Oficjum",
     "type": "akcja",
-    "cost": 2,
+    "cost": 1,
     "interrogate": true,
     "action": "interrogate",
     "target_loc": "dungeon",
@@ -1219,6 +1222,7 @@
     "tags": [
       "interrogation"
     ],
+    "gold": 2,
     "lore": "Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję."
   },
   "so-08": {
@@ -1233,6 +1237,7 @@
       "inquisitor",
       "heresy"
     ],
+    "gold": 3,
     "heresy_text": "Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.",
     "lore": "Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne."
   },
@@ -1289,18 +1294,20 @@
       "move",
       "gold"
     ],
+    "target_heresy": 1,
     "lore": "Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom."
   },
   "caa-01": {
     "name": "Przejście Podziemiami",
     "type": "akcja",
-    "cost": 0,
+    "cost": 1,
     "agents": 1,
     "action": "move_agent",
     "tags": [
       "move"
     ],
     "target_heresy": 1,
+    "heresy": 1,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
   },
@@ -1355,7 +1362,8 @@
     "tags": [
       "relic"
     ],
-    "gold": 0,
+    "gold": 3,
+    "target_heresy": 3,
     "lore": "Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar."
   },
   "caa-06": {
@@ -1392,7 +1400,7 @@
   "caa-08": {
     "name": "Kaptur Nocy",
     "type": "akcja",
-    "cost": 1,
+    "cost": 2,
     "heresy": 0,
     "action": "move_agent",
     "condition": "has_double_agent",
@@ -1448,6 +1456,7 @@
       "inquisitor"
     ],
     "gold": 3,
+    "target_heresy": 2,
     "lore": "Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku."
   },
   "caa-12": {
@@ -1473,7 +1482,7 @@
       "move"
     ],
     "heresy": 1,
-    "target_heresy": 1,
+    "target_heresy": 0,
     "heresy_text": "Królewski nakaz wiąże bez pytania biskupów o zgodę.",
     "lore": "Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu."
   },
@@ -1830,6 +1839,7 @@
     "tags": [
       "heresy"
     ],
+    "heresy": 2,
     "heresy_text": "Zakazana księga ląduje w cudzej komnacie o świcie.",
     "lore": "Klasyczny frame: zakazana księga ląduje w cudzej komnacie."
   },
@@ -1844,7 +1854,7 @@
       "hook",
       "heresy"
     ],
-    "target_heresy": 1,
+    "target_heresy": 0,
     "heresy_text": "Donosiciel pamięta twarz i zapach srebra.",
     "lore": "Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę."
   },
@@ -1864,7 +1874,7 @@
   "gc-06": {
     "name": "Szantaż",
     "type": "akcja",
-    "cost": 2,
+    "cost": 3,
     "heresy": 1,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1899,7 +1909,7 @@
       "gold",
       "heresy"
     ],
-    "heresy": 1,
+    "heresy": 2,
     "lore": "Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej."
   },
   "gc-09": {
@@ -2323,7 +2333,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.61';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.78';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;
