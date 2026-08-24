@@ -129,8 +129,8 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
     for fid, path_a, path_b, label_a, label_b in _DUAL_WIN_PATHS:
         if fid not in factions:
             continue
-        n_a = int(paths.get(path_a, 0))
-        n_b = int(paths.get(path_b, 0))
+        n_a = paths.get(path_a, 0)
+        n_b = paths.get(path_b, 0)
         total = n_a + n_b
         if total < _DEAD_PATH_MIN_WINS:
             continue
