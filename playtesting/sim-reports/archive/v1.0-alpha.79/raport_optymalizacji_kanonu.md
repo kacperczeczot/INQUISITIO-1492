@@ -1,23 +1,23 @@
 # Raport Optymalizacji Kanonu 4P (Anchor-Based 4P Optimizer) — Wersja v1.0-alpha.79 (Iteracja #1, Faza 1D)
 
-**Wersja Poprzednia:** `v1.0-alpha.78` (4P: `83.2 pkt`) → **Nowa Wersja:** `v1.0-alpha.79` (4P: `85.3 pkt`)
-**Data:** 2026-08-24 20:27 | **Czas Trwania Iteracji:** 669.0s | **Zysk 4P:** `+2.1 pkt` | **Zysk Global:** `+2.5 pkt`
+**Wersja Poprzednia:** `v1.0-alpha.78` (4P: `79.1 pkt`) → **Nowa Wersja:** `v1.0-alpha.79` (4P: `84.5 pkt`)
+**Data:** 2026-08-24 20:27 | **Czas Trwania Iteracji:** 669.0s | **Zysk 4P:** `⬆️ +5.4 pkt` | **Zysk Global:** `⬆️ +2.5 pkt`
 
 ## 1. Wprowadzona Zmiana i Wynik Balansu Kanonu 4P
 - **Wybrany Wariant (1D):** `L3_KT-07_HERESY_MINUS1` — **KT-07 (Archiwum Ukryte): heresy 1 → 0**
 - **Opis Modyfikacji:** Karta `kt-07` (Archiwum Ukryte): `heresy` → `0`
-- **Wynik Kanonu 4P Balance:** 83.2 → 🟡 ** 85.3** (`⬆️ +2.1`) pkt
-- **Rozbicie Setupów Kanonu 4P:**
-  - `4p-core`: 91.1 → 91.4 (`⬆️ +0.3`) pkt
-  - `4p-no-cienie`: 74.5 → 80.8 (`⬆️ +6.3`) pkt
-  - `4p-no-kabala`: 93.0 pkt
-  - `4p-no-korona`: 85.5 → 88.5 (`⬆️ +3.0`) pkt
-  - `4p-no-oficjum`: 71.8 → 72.9 (`⬆️ +1.1`) pkt
+- **Wynik Kanonu 4P Balance:** 79.1 → 🟡 ** 84.5** (`⬆️ +5.4`) pkt
+- **Rozbicie Setupów Kanonu 4P (Próba 10 000 partii / setup — SSOT):**
+  - `4p-core`: 92.6 → 90.9 (`🔻 -1.7`) pkt
+  - `4p-no-cienie`: 68.7 → 74.6 (`⬆️ +5.9`) pkt
+  - `4p-no-kabala`: 87.2 → 87.2 (`= 0.0`) pkt
+  - `4p-no-korona`: 81.4 → 83.2 (`⬆️ +1.8`) pkt
+  - `4p-no-oficjum`: 75.6 → 73.6 (`🔻 -2.0`) pkt
 
 ## 2. Diagnostyka Wpływu Kolateralnego na Pozostałe Tryby (3P / 5P)
 - **Tryb 3-osobowy (3p Avg):** 29.1 → 31.0 (`⬆️ +1.9`) pkt
 - **Tryb 4-osobowy (4p Avg):** 79.1 → 84.5 (`⬆️ +5.4`) pkt
-- **Tryb 5-osobowy (5p Avg):** 16.3 → 16.6 (`⬆️ +0.3`) pkt
+- **Tryb 5-osobowy (5p Avg):** 19.6 → 21.3 (`⬆️ +1.7`) pkt
 - **Global Game Balance Score:** 41.5 → 🔴 ** 44.0** (`⬆️ +2.5`) pkt
 
 - **Kluczowa Telemetria Silnika (Kanon 4P):**
