@@ -94,6 +94,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.79 (2026-08-24) — Kanon 4P: Karta `kt-07` (Archiwum Ukryte): `heresy` → `0` (Zysk 4P Δ +2.1 pkt)
+- **Wynik 4P:** Kanon **`83.2`** → **`85.3 pkt`** | Global **`44.0`** | 3p **`31.0`** | 5p **`16.6`**
+- **Modyfikacja (`L3_KT-07_HERESY_MINUS1`):** Karta `kt-07` (Archiwum Ukryte): `heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.78, Deadlocks 0.0%, Pas Biedy 4.2%.
+
 ### 🟢 Patch v1.0-alpha.78 (2026-08-24) — Kanon 4P: Karta `gc-04` (Informator): `target_heresy` → `0` + Karta `caa-05` (Ukryty Kurier): `target_heresy` → `3` (Zysk 4P Δ +1.6 pkt)
 - **Wynik 4P:** Kanon **`83.3`** → **`84.9 pkt`** | Global **`41.5`** | 3p **`29.1`** | 5p **`16.3`**
 - **Modyfikacja (`L3_GC-04_TARGET_HERESY_MINUS1__L3_CAA-05_TARGET_HERESY_PLUS1`):** Karta `gc-04` (Informator): `target_heresy` → `0` + Karta `caa-05` (Ukryty Kurier): `target_heresy` → `3`.
