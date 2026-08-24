@@ -506,15 +506,16 @@ def select_diverse_survivors(results: list[dict], cand_dict: dict, target_count:
     return [cand_dict[cid] for cid in selected_ids]
 
 
-def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000, seed: int = 42) -> tuple[Path, Path | None]:
+def generate_and_save_telemetry_report(version: str, games_per_setup: int = 5000, seed: int = 42) -> tuple[Path, Path | None]:
     """Generates and archives raport_telemetrii.md for the given version across all 16 setups."""
     setups = sorted(SETUP_PRESETS.keys())
     t0 = time.time()
     setup_data = []
     all_summaries = []
+    thresh = int(CONFIG.system.accusation_threshold)
 
     for sname in setups:
-        summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=8)
+        summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=thresh)
         all_summaries.append(summary)
         score = calculate_setup_score(summary)
         balance = calculate_balance_score(summary)
@@ -539,7 +540,7 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 1000
         deadlock_opt = "🟢" if deadlock_pct <= 5.0 else ("🟡" if deadlock_pct <= 10.0 else "🔴")
         poverty_opt = "🟢" if poverty_pct <= 28.0 else ("🟡" if poverty_pct <= 32.0 else "🔴")
         autodafe_opt = "🟢" if 0.7 <= autodafe_avg <= 1.8 else ("🟡" if 0.5 <= autodafe_avg <= 2.0 else "🔴")
-        acc_opt = "🟢" if 2.0 <= accusations_avg <= 4.5 else ("🟡" if 1.5 <= accusations_avg <= 5.0 else "🔴")
+        acc_opt = "🟢" if 3.5 <= accusations_avg <= 8.5 else ("🟡" if 2.0 <= accusations_avg <= 10.0 else "🔴")
 
         vit = evaluate_vitality(summary)
 
@@ -1277,8 +1278,8 @@ def main():
         args.fast_games = 100
     if args.screen_games < 500:
         args.screen_games = 500
-    if args.confirm_games < 3000:
-        args.confirm_games = 3000
+    if args.confirm_games < 5000:
+        args.confirm_games = 5000
 
     auditor = Canon4PAutoBalancer(args)
     auditor.run()

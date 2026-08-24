@@ -250,6 +250,7 @@ _FROZEN_ID_MARKERS = (
     "TIME_DECK",
     "MAX_ERAS",
     "INTRIGUE_GOLD",
+    "INQUISITOR_SPEED",
 )
 _FROZEN_PARAM_KEYS = (
     "agents_offset",
@@ -264,11 +265,13 @@ _FROZEN_PARAM_KEYS = (
     "max_eras",
     "intrigue_gold_offset",
     "intrigue_gold",
+    "inquisitor_speed",
 )
 _ABLATION_OFF_ID_MARKERS = (
     "NO_TIME_DECK",
     "SEA_ROUTE_OFF",
     "INQUISITOR_SPEED0",
+    "INQUISITOR_SPEED2",
     "START_GOLD_0",
     "AUTODAFE_DISABLED",
     "AUTODAFE_CD_0",
@@ -1021,8 +1024,8 @@ def main():
         args.fast_games = 100
     if args.screen_games < 500:
         args.screen_games = 500
-    if args.confirm_games < 3000:
-        args.confirm_games = 3000
+    if args.confirm_games < 5000:
+        args.confirm_games = 5000
     if args.max_depth < 2:
         args.max_depth = 2
 

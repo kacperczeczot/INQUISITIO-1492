@@ -20,11 +20,11 @@ PYTHON_BIN = sys.executable
 
 AUDIT_PIPELINE = [
     ("1. Raport Główny (Telemetria i Win Shares 16 setupów)", TOOLS_SIM_DIR / "generate_report.py", ["--games", "10000", "--seed", "42"]),
-    ("2. Poziom 1 (Mechaniki Systemowe i Offsety)", TOOLS_SIM_DIR / "audit_level1.py", ["--games", "3000", "--seed", "42"]),
-    ("3. Poziom 2 (Warunki Zwycięstwa i Skalowanie)", TOOLS_SIM_DIR / "audit_level2.py", ["--games", "3000", "--seed", "42"]),
-    ("4. Poziom 3 (Parametry Wszystkich 50 Kart - Koszt/Herezja)", TOOLS_SIM_DIR / "audit_level3.py", ["--games", "3000", "--param", "cost,heresy", "--seed", "42"]),
-    ("5. Poziom 4 (Warianty Niszowe i Edykty)", TOOLS_SIM_DIR / "audit_level4.py", ["--games", "3000", "--seed", "42"]),
-    ("6. Testy Stresu Ekonomicznego (Poverty Stress)", TOOLS_SIM_DIR / "audit_stress_tests.py", ["--games", "3000", "--seed", "42"]),
+    ("2. Poziom 1 (Mechaniki Systemowe i Offsety)", TOOLS_SIM_DIR / "audit_level1.py", ["--games", "5000", "--seed", "42"]),
+    ("3. Poziom 2 (Warunki Zwycięstwa i Skalowanie)", TOOLS_SIM_DIR / "audit_level2.py", ["--games", "5000", "--seed", "42"]),
+    ("4. Poziom 3 (Parametry Wszystkich 50 Kart - Koszt/Herezja)", TOOLS_SIM_DIR / "audit_level3.py", ["--games", "5000", "--param", "cost,heresy", "--seed", "42"]),
+    ("5. Poziom 4 (Warianty Niszowe i Edykty)", TOOLS_SIM_DIR / "audit_level4.py", ["--games", "5000", "--seed", "42"]),
+    ("6. Testy Stresu Ekonomicznego (Poverty Stress)", TOOLS_SIM_DIR / "audit_stress_tests.py", ["--games", "5000", "--seed", "42"]),
     ("7. Badanie Użyteczności i Wpływu Elementów (Feature & Card Impact 4P)", TOOLS_SIM_DIR / "feature_impact_4p.py", ["--games", "5000", "--seed", "42"]),
 ]
 

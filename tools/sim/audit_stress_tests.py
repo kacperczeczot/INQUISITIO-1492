@@ -77,7 +77,7 @@ def run_poverty_stress_test(games_per_setup, seed, setups=None):
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Economic Stress and Resilience Tests")
-    parser.add_argument("--games", type=int, default=150, help="Number of games per setup")
+    parser.add_argument("--games", type=int, default=5000, help="Number of games per setup (ADR-0014: >= 5000)")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")

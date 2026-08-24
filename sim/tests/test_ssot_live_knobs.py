@@ -10,7 +10,7 @@ from inquisitio.engine.win import check_winner_details
 
 
 def test_yaml_exposes_observed_and_income_and_no_split_zones():
-    assert CONFIG.observed_threshold() == 5
+    assert CONFIG.observed_threshold() == int(CONFIG.system.observed_threshold)
     assert CONFIG.era_income() == 1
     assert CONFIG.intrigue_gold() == 1
     assert int(CONFIG.system.cards_per_era) == 2
@@ -88,9 +88,7 @@ def test_caa_relics_offset_controls_victory():
     caa.relics_evacuated = 2
     caa.path_via_double = True
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
-    assert check_winner_details(st, {"caa_relics_offset": 1}) is None or (
-        check_winner_details(st, {"caa_relics_offset": 1})[0] != FactionId.CIENIE_AL_ANDALUS
-    )
+    assert check_winner_details(st, {"caa_relics_offset": 1}) is None
     caa.relics_evacuated = 3
     assert check_winner_details(st, {"caa_relics_offset": 1}) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
 

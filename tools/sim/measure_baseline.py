@@ -21,7 +21,7 @@ from inquisitio.runner.scoring import (
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--games", type=int, default=1000)
+    parser.add_argument("--games", type=int, default=5000, help="Number of games per setup (ADR-0014: >= 5000)")
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 

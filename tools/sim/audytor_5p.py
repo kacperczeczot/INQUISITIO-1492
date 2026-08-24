@@ -757,8 +757,8 @@ def main():
         args.fast_games = 200
     if args.screen_games < 800:
         args.screen_games = 800
-    if args.confirm_games < 3000:
-        args.confirm_games = 3000
+    if args.confirm_games < 5000:
+        args.confirm_games = 5000
     if args.max_depth < 2:
         args.max_depth = 2
 

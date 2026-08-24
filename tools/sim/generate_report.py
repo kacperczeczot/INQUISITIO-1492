@@ -27,7 +27,7 @@ FACTION_NAMES = {
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Generate Telemetry Report")
-    parser.add_argument("--games", type=int, default=500, help="Number of games per setup")
+    parser.add_argument("--games", type=int, default=10000, help="Number of games per setup (ADR-0014: >= 5000)")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
@@ -49,9 +49,10 @@ def main():
     t0 = time.time()
     setup_data = []
     all_summaries = []
+    thresh = int(CONFIG.system.accusation_threshold)
 
     for sname in setups:
-        summary = run_batch(games=games_per_setup, setup=sname, seed=args.seed, layer="C", threshold=8)
+        summary = run_batch(games=games_per_setup, setup=sname, seed=args.seed, layer="C", threshold=thresh)
         all_summaries.append(summary)
         score = calculate_setup_score(summary)
         balance = calculate_balance_score(summary)
@@ -102,9 +103,9 @@ def main():
         else:
             autodafe_opt = "🔴"
 
-        if 2.0 <= accusations_avg <= 4.5:
+        if 3.5 <= accusations_avg <= 8.5:
             acc_opt = "🟢"
-        elif 1.5 <= accusations_avg <= 5.0:
+        elif 2.0 <= accusations_avg <= 10.0:
             acc_opt = "🟡"
         else:
             acc_opt = "🔴"
@@ -263,7 +264,7 @@ def main():
         "- **🔒 Remisy po Limicie Er (Deadlock %):** 🟢 **< 5.0%** | 🟡 5–10% | 🔴 > 10%",
         "- **💰 Pas Biedy (Poverty Rate %):** 🟢 **< 28.0%** | 🟡 28–32% | 🔴 > 32%",
         "- **🔥 Autodafé / Partię:** 🟢 **0.7 – 1.8** | 🟡 0.5–0.7 / 1.8–2.0 | 🔴 poza zakresem",
-        "- **⚖️ Oskarżenia / Partię:** 🟢 **2.0 – 4.5** | 🟡 1.5–2.0 / 4.5–5.0 | 🔴 poza zakresem",
+        "- **⚖️ Oskarżenia / Partię:** 🟢 **3.5 – 8.5** | 🟡 2.0–3.5 / 8.5–10.0 | 🔴 poza zakresem",
         "- **📊 Status Setupu:** 🟢 Score ≥ 90 | 🟡 ≥ 75 | 🟠 ≥ 60 | 🔴 < 60",
     ])
 

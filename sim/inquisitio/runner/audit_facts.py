@@ -78,12 +78,31 @@ def save_and_archive_report(
     report_lines: list[str],
     filename: str,
     custom_out: str | None = None,
+    min_games_per_setup: int | None = None,
 ) -> tuple[Path, Path]:
-    """Write report directly to playtesting/sim-reports/archive/{version}/ with game_config.yaml snapshot."""
+    """Write report directly to playtesting/sim-reports/archive/{version}/ with game_config.yaml snapshot.
+    Enforces ADR-0014: Hard prohibition on saving reports with < 5000 games per setup.
+    """
+    if min_games_per_setup is not None and min_games_per_setup < 5000:
+        raise ValueError(
+            f"⛔ ADR-0014 VIOLATION: ZAKAZ zapisu raportu do pliku przy próbie {min_games_per_setup} < 5000 gier per setup!"
+        )
+
+    # Secondary text scan check to prevent bypasses
+    report_text = "\n".join(report_lines)
+    import re
+    m = re.search(r"Wielkość Próby:\s*(\d+)\s*gier/setup", report_text)
+    if m:
+        sample_detected = int(m.group(1))
+        if sample_detected < 5000:
+            raise ValueError(
+                f"⛔ ADR-0014 VIOLATION: Wykryto próbę {sample_detected} gier/setup < 5000. Raport nie może być zapisany jako plik!"
+            )
+
     if custom_out:
         out_path = Path(custom_out)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text("\n".join(report_lines), encoding="utf-8")
+        out_path.write_text(report_text, encoding="utf-8")
         return out_path, out_path
 
     repo_root = Path(__file__).resolve().parent.parent.parent.parent
@@ -93,7 +112,7 @@ def save_and_archive_report(
     archive_path = archive_dir / filename
 
     archive_dir.mkdir(parents=True, exist_ok=True)
-    archive_path.write_text("\n".join(report_lines), encoding="utf-8")
+    archive_path.write_text(report_text, encoding="utf-8")
 
     # Automatically snapshot game_config.yaml in the archive folder
     config_src = repo_root / "game_config.yaml"

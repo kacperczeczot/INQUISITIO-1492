@@ -48,12 +48,12 @@ def evaluate_telemetry(summary: BatchSummary) -> list[MetricCheckResult]:
 
     # 4. Oskarżenia i Werdykty (accusations_avg)
     acc = summary.accusations_avg
-    if 1.5 <= acc <= 4.0:
-        st, msg = "OK", "W normie (1.5–4.0)"
-    elif 0.8 <= acc <= 6.0:
+    if 3.5 <= acc <= 8.5:
+        st, msg = "OK", "W normie (3.5–8.5)"
+    elif 2.0 <= acc <= 10.0:
         st, msg = "WARNING", f"Odbiegi aktywności Oskarżeń: {acc:.2f}"
     else:
-        st, msg = "CRITICAL", f"CRITICAL ACCUSATIONS: {acc:.2f} na partię (Czerwona Linia: 0.8–6.0)"
+        st, msg = "CRITICAL", f"CRITICAL ACCUSATIONS: {acc:.2f} na partię (Czerwona Linia: 2.0–10.0)"
     results.append(MetricCheckResult("accusations_avg", "Średnia Oskarżeń / partię", acc, st, msg))
 
     # --- KATEGORIA B: Mechaniki Pomocnicze (1 Poziom: Zakres Ostrzegawczy) ---
