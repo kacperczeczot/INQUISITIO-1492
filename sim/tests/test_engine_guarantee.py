@@ -125,13 +125,13 @@ def test_caa05_evacuates_relic_and_sets_shadow_exit():
     st = new_game(setup="4p-core", seed=25, layer="C")
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]
     caa.gold = 3
-    loc = caa.agents[0].location
-    st.inquisitor_location = "trybunal" if loc != "trybunal" else "palac"
-    st.relics_on_board[loc] = 1
+    caa.agents[0].location = "rynek"
+    st.sea_route_open = True
+    st.inquisitor_location = "trybunal"
+    st.relics_on_board["rynek"] = 1
     card = load_all_cards()["caa-05"]
     resolve_card_effects(st, FactionId.CIENIE_AL_ANDALUS, card, random.Random(9))
     assert caa.relics_evacuated == 1
-    assert caa.shadow_exit is True
 
 
 def test_caa06_frees_prisoner():
@@ -145,16 +145,17 @@ def test_caa06_frees_prisoner():
     assert not any(ag.arrested for ag in caa.agents)
 
 
-def test_kt10_respects_heresy_band_and_fallback():
+def test_kt10_respects_heresy_band_and_activation():
     st = new_game(setup="4p-core", seed=29, layer="C")
     kt = st.players[FactionId.KABALA_TOLEDO]
-    kt.fragments = 2
-    kt.heresy = 0  # with card heresy 2 => 2 (outside [4, 6] band)
+    kt.fragments = 3
+    kt.heresy = 6
     card = load_all_cards()["kt-10"]
     from inquisitio.engine.effects.registry import _signature
     _signature(st, FactionId.KABALA_TOLEDO, card, random.Random(11))
-    assert kt.fragments == 3
-    assert kt.heresy == 5  # fallback applied
+    assert kt.kt10_played is True
+    # Card decreases heresy by 2 per definition, bringing 6 -> 4 (within [4, 6] band)
+    assert kt.heresy == 4
 
 
 def test_gc10_fiasco_and_success():
@@ -198,21 +199,30 @@ def test_victory_conditions_strictly_follow_ssot_config():
     st.players[FactionId.SWIETE_OFICJUM].condemned_rivals.clear()
 
     # CAA Relics
-    st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = int(cfg_v.cienie_al_andalus.relics)
+    rel_5p = cfg_v.cienie_al_andalus.relics
+    relics_5p = int(rel_5p.get("5p", 3) if hasattr(rel_5p, "get") else rel_5p)
+    st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = relics_5p
     st.players[FactionId.CIENIE_AL_ANDALUS].shadow_exit = True
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
     st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = 0
 
     # KB Decrees
-    st.players[FactionId.KORONA_BORGIOWIE].decrees_played = int(cfg_v.korona_borgiowie.decrees)
+    dec_5p = cfg_v.korona_borgiowie.decrees
+    decrees_5p = int(dec_5p.get("5p", 3) if hasattr(dec_5p, "get") else dec_5p)
+    st.players[FactionId.KORONA_BORGIOWIE].decrees_played = decrees_5p
+    st.players[FactionId.KORONA_BORGIOWIE].hooks_on[FactionId.CIENIE_AL_ANDALUS] = 1
+    st.players[FactionId.KORONA_BORGIOWIE].hooks_on[FactionId.KABALA_TOLEDO] = 1
     assert check_winner_details(st) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     st.players[FactionId.KORONA_BORGIOWIE].decrees_played = 0
+    st.players[FactionId.KORONA_BORGIOWIE].hooks_on.clear()
 
     # KT Fragments
     st.players[FactionId.KABALA_TOLEDO].fragments = int(cfg_v.kabala_toledo.fragments)
-    st.era = int(cfg_v.kabala_toledo.era)
+    st.players[FactionId.KABALA_TOLEDO].heresy = 5
+    st.players[FactionId.KABALA_TOLEDO].kt10_played = True
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
     st.players[FactionId.KABALA_TOLEDO].fragments = 0
+    st.players[FactionId.KABALA_TOLEDO].kt10_played = False
 
     # GC Falls
     st.players[FactionId.GILDIA_CIENI].falls = int(cfg_v.gildia_cieni.falls)

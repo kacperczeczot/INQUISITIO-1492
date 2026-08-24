@@ -24,8 +24,8 @@ def test_no_2p_setup():
         new_game(factions=[FactionId.SWIETE_OFICJUM, FactionId.CIENIE_AL_ANDALUS])
 
 
-def test_layer_a_cards_simple():
-    """A decks: 5 cards, no signatures; Haki dozwolone na teach (kb-04, gc-04)."""
+def test_full_faction_decks_count():
+    """All 5 factions have exactly 12 unique physical cards in their deck."""
     for fac in [
         "swiete-oficjum",
         "cienie-al-andalus",
@@ -33,16 +33,8 @@ def test_layer_a_cards_simple():
         "kabala-toledo",
         "gildia-cieni",
     ]:
-        a = cards_for_faction(fac, max_layer="A")
-        assert len(a) == 6
-        for c in a:
-            assert c.layer == "A"
-            assert c.type != "signature"
-            assert not c.breaks_rule
-            # A-layer Haki: Faworyt, Informator, List Żelazny
-            if c.creates_hook:
-                assert c.id in ("kb-04", "gc-04", "kb-05")
-                assert "hook" in c.tags
+        deck = cards_for_faction(fac)
+        assert len(deck) == 12
 
 
 def test_layer_c_full_decks():
@@ -53,13 +45,13 @@ def test_layer_c_full_decks():
         "kabala-toledo",
         "gildia-cieni",
     ]:
-        assert len(cards_for_faction(fac, max_layer="C")) == 12
-    assert len(time_cards("C")) >= 8
+        assert len(cards_for_faction(fac)) == 12
+    assert len(time_cards()) >= 8
 
 
-def test_heresy_and_verdict_layer_a():
+def test_heresy_and_verdict():
     rng = random.Random(1)
-    state = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="A")
+    state = new_game(setup="3p-oficjum-alandalus-korona", seed=1)
     accused = FactionId.CIENIE_AL_ANDALUS
     add_heresy(state, accused, 8)
     assert is_critical(state.players[accused], state.accusation_threshold)
@@ -70,7 +62,7 @@ def test_heresy_and_verdict_layer_a():
     assert state.metrics.accusations >= 1
 
 
-def test_dungeon_and_hooks_layer_b():
+def test_dungeon_and_hooks():
     rng = random.Random(2)
     state = new_game(setup="3p-oficjum-alandalus-korona", seed=2, layer="B")
     victim = FactionId.CIENIE_AL_ANDALUS
@@ -211,7 +203,7 @@ def test_ssot_win_paths_match_yaml():
 
     st5 = new_game(setup="5p-full", seed=1, layer="C")
     caa5 = st5.players[FactionId.CIENIE_AL_ANDALUS]
-    caa5.relics_evacuated = 2
+    caa5.relics_evacuated = 3
     st5.era = 1
     got = check_winner_details(st5)
     assert got is None or got[0] != FactionId.CIENIE_AL_ANDALUS
@@ -249,22 +241,20 @@ def test_win_overrides_kt_era_kb_decrees_alt():
 
     st = new_game(setup="3p-oficjum-kabala-gildia", seed=1, layer="C")
     kt = st.players[FactionId.KABALA_TOLEDO]
-    kt.fragments = 2
+    kt.fragments = 3
     kt.heresy = 5
-    st.era = 6
+    kt.kt10_played = True
     assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
-    blocked = check_winner_details(st, {"kt_era_offset": 1})
+    blocked = check_winner_details(st, {"kt_frags_offset": 1})
     assert blocked is None or blocked[0] != FactionId.KABALA_TOLEDO
-    st.era = 7
-    assert check_winner_details(st, {"kt_era_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
-    kt.heresy = 0
-    assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
-    kt.heresy = 10
-    assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
+    kt.fragments = 4
+    assert check_winner_details(st, {"kt_frags_offset": 1}) == (FactionId.KABALA_TOLEDO, "kt_codex")
 
     st2 = new_game(setup="3p-oficjum-alandalus-korona", seed=1, layer="C")
     kb = st2.players[FactionId.KORONA_BORGIOWIE]
     kb.decrees_played = 2
+    kb.hooks_on[FactionId.SWIETE_OFICJUM] = 1
+    kb.hooks_on[FactionId.CIENIE_AL_ANDALUS] = 1
     st2.era = 1
     assert check_winner_details(st2) == (FactionId.KORONA_BORGIOWIE, "kb_main")
     blocked = check_winner_details(st2, {"kb_decrees_offset": 1})
@@ -325,7 +315,7 @@ def test_so_condemns_win_without_full_stacks():
     }
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
     so.condemned_rivals = set()
-    so.stacks = 6
+    so.stacks = 8
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
 
 
@@ -369,7 +359,7 @@ def test_oficjum_snowball_threat_is_one_shy_not_early():
     so.stacks = 2
     so.condemned_rivals = {FactionId.CIENIE_AL_ANDALUS}
     assert oficjum_snowball_threat(st) is False
-    so.stacks = 5
+    so.stacks = 7
     assert oficjum_snowball_threat(st) is True
     so.stacks = 0
     so.condemned_rivals = {

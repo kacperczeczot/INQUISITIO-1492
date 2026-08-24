@@ -19,11 +19,12 @@ def _summary(setup: str = "4p-core", games: int = 1000, **kwargs) -> BatchSummar
     defaults = dict(
         accusations_avg=2.0,
         convictions_avg=0.5,
-        autodafe_avg=1.0,
+        autodafe_avg=1.8,
         hooks_avg=1.0,
         doubles_avg=0.2,
         passes_forced_pct=0.05,
         eras_limit_pct=0.0,
+        eras_avg=5.5,
     )
     defaults.update(kwargs)
     return BatchSummary(
@@ -73,3 +74,25 @@ def test_deadlock_lowers_setup_score_but_not_balance_score():
     setup = calculate_setup_score(s)
     assert balance >= 98.0
     assert setup < balance
+
+
+def test_early_era_sprint_triggers_vitality_penalty():
+    # Era 1-2 sprint: 5% of games in Era 1 and 2
+    s_sprint = _summary(
+        games=1000,
+        eras_avg=5.1,
+        era_hist={1: 20, 2: 30, 3: 50, 4: 300, 5: 400, 6: 200},
+    )
+    vit_sprint = evaluate_vitality(s_sprint)
+    assert vit_sprint.vitality_penalty > 0.0
+    assert any("Era 1-2" in w for w in vit_sprint.warnings)
+
+    # Clean distribution: 0% in Era 1-2, 3% in Era 3, 15% in Era 4, 82% in Era 5+
+    s_clean = _summary(
+        games=1000,
+        eras_avg=5.5,
+        era_hist={3: 30, 4: 150, 5: 500, 6: 320},
+    )
+    vit_clean = evaluate_vitality(s_clean)
+    assert vit_clean.vitality_penalty == 0.0
+    assert vit_clean.is_healthy
