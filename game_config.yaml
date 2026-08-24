@@ -1,5 +1,5 @@
-version: v1.0-alpha.61
-date: '2026-08-23'
+version: v1.0-alpha.78
+date: '2026-08-24'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
   start_gold: 4
@@ -10,7 +10,7 @@ system:
   cards_per_era: 2
   era_income: 1
   intrigue_gold: 1
-  observed_threshold: 5
+  observed_threshold: 4
   accusation_threshold: 7
 victory:
   swiete_oficjum:
@@ -40,6 +40,8 @@ cards:
     action: move_agent
     tags:
     - move
+    gold: 2
+    heresy: 2
   so-02:
     name: Skarbiec Trybunału
     type: akcja
@@ -69,6 +71,7 @@ cards:
     tags:
     - inquisitor
     gold: 1
+    target_heresy: 1
   so-05:
     name: Wezwanie do Trybunału
     type: reakcja
@@ -92,13 +95,14 @@ cards:
   so-07:
     name: Przesłuchanie Oficjum
     type: akcja
-    cost: 2
+    cost: 1
     interrogate: true
     action: interrogate
     target_loc: dungeon
     interrogate_limit: 1
     tags:
     - interrogation
+    gold: 2
   so-08:
     name: Nasłanie Inkwizytora
     type: akcja
@@ -110,6 +114,7 @@ cards:
     tags:
     - inquisitor
     - heresy
+    gold: 3
   so-09:
     name: Świadek Koronny
     type: akcja
@@ -152,15 +157,17 @@ cards:
     tags:
     - move
     - gold
+    target_heresy: 1
   caa-01:
     name: Przejście Podziemiami
     type: akcja
-    cost: 0
+    cost: 1
     agents: 1
     action: move_agent
     tags:
     - move
     target_heresy: 1
+    heresy: 1
   caa-02:
     name: Złoto z Kryjówki
     type: akcja
@@ -200,7 +207,8 @@ cards:
     kurier_limit: 1
     tags:
     - relic
-    gold: 0
+    gold: 3
+    target_heresy: 3
   caa-06:
     name: Ucieczka z Lochów
     type: akcja
@@ -227,7 +235,7 @@ cards:
   caa-08:
     name: Kaptur Nocy
     type: akcja
-    cost: 1
+    cost: 2
     heresy: 0
     action: move_agent
     condition: has_double_agent
@@ -271,6 +279,7 @@ cards:
     - move
     - inquisitor
     gold: 3
+    target_heresy: 2
   caa-12:
     name: Skrytka w Murach
     type: akcja
@@ -290,7 +299,7 @@ cards:
     tags:
     - move
     heresy: 1
-    target_heresy: 1
+    target_heresy: 0
   kb-02:
     name: Pobór Podatków
     type: akcja
@@ -554,6 +563,7 @@ cards:
     action: frame_rival
     tags:
     - heresy
+    heresy: 2
   gc-04:
     name: Informator
     type: akcja
@@ -564,7 +574,7 @@ cards:
     tags:
     - hook
     - heresy
-    target_heresy: 1
+    target_heresy: 0
   gc-05:
     name: Fałszywy Świadek
     type: reakcja
@@ -578,7 +588,7 @@ cards:
   gc-06:
     name: Szantaż
     type: akcja
-    cost: 2
+    cost: 3
     heresy: 1
     creates_hook: true
     action: creates_hook
@@ -605,7 +615,7 @@ cards:
     tags:
     - gold
     - heresy
-    heresy: 1
+    heresy: 2
   gc-09:
     name: Lista Dłużników
     type: akcja

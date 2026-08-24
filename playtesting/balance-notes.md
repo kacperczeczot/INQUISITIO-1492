@@ -44,7 +44,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
-| **Próg Obserwowanej** | **5** | **5** | **5** | Czysta to 0–4. Od **5** Autodafé pali na Stos (nie areszt). |
+| **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **14** | **14** | **14** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **4 Ery** | **4 Ery** | **4 Ery** | Zunifikowany cooldown co 4 Ery (pierwsze możliwe od Ery 4). |
@@ -93,6 +93,91 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.78 (2026-08-24) — Kanon 4P: Karta `gc-04` (Informator): `target_heresy` → `0` + Karta `caa-05` (Ukryty Kurier): `target_heresy` → `3` (Zysk 4P Δ +1.6 pkt)
+- **Wynik 4P:** Kanon **`83.3`** → **`84.9 pkt`** | Global **`41.5`** | 3p **`29.1`** | 5p **`16.3`**
+- **Modyfikacja (`L3_GC-04_TARGET_HERESY_MINUS1__L3_CAA-05_TARGET_HERESY_PLUS1`):** Karta `gc-04` (Informator): `target_heresy` → `0` + Karta `caa-05` (Ukryty Kurier): `target_heresy` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.78, Deadlocks 0.0%, Pas Biedy 4.2%.
+
+### 🟢 Patch v1.0-alpha.77 (2026-08-24) — Kanon 4P: Karta `gc-03` (Podrzucenie Księgi): `heresy` → `2` (Zysk 4P Δ +2.8 pkt)
+- **Wynik 4P:** Kanon **`79.6`** → **`82.4 pkt`** | Global **`41.7`** | 3p **`30.2`** | 5p **`13.9`**
+- **Modyfikacja (`L3_GC-03_HERESY_SET2`):** Karta `gc-03` (Podrzucenie Księgi): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.75, Deadlocks 0.0%, Pas Biedy 4.2%.
+
+### 🟢 Patch v1.0-alpha.76 (2026-08-24) — Kanon 4P: Karta `gc-06` (Szantaż): `cost` → `3` (Zysk 4P Δ +2.1 pkt)
+- **Wynik 4P:** Kanon **`80.2`** → **`82.3 pkt`** | Global **`41.4`** | 3p **`28.1`** | 5p **`17.3`**
+- **Modyfikacja (`L3_GC-06_COST_PLUS1`):** Karta `gc-06` (Szantaż): `cost` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.75, Deadlocks 0.0%, Pas Biedy 4.2%.
+
+### 🟢 Patch v1.0-alpha.75 (2026-08-24) — Kanon 4P: Karta `caa-11` (Nocna Zmiana Warty): `target_heresy` → `2` (Zysk 4P Δ +4.3 pkt)
+- **Wynik 4P:** Kanon **`79.2`** → **`83.5 pkt`** | Global **`40.8`** | 3p **`28.1`** | 5p **`17.8`**
+- **Modyfikacja (`L3_CAA-11_TARGET_HERESY_SET2`):** Karta `caa-11` (Nocna Zmiana Warty): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.74, Deadlocks 0.0%, Pas Biedy 4.2%.
+
+### 🟢 Patch v1.0-alpha.74 (2026-08-24) — Kanon 4P: Karta `so-12` (Straż Trybunalska): `target_heresy` → `1` (Zysk 4P Δ +2.8 pkt)
+- **Wynik 4P:** Kanon **`78.3`** → **`81.1 pkt`** | Global **`41.2`** | 3p **`28.5`** | 5p **`25.8`**
+- **Modyfikacja (`L3_SO-12_TARGET_HERESY_SET1`):** Karta `so-12` (Straż Trybunalska): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.2%.
+
+### 🟢 Patch v1.0-alpha.73 (2026-08-24) — Kanon 4P: Karta `so-07` (Przesłuchanie Oficjum): `gold` → `2` + Karta `caa-01` (Przejście Podziemiami): `heresy` → `1` (Zysk 4P Δ +3.1 pkt)
+- **Wynik 4P:** Kanon **`78.0`** → **`81.1 pkt`** | Global **`47.5`** | 3p **`29.9`** | 5p **`40.5`**
+- **Modyfikacja (`L3_SO-07_GOLD_SET2__L3_CAA-01_HERESY_SET1`):** Karta `so-07` (Przesłuchanie Oficjum): `gold` → `2` + Karta `caa-01` (Przejście Podziemiami): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.78, Deadlocks 0.0%, Pas Biedy 4.3%.
+
+### 🟢 Patch v1.0-alpha.72 (2026-08-24) — Kanon 4P: Karta `so-01` (Patrol Familiariuszy): `heresy` → `2` + Karta `caa-08` (Kaptur Nocy): `cost` → `2` + Karta `caa-05` (Ukryty Kurier): `gold` → `3` (Zysk 4P Δ +3.4 pkt)
+- **Wynik 4P:** Kanon **`76.6`** → **`80.0 pkt`** | Global **`36.6`** | 3p **`34.5`** | 5p **`3.2`**
+- **Modyfikacja (`L3_SO-01_HERESY_SET2__L3_CAA-08_COST_PLUS1__L3_CAA-05_GOLD_SET3`):** Karta `so-01` (Patrol Familiariuszy): `heresy` → `2` + Karta `caa-08` (Kaptur Nocy): `cost` → `2` + Karta `caa-05` (Ukryty Kurier): `gold` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.73, Deadlocks 0.0%, Pas Biedy 4.6%.
+
+### 🟢 Patch v1.0-alpha.71 (2026-08-24) — Kanon 4P: Karta `so-07` (Przesłuchanie Oficjum): `cost` → `1` + Karta `caa-08` (Kaptur Nocy): `target_heresy` → `2` (Zysk 4P Δ +2.6 pkt)
+- **Wynik 4P:** Kanon **`74.5`** → **`77.1 pkt`** | Global **`41.4`** | 3p **`32.0`** | 5p **`22.1`**
+- **Modyfikacja (`L3_SO-07_COST_MINUS1__L3_CAA-08_TARGET_HERESY_PLUS1`):** Karta `so-07` (Przesłuchanie Oficjum): `cost` → `1` + Karta `caa-08` (Kaptur Nocy): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.82, Deadlocks 0.0%, Pas Biedy 4.3%.
+
+### 🟢 Patch v1.0-alpha.70 (2026-08-24) — Kanon 4P: Próg Obserwowanej: offset -1 (nowy: 4) + Karta `caa-01` (Przejście Podziemiami): `cost` → `1` (Zysk 4P Δ +2.3 pkt)
+- **Wynik 4P:** Kanon **`73.3`** → **`75.6 pkt`** | Global **`41.2`** | 3p **`32.1`** | 5p **`20.6`**
+- **Modyfikacja (`L1_OBSERVED_MINUS1__L3_CAA-01_COST_PLUS1`):** Próg Obserwowanej: offset -1 (nowy: 4) + Karta `caa-01` (Przejście Podziemiami): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.78, Deadlocks 0.0%, Pas Biedy 4.2%.
+
+### 🟢 Patch v1.0-alpha.69 (2026-08-24) — Kanon 4P: Karta `so-04` (Publiczne Ostrzeżenie): `target_heresy` → `1` (Zysk 4P Δ +3.3 pkt)
+- **Wynik 4P:** Kanon **`69.8`** → **`73.1 pkt`** | Global **`40.5`** | 3p **`30.6`** | 5p **`27.2`**
+- **Modyfikacja (`L3_SO-04_TARGET_HERESY_PLUS1`):** Karta `so-04` (Publiczne Ostrzeżenie): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.82, Deadlocks 0.0%, Pas Biedy 4.3%.
+
+### 🟢 Patch v1.0-alpha.68 (2026-08-24) — Kanon 4P: Karta `so-08` (Nasłanie Inkwizytora): `gold` → `3` + Karta `caa-08` (Kaptur Nocy): `target_heresy` → `1` (Zysk 4P Δ +2.1 pkt)
+- **Wynik 4P:** Kanon **`72.3`** → **`74.4 pkt`** | Global **`41.2`** | 3p **`31.9`** | 5p **`25.7`**
+- **Modyfikacja (`L3_SO-08_GOLD_SET3__L3_CAA-08_TARGET_HERESY_MINUS1`):** Karta `so-08` (Nasłanie Inkwizytora): `gold` → `3` + Karta `caa-08` (Kaptur Nocy): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.80, Deadlocks 0.0%, Pas Biedy 4.4%.
+
+### 🟢 Patch v1.0-alpha.67 (2026-08-24) — Kanon 4P: Karta `kb-01` (Rozkaz Dworu): `target_heresy` → `0` (Zysk 4P Δ +1.0 pkt)
+- **Wynik 4P:** Kanon **`72.5`** → **`73.5 pkt`** | Global **`32.1`** | 3p **`31.9`** | 5p **`3.2`**
+- **Modyfikacja (`L3_KB-01_TARGET_HERESY_MINUS1`):** Karta `kb-01` (Rozkaz Dworu): `target_heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.84, Deadlocks 0.0%, Pas Biedy 5.1%.
+
+### 🟢 Patch v1.0-alpha.66 (2026-08-24) — Interwencja Architektoniczna: Przywrócenie Prędkości Inkwizytora = 1 (Ochrona Fizycznych Zasad Planszy)
+- **Wynik 4P:** Kanon **`73.1 pkt`** (stan po Patchu v1.0-alpha.64) | Global **`36.0`** | 3p **`32.5`**
+- **Modyfikacja:** Wycofano modyfikator `L4_INQUISITOR_SPEED2` (`inquisitor_speed: 2 → 1`). Dodano `INQUISITOR_SPEED` do zamrożonych niezmienników (`_FROZEN_ID_MARKERS`).
+- **Efekt:** Zachowanie fizycznej integralności stołu (ruch Inkwizytora o dokładnie 1 pole). 100% testów `pytest` (w tym `test_board_graph_neighbors`) przechodzi natychmiast na zielono.
+
+### 🟢 Patch v1.0-alpha.65 (2026-08-24) — Kanon 4P: Wariant: Prędkość Ruchu Inkwizytora = 2 (Zysk 4P Δ +1.9 pkt) [WYCOFANY W v1.0-alpha.66]
+- **Wynik 4P:** Kanon **`69.6`** → **`71.5 pkt`** | Global **`26.1`** | 3p **`28.9`** | 5p **`2.2`**
+- **Modyfikacja (`L4_INQUISITOR_SPEED2`):** Wariant: Prędkość Ruchu Inkwizytora = 2.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.78, Deadlocks 0.0%, Pas Biedy 5.3%.
+
+### 🟢 Patch v1.0-alpha.64 (2026-08-24) — Kanon 4P: Karta `gc-08` (Zatrute Złoto): `heresy` → `2` (Zysk 4P Δ +4.3 pkt)
+- **Wynik 4P:** Kanon **`68.8`** → **`73.1 pkt`** | Global **`36.0`** | 3p **`32.5`** | 5p **`2.8`**
+- **Modyfikacja (`L3_GC-08_HERESY_PLUS1`):** Karta `gc-08` (Zatrute Złoto): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.80, Deadlocks 0.0%, Pas Biedy 5.3%.
+
+### 🟢 Patch v1.0-alpha.63 (2026-08-24) — Kanon 4P: Karta `caa-05` (Ukryty Kurier): `target_heresy` → `2` (Zysk 4P Δ +3.5 pkt)
+- **Wynik 4P:** Kanon **`67.9`** → **`71.4 pkt`** | Global **`31.3`** | 3p **`30.0`** | 5p **`2.4`**
+- **Modyfikacja (`L3_CAA-05_TARGET_HERESY_SET2`):** Karta `caa-05` (Ukryty Kurier): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.81, Deadlocks 0.0%, Pas Biedy 5.3%.
+
+### 🟢 Patch v1.0-alpha.62 (2026-08-24) — Kanon 4P: Karta `so-01` (Patrol Familiariuszy): `gold` → `2` (Zysk 4P Δ +1.5 pkt)
+- **Wynik 4P:** Kanon **`66.4`** → **`67.9 pkt`** | Global **`30.6`** | 3p **`27.9`** | 5p **`2.6`**
+- **Modyfikacja (`L3_SO-01_GOLD_SET2`):** Karta `so-01` (Patrol Familiariuszy): `gold` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.83, Deadlocks 0.0%, Pas Biedy 5.3%.
 
 ### 🟢 Patch v1.0-alpha.61 (2026-08-23) — Kanon 4P: Karta `so-03` (Podejrzenie): `heresy` → `3` (Zysk 4P Δ +7.4 pkt)
 - **Wynik 4P:** Kanon **`59.4`** → **`66.8 pkt`** | Global **`37.9`** | 3p **`28.1`** | 5p **`20.1`**
