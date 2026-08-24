@@ -159,9 +159,9 @@ def main():
 
         if d['score'] >= 90.0:
             eval_str = "🟢 ZBALANSOWANY"
-        elif d['score'] >= 75.0:
+        elif d['score'] >= 80.0:
             eval_str = "🟡 AKCEPTOWALNY"
-        elif d['score'] >= 60.0:
+        elif d['score'] >= 65.0:
             eval_str = "🟠 WYMAGA UWAGI"
         else:
             eval_str = "🔴 ODCHYLONY"
@@ -265,7 +265,7 @@ def main():
         "- **💰 Pas Biedy (Poverty Rate %):** 🟢 **< 28.0%** | 🟡 28–32% | 🔴 > 32%",
         "- **🔥 Autodafé / Partię:** 🟢 **0.7 – 1.8** | 🟡 0.5–0.7 / 1.8–2.0 | 🔴 poza zakresem",
         "- **⚖️ Oskarżenia / Partię:** 🟢 **3.5 – 8.5** | 🟡 2.0–3.5 / 8.5–10.0 | 🔴 poza zakresem",
-        "- **📊 Status Setupu:** 🟢 Score ≥ 90 | 🟡 ≥ 75 | 🟠 ≥ 60 | 🔴 < 60",
+        "- **📊 Status Setupu:** 🟢 Score ≥ 90 | 🟡 ≥ 80 | 🟠 ≥ 65 | 🔴 < 65",
     ])
 
     default_report_name = f"raport_telemetrii_{args.players}p.md" if args.players else "raport_telemetrii.md"
