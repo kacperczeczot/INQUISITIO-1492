@@ -5,7 +5,7 @@ faction: korona-borgiowie
 type: akcja
 layer: A
 cost: 2
-heresy: 1
+heresy: 0
 tags:
 - hook
 - move
@@ -16,4 +16,5 @@ lore: Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.
 agents: 1
 creates_hook: true
 ---
+
 

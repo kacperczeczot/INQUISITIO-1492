@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.35</span>
+              <span id="prev-meta-ver">v1.0-alpha.61</span>
             </div>
           </div>
         </div>
@@ -1131,7 +1131,6 @@
   "so-01": {
     "name": "Patrol Familiariuszy",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "agents": 1,
     "action": "move_agent",
@@ -1144,7 +1143,6 @@
   "so-02": {
     "name": "Skarbiec Trybunału",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "gold": 2,
     "action": "gain_gold",
@@ -1158,21 +1156,20 @@
   "so-03": {
     "name": "Podejrzenie",
     "type": "akcja",
-    "layer": "A",
     "cost": 2,
     "target_heresy": 3,
     "action": "frame_rival",
     "tags": [
       "heresy"
     ],
-    "heresy": 2,
+    "heresy": 3,
+    "gold": 1,
     "heresy_text": "Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.",
     "lore": "Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie."
   },
   "so-04": {
     "name": "Publiczne Ostrzeżenie",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "action": "send_inquisitor",
     "target_loc": "agent_location",
@@ -1187,7 +1184,6 @@
   "so-05": {
     "name": "Wezwanie do Trybunału",
     "type": "reakcja",
-    "layer": "A",
     "cost": 0,
     "target_heresy": 1,
     "action": "frame_rival",
@@ -1201,7 +1197,6 @@
   "so-06": {
     "name": "Areszt Trybunalski",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "arrest": true,
     "action": "arrest",
@@ -1216,7 +1211,6 @@
   "so-07": {
     "name": "Przesłuchanie Oficjum",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "interrogate": true,
     "action": "interrogate",
@@ -1230,7 +1224,6 @@
   "so-08": {
     "name": "Nasłanie Inkwizytora",
     "type": "akcja",
-    "layer": "B",
     "cost": 0,
     "heresy": 0,
     "action": "send_inquisitor",
@@ -1246,7 +1239,6 @@
   "so-09": {
     "name": "Świadek Koronny",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1259,7 +1251,6 @@
   "so-10": {
     "name": "Oczyść Miasto",
     "type": "signature",
-    "layer": "C",
     "cost": 5,
     "heresy": 1,
     "autodafe": true,
@@ -1276,7 +1267,6 @@
   "so-11": {
     "name": "Dekret Czystości Wiary",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "target_heresy": 1,
     "gold": 1,
@@ -1291,7 +1281,6 @@
   "so-12": {
     "name": "Straż Trybunalska",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "agents": 1,
     "gold": 1,
@@ -1305,22 +1294,21 @@
   "caa-01": {
     "name": "Przejście Podziemiami",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "agents": 1,
     "action": "move_agent",
     "tags": [
       "move"
     ],
+    "target_heresy": 1,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
   },
   "caa-02": {
     "name": "Złoto z Kryjówki",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
-    "gold": 2,
+    "gold": 3,
     "action": "gain_gold",
     "tags": [
       "gold"
@@ -1330,7 +1318,6 @@
   "caa-03": {
     "name": "Cień na Rynku",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "heresy": 1,
     "agents": 1,
@@ -1347,21 +1334,20 @@
   "caa-04": {
     "name": "Fałszywy Trop",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "target_heresy": 1,
     "action": "frame_rival",
     "tags": [
       "heresy"
     ],
+    "gold": 3,
     "heresy_text": "Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce.",
     "lore": "Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę."
   },
   "caa-05": {
     "name": "Ukryty Kurier",
     "type": "akcja",
-    "layer": "A",
-    "cost": 0,
+    "cost": 1,
     "evacuate_relic": 1,
     "action": "evacuate_relic",
     "condition": "relic_present",
@@ -1369,12 +1355,12 @@
     "tags": [
       "relic"
     ],
+    "gold": 0,
     "lore": "Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar."
   },
   "caa-06": {
     "name": "Ucieczka z Lochów",
     "type": "akcja",
-    "layer": "B",
     "cost": 0,
     "agents": 1,
     "free_agent": true,
@@ -1385,13 +1371,13 @@
       "arrest"
     ],
     "heresy": 0,
+    "target_heresy": 2,
     "heresy_text": "Klucz od strażnika, który nigdy nie służył Koronie.",
     "lore": "Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą."
   },
   "caa-07": {
     "name": "Szantaż Bractwa",
     "type": "akcja",
-    "layer": "B",
     "cost": 0,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1399,13 +1385,13 @@
     "tags": [
       "hook"
     ],
+    "gold": 3,
     "heresy_text": "Bractwo zna imiona sąsiadów lepiej niż proboszczowie.",
     "lore": "Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni."
   },
   "caa-08": {
     "name": "Kaptur Nocy",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "heresy": 0,
     "action": "move_agent",
@@ -1415,13 +1401,13 @@
       "heresy"
     ],
     "target_heresy": 2,
+    "gold": 3,
     "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
     "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
   },
   "caa-09": {
     "name": "Kurier Relikwii",
     "type": "akcja",
-    "layer": "C",
     "cost": 0,
     "move_relic": true,
     "action": "move_agent",
@@ -1435,8 +1421,7 @@
   "caa-10": {
     "name": "Echo Alhambry",
     "type": "signature",
-    "layer": "C",
-    "cost": 1,
+    "cost": 3,
     "heresy": 0,
     "evacuate_relic": 2,
     "action": "evacuate_relic",
@@ -1454,7 +1439,6 @@
   "caa-11": {
     "name": "Nocna Zmiana Warty",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "agents": 1,
     "move_inquisitor": true,
@@ -1463,12 +1447,12 @@
       "move",
       "inquisitor"
     ],
+    "gold": 3,
     "lore": "Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku."
   },
   "caa-12": {
     "name": "Skrytka w Murach",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "heresy": 0,
     "gold": 4,
@@ -1482,7 +1466,6 @@
   "kb-01": {
     "name": "Rozkaz Dworu",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "agents": 1,
     "action": "move_agent",
@@ -1497,7 +1480,6 @@
   "kb-02": {
     "name": "Pobór Podatków",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "gold": 2,
     "action": "gain_gold",
@@ -1511,7 +1493,6 @@
   "kb-03": {
     "name": "Plotka Dworska",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "target_heresy": 1,
     "action": "frame_rival",
@@ -1525,9 +1506,8 @@
   "kb-04": {
     "name": "Faworyt Dworu",
     "type": "akcja",
-    "layer": "A",
     "cost": 2,
-    "heresy": 1,
+    "heresy": 0,
     "agents": 1,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1542,7 +1522,6 @@
   "kb-05": {
     "name": "List Żelazny",
     "type": "akcja",
-    "layer": "A",
     "cost": 2,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1555,7 +1534,6 @@
   "kb-06": {
     "name": "Areszt Królewski",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "arrest": true,
     "action": "arrest",
@@ -1569,7 +1547,6 @@
   "kb-07": {
     "name": "Szantaż Pieczęcią",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1582,8 +1559,7 @@
   "kb-08": {
     "name": "Przekupstwo Sędziego",
     "type": "akcja",
-    "layer": "B",
-    "cost": 2,
+    "cost": 3,
     "creates_hook": true,
     "verdict_weight": 2,
     "action": "creates_hook",
@@ -1595,8 +1571,7 @@
   "kb-09": {
     "name": "Dekret Królewski",
     "type": "signature",
-    "layer": "C",
-    "cost": 4,
+    "cost": 2,
     "heresy": 0,
     "decree": 1,
     "penalty_heresy": 3,
@@ -1607,16 +1582,15 @@
       "decree",
       "heresy"
     ],
-    "gold": 3,
+    "gold": 0,
     "heresy_text": "Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.",
     "lore": "Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru."
   },
   "kb-10": {
     "name": "Pieczęć Korony",
     "type": "signature",
-    "layer": "C",
-    "cost": 3,
-    "heresy": 2,
+    "cost": 4,
+    "heresy": 1,
     "decree": 2,
     "action": "check_victory",
     "condition": "active_hooks_gte_2",
@@ -1633,7 +1607,6 @@
   "kb-11": {
     "name": "Tajny Emisariusz",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "agents": 1,
     "action": "move_agent",
@@ -1648,7 +1621,6 @@
   "kb-12": {
     "name": "Szantaż Salonowy",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1660,7 +1632,6 @@
   "kt-01": {
     "name": "Rytuał Przejścia",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "agents": 1,
     "action": "move_agent",
@@ -1673,9 +1644,8 @@
   "kt-02": {
     "name": "Transmutacja Złota",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
-    "gold": 2,
+    "gold": 3,
     "action": "gain_gold",
     "tags": [
       "gold"
@@ -1685,9 +1655,8 @@
   "kt-03": {
     "name": "Zakazana Wiedza",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
-    "heresy": 0,
+    "heresy": 2,
     "grant_fragment": 1,
     "action": "grant_fragment",
     "tags": [
@@ -1700,7 +1669,6 @@
   "kt-04": {
     "name": "Zwierciadło Herezji",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "target_heresy": 1,
     "action": "frame_rival",
@@ -1713,7 +1681,6 @@
   "kt-05": {
     "name": "Wskazówka Cyklu",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "grant_fragment": 1,
     "action": "grant_fragment",
@@ -1727,7 +1694,6 @@
   "kt-06": {
     "name": "Przesłuchanie Imienia",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "interrogate": true,
     "grant_fragment": 1,
@@ -1744,7 +1710,6 @@
   "kt-07": {
     "name": "Archiwum Ukryte",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1758,7 +1723,6 @@
   "kt-08": {
     "name": "Areszt Wiedzy",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "arrest": true,
     "action": "arrest",
@@ -1772,8 +1736,7 @@
   "kt-09": {
     "name": "Fragment Kodeksu",
     "type": "akcja",
-    "layer": "C",
-    "cost": 2,
+    "cost": 1,
     "heresy": 1,
     "grant_fragment": 1,
     "action": "grant_fragment",
@@ -1788,27 +1751,25 @@
   "kt-10": {
     "name": "Pieczęć Salomona",
     "type": "signature",
-    "layer": "C",
-    "cost": 2,
+    "cost": 4,
     "action": "check_victory",
     "condition": "fragments_eq_3",
     "target_heresy_band": [
       4,
       6
     ],
-    "fallback_heresy": 5,
     "breaks_rule": "Herezja tylko z karty",
     "tags": [
       "signature",
       "fragment"
     ],
-    "heresy": 2,
+    "heresy": 0,
+    "heresy_decrease": 2,
     "lore": "Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6."
   },
   "kt-11": {
     "name": "Medytacja Sefirot",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "gold": 1,
     "heresy_decrease": 1,
@@ -1817,12 +1778,12 @@
       "gold",
       "heresy"
     ],
+    "target_heresy": 1,
     "lore": "Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony."
   },
   "kt-12": {
     "name": "Strażnik Archiwum",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "heresy": 1,
     "agents": 1,
@@ -1836,8 +1797,7 @@
   "gc-01": {
     "name": "Przekupiony Strażnik",
     "type": "akcja",
-    "layer": "A",
-    "cost": 2,
+    "cost": 1,
     "agents": 1,
     "action": "move_agent",
     "tags": [
@@ -1851,7 +1811,6 @@
   "gc-02": {
     "name": "Czarny Rynek",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "gold": 2,
     "action": "gain_gold",
@@ -1859,13 +1818,12 @@
       "gold",
       "heresy"
     ],
-    "heresy": 1,
+    "heresy": 0,
     "lore": "Handel spod lady — stół czuje, że Gildia ma gotówkę na brud."
   },
   "gc-03": {
     "name": "Podrzucenie Księgi",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "target_heresy": 1,
     "action": "frame_rival",
@@ -1878,7 +1836,6 @@
   "gc-04": {
     "name": "Informator",
     "type": "akcja",
-    "layer": "A",
     "cost": 1,
     "heresy": 1,
     "creates_hook": true,
@@ -1894,7 +1851,6 @@
   "gc-05": {
     "name": "Fałszywy Świadek",
     "type": "reakcja",
-    "layer": "A",
     "cost": 0,
     "change_vote": true,
     "vote_change_limit": 1,
@@ -1908,7 +1864,6 @@
   "gc-06": {
     "name": "Szantaż",
     "type": "akcja",
-    "layer": "B",
     "cost": 2,
     "heresy": 1,
     "creates_hook": true,
@@ -1921,7 +1876,6 @@
   "gc-07": {
     "name": "Skrytobójstwo",
     "type": "akcja",
-    "layer": "B",
     "cost": 0,
     "heresy": 0,
     "arrest": true,
@@ -1937,7 +1891,6 @@
   "gc-08": {
     "name": "Zatrute Złoto",
     "type": "akcja",
-    "layer": "B",
     "cost": 1,
     "target_heresy": 1,
     "gold": 1,
@@ -1952,9 +1905,8 @@
   "gc-09": {
     "name": "Lista Dłużników",
     "type": "akcja",
-    "layer": "C",
-    "cost": 3,
-    "heresy": 1,
+    "cost": 1,
+    "heresy": 0,
     "creates_hook": true,
     "mark_fall": true,
     "action": "creates_hook",
@@ -1963,13 +1915,12 @@
       "hook",
       "fall"
     ],
-    "gold": 1,
+    "gold": 0,
     "lore": "Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole."
   },
   "gc-10": {
     "name": "Upadek Domu",
     "type": "signature",
-    "layer": "C",
     "cost": 4,
     "heresy": 2,
     "mark_fall": true,
@@ -1987,7 +1938,6 @@
   "gc-11": {
     "name": "Fałszywe Świadectwo Cechu",
     "type": "akcja",
-    "layer": "B",
     "cost": 0,
     "target_heresy": 1,
     "action": "frame_rival",
@@ -2001,7 +1951,6 @@
   "gc-12": {
     "name": "Złodziejski Zwiad",
     "type": "akcja",
-    "layer": "A",
     "cost": 0,
     "heresy": 2,
     "agents": 1,
@@ -2374,7 +2323,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.35';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.61';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

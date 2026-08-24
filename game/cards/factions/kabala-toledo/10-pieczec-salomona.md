@@ -4,16 +4,20 @@ name: Pieczęć Salomona
 faction: kabala-toledo
 type: signature
 layer: C
-cost: 2
-heresy: 2
+cost: 4
+heresy: 0
 tags:
 - signature
 - fragment
-effect: 'Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty i Herezję 4–6:
-  zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji 4–6: Ustaw swoją Herezję na 5.'
+effect: 'Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty zwycięstwo.'
 lore: Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.
 breaks_rule: true
 ---
+
+
+
+
+
 
 
 

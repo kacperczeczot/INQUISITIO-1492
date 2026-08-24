@@ -67,9 +67,9 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 2 |
-| `heresy` | 2 |
+| `heresy` | 3 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
-| `effect` | Wskaż rywala: +3 Herezja. |
+| `effect` | Wskaż rywala: +3 Herezja. Zyskaj 1 złoto. |
 | `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -262,7 +262,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -296,7 +296,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce. |
-| `effect` | Wskaż rywala: +1 Herezja. |
+| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 3 złota. |
 | `lore` | Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -310,7 +310,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
@@ -395,7 +395,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 1 |
+| `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
@@ -504,7 +504,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 2 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Faworyzm dworu budzi zazdrość kortegan i biskupów. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala. |
 | `lore` | Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret. |
@@ -571,7 +571,7 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala. |
@@ -588,7 +588,7 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 4 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać. |
 | `effect` | DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie Haka. Odmowa: +3 Herezja. |
@@ -605,8 +605,8 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 3 |
-| `heresy` | 2 |
+| `cost_gold` | 4 |
+| `heresy` | 1 |
 | `heresy_text` | Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu. |
 | `effect` | DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli masz aktywne Haki na ≥ 2 graczach: zwycięstwo. |
 | `lore` | Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie. |
@@ -682,7 +682,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -697,7 +697,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu. |
 | `effect` | Zyskaj Fragment. |
 | `lore` | Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną. |
@@ -798,7 +798,7 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
 | `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. |
@@ -815,10 +815,10 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 2 |
-| `heresy` | 2 |
+| `cost_gold` | 4 |
+| `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty i Herezję 4–6: zwycięstwo. Jeśli masz 3 Fragmenty bez Herezji 4–6: Ustaw swoją Herezję na 5. |
+| `effect` | Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty zwycięstwo. |
 | `lore` | Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6. |
 | `tags` | signature, fragment |
 | `status` | prototyp |
@@ -872,7 +872,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
@@ -890,7 +890,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. |
 | `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
@@ -1008,8 +1008,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 3 |
-| `heresy` | 1 |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala. |
 | `lore` | Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole. |

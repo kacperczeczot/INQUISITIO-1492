@@ -8,9 +8,10 @@ cost: 0
 heresy: 0
 tags:
 - gold
-effect: Zyskaj 2 złota.
+effect: Zyskaj 3 złota.
 lore: Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.
 gold: 2
 ---
+
 
 
