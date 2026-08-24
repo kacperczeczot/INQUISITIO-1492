@@ -1,0 +1,697 @@
+version: v1.0-alpha.68
+date: '2026-08-24'
+title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
+system:
+  start_gold: 4
+  agents_per_player: 3
+  hand_limit: 5
+  max_eras: 14
+  autodafe_cooldown: 4
+  cards_per_era: 2
+  era_income: 1
+  intrigue_gold: 1
+  observed_threshold: 5
+  accusation_threshold: 7
+victory:
+  swiete_oficjum:
+    stacks: 7
+    condemns:
+      3p: 2
+      4p: 3
+      5p: 3
+  cienie_al_andalus:
+    relics: 2
+  korona_borgiowie:
+    decrees: 2
+    hooks: 2
+  kabala_toledo:
+    fragments: 3
+  gildia_cieni:
+    falls: 9
+economy:
+  card_cost_offset: 0
+  sig_cost_offset: 0
+cards:
+  so-01:
+    name: Patrol Familiariuszy
+    type: akcja
+    cost: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    gold: 2
+  so-02:
+    name: Skarbiec Trybunału
+    type: akcja
+    cost: 1
+    gold: 2
+    action: gain_gold
+    tags:
+    - gold
+    target_heresy: 1
+  so-03:
+    name: Podejrzenie
+    type: akcja
+    cost: 2
+    target_heresy: 3
+    action: frame_rival
+    tags:
+    - heresy
+    heresy: 3
+    gold: 1
+  so-04:
+    name: Publiczne Ostrzeżenie
+    type: akcja
+    cost: 1
+    action: send_inquisitor
+    target_loc: agent_location
+    inquisitor_send_limit: 1
+    tags:
+    - inquisitor
+    gold: 1
+  so-05:
+    name: Wezwanie do Trybunału
+    type: reakcja
+    cost: 0
+    target_heresy: 1
+    action: frame_rival
+    target_scope: triggering_rival
+    trigger: rival_plays_heresy_gte_1
+    tags:
+    - reaction
+  so-06:
+    name: Areszt Trybunalski
+    type: akcja
+    cost: 2
+    arrest: true
+    action: arrest
+    target_loc: same_location
+    tags:
+    - arrest
+    target_heresy: 1
+  so-07:
+    name: Przesłuchanie Oficjum
+    type: akcja
+    cost: 2
+    interrogate: true
+    action: interrogate
+    target_loc: dungeon
+    interrogate_limit: 1
+    tags:
+    - interrogation
+  so-08:
+    name: Nasłanie Inkwizytora
+    type: akcja
+    cost: 0
+    heresy: 0
+    action: send_inquisitor
+    target_loc: same_location
+    inquisitor_send_limit: 1
+    tags:
+    - inquisitor
+    - heresy
+    gold: 3
+  so-09:
+    name: Świadek Koronny
+    type: akcja
+    cost: 1
+    creates_hook: true
+    action: creates_hook
+    condition: rival_in_dungeon_or_inquisitor
+    tags:
+    - hook
+  so-10:
+    name: Oczyść Miasto
+    type: signature
+    cost: 5
+    heresy: 1
+    autodafe: true
+    action: autodafe
+    breaks_rule: Autodafé / 3 Ery
+    tags:
+    - signature
+    - autodafe
+    - heresy
+  so-11:
+    name: Dekret Czystości Wiary
+    type: akcja
+    cost: 1
+    target_heresy: 1
+    gold: 1
+    action: frame_rival
+    tags:
+    - heresy
+    - gold
+    heresy: 1
+  so-12:
+    name: Straż Trybunalska
+    type: akcja
+    cost: 1
+    agents: 1
+    gold: 1
+    action: move_agent
+    tags:
+    - move
+    - gold
+  caa-01:
+    name: Przejście Podziemiami
+    type: akcja
+    cost: 0
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    target_heresy: 1
+  caa-02:
+    name: Złoto z Kryjówki
+    type: akcja
+    cost: 0
+    gold: 3
+    action: gain_gold
+    tags:
+    - gold
+  caa-03:
+    name: Cień na Rynku
+    type: akcja
+    cost: 0
+    heresy: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    - relic
+    - heresy
+    gold: 2
+  caa-04:
+    name: Fałszywy Trop
+    type: akcja
+    cost: 0
+    target_heresy: 1
+    action: frame_rival
+    tags:
+    - heresy
+    gold: 3
+  caa-05:
+    name: Ukryty Kurier
+    type: akcja
+    cost: 1
+    evacuate_relic: 1
+    action: evacuate_relic
+    condition: relic_present
+    kurier_limit: 1
+    tags:
+    - relic
+    gold: 0
+    target_heresy: 2
+  caa-06:
+    name: Ucieczka z Lochów
+    type: akcja
+    cost: 0
+    agents: 1
+    free_agent: true
+    action: move_agent
+    target_loc: dungeon
+    tags:
+    - move
+    - arrest
+    heresy: 0
+    target_heresy: 2
+  caa-07:
+    name: Szantaż Bractwa
+    type: akcja
+    cost: 0
+    creates_hook: true
+    action: creates_hook
+    target_loc: neighbor_location
+    tags:
+    - hook
+    gold: 3
+  caa-08:
+    name: Kaptur Nocy
+    type: akcja
+    cost: 1
+    heresy: 0
+    action: move_agent
+    condition: has_double_agent
+    tags:
+    - double
+    - heresy
+    target_heresy: 1
+    gold: 3
+  caa-09:
+    name: Kurier Relikwii
+    type: akcja
+    cost: 0
+    move_relic: true
+    action: move_agent
+    target_loc: neighbor_location
+    tags:
+    - relic
+    - move
+  caa-10:
+    name: Echo Alhambry
+    type: signature
+    cost: 3
+    heresy: 0
+    evacuate_relic: 2
+    action: evacuate_relic
+    max_relics: 2
+    condition: no_inquisitor_or_double_or_sea_route
+    breaks_rule: Relikwia tylko ze Szlaku Morskiego
+    tags:
+    - signature
+    - relic
+    - heresy
+  caa-11:
+    name: Nocna Zmiana Warty
+    type: akcja
+    cost: 1
+    agents: 1
+    move_inquisitor: true
+    action: move_agent
+    tags:
+    - move
+    - inquisitor
+    gold: 3
+  caa-12:
+    name: Skrytka w Murach
+    type: akcja
+    cost: 0
+    heresy: 0
+    gold: 4
+    action: gain_gold
+    tags:
+    - gold
+    - heresy
+  kb-01:
+    name: Rozkaz Dworu
+    type: akcja
+    cost: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    heresy: 1
+    target_heresy: 0
+  kb-02:
+    name: Pobór Podatków
+    type: akcja
+    cost: 1
+    gold: 2
+    action: gain_gold
+    tags:
+    - gold
+    target_heresy: 1
+  kb-03:
+    name: Plotka Dworska
+    type: akcja
+    cost: 1
+    target_heresy: 1
+    action: frame_rival
+    tags:
+    - heresy
+    heresy: 1
+  kb-04:
+    name: Faworyt Dworu
+    type: akcja
+    cost: 2
+    heresy: 0
+    agents: 1
+    creates_hook: true
+    action: creates_hook
+    tags:
+    - hook
+    - move
+    - heresy
+  kb-05:
+    name: List Żelazny
+    type: akcja
+    cost: 2
+    creates_hook: true
+    action: creates_hook
+    tags:
+    - decree
+    - hook
+  kb-06:
+    name: Areszt Królewski
+    type: akcja
+    cost: 2
+    arrest: true
+    action: arrest
+    target_loc: palace_or_same_location
+    tags:
+    - arrest
+  kb-07:
+    name: Szantaż Pieczęcią
+    type: akcja
+    cost: 2
+    creates_hook: true
+    action: creates_hook
+    condition: heresy_gte_4
+    tags:
+    - hook
+  kb-08:
+    name: Przekupstwo Sędziego
+    type: akcja
+    cost: 3
+    creates_hook: true
+    verdict_weight: 2
+    action: creates_hook
+    tags:
+    - verdict
+  kb-09:
+    name: Dekret Królewski
+    type: signature
+    cost: 2
+    heresy: 0
+    decree: 1
+    penalty_heresy: 3
+    action: creates_hook
+    breaks_rule: 1 wymuszenie Haka / gracza / Erę
+    tags:
+    - signature
+    - decree
+    - heresy
+    gold: 0
+  kb-10:
+    name: Pieczęć Korony
+    type: signature
+    cost: 4
+    heresy: 1
+    decree: 2
+    action: check_victory
+    condition: active_hooks_gte_2
+    breaks_rule: zwycięstwo tylko po Erze
+    tags:
+    - signature
+    - decree
+    - heresy
+    target_heresy: 0
+  kb-11:
+    name: Tajny Emisariusz
+    type: akcja
+    cost: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    - gold
+    target_heresy: 1
+    gold: 0
+  kb-12:
+    name: Szantaż Salonowy
+    type: akcja
+    cost: 1
+    creates_hook: true
+    action: creates_hook
+    tags:
+    - hook
+  kt-01:
+    name: Rytuał Przejścia
+    type: akcja
+    cost: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+  kt-02:
+    name: Transmutacja Złota
+    type: akcja
+    cost: 0
+    gold: 3
+    action: gain_gold
+    tags:
+    - gold
+  kt-03:
+    name: Zakazana Wiedza
+    type: akcja
+    cost: 0
+    heresy: 2
+    grant_fragment: 1
+    action: grant_fragment
+    tags:
+    - fragment
+    - heresy
+  kt-04:
+    name: Zwierciadło Herezji
+    type: akcja
+    cost: 1
+    target_heresy: 1
+    action: frame_rival
+    tags:
+    - heresy
+  kt-05:
+    name: Wskazówka Cyklu
+    type: akcja
+    cost: 1
+    grant_fragment: 1
+    action: grant_fragment
+    condition: agent_in_dungeon_or_tribunal
+    tags:
+    - fragment
+    heresy: 1
+  kt-06:
+    name: Przesłuchanie Imienia
+    type: akcja
+    cost: 2
+    interrogate: true
+    grant_fragment: 1
+    interrogate_limit: 1
+    action: interrogate
+    bonus_on_heresy: grant_fragment
+    tags:
+    - interrogation
+    - fragment
+  kt-07:
+    name: Archiwum Ukryte
+    type: akcja
+    cost: 1
+    creates_hook: true
+    action: creates_hook
+    condition: heresy_gte_4
+    tags:
+    - hook
+    heresy: 1
+  kt-08:
+    name: Areszt Wiedzy
+    type: akcja
+    cost: 1
+    arrest: true
+    action: arrest
+    target_loc: dungeon_or_tribunal
+    tags:
+    - arrest
+  kt-09:
+    name: Fragment Kodeksu
+    type: akcja
+    cost: 1
+    heresy: 1
+    grant_fragment: 1
+    action: grant_fragment
+    condition: has_fragment_and_agent_in_dungeon_or_tribunal
+    tags:
+    - fragment
+    - heresy
+  kt-10:
+    name: Pieczęć Salomona
+    type: signature
+    cost: 4
+    action: check_victory
+    condition: fragments_eq_3
+    target_heresy_band:
+    - 4
+    - 6
+    breaks_rule: Herezja tylko z karty
+    tags:
+    - signature
+    - fragment
+    heresy: 0
+    heresy_decrease: 2
+  kt-11:
+    name: Medytacja Sefirot
+    type: akcja
+    cost: 2
+    gold: 1
+    heresy_decrease: 1
+    action: heresy_adjust
+    tags:
+    - gold
+    - heresy
+    target_heresy: 1
+  kt-12:
+    name: Strażnik Archiwum
+    type: akcja
+    cost: 0
+    heresy: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    - heresy
+  gc-01:
+    name: Przekupiony Strażnik
+    type: akcja
+    cost: 1
+    agents: 1
+    action: move_agent
+    tags:
+    - move
+    heresy: 1
+    gold: 1
+  gc-02:
+    name: Czarny Rynek
+    type: akcja
+    cost: 0
+    gold: 2
+    action: gain_gold
+    tags:
+    - gold
+    - heresy
+    heresy: 0
+  gc-03:
+    name: Podrzucenie Księgi
+    type: akcja
+    cost: 1
+    target_heresy: 1
+    action: frame_rival
+    tags:
+    - heresy
+  gc-04:
+    name: Informator
+    type: akcja
+    cost: 1
+    heresy: 1
+    creates_hook: true
+    action: creates_hook
+    tags:
+    - hook
+    - heresy
+    target_heresy: 1
+  gc-05:
+    name: Fałszywy Świadek
+    type: reakcja
+    cost: 0
+    change_vote: true
+    vote_change_limit: 1
+    action: frame_rival
+    trigger: after_verdict_majority_revealed
+    tags:
+    - reaction
+  gc-06:
+    name: Szantaż
+    type: akcja
+    cost: 2
+    heresy: 1
+    creates_hook: true
+    action: creates_hook
+    tags:
+    - hook
+  gc-07:
+    name: Skrytobójstwo
+    type: akcja
+    cost: 0
+    heresy: 0
+    arrest: true
+    action: arrest
+    target_loc: guild_or_market
+    tags:
+    - arrest
+    - heresy
+  gc-08:
+    name: Zatrute Złoto
+    type: akcja
+    cost: 1
+    target_heresy: 1
+    gold: 1
+    action: gain_gold
+    tags:
+    - gold
+    - heresy
+    heresy: 2
+  gc-09:
+    name: Lista Dłużników
+    type: akcja
+    cost: 1
+    heresy: 0
+    creates_hook: true
+    mark_fall: true
+    action: creates_hook
+    on_refusal: mark_fall
+    tags:
+    - hook
+    - fall
+    gold: 0
+  gc-10:
+    name: Upadek Domu
+    type: signature
+    cost: 4
+    heresy: 2
+    mark_fall: true
+    action: creates_hook
+    condition: rival_has_hook_or_double_or_autodafe
+    breaks_rule: Upadek tylko z odmowy Haka
+    tags:
+    - signature
+    - fall
+    - heresy
+  gc-11:
+    name: Fałszywe Świadectwo Cechu
+    type: akcja
+    cost: 0
+    target_heresy: 1
+    action: frame_rival
+    tags:
+    - heresy
+    - hook
+    heresy: 2
+  gc-12:
+    name: Złodziejski Zwiad
+    type: akcja
+    cost: 0
+    heresy: 2
+    agents: 1
+    gold: 1
+    action: move_agent
+    tags:
+    - move
+    - gold
+    - heresy
+variants:
+  time_deck_freq: 1
+  sea_route_era: 4
+  inquisitor_speed: 1
+telemetry_norms:
+  game_length_eras:
+  - 5.0
+  - 6.5
+  deadlock_pct_max: 5.0
+  poverty_pct_max: 28.0
+  autodafe_per_game:
+  - 0.7
+  - 1.8
+  accusations_per_game:
+  - 2.0
+  - 4.5
+  balance_targets:
+    3p:
+      target:
+      - 0.29
+      - 0.37
+      critical:
+      - 0.22
+      - 0.45
+    4p:
+      target:
+      - 0.21
+      - 0.29
+      critical:
+      - 0.17
+      - 0.32
+    5p:
+      target:
+      - 0.16
+      - 0.24
+      critical:
+      - 0.1
+      - 0.3
