@@ -506,9 +506,15 @@ def select_diverse_survivors(results: list[dict], cand_dict: dict, target_count:
     return [cand_dict[cid] for cid in selected_ids]
 
 
-def generate_and_save_telemetry_report(version: str, games_per_setup: int = 5000, seed: int = 42) -> tuple[Path, Path | None]:
-    """Generates and archives raport_telemetrii.md for the given version across all 16 setups."""
-    setups = sorted(SETUP_PRESETS.keys())
+def generate_and_save_telemetry_report(
+    version: str,
+    games_per_setup: int = 10000,
+    seed: int = 42,
+    setups: list[str] | None = None,
+) -> tuple[Path, Path | None]:
+    """Generates and archives raport_telemetrii.md for the given version across Kanon 4P setups."""
+    if setups is None:
+        setups = CANON_4P_SETUPS
     t0 = time.time()
     setup_data = []
     all_summaries = []
@@ -569,11 +575,12 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 5000
         })
 
     elapsed = round(time.time() - t0, 2)
+    total_games = games_per_setup * len(setups)
 
     report_lines = [
-        f"# Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: {version}",
+        f"# Raport Telemetrii i Szans Wygranych (Win Shares) dla Kanonu 4P — Wersja Balansu: {version}",
         "",
-        f"**Wersja Balansu:** `{version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Wielkość Próby:** {games_per_setup} gier/setup ({games_per_setup * 16} gier łącznie) | **Czas Symulacji:** {elapsed}s",
+        f"**Wersja Balansu:** `{version}` | **Data:** {datetime.now().strftime('%Y-%m-%d %H:%M')} | **Wielkość Próby:** {games_per_setup} gier/setup ({total_games} gier łącznie) | **Czas Symulacji:** {elapsed}s",
         "",
         "*Score* = legacy (win share + kara witalności w jednym wykładniku). *Balance* = tylko równość win share.",
         "",
@@ -623,6 +630,60 @@ def generate_and_save_telemetry_report(version: str, games_per_setup: int = 5000
         report_lines.append(
             f"| `{d['setup']}` | {d['vitality_status']} | {d['vitality_penalty']:.3f} | {warn_str} |"
         )
+
+    # --- Section 3.1: Faction Attention Report (Kanon 4P) ---
+    faction_stats: dict[str, list[tuple[str, float, float]]] = {}
+    for d in setup_data:
+        ideal = d['ideal_share'] / 100.0
+        for fname, share_pct in d['shares'].items():
+            share = share_pct / 100.0
+            faction_stats.setdefault(fname, []).append((d['setup'], share, ideal))
+
+    report_lines.extend([
+        "",
+        "## 3.1. Frakcje Wymagające Uwagi (Kanon 4P)",
+        "",
+    ])
+
+    faction_summary = []
+    for fname, entries in sorted(faction_stats.items()):
+        avg_share = sum(s for _, s, _ in entries) / len(entries)
+        worst_setup = max(entries, key=lambda e: abs(e[1] - e[2]))
+        worst_dev = worst_setup[1] - worst_setup[2]
+        worst_dev_pct = worst_dev * 100.0
+        if abs(worst_dev_pct) > 5.0:
+            status = "🟡 DOMINUJE" if worst_dev > 0 else "🟡 SŁABA"
+        elif abs(worst_dev_pct) > 8.0:
+            status = "🔴 SILNIE ZABURZONA"
+        else:
+            status = "🟢 OK"
+        faction_summary.append((fname, avg_share * 100, worst_setup[0], worst_dev_pct, status))
+
+    report_lines.append("| Frakcja | Śr. Win Share (Kanon 4P) | Najgorszy Setup | Max Odchylenie od Ideału | Status |")
+    report_lines.append("| :--- | :---: | :--- | :---: | :--- |")
+    for fname, avg_s, ws_name, ws_dev, ws_status in sorted(faction_summary, key=lambda x: abs(x[3]), reverse=True):
+        dev_sign = f"+{ws_dev:.1f}%" if ws_dev > 0 else f"{ws_dev:.1f}%"
+        report_lines.append(f"| **{fname}** | {avg_s:.1f}% | `{ws_name}` | {dev_sign} | {ws_status} |")
+
+    weak_setups = [(d['setup'], d['score'], d['shares'], d['ideal_share']) for d in setup_data if d['score'] < 90.0]
+    if weak_setups:
+        report_lines.extend([
+            "",
+            "### Setupy poniżej Score 90 (wymagające poprawy):",
+            "",
+            "| Setup | Score | Główny problem |",
+            "| :--- | :---: | :--- |",
+        ])
+        for sname, sc, shares, ideal_s in sorted(weak_setups, key=lambda x: x[1]):
+            dom_f = max(shares.items(), key=lambda x: x[1])
+            sub_f = min(shares.items(), key=lambda x: x[1])
+            if dom_f[1] - ideal_s > 4.0:
+                prob = f"{dom_f[0]} dominuje ({dom_f[1]:.1f}% vs ideal {ideal_s:.1f}%)"
+            elif ideal_s - sub_f[1] > 4.0:
+                prob = f"{sub_f[0]} za słaba ({sub_f[1]:.1f}% vs ideal {ideal_s:.1f}%)"
+            else:
+                prob = "Nierównomierny rozkład pozostałych frakcji"
+            report_lines.append(f"| `{sname}` | {color_score(sc, bold=True)} | {prob} |")
 
     # --- Section 4: Era & Timing Distribution ---
     report_lines.extend([""])
