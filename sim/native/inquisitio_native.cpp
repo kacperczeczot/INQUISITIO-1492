@@ -284,7 +284,7 @@ struct ConfigOverridesNative {
     int gc_falls_offset = 0;
     int sea_route_era = 4;
     int autodafe_cooldown = 4;
-    int threshold = 8;
+    int threshold = 7;
     int observed_threshold = 5;
     int hand_limit = 5;
     int max_eras = 12;
@@ -657,18 +657,19 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
         // C. Heresy self-gain risk
         if (c.heresy > 0) {
             int post_h = pl.heresy + c.heresy;
-            if (fid == KT && post_h >= 4 && post_h <= 6) {
-                u += 2.0f; // Sweet spot for Codex
-            } else if (post_h >= ov.threshold) {
+            if (post_h >= ov.threshold) {
                 u -= (float)c.heresy * 4.5f;
             } else if (post_h >= ov.threshold - 1) {
                 u -= (float)c.heresy * 2.5f;
-            } else if (post_h >= ov.observed_threshold) {
-                u -= (float)c.heresy * 1.2f;
+            } else if (has_so && post_h >= ov.observed_threshold) {
+                if (autodafe_near) {
+                    u -= (float)c.heresy * 3.0f;
+                } else {
+                    u -= (float)c.heresy * 1.2f;
+                }
             } else {
                 u -= (float)c.heresy * 0.3f;
             }
-            if (autodafe_near && post_h >= ov.observed_threshold) u -= 2.0f;
         }
 
         // D. Target Heresy / Framing
@@ -768,7 +769,7 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
             if (c_idx == 41) u += 5.0f; // kt-06
             if (c_idx == 44) u += 5.0f; // kt-09
             if (c_idx == 45) { // kt-10
-                if (pl.fragments == 3) u += 12.0f;
+                if (pl.fragments >= 3) u += 12.0f;
                 else u -= 20.0f;
             }
             if (c_idx == 36 || c_idx == 37 || c_idx == 39 || c_idx == 42 || c_idx == 43 || c_idx == 46 || c_idx == 47) {
@@ -1028,42 +1029,20 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     }
 
     if (c.tags & TAG_RELIC) {
-        if (card_idx == 16) { // caa-05 (Ukryty Kurier)
-            bool evacuated = false;
+        if (card_idx == 16) { // caa-05 (Odnalezienie Relikwii)
+            bool handled = false;
             for (int a = 0; a < pl.agent_count; ++a) {
                 if (!pl.agents[a].arrested) {
                     uint8_t loc = pl.agents[a].location;
                     if (st.relics_on_board[loc] > 0) {
-                        if (st.sea_route_open || pl.path_via_double) {
-                            st.relics_on_board[loc]--;
-                            pl.relics_evacuated++;
-                            evacuated = true;
-                            break;
-                        }
+                        st.relics_on_board[loc]--;
+                        pl.relics_evacuated++;
+                        handled = true;
+                        break;
                     }
                 }
             }
-            if (!evacuated) {
-                for (int a = 0; a < pl.agent_count; ++a) {
-                    if (!pl.agents[a].arrested) {
-                        uint8_t loc = pl.agents[a].location;
-                        if (st.relics_on_board[loc] > 0) {
-                            uint8_t cnt = NEIGHBOR_COUNTS[loc];
-                            for (uint8_t i = 0; i < cnt; ++i) {
-                                uint8_t dest = NEIGHBORS[loc][i];
-                                if (dest == RYNEK || dest == GILDIA) {
-                                    st.relics_on_board[loc]--;
-                                    st.relics_on_board[dest]++;
-                                    evacuated = true;
-                                    break;
-                                }
-                            }
-                            if (evacuated) break;
-                        }
-                    }
-                }
-            }
-            if (!evacuated) {
+            if (!handled) {
                 for (int a = 0; a < pl.agent_count; ++a) {
                     if (!pl.agents[a].arrested) {
                         st.relics_on_board[pl.agents[a].location]++;
@@ -1139,7 +1118,7 @@ static inline bool card_condition_met_native(const GameStateNative& st, uint8_t 
     }
     // kt-10 (45)
     if (card_idx == 45) {
-        return pl.fragments == 3;
+        return pl.fragments >= 3;
     }
     // gc-10 (57)
     if (card_idx == 57) {
