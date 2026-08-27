@@ -293,7 +293,7 @@ struct ConfigOverridesNative {
     int sea_route_era = 4;
     int autodafe_cooldown = 4;
     int threshold = 7;
-    int observed_threshold = 5;
+    int observed_threshold = 4;
     int hand_limit = 5;
     int max_eras = 12;
 
@@ -595,7 +595,6 @@ static inline void move_agent_step(GameStateNative& st, uint8_t fid, FastRng& rn
 }
 
 static inline void take_economic_action(GameStateNative& st, uint8_t fid, FastRng& rng, const ConfigOverridesNative& ov) {
-    move_agent_step(st, fid, rng);
     int amt = std::max(0, ov.intrigue_gold_base + ov.intrigue_gold_offset);
     st.players[fid].gold += amt;
 }
@@ -1001,11 +1000,15 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     }
 
     if (c.creates_hook) {
-        st.hooks_created++;
-        uint8_t victim = pick_rival_native(st, fid, rng);
-        if (victim != fid) {
-            pl.hooks_on[victim]++;
-            pl.hook_victims_ever_mask |= (1 << victim);
+        int total_hooks = 0;
+        for (int k = 0; k < 5; ++k) total_hooks += pl.hooks_on[k];
+        if (total_hooks < 2) {
+            st.hooks_created++;
+            uint8_t victim = pick_rival_native(st, fid, rng);
+            if (victim != fid) {
+                pl.hooks_on[victim]++;
+                pl.hook_victims_ever_mask |= (1 << victim);
+            }
         }
     }
 
@@ -1039,9 +1042,7 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
                 }
             }
         } else if (card_idx == 33) { // kb-10 (Akt Sukcesyjny)
-            if (card_condition_met_native(st, fid, card_idx)) {
-                pl.decrees_played++;
-            }
+            pl.decrees_played++;
         }
     }
 
@@ -1453,7 +1454,11 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
 
             // Hook forcing (1 per player per era)
             if (!pl.used_hook) {
-                bool protect_hooks = (fid == KB && pl.hand_has(33) && pl.distinct_hooks() >= 2);
+                bool staged_kb10 = false;
+                for (int sp = 0; sp < st.pending_count; ++sp) {
+                    if (st.pending_plays[sp].owner == fid && st.pending_plays[sp].card_idx == 33) staged_kb10 = true;
+                }
+                bool protect_hooks = staged_kb10 || (fid == KB && pl.hand_has(33) && pl.distinct_hooks() >= 2);
                 if (!protect_hooks) {
                     for (int k = 0; k < 5; ++k) {
                         if (pl.hooks_on[k] > 0) {
@@ -1687,9 +1692,13 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                 } else if (fid == SO) {
                     st.players[r_fid].heresy = std::min(10, st.players[r_fid].heresy + 2);
                 } else {
-                    // KB, GC, KT prefer hook (no +2 heresy)
-                    pl.hooks_on[r_fid]++;
-                    pl.hook_victims_ever_mask |= (1 << r_fid);
+                    // KB, GC, KT prefer hook (capped at 2 active)
+                    int total_hooks = 0;
+                    for (int k = 0; k < 5; ++k) total_hooks += pl.hooks_on[k];
+                    if (total_hooks < 2) {
+                        pl.hooks_on[r_fid]++;
+                        pl.hook_victims_ever_mask |= (1 << r_fid);
+                    }
                 }
                 break;
             }
