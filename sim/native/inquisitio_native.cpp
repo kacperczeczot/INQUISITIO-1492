@@ -1714,8 +1714,11 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
 
             uint8_t accused_list[5];
             int accused_cnt = 0;
-            for (int p = 0; p < st.num_players; ++p) {
-                uint8_t r = st.turn_order[p];
+            for (int p = 0; p < 5; ++p) {
+                uint8_t r = (uint8_t)p;
+                bool in_game = false;
+                for (int t = 0; t < st.num_players; ++t) if (st.turn_order[t] == r) in_game = true;
+                if (!in_game) continue;
                 if (r != fid && !(st.accused_this_era_mask & (1 << r)) && st.players[r].heresy >= eff_thresh) {
                     accused_list[accused_cnt++] = r;
                 }
