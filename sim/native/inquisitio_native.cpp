@@ -182,7 +182,7 @@ static CardDef CARD_DB[60] = {
     {"kt-03", KT, 0, 2, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT | TAG_HERESY},
     {"kt-04", KT, 1, 0, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_HERESY},
     {"kt-05", KT, 1, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
-    {"kt-06", KT, 2, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
+    {"kt-06", KT, 2, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_HERESY},
     {"kt-07", KT, 1, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_HOOK},
     {"kt-08", KT, 1, 0, 0, 0, 0, true, false, false, 0, NO_LOCATION, TAG_ARREST},
     {"kt-09", KT, 1, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT | TAG_HERESY},
@@ -884,6 +884,33 @@ static inline uint8_t pick_rival_native(const GameStateNative& st, uint8_t fid, 
     return rivals[rng.next_u32(r_cnt)];
 }
 
+static inline void move_agent_card_native(GameStateNative& st, uint8_t fid, FastRng& rng, int n = 1) {
+    PlayerStateNative& pl = st.players[fid];
+    uint8_t free_agents[3];
+    int free_cnt = 0;
+    for (int a = 0; a < pl.agent_count; ++a) {
+        if (!pl.agents[a].arrested) free_agents[free_cnt++] = (uint8_t)a;
+    }
+    for (int step = 0; step < n; ++step) {
+        if (free_cnt == 0) return;
+        uint8_t ag_idx = free_agents[rng.next_u32(free_cnt)];
+        uint8_t loc = pl.agents[ag_idx].location;
+        uint8_t cnt = NEIGHBOR_COUNTS[loc];
+        if (cnt > 0) {
+            uint8_t dest = NEIGHBORS[loc][rng.next_u32(cnt)];
+            if (dest == st.inquisitor_location && cnt > 1 && rng.next_double() < 0.5) {
+                for (uint8_t i = 0; i < cnt; ++i) {
+                    if (NEIGHBORS[loc][i] != st.inquisitor_location) {
+                        dest = NEIGHBORS[loc][i];
+                        break;
+                    }
+                }
+            }
+            pl.agents[ag_idx].location = dest;
+        }
+    }
+}
+
 static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t card_idx, FastRng& rng, const ConfigOverridesNative& ov) {
     const CardDef& c = CARD_DB[card_idx];
     PlayerStateNative& pl = st.players[fid];
@@ -911,7 +938,7 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     }
 
     if (c.agents_move > 0) {
-        move_agent_step(st, fid, rng);
+        move_agent_card_native(st, fid, rng, c.agents_move);
     }
 
     if (c.is_arrest) {
@@ -957,60 +984,86 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     if (c.creates_hook) {
         st.hooks_created++;
         uint8_t victim = pick_rival_native(st, fid, rng);
-        int total_hooks = 0;
-        for (int k = 0; k < 5; ++k) total_hooks += pl.hooks_on[k];
-        if (total_hooks < 2) {
+        if (victim != fid) {
             pl.hooks_on[victim]++;
+            pl.hook_victims_ever_mask |= (1 << victim);
         }
-        pl.hook_victims_ever_mask |= (1 << victim);
     }
 
     if (card_idx == 28) { // kb-05 (List Żelazny)
         if (pl.heresy > 0) pl.heresy -= 1;
     }
 
-    if (card_idx == 32 || card_idx == 33) { // kb-09, kb-10
-        if (card_idx == 33) { // kb-10
-            if (pl.distinct_hooks() >= 2) {
-                pl.decrees_played++;
-            }
-        } else { // kb-09
+    if (c.tags & TAG_DECREE) {
+        if (card_idx == 32) { // kb-09 (Dekret Królewski)
             pl.decrees_played++;
-            int active_h = pl.distinct_hooks();
-            if (active_h == 0 && pl.distinct_hooks_ever() >= 1) {
+            bool forced = false;
+            for (int k = 0; k < 5; ++k) {
+                if (pl.hooks_on[k] > 0) {
+                    pl.hooks_on[k]--;
+                    bool comply = (rng.next_double() < 0.5);
+                    if (comply && st.players[k].gold > 0) {
+                        st.players[k].gold--;
+                        pl.gold++;
+                    } else {
+                        st.players[k].heresy = std::min(10, st.players[k].heresy + 2);
+                    }
+                    forced = true;
+                    break;
+                }
+            }
+            if (!forced && pl.distinct_hooks_ever() >= 1) {
                 uint8_t rival = pick_rival_native(st, fid, rng);
-                int total_hooks = 0;
-                for (int k = 0; k < 5; ++k) total_hooks += pl.hooks_on[k];
-                if (total_hooks < 2) {
+                if (rival != fid) {
                     pl.hooks_on[rival]++;
                     pl.hook_victims_ever_mask |= (1 << rival);
                 }
+            }
+        } else if (card_idx == 33) { // kb-10 (Akt Sukcesyjny)
+            if (card_condition_met_native(st, fid, card_idx)) {
+                pl.decrees_played++;
             }
         }
     }
 
     if (c.tags & TAG_FRAGMENT) {
         if (card_idx == 38) { // kt-03 (Zakazana Wiedza)
-            pl.fragments++;
+            if (pl.fragments < 3) pl.fragments++;
+            else pl.gold++;
         } else if (card_idx == 40) { // kt-05 (Wskazówka Cyklu)
             bool in_place = false;
             for (int a = 0; a < pl.agent_count; ++a) {
                 if (pl.agents[a].location == LOCHY || pl.agents[a].location == TRYBUNAL) in_place = true;
             }
-            if (in_place) pl.fragments++;
+            if (in_place && pl.fragments < 3) pl.fragments++;
             else pl.gold++;
         } else if (card_idx == 41) { // kt-06 (Przesłuchanie Mistyczne)
             uint8_t rival = pick_rival_native(st, fid, rng);
             if (rival != fid) {
-                st.players[rival].heresy = std::min(10, st.players[rival].heresy + 2);
-                pl.fragments++;
+                bool has_dungeon = false;
+                for (int a = 0; a < pl.agent_count; ++a) {
+                    if (!pl.agents[a].arrested && pl.agents[a].location == LOCHY) has_dungeon = true;
+                }
+                bool rival_arrested = false;
+                for (int a = 0; a < st.players[rival].agent_count; ++a) {
+                    if (st.players[rival].agents[a].arrested) rival_arrested = true;
+                }
+                if (has_dungeon || rival_arrested) {
+                    if (rng.next_double() < 0.5) {
+                        pl.hooks_on[rival]++;
+                        pl.hook_victims_ever_mask |= (1 << rival);
+                    } else {
+                        st.players[rival].heresy = std::min(10, st.players[rival].heresy + 2);
+                    }
+                    if (pl.fragments < 3) pl.fragments++;
+                }
             }
         } else if (card_idx == 44) { // kt-09 (Ostatnia Glosa)
             bool in_place = false;
             for (int a = 0; a < pl.agent_count; ++a) {
                 if (pl.agents[a].location == LOCHY || pl.agents[a].location == TRYBUNAL) in_place = true;
             }
-            if (pl.fragments >= 1 && in_place) pl.fragments++;
+            if (pl.fragments >= 1 && in_place && pl.fragments < 3) pl.fragments++;
         } else if (card_idx == 45) { // kt-10 (Pieczęć Salomona)
             if (pl.fragments >= 3) {
                 pl.kt10_played = true;
@@ -1026,23 +1079,73 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     }
 
     if (card_idx == 57) { // gc-10 (Upadek Domu)
-        pl.falls += 1;
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t r = st.turn_order[p];
+            if (r == fid) continue;
+            const PlayerStateNative& r_pl = st.players[r];
+            bool hooked = (pl.hooks_on[r] > 0 || (pl.hook_victims_ever_mask & (1 << r)));
+            bool marionette = false;
+            for (int a = 0; a < r_pl.agent_count; ++a) {
+                if (r_pl.agents[a].double_agent) marionette = true;
+            }
+            bool at_inq = (r != SO);
+            if (at_inq) {
+                bool in_loc = false;
+                for (int a = 0; a < r_pl.agent_count; ++a) {
+                    if (!r_pl.agents[a].arrested && r_pl.agents[a].location == st.inquisitor_location) in_loc = true;
+                }
+                at_inq = in_loc;
+            }
+            if (hooked || marionette || at_inq) {
+                pl.falls++;
+                break;
+            }
+        }
     }
 
     if (c.tags & TAG_RELIC) {
         if (card_idx == 16) { // caa-05 (Odnalezienie Relikwii)
-            uint8_t loc = RYNEK;
+            bool evacuated = false;
             for (int a = 0; a < pl.agent_count; ++a) {
-                if (!pl.agents[a].arrested) {
-                    loc = pl.agents[a].location;
-                    break;
+                if (pl.agents[a].arrested) continue;
+                uint8_t loc = pl.agents[a].location;
+                if (st.relics_on_board[loc] > 0) {
+                    bool via_double = (pl.agents[a].double_agent || pl.path_via_double);
+                    if (st.sea_route_open || via_double) {
+                        st.relics_on_board[loc]--;
+                        pl.relics_evacuated++;
+                        if (via_double) pl.path_via_double = true;
+                        evacuated = true;
+                        break;
+                    }
                 }
             }
-            if (st.relics_on_board[loc] > 0) {
-                st.relics_on_board[loc]--;
-                pl.relics_evacuated++;
-            } else {
-                st.relics_on_board[loc]++;
+            if (!evacuated) {
+                for (int a = 0; a < pl.agent_count; ++a) {
+                    if (!pl.agents[a].arrested && st.relics_on_board[pl.agents[a].location] > 0) {
+                        uint8_t loc = pl.agents[a].location;
+                        uint8_t cnt = NEIGHBOR_COUNTS[loc];
+                        if (cnt > 0) {
+                            uint8_t dest = NEIGHBORS[loc][rng.next_u32(cnt)];
+                            for (uint8_t i = 0; i < cnt; ++i) {
+                                uint8_t nb = NEIGHBORS[loc][i];
+                                if (nb == RYNEK || nb == GILDIA) { dest = nb; break; }
+                            }
+                            st.relics_on_board[loc]--;
+                            st.relics_on_board[dest]++;
+                            evacuated = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!evacuated) {
+                for (int a = 0; a < pl.agent_count; ++a) {
+                    if (!pl.agents[a].arrested) {
+                        st.relics_on_board[pl.agents[a].location]++;
+                        break;
+                    }
+                }
             }
         } else if (card_idx == 21) { // caa-10 (Echo Alhambry)
             for (int a = 0; a < pl.agent_count; ++a) {
@@ -1069,6 +1172,10 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
                         uint8_t cnt = NEIGHBOR_COUNTS[loc];
                         if (cnt > 0) {
                             uint8_t dest = NEIGHBORS[loc][rng.next_u32(cnt)];
+                            for (uint8_t i = 0; i < cnt; ++i) {
+                                uint8_t nb = NEIGHBORS[loc][i];
+                                if (nb == RYNEK || nb == GILDIA) { dest = nb; break; }
+                            }
                             st.relics_on_board[loc]--;
                             st.relics_on_board[dest]++;
                             break;
@@ -1131,6 +1238,48 @@ static inline bool card_condition_met_native(const GameStateNative& st, uint8_t 
     return true;
 }
 
+static inline uint8_t choose_play_location_native(const GameStateNative& st, uint8_t fid, uint8_t card_idx) {
+    const CardDef& c = CARD_DB[card_idx];
+    if (c.fixed_loc < 5) return c.fixed_loc;
+    if (card_idx == 17) return LOCHY; // caa-06
+    const PlayerStateNative& pl = st.players[fid];
+    uint8_t own_first = TRYBUNAL;
+    for (int a = 0; a < pl.agent_count; ++a) {
+        if (!pl.agents[a].arrested && pl.agents[a].location < 5) {
+            own_first = pl.agents[a].location;
+            break;
+        }
+    }
+    if (c.tags & TAG_INQUISITOR) {
+        int r_counts[5] = {0};
+        for (int op = 0; op < st.num_players; ++op) {
+            uint8_t ofid = st.turn_order[op];
+            if (ofid == fid) continue;
+            for (int a = 0; a < st.players[ofid].agent_count; ++a) {
+                if (!st.players[ofid].agents[a].arrested && st.players[ofid].agents[a].location < 5) {
+                    r_counts[st.players[ofid].agents[a].location]++;
+                }
+            }
+        }
+        int max_c = -1;
+        uint8_t best_loc = TRYBUNAL;
+        for (int l = 0; l < 5; ++l) {
+            if (r_counts[l] > max_c) {
+                max_c = r_counts[l];
+                best_loc = (uint8_t)l;
+            }
+        }
+        return best_loc;
+    }
+    if (c.tags & TAG_RELIC) {
+        static const uint8_t RELIC_PREF[5] = {RYNEK, GILDIA, LOCHY, TRYBUNAL, PALAC};
+        for (int i = 0; i < 5; ++i) {
+            if (st.relics_on_board[RELIC_PREF[i]] > 0) return RELIC_PREF[i];
+        }
+    }
+    return own_first;
+}
+
 static inline void play_turn_era(GameStateNative& st, FastRng& rng, const ConfigOverridesNative& ov) {
     st.eras_since_autodafe++;
     if (st.era >= ov.sea_route_era) {
@@ -1184,7 +1333,8 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                             break;
                         }
                     }
-                    st.pending_plays[st.pending_count++] = {fid, (uint8_t)chosen, TRYBUNAL};
+                    uint8_t staged_loc = choose_play_location_native(st, fid, (uint8_t)chosen);
+                    st.pending_plays[st.pending_count++] = {fid, (uint8_t)chosen, staged_loc};
                     move_agent_step(st, fid, rng);
                 } else {
                     take_economic_action(st, fid, rng, ov);
@@ -1371,9 +1521,17 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
 
     if (check_winner_fast(st, ov) != NO_FACTION) return;
 
-    // 3. Resolve pending plays
-    for (int p = 0; p < st.pending_count; ++p) {
-        apply_card_effect(st, st.pending_plays[p].owner, st.pending_plays[p].card_idx, rng, ov);
+    // 3. Resolve pending plays (by location 0..4, then turn_order)
+    for (uint8_t loc = 0; loc < 5; ++loc) {
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t fid = st.turn_order[p];
+            for (int sp = 0; sp < st.pending_count; ++sp) {
+                if (st.pending_plays[sp].location == loc && st.pending_plays[sp].owner == fid) {
+                    apply_card_effect(st, fid, st.pending_plays[sp].card_idx, rng, ov);
+                    if (check_winner_fast(st, ov) != NO_FACTION) return;
+                }
+            }
+        }
     }
     st.pending_count = 0;
 
