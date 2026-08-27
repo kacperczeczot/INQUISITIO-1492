@@ -491,11 +491,10 @@ static inline void draw_cards(PlayerStateNative& pl, int n, FastRng& rng) {
         if (pl.deck_count == 0) {
             if (pl.discard_count == 0) return;
             for (int d = 0; d < pl.discard_count; ++d) {
-                pl.deck[d] = pl.discard[d];
+                pl.deck[d] = pl.discard[pl.discard_count - 1 - d];
             }
             pl.deck_count = pl.discard_count;
             pl.discard_count = 0;
-            rng.shuffle(pl.deck, pl.deck_count);
         }
         if (pl.deck_count > 0) {
             pl.hand[pl.hand_count++] = pl.deck[--pl.deck_count];
@@ -1000,9 +999,8 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
             }
             if (pl.fragments >= 1 && in_place && pl.fragments < 3) pl.fragments++;
         } else if (card_idx == 45) { // kt-10 (Pieczęć Salomona)
-            if (pl.fragments == 3) {
+            if (pl.fragments >= 3) {
                 pl.kt10_played = true;
-                pl.heresy = std::max(0, pl.heresy - 2);
             }
         }
     }
@@ -1014,41 +1012,24 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
         pl.heresy = std::max(0, pl.heresy - 1);
     }
 
-    if (card_idx == 19) { // caa-08 (Kaptur Nocy - Double Agent)
-        pl.path_via_double = true;
-    }
-    if (card_idx == 12) { // caa-01 (Przejście Podziemiami)
-        pl.shadow_exit = true;
-    }
-    if (card_idx == 17) { // caa-06 (Ucieczka z Lochów)
-        pl.avoided_autodafe = true;
-    }
-
     if (card_idx == 57) { // gc-10 (Upadek Domu)
         pl.falls += 1;
     }
 
     if (c.tags & TAG_RELIC) {
         if (card_idx == 16) { // caa-05 (Odnalezienie Relikwii)
-            bool handled = false;
+            uint8_t loc = RYNEK;
             for (int a = 0; a < pl.agent_count; ++a) {
                 if (!pl.agents[a].arrested) {
-                    uint8_t loc = pl.agents[a].location;
-                    if (st.relics_on_board[loc] > 0) {
-                        st.relics_on_board[loc]--;
-                        pl.relics_evacuated++;
-                        handled = true;
-                        break;
-                    }
+                    loc = pl.agents[a].location;
+                    break;
                 }
             }
-            if (!handled) {
-                for (int a = 0; a < pl.agent_count; ++a) {
-                    if (!pl.agents[a].arrested) {
-                        st.relics_on_board[pl.agents[a].location]++;
-                        break;
-                    }
-                }
+            if (st.relics_on_board[loc] > 0) {
+                st.relics_on_board[loc]--;
+                pl.relics_evacuated++;
+            } else {
+                st.relics_on_board[loc]++;
             }
         } else if (card_idx == 21) { // caa-10 (Echo Alhambry)
             for (int a = 0; a < pl.agent_count; ++a) {
