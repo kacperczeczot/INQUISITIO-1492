@@ -43,8 +43,11 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 
 ---
 
-## 6. Obowiązkowy Proces Monitorująco-Reagujący (Watchdog Schedule)
+## 6. Obowiązkowy Proces Monitorująco-Reagujący i Limit Przestoju (Anti-Stagnation Watchdog)
 - **Zakaz biernego oczekiwania:** Przy uruchomieniu jakiegokolwiek długotrwałego procesu w tle (np. audytor kanonu, wielogodzinna symulacja), asystent ma **bezwzględny obowiązek natychmiastowego ustawienia cyklicznego harmonogramu monitorowania (`schedule`)**.
+- **Twardy Limit Przestoju (Anti-Stagnation Hard Rule):** Jeśli w ciągu **maksymalnie 60 minut** lub po **1 pełnym cyklu wiązek (1D→2D→3D)** optymalizator nie wdroży żadnego nowego patcha i kręci się w pętli resetów z brakiem zysku:
+  1. Asystent **NIE MOŻE** biernie czekać do rana ani powtarzać pustych cykli.
+  2. Asystent **MUSI natychmiast zatrzymać proces**, przeprowadzić manualną dekompozycję telemetryczną najsłabszego setupu (bottom setup), zidentyfikować blokujące karty/frakcje i przygotować konkretną diagnozę inżynieryjną lub interweniować manualnie w przestrzeni mutacji.
 - **Aktywna reakcja:** Każde wybudzenie z harmonogramu wymaga sprawdzenia logów, wykrycia ewentualnej stagnacji, martwych pętli lub spadku witalności i podjęcia aktywnej reakcji (zgodnie z ADR-0005).
 
 ---
