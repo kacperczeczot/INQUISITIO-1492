@@ -283,7 +283,7 @@ struct ConfigOverridesNative {
     int kt_frags_offset = 0;
     int gc_falls_offset = 0;
     int sea_route_era = 4;
-    int autodafe_cooldown = 2;
+    int autodafe_cooldown = 4;
     int threshold = 8;
     int observed_threshold = 4;
     int hand_limit = 5;
@@ -897,10 +897,10 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
                 }
             }
         }
+        st.autodafe_count++;
+        st.eras_since_autodafe = 0;
         if (burned > 0) {
-            st.autodafe_count++;
-            st.eras_since_autodafe = 0;
-            st.players[SO].stacks += 1;
+            st.players[SO].stacks += burned;
         }
     }
 
@@ -1227,8 +1227,22 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
         st.inquisitor_location = NEIGHBORS[cur_inq][choice - 1];
     }
 
-    // 3. Autodafe check
-    if (st.eras_since_autodafe >= ov.autodafe_cooldown) {
+    // 3. Autodafe check (only if rival agent present at inquisitor location and cooldown elapsed)
+    bool has_rival_agent = false;
+    for (int p = 0; p < st.num_players; ++p) {
+        uint8_t fid = st.turn_order[p];
+        if (fid == SO) continue;
+        const PlayerStateNative& pl = st.players[fid];
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (!pl.agents[a].arrested && pl.agents[a].location == st.inquisitor_location) {
+                has_rival_agent = true;
+                break;
+            }
+        }
+        if (has_rival_agent) break;
+    }
+
+    if (has_rival_agent && st.eras_since_autodafe >= ov.autodafe_cooldown) {
         int burned = 0;
         for (int p = 0; p < st.num_players; ++p) {
             uint8_t fid = st.turn_order[p];
@@ -1283,13 +1297,12 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                 pl.used_interrogation = true;
                 if (fid == CAA) {
                     pl.path_via_double = true;
-                } else {
+                } else if (fid == SO) {
                     st.players[r_fid].heresy = std::min(10, st.players[r_fid].heresy + 2);
-                    if (fid == KT) pl.fragments++;
-                    else if (fid == KB || fid == GC) {
-                        pl.hooks_on[r_fid]++;
-                        pl.hook_victims_ever_mask |= (1 << r_fid);
-                    }
+                } else {
+                    // KB, GC, KT prefer hook (no +2 heresy)
+                    pl.hooks_on[r_fid]++;
+                    pl.hook_victims_ever_mask |= (1 << r_fid);
                 }
                 break;
             }
@@ -1304,7 +1317,7 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
         int accused_cnt = 0;
         for (int p = 0; p < st.num_players; ++p) {
             uint8_t r = st.turn_order[p];
-            if (!(st.accused_this_era_mask & (1 << r)) && st.players[r].heresy >= ov.threshold) {
+            if (r != fid && !(st.accused_this_era_mask & (1 << r)) && st.players[r].heresy >= ov.threshold) {
                 accused_list[accused_cnt++] = r;
             }
         }
