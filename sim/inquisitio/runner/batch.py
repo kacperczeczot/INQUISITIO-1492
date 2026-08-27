@@ -16,11 +16,10 @@ from inquisitio.engine.turn import play_game
 
 try:
     import inquisitio_native  # type: ignore[import-not-found, import-untyped]
+    _HAS_NATIVE = True
 except ImportError:
     inquisitio_native = None  # type: ignore[assignment]
-
-# Use Python SSOT engine for complete mathematical fidelity and valid scores
-_HAS_NATIVE = False
+    _HAS_NATIVE = False
 
 @dataclass
 class BatchSummary:
@@ -136,6 +135,9 @@ def run_batch(
             autodafe_avg=res.get("autodafe_avg", 0.0),
             accusations_avg=res.get("accusations_avg", 0.0),
             convictions_avg=res.get("convictions_avg", 0.0),
+            hooks_avg=res.get("hooks_avg", 0.0),
+            hooks_forced_avg=res.get("hooks_forced_avg", 0.0),
+            doubles_avg=res.get("doubles_avg", 0.0),
             deadlocks_avg=res.get("deadlocks_avg", 0.0),
             eras_limit_pct=res.get("eras_limit_pct", 0.0),
             avg_gold_end=res.get("avg_gold_end", 0.0),
