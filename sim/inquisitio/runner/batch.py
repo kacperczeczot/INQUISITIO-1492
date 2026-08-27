@@ -97,7 +97,7 @@ def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict
 def run_batch(
     games: int = 100,
     *,
-    threshold: int = 8,
+    threshold: int = 7,
     players: int | None = None,
     setup: str | None = None,
     seed: int = 42,
