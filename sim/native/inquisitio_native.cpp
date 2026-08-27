@@ -898,6 +898,12 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
         pl.heresy = std::min(10, pl.heresy + c.heresy);
     }
 
+    if (card_idx == 45) { // kt-10 (Pieczęć Salomona)
+        pl.heresy = std::max(0, pl.heresy - 2);
+    } else if (card_idx == 46 || card_idx == 47) { // kt-11, kt-12
+        pl.heresy = std::max(0, pl.heresy - 1);
+    }
+
     if (c.target_heresy > 0) {
         uint8_t victim = pick_rival_native(st, fid, rng);
         st.players[victim].heresy = std::min(10, st.players[victim].heresy + c.target_heresy);
