@@ -1221,20 +1221,6 @@ class Canon4PAutoBalancer:
                     best_ver_res = cand_res
                     acceptance_reason = decision.reason
                     break
-                else:
-                    # Check Simulated Annealing exploration step
-                    safe_telemetry, _ = telemetry_is_safe(cand_res)
-                    vit_ok = cand_res.get("vitality_penalty", 0.0) <= base_res.get("vitality_penalty", 0.0) + 1e-9
-                    d_score = cand_res["score_4p_balance"] - base_res["score_4p_balance"]
-                    d_min = cand_res["min_balance"] - base_res["min_balance"]
-
-                    if safe_telemetry and vit_ok and d_score >= -0.30 and d_min >= -0.40 and self.temperature > self.min_temperature:
-                        prob = math.exp(d_score / self.temperature)
-                        if random.random() < prob:
-                            accepted_candidate = cand_stat.cand_tuple
-                            best_ver_res = cand_res
-                            acceptance_reason = f"Simulated Annealing ucieczka z minimum (T={self.temperature:.2f}, P={prob:.2f}, Δ={d_score:+.2f})"
-                            break
 
             # 4. Apply Patch & Measure Collateral Impact
             if accepted_candidate and best_ver_res is not None:
