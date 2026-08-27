@@ -1587,6 +1587,17 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
         st.inquisitor_location = best_dest;
     }
 
+    // Marionette detection under Inquisitor (+2 heresy, double agent removed)
+    for (int p = 0; p < st.num_players; ++p) {
+        uint8_t fid = st.turn_order[p];
+        for (int a = 0; a < st.players[fid].agent_count; ++a) {
+            if (st.players[fid].agents[a].location == st.inquisitor_location && st.players[fid].agents[a].double_agent) {
+                st.players[fid].heresy = std::min(10, st.players[fid].heresy + 2);
+                st.players[fid].agents[a].double_agent = false;
+            }
+        }
+    }
+
     // 2. Autodafe check (only if rival agent present at inquisitor location and cooldown elapsed)
     bool has_rival_agent = false;
     for (int p = 0; p < st.num_players; ++p) {
