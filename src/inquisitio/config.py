@@ -16,7 +16,7 @@ import yaml
 
 # ── locate game_config.yaml ────────────────────────────────────────
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # sim/ → project root
-_CONFIG_PATH = _PROJECT_ROOT / "game_config.yaml"
+_CONFIG_PATH = _PROJECT_ROOT / "data/game_config.yaml"
 
 
 class _Section:

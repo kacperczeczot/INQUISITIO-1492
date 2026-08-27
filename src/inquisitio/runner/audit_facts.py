@@ -117,7 +117,7 @@ def save_and_archive_report(
     archive_path.write_text(report_text, encoding="utf-8")
 
     # Automatically snapshot game_config.yaml in the archive folder
-    config_src = repo_root / "game_config.yaml"
+    config_src = repo_root / "data/game_config.yaml"
     if config_src.exists():
         shutil.copy2(config_src, archive_dir / "game_config.yaml")
 

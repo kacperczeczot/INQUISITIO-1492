@@ -30,7 +30,7 @@ import yaml
 # ---------------------------------------------------------------------------
 
 def load_game_config() -> dict:
-    cfg_path = REPO_ROOT / "game_config.yaml"
+    cfg_path = REPO_ROOT / "data/game_config.yaml"
     if cfg_path.is_file():
         with open(cfg_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
