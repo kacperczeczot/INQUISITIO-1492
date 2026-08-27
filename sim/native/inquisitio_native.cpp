@@ -41,6 +41,14 @@ static const uint8_t NEIGHBORS[5][4] = {
 
 static const uint8_t NEIGHBOR_COUNTS[5] = {2, 3, 3, 2, 2};
 
+static const uint8_t STEP_TOWARD_TABLE[5][5] = {
+    {TRYBUNAL, PALAC, LOCHY, PALAC, LOCHY}, // TRYBUNAL (0)
+    {TRYBUNAL, PALAC, LOCHY, RYNEK, RYNEK}, // PALAC (1)
+    {TRYBUNAL, PALAC, LOCHY, PALAC, GILDIA},// LOCHY (2)
+    {PALAC, PALAC, PALAC, RYNEK, GILDIA},   // RYNEK (3)
+    {LOCHY, RYNEK, LOCHY, RYNEK, GILDIA}    // GILDIA (4)
+};
+
 [[maybe_unused]] static inline bool is_neighbor(uint8_t a, uint8_t b) {
     if (a >= 5 || b >= 5) return false;
     for (uint8_t i = 0; i < NEIGHBOR_COUNTS[a]; ++i) {
@@ -477,7 +485,7 @@ static inline uint8_t check_winner_fast(GameStateNative& st, const ConfigOverrid
                 st.winner = fid; st.win_path = "kt_codex"; return fid;
             }
         } else if (fid == GC) {
-            int falls_need = std::max(1, 11 + ov.gc_falls_offset);
+            int falls_need = std::max(1, 9 + ov.gc_falls_offset);
             if (pl.falls >= falls_need) {
                 st.winner = fid; st.win_path = "gc_falls"; return fid;
             }
@@ -1204,43 +1212,111 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     }
 
     // ── Phase II: Sąd (Inquisitor, Autodafe, Pending, Interrogations, Verdicts) ──
-    // 1. Inquisitor movement (choose_patrol_dest by lowest heresy chooser)
-    uint8_t chooser = st.turn_order[0];
-    int min_h = 999;
+    // 1. Inquisitor movement (Nasłanie / Patrol)
+    uint8_t naslanie_target[5] = {255, 255, 255, 255, 255};
     for (int p = 0; p < st.num_players; ++p) {
-        uint8_t f = st.turn_order[p];
-        if (st.players[f].heresy < min_h) {
-            min_h = st.players[f].heresy;
-            chooser = f;
+        uint8_t fid = st.turn_order[p];
+        const PlayerStateNative& pl = st.players[fid];
+        if (pl.used_inquisitor_send) continue;
+
+        int r_counts_local[5] = {0, 0, 0, 0, 0};
+        for (int op = 0; op < st.num_players; ++op) {
+            uint8_t ofid = st.turn_order[op];
+            if (ofid == fid) continue;
+            const PlayerStateNative& opl = st.players[ofid];
+            for (int a = 0; a < opl.agent_count; ++a) {
+                if (!opl.agents[a].arrested && opl.agents[a].location < 5) {
+                    r_counts_local[opl.agents[a].location]++;
+                }
+            }
+        }
+
+        if (fid == CAA) {
+            bool has_relic_agent[5] = {false, false, false, false, false};
+            for (int a = 0; a < pl.agent_count; ++a) {
+                if (!pl.agents[a].arrested && pl.agents[a].location < 5 && st.relics_on_board[pl.agents[a].location] > 0) {
+                    has_relic_agent[pl.agents[a].location] = true;
+                }
+            }
+            int max_c = 0;
+            uint8_t best_loc = 255;
+            for (int l = 0; l < 5; ++l) {
+                if (!has_relic_agent[l] && r_counts_local[l] > max_c) {
+                    max_c = r_counts_local[l];
+                    best_loc = l;
+                }
+            }
+            if (best_loc != 255) naslanie_target[fid] = best_loc;
+        } else {
+            int max_c = 0;
+            uint8_t best_loc = 255;
+            for (int l = 0; l < 5; ++l) {
+                if (r_counts_local[l] > max_c) {
+                    max_c = r_counts_local[l];
+                    best_loc = l;
+                }
+            }
+            if (best_loc != 255) naslanie_target[fid] = best_loc;
         }
     }
 
-    int r_counts[5] = {0};
-    for (int p = 0; p < st.num_players; ++p) {
-        uint8_t f = st.turn_order[p];
-        if (f == chooser) continue;
-        const PlayerStateNative& pl = st.players[f];
-        for (int a = 0; a < pl.agent_count; ++a) {
-            if (!pl.agents[a].arrested && pl.agents[a].location < 5) {
-                r_counts[pl.agents[a].location]++;
+    uint8_t naslanie_winner = 255;
+    if (naslanie_target[SO] != 255) {
+        naslanie_winner = SO;
+    } else if (naslanie_target[st.turn_order[0]] != 255) {
+        naslanie_winner = st.turn_order[0];
+    } else {
+        int min_h = 999;
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t fid = st.turn_order[p];
+            if (naslanie_target[fid] != 255 && st.players[fid].heresy < min_h) {
+                min_h = st.players[fid].heresy;
+                naslanie_winner = fid;
             }
         }
     }
 
-    uint8_t cur_inq = st.inquisitor_location;
-    uint8_t n_cnt = NEIGHBOR_COUNTS[cur_inq];
-    uint8_t best_dest = cur_inq;
-    int best_score = r_counts[cur_inq];
-
-    for (int i = 0; i < n_cnt; ++i) {
-        uint8_t nb = NEIGHBORS[cur_inq][i];
-        int nb_score = r_counts[nb];
-        if (nb_score > best_score) {
-            best_score = nb_score;
-            best_dest = nb;
+    if (naslanie_winner != 255) {
+        uint8_t tgt = naslanie_target[naslanie_winner];
+        st.inquisitor_location = STEP_TOWARD_TABLE[st.inquisitor_location][tgt];
+    } else {
+        uint8_t chooser = st.turn_order[0];
+        int min_h = 999;
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t f = st.turn_order[p];
+            if (st.players[f].heresy < min_h) {
+                min_h = st.players[f].heresy;
+                chooser = f;
+            }
         }
+
+        int r_counts[5] = {0};
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t f = st.turn_order[p];
+            if (f == chooser) continue;
+            const PlayerStateNative& pl = st.players[f];
+            for (int a = 0; a < pl.agent_count; ++a) {
+                if (!pl.agents[a].arrested && pl.agents[a].location < 5) {
+                    r_counts[pl.agents[a].location]++;
+                }
+            }
+        }
+
+        uint8_t cur_inq = st.inquisitor_location;
+        uint8_t n_cnt = NEIGHBOR_COUNTS[cur_inq];
+        uint8_t best_dest = cur_inq;
+        int best_score = r_counts[cur_inq];
+
+        for (int i = 0; i < n_cnt; ++i) {
+            uint8_t nb = NEIGHBORS[cur_inq][i];
+            int nb_score = r_counts[nb];
+            if (nb_score > best_score) {
+                best_score = nb_score;
+                best_dest = nb;
+            }
+        }
+        st.inquisitor_location = best_dest;
     }
-    st.inquisitor_location = best_dest;
 
     // 2. Autodafe check (only if rival agent present at inquisitor location and cooldown elapsed)
     bool has_rival_agent = false;
