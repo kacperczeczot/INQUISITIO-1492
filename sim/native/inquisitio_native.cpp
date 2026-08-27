@@ -7,7 +7,6 @@
 #include <thread>
 #include <future>
 #include <map>
-#include <chrono>
 
 namespace inq {
 
