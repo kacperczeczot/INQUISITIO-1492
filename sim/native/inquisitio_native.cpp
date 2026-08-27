@@ -628,17 +628,15 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
             if (r_pl.relics_evacuated >= 1) th += 0.70f;
             if (st.sea_route_open) th += 0.20f;
         } else if (r_fid == KB) {
-            int r_hooks = 0;
-            for (int k = 0; k < 5; ++k) if (r_pl.hooks_on[k] > 0) r_hooks++;
-            if (r_hooks >= 2) th += 0.75f;
-            else if (r_hooks == 1) th += 0.35f;
-            if (r_pl.decrees_played >= 1) th += 0.3f;
+            int r_hooks = r_pl.distinct_hooks_ever();
+            if (r_pl.decrees_played >= 1 && r_hooks >= 1) th += 0.65f;
+            else if (r_hooks >= 2) th += 0.40f;
         } else if (r_fid == KT) {
             if (r_pl.fragments >= 2) th += 0.75f;
             else if (r_pl.fragments == 1 && st.era >= 4) th += 0.30f;
         } else if (r_fid == GC) {
-            if (r_pl.falls >= 18) th += 0.85f;
-            else if (r_pl.falls >= 12) th += 0.45f;
+            if (r_pl.falls >= 7) th += 0.85f;
+            else if (r_pl.falls >= 5) th += 0.45f;
         }
         if (th > max_threat) max_threat = th;
     }
@@ -684,31 +682,32 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
             }
         }
 
-        // D. Target Heresy / Framing
-        if (c.target_heresy > 0) {
-            u += (float)c.target_heresy * 1.8f;
-            if (max_threat >= 0.7f) u += 1.5f;
-            if (fid == SO && autodafe_near) u += 1.5f;
+        // D. Board Presence & Agent Mobility
+        if (c.agents_move > 0) {
+            u += (float)c.agents_move * 1.2f;
+            if (fid == CAA) u += (float)c.agents_move * 1.0f;
+            else if (fid == SO) u += (float)c.agents_move * 0.8f;
         }
 
-        // E. Hooks
+        // E. Control, Hooks, Arrests, Framing
+        if (c.target_heresy > 0) {
+            u += (float)c.target_heresy * 1.4f;
+            if (max_threat >= 0.4f) u += (float)c.target_heresy * 1.8f * max_threat;
+        }
+
         if (c.creates_hook) {
             if (fid == GC) u += 3.6f;
             else if (fid == KB) u += 3.2f;
             else u += 2.2f;
         }
 
-        // F. Arrests
         if (c.is_arrest) {
             u += 2.5f;
-            if (max_threat >= 0.7f) u += 1.5f;
+            if (max_threat >= 0.4f) u += 2.0f * max_threat;
         }
 
-        // G. Agent mobility
-        if (c.agents_move > 0) {
-            if (fid == CAA) u += 2.8f;
-            else if (fid == KB) u += 1.8f;
-            else u += 1.0f;
+        if (c_idx == 41 || c_idx == 6) { // interrogation (kt-06, so-07)
+            u += 2.4f;
         }
 
         // H. Faction specific political synergies
@@ -1167,8 +1166,10 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
                     }
                 }
             }
-        } else if (card_idx == 21) { // caa-10 (Echo Alhambry)
+        } else if (card_idx == 21) { // caa-10 (Echo Alhambry - up to 2 relics)
+            int count = 0;
             for (int a = 0; a < pl.agent_count; ++a) {
+                if (count >= 2) break;
                 if (!pl.agents[a].arrested) {
                     uint8_t loc = pl.agents[a].location;
                     if (st.relics_on_board[loc] > 0) {
@@ -1177,9 +1178,9 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
                         if (pl.path_via_double || (st.sea_route_open && in_port) || quiet) {
                             st.relics_on_board[loc]--;
                             pl.relics_evacuated++;
+                            count++;
                             if (quiet) pl.shadow_exit = true;
                             else pl.avoided_autodafe = true;
-                            break;
                         }
                     }
                 }
@@ -1417,8 +1418,7 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
             for (int h = 0; h < pl.hand_count; ++h) {
                 uint8_t cid = pl.hand[h];
                 if (CARD_DB[cid].card_type == 1) continue; // Reaction
-                if (cid == 33 && !card_condition_met_native(st, fid, cid)) continue; // kb-10
-                if (cid == 21 && !card_condition_met_native(st, fid, cid)) continue; // caa-10
+                if (!card_condition_met_native(st, fid, cid)) continue;
 
                 int cost = effective_card_cost(cid, st, ov);
                 if (pl.gold >= cost) {
@@ -1449,28 +1449,29 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                 } else {
                     take_economic_action(st, fid, rng, ov);
                 }
+            }
 
-                // Hook forcing (1 per player per era)
-                if (!pl.used_hook) {
-                    bool protect_hooks = (fid == KB && pl.hand_has(33) && pl.distinct_hooks() >= 2);
-                    if (!protect_hooks) {
-                        for (int k = 0; k < 5; ++k) {
-                            if (pl.hooks_on[k] > 0) {
-                                pl.used_hook = true;
-                                st.hooks_forced++;
-                                pl.hooks_on[k]--;
-                                bool comply = (st.players[k].heresy + 2 >= ov.threshold);
-                                if (comply) {
-                                    if (st.players[k].gold > 0) {
-                                        st.players[k].gold--;
-                                        pl.gold++;
-                                    }
-                                } else {
-                                    st.players[k].heresy = std::min(10, st.players[k].heresy + 2);
-                                    if (fid == GC) pl.falls++;
+            // Hook forcing (1 per player per era)
+            if (!pl.used_hook) {
+                bool protect_hooks = (fid == KB && pl.hand_has(33) && pl.distinct_hooks() >= 2);
+                if (!protect_hooks) {
+                    for (int k = 0; k < 5; ++k) {
+                        if (pl.hooks_on[k] > 0) {
+                            pl.used_hook = true;
+                            st.hooks_forced++;
+                            pl.hooks_on[k]--;
+                            int eff_thresh = ov.threshold - (st.active_time_edict == 5 ? 1 : 0);
+                            bool comply = (st.players[k].heresy + 2 >= eff_thresh);
+                            if (comply) {
+                                if (st.players[k].gold > 0) {
+                                    st.players[k].gold--;
+                                    pl.gold++;
                                 }
-                                break;
+                            } else {
+                                st.players[k].heresy = std::min(10, st.players[k].heresy + 2);
+                                if (fid == GC) pl.falls++;
                             }
+                            break;
                         }
                     }
                 }
@@ -2103,6 +2104,7 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         PyDict_SetItemString(py_cards, inq::CARD_DB[c].id, PyLong_FromLong(card_plays[c]));
     }
     PyDict_SetItemString(py_res, "card_plays", py_cards);
+    PyDict_SetItemString(py_res, "card_plays_total", py_cards);
     Py_DECREF(py_cards);
 
     // 5. Scalars
