@@ -20,6 +20,6 @@ echo "🔨 Kompilacja inquisitio_native (C++20, -O3)..."
 clang++ -std=c++20 -O3 -fPIC -shared -undefined dynamic_lookup \
     $INCLUDES \
     "$DIR/inquisitio_native.cpp" \
-    -o "$ROOT_DIR/sim/inquisitio_native.so"
+    -o "$ROOT_DIR/src/inquisitio_native.so"
 
-echo "✅ Zbudowano pomyślnie: $ROOT_DIR/sim/inquisitio_native.so"
+echo "✅ Zbudowano pomyślnie: $ROOT_DIR/src/inquisitio_native.so"

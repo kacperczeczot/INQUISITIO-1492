@@ -57,43 +57,103 @@ static const uint8_t STEP_TOWARD_TABLE[5][5] = {
     return false;
 }
 
-// ─── Fast RNG (Xoroshiro128+) ───────────────────────────────────────────────
-struct FastRng {
-    uint64_t s[2];
+// ─── Python-Compatible MT19937 RNG ──────────────────────────────────────────
+#define MT_N 624
+#define MT_M 397
+#define MT_MATRIX_A 0x9908b0dfUL
+#define MT_UPPER_MASK 0x80000000UL
+#define MT_LOWER_MASK 0x7fffffffUL
 
-    static inline uint64_t rotl(const uint64_t x, int k) {
-        return (x << k) | (x >> (64 - k));
+struct FastRng {
+    uint32_t mt[MT_N];
+    int mti;
+
+    void init_genrand(uint32_t s) {
+        mt[0] = s & 0xffffffffUL;
+        for (mti = 1; mti < MT_N; mti++) {
+            mt[mti] = (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti);
+            mt[mti] &= 0xffffffffUL;
+        }
+    }
+
+    void init_by_array(const uint32_t* init_key, int key_length) {
+        init_genrand(19650218UL);
+        int i = 1, j = 0;
+        int k = (MT_N > key_length ? MT_N : key_length);
+        for (; k; k--) {
+            mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1664525UL))
+                  + init_key[j] + j;
+            mt[i] &= 0xffffffffUL;
+            i++; j++;
+            if (i >= MT_N) { mt[0] = mt[MT_N-1]; i = 1; }
+            if (j >= key_length) j = 0;
+        }
+        for (k = MT_N - 1; k; k--) {
+            mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1566083941UL))
+                  - i;
+            mt[i] &= 0xffffffffUL;
+            i++;
+            if (i >= MT_N) { mt[0] = mt[MT_N-1]; i = 1; }
+        }
+        mt[0] = 0x80000000UL;
     }
 
     void seed(uint64_t seed_val) {
-        uint64_t z = (seed_val + 0x9e3779b97f4a7c15ULL);
-        z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
-        z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
-        s[0] = z ^ (z >> 31);
-        z = (seed_val + 0x9e3779b97f4a7c15ULL * 2);
-        z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
-        z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
-        s[1] = z ^ (z >> 31);
-        if (s[0] == 0 && s[1] == 0) s[0] = 1;
+        uint32_t key[1] = {(uint32_t)(seed_val & 0xffffffffUL)};
+        init_by_array(key, 1);
     }
 
-    inline uint64_t next_u64() {
-        const uint64_t s0 = s[0];
-        uint64_t s1 = s[1];
-        const uint64_t result = rotl(s0 + s1, 17) + s0;
-        s1 ^= s0;
-        s[0] = rotl(s0, 49) ^ s1 ^ (s1 << 21);
-        s[1] = rotl(s1, 28);
-        return result;
+    uint32_t genrand_uint32() {
+        uint32_t y;
+        static const uint32_t mag01[2] = {0x0UL, MT_MATRIX_A};
+
+        if (mti >= MT_N) {
+            int kk;
+            for (kk = 0; kk < MT_N - MT_M; kk++) {
+                y = (mt[kk] & MT_UPPER_MASK) | (mt[kk+1] & MT_LOWER_MASK);
+                mt[kk] = mt[kk+MT_M] ^ (y >> 1) ^ mag01[y & 0x1UL];
+            }
+            for (; kk < MT_N - 1; kk++) {
+                y = (mt[kk] & MT_UPPER_MASK) | (mt[kk+1] & MT_LOWER_MASK);
+                mt[kk] = mt[kk+(MT_M-MT_N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
+            }
+            y = (mt[MT_N-1] & MT_UPPER_MASK) | (mt[0] & MT_LOWER_MASK);
+            mt[MT_N-1] = mt[MT_M-1] ^ (y >> 1) ^ mag01[y & 0x1UL];
+            mti = 0;
+        }
+
+        y = mt[mti++];
+        y ^= (y >> 11);
+        y ^= (y << 7) & 0x9d2c5680UL;
+        y ^= (y << 15) & 0xefc60000UL;
+        y ^= (y >> 18);
+        return y;
+    }
+
+    inline double next_double() {
+        uint32_t a = genrand_uint32() >> 5;
+        uint32_t b = genrand_uint32() >> 6;
+        return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
+    }
+
+    inline uint32_t getrandbits(int k) {
+        if (k == 0) return 0;
+        if (k <= 32) {
+            return genrand_uint32() >> (32 - k);
+        }
+        return genrand_uint32();
     }
 
     inline uint32_t next_u32(uint32_t bound) {
         if (bound <= 1) return 0;
-        return (uint32_t)((next_u64() & 0xFFFFFFFFULL) % bound);
-    }
-
-    inline double next_double() {
-        return (next_u64() >> 11) * (1.0 / 9007199254740992.0);
+        int k = 0;
+        uint32_t temp = bound;
+        while (temp > 0) { k++; temp >>= 1; }
+        uint32_t r = getrandbits(k);
+        while (r >= bound) {
+            r = getrandbits(k);
+        }
+        return r;
     }
 
     void shuffle(uint8_t* arr, int n) {
@@ -341,9 +401,7 @@ struct GameStateNative {
 };
 
 // ─── Setup Presets ──────────────────────────────────────────────────────────
-static void init_game(GameStateNative& st, int preset_id, uint64_t seed, const ConfigOverridesNative& ov) {
-    FastRng rng;
-    rng.seed(seed);
+static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const ConfigOverridesNative& ov) {
 
     st.era = 0;
     st.eras_since_autodafe = 0;
@@ -452,7 +510,7 @@ static inline int effective_card_cost(uint8_t card_idx, const GameStateNative& s
     const CardDef& c = CARD_DB[card_idx];
     int base_c = ov.has_card_cost_override[card_idx] ? ov.card_cost_overrides[card_idx] : c.cost_gold;
     int sig_off = (c.breaks_rule || (c.tags & TAG_SIGNATURE)) ? ov.sig_cost_offset : 0;
-    int curfew = (st.active_time_edict == 2 && (c.fixed_loc == RYNEK || c.fixed_loc == GILDIA)) ? 1 : 0;
+    int curfew = (st.active_time_edict == 1 && (c.fixed_loc == RYNEK || c.fixed_loc == GILDIA)) ? 1 : 0;
     return std::max(0, base_c + ov.card_cost_offset + sig_off + curfew);
 }
 
@@ -506,13 +564,18 @@ static inline void draw_cards(PlayerStateNative& pl, int n, FastRng& rng) {
         if (pl.deck_count == 0) {
             if (pl.discard_count == 0) return;
             for (int d = 0; d < pl.discard_count; ++d) {
-                pl.deck[d] = pl.discard[pl.discard_count - 1 - d];
+                pl.deck[d] = pl.discard[d];
             }
             pl.deck_count = pl.discard_count;
             pl.discard_count = 0;
+            rng.shuffle(pl.deck, pl.deck_count);
         }
         if (pl.deck_count > 0) {
-            pl.hand[pl.hand_count++] = pl.deck[--pl.deck_count];
+            pl.hand[pl.hand_count++] = pl.deck[0];
+            for (int d = 0; d < pl.deck_count - 1; ++d) {
+                pl.deck[d] = pl.deck[d + 1];
+            }
+            pl.deck_count--;
         }
     }
 }
@@ -598,6 +661,15 @@ static inline void move_agent_step(GameStateNative& st, uint8_t fid, FastRng& rn
 
 static inline void take_economic_action(GameStateNative& st, uint8_t fid, FastRng& rng, const ConfigOverridesNative& ov) {
     int amt = std::max(0, ov.intrigue_gold_base + ov.intrigue_gold_offset);
+    if (st.active_time_edict == 8) { // time-09: Jarmark Królewski (economic action on Rynek = max(base, 2))
+        const PlayerStateNative& pl = st.players[fid];
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (!pl.agents[a].arrested && pl.agents[a].location == RYNEK) {
+                amt = std::max(amt, 2);
+                break;
+            }
+        }
+    }
     st.players[fid].gold += amt;
     move_agent_step(st, fid, rng);
 }
@@ -790,7 +862,7 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
             if (c_idx == 41) u += 5.0f; // kt-06
             if (c_idx == 44) u += 5.0f; // kt-09
             if (c_idx == 45) { // kt-10
-                if (pl.fragments >= 3) u += 12.0f;
+                if (pl.fragments >= 3) u += 20.0f;
                 else u -= 20.0f;
             }
             if (c_idx == 36 || c_idx == 37 || c_idx == 39 || c_idx == 42 || c_idx == 43 || c_idx == 46 || c_idx == 47) {
@@ -923,6 +995,46 @@ static inline void move_agent_card_native(GameStateNative& st, uint8_t fid, Fast
             pl.agents[ag_idx].location = dest;
         }
     }
+}
+
+static inline bool card_fiasco_native(const GameStateNative& st, uint8_t fid, uint8_t card_idx, uint8_t staged_loc) {
+    const CardDef& c = CARD_DB[card_idx];
+    const PlayerStateNative& pl = st.players[fid];
+
+    if (c.fixed_loc < 5) {
+        bool has_free = false;
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (!pl.agents[a].arrested && pl.agents[a].location == c.fixed_loc) {
+                has_free = true;
+                break;
+            }
+        }
+        if (!has_free) return true;
+    }
+
+    if (card_idx == 6 || card_idx == 17) { // so-07, caa-06
+        bool has_lochy = false;
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (pl.agents[a].location == LOCHY) {
+                has_lochy = true;
+                break;
+            }
+        }
+        if (!has_lochy) return true;
+    }
+
+    if (card_idx == 3 || card_idx == 7) { // so-04, so-08
+        bool free_here = false;
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (!pl.agents[a].arrested && pl.agents[a].location == staged_loc) {
+                free_here = true;
+                break;
+            }
+        }
+        if (!free_here) return true;
+    }
+
+    return false;
 }
 
 static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t card_idx, FastRng& rng, const ConfigOverridesNative& ov) {
@@ -1141,6 +1253,7 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     }
 
     if (card_idx == 41) { // kt-06 (Przesłuchanie Imienia)
+        printf("KT06 ");
         uint8_t rival = pick_rival_native(st, fid, rng);
         if (rival != fid) {
             bool rival_arrested = false;
@@ -1155,8 +1268,9 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
                     pl.hook_victims_ever_mask |= (1 << rival);
                 } else {
                     st.players[rival].heresy = std::min(10, st.players[rival].heresy + 2);
-                    pl.fragments++;
+                    pl.fragments++; // from interrogate(heresy)
                 }
+                pl.fragments++; // from kt-06
             }
         }
     }
@@ -1446,7 +1560,7 @@ static inline void resolve_time_edict_native(GameStateNative& st, uint8_t edict_
         }
         st.inquisitor_location = STEP_TOWARD_TABLE[st.inquisitor_location][TRYBUNAL];
     } else if (edict_id == 1) { // time-02: Godzina Policyjna
-        st.active_time_edict = 2; // curfew
+        st.active_time_edict = 1; // curfew
     } else if (edict_id == 2) { // time-03: Flota Odkrywców
         st.sea_route_open = true;
         for (int p = 0; p < st.num_players; ++p) {
@@ -1471,7 +1585,7 @@ static inline void resolve_time_edict_native(GameStateNative& st, uint8_t edict_
             if (st.players[fid].heresy == min_h) st.players[fid].gold++;
         }
     } else if (edict_id == 4) { // time-05: Gorączka Donosów
-        st.active_time_edict = 5;
+        st.active_time_edict = 4;
     } else if (edict_id == 5) { // time-06: Nocna Obława
         int loc_c[5] = {0};
         for (int p = 0; p < st.num_players; ++p) {
@@ -1510,9 +1624,9 @@ static inline void resolve_time_edict_native(GameStateNative& st, uint8_t edict_
             st.relics_on_board[LOCHY]++;
         }
     } else if (edict_id == 7) { // time-08: Święte Przymierze
-        st.active_time_edict = 8;
+        st.active_time_edict = 7;
     } else if (edict_id == 8) { // time-09: Jarmark Królewski
-        st.active_time_edict = 9;
+        st.active_time_edict = 8;
     } else if (edict_id == 9) { // time-10: Amnestia Biskupia
         for (int p = 0; p < st.num_players; ++p) {
             uint8_t fid = st.turn_order[p];
@@ -1629,7 +1743,7 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                             pl.used_hook = true;
                             st.hooks_forced++;
                             pl.hooks_on[k]--;
-                            int eff_thresh = ov.threshold - (st.active_time_edict == 5 ? 1 : 0);
+                            int eff_thresh = ov.threshold - (st.active_time_edict == 4 ? 1 : 0);
                             bool comply = (st.players[k].heresy + 2 >= eff_thresh);
                             if (comply) {
                                 if (st.players[k].gold > 0) {
@@ -1818,6 +1932,10 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
             uint8_t fid = st.turn_order[p];
             for (int sp = 0; sp < st.pending_count; ++sp) {
                 if (st.pending_plays[sp].location == loc && st.pending_plays[sp].owner == fid) {
+                    if (card_fiasco_native(st, fid, st.pending_plays[sp].card_idx, loc)) {
+                        st.cards_played[st.pending_plays[sp].card_idx]++;
+                        continue;
+                    }
                     apply_card_effect(st, fid, st.pending_plays[sp].card_idx, rng, ov);
                     if (check_winner_fast(st, ov) != NO_FACTION) return;
                 }
@@ -1877,8 +1995,8 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     }
 
     // Accusations & Verdicts (1 accusation per player in turn order)
-    if (st.active_time_edict != 8) { // time-08: verdicts suspended
-        int eff_thresh = ov.threshold - (st.active_time_edict == 5 ? 1 : 0);
+    if (st.active_time_edict != 7) { // time-08: verdicts suspended
+        int eff_thresh = ov.threshold - (st.active_time_edict == 4 ? 1 : 0);
 
         for (int i = 0; i < st.num_players; ++i) {
             uint8_t fid = st.turn_order[i];
@@ -2039,10 +2157,9 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
 }
 
 static inline uint8_t play_game_fast(int preset_id, uint64_t seed, const ConfigOverridesNative& ov, int& out_eras, const char*& out_path, GameStateNative& final_st) {
-    init_game(final_st, preset_id, seed, ov);
-
     FastRng rng;
     rng.seed(seed);
+    init_game(final_st, preset_id, rng, ov);
 
     for (int era = 1; era <= ov.max_eras; ++era) {
         final_st.era = era;
