@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.79</span>
+              <span id="prev-meta-ver">v1.0-alpha.80</span>
             </div>
           </div>
         </div>
@@ -1152,6 +1152,7 @@
       "gold"
     ],
     "target_heresy": 1,
+    "heresy": 2,
     "heresy_text": "Konfiskata majątku skazańców to prawny obowiązek trybunału.",
     "lore": "Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie."
   },
@@ -1400,7 +1401,7 @@
   "caa-08": {
     "name": "Kaptur Nocy",
     "type": "akcja",
-    "cost": 2,
+    "cost": 3,
     "heresy": 0,
     "action": "move_agent",
     "condition": "has_double_agent",
@@ -2333,7 +2334,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.79';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.80';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

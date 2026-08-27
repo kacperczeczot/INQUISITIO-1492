@@ -4,7 +4,7 @@
 
 # INQUISITIO 1492 — Księga Zasad
 
-### Wariant kanoniczny: 4 graczy · wersja v1.0-alpha.79
+### Wariant kanoniczny: 4 graczy · wersja v1.0-alpha.80
 
 > *„Toledo, Rok Pański 1492. Grenada upadła. Na starym moście Alcántara spotykają się ci, którzy wierzą w ogień, ci, którzy uciekają z relikwiami, mędrcy składający zakazany kodeks i królewscy poborcy. W tym mieście nikt nie jest bez winy — chodzi jedynie o to, kto spłonie pierwszy."*
 

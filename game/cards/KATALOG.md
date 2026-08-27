@@ -50,7 +50,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | Konfiskata majątku skazańców to prawny obowiązek trybunału. |
 | `effect` | Zyskaj 2 złota. Wskaż rywala: +1 Herezja. |
 | `lore` | Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie. |
@@ -361,7 +361,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
