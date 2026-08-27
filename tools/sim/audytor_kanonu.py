@@ -95,6 +95,8 @@ REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "s
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
 LIVE_LOG_PATH = REPORTS_DIR / "audytor_live.log"
 
+import multiprocessing
+
 class _LiveTee:
     def __init__(self, filename: Path):
         self.terminal = sys.stdout
@@ -111,7 +113,8 @@ class _LiveTee:
         self.terminal.flush()
         self.log.flush()
 
-sys.stdout = _LiveTee(LIVE_LOG_PATH)
+if multiprocessing.current_process().name == "MainProcess":
+    sys.stdout = _LiveTee(LIVE_LOG_PATH)
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -311,7 +314,8 @@ def _simulate_flat_tasks_pool(
 
     results = []
     t0 = time.time()
-    chunk_size = max(1, total // (workers * 4))
+    chunk_size = max(1, min(10, total // (workers * 4)))
+    step_freq = max(1, total // 10)
     with ProcessPoolExecutor(max_workers=workers) as executor:
         for idx, res in enumerate(executor.map(_run_single_batch_task, task_list, chunksize=chunk_size), 1):
             results.append(res)
@@ -319,10 +323,13 @@ def _simulate_flat_tasks_pool(
             rate = idx / elapsed if elapsed > 0 else 0
             eta_s = (total - idx) / rate if rate > 0 else 0
             eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
-            sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} bat/s | ETA: {eta_str:<8s}")
+            if idx % step_freq == 0 or idx == total:
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} bat/s | ETA: {eta_str:<8s}\n")
+            else:
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} bat/s | ETA: {eta_str:<8s}")
             sys.stdout.flush()
 
-    sys.stdout.write(f"\n   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
+    sys.stdout.write(f"   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
     return results
 
 
