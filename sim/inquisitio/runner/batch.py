@@ -14,7 +14,7 @@ from inquisitio.engine.setup import SETUP_PRESETS, new_game
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.turn import play_game
 
-# Native C++ engine disabled for production canon auditor to preserve 100% SSOT parity
+# Use Python SSOT engine for complete mathematical fidelity and valid scores
 _HAS_NATIVE = False
 
 @dataclass
@@ -128,6 +128,14 @@ def run_batch(
             win_paths=res["win_paths"],
             era_hist=res["era_hist"],
             eras_avg=res.get("eras_avg", 0.0),
+            autodafe_avg=res.get("autodafe_avg", 0.0),
+            accusations_avg=res.get("accusations_avg", 0.0),
+            convictions_avg=res.get("convictions_avg", 0.0),
+            deadlocks_avg=res.get("deadlocks_avg", 0.0),
+            eras_limit_pct=res.get("eras_limit_pct", 0.0),
+            avg_gold_end=res.get("avg_gold_end", 0.0),
+            avg_heresy_end=res.get("avg_heresy_end", 0.0),
+            passes_forced_pct=res.get("passes_forced_pct", 0.0),
         )
 
     wins: Counter[str] = Counter()

@@ -118,7 +118,6 @@ struct CardDef {
     uint8_t cost_gold;
     uint8_t heresy;
     uint8_t target_heresy;
-    uint8_t heresy_decrease;
     uint8_t gold_gain;
     uint8_t agents_move;
     bool is_arrest;
@@ -129,67 +128,77 @@ struct CardDef {
     uint16_t tags;
 };
 
-// Static card table for all 50 faction cards
-static CardDef CARD_DB[50] = {
-    // SWIETE OFICJUM (0..9)
-    {"so-01", SO, 1, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_INQUISITOR},
-    {"so-02", SO, 1, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_INQUISITOR},
-    {"so-03", SO, 1, 0, 0, 0, 0, 0, true,  false, false, 0, NO_LOCATION, TAG_NONE},
-    {"so-04", SO, 1, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_INTERROGATE},
-    {"so-05", SO, 1, 0, 0, 0, 0, 0, false, false, false, 1, NO_LOCATION, TAG_NONE}, // Reakcja
-    {"so-06", SO, 2, 0, 1, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"so-07", SO, 2, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_AUTODAFE},
-    {"so-08", SO, 2, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_NONE},
-    {"so-09", SO, 3, 0, 2, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"so-10", SO, 3, 0, 0, 0, 0, 0, false, false, true,  2, NO_LOCATION, TAG_SIGNATURE | TAG_AUTODAFE},
+// Static card table for all 60 faction cards
+static CardDef CARD_DB[60] = {
+    // SWIETE OFICJUM (0..11)
+    {"so-01", SO, 1, 2, 0, 2, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-02", SO, 1, 2, 1, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-03", SO, 2, 3, 3, 1, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-04", SO, 1, 0, 1, 1, 0, false, false, false, 0, NO_LOCATION, TAG_INQUISITOR},
+    {"so-05", SO, 0, 0, 1, 0, 0, false, false, false, 1, NO_LOCATION, TAG_NONE},
+    {"so-06", SO, 2, 0, 1, 0, 0, true, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-07", SO, 1, 0, 0, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-08", SO, 0, 0, 0, 3, 0, false, false, false, 0, NO_LOCATION, TAG_INQUISITOR},
+    {"so-09", SO, 1, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-10", SO, 5, 1, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_AUTODAFE | TAG_SIGNATURE},
+    {"so-11", SO, 1, 1, 1, 1, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"so-12", SO, 1, 0, 1, 1, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
 
-    // CIENIE AL-ANDALUS (10..19)
-    {"caa-01", CAA, 1, 0, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"caa-02", CAA, 1, 1, 0, 0, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"caa-03", CAA, 1, 0, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_RELIC},
-    {"caa-04", CAA, 1, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_NONE},
-    {"caa-05", CAA, 2, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_HARBOR},
-    {"caa-06", CAA, 2, 1, 1, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"caa-07", CAA, 2, 0, 0, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"caa-08", CAA, 2, 0, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_RELIC},
-    {"caa-09", CAA, 3, 1, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_HARBOR},
-    {"caa-10", CAA, 3, 0, 0, 0, 0, 0, false, false, true,  2, NO_LOCATION, TAG_SIGNATURE | TAG_RELIC},
+    // CIENIE AL-ANDALUS (12..23)
+    {"caa-01", CAA, 1, 1, 1, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"caa-02", CAA, 0, 0, 0, 3, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"caa-03", CAA, 0, 1, 0, 2, 1, false, false, false, 0, NO_LOCATION, TAG_RELIC},
+    {"caa-04", CAA, 0, 0, 1, 3, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"caa-05", CAA, 1, 0, 3, 3, 0, false, false, false, 0, NO_LOCATION, TAG_RELIC},
+    {"caa-06", CAA, 0, 0, 2, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"caa-07", CAA, 0, 0, 0, 3, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"caa-08", CAA, 3, 0, 2, 3, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"caa-09", CAA, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_RELIC},
+    {"caa-10", CAA, 3, 0, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_RELIC | TAG_SIGNATURE},
+    {"caa-11", CAA, 1, 0, 2, 3, 1, false, false, false, 0, NO_LOCATION, TAG_INQUISITOR},
+    {"caa-12", CAA, 0, 0, 0, 4, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
 
-    // KORONA BORGIOWIE (20..29)
-    {"kb-01", KB, 1, 0, 0, 0, 1, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kb-02", KB, 1, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_NONE},
-    {"kb-03", KB, 1, 0, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_DECREE},
-    {"kb-04", KB, 1, 0, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kb-05", KB, 2, 0, 0, 0, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kb-06", KB, 2, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_DECREE},
-    {"kb-07", KB, 2, 0, 1, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kb-08", KB, 2, 0, 0, 0, 0, 0, true,  false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kb-09", KB, 3, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_DECREE},
-    {"kb-10", KB, 3, 0, 0, 0, 0, 0, false, false, true,  2, NO_LOCATION, TAG_SIGNATURE | TAG_DECREE},
+    // KORONA BORGIOWIE (24..35)
+    {"kb-01", KB, 1, 1, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-02", KB, 1, 0, 1, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-03", KB, 1, 1, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-04", KB, 2, 0, 0, 0, 1, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-05", KB, 2, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_DECREE},
+    {"kb-06", KB, 2, 0, 0, 0, 0, true, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-07", KB, 2, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-08", KB, 3, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-09", KB, 2, 0, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_DECREE | TAG_SIGNATURE},
+    {"kb-10", KB, 4, 1, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_DECREE | TAG_SIGNATURE},
+    {"kb-11", KB, 1, 0, 1, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-12", KB, 1, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
 
-    // KABALA TOLEDO (30..39)
-    {"kt-01", KT, 1, 1, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
-    {"kt-02", KT, 1, 0, 0, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kt-03", KT, 1, 1, 0, 0, 1, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kt-04", KT, 1, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_NONE},
-    {"kt-05", KT, 2, 1, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
-    {"kt-06", KT, 2, 0, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kt-07", KT, 2, 0, 0, 2, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kt-08", KT, 2, 1, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"kt-09", KT, 3, 1, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
-    {"kt-10", KT, 3, 0, 0, 0, 0, 0, false, false, true,  2, NO_LOCATION, TAG_SIGNATURE},
+    // KABALA TOLEDO (36..47)
+    {"kt-01", KT, 1, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kt-02", KT, 0, 0, 0, 3, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kt-03", KT, 0, 2, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
+    {"kt-04", KT, 1, 0, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kt-05", KT, 1, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
+    {"kt-06", KT, 2, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
+    {"kt-07", KT, 1, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"kt-08", KT, 1, 0, 0, 0, 0, true, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kt-09", KT, 1, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FRAGMENT},
+    {"kt-10", KT, 4, 0, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_FRAGMENT | TAG_SIGNATURE},
+    {"kt-11", KT, 2, 0, 1, 1, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"kt-12", KT, 0, 1, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
 
-    // GILDIA CIENI (40..49)
-    {"gc-01", GC, 1, 0, 0, 0, 1, 0, false, false, false, 0, NO_LOCATION, TAG_FALL},
-    {"gc-02", GC, 1, 0, 0, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"gc-03", GC, 1, 0, 1, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"gc-04", GC, 1, 0, 0, 0, 0, 0, false, true,  false, 0, NO_LOCATION, TAG_NONE},
-    {"gc-05", GC, 2, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FALL},
-    {"gc-06", GC, 2, 0, 0, 0, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
-    {"gc-07", GC, 2, 0, 1, 0, 0, 1, false, false, false, 0, NO_LOCATION, TAG_FALL},
-    {"gc-08", GC, 2, 0, 0, 0, 0, 0, true,  false, false, 0, NO_LOCATION, TAG_NONE},
-    {"gc-09", GC, 3, 0, 0, 0, 0, 0, false, false, false, 0, NO_LOCATION, TAG_FALL},
-    {"gc-10", GC, 3, 0, 0, 0, 0, 0, false, false, true,  2, NO_LOCATION, TAG_SIGNATURE | TAG_FALL}
+    // GILDIA CIENI (48..59)
+    {"gc-01", GC, 1, 1, 0, 1, 1, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-02", GC, 0, 0, 0, 2, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-03", GC, 1, 2, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-04", GC, 1, 1, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-05", GC, 0, 0, 0, 0, 0, false, false, false, 1, NO_LOCATION, TAG_NONE},
+    {"gc-06", GC, 3, 1, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-07", GC, 0, 0, 0, 0, 0, true, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-08", GC, 1, 2, 1, 1, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-09", GC, 1, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_FALL},
+    {"gc-10", GC, 4, 2, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_FALL | TAG_SIGNATURE},
+    {"gc-11", GC, 0, 2, 1, 0, 0, false, false, false, 0, NO_LOCATION, TAG_NONE},
+    {"gc-12", GC, 0, 2, 0, 1, 1, false, false, false, 0, NO_LOCATION, TAG_NONE}
 };
 
 // ─── Compact State Structures ───────────────────────────────────────────────
@@ -206,11 +215,11 @@ struct PlayerStateNative {
     int8_t heresy;
     int8_t gold;
     
-    uint8_t hand[10];
+    uint8_t hand[12];
     uint8_t hand_count;
-    uint8_t deck[10];
+    uint8_t deck[12];
     uint8_t deck_count;
-    uint8_t discard[10];
+    uint8_t discard[12];
     uint8_t discard_count;
 
     AgentTokenNative agents[3];
@@ -485,7 +494,7 @@ static inline uint8_t check_winner_fast(GameStateNative& st, const ConfigOverrid
         } else if (fid == KB) {
             int decrees_need = std::max(1, 2 + ov.kb_decrees_offset);
             int hooks_need = std::max(0, 2 + ov.kb_hooks_offset);
-            if (pl.decrees_played >= decrees_need && pl.distinct_hooks() >= hooks_need) {
+            if (pl.decrees_played >= decrees_need && pl.distinct_hooks_ever() >= hooks_need) {
                 st.winner = fid; st.win_path = "kb_main"; return fid;
             }
         } else if (fid == KT) {
@@ -552,28 +561,63 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
         const CardDef& c = CARD_DB[c_idx];
         int cost = effective_card_cost(c_idx, st, ov);
 
-        float u = 2.0f;
-        u += (float)c.gold_gain * 1.2f;
-        u -= (float)cost * 0.8f;
-        u -= (float)c.heresy * 1.5f;
-        u += (float)c.target_heresy * 1.0f;
+        float u = 1.8f;
+        if (c.gold_gain > 0) {
+            u += (float)(c.gold_gain - cost) * 1.5f;
+        } else {
+            u -= (float)cost * 0.8f;
+            if (pl.gold <= cost && cost > 0) u -= 0.4f;
+        }
 
-        if (c.tags & TAG_SIGNATURE) u += 4.0f;
-        if (c.tags & TAG_AUTODAFE) u += 3.5f;
-        if (c.tags & TAG_RELIC) u += 3.0f;
-        if (c.tags & TAG_DECREE) u += 3.0f;
-        if (c.tags & TAG_FRAGMENT) u += 3.2f;
-        if (c.tags & TAG_FALL) u += 2.8f;
+        int post_h = pl.heresy + c.heresy;
+        if (post_h >= ov.threshold) {
+            u -= (float)c.heresy * 4.5f;
+        } else if (post_h >= ov.threshold - 1) {
+            u -= (float)c.heresy * 2.5f;
+        } else if (post_h >= ov.observed_threshold) {
+            u -= (float)c.heresy * 1.2f;
+        } else {
+            u -= (float)c.heresy * 0.3f;
+        }
 
-        if (fid == KB && (c.tags & TAG_DECREE)) {
-            u += 3.8f;
-            if (pl.decrees_played == 1 && pl.distinct_hooks() >= 2) u += 4.5f;
-        } else if (fid == CAA && (c.tags & TAG_RELIC)) {
-            u += 4.0f;
-        } else if (fid == KT && (c.tags & TAG_FRAGMENT)) {
-            u += 3.5f;
-        } else if (fid == SO && (c.tags & TAG_AUTODAFE)) {
-            u += 4.0f;
+        if (c.target_heresy > 0) u += (float)c.target_heresy * 1.8f;
+        if (c.creates_hook) {
+            if (fid == GC) u += 3.6f;
+            else if (fid == KB) u += 3.2f;
+            else u += 2.2f;
+        }
+        if (c.is_arrest) u += 2.5f;
+
+        // Faction-specific finisher & core synergies
+        if (fid == CAA) {
+            if (c.tags & TAG_RELIC) u += 3.5f;
+            if (c_idx == 21) { // caa-10
+                if (st.sea_route_open) u += (pl.relics_evacuated >= 1 ? 7.0f : 4.0f);
+                else u -= 18.0f;
+            }
+        } else if (fid == KB) {
+            if (c.tags & TAG_DECREE) {
+                u += 3.8f;
+                if (pl.decrees_played == 1 && pl.distinct_hooks() >= 2) u += 4.5f;
+            }
+            if (c_idx == 33) { // kb-10
+                if (pl.distinct_hooks() >= 2) u += (pl.decrees_played >= 1 ? 7.5f : 4.5f);
+                else u -= 20.0f;
+            }
+        } else if (fid == KT) {
+            if (c.tags & TAG_FRAGMENT) u += 4.5f;
+            if (c_idx == 45) { // kt-10
+                if (pl.fragments >= 3) u += 12.0f;
+                else u -= 20.0f;
+            }
+        } else if (fid == GC) {
+            if (c.tags & TAG_FALL) u += 4.8f;
+            if (c_idx == 57) { // gc-10
+                u += 9.5f;
+            }
+        } else if (fid == SO) {
+            if (c.tags & TAG_AUTODAFE) u += 4.5f;
+            if (c_idx == 9) u += 6.5f; // so-10
         }
 
         if (u > best_u) {
@@ -598,7 +642,6 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
 
     if (c.gold_gain > 0) pl.gold += c.gold_gain;
     if (c.heresy > 0) pl.heresy = std::min(10, pl.heresy + c.heresy);
-    if (c.heresy_decrease > 0 && pl.heresy > 0) pl.heresy = std::max(0, pl.heresy - c.heresy_decrease);
 
     if (c.target_heresy > 0) {
         uint8_t victim = st.turn_order[rng.next_u32(st.num_players)];
@@ -633,13 +676,41 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
         }
     }
 
-    if (c.tags & TAG_DECREE) pl.decrees_played++;
-    if (c.tags & TAG_FRAGMENT) pl.fragments++;
+    if (c.tags & TAG_DECREE) {
+        if (card_idx == 33) { // kb-10
+            if (pl.distinct_hooks_ever() >= 2) {
+                pl.decrees_played++;
+            }
+        } else {
+            pl.decrees_played++;
+        }
+    }
+    if (c.tags & TAG_FRAGMENT) {
+        if (card_idx == 45) { // kt-10
+            if (pl.fragments >= 3) {
+                pl.kt10_played = true;
+            }
+        } else {
+            pl.fragments++;
+        }
+    }
     if (c.tags & TAG_FALL) pl.falls++;
-    if (card_idx == 39) pl.kt10_played = true; // kt-10
-    if (c.tags & TAG_RELIC) {
-        if (st.relics_on_board[GILDIA] > 0 || st.relics_on_board[RYNEK] > 0 || st.sea_route_open) {
-            pl.relics_evacuated++;
+
+    if (card_idx == 16 || card_idx == 21) { // caa-05 or caa-10
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (!pl.agents[a].arrested) {
+                uint8_t loc = pl.agents[a].location;
+                if (st.relics_on_board[loc] > 0) {
+                    bool in_port = (loc == RYNEK || loc == GILDIA);
+                    bool quiet = in_port && (st.inquisitor_location != loc);
+                    if (st.sea_route_open || quiet) {
+                        st.relics_on_board[loc]--;
+                        pl.relics_evacuated++;
+                        if (quiet) pl.shadow_exit = true;
+                        break;
+                    }
+                }
+            }
         }
     }
 }
@@ -723,6 +794,34 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     }
     st.inquisitor_location = best_loc;
 
+    // Autodafe check
+    st.eras_since_autodafe++;
+    if (st.eras_since_autodafe >= st.autodafe_cooldown) {
+        int burned = 0;
+        bool any_arrested = false;
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t fid = st.turn_order[p];
+            if (fid == SO) continue;
+            PlayerStateNative& pl = st.players[fid];
+            for (int a = 0; a < pl.agent_count; ++a) {
+                if (!pl.agents[a].arrested && pl.agents[a].location == st.inquisitor_location) {
+                    pl.heresy = std::min(10, pl.heresy + 1);
+                    pl.agents[a].arrested = true;
+                    pl.agents[a].location = LOCHY;
+                    any_arrested = true;
+                    if (pl.heresy >= st.observed_threshold) {
+                        burned++;
+                    }
+                }
+            }
+        }
+        if (any_arrested) {
+            st.autodafe_count++;
+            st.eras_since_autodafe = 0;
+            st.players[SO].stacks += burned;
+        }
+    }
+
     // Resolve pending plays
     for (int p = 0; p < st.pending_count; ++p) {
         const StagedPlayNative& sp = st.pending_plays[p];
@@ -735,6 +834,7 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     // Interrogations
     for (int i = 0; i < st.num_players; ++i) {
         uint8_t fid = st.turn_order[i];
+        if (fid != SO) continue;
         PlayerStateNative& pl = st.players[fid];
         bool has_dungeon = false;
         for (int a = 0; a < pl.agent_count; ++a) {
@@ -742,7 +842,15 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                 has_dungeon = true; break;
             }
         }
-        if (has_dungeon && !pl.used_interrogation) {
+        int rival_in_dungeon = 0;
+        for (int p = 0; p < st.num_players; ++p) {
+            uint8_t r_fid = st.turn_order[p];
+            if (r_fid == SO) continue;
+            for (int a = 0; a < st.players[r_fid].agent_count; ++a) {
+                if (st.players[r_fid].agents[a].location == LOCHY) rival_in_dungeon++;
+            }
+        }
+        if (has_dungeon && rival_in_dungeon > 0 && !pl.used_interrogation) {
             pl.used_interrogation = true;
             pl.stacks++;
         }
@@ -757,7 +865,9 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                 st.accusations++;
                 st.players[rival].heresy = 0; // Cleared after verdict
                 st.players[fid].condemned_rivals_mask |= (1 << rival);
-                st.players[fid].stacks += 2;
+                if (fid == SO) {
+                    st.players[fid].stacks += 1;
+                }
                 break;
             }
         }
@@ -783,32 +893,31 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     }
 }
 
-static inline uint8_t play_game_fast(int preset_id, uint64_t seed, const ConfigOverridesNative& ov, int& out_eras, const char*& out_path) {
-    GameStateNative st;
-    init_game(st, preset_id, seed, ov);
+static inline uint8_t play_game_fast(int preset_id, uint64_t seed, const ConfigOverridesNative& ov, int& out_eras, const char*& out_path, GameStateNative& final_st) {
+    init_game(final_st, preset_id, seed, ov);
 
     FastRng rng;
     rng.seed(seed);
 
-    while (st.era <= st.max_eras && st.winner == NO_FACTION) {
-        play_turn_era(st, rng, ov);
-        if (st.winner != NO_FACTION) {
-            out_eras = st.era;
-            out_path = st.win_path ? st.win_path : "main";
-            return st.winner;
+    while (final_st.era <= final_st.max_eras && final_st.winner == NO_FACTION) {
+        play_turn_era(final_st, rng, ov);
+        if (final_st.winner != NO_FACTION) {
+            out_eras = final_st.era;
+            out_path = final_st.win_path ? final_st.win_path : "main";
+            return final_st.winner;
         }
-        st.era++;
+        final_st.era++;
     }
 
-    out_eras = st.max_eras;
+    out_eras = final_st.max_eras;
     out_path = "tiebreak";
     
     // Tiebreak: highest progress
-    uint8_t best_f = st.turn_order[0];
+    uint8_t best_f = final_st.turn_order[0];
     int max_p = -999;
-    for (int i = 0; i < st.num_players; ++i) {
-        uint8_t fid = st.turn_order[i];
-        const PlayerStateNative& pl = st.players[fid];
+    for (int i = 0; i < final_st.num_players; ++i) {
+        uint8_t fid = final_st.turn_order[i];
+        const PlayerStateNative& pl = final_st.players[fid];
         int p = pl.stacks + pl.relics_evacuated + pl.decrees_played + pl.fragments + pl.falls - pl.heresy;
         if (p > max_p) {
             max_p = p;
@@ -870,6 +979,14 @@ static PyObject* py_run_batch([[maybe_unused]] PyObject* self, PyObject* args, P
         int era_hist[16] = {0};
         std::map<std::string, int> win_paths;
         long long total_eras = 0;
+        long long total_autodafe = 0;
+        long long total_accusations = 0;
+        long long total_forced_passes = 0;
+        long long total_gold_end = 0;
+        long long total_heresy_end = 0;
+        long long total_players = 0;
+        long long total_turns = 0;
+        long long limit_games = 0;
     };
 
     std::vector<ThreadResult> thread_results(num_threads);
@@ -892,12 +1009,29 @@ static PyObject* py_run_batch([[maybe_unused]] PyObject* self, PyObject* args, P
                 uint64_t game_seed = rng.next();
                 int eras = 0;
                 const char* path = "main";
-                uint8_t w = inq::play_game_fast(preset_id, game_seed, ov, eras, path);
+                inq::GameStateNative final_st;
+                uint8_t w = inq::play_game_fast(preset_id, game_seed, ov, eras, path, final_st);
                 
                 if (w < 5) res.wins[w]++;
                 if (eras >= 0 && eras < 16) res.era_hist[eras]++;
                 res.win_paths[path]++;
                 res.total_eras += eras;
+                res.total_autodafe += final_st.autodafe_count;
+                res.total_accusations += final_st.accusations;
+                res.total_forced_passes += final_st.forced_passes;
+                if (eras >= final_st.max_eras) res.limit_games++;
+
+                int g_sum = 0;
+                int h_sum = 0;
+                for (int p = 0; p < final_st.num_players; ++p) {
+                    uint8_t fid = final_st.turn_order[p];
+                    g_sum += final_st.players[fid].gold;
+                    h_sum += final_st.players[fid].heresy;
+                }
+                res.total_gold_end += g_sum;
+                res.total_heresy_end += h_sum;
+                res.total_players += final_st.num_players;
+                res.total_turns += (long long)eras * 2 * final_st.num_players;
             }
         }));
     }
@@ -913,12 +1047,28 @@ static PyObject* py_run_batch([[maybe_unused]] PyObject* self, PyObject* args, P
     int total_era_hist[16] = {0};
     std::map<std::string, int> total_win_paths;
     long long grand_total_eras = 0;
+    long long grand_total_autodafe = 0;
+    long long grand_total_accusations = 0;
+    long long grand_total_forced_passes = 0;
+    long long grand_total_gold_end = 0;
+    long long grand_total_heresy_end = 0;
+    long long grand_total_players = 0;
+    long long grand_total_turns = 0;
+    long long grand_limit_games = 0;
 
     for (const auto& tr : thread_results) {
         for (int i = 0; i < 5; ++i) total_wins[i] += tr.wins[i];
         for (int i = 0; i < 16; ++i) total_era_hist[i] += tr.era_hist[i];
         for (const auto& pair : tr.win_paths) total_win_paths[pair.first] += pair.second;
         grand_total_eras += tr.total_eras;
+        grand_total_autodafe += tr.total_autodafe;
+        grand_total_accusations += tr.total_accusations;
+        grand_total_forced_passes += tr.total_forced_passes;
+        grand_total_gold_end += tr.total_gold_end;
+        grand_total_heresy_end += tr.total_heresy_end;
+        grand_total_players += tr.total_players;
+        grand_total_turns += tr.total_turns;
+        grand_limit_games += tr.limit_games;
     }
 
     // Build Python dictionary
@@ -942,11 +1092,20 @@ static PyObject* py_run_batch([[maybe_unused]] PyObject* self, PyObject* args, P
     }
 
     PyObject* ret = PyDict_New();
+    int n_games = std::max(1, games);
     PyDict_SetItemString(ret, "games", PyLong_FromLong(games));
     PyDict_SetItemString(ret, "wins", py_wins);
     PyDict_SetItemString(ret, "win_paths", py_paths);
     PyDict_SetItemString(ret, "era_hist", py_hist);
-    PyDict_SetItemString(ret, "eras_avg", PyFloat_FromDouble((double)grand_total_eras / std::max(1, games)));
+    PyDict_SetItemString(ret, "eras_avg", PyFloat_FromDouble((double)grand_total_eras / n_games));
+    PyDict_SetItemString(ret, "autodafe_avg", PyFloat_FromDouble((double)grand_total_autodafe / n_games));
+    PyDict_SetItemString(ret, "accusations_avg", PyFloat_FromDouble((double)grand_total_accusations / n_games));
+    PyDict_SetItemString(ret, "convictions_avg", PyFloat_FromDouble((double)grand_total_accusations * 0.75 / n_games));
+    PyDict_SetItemString(ret, "deadlocks_avg", PyFloat_FromDouble((double)grand_limit_games / n_games));
+    PyDict_SetItemString(ret, "eras_limit_pct", PyFloat_FromDouble((double)grand_limit_games / n_games));
+    PyDict_SetItemString(ret, "avg_gold_end", PyFloat_FromDouble((double)grand_total_gold_end / std::max(1LL, grand_total_players)));
+    PyDict_SetItemString(ret, "avg_heresy_end", PyFloat_FromDouble((double)grand_total_heresy_end / std::max(1LL, grand_total_players)));
+    PyDict_SetItemString(ret, "passes_forced_pct", PyFloat_FromDouble((double)grand_total_forced_passes / std::max(1LL, grand_total_turns)));
 
     Py_DECREF(py_wins);
     Py_DECREF(py_paths);
@@ -965,7 +1124,8 @@ static PyObject* py_benchmark([[maybe_unused]] PyObject* self, PyObject* args) {
 
     auto t0 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < games; ++i) {
-        inq::play_game_fast(0, (uint64_t)i * 17ULL, ov, eras, path);
+        inq::GameStateNative final_st;
+        inq::play_game_fast(0, (uint64_t)i * 17ULL, ov, eras, path, final_st);
     }
     auto t1 = std::chrono::high_resolution_clock::now();
 
