@@ -14,17 +14,9 @@ from inquisitio.engine.setup import SETUP_PRESETS, new_game
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.turn import play_game
 
-# Python SSOT is the authoritative engine. Native C++ extension is strictly opt-in via env var.
-import os
-_ENABLE_NATIVE_ENV = os.environ.get("INQUISITIO_USE_NATIVE", "0") == "1"
-
 try:
-    if _ENABLE_NATIVE_ENV:
-        import inquisitio_native  # type: ignore[import-not-found, import-untyped]
-        _HAS_NATIVE = True
-    else:
-        inquisitio_native = None
-        _HAS_NATIVE = False
+    import inquisitio_native  # type: ignore[import-not-found, import-untyped]
+    _HAS_NATIVE = True
 except ImportError:
     inquisitio_native = None  # type: ignore[assignment]
     _HAS_NATIVE = False
