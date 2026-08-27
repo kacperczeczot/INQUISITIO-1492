@@ -8,7 +8,6 @@
 Silnik Python pod prototyp (**warstwa C** na stół; A/B = filtry talii w sim).  
 Pętla ery: Faza I = zakryta karta **lub** Akcja Gospodarcza (`system.intrigue_gold`); Faza II = Inkwizytor → odkrycie 1→5 → Lochy → Werdykt.  
 Karty: Markdown → YAML z [`../game/cards/`](../game/cards/).  
-Raporty batch: lokalnie → [`../playtesting/sim-reports/`](../playtesting/sim-reports/) (gitignore; skrót do [`../playtesting/balance-notes.md`](../playtesting/balance-notes.md)).
 
 ## Instalacja
 
