@@ -977,27 +977,26 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
 
     if (c.tags & TAG_FRAGMENT) {
         if (card_idx == 38) { // kt-03 (Zakazana Wiedza)
-            if (pl.fragments < 3) pl.fragments++;
-            else pl.gold++;
+            pl.fragments++;
         } else if (card_idx == 40) { // kt-05 (Wskazówka Cyklu)
             bool in_place = false;
             for (int a = 0; a < pl.agent_count; ++a) {
                 if (pl.agents[a].location == LOCHY || pl.agents[a].location == TRYBUNAL) in_place = true;
             }
-            if (in_place && pl.fragments < 3) pl.fragments++;
+            if (in_place) pl.fragments++;
             else pl.gold++;
         } else if (card_idx == 41) { // kt-06 (Przesłuchanie Mistyczne)
             uint8_t rival = pick_rival_native(st, fid, rng);
             if (rival != fid) {
                 st.players[rival].heresy = std::min(10, st.players[rival].heresy + 2);
-                if (pl.fragments < 3) pl.fragments++;
+                pl.fragments++;
             }
         } else if (card_idx == 44) { // kt-09 (Ostatnia Glosa)
             bool in_place = false;
             for (int a = 0; a < pl.agent_count; ++a) {
                 if (pl.agents[a].location == LOCHY || pl.agents[a].location == TRYBUNAL) in_place = true;
             }
-            if (pl.fragments >= 1 && in_place && pl.fragments < 3) pl.fragments++;
+            if (pl.fragments >= 1 && in_place) pl.fragments++;
         } else if (card_idx == 45) { // kt-10 (Pieczęć Salomona)
             if (pl.fragments >= 3) {
                 pl.kt10_played = true;
