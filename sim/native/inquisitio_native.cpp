@@ -1150,9 +1150,6 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
         pl.used_hook = false;
         pl.used_interrogation = false;
         pl.used_inquisitor_send = false;
-        pl.avoided_autodafe = false;
-        pl.path_via_double = false;
-        pl.shadow_exit = false;
         pl.frames_dealt = 0;
     }
 
