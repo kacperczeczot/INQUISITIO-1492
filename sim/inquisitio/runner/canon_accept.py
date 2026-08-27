@@ -153,8 +153,13 @@ def accept_candidate(
         safe, msg = telemetry_is_safe(cand)
         if not safe:
             return AcceptDecision(False, msg, "legacy")
-        if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
-            return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand.get('vitality_penalty', 0.0):.2f} > {base.get('vitality_penalty', 0.0):.2f})", "legacy")
+        # Hard Vitality Gate: Do not accept any patch that carries vitality penalty > 0.10
+        cand_vit = cand.get("vitality_penalty", 0.0)
+        base_vit = base.get("vitality_penalty", 0.0)
+        if cand_vit > 0.10:
+            return AcceptDecision(False, f"legacy: naruszenie witalności (kara {cand_vit:.3f} > 0.10)", "legacy")
+        if cand_vit > base_vit + 1e-9:
+            return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand_vit:.2f} > {base_vit:.2f})", "legacy")
         d = _score(cand) - _score(base)
         dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
         # 1. Zysk ogólny bez istotnego psucia podłogi
