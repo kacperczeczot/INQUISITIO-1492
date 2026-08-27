@@ -372,7 +372,7 @@ class AdaptiveSequentialRacer:
         r = max(100, self.batch_step)
         while r < self.max_games:
             rungs.append(r)
-            r = int(r * 2)
+            r *= 2
         if not rungs or rungs[-1] < self.max_games:
             rungs.append(self.max_games)
 

@@ -14,6 +14,11 @@ from inquisitio.engine.setup import SETUP_PRESETS, new_game
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.turn import play_game
 
+try:
+    import inquisitio_native  # type: ignore[import-not-found, import-untyped]
+except ImportError:
+    inquisitio_native = None  # type: ignore[assignment]
+
 # Use Python SSOT engine for complete mathematical fidelity and valid scores
 _HAS_NATIVE = False
 
