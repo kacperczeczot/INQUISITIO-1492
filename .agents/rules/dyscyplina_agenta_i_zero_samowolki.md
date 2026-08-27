@@ -71,3 +71,31 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 - **Kategoryczny zakaz zapisu raportów na małych próbach:** Żaden raport zapisywany jako plik markdown (`raport_telemetrii.md`, `raport_optymalizacji.md`, archiwa) **NIE MOŻE** opierać się na próbie mniejszej niż **5 000 partii na setup** (dla pełnych raportów telemetrii wydania: **10 000 partii na setup** = 160 000 partii dla 16 setupów).
 - **Twarda blokada programowa w silniku:** Funkcja `save_and_archive_report()` w `sim/inquisitio/runner/audit_facts.py` oraz wszystkie skrypty narzędziowe posiadają twardy warunek zgłaszający `ValueError` i przerywający wykonanie, jeśli próba zapisu nastąpi dla próby $< 5000$ gier/setup.
 - **Zero kompromisów statystycznych:** Pomiar balansu gry asymetrycznej na próbach rzędu 500 czy 1000 gier generuje niedopuszczalny szum statystyczny ($\pm 2.5\%$) i jest traktowany jako krytyczne naruszenie dyscypliny inżynierskiej.
+
+---
+
+## 10. Zasada Jednego Autorytatywnego Źródła Telemetrii (Single Telemetry Truth)
+- **Kategoryczny zakaz podwójnej telemetrii:** Zabrania się uruchamiania lub cytowania wyników z modułów alternatywnych (np. niezweryfikowanego modułu C++), jeśli oficjalne raporty na dysku generowane są z innego źródła.
+- **Python SSOT jako jedyny standard:** Autorytatywnym silnikiem decyzyjnym, symulacyjnym i audytowym jest wyłącznie kanoniczny kod Pythona (`sim/inquisitio/`). Jakiekolwiek moduły akceleracji (C++) mogą być używane tylko wtedy, gdy przejdą formalny test identyczności rozkładu (Kolmogorov-Smirnov / Chi-Square $p > 0.99$).
+- **Zakaz rozbieżności werbalno-plikowej:** Wszystkie liczby podawane użytkownikowi w czacie muszą w 100% odpowiadać liczbom generowanym i zapisywanym do plików na dysku.
+
+---
+
+## 11. Zasada Ścisłej Monotoniczności i Zakaz Degradacji Balansu (Strict Monotonicity Gate)
+- **Kategoryczny zakaz heurystyk degradujących (*Simulated Annealing*):** W algorytmach optymalizacyjnych zabrania się stosowania mechanizmów probabilistycznej akceptacji gorszych wyników ($\Delta \le 0$).
+- **Twardy warunek akceptacji patcha:** Zmiana w `game_config.yaml` może zostać wdrożona **WYŁĄCZNIE wtedy**, gdy spełnia jednocześnie:
+  1. $\Delta \text{Score} \ge +0.50$ pkt (udowodniony zysk globalny).
+  2. $\Delta \text{Min} \ge -0.50$ pkt (ochrona najsłabszego setupu przed załamaniem podłogi).
+  3. $\text{Kara Witalności} = 0.00$ (brak deadlocków, brak kryzysu biedy, zachowane oskarżenia).
+
+---
+
+## 12. Obowiązkowa Weryfikacja Stanu na Dysku przed Raportowaniem (On-Disk State Verification)
+- **Weryfikacja przed odpowiedzią:** Przed udzieleniem odpowiedzi na pytanie o stan gry, wersję czy parametry, asystent ma **bezwzględny obowiązek** sprawdzić stan repozytorium (`git status`), nagłówek [game_config.yaml](file:///Users/kacper/Documents/GitHub/INQUISITIO-1492/game_config.yaml) oraz zawartość bieżącego raportu na dysku.
+- **Zakaz deklaracji z pamięci podręcznej:** Zabrania się twierdzenia, że pliki zostały przywrócone lub zmienione, bez natychmiastowego potwierdzenia tego faktu komendą weryfikującą na dysku.
+
+---
+
+## 13. Ścisły Nadzór nad Cyklem Życia Procesów w Tle (Process Lifecycle Lockdown)
+- **Zakaz porzucania procesów:** Każde zadanie asynchroniczne uruchomione w tle musi być stale monitorowane za pomocą harmonogramu (`schedule`) lub zakończone (`manage_task kill`) przed oddaniem głosu użytkownikowi.
+- **Zakaz samowolnych pętli w tle:** Skrypty działające w tle nie mogą w pętli modyfikować plików konfiguracyjnych i podbijać wersji bez jawnego punktu kontrolnego i zgody użytkownika.
