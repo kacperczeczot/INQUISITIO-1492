@@ -1687,7 +1687,8 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     double accusations_avg = (num_games > 0) ? (double)accusations / num_games : 0.0;
     double convictions_avg = (num_games > 0) ? (double)convictions / num_games : 0.0;
     double deadlocks_avg = (num_games > 0) ? (double)deadlocks / num_games : 0.0;
-    double passes_forced_pct = (num_games > 0) ? (double)forced_passes / (num_games * 4) : 0.0;
+    int total_turns = total_eras * 4 * ov.cards_per_era;
+    double passes_forced_pct = (total_turns > 0) ? (double)forced_passes / total_turns : 0.0;
     double hooks_avg = (num_games > 0) ? (double)hooks_created / num_games : 0.0;
     double hooks_forced_avg = (num_games > 0) ? (double)hooks_forced / num_games : 0.0;
     double doubles_avg = (num_games > 0) ? (double)doubles_created / num_games : 0.0;
