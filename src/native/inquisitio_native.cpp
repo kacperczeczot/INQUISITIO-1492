@@ -1253,7 +1253,6 @@ static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t c
     }
 
     if (card_idx == 41) { // kt-06 (Przesłuchanie Imienia)
-        printf("KT06 ");
         uint8_t rival = pick_rival_native(st, fid, rng);
         if (rival != fid) {
             bool rival_arrested = false;
