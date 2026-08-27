@@ -1200,9 +1200,11 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                                 st.hooks_forced++;
                                 pl.hooks_on[k]--;
                                 bool comply = (st.players[k].heresy + 2 >= ov.threshold);
-                                if (comply && st.players[k].gold > 0) {
-                                    st.players[k].gold--;
-                                    pl.gold++;
+                                if (comply) {
+                                    if (st.players[k].gold > 0) {
+                                        st.players[k].gold--;
+                                        pl.gold++;
+                                    }
                                 } else {
                                     st.players[k].heresy = std::min(10, st.players[k].heresy + 2);
                                     if (fid == GC) pl.falls++;
