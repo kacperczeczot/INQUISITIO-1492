@@ -188,6 +188,52 @@ def calculate_balance_score(summary: BatchSummary) -> float:
     return round(max(0.1, min(100.0, val)), 1)
 
 
+def calculate_balance_score_se(summary: BatchSummary) -> float:
+    """Calculates standard error SE of balance score using the Delta Method on the Multinomial covariance."""
+    shares = faction_shares(summary)
+    n_players = len(SETUP_PRESETS.get(summary.setup, [])) or len(shares) or 4
+    p_ideal = 1.0 / n_players
+    n_games = max(1, summary.games)
+
+    sum_sq_rd = 0.0
+    for _fid, win_share in shares.items():
+        rel_dev = abs(win_share - p_ideal) / p_ideal
+        sum_sq_rd += rel_dev ** 2
+    rms = math.sqrt(sum_sq_rd / n_players)
+
+    if rms < 1e-7:
+        # Near-zero deviation: derivative is 0, minimal floor SE
+        return round(0.01 / math.sqrt(n_games / 100.0), 3)
+
+    score = 100.0 * math.exp(-3.2 * (rms ** 1.25))
+
+    # Analytical gradient: dScore/dp_i = -4.0 * score * (rms^0.25) * ((p_i - p_ideal) / rms) / (n_players * p_ideal^2)
+    # Numerically stable formulation:
+    grad_list = []
+    prob_list = []
+    factor = -4.0 * score * (rms ** 0.25) / (n_players * (p_ideal ** 2))
+
+    for _fid, win_share in shares.items():
+        ratio_i = (win_share - p_ideal) / rms
+        g_i = factor * ratio_i
+        grad_list.append(g_i)
+        prob_list.append(win_share)
+
+    # Multinomial variance formula: Var(S) = (1 / N) * [ E_p[g^2] - (E_p[g])^2 ]
+    mean_g = sum(p * g for p, g in zip(prob_list, grad_list))
+    mean_g2 = sum(p * (g ** 2) for p, g in zip(prob_list, grad_list))
+    var_s = max(0.0, (mean_g2 - (mean_g ** 2)) / n_games)
+
+    return round(math.sqrt(var_s), 3)
+
+
+def calculate_balance_stats(summary: BatchSummary) -> tuple[float, float]:
+    """Returns (balance_score, standard_error_se) for the given BatchSummary."""
+    score = calculate_balance_score(summary)
+    se = calculate_balance_score_se(summary)
+    return score, se
+
+
 def calculate_setup_score(summary: BatchSummary) -> float:
     """Legacy setup score: win-share decay plus vitality penalty in the same exponent.
 

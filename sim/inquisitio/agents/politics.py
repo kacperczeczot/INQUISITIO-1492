@@ -6,6 +6,7 @@ import random
 from inquisitio.cards.loader import Card, load_all_cards
 from inquisitio.config import CONFIG
 from inquisitio.engine.card_conditions import card_condition_met
+from inquisitio.engine.hooks import distinct_hook_victims
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.verdict import oficjum_snowball_threat
 
@@ -86,7 +87,6 @@ class PoliticsAgent:
                 elif any(state.relics_on_board.get(ag.location, 0) > 0 and not ag.arrested for ag in r_pl.agents):
                     th += 0.35
             elif r_fid == FactionId.KORONA_BORGIOWIE:
-                from inquisitio.engine.hooks import distinct_hook_victims
                 r_hooks = distinct_hook_victims(state, r_fid)
                 if r_hooks >= 2:
                     th += 0.85
@@ -230,7 +230,6 @@ class PoliticsAgent:
                     u += 3.5
 
             elif faction == FactionId.KORONA_BORGIOWIE:
-                from inquisitio.engine.hooks import distinct_hook_victims
                 active_hooks = distinct_hook_victims(state, faction)
                 decrees_left = max(0, 2 - pl.decrees_played)
 

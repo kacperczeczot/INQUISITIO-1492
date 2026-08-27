@@ -134,6 +134,7 @@ def new_game(
     layer: str = "C",
     max_eras: int | None = None,
     sys_overrides: dict | None = None,
+    enable_log: bool = True,
 ) -> GameState:
     if setup:
         factions = SETUP_PRESETS[setup]
@@ -235,6 +236,7 @@ def new_game(
         observed_threshold=observed,
         relics_on_board=relics,
         time_deck=tdeck,
+        log=[] if enable_log else None,
         rng_seed=seed,
         layer=layer,
         max_eras=final_max_eras,

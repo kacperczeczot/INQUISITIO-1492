@@ -83,20 +83,27 @@ def _reset_era_flags(state: GameState) -> None:
     state.accused_this_era.clear()
 
 
+_DEFAULT_CARD_COST_OFFSET = int(getattr(CONFIG.economy, "card_cost_offset", 0) or 0)
+_DEFAULT_SIG_COST_OFFSET = int(getattr(CONFIG.economy, "sig_cost_offset", 0) or 0)
+_DEFAULT_INTRIGUE_GOLD = int(CONFIG.intrigue_gold())
+
+
 def _legal_card_ids(state: GameState, fid: FactionId) -> list[str]:
     sys = state.sys_overrides or {}
     cards = load_all_cards(card_overrides=sys.get("card_overrides"))
     pl = state.players[fid]
     legal = []
-    card_cost_offset = sys.get("card_cost_offset", CONFIG.economy.card_cost_offset)
+    card_cost_offset = sys.get("card_cost_offset", _DEFAULT_CARD_COST_OFFSET)
+    sig_cost_offset = sys.get("sig_cost_offset", _DEFAULT_SIG_COST_OFFSET)
+    active_curfew = state.active_time_edict == "time-02"
     for cid in pl.hand:
         c = cards.get(cid)
         if not c:
             continue
         if c.type == "reakcja":
             continue
-        sig_offset = sys.get("sig_cost_offset", CONFIG.economy.sig_cost_offset) if (c.breaks_rule or c.type == "signature") else 0
-        curfew_cost = 1 if (state.active_time_edict == "time-02" and c.location in ("rynek", "gildia")) else 0
+        sig_offset = sig_cost_offset if (c.breaks_rule or c.type == "signature") else 0
+        curfew_cost = 1 if (active_curfew and c.location in ("rynek", "gildia")) else 0
         cost = max(0, c.cost + card_cost_offset + sig_offset + curfew_cost)
         if pl.gold >= cost:
             raw = c.raw if isinstance(c.raw, dict) else {}
@@ -112,9 +119,9 @@ def intrigue_gold_amount(state: GameState, fid: FactionId) -> int:
     """Akcja Gospodarcza: YAML intrigue_gold; Jarmark (time-09) na Rynku = 2."""
     sys = state.sys_overrides or {}
     if "intrigue_gold_offset" in sys:
-        base = max(0, CONFIG.intrigue_gold() + int(sys["intrigue_gold_offset"]))
+        base = max(0, _DEFAULT_INTRIGUE_GOLD + int(sys["intrigue_gold_offset"]))
     else:
-        base = int(sys.get("intrigue_gold", CONFIG.intrigue_gold()))
+        base = int(sys.get("intrigue_gold", _DEFAULT_INTRIGUE_GOLD))
     pl = state.players[fid]
     on_rynek = any(ag.location == "rynek" and not ag.arrested for ag in pl.agents)
     if state.active_time_edict == "time-09" and on_rynek:
@@ -259,12 +266,22 @@ def play_era(
                     take_economic_action(state, fid, rng)
             move_controlled_marionette(state, fid)
             _maybe_force_hook(state, fid, rng)
+            w = check_winner(state, win_overrides)
+            if w:
+                state.winner = w
+                state.add_log(f"WINNER {w.value}")
+                return w
 
     # ══════════════════════════════════════════════════════════════
     # FAZA II: SĄD (Inkwizytor → Odkrycie → Lochy → Dwór)
     # ══════════════════════════════════════════════════════════════
     _phase_ii_inquisitor(state, rng)
     resolve_pending_plays(state, rng)
+    w_rev = check_winner(state, win_overrides)
+    if w_rev:
+        state.winner = w_rev
+        state.add_log(f"WINNER {w_rev.value}")
+        return w_rev
     _phase_ii_interrogations(state, rng)
 
     for fid in state.turn_order:

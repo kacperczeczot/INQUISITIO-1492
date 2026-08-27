@@ -96,3 +96,53 @@ def test_early_era_sprint_triggers_vitality_penalty():
     vit_clean = evaluate_vitality(s_clean)
     assert vit_clean.vitality_penalty == 0.0
     assert vit_clean.is_healthy
+
+
+def test_calculate_balance_score_se_delta_method():
+    from inquisitio.runner.scoring import calculate_balance_score_se, calculate_balance_stats
+    
+    # 1. Equal shares: SE should be very small
+    s_equal = _summary(games=1000)
+    se_equal = calculate_balance_score_se(s_equal)
+    assert 0.0 <= se_equal < 0.2
+    
+    # 2. Imbalanced shares: SE should be non-zero and decrease with sqrt(N)
+    imbalanced_wins_100 = {
+        "swiete-oficjum": 45,
+        "cienie-al-andalus": 25,
+        "korona-borgiowie": 15,
+        "kabala-toledo": 15,
+    }
+    s_imb_100 = _summary(games=100, wins=imbalanced_wins_100)
+    score_100, se_100 = calculate_balance_stats(s_imb_100)
+    
+    imbalanced_wins_1000 = {
+        "swiete-oficjum": 450,
+        "cienie-al-andalus": 250,
+        "korona-borgiowie": 150,
+        "kabala-toledo": 150,
+    }
+    s_imb_1000 = _summary(games=1000, wins=imbalanced_wins_1000)
+    score_1000, se_1000 = calculate_balance_stats(s_imb_1000)
+    
+    assert score_100 == score_1000
+    # Standard error with 10x games should be ~sqrt(10) ≈ 3.16 times smaller
+    ratio = se_100 / se_1000
+    assert 2.5 <= ratio <= 3.8
+
+
+def test_merge_batch_summaries():
+    from inquisitio.runner.batch import merge_batch_summaries
+    
+    s1 = _summary(games=200, autodafe_avg=1.0, eras_avg=5.0, eras_min=3, eras_max=7)
+    s2 = _summary(games=300, autodafe_avg=2.0, eras_avg=6.0, eras_min=4, eras_max=9)
+    
+    merged = merge_batch_summaries([s1, s2])
+    assert merged.games == 500
+    assert merged.eras_min == 3
+    assert merged.eras_max == 9
+    # Weighted averages: (1.0*200 + 2.0*300)/500 = 1.6
+    assert abs(merged.autodafe_avg - 1.6) < 1e-6
+    # (5.0*200 + 6.0*300)/500 = 5.6
+    assert abs(merged.eras_avg - 5.6) < 1e-6
+

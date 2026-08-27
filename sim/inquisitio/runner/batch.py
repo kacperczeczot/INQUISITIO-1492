@@ -14,6 +14,9 @@ from inquisitio.engine.setup import SETUP_PRESETS, new_game
 from inquisitio.engine.state import FactionId, GameState
 from inquisitio.engine.turn import play_game
 
+# Native C++ engine disabled for production canon auditor to preserve 100% SSOT parity
+_HAS_NATIVE = False
+
 @dataclass
 class BatchSummary:
     games: int
@@ -54,7 +57,7 @@ class BatchSummary:
 def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict:
     setup_name, gseed, threshold, layer, win_overrides = args
     rng = random.Random(gseed)
-    state = new_game(setup=setup_name, seed=gseed, threshold=threshold, layer=layer, sys_overrides=win_overrides)
+    state = new_game(setup=setup_name, seed=gseed, threshold=threshold, layer=layer, sys_overrides=win_overrides, enable_log=False)
     agent = PoliticsAgent(rng)
 
     def choose(st: GameState, fid: FactionId, legal: list[str]):
@@ -106,6 +109,26 @@ def run_batch(
     )
     if setup_name not in SETUP_PRESETS:
         setup_name = "3p-oficjum-alandalus-korona"
+
+    if _HAS_NATIVE:
+        res = inquisitio_native.run_batch(
+            games=games,
+            setup=setup_name,
+            seed=seed,
+            threshold=threshold,
+            layer=layer,
+            win_overrides=win_overrides or {},
+        )
+        return BatchSummary(
+            games=games,
+            setup=setup_name,
+            threshold=threshold,
+            layer=layer,
+            wins=res["wins"],
+            win_paths=res["win_paths"],
+            era_hist=res["era_hist"],
+            eras_avg=res.get("eras_avg", 0.0),
+        )
 
     wins: Counter[str] = Counter()
     win_paths: Counter[str] = Counter()
@@ -281,4 +304,121 @@ def compare_thresholds(
         run_batch(games, threshold=t, setup=setup, seed=seed, layer=layer)
         for t in thresholds
     ]
+
+
+def merge_batch_summaries(summaries: list[BatchSummary]) -> BatchSummary:
+    """Merges multiple BatchSummary objects (e.g. from incremental micro-batches) into a single aggregated summary."""
+    if not summaries:
+        raise ValueError("Cannot merge empty list of BatchSummary")
+    if len(summaries) == 1:
+        return summaries[0]
+
+    first = summaries[0]
+    setup_name = first.setup
+    threshold = first.threshold
+    layer = first.layer
+
+    total_games = sum(s.games for s in summaries)
+    if total_games == 0:
+        return first
+
+    merged_wins: Counter[str] = Counter()
+    merged_win_paths: Counter[str] = Counter()
+    merged_card_plays: Counter[str] = Counter()
+    merged_era_hist: Counter[int] = Counter()
+    merged_era_faction_wins: dict[int, Counter] = {}
+
+    weighted_autodafe = 0.0
+    weighted_accusations = 0.0
+    weighted_convictions = 0.0
+    weighted_hooks = 0.0
+    weighted_hooks_forced = 0.0
+    weighted_doubles = 0.0
+    weighted_deadlocks = 0.0
+    weighted_legal_moves = 0.0
+    weighted_eras = 0.0
+    weighted_eras_limit_pct = 0.0
+    weighted_cards_played = 0.0
+    weighted_avg_gold_end = 0.0
+    weighted_avg_heresy_end = 0.0
+    weighted_passes_forced_pct = 0.0
+
+    eras_min_val = min(s.eras_min for s in summaries)
+    eras_max_val = max(s.eras_max for s in summaries)
+    autodafe_min_val = min(s.autodafe_min for s in summaries)
+    autodafe_max_val = max(s.autodafe_max for s in summaries)
+    accusations_min_val = min(s.accusations_min for s in summaries)
+    accusations_max_val = max(s.accusations_max for s in summaries)
+    gold_min_val = min(s.gold_min for s in summaries)
+    gold_max_val = max(s.gold_max for s in summaries)
+    heresy_min_val = min(s.heresy_min for s in summaries)
+    heresy_max_val = max(s.heresy_max for s in summaries)
+
+    for s in summaries:
+        w = s.games
+        for fid, count in s.wins.items():
+            merged_wins[fid] += count
+        for wp, count in s.win_paths.items():
+            merged_win_paths[wp] += count
+        for cid, count in s.card_plays_total.items():
+            merged_card_plays[cid] += count
+        for era, count in s.era_hist.items():
+            merged_era_hist[era] += count
+        for era, f_dict in s.era_faction_wins.items():
+            if era not in merged_era_faction_wins:
+                merged_era_faction_wins[era] = Counter()
+            for fid, count in f_dict.items():
+                merged_era_faction_wins[era][fid] += count
+
+        weighted_autodafe += s.autodafe_avg * w
+        weighted_accusations += s.accusations_avg * w
+        weighted_convictions += s.convictions_avg * w
+        weighted_hooks += s.hooks_avg * w
+        weighted_hooks_forced += s.hooks_forced_avg * w
+        weighted_doubles += s.doubles_avg * w
+        weighted_deadlocks += s.deadlocks_avg * w
+        weighted_legal_moves += s.legal_moves_avg * w
+        weighted_eras += s.eras_avg * w
+        weighted_eras_limit_pct += s.eras_limit_pct * w
+        weighted_cards_played += s.cards_played_avg * w
+        weighted_avg_gold_end += s.avg_gold_end * w
+        weighted_avg_heresy_end += s.avg_heresy_end * w
+        weighted_passes_forced_pct += s.passes_forced_pct * w
+
+    return BatchSummary(
+        games=total_games,
+        setup=setup_name,
+        threshold=threshold,
+        layer=layer,
+        wins=dict(merged_wins),
+        win_paths=dict(merged_win_paths),
+        autodafe_avg=weighted_autodafe / total_games,
+        accusations_avg=weighted_accusations / total_games,
+        convictions_avg=weighted_convictions / total_games,
+        hooks_avg=weighted_hooks / total_games,
+        hooks_forced_avg=weighted_hooks_forced / total_games,
+        doubles_avg=weighted_doubles / total_games,
+        deadlocks_avg=weighted_deadlocks / total_games,
+        legal_moves_avg=weighted_legal_moves / total_games,
+        eras_avg=weighted_eras / total_games,
+        eras_min=eras_min_val,
+        eras_max=eras_max_val,
+        autodafe_min=autodafe_min_val,
+        autodafe_max=autodafe_max_val,
+        accusations_min=accusations_min_val,
+        accusations_max=accusations_max_val,
+        gold_min=gold_min_val,
+        gold_max=gold_max_val,
+        heresy_min=heresy_min_val,
+        heresy_max=heresy_max_val,
+        eras_limit_pct=weighted_eras_limit_pct / total_games,
+        cards_played_avg=weighted_cards_played / total_games,
+        avg_gold_end=weighted_avg_gold_end / total_games,
+        avg_heresy_end=weighted_avg_heresy_end / total_games,
+        passes_forced_pct=weighted_passes_forced_pct / total_games,
+        card_plays_total=dict(merged_card_plays),
+        era_hist={k: merged_era_hist[k] for k in sorted(merged_era_hist.keys())},
+        era_faction_wins={k: dict(v) for k, v in sorted(merged_era_faction_wins.items())},
+    )
+
 

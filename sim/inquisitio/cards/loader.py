@@ -167,12 +167,14 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
     if key in _OVERRIDE_CACHE and not force:
         return _OVERRIDE_CACHE[key]
 
-    # Return deep copies with applied overrides
+    # Return shallow dictionary with shallow copies of only modified cards
     import copy
-    modified_cards = copy.deepcopy(_CACHE)
+    modified_cards = dict(_CACHE)
     for cid, ov in card_overrides.items():
         if cid in modified_cards:
-            card = modified_cards[cid]
+            orig = _CACHE[cid]
+            card = copy.copy(orig)
+            card.raw = dict(orig.raw) if isinstance(orig.raw, dict) else {}
             for field_name, val in ov.items():
                 card.raw[field_name] = val
                 if hasattr(card, field_name):
@@ -181,6 +183,7 @@ def load_all_cards(force: bool = False, card_overrides: dict | None = None) -> d
                         card.cost_gold = val
                     elif field_name == "cost_gold":
                         card.cost = val
+            modified_cards[cid] = card
 
     _OVERRIDE_CACHE[key] = modified_cards
     return modified_cards

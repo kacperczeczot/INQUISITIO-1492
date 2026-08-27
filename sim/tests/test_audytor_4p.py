@@ -311,3 +311,21 @@ def test_lookahead_stop_when_2d_empty_and_nothing_held():
 def test_lookahead_applies_at_max_depth():
     assert lookahead_next_action(depth=4, max_depth=4, has_pending=True, found_better=True) == "apply_current"
     assert lookahead_next_action(depth=4, max_depth=4, has_pending=True, found_better=False) == "apply_pending"
+
+
+def test_generate_antagonistic_and_hybrid_candidates_with_slug_shares():
+    from audytor_kanonu import generate_all_atomic_candidates, generate_antagonistic_and_hybrid_candidates
+    base_res = {
+        "setup_scores": {"4p-no-oficjum": 71.0, "4p-core": 90.0},
+        "setup_shares": {
+            "4p-no-oficjum": {"cienie-al-andalus": 19.0, "gildia-cieni": 31.0, "korona-borgiowie": 25.0, "kabala-toledo": 25.0},
+            "4p-core": {"swiete-oficjum": 25.0, "cienie-al-andalus": 25.0, "korona-borgiowie": 25.0, "kabala-toledo": 25.0},
+        },
+    }
+    atomic_pool = generate_all_atomic_candidates()
+    antag = generate_antagonistic_and_hybrid_candidates(base_res, atomic_pool)
+    assert len(antag) > 0
+    # Sprawdź czy wygenerowano pary uderzające w dominantę GC i wspomagające deficyt CAA
+    has_gc_nerf_caa_buff = any("L3_GC-" in c[0] and "L3_CAA-" in c[0] for c in antag)
+    assert has_gc_nerf_caa_buff
+
