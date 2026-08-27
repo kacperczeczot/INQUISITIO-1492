@@ -114,7 +114,7 @@ def run_batch(
     if setup_name not in SETUP_PRESETS:
         setup_name = "3p-oficjum-alandalus-korona"
 
-    if _HAS_NATIVE:
+    if _HAS_NATIVE and inquisitio_native is not None:
         res = inquisitio_native.run_batch(
             games=games,
             setup=setup_name,

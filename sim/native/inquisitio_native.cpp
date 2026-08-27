@@ -791,6 +791,47 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
 
             st.legal_moves_sampled += legal_count;
 
+            bool saving_for_finisher = false;
+            for (int h = 0; h < pl.hand_count; ++h) {
+                uint8_t cid = pl.hand[h];
+                if (fid == KT && cid == 45 && pl.fragments >= 3 && pl.gold < 4) {
+                    saving_for_finisher = true; break;
+                }
+                if (fid == KB && cid == 33 && pl.distinct_hooks_ever() >= 2 && pl.gold < 4) {
+                    saving_for_finisher = true; break;
+                }
+                if (fid == CAA && cid == 21 && st.sea_route_open && pl.gold < 3) {
+                    saving_for_finisher = true; break;
+                }
+                if (fid == GC && cid == 57 && pl.falls >= 7 && pl.gold < 4) {
+                    saving_for_finisher = true; break;
+                }
+            }
+
+            if (saving_for_finisher) {
+                int gold_card = -1;
+                for (int l = 0; l < legal_count; ++l) {
+                    if (CARD_DB[legal[l]].gold_gain > 0 && effective_card_cost(legal[l], st, ov) == 0) {
+                        gold_card = legal[l]; break;
+                    }
+                }
+                if (gold_card >= 0) {
+                    int cost = effective_card_cost((uint8_t)gold_card, st, ov);
+                    pl.gold -= cost;
+                    for (int h = 0; h < pl.hand_count; ++h) {
+                        if (pl.hand[h] == (uint8_t)gold_card) {
+                            pl.hand[h] = pl.hand[--pl.hand_count];
+                            break;
+                        }
+                    }
+                    st.pending_plays[st.pending_count++] = {fid, (uint8_t)gold_card, TRYBUNAL};
+                    move_agent_step(st, fid, rng);
+                } else {
+                    take_economic_action(st, fid, rng, ov);
+                }
+                continue;
+            }
+
             if (legal_count == 0) {
                 st.forced_passes++;
                 take_economic_action(st, fid, rng, ov);
