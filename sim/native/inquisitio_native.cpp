@@ -285,7 +285,7 @@ struct ConfigOverridesNative {
     int sea_route_era = 4;
     int autodafe_cooldown = 4;
     int threshold = 8;
-    int observed_threshold = 4;
+    int observed_threshold = 5;
     int hand_limit = 5;
     int max_eras = 12;
 
@@ -477,7 +477,7 @@ static inline uint8_t check_winner_fast(GameStateNative& st, const ConfigOverrid
                 st.winner = fid; st.win_path = "kt_codex"; return fid;
             }
         } else if (fid == GC) {
-            int falls_need = std::max(1, 9 + ov.gc_falls_offset);
+            int falls_need = std::max(1, 11 + ov.gc_falls_offset);
             if (pl.falls >= falls_need) {
                 st.winner = fid; st.win_path = "gc_falls"; return fid;
             }
@@ -526,9 +526,9 @@ static inline void move_agent_step(GameStateNative& st, uint8_t fid, FastRng& rn
             }
         }
 
-        // 2. CAA relic movement toward harbor
+        // 2. CAA relic movement
         if (fid == CAA) {
-            if (st.relics_on_board[loc] > 0 && loc != RYNEK && loc != GILDIA) {
+            if (st.relics_on_board[loc] > 0) {
                 for (uint8_t i = 0; i < cnt; ++i) {
                     uint8_t dest = NEIGHBORS[loc][i];
                     if (dest == RYNEK || dest == GILDIA) {
@@ -537,12 +537,48 @@ static inline void move_agent_step(GameStateNative& st, uint8_t fid, FastRng& rn
                     }
                 }
             }
+            for (uint8_t i = 0; i < cnt; ++i) {
+                uint8_t dest = NEIGHBORS[loc][i];
+                if (st.relics_on_board[dest] > 0 || dest == RYNEK || dest == GILDIA) {
+                    pl.agents[a].location = dest;
+                    return;
+                }
+            }
         }
 
-        // 3. Normal random step
-        uint8_t next_l = NEIGHBORS[loc][rng.next_u32(cnt)];
-        pl.agents[a].location = next_l;
-        return;
+        // 3. SO agent movement toward rival concentrations
+        if (fid == SO) {
+            int cur_c = 0;
+            for (int p = 0; p < st.num_players; ++p) {
+                uint8_t other = st.turn_order[p];
+                if (other == SO) continue;
+                for (int oa = 0; oa < st.players[other].agent_count; ++oa) {
+                    if (!st.players[other].agents[oa].arrested && st.players[other].agents[oa].location == loc) cur_c++;
+                }
+            }
+            uint8_t best_nb = loc;
+            int best_c = cur_c;
+            for (uint8_t i = 0; i < cnt; ++i) {
+                uint8_t dest = NEIGHBORS[loc][i];
+                int dest_c = 0;
+                for (int p = 0; p < st.num_players; ++p) {
+                    uint8_t other = st.turn_order[p];
+                    if (other == SO) continue;
+                    for (int oa = 0; oa < st.players[other].agent_count; ++oa) {
+                        if (!st.players[other].agents[oa].arrested && st.players[other].agents[oa].location == dest) dest_c++;
+                    }
+                }
+                if (dest_c > best_c) {
+                    best_c = dest_c;
+                    best_nb = dest;
+                }
+            }
+            if (best_nb != loc) {
+                pl.agents[a].location = best_nb;
+                return;
+            }
+        }
+        // Otherwise, do not move (None in Python SSOT)
     }
 }
 
@@ -1210,24 +1246,46 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
         }
     }
 
-    // ── Phase II: Sąd (Pending, Inquisitor, Autodafe, Interrogations, Verdicts) ──
-    // 1. Resolve pending plays
-    for (int p = 0; p < st.pending_count; ++p) {
-        apply_card_effect(st, st.pending_plays[p].owner, st.pending_plays[p].card_idx, rng, ov);
+    // ── Phase II: Sąd (Inquisitor, Autodafe, Pending, Interrogations, Verdicts) ──
+    // 1. Inquisitor movement (choose_patrol_dest by lowest heresy chooser)
+    uint8_t chooser = st.turn_order[0];
+    int min_h = 999;
+    for (int p = 0; p < st.num_players; ++p) {
+        uint8_t f = st.turn_order[p];
+        if (st.players[f].heresy < min_h) {
+            min_h = st.players[f].heresy;
+            chooser = f;
+        }
     }
-    st.pending_count = 0;
 
-    if (check_winner_fast(st, ov) != NO_FACTION) return;
+    int r_counts[5] = {0};
+    for (int p = 0; p < st.num_players; ++p) {
+        uint8_t f = st.turn_order[p];
+        if (f == chooser) continue;
+        const PlayerStateNative& pl = st.players[f];
+        for (int a = 0; a < pl.agent_count; ++a) {
+            if (!pl.agents[a].arrested && pl.agents[a].location < 5) {
+                r_counts[pl.agents[a].location]++;
+            }
+        }
+    }
 
-    // 2. Inquisitor movement (random step among current + neighbors)
     uint8_t cur_inq = st.inquisitor_location;
     uint8_t n_cnt = NEIGHBOR_COUNTS[cur_inq];
-    uint32_t choice = rng.next_u32(n_cnt + 1); // 0 = stay, 1..n_cnt = step to neighbor
-    if (choice > 0) {
-        st.inquisitor_location = NEIGHBORS[cur_inq][choice - 1];
-    }
+    uint8_t best_dest = cur_inq;
+    int best_score = r_counts[cur_inq];
 
-    // 3. Autodafe check (only if rival agent present at inquisitor location and cooldown elapsed)
+    for (int i = 0; i < n_cnt; ++i) {
+        uint8_t nb = NEIGHBORS[cur_inq][i];
+        int nb_score = r_counts[nb];
+        if (nb_score > best_score) {
+            best_score = nb_score;
+            best_dest = nb;
+        }
+    }
+    st.inquisitor_location = best_dest;
+
+    // 2. Autodafe check (only if rival agent present at inquisitor location and cooldown elapsed)
     bool has_rival_agent = false;
     for (int p = 0; p < st.num_players; ++p) {
         uint8_t fid = st.turn_order[p];
@@ -1269,6 +1327,14 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
             st.players[SO].stacks += burned;
         }
     }
+
+    if (check_winner_fast(st, ov) != NO_FACTION) return;
+
+    // 3. Resolve pending plays
+    for (int p = 0; p < st.pending_count; ++p) {
+        apply_card_effect(st, st.pending_plays[p].owner, st.pending_plays[p].card_idx, rng, ov);
+    }
+    st.pending_count = 0;
 
     if (check_winner_fast(st, ov) != NO_FACTION) return;
 
