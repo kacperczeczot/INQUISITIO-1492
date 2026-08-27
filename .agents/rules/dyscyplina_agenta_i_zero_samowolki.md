@@ -5,7 +5,7 @@ Każdy model AI / asystent pracujący w tym repozytorium **MUSI** bezwzględnie 
 ---
 
 ## 1. Bezwzględny Tryb Konsultacyjny (Zero Samowolki)
-- **Zakaz wyrywania się przed szereg:** Asystentowi kategorycznie zabrania się modyfikowania plików `game_config.yaml`, kodu silnika (`sim/`), skryptów audytora czy dokumentacji w odpowiedzi na luźne pytanie, hipotezę lub dyskusję.
+- **Zakaz wyrywania się przed szereg:** Asystentowi kategorycznie zabrania się modyfikowania plików `data/data/game_config.yaml`, kodu silnika (`sim/`), skryptów audytora czy dokumentacji w odpowiedzi na luźne pytanie, hipotezę lub dyskusję.
 - **Forma odpowiedzi:** Na pytania dotyczące balansu asystent odpowiada **WYŁĄCZNIE analizą, diagnozą i propozycją wariantów do wyboru**.
 - **Warunek wdrożenia:** Modyfikacja kodu lub parametrów może nastąpić **WYŁĄCZNIE po wyraźnym poleceniu użytkownika** (np. *„wprowadź”*, *„zastosuj”*, *„napraw”*, *„wykonaj”*).
 
@@ -29,11 +29,11 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 ---
 
 ## 4. Rygor Procesowy i Integralność Dokumentacji
-- Każda zatwierdzona zmiana parametrów w `game_config.yaml` wymaga:
+- Każda zatwierdzona zmiana parametrów w `data/data/game_config.yaml` wymaga:
   1. Podbicia wersji `v1.0-alpha.X` $\to$ `v1.0-alpha.Y` i aktualizacji daty.
   2. Rzetelnego wpisu w `playtesting/balance-notes.md` (bez cenzury i pomijania faktów).
-  3. Uruchomienia `./sim/.venv/bin/python3 tools/sync_config.py`.
-  4. Weryfikacji 100% testów `./sim/.venv/bin/pytest`.
+  3. Uruchomienia `src/.venv/bin/python3 scripts/sync_config.py`.
+  4. Weryfikacji 100% testów `src/.venv/bin/pytest`.
 
 ---
 
@@ -69,21 +69,21 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 
 ## 9. Bezwzględna Zasada Próby Minimalnej (Zasada 5000 / ADR-0014)
 - **Kategoryczny zakaz zapisu raportów na małych próbach:** Żaden raport zapisywany jako plik markdown (`raport_telemetrii.md`, `raport_optymalizacji.md`, archiwa) **NIE MOŻE** opierać się na próbie mniejszej niż **5 000 partii na setup** (dla pełnych raportów telemetrii wydania: **10 000 partii na setup** = 160 000 partii dla 16 setupów).
-- **Twarda blokada programowa w silniku:** Funkcja `save_and_archive_report()` w `sim/inquisitio/runner/audit_facts.py` oraz wszystkie skrypty narzędziowe posiadają twardy warunek zgłaszający `ValueError` i przerywający wykonanie, jeśli próba zapisu nastąpi dla próby $< 5000$ gier/setup.
+- **Twarda blokada programowa w silniku:** Funkcja `save_and_archive_report()` w `src/inquisitio/runner/audit_facts.py` oraz wszystkie skrypty narzędziowe posiadają twardy warunek zgłaszający `ValueError` i przerywający wykonanie, jeśli próba zapisu nastąpi dla próby $< 5000$ gier/setup.
 - **Zero kompromisów statystycznych:** Pomiar balansu gry asymetrycznej na próbach rzędu 500 czy 1000 gier generuje niedopuszczalny szum statystyczny ($\pm 2.5\%$) i jest traktowany jako krytyczne naruszenie dyscypliny inżynierskiej.
 
 ---
 
 ## 10. Zasada Jednego Autorytatywnego Źródła Telemetrii (Single Telemetry Truth)
 - **Kategoryczny zakaz podwójnej telemetrii:** Zabrania się uruchamiania lub cytowania wyników z modułów alternatywnych (np. niezweryfikowanego modułu C++), jeśli oficjalne raporty na dysku generowane są z innego źródła.
-- **Python SSOT jako jedyny standard:** Autorytatywnym silnikiem decyzyjnym, symulacyjnym i audytowym jest wyłącznie kanoniczny kod Pythona (`sim/inquisitio/`). Jakiekolwiek moduły akceleracji (C++) mogą być używane tylko wtedy, gdy przejdą formalny test identyczności rozkładu (Kolmogorov-Smirnov / Chi-Square $p > 0.99$).
+- **Python SSOT jako jedyny standard:** Autorytatywnym silnikiem decyzyjnym, symulacyjnym i audytowym jest wyłącznie kanoniczny kod Pythona (`src/inquisitio/`). Jakiekolwiek moduły akceleracji (C++) mogą być używane tylko wtedy, gdy przejdą formalny test identyczności rozkładu (Kolmogorov-Smirnov / Chi-Square $p > 0.99$).
 - **Zakaz rozbieżności werbalno-plikowej:** Wszystkie liczby podawane użytkownikowi w czacie muszą w 100% odpowiadać liczbom generowanym i zapisywanym do plików na dysku.
 
 ---
 
 ## 11. Zasada Ścisłej Monotoniczności i Zakaz Degradacji Balansu (Strict Monotonicity Gate)
 - **Kategoryczny zakaz heurystyk degradujących (*Simulated Annealing*):** W algorytmach optymalizacyjnych zabrania się stosowania mechanizmów probabilistycznej akceptacji gorszych wyników ($\Delta \le 0$).
-- **Twardy warunek akceptacji patcha:** Zmiana w `game_config.yaml` może zostać wdrożona **WYŁĄCZNIE wtedy**, gdy spełnia jednocześnie:
+- **Twardy warunek akceptacji patcha:** Zmiana w `data/data/game_config.yaml` może zostać wdrożona **WYŁĄCZNIE wtedy**, gdy spełnia jednocześnie:
   1. $\Delta \text{Score} \ge +0.50$ pkt (udowodniony zysk globalny).
   2. $\Delta \text{Min} \ge -0.50$ pkt (ochrona najsłabszego setupu przed załamaniem podłogi).
   3. $\text{Kara Witalności} = 0.00$ (brak deadlocków, brak kryzysu biedy, zachowane oskarżenia).
