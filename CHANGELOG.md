@@ -1,25 +1,422 @@
-# Changelog — INQUISITIO 1492: Cienie Toledo
+# Dziennik Zmian (Changelog)
 
-Wszystkie istotne zmiany w tym projekcie są dokumentowane w tym pliku.
-
-Format oparty na [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/).
-Wersjonowanie zgodne z [Semantic Versioning](https://semver.org/lang/pl/).
+Wszystkie istotne zmiany w projekcie są dokumentowane w tym pliku zgodnie ze standardem [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/) oraz [Semantic Versioning](https://semver.org/lang/pl/).
 
 ---
 
-## [Unreleased]
-
----
-
-## [v1.0-alpha] — trwa
-
-> Aktywna faza alpha-playtestingu i optymalizacji balansu Monte Carlo.
-> Historia szczegółowych patchów balansu znajduje się w [`data/playtesting/balance-notes.md`](data/playtesting/balance-notes.md).
+## [0.1.0] - 2026-08-27
 
 ### Added
-- Symulator Monte Carlo w Pythonie (`src/`) z modułem natywnym C++ (`src/native/`)
-- Pełen zestaw 50 kart podzielony na 4 frakcje + talia czasu
-- Rejestr 16 Decyzji Architektonicznych (ADR-0001 – ADR-0016) w `docs/adr/`
-- Narzędzia audytorskie: `scripts/sim/audytor_3p.py`, `audytor_4p.py`, `audytor_5p.py`, `audytor_kanonu.py`
-- Generator PnP kart (`scripts/pnp/`)
-- Mechanizm SSOT: `data/game_config.yaml` → synchronizowany przez `scripts/sync_config.py`
+- update heresy threshold to 8
+- add central game_config.yaml single source of truth and sync tool
+- integrate card markdown sync and catalog rebuild into sync_config.py
+- include tags in game_config.yaml and auto-sync them across card markdown files
+- create real-time interactive HTML card preview & code generator
+- update HTML card editor with light mode theme and real-time auto-generated effect text
+- auto-derive and check card tags in HTML card editor
+- widen HTML card editor panel and include all 21 game_config actions
+- port 1:1 Python card text generator into JS for HTML card editor
+- add all 20 advanced card parameters to HTML card editor panel
+- make advanced fields context-sensitive w HTML editor and group action parameters in docs
+- expand HTML card editor width and upgrade to multi-column flex layout
+- add card loader and markdown export to card-editor.html and integrate auto-sync into sync_config
+- add sync_card_editor.py script to embed cards database into editor
+- add colorized scores and positive delta arrow indicators to audit tools
+- add run_all_audits.py master runner script for levels 1-4
+- add win_paths telemetry tracking to check_winner and BatchSummary
+- relative L1–L4 audit labels and baseline runner
+- expand win_overrides support in engine and add unit tests
+- add Szalony Audytor auto-balancer and update pyright config
+- upgrade Szalony Audytor with Ultra Monte Carlo (1000/5000 games, TOP 20, all card params)
+- direct Ultra evaluation for small tiers (L1, L2, L4) and two-stage screening for L3 cards
+- zaostrzenie norm balansowych post-plateau v0.29
+- zaktualizuj opisy kart, talie Kroniki Dziejow i katalog
+- dodano Outlier Hunter (optymalizator antagonistyczny 2D/3D z rygorem min. 1000/5000 gier)
+- pelna integracja raportowania i dokumentacji w Outlier Hunter (v0.30 patch: +24.9 pkt dla 3p-oficjum-alandalus-kabala)
+- Outlier Hunter kontynuuje ciagla mikrodokrecanie po osiagnieciu 90+ na wszystkich setupach
+- scisly limit aktywnych poszukiwan do TOP N najgorszych setupow (--top-worst N, domyslnie 3)
+- narzedzie badania ablacyjnego feature_impact_audit.py oraz raport uzytecznosci 50 kart i mechanik
+- pelny raport ablacyjny L1, L2, L4 i 50 kart w feature_impact_audit.py
+- czysta ablacja podsystemow i sciezek zwyciestwa (wycinanie do zera) zamiast testow +-1
+- Szalony Audytor jako Progressive Beam Search (Wszystkie poziomy L1-L4 naraz, 12 finalistow, 8 nasion wiazki, nieograniczona glebokosc faz)
+- ustawienie domyslnej proby feature_impact_audit.py na 5000 gier/setup
+- aktualizacja konfiguracji balansu i kart do wersji v0.33 (Global Score 97.2 pkt)
+- 5-layer ablation audit script and balance optimization reports (v0.34/v0.35)
+- card text generator script and unit tests
+- printable deck with full bleed, faction borders, duplex backs and card metadata
+- dodano dynamiczny pasek postepu na zywo z ETA i predkoscia w auto_balancer.py
+- zaimplementuj Talie Czasu 2.0 (Kronika Dziejow) z pelna obsluga edyktow
+- przejdz na 3-fazowa strukture Ery (Intryga -> Sad -> Kronika) i podbij wersje do v0.40
+- zaktualizuj testy audytowe Poziomu 2 i Poziomu 4 (wymogi Korony, warianty edyktow i tajny werdykt)
+- zoptymalizuj Szalonego Audytora do 3-stopniowego lejka selekcji
+- rozszerz skrypt sync_config o slownik i dynamiczne warunki zwyciestwa
+- zaimplementuj audytor_kanonu.py do optymalizacji kanonu 4P z diagnostyka wplywu
+- zsynchronizuj pelny system dokumentacji i archiwizacji w audytorze kanonu oraz wdróz v0.52
+- dodaj badanie uzytecznosci i wplywu kart w kanonie 4P (feature_impact_4p.py oraz --canon-4p)
+- zaostrz formule scoringowa w scoring.py i dodaj adnotacje w balance-notes.md
+- wdrozenie ciaglego asymptotycznego modelu punktacji (exponential decay) i aktualizacja balance-notes.md
+- dodanie skryptow audytor_3p.py i audytor_5p.py z adaptacyjnym algorytmem Lookahead +1D
+- dodanie narzedzia audytor_4p.py do szybkiej optymalizacji makro-parametrow 4P z algorytmem Lookahead +1D
+- unifikacja architektury audytorow 4p, 3p i 5p z ciaglym lejkiem 3-etapowym i beam search
+- aktualizacja balansu v0.59-v0.69 (karty i parametry makro 4P)
+- pelna implementacja reakcji so-05 i gc-05 oraz eliminacja kandydatow no-op w L4
+- refaktoryzacja AI bota na Utility AI (ROI netto, strefy herezji, taktyczny pas) i naprawa gc-02
+- patch v0.75 - oczyszczenie kart SSOT, wdrożenie Utility AI i raport Grand Monte Carlo v0.75
+- wdrożenie Bramki Witalności Mechanik (Mechanic Vitality Gate) do ewaluacji i raportów audytorów
+- rozszerz leksykon o 3 nowe wzorce efektów kart
+- v0.76 — dodaj 10 nowych kart frakcyjnych (2 × 5 frakcji)
+- rozdziel score win share od witalności i dodaj --accept-mode
+- kanon 4P v0.77–v0.86 — karty, pasmo Kabały i sync dokumentacji
+- oznacz martwe mechaniki w ablacji 4P i dodaj --no-cards
+- karaj martwe dualne ścieżki zwycięstwa w witalności
+- zetnij martwe kłódki zwycięstwa i daj skazaniom pierwszeństwo
+- kanon 4P v0.91 — haki 0, pasmo ≤9, szlak od ery 4
+- słaba dźwignia L1/L2/L4 to dług, nie „zbalansowany regulator”
+- raport 4P liczy win share, wymaga 5000 gier i nie abluje martwych gałek
+- v0.92 — rozdziel stosy i skazania, odblokuj audytor 4P
+- v0.94 — stosy 4 i jedna liczba Upadków
+- v0.96 — cofnij HUD v0.95 i zetnij martwe kłódki zwycięstwa
+- wpięcie procedur Faz I/II i skalarów SSOT
+- bramka fundamentu 15–35% przed zapisem audytora makro
+- force acceptance of all final candidates in audytor_kanonu.py for testing purposes
+- usprawnienia audytora kanonu i narzedzi raportowania Monte Carlo
+- usprawnienia selekcji i domyslny tryb legacy w audytorze kanonu
+- zaawansowana selekcja synergii i kryterium Maximin w audytorze kanonu
+- milestone v1.0-alpha.23 - implement Dynamic Threat Assessment AI for 80+ Canon 4P balance
+- create targeted problem card optimizer (audytor_kart_problemowych.py) for Autopodatki, Disruptors, and Dead Weight
+- enable targeted problem card optimization by default in audytor_kanonu.py
+- upgrade audytor_kart_problemowych.py to continuous iterative optimization loop (1D/2D)
+- remove arbitrary 95.0 stop in audytor_kart_problemowych.py; optimize continuously until all potential gains are extracted
+- expand audytor_kart_problemowych.py with deep multi-parameter & compound reworks (1D/2D)
+- bump to v1.0-alpha.24 with start_gold: 5 and docs sync
+- implement sequential per-card deep-dive optimizer with multi-D mechanics
+- track per-card play counts in engine and batch runner
+- add play-rate to ablation report and fix false autopodatek classification
+- implement comprehensive tactical heuristics for all 60 cards in PoliticsAgent
+- bump to v1.0-alpha.25 — KB-09 gold buff (4P Score 11.9 -> 27.2)
+- freeze intrigue_gold knob in audytor_4p to protect base economic rules
+- bump to v1.0-alpha.30 — reset intrigue_gold to 1 and sync documentation
+- bump to v1.0-alpha.34 — cut gold inflation on economy cards (so-02, caa-02, gc-02)
+- bump to v1.0-alpha.35 — fix redundant economic cards (gc-02, kt-02)
+- implement organic win condition checks, era analytics, and anti-cheat hooks
+- update card costs, effects, and catalogue for v1.0-alpha.61
+- refine scoring penalties, golden era window validation, and report generator
+- bump SSOT and rulebook to v1.0-alpha.61 with balanced win thresholds and economy
+- enforce ADR-0014 Rule 5000 and calibrate accusation telemetry bounds
+- update card metadata and prototype editor for alpha.62..78
+- advance SSOT and balance changelog to v1.0-alpha.78
+- adjust acceptable balance tier threshold to 80+
+- bump SSOT to v1.0-alpha.79 with KT-07 heresy reduction and 160k telemetry
+- focus canon telemetry report strictly on 5 canonical 4P setups
+- release v1.0-alpha.80 (SO-02 heresy 2, CAA-08 cost 3) - Canon 4P 85.1 pts
+- implement successive halving geometric rung ladder in adaptive racer
+- add C++20 simulation core architecture, build scripts and type stubs
+- enable C++ native engine acceleration and wire full telemetry bridge
+- replace RNG with MT19937 for Python compatibility, add card fiasco logic, and update game rules and edict triggers.
+
+### Changed
+- update card loader parsing logic, clarify patrol rules, and adjust Publiczne Ostrzeżenie card balance.
+- clean code identifiers from HTML card editor UI and use pure Polish terminology
+- compact card editor input widths and align form controls into 3-column rows
+- align input heights to 38px and enforce single-line label height
+- normalize kt-10 action to check_victory and eliminate artificial check_victory_or_set_heresy action
+- normalize all composite actions (grant_fragment_or_gold, gain_gold_and_frame) to pure atomic actions
+- consolidate single-card actions into 11 core primitive mechanics using modifier parameters
+- synchronize computeEffectText w card-editor.html to 100% exact 1:1 match with Python generator for 11 primitive actions
+- extract audit table score formatting helper functions
+- enhance auto-balancer with full documentation and reporting
+- poprawa frazy S14 na naturalna polszczyzne 'Limit: bez ruchu Agenta w tej Erze.'
+- usunieto zbedny dopisek no_move_limit z karty SO-05 i skryptow
+- use lambda for min key lookup in outlier_hunter.py
+- Outlier Hunter skupia sie wylacznie na outlierach (<90) z natychmiastowa eskalacja strategii
+- zbalansowano generator hybryd (filtr reguł L2 dla frakcji setupu) pod budzet ~15 minut na iteracje
+- uporzadkuj strukture sim-reports w dedykowane foldery current/, logs/ i archive/
+- remove stale test commands and outdated status reports from balance notes
+- usuniecie folderow current i logs, zapis raportow bezposrednio do archiwum wersji
+- replace condemnations counter with unique faction set for Swiete Oficjum win condition and rebalance Podejrzenie card cost and heresy output
+- load time cards dynamically from the loader and update key formatting logic
+- update card prototype styling and faction colors
+- update game balance and card parameters for v0.99.13
+- replace accept_candidate logic with score comparison and add fallback to best candidate
+- zmień tło .card-proto na faction-edge/blood
+- pergaminowe tla kart, zaokraglenia i naprawa fallbacku ikon
+- usuniecie martwych parametrow path_era (CAA) i verdict_secret
+- optymalizacja obslugi garbage collectora w petli run_batch
+- align candidate pools across all audit levels to exact multiples of 10 for 100% CPU core utilization
+- enforce exact multiple-of-10 funnel stages and survivor slicing across all audit tools
+- remove redundant int() calls in dual win path check
+- improve score delta formatting in audit_facts
+- optimize simulation core and analytical standard error calculations
+- remove unused chrono header include
+
+### Fixed
+- allow non-integer heresy values in generator and add Pyright configuration for project type checking
+- fix heresy badge plus sign formatting and move heresy_text caption to HDR section
+- fix effect text real-time auto-computation and event reactivity
+- align computeEffectText phrasing in HTML card editor with leksykon standards
+- fix inline display override bug in HTML card editor to preserve CSS multi-column layouts
+- combine all advanced fields into a single flex-wrap container so active inputs sit side-by-side
+- fix no_move_limit check in test_card_text_gen to achieve 50/50 100% exact text generation match
+- add missing trigger reaction support and field mapping to card-editor.html computeEffectText
+- bind win paths and heresy zones to YAML SSOT
+- poprawiono regex setupu w teach-sheet.md
+- remove unreachable dead code in sync_teach_sheet
+- enhance auto-balancer candidate filtering and stop condition
+- usunięte zbędne entery z card-editor.html
+- adaptacyjna kolejka setupow i wielopoziomowa eskalacja strategii w Outlier Hunter
+- bezpieczne pobieranie nazwy frakcji z prefixu karty w feature_impact_audit.py
+- napraw parametry disabled_cards w feature_impact_4p.py i przelicz prawidlowy raport ablacji 4P
+- wdrozenie zasady cooldownu Autodafe od Ery 3 w dokumentacji i silniku oraz pelna naprawa mechanik Inkwizytora
+- poprawka reguly Lookahead +1D gwarantujacej przejscie do 2D nawet bez zysku w 1D
+- poprawka atrybutu s.games w BatchSummary w audytorach 4p, 3p i 5p
+- poprawka wyliczania metryk BatchSummary w audytorach 4p, 3p i 5p
+- poprawka typowania i rzutowania FactionId w audytorach 4p, 3p i 5p
+- bezpieczne rzutowanie typu w _set_3p i _set_5p
+- zamrożenie limitu ręki w audytorze kanonu 4P
+- audyty L2/L4 nie strzelają w wycięte ery ani w poluzowanie bezpieczników
+- nie ruszaj cooldownu Autodafé w audytorze 4P
+- audytor wdraża tylko ±1 z L1–L4, nie ablację ani tempo Kroniki
+- 3p/5p nie zapisują gałek całego stołu
+- Gospodarcza 1→0 to ablacja, nie gałka ±1
+- kt-03 zawsze daje fragment; gc-10 tylko przy Haku lub Marionetce
+- sync_config porównuje skalowanie 3p/5p względem wartości 4p
+- napraw selekcję kandydatów i lejek etapów
+- napraw bramkę fundament i logikę akceptacji
+- przywróć accept_candidate() i usuń ręczne hacki
+- odblokuj wspinaczkę fundamentu w audytor_4p i zaktualizuj testy akceptacji
+- akceptuj zyski score_4p bez regresji min i zmniejsz beam-width do 4
+- usun blokady wspinaczki — akceptuj kazdy zysk score/min jak legacy
+- sortuj lejek wedlug score_4p zeby nie gubic najlepszych kandydatow
+- dodaj obsługe wartosci slownikowych per-player w _n4()
+- zamroz max_eras, zaostrz kryteria canon_accept i popraw obsluge typow w audytorach
+- poprawa layoutu planszy – usuniecie widgetu inkwizytora i siatka 3x2 pul zasobow
+- popraw kryteria canon_accept, odblokuj generowanie L1/L4 i zwieksz parametry beam search
+- rozdzielenie rankingu win-share (score_4p_balance) od weta witalnosci
+- optymalizacja wielkosci puli 2D/3D i czasu szybkiego przesiewu
+- fundamental engine bugfixes in Cienie mechanics and harden 4P auditor acceptance criteria
+- balance Pareto trade-offs in canon accept criteria
+- track reaction card triggers in DramaMetrics card_plays
+- prevent unplayed cards from being labeled as balanced utility
+- make victory assertions in test_smoke compare against dynamic SSOT config
+- revert premature condemns=2 in 4P back to 3 to prevent SO blowout
+- enforce hard vitality gate in ranking and acceptance across all modes
+- protect _LiveTee from worker multiprocess race and stream progress
+- complete C++ telemetry bridge and enforce SSOT fidelity across runner
+- resolve inquisitio_native undefined symbol and redundant int cast
+- refine type narrowing for inquisitio_native import in batch runner
+- achieve full SSOT mechanics parity with canonical Python engine
+- normalize passes_forced_pct telemetry by total turns
+- align autodafe cooldown, interrogation effects, and trial filters with SSOT
+- achieve full behavioral parity for agent navigation, victory parameters and phase ordering
+- remove probabilistic acceptance of worse balance candidates
+- enforce canonical Python SSOT engine as default in batch runner
+- restore C++ native engine as primary accelerator
+- align caa-05 relic evacuation and heresy risk with Python SSOT
+- check victory condition immediately after each player turn in Phase I
+- enforce hard vitality gate requiring vitality penalty <= 0.10 for all candidate acceptances
+- maintain persistent double agent and shadow exit flags across eras to match Python SSOT
+- remove rogue permanent flag setters for caa-01, caa-06, caa-08
+- uncap KT fragment accumulation and reverse discard draw matching Python SSOT
+- set default GC falls requirement to 9 matching game_config.yaml and implement Phase II Nasłanie bidding
+- apply heresy decrease on kt-10, kt-11, kt-12 enabling Codex victory in C++
+- align hook compliance branching with Python SSOT
+- port exact Python card resolution and movement mechanics to inquisitio_native.cpp
+- port time edict deck and reaction cards to match Python SSOT
+- synchronize threat, mobility and legal condition checks with Python SSOT
+- add marionette detection under Inquisitor
+- align observed_threshold, sea_route_era and economic action mechanics
+- align accusation candidate iteration order with Python SSOT
+- synchronize threat assessment calculations across all factions
+- align C++ engine mechanics and card resolutions with Python SSOT
+- add agent movement on economic action and handle so-07 interrogation
+- update game_config.yaml path from root to data/ in all consumers
+- remove debug print in kt-06 effect
+
+### Miscellaneous
+- Initial scaffold for INQUISITIO 1492 board game design.
+- Add full faction decks, time cards, playtest sims, and intrigue engine.
+- Rebuild intrigue prototype around heresy, Inquisitor, verdict, hooks, and dungeons.
+- add index READMEs for documentation and playtesting
+- add index READMEs for board, factions, mechanics, and components
+- add index READMEs and fix breadcrumbs across card decks
+- add README indexes and fix breadcrumbs for tools and assets
+- update simulation engine, CLI, runners and balance tests
+- add HTML prototypes and clean up gitkeeps
+- add build_catalog, PnP generator and verification scripts
+- update root README and gitignore
+- update win conditions, autodafé mechanics and playtest setup notes
+- update card costs for faction balance optimization
+- update win conditions, autodafé mechanics, and balance bounds
+- add telemetry bounds, scoring, analytics insights, and new agent profiles
+- add balancing hierarchy documentation and update faction win conditions with parameterized overrides in engine.
+- parameterize win conditions, turn structure, and batch runner with central config
+- update card costs and effect specs for balance tuning
+- update HTML prototypes and PnP generation scripts
+- synchronize rulebooks, teach-sheets, and balance notes with central config
+- remove breadcrumbs header from all card markdown files
+- standardize YAML frontmatter structure across card markdown files
+- clean up legacy zero/false boilerplate fields from all card markdown frontmatters
+- update SCHEMA.md and tools/pnp/README.md to reflect cost parameter and clean frontmatter
+- adjust 5p SO victory stacks to 4 and add per-player start gold
+- update balance-notes.md with 5p SO stacks, 5p start gold and audit notes
+- add formal Chronological Patch Notes section to balance-notes.md
+- set 5p hand limit to 6 cards and update balance notes
+- update Kabała heresy band to [3, 8] and refine audit relative offsets
+- complete Patch v1.2 entry in balance-notes.md
+- increase max_eras to 9 and update rules & notes
+- Autodafé 3, threshold 6/7/7, flatten fragments and Korona era
+- update Kabala heresy band in glossary and balance notes history
+- wdrozono patche v0.13–v0.16 (uproszczone cele Korony/Oficjum, prog 5p oraz splaszczone SSOT)
+- obsluga skalarnych wartosci SSOT, usuniecie martwych sciezek Korony i aktualizacja testow
+- dodano standardowy/gleboki pipeline audytowy z automatycznym snapshotem configu do archiwum
+- dodano sortowanie po Global Delta oraz zwijane sekcje <details> dla wariantow bez zysku
+- ustanowiono kanon 4p jako glowny opis zasad + ramka modyfikatorow dla 3p/5p
+- zsynchronizowano tabele frakcji w README.md z Kanonem 4p oraz dodano auto-sync
+- zrownano ere wygranej Korony z Cieniami (Era 5) oraz zsynchronizowano dokumentacje
+- dodano run_grand_audit.py (10k glowny, 3k poziomy L1-L4) i zsynchronizowano teach-sheet
+- zawezono pasmo Herezji Kabaly do [3, 7] (Kanon i wszystkie sklady)
+- obnizono koszt CAA-03 (Cien na Rynku) do 0 zl oraz uodporniono dwukierunkowy sync kart
+- zsynchronizowano ere wygranej Korony (Kanon 4p: Era 5, 3p: Era 6)
+- increase default confirmation games for Ultra Monte Carlo
+- obnizono koszt CAA-10 (Echo Alhambry) do 0 zl (Global 94.4 pkt) oraz dodano pelne raporty i archiwum
+- add 2-player variant (2x2p Dual Control) rules
+- set gc-01 heresy to 1 and update balance notes (94.7/100 score)
+- update auto-optimizer logs, telemetry and v0.23 archive
+- obnizono koszt GC-04 (Informator) do 0 zl (Global 95.2 pkt) oraz zsynchronizowano baze kart
+- zaktualizowano raporty telemetrii, auto-balancera i archiwum v0.24
+- set default min_delta to 0.0 to accept any strictly positive balance gain
+- zaktualizowano wersje v0.23-v0.28 (Global 96.2 pkt) oraz pelne raporty Grand Monte Carlo
+- obnizono koszt CAA-01 (Przejscie Podziemiami) do 0 zl (Global 96.5 pkt)
+- zaktualizowano raporty biezace audytow i telemetrii dla v0.29
+- zsynchronizowano katalog kart, opisy i card-editor z game_config.yaml v0.29
+- zsynchronizowano ksiege zasad, teach-sheet i hierarchie z game_config.yaml v0.29
+- dodano tla historyczne, kulturowe i powiazania frakcji w Toledo 1492
+- usunieto techniczna notatke designu ze swiete-oficjum.md
+- zaktualizuj terminologię gry (Marionetka, Kronika Dziejów, Dzielnica Garbarzy)
+- dostosuj generatory PnP, sync i testy do zaktualizowanego glosariusza
+- przebuduj arkusze PnP i edytor kart z nowa terminologia
+- zaktualizuj raporty telemetrii i notatki playtestingowe
+- zaktualizowano raport telemetrii, balance-notes i archiwum v0.30
+- dodano adnotacje metodologiczna wyjasniajaca przejscie v0.29 -> v0.30
+- poprawiono wyjasnienie zmiany skali scoringowej post-plateau dla v0.30
+- zaktualizowano raporty, archiwum wersji v0.31-v0.33 i balance-notes
+- update rules, lexicon, player boards, and faction card documentation
+- wygeneruj zaktualizowane szablony kart i pomocy gracza dla v0.40
+- zaktualizuj raporty symulacji i archiwizuj wyniki balansu v0.35 oraz v0.40
+- zaaplikuj patche balansu v0.41 - v0.50 i zsynchronizuj zasady oraz komponenty
+- zaktualizuj raporty symulacji oraz dodaj archiwum v0.40 - v0.50
+- wprowadz zasade organicznego balansowania i bezwzgledny zakaz sztucznych protez
+- zwieksz wymog Stosow Swietego Oficjum w 5p do 5 stosow
+- wygeneruj i zarchiwizuj pelne audyty L1 i L2 dla v0.52
+- archive v0.52 playtesting log to sub-directory
+- wykonaj Grand Audit dla v0.56 po rekalibracji scoringu i zsynchronizuj pelna dokumentacje
+- uzupelnij playtesting/sim-reports/current/ o raporty z v0.56
+- umieszczenie notatki o modelu asymptotycznym wylacznie nad najnowszym patchem w historii zmian
+- pelna dokumentacja Patch Notes v0.57 i v0.58 oraz aktualizacja stanu zmierzonego w balance-notes.md
+- uporzadkowanie kolejnosci patch notes v0.58, v0.57 i adnotacji scoringowej nad v0.56
+- oznaczenie patch v0.58 jako w trakcie testow i wyczyszczenie przedwczesnych wynikow
+- dodanie kompletnych wynikow audytu i telemetrii dla patch v0.57
+- pelna synchronizacja oficjalnych wynikow audytu v0.58 w balance-notes.md
+- archiwizacja raportow z pelnego audytu v0.58 (poziom 1, poziom 2, telemetria)
+- synchronizacja tabel systemowych, warunkow zwyciestwa i wynikow patch notes v0.58
+- podpiecie dedykowanych audytorow 3P i 5P w dokumentacji sim i balance-notes
+- usuniecie przestarzalych skryptow (szalony_audytor, auto_balancer, outlier_hunter itp.)
+- aktualizacja ksiegi zasad, patch notes v0.59-v0.69 i audytora kanonu
+- archiwizacja raportow v0.59-v0.69 i usuniecie katalogow current oraz logs
+- aktualizacja raportow optymalizacji kanonu v0.68 i v0.69 dla proby ultra 5000 gier
+- aktualizacja sciezek logow w docstringach audytorow
+- publikacja patcha v0.70 i kompletnego pakietu Grand Monte Carlo Audit
+- uzupelnienie wynikow telemetrii i benchmarku dla patcha v0.70
+- v0.76 — synchronizacja dokumentacji, katalogu, edytora i testów
+- patch v0.76 — 10 nowych kart i audyt L1 kanonu 4P
+- patch notes i audyty v0.87–v0.91 (L2/L4, impact bez kart)
+- wyczyść martwe gałki z raportów v0.87–v0.91
+- archiwum audytora 4P v0.93
+- zsynchronizuj kanon v0.96 i bezpieczne odpalanie audytorów
+- v0.99 — SSOT L2 i koszty kart po naprawie silnika proxy
+- v0.99.1 — L3 ręcznie: osłab GC disruptory, buff startu Kabały
+- synchronizacja kanonu v0.99.1 (sync_config)
+- archiwum raportów sym v0.97–v0.99
+- v0.99.2 — Oficjum stosy 7→6 po audycie L2
+- synchronizacja stosów 6 + archiwum L2 v0.99.1
+- v1.0.0 — wspinaczka do bramki fundamentu (CAA nadal poniżej 15%)
+- v1.0.0 → v0.99.3 — numer balansu bez przejścia bramki fundamentu
+- v0.99.4 — domknięcie gwarancji silnika (L4, warunki kart, staged)
+- v0.99.5–v0.99.6 — fundament True, audytor makro działa
+- balance-notes nagłówek v0.99.6
+- synchronizacja kanonu, kart i silnika symulacji
+- uporzadkowanie ksiegi zasad 4p, slownika i dodanie wariantu 2x2p
+- dodanie arkuszy druku ksiegi zasad, slownika i wariantu 2x2 oraz usuniecie teach-sheet
+- zastapienie emotek wektorowymi ikonami SVG dla frakcji i zetonow
+- uklad kart 3x3 single-cut (bez przerw, spad wylacznie na obwodzie)
+- zsynchronizowano pozostale szablony prototypow z generatorem
+- pelna synchronizacja liczby i rodzajow zetonow z ksiega zasad i arkuszami
+- usuniecie bialych marginesow - pelne tlo pergaminowe do krawedzi (margin 0)
+- synchronizacja szablonow prototypow z margin: 0
+- dodanie zetonow agentow i uklad zetonow 9x8 single-cut bez przerw
+- synchronizacja wszystkich talii kart do ukladu single-cut (gap 0, spad na zewnatrz)
+- synchronizacja szablonow prototypow
+- usuniecie mikroskopijnych etykiet tekstowych z zetonow na rzecz czytelnej grafiki
+- synchronizacja szablonow prototypow
+- usuniecie wewnetrznych ramek i grubych pasow - karty stykaja sie bezposrednio
+- synchronizacja szablonow kart
+- unifikacja progu oskarzenia (skalar 7) i aktualizacja raportu 4P
+- unifikacja stref postepu jako tacki z celem oraz optymalizacja ukladu i DTP
+- poprawny uklad kart 3x3 single-cut z 3mm pasami frakcyjnymi i spadem zewnetrznym 2.5mm
+- synchronizacja szablonow prototypow
+- pelne rozdzielenie podgladu talii frakcji i siatki druku single-cut
+- pelna synchronizacja zetonow zlota svg, planszetek i kart
+- pelna eliminacja bialych szczelin w ukladzie 3x3 kart (100% szerokosc i wysokosc komorki)
+- synchronizacja banerow efektow kart i prototypow
+- usun przestarzale skrypty diagnostyczne (compare_accept_modes, measure_foundation)
+- optymalizacja parametrów kart w kanonie 4P
+- archiwum raportów optymalizacji i telemetrii v0.99.14-v0.99.18
+- optymalizacja kart i skalowanie skazan dla 3P
+- archiwum raportow optymalizacji kanonu v0.99.19-v0.99.24
+- skonfiguruj sciezki tools/sim dla pyright i pytest
+- archiwum raportow optymalizacji i telemetrii v0.99.25-v0.99.26
+- zablokuj limit 11 Er dla talii czasu i dodaj target_heresy do kb-10
+- podbicie wersji do v1.0-alpha.1 i harmonizacja zasad pod kanon 4p
+- regeneracja kart, zasad i komponentow dla wersji v1.0-alpha.1
+- kb-11 gold=0, max_eras=12 i aktualizacja notatek balansu
+- harmonizacja ksiegi zasad, slownika i wariantu 2p z limitem 12 Er (v1.0-alpha.3)
+- archiwum raportow optymalizacji i telemetrii v1.0-alpha.2 oraz v1.0-alpha.3
+- aktualizacja SSOT (v1.0-alpha.9), kart, dokumentacji i raportow symulacji
+- aktualizacja SSOT do v1.0-alpha.22 (optymalizacja 4P do 80.3 pkt) oraz raporty
+- weryfikacja i rozszerzenie testow gwarancji silnika (v1.0-alpha.22)
+- harmonizacja specyfikacji setupow, limitow er i regul unifikacji
+- walidacja krzyżowa na niezależnym seedzie przed zapisem do SSOT
+- naprawa nieskończonej pętli (30D+) — 3 fundamentalne luki
+- fix rotacji seeda — użyj loop_iteration zamiast total_iterations
+- expand v1.0-alpha.23 patch notes with engine evolution and score jump explanations
+- keep audytor_kanonu.py untouched for full search; maintain dedicated standalone audytor_kart_problemowych.py
+- update simulation reports and archive for v1.0-alpha.24
+- add full transcript export of previous session
+- document Milestone v1.0-alpha.25 (60/60 AI cards, play-rate telemetry, true balance)
+- clean up balance-notes.md and ensure full chronological patch notes for v1.0-alpha.25
+- remove volatile simulation tables from balance-notes.md in favor of living sim-reports
+- fix archive report links in balance-notes.md
+- make Engine Guarantee permanent and immutable
+- anchor Engine Guarantee to v1.0-alpha.25 as true complete engine milestone
+- store reports and logs for v1.0-alpha.26 to v1.0-alpha.29
+- reset audytor_live.log and sync SSOT documentation for v1.0-alpha.35
+- add architecture decision records ADR-0001..0016 and agent discipline rules
+- update engine guarantee, smoke tests, and scoring assertions for v1.0-alpha.61
+- store audit reports and live logs for alpha iterations v1.0-alpha.36..61
+- codify Rule 5000, discipline invariants, and rulebook references
+- store 160k-game telemetry reports and archive for v1.0-alpha.62..78
+- update canonical optimization report for v1.0-alpha.79
+- ignore sim live log files
+- add anti-stagnation watchdog rule and update .gitignore
+- synchronize card catalogue, card editor and rules with v1.0-alpha.80 SSOT
+- codify sections 10-13 against dual telemetry, balance degradation and unmonitored background tasks
+- migrate legacy cursor rules to .agents/rules
+- add standard PR template
+- align PR templates with .agents/rules standard and specific repo context
+- enforce single-app root structure (move sim->src, game->docs, tools->scripts, playtesting->data)
+- move game_config.yaml to data/ (enforce root structure)
+- remove self-referencing breadcrumb from root README.md
+- add project.md, STANDARDS.md, CHANGELOG.md; fix rule paths after restructure
+- enforce DevEx canonical breadcrumbs in all markdown files
+
+---
