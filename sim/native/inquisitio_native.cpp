@@ -1222,6 +1222,7 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                     }
                 }
             }
+            if (check_winner_fast(st, ov) != NO_FACTION) return;
         }
     }
 
