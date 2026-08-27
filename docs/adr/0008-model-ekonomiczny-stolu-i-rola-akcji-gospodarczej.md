@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0008-model-ekonomiczny-stolu-i-rola-akcji-gospodarczej](0008-model-ekonomiczny-stolu-i-rola-akcji-gospodarczej.md)
+
+---
+
 # ADR-0008: Model Ekonomiczny Stołu i Rola Akcji Gospodarczej
 
 * **Status:** ACCEPTED

@@ -12,3 +12,8 @@ effect: 'Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit
 lore: Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [05-falszywy-swiadek](05-falszywy-swiadek.md)
+
+---
+
+

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [18_raport_wielkiej_proby](18_raport_wielkiej_proby.md)
+
+---
+
 # Raport 18: Wielka Próba Uczenia Botów i Analizy Głębokie (80,000 Partii)
 
 **Wielkość Próby:** 5000 gier na setup (16 setupów) | **Łącznie:** 80,000 gier | **Czas Symulacji:** 11.34s

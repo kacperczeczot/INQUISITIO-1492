@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [08_fala_4_czworki_kombinacji](08_fala_4_czworki_kombinacji.md)
+
+---
+
 # Raport Fali 4: Czwórki Kombinatoryczne (70 Czwórek Poprawkowych)
 
 **Przeanalizowano Czwórek:** 70 | **Łączna Liczba Partii:** 336000 | **Czas Wykonania:** 161.34s

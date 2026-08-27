@@ -13,5 +13,10 @@ effect: Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.
 lore: Bluff kierunku Relikwii jest połową gry Cieni.
 ---
 
+[Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [09-kurier-relikwii](09-kurier-relikwii.md)
+
+---
+
+
 
 

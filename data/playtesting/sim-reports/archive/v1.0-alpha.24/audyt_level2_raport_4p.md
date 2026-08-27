@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.24](README.md) > [audyt_level2_raport_4p](audyt_level2_raport_4p.md)
+
+---
+
 # Raport Audytu Poziomu 2 (Warunki Zwycięstwa i Skalowanie) — Wersja Balansu: v1.0-alpha.24
 
 **Wersja Balansu:** `v1.0-alpha.24` | **Data:** 2026-08-22 18:06 | **Przeanalizowano Wariantów:** 20 | **Próba:** 3000 gier/setup | **Czas:** 90.39s

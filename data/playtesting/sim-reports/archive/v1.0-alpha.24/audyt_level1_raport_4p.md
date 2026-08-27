@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.24](README.md) > [audyt_level1_raport_4p](audyt_level1_raport_4p.md)
+
+---
+
 # Raport Audytu Poziomu 1 (Główne Mechaniki Systemowe) — Wersja Balansu: v1.0-alpha.24
 
 **Wersja Balansu:** `v1.0-alpha.24` | **Data:** 2026-08-22 18:05 | **Przeanalizowano Wariantów:** 20 | **Próba:** 3000 gier/setup | **Czas:** 97.76s

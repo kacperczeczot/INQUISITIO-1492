@@ -1,3 +1,7 @@
+[Strona główna](../README.md) > [docs](README.md) > [config_reference](config_reference.md)
+
+---
+
 # Specyfikacja Konfiguracji `game_config.yaml` — Inquisitio 1492
 
 Dokument zawiera pełną dokumentację techniczną, schemat pól oraz dopuszczalne wartości dla pliku **`game_config.yaml`**, który stanowi **Jedno Źródło Prawdy (Single Source of Truth)** dla zasad gry, ekonomii, słownika kart i celów balansowych symulatora.

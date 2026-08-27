@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.75](README.md) > [raport_uzytecznosci_i_wplywu_4p](raport_uzytecznosci_i_wplywu_4p.md)
+
+---
+
 # Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja v0.75
 
 **Wersja Gry:** `v0.75` | **Data Badania:** 2026-08-17 01:06 | **Próba:** 2000 gier/setup (10000 gier na wariant) | **Ziarno:** 42

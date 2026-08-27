@@ -1,3 +1,7 @@
+[Strona główna](../../../README.md) > [factions](README.md)
+
+---
+
 # Frakcje — Toledo, Rok Pański 1492
 
 *Miasto Trzech Kultur w cieniu stosów i królewskich edyktów.*

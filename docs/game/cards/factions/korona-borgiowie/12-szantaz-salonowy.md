@@ -13,3 +13,8 @@ lore: Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smy
 creates_hook: true
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [12-szantaz-salonowy](12-szantaz-salonowy.md)
+
+---
+
+

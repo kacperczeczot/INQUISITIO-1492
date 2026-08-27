@@ -15,5 +15,10 @@ lore: Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.
 arrest: true
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [07-skrytobojstwo](07-skrytobojstwo.md)
+
+---
+
+
 
 

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.16](README.md) > [audyt_stress_raport](audyt_stress_raport.md)
+
+---
+
 # Raport Testów Stresu Ekonomicznego i Odporności Systemowej — Wersja Balansu: v0.16
 
 **Wersja Balansu:** `v0.16` | **Data:** 2026-08-14 12:49 | **Próba:** 2000 gier/setup | **Ziarno:** 42

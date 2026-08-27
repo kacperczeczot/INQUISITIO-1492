@@ -17,6 +17,11 @@ lore: Egzekucja domu. Stół boi się trzymać ujawnione brudy.
 breaks_rule: true
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [10-upadek-domu](10-upadek-domu.md)
+
+---
+
+
 
 
 

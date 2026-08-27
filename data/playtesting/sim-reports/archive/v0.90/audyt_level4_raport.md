@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.90](README.md) > [audyt_level4_raport](audyt_level4_raport.md)
+
+---
+
 # Raport Audytu Poziomu 4 (Warianty Niszowe i Edykty) — Wersja Balansu: v0.90
 
 **Wersja Balansu:** `v0.90` | **Data:** 2026-08-17 13:22 | **Przeanalizowano Wariantów:** 8 | **Próba:** 250 gier/setup | **Czas:** 12.13s

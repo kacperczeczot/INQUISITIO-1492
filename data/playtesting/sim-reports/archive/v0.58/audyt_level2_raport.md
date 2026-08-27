@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.58](README.md) > [audyt_level2_raport](audyt_level2_raport.md)
+
+---
+
 # Raport Audytu Poziomu 2 (Warunki Zwycięstwa i Skalowanie) — Wersja Balansu: v0.58
 
 **Wersja Balansu:** `v0.58` | **Data:** 2026-08-16 16:22 | **Przeanalizowano Wariantów:** 29 | **Próba:** 3000 gier/setup | **Czas:** 266.4s

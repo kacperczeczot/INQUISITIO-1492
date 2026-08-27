@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0007-geometria-planszy-i-fizyczne-niezmienniki-komponentow](0007-geometria-planszy-i-fizyczne-niezmienniki-komponentow.md)
+
+---
+
 # ADR-0007: Geometria Planszy i Fizyczne Niezmienniki Komponentów
 
 * **Status:** ACCEPTED

@@ -14,4 +14,9 @@ lore: 'Klasyczny frame: zakazana księga ląduje w cudzej komnacie.'
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [03-podrzucenie](03-podrzucenie.md)
+
+---
+
+
 

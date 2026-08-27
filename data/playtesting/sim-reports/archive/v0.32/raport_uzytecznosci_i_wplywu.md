@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.32](README.md) > [raport_uzytecznosci_i_wplywu](raport_uzytecznosci_i_wplywu.md)
+
+---
+
 # Raport Użyteczności i Wpływu Elementów Gry (Ablation & Impact Audit) — Wersja: v0.32
 
 **Wersja Gry:** `v0.32` | **Data:** 2026-08-15 08:39 | **Próba:** 500 gier/setup (8000 gier/test) | **Czas Analizy:** 142.4s

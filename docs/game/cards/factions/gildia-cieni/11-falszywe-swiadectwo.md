@@ -14,5 +14,10 @@ lore: Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [11-falszywe-swiadectwo](11-falszywe-swiadectwo.md)
+
+---
+
+
 
 

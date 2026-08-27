@@ -13,3 +13,8 @@ tags:
 effect: Przesuń swojego Agenta o 1 lokację.
 lore: Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach.
 ---
+
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [12-straznik-archiwum](12-straznik-archiwum.md)
+
+---
+

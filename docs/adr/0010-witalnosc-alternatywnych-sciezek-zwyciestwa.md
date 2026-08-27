@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0010-witalnosc-alternatywnych-sciezek-zwyciestwa](0010-witalnosc-alternatywnych-sciezek-zwyciestwa.md)
+
+---
+
 # ADR-0010: Witalność Alternatywnych Ścieżek Zwycięstwa (Dual-Path Invariant)
 
 * **Status:** ACCEPTED

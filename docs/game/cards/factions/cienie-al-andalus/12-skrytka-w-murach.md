@@ -14,5 +14,10 @@ lore: Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało n
 gold: 2
 ---
 
+[Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [12-skrytka-w-murach](12-skrytka-w-murach.md)
+
+---
+
+
 
 

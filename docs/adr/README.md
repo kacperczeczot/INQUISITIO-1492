@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md)
+
+---
+
 # Rejestr Decyzji Projektowych i Architektonicznych (ADR / GDDR)
 ## INQUISITIO-1492: The Great Board Game Simulation & Engine
 

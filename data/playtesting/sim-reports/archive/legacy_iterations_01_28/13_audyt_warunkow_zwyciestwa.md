@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [13_audyt_warunkow_zwyciestwa](13_audyt_warunkow_zwyciestwa.md)
+
+---
+
 # Raport Audytu Wariacji Warunków Zwycięstwa Frakcji (3p, 4p, 5p)
 
 **Przeanalizowano Wariantów:** 20 | **Próba:** 300 gier/setup | **Czas:** 83.1s

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [06_fala_2_szeroka_wiazka_par](06_fala_2_szeroka_wiazka_par.md)
+
+---
+
 # Raport Fali 2: Szeroka Wiązka Kombinacji Par (300 Par z TOP 25 Poprawiek)
 
 **Przeanalizowano Par:** 300 | **Łączna Liczba Partii:** 1440000 | **Czas Wykonania:** 695.01s

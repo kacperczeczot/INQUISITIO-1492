@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.99.12](README.md) > [kandydaci_recznej_ablacji](kandydaci_recznej_ablacji.md)
+
+---
+
 # Kandydaci do ręcznej ablacji — Kanon 4P (v0.99.12)
 
 **Wersja:** `v0.99.12` | **Patchy w sesji:** 0

@@ -14,6 +14,11 @@ lore: Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [03-podejrzenie](03-podejrzenie.md)
+
+---
+
+
 
 
 

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [01_iteracja_01_diagnoza](01_iteracja_01_diagnoza.md)
+
+---
+
 # Raport Diagnostyczny Balansu — Iteracja 01
 
 **Weryfikacja próby:** 500 gier na setup | **Warstwa:** C | **Próg Oskarżenia:** 7 | **Czas wykonania:** 3.39s

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.68](README.md) > [raport_optymalizacji_kanonu](raport_optymalizacji_kanonu.md)
+
+---
+
 # Raport Optymalizacji Kanonu 4P — Wersja v0.68
 
 **Wersja Poprzednia:** `v0.67` (4P: `95.1 pkt`) → **Nowa Wersja:** `v0.68` (4P: `95.3 pkt`)

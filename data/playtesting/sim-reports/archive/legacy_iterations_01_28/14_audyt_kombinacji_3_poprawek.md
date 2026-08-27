@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [14_audyt_kombinacji_3_poprawek](14_audyt_kombinacji_3_poprawek.md)
+
+---
+
 # Raport 14: Audyt Kombinatoryczny TOP 3 Poprawek Warunków Zwycięstwa
 
 **Przeanalizowano Wariantów:** 8 | **Próba:** 300 gier/setup | **Czas:** 34.73s

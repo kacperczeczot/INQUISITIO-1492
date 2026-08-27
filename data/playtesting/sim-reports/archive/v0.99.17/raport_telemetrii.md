@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.99.17](README.md) > [raport_telemetrii](raport_telemetrii.md)
+
+---
+
 # Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: v0.99.17
 
 **Wersja Balansu:** `v0.99.17` | **Data:** 2026-08-18 13:30 | **Wielkość Próby:** 1000 gier/setup (16000 gier łącznie) | **Czas Symulacji:** 13.63s

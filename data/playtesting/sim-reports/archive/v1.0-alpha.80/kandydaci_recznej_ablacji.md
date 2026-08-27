@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.80](README.md) > [kandydaci_recznej_ablacji](kandydaci_recznej_ablacji.md)
+
+---
+
 # Kandydaci do ręcznej ablacji — Kanon 4P (v1.0-alpha.80)
 
 **Wersja:** `v1.0-alpha.80` | **Patchy w sesji:** 0

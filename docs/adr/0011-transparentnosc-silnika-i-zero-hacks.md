@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0011-transparentnosc-silnika-i-zero-hacks](0011-transparentnosc-silnika-i-zero-hacks.md)
+
+---
+
 # ADR-0011: Transparentność Silnika Symulacji i Zasada Czystej Fizyki (Zero Hacks Policy)
 
 * **Status:** ACCEPTED

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.8](README.md) > [audyt_level4_raport_4p](audyt_level4_raport_4p.md)
+
+---
+
 # Raport Audytu Poziomu 4 (Warianty Niszowe i Edykty) — Wersja Balansu: v1.0-alpha.8
 
 **Wersja Balansu:** `v1.0-alpha.8` | **Data:** 2026-08-19 12:22 | **Przeanalizowano Wariantów:** 7 | **Próba:** 3000 gier/setup | **Czas:** 63.82s

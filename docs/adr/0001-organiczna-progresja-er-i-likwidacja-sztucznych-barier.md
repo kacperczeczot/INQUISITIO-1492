@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0001-organiczna-progresja-er-i-likwidacja-sztucznych-barier](0001-organiczna-progresja-er-i-likwidacja-sztucznych-barier.md)
+
+---
+
 # ADR-0001: Organiczna Progresja Er i Likwidacja Sztucznych Barier Czasowych
 
 * **Status:** ACCEPTED

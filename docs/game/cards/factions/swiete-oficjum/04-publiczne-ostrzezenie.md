@@ -14,3 +14,8 @@ heresy_text: Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.
 lore: Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel.
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [04-publiczne-ostrzezenie](04-publiczne-ostrzezenie.md)
+
+---
+
+

@@ -14,6 +14,11 @@ lore: Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.
 gold: 3
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [02-czarny-rynek](02-czarny-rynek.md)
+
+---
+
+
 
 
 

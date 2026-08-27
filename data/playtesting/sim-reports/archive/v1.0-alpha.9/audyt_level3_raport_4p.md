@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.9](README.md) > [audyt_level3_raport_4p](audyt_level3_raport_4p.md)
+
+---
+
 # Raport Precyzyjnego Audytu Poziomu 3 (Parametry Pojedynczych Kart) — Wersja Balansu: v1.0-alpha.9
 
 **Wersja Balansu:** `v1.0-alpha.9` | **Data:** 2026-08-19 14:36 | **Przeanalizowano Wariantów Kart:** 187 | **Próba:** 3000 gier/setup | **Czas:** 903.53s

@@ -16,4 +16,9 @@ lore: 'Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — sta
 gold: 2
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [02-pobor-podatkow](02-pobor-podatkow.md)
+
+---
+
+
 

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.28](README.md) > [audytor_4p_log](audytor_4p_log.md)
+
+---
+
 # Dziennik Optymalizacji Kanonu 4P Makro (Audytor 4P)
 
 Rejestr wdrożonych patchów makro (L1, L2, L4) dla Kanonu 4-osobowego.

@@ -11,3 +11,8 @@ tags:
 effect: "Każdy gracz w Strefie Obserwowanej zmniejsza swoją Herezję o 1."
 lore: "Biskup ogłasza wielki jubileusz i powszechne rozgrzeszenie, dając wytchnienie podejrzanym."
 ---
+
+[Strona główna](../../../../README.md) > [time-deck](README.md) > [10-amnestia-biskupia](10-amnestia-biskupia.md)
+
+---
+

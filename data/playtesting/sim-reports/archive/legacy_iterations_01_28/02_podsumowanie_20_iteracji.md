@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [02_podsumowanie_20_iteracji](02_podsumowanie_20_iteracji.md)
+
+---
+
 # Podsumowanie 17 Iteracji Optymalizacji Balansu
 
 ## 1. Trajektoria Naruszeń Czerwonej Linii

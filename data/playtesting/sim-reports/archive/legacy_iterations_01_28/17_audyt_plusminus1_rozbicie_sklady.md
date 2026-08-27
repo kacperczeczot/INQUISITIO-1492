@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [17_audyt_plusminus1_rozbicie_sklady](17_audyt_plusminus1_rozbicie_sklady.md)
+
+---
+
 # Raport 17: Dedykowany Audyt Wariacji +1 i -1 Wartości Zwycięstwa (3p, 4p, 5p)
 
 **Łącznie Testów:** 43 | **Próba:** 300 gier/setup | **Czas:** 68.95s

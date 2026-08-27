@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.28](README.md) > [raport_optymalizacji](raport_optymalizacji.md)
+
+---
+
 # Raport Optymalizacji Balansu (Szalony Audytor) — Wersja v0.28 (Iteracja #4)
 
 **Wersja Poprzednia:** `v0.27` (`96.1 pkt`) → **Nowa Wersja:** `v0.28` (`96.2 pkt`)

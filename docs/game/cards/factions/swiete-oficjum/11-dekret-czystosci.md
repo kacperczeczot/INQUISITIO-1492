@@ -15,5 +15,10 @@ target_heresy: 1
 gold: 1
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [11-dekret-czystosci](11-dekret-czystosci.md)
+
+---
+
+
 
 

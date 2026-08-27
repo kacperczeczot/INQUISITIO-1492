@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [26_ponowny_audyt_level1_nowa_baza](26_ponowny_audyt_level1_nowa_baza.md)
+
+---
+
 # Raport 26: Ponowny Audyt +-1 dla Poziomu 1 (Główne Mechaniki z Nowego Punktu)
 
 **Przeanalizowano Wariantów:** 13 | **Próba:** 300 gier/setup | **Czas:** 54.72s

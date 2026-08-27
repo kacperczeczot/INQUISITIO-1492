@@ -13,6 +13,11 @@ lore: Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuacj�
 gold: 2
 ---
 
+[Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [02-zloto-kryjowki](02-zloto-kryjowki.md)
+
+---
+
+
 
 
 

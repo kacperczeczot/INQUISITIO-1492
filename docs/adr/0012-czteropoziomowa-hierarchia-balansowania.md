@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0012-czteropoziomowa-hierarchia-balansowania](0012-czteropoziomowa-hierarchia-balansowania.md)
+
+---
+
 # ADR-0012: Czteropoziomowa Hierarchia Balansowania (L1-L4 Invariant)
 
 * **Status:** ACCEPTED

@@ -13,6 +13,11 @@ lore: Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze.
 creates_hook: true
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [07-archiwum](07-archiwum.md)
+
+---
+
+
 
 
 

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [15_audyt_skalowany_liczba_graczy](15_audyt_skalowany_liczba_graczy.md)
+
+---
+
 # Raport 15: Audyt Skalowanych Warunków Zwycięstwa wg Liczby Graczy (3p, 4p, 5p)
 
 **Przeanalizowano Setupów:** 16 | **Próba:** 300 gier/setup | **Czas:** 4.37s

@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0013-deterministyczna-gramatyka-kart-z-ssot](0013-deterministyczna-gramatyka-kart-z-ssot.md)
+
+---
+
 # ADR-0013: Deterministyczna Gramatyka Kart i Generowanie Tekstów z SSOT
 
 * **Status:** ACCEPTED

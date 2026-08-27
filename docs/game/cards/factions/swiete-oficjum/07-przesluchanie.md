@@ -13,4 +13,9 @@ effect: 'Wykonaj Przesłuchanie na aresztowanego Agenta rywala. Limit: 1 / gracz
 lore: Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję.
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [07-przesluchanie](07-przesluchanie.md)
+
+---
+
+
 

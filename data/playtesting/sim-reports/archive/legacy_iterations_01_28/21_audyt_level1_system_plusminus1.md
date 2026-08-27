@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [21_audyt_level1_system_plusminus1](21_audyt_level1_system_plusminus1.md)
+
+---
+
 # Raport 21: Audyt +-1 dla Poziomu 1 (Główne Mechaniki Systemowe)
 
 **Przeanalizowano Wariantów:** 13 | **Próba:** 300 gier/setup | **Czas:** 55.24s

@@ -14,6 +14,11 @@ lore: Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.
 breaks_rule: true
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [10-pieczec-salomona](10-pieczec-salomona.md)
+
+---
+
+
 
 
 

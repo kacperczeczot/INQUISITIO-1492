@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [10_fala_5_piatki_szostki](10_fala_5_piatki_szostki.md)
+
+---
+
 # Raport Fali 5: Piątki i Szóstki Kombinatoryczne (462 Zestawienia)
 
 **Przeanalizowano Zestawów:** 462 (252 Piątki, 210 Szóstek) | **Czas Wykonania:** 1742.93s

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.50](README.md) > [raport_optymalizacji](raport_optymalizacji.md)
+
+---
+
 # Raport Optymalizacji Balansu (Szalony Audytor — Progressive Beam) — Wersja v0.50 (Iteracja #8, Faza 1D)
 
 **Wersja Poprzednia:** `v0.49` (`86.8 pkt`) → **Nowa Wersja:** `v0.50` (`86.9 pkt`)

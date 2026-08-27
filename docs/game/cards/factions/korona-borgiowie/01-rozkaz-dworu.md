@@ -14,4 +14,9 @@ lore: Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dw
 agents: 1
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [01-rozkaz-dworu](01-rozkaz-dworu.md)
+
+---
+
+
 

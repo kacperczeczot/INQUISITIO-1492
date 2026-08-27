@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.8](README.md) > [audyt_stress_raport_4p](audyt_stress_raport_4p.md)
+
+---
+
 # Raport Testów Stresu Ekonomicznego i Odporności Systemowej — Wersja Balansu: v1.0-alpha.8
 
 **Wersja Balansu:** `v1.0-alpha.8` | **Data:** 2026-08-19 12:22 | **Próba:** 3000 gier/setup | **Ziarno:** 42

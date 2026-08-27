@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [05_podsumowanie_50_iteracji](05_podsumowanie_50_iteracji.md)
+
+---
+
 # Raport 50 Iteracji Optymalizacji Balansu i 50 Poprawek Mechanicznych
 
 **Łączna Liczba Partii:** 400,000 gier | **Czas Wykonania:** 189.73s | **Zastosowane Poprawki:** 50

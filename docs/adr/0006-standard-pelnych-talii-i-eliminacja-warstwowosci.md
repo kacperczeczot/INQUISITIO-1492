@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0006-standard-pelnych-talii-i-eliminacja-warstwowosci](0006-standard-pelnych-talii-i-eliminacja-warstwowosci.md)
+
+---
+
 # ADR-0006: Standard Pełnych Talii (Full Deck Paradigm) i Eliminacja Warstwowości
 
 * **Status:** ACCEPTED

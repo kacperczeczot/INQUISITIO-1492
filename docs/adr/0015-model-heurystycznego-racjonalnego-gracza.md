@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0015-model-heurystycznego-racjonalnego-gracza](0015-model-heurystycznego-racjonalnego-gracza.md)
+
+---
+
 # ADR-0015: Model Heurystycznego Racjonalnego Gracza w Symulacji
 
 * **Status:** ACCEPTED

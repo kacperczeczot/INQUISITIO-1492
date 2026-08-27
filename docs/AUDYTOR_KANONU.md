@@ -1,3 +1,7 @@
+[Strona główna](../README.md) > [docs](README.md) > [AUDYTOR_KANONU](AUDYTOR_KANONU.md)
+
+---
+
 # 🎯 Audytor Kanonu 4P (Anchor-Based 4P Optimizer) — Instrukcja Użytkownika
 
 **Audytor Kanonu 4P** (`tools/sim/audytor_kanonu.py`) to specjalistyczny optymalizator balansu gry **INQUISITIO-1492**, skupiony w 100% na doprowadzeniu **kanonicznej rozgrywki 4-osobowej (4P)** do absolutnego optimum (99–100 pkt), bez wprowadzania sztucznych kompromisów pod 3p i 5p.

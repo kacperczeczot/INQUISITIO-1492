@@ -13,4 +13,9 @@ effect: 'Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie
 lore: Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale.
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [05-wskazowka](05-wskazowka.md)
+
+---
+
+
 

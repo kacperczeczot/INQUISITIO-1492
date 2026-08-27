@@ -14,4 +14,9 @@ lore: Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4).
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [03-plotka-dworska](03-plotka-dworska.md)
+
+---
+
+
 

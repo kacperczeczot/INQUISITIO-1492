@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0004-standardy-czasu-rozgrywki-i-akceptowalne-okno-er](0004-standardy-czasu-rozgrywki-i-akceptowalne-okno-er.md)
+
+---
+
 # ADR-0004: Standardy Czasu Rozgrywki i Złote Okno Er (Era 4–6)
 
 * **Status:** ACCEPTED

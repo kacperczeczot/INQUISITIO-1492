@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.33](README.md) > [raport_uzytecznosci_i_wplywu](raport_uzytecznosci_i_wplywu.md)
+
+---
+
 # Raport Użyteczności i Wpływu Elementów Gry (5-Warstwowy Audyt Ablacyjny) — Wersja: v0.33
 
 **Wersja Gry:** `v0.33` | **Data:** 2026-08-15 10:47 | **Próba:** 1000 gier/setup (16000 gier/test) | **Czas Analizy:** 423.7s

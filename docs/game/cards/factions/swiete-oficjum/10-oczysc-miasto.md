@@ -17,5 +17,10 @@ lore: Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika.
 breaks_rule: true
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [10-oczysc-miasto](10-oczysc-miasto.md)
+
+---
+
+
 
 

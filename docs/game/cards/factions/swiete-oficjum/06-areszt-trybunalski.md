@@ -14,3 +14,8 @@ lore: Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchani
 arrest: true
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [06-areszt-trybunalski](06-areszt-trybunalski.md)
+
+---
+
+

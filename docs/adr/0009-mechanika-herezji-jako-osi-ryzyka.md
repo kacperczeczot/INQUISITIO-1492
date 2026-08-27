@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0009-mechanika-herezji-jako-osi-ryzyka](0009-mechanika-herezji-jako-osi-ryzyka.md)
+
+---
+
 # ADR-0009: Mechanika Herezji jako Dynamicznej Osi Ryzyka i Push-Your-Luck
 
 * **Status:** ACCEPTED

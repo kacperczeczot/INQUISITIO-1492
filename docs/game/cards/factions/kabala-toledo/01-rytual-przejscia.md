@@ -14,3 +14,8 @@ lore: Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właści
 agents: 1
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [01-rytual-przejscia](01-rytual-przejscia.md)
+
+---
+
+

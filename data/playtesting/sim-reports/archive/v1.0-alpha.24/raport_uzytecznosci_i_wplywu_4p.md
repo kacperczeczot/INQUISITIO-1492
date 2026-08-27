@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.24](README.md) > [raport_uzytecznosci_i_wplywu_4p](raport_uzytecznosci_i_wplywu_4p.md)
+
+---
+
 # Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja v1.0-alpha.24
 
 **Wersja Gry:** `v1.0-alpha.24` | **Data Badania:** 2026-08-22 20:08 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42

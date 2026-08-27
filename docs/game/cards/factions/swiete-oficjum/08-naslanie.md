@@ -15,5 +15,10 @@ heresy_text: Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dw
 lore: Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [08-naslanie](08-naslanie.md)
+
+---
+
+
 
 

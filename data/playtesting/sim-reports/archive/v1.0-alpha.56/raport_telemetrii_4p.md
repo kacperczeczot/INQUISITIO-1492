@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.56](README.md) > [raport_telemetrii_4p](raport_telemetrii_4p.md)
+
+---
+
 # Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: v1.0-alpha.56
 
 **Wersja Balansu:** `v1.0-alpha.56` | **Data:** 2026-08-23 21:23 | **Wielkość Próby:** 10000 gier/setup (160000 gier łącznie) | **Czas Symulacji:** 16.48s

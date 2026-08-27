@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0003-anatomia-i-asymetria-warunkow-zwyciestwa-frakcji](0003-anatomia-i-asymetria-warunkow-zwyciestwa-frakcji.md)
+
+---
+
 # ADR-0003: Anatomia i Asymetria Warunków Zwycięstwa 5 Frakcji
 
 * **Status:** ACCEPTED

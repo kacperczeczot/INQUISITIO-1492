@@ -14,5 +14,10 @@ lore: Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamio
 gold: 1
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [11-medytacja-sefirot](11-medytacja-sefirot.md)
+
+---
+
+
 
 

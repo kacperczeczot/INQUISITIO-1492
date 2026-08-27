@@ -1,3 +1,7 @@
+[Strona główna](../../../README.md) > [cards](README.md) > [KATALOG](KATALOG.md)
+
+---
+
 # Katalog kart — INQUISITIO 1492
 
 > **Auto-generowane.** Nie edytuj ręcznie.

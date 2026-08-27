@@ -17,4 +17,9 @@ agents: 1
 creates_hook: true
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [04-faworyt](04-faworyt.md)
+
+---
+
+
 

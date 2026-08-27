@@ -17,3 +17,8 @@ lore: 'Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „�
   '
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [06-przesluchanie-imienia](06-przesluchanie-imienia.md)
+
+---
+
+

@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0005-zasady-nadzoru-i-interwencji-w-procesie-audytora](0005-zasady-nadzoru-i-interwencji-w-procesie-audytora.md)
+
+---
+
 # ADR-0005: Zasady Ciągłego Nadzoru, Reakcji i Eskalacji Wielowymiarowej Audytora
 
 * **Status:** ACCEPTED

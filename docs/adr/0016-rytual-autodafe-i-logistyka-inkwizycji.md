@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0016-rytual-autodafe-i-logistyka-inkwizycji](0016-rytual-autodafe-i-logistyka-inkwizycji.md)
+
+---
+
 # ADR-0016: Rytuał Autodafé, Cykliczność i Logistyka Przesłuchań Inkwizycji
 
 * **Status:** ACCEPTED

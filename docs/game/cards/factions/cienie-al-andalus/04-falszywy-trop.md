@@ -14,5 +14,10 @@ lore: Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę.
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [04-falszywy-trop](04-falszywy-trop.md)
+
+---
+
+
 
 

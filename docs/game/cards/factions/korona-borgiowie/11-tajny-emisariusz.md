@@ -15,3 +15,8 @@ agents: 1
 gold: 1
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [11-tajny-emisariusz](11-tajny-emisariusz.md)
+
+---
+
+

@@ -14,6 +14,11 @@ lore: Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.
 gold: 2
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [02-skarbiec-trybunalu](02-skarbiec-trybunalu.md)
+
+---
+
+
 
 
 

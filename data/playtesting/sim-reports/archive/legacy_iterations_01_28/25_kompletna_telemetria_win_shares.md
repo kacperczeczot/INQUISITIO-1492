@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [25_kompletna_telemetria_win_shares](25_kompletna_telemetria_win_shares.md)
+
+---
+
 # Raport 25: Kompletna Telemetria i Szanse Wygranych (Win Shares) dla Wszystkich 16 Setupów
 
 **Wielkość Próby:** 500 gier/setup (8000 gier łącznie) | **Czas Symulacji:** 4.81s

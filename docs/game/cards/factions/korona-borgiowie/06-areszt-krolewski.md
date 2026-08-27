@@ -14,5 +14,10 @@ lore: Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba ares
 arrest: true
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [06-areszt-krolewski](06-areszt-krolewski.md)
+
+---
+
+
 
 

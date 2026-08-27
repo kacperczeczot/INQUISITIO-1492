@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [19_audyt_nowego_punktu_wyjsciowego](19_audyt_nowego_punktu_wyjsciowego.md)
+
+---
+
 # Raport 19: Audyt +-1 od Nowego Punktu Wyjściowego (3p, 4p, 5p)
 
 **Przeanalizowano Testów:** 37 | **Próba:** 300 gier/setup | **Czas:** 58.08s

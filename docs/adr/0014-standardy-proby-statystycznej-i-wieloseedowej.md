@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0014-standardy-proby-statystycznej-i-wieloseedowej](0014-standardy-proby-statystycznej-i-wieloseedowej.md)
+
+---
+
 # ADR-0014: Standardy Próby Statystycznej i Walidacja Wieloseedowa
 
 * **Status:** ACCEPTED

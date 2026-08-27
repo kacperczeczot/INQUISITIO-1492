@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [22_audyt_level2_victory_plusminus1](22_audyt_level2_victory_plusminus1.md)
+
+---
+
 # Raport 22: Audyt +-1 dla Poziomu 2 (Warunki Zwycięstwa i Skalowanie)
 
 **Przeanalizowano Wariantów:** 17 | **Próba:** 300 gier/setup | **Czas:** 70.9s

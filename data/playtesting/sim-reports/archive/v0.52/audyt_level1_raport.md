@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.52](README.md) > [audyt_level1_raport](audyt_level1_raport.md)
+
+---
+
 # Raport Audytu Poziomu 1 (Główne Mechaniki Systemowe) — Wersja Balansu: v0.52
 
 **Wersja Balansu:** `v0.52` | **Data:** 2026-08-16 13:45 | **Przeanalizowano Wariantów:** 13 | **Próba:** 1000 gier/setup | **Czas:** 40.21s

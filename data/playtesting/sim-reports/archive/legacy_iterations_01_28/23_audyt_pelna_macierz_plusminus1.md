@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [23_audyt_pelna_macierz_plusminus1](23_audyt_pelna_macierz_plusminus1.md)
+
+---
+
 # Raport 23: Pełna Kompleksowa Macierz Audytu +-1 dla Wszystkich 5 Frakcji (3p, 4p, 5p)
 
 **Łącznie Testów:** 71 | **Próba:** 300 gier/setup | **Czas Symulacji:** 101.66s

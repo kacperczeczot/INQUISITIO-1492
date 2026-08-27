@@ -14,5 +14,10 @@ lore: Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [04-zwierciadlo](04-zwierciadlo.md)
+
+---
+
+
 
 

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [07_fala_3_trojki_kombinacji](07_fala_3_trojki_kombinacji.md)
+
+---
+
 # Raport Fali 3: Trójki Kombinatoryczne (120 Trójek Poprawkowych)
 
 **Przeanalizowano Trójek:** 120 | **Łączna Liczba Partii:** 576000 | **Czas Wykonania:** 280.1s

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.61](README.md) > [canon_4p_log](canon_4p_log.md)
+
+---
+
 # Dziennik Optymalizacji Kanonu 4P (Anchor-Based 4P Optimizer)
 
 Rejestr wdrożonych patchów skupionych w 100% na doprowadzeniu Kanonu 4-osobowego do 100%.

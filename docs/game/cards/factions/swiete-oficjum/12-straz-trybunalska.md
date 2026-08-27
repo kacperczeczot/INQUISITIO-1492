@@ -16,3 +16,8 @@ agents: 1
 gold: 1
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [12-straz-trybunalska](12-straz-trybunalska.md)
+
+---
+
+

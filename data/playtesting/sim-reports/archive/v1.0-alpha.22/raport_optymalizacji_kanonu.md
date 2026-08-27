@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.22](README.md) > [raport_optymalizacji_kanonu](raport_optymalizacji_kanonu.md)
+
+---
+
 # Raport Optymalizacji Kanonu 4P (Anchor-Based 4P Optimizer) — Wersja v1.0-alpha.22 (Iteracja #12, Faza 1D)
 
 **Wersja Poprzednia:** `v1.0-alpha.21` (4P: `80.1 pkt`) → **Nowa Wersja:** `v1.0-alpha.22` (4P: `80.3 pkt`)

@@ -14,4 +14,9 @@ lore: Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod ares
 agents: 1
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [01-patrol-familiariuszy](01-patrol-familiariuszy.md)
+
+---
+
+
 

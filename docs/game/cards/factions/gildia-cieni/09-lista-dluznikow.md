@@ -15,6 +15,11 @@ lore: Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu p
 creates_hook: true
 ---
 
+[Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [09-lista-dluznikow](09-lista-dluznikow.md)
+
+---
+
+
 
 
 

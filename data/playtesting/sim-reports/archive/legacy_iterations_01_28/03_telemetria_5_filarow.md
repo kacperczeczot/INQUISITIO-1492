@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [03_telemetria_5_filarow](03_telemetria_5_filarow.md)
+
+---
+
 # Raport Telemetrii i Punktacji Balansu Symulacji (Zakresy 2-Poziomowe i 1-Poziomowe)
 
 **Global Game Balance Score:** `63.8 / 100.0 pkt`

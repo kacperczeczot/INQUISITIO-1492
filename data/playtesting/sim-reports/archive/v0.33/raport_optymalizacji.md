@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.33](README.md) > [raport_optymalizacji](raport_optymalizacji.md)
+
+---
+
 # Raport Optymalizacji Balansu (Outlier Hunter) — Wersja v0.33 (Iteracja #1)
 
 **Wersja Poprzednia:** `v0.32` (`96.7 pkt`) → **Nowa Wersja:** `v0.33` (`97.2 pkt`)

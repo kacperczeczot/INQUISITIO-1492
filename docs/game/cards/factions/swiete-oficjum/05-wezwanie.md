@@ -13,6 +13,11 @@ lore: Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcj�
 target_heresy: 1
 ---
 
+[Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [05-wezwanie](05-wezwanie.md)
+
+---
+
+
 
 
 

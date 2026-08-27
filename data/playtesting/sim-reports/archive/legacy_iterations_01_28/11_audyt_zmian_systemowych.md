@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [11_audyt_zmian_systemowych](11_audyt_zmian_systemowych.md)
+
+---
+
 # Raport Audytu 14 Głównych Zmian Systemowych Zasad
 
 **Przeanalizowano Wariantów Zasad:** 15 | **Próba:** 300 gier/setup | **Czas:** 56.45s

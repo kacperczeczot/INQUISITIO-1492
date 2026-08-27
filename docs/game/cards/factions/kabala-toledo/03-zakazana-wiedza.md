@@ -14,3 +14,8 @@ heresy_text: Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu.
 lore: Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną.
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [03-zakazana-wiedza](03-zakazana-wiedza.md)
+
+---
+
+

@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v0.30](README.md) > [raport_telemetrii](raport_telemetrii.md)
+
+---
+
 # Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: v0.30
 
 **Wersja Balansu:** `v0.30` | **Data:** 2026-08-15 00:54 | **Wielkość Próby:** 5000 gier/setup (80000 gier łącznie) | **Czas Symulacji:** 15.78s

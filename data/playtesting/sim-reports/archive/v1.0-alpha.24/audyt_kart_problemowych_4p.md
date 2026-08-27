@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [v1.0-alpha.24](README.md) > [audyt_kart_problemowych_4p](audyt_kart_problemowych_4p.md)
+
+---
+
 # Raport Audytora Kart Problemowych 4P — Wersja Balansu: v1.0-alpha.24
 
 **Wersja:** `v1.0-alpha.24` | **Data:** 2026-08-22 16:32 | **Próba:** 5000 gier/setup | **Ziarno:** 42

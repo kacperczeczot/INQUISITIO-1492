@@ -1,3 +1,7 @@
+[Strona główna](../../../../../README.md) > [legacy_iterations_01_28](README.md) > [27_ponowny_audyt_victory_3p](27_ponowny_audyt_victory_3p.md)
+
+---
+
 # Raport 27: Ponowny Audyt +-1 Warunków Zwycięstwa dla 3p (przy Progu Oskarżeń = 7)
 
 **Przeanalizowano Wariantów:** 24 | **Próba:** 300 gier/setup | **Czas:** 63.59s

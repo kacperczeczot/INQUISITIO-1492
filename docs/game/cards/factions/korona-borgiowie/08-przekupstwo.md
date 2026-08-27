@@ -13,5 +13,10 @@ lore: Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone.
 creates_hook: true
 ---
 
+[Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [08-przekupstwo](08-przekupstwo.md)
+
+---
+
+
 
 

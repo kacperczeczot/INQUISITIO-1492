@@ -14,5 +14,10 @@ lore: Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni.
 creates_hook: true
 ---
 
+[Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [07-szantaz-bractwa](07-szantaz-bractwa.md)
+
+---
+
+
 
 

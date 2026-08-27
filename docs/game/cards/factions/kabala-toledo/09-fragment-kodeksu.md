@@ -14,4 +14,9 @@ heresy_text: Pergamin Salomona brudzi palce i sumienie.
 lore: Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko.
 ---
 
+[Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [09-fragment-kodeksu](09-fragment-kodeksu.md)
+
+---
+
+
 

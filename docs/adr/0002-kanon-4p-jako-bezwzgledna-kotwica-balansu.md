@@ -1,3 +1,7 @@
+[Strona główna](../../README.md) > [adr](README.md) > [0002-kanon-4p-jako-bezwzgledna-kotwica-balansu](0002-kanon-4p-jako-bezwzgledna-kotwica-balansu.md)
+
+---
+
 # ADR-0002: Kanon 4P jako Bezwzględna Kotwica Balansu i SSOT
 
 * **Status:** ACCEPTED
