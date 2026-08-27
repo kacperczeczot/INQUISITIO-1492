@@ -4,7 +4,7 @@
 Autonomiczny optymalizator balansu skupiony w 100% na doprowadzeniu Kanonu 4-osobowego (4P)
 do absolutnego optimum (99–100 pkt), bez kompromisów pod 3p i 5p.
 
-Główne założenia metodologiczne:
+Architektura optymalizacyjna:
   1. Kanon 4P jako Kotwica (Anchor):
      Format 4-osobowy jest sercem mechaniki gry INQUISITIO-1492. Wszystkie karty i reguły
      muszą w pierwszej kolejności działać w sposób idealny i elegancki na 5 setupach 4p:
@@ -13,24 +13,24 @@ Główne założenia metodologiczne:
        - 4p-no-kabala
        - 4p-no-korona
        - 4p-no-oficjum
-  2. Błyskawiczny 3-Stopniowy Lejek na 5 setupach 4P:
-     - Etap 1 (Szybki Przesiew): 200 gier/setup × 5 setupów (~1.5 min) -> TOP 48 półfinalistów
-     - Etap 2 (Głęboki Przesiew): 1000 gier/setup × 5 setupów (~3.5 min) -> TOP 24 finalistów
-     - Etap 3 (Weryfikacja Ultra): 5000 gier/setup × 5 setupów (~7.5 min) -> Zwycięski Patch
-  3. Diagnostyka Wpływu Kolateralnego (Cross-Impact Telemetry):
-     Po znalezieniu najlepszej zmiany 4P, skrypt mierzy jej wpływ na 3p i 5p, raportując:
-     jakie realne anomalie geometryczne stołu zostały obnażone.
-  4. Pełna automatyzacja dokumentacji:
-     - playtesting/sim-reports/canon_4p_log.md
-     - playtesting/sim-reports/raport_optymalizacji_4p.md (oraz archiwum)
-     - playtesting/balance-notes.md
-     - Pełna synchronizacja kart, katalogu i księgi zasad (sync_config.py)
+  2. Adaptacyjny Wyścig Monte Carlo (Multi-Fidelity Sequential Racing):
+     - Zastąpienie sztywnych etapów dynamicznym mikro-krokiem (Iterative Batching, np. 100 gier/setup).
+     - Rygorystyczny błąd standardowy liczony analitycznie Metodą Delta z macierzy kowariancji rozkładu wielomianowego.
+     - Spłaszczona kolejka zadań (Flat Task Matrix) dla 100% wysycenia wszystkich rdzeni CPU.
+     - Wczesne odrzucanie statystyczne (Statistical Upper-Bound Pruning) wariantów bez szans na wygraną.
+     - Zbieżność wyścigu w Strefie Nierozróżnialności (Indifference Zone Racing) z ochroną przed nieskończonymi remisami.
+  3. Mechanizm Ucieczki z Minimów Lokalnych (Simulated Annealing):
+     - Probabilistyczna akceptacja mikro-mutacji z temperaturą wyżarzania przy jednoczesnym twardym wetowaniu kastracji mechanik.
+  4. Wektoryzacja synergii i wiązek celowanych.
+  5. Pełna automatyzacja dokumentacji i archiwizacji (100% kompatybilności wstecznej).
 """
 from __future__ import annotations
 
 import argparse
 import copy
+import math
 import os
+import random
 import re
 import shutil
 import signal
@@ -38,6 +38,7 @@ import subprocess
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -56,7 +57,7 @@ from inquisitio.config import CONFIG, _CONFIG_PATH
 from inquisitio.config_updater import apply_mutation_to_config, save_config_and_bump_version
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
 from inquisitio.runner.audit_facts import score_pair, save_and_archive_report
-from inquisitio.runner.batch import run_batch
+from inquisitio.runner.batch import BatchSummary, merge_batch_summaries, run_batch
 from inquisitio.runner.era_analytics import generate_era_distribution_markdown
 from inquisitio.runner.balance import faction_shares as win_shares
 from inquisitio.runner.canon_accept import (
@@ -66,9 +67,11 @@ from inquisitio.runner.canon_accept import (
     rank_key,
     setup_shares_in_range,
     table_has_share_foundation,
+    telemetry_is_safe,
 )
 from inquisitio.runner.scoring import (
     calculate_balance_score,
+    calculate_balance_stats,
     calculate_category_scores,
     calculate_global_score,
     calculate_setup_score,
@@ -81,7 +84,7 @@ import audit_level1
 import audit_level2
 import audit_level3
 import audit_level4
-from audytor_4p import is_ablation_off, is_frozen_identity_knob
+from audytor_4p import is_ablation_off
 from manual_ablation_hints import (
     collect_manual_ablation_candidates,
     format_manual_ablation_report,
@@ -127,93 +130,387 @@ FACTION_NAMES = {
 }
 
 
-def _run_single_test_task_4p(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:
-    """Execute a single candidate rule across the 5 canonical 4P setups."""
-    (rule_id, rule_name, rule_params), games_per_setup, seed, setups = task_args
-    t_rule = time.time()
+def _run_single_batch_task(task_args: tuple[int, str, int, int, str, dict | None, int]) -> tuple[int, BatchSummary]:
+    """Runs a single micro-batch on a specific setup in parallel worker process.
 
-    summaries = []
-    setup_scores = {}
-    setup_scores_balance = {}
-    setup_shares: dict[str, dict[str, float]] = {}
-    vitality_penalties = []
-    vitality_warnings: list[str] = []
-    for idx_s, sname in enumerate(setups):
-        summary = run_batch(
-            games=games_per_setup,
-            setup=sname,
-            seed=seed,
-            layer="C",
-            win_overrides=rule_params,
+    task_args: (task_idx, setup_name, seed, threshold, layer, win_overrides, games)
+    """
+    task_idx, setup_name, seed, threshold, layer, win_overrides, games = task_args
+    summary = run_batch(
+        games=games,
+        setup=setup_name,
+        seed=seed,
+        threshold=threshold,
+        layer=layer,
+        win_overrides=win_overrides,
+    )
+    return task_idx, summary
+
+
+@dataclass
+class CandidateStats:
+    """Represents a candidate's complete accumulated Monte Carlo race statistics."""
+    cand_tuple: tuple[str, str, dict]
+    total_games_per_setup: int = 0
+    summaries_per_setup: dict[str, list[BatchSummary]] = field(default_factory=dict)
+    combined_summary_per_setup: dict[str, BatchSummary] = field(default_factory=dict)
+    setup_scores: dict[str, float] = field(default_factory=dict)
+    setup_scores_balance: dict[str, float] = field(default_factory=dict)
+    setup_shares: dict[str, dict[str, float]] = field(default_factory=dict)
+    score_4p: float = 0.0
+    score_4p_balance: float = 0.0
+    score_se: float = 0.0
+    min_balance: float = 0.0
+    min_balance_setup: str = ""
+    vitality_penalty: float = 0.0
+    vitality_warnings: list[str] = field(default_factory=list)
+    eras_avg: float = 0.0
+    eras_min: int = 1
+    eras_max: int = 8
+    deadlock_pct: float = 0.0
+    poverty_pct: float = 0.0
+    autodafe_avg: float = 0.0
+    acc_avg: float = 0.0
+    gold_avg: float = 0.0
+    is_pruned: bool = False
+    prune_reason: str = ""
+    dt: float = 0.0
+
+    @property
+    def id(self) -> str:
+        return self.cand_tuple[0]
+
+    @property
+    def name(self) -> str:
+        return self.cand_tuple[1]
+
+    @property
+    def params(self) -> dict:
+        return self.cand_tuple[2]
+
+    @property
+    def ci_95(self) -> tuple[float, float]:
+        """Returns [Lower 95% Bound, Upper 95% Bound]."""
+        margin = 1.96 * self.score_se
+        return (round(self.score_4p_balance - margin, 2), round(self.score_4p_balance + margin, 2))
+
+    def update_metrics(self) -> None:
+        """Recomputes all balance, SE, vitality, and telemetry metrics from combined summaries."""
+        if not self.combined_summary_per_setup:
+            return
+
+        setup_scores = {}
+        setup_scores_balance = {}
+        setup_shares = {}
+        setup_ses = []
+        vitality_penalties = []
+        vitality_warnings = []
+        summaries = list(self.combined_summary_per_setup.values())
+
+        for sname, summary in self.combined_summary_per_setup.items():
+            sc = calculate_setup_score(summary)
+            bal, se = calculate_balance_stats(summary)
+            setup_scores[sname] = sc
+            setup_scores_balance[sname] = bal
+            setup_ses.append(se)
+            setup_shares[sname] = {
+                fid: round(pct * 100.0, 1) for fid, pct in win_shares(summary).items()
+            }
+            vit = evaluate_vitality(summary)
+            vitality_penalties.append(vit.vitality_penalty)
+            for msg in vit.warnings:
+                vitality_warnings.append(f"{sname}: {msg}")
+
+        n_s = len(setup_scores)
+        self.setup_scores = setup_scores
+        self.setup_scores_balance = setup_scores_balance
+        self.setup_shares = setup_shares
+        self.score_4p = round(sum(setup_scores.values()) / n_s, 1) if n_s else 0.0
+        self.score_4p_balance = (
+            round(sum(setup_scores_balance.values()) / n_s, 1) if n_s else 0.0
         )
-        summaries.append(summary)
-        setup_scores[sname] = calculate_setup_score(summary)
-        setup_scores_balance[sname] = calculate_balance_score(summary)
-        setup_shares[sname] = {
-            fid: round(pct * 100.0, 1) for fid, pct in win_shares(summary).items()
-        }
-        vit = evaluate_vitality(summary)
-        vitality_penalties.append(vit.vitality_penalty)
-        for msg in vit.warnings:
-            vitality_warnings.append(f"{sname}: {msg}")
+        # Average of independent setup balance scores has variance = (1/n^2) * sum(Var_i)
+        # So SE = (1/n) * sqrt( sum(SE_i^2) )
+        self.score_se = round((math.sqrt(sum(s ** 2 for s in setup_ses)) / n_s), 3) if n_s else 0.0
 
-        # Wczesne odrzucanie w Etapie 1 (gdy po 2 setupach wariant jest skrajnie nieoptymalny < 30 pkt)
-        if games_per_setup <= 200 and idx_s == 1:
-            if (sum(setup_scores_balance.values()) / 2.0) < 30.0:
-                for rem_sname in setups[2:]:
-                    setup_scores[rem_sname] = 0.0
-                    setup_scores_balance[rem_sname] = 0.0
+        min_sname = min(setup_scores_balance, key=lambda k: setup_scores_balance[k])
+        self.min_balance_setup = min_sname
+        self.min_balance = setup_scores_balance[min_sname]
+        self.vitality_penalty = max(vitality_penalties) if vitality_penalties else 0.0
+        self.vitality_warnings = vitality_warnings
+
+        n_sum = len(summaries)
+        self.eras_avg = sum(s.eras_avg for s in summaries) / n_sum
+        self.eras_min = min(s.eras_min for s in summaries)
+        self.eras_max = max(s.eras_max for s in summaries)
+        self.deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
+        self.poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
+        self.autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
+        self.acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
+        self.gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
+
+    def to_result_dict(self) -> dict:
+        """Converts stats to the standard dictionary schema expected by reporting and accept logic."""
+        min_setup_name = min(self.setup_scores, key=lambda k: self.setup_scores[k]) if self.setup_scores else ""
+        min_setup_score = self.setup_scores.get(min_setup_name, 0.0)
+        return {
+            "id": self.id,
+            "name": self.name,
+            "params": self.params,
+            "score_4p": self.score_4p,
+            "score_4p_balance": self.score_4p_balance,
+            "score_se": self.score_se,
+            "ci_95": self.ci_95,
+            "setup_scores": self.setup_scores,
+            "setup_scores_balance": self.setup_scores_balance,
+            "setup_shares": self.setup_shares,
+            "min_setup": (min_setup_name, min_setup_score),
+            "min_balance": self.min_balance,
+            "min_balance_setup": self.min_balance_setup,
+            "vitality_penalty": self.vitality_penalty,
+            "vitality_warnings": self.vitality_warnings,
+            "dt": self.dt,
+            "total_games_per_setup": self.total_games_per_setup,
+            "eras_avg": self.eras_avg,
+            "eras_min": self.eras_min,
+            "eras_max": self.eras_max,
+            "deadlock_pct": self.deadlock_pct,
+            "poverty_pct": self.poverty_pct,
+            "autodafe_avg": self.autodafe_avg,
+            "acc_avg": self.acc_avg,
+            "gold_avg": self.gold_avg,
+        }
+
+
+def _simulate_flat_tasks_pool(
+    task_list: list[tuple[int, str, int, int, str, dict | None, int]],
+    workers: int,
+    label: str = "Testy 4P",
+) -> list[tuple[int, BatchSummary]]:
+    """Executes a flat list of setup micro-batches in parallel across all CPU cores."""
+    total = len(task_list)
+    if total == 0:
+        return []
+
+    has_native = False
+    if workers <= 1:
+        results = []
+        t0 = time.time()
+        for idx, t in enumerate(task_list, 1):
+            res = _run_single_batch_task(t)
+            results.append(res)
+            if idx % 100 == 0 or idx == total:
+                elapsed = time.time() - t0
+                rate = idx / elapsed if elapsed > 0 else 0
+                eta_s = (total - idx) / rate if rate > 0 else 0
+                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:5.1f} bat/s | ETA: {eta_str:<8s}")
+                sys.stdout.flush()
+        sys.stdout.write("\n")
+        return results
+
+    results = []
+    t0 = time.time()
+    chunk_size = max(1, total // (workers * 4))
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        for idx, res in enumerate(executor.map(_run_single_batch_task, task_list, chunksize=chunk_size), 1):
+            results.append(res)
+            elapsed = time.time() - t0
+            rate = idx / elapsed if elapsed > 0 else 0
+            eta_s = (total - idx) / rate if rate > 0 else 0
+            eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
+            sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} bat/s | ETA: {eta_str:<8s}")
+            sys.stdout.flush()
+
+    sys.stdout.write(f"\n   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
+    return results
+
+
+class AdaptiveSequentialRacer:
+    """Adaptive Multi-Fidelity Racing optimizer with Delta-Method SE and Indifference Zone stopping."""
+
+    def __init__(
+        self,
+        setups: list[str],
+        batch_step: int = 100,
+        min_games: int = 400,
+        max_games: int = 8000,
+        epsilon_indiff: float = 0.15,
+        workers: int = 10,
+        accept_mode: str = "legacy",
+        min_delta: float = 0.50,
+    ):
+        self.setups = setups
+        self.batch_step = batch_step
+        self.min_games = min_games
+        self.max_games = max_games
+        self.epsilon_indiff = epsilon_indiff
+        self.workers = workers
+        self.accept_mode = accept_mode
+        self.min_delta = min_delta
+
+    def run_race(
+        self,
+        base_cand: tuple[str, str, dict],
+        candidate_pool: list[tuple[str, str, dict]],
+        seed: int,
+    ) -> tuple[CandidateStats, list[CandidateStats]]:
+        """Conducts iterative micro-batch racing with statistical pruning and indifference zone stopping."""
+        base_stats = CandidateStats(base_cand)
+        active_candidates = [CandidateStats(c) for c in candidate_pool]
+        all_candidates = list(active_candidates)
+
+        # ─── Geometric Rung Ladder (Successive Halving) ──────────────────────
+        rungs = []
+        r = max(100, self.batch_step)
+        while r < self.max_games:
+            rungs.append(r)
+            r = int(r * 2)
+        if not rungs or rungs[-1] < self.max_games:
+            rungs.append(self.max_games)
+
+        curr_games = 0
+        t_start = time.time()
+
+        print(
+            f"\n🏁 [START WYŚCIGU ADAPTACYJNEGO] Pula: {len(active_candidates)} kandydatów | "
+            f"Szczeble: {rungs} gier/setup (Successive Halving)"
+        )
+
+        for step_idx, target_games in enumerate(rungs, 1):
+            delta_games = target_games - curr_games
+            if delta_games <= 0:
+                continue
+
+            # Active set: Base + non-pruned candidates
+            survivors = [c for c in active_candidates if not c.is_pruned]
+            if not survivors:
+                print(f"   🛑 Wszyscy kandydaci zostali statystycznie wyeliminowani (N={curr_games} gier/setup).")
                 break
 
+            current_pool = [base_stats] + survivors
 
-    score_4p = round(sum(setup_scores.values()) / len(setup_scores), 1) if setup_scores else 0.0
-    score_4p_balance = (
-        round(sum(setup_scores_balance.values()) / len(setup_scores_balance), 1)
-        if setup_scores_balance
-        else 0.0
-    )
-    dt = round(time.time() - t_rule, 2)
+            # 1. Build flat task matrix (candidate x setup) for the delta games
+            task_list = []
+            task_map = {}  # task_idx -> (candidate_obj, setup_name)
+            task_idx = 0
 
-    n_sum = len(summaries)
-    eras_avg = sum(s.eras_avg for s in summaries) / n_sum
-    eras_min = min(s.eras_min for s in summaries)
-    eras_max = max(s.eras_max for s in summaries)
+            for cand_obj in current_pool:
+                for sname in self.setups:
+                    task_seed = seed + step_idx * 10007 + (hash(cand_obj.id) % 5003)
+                    task_args = (task_idx, sname, task_seed, 8, "C", cand_obj.params, delta_games)
+                    task_list.append(task_args)
+                    task_map[task_idx] = (cand_obj, sname)
+                    task_idx += 1
 
-    deadlock_pct = (sum(s.eras_limit_pct for s in summaries) / n_sum) * 100.0
-    poverty_pct = (sum(s.passes_forced_pct for s in summaries) / n_sum) * 100.0
+            # 2. Execute flattened pool across all CPU workers
+            step_label = f"Szczebel #{step_idx}/{len(rungs)} (N={target_games} gier) [{len(survivors)} kand]"
+            batch_results = _simulate_flat_tasks_pool(task_list, self.workers, label=step_label)
 
-    autodafe_avg = sum(s.autodafe_avg for s in summaries) / n_sum
-    acc_avg = sum(s.accusations_avg for s in summaries) / n_sum
-    gold_avg = sum(s.avg_gold_end for s in summaries) / n_sum
+            # 3. Aggregate results into candidate stats
+            for t_id, summary in batch_results:
+                cand_obj, sname = task_map[t_id]
+                cand_obj.summaries_per_setup.setdefault(sname, []).append(summary)
 
-    min_setup_name = min(setup_scores, key=lambda k: setup_scores[k])
-    min_setup_score = setup_scores[min_setup_name]
-    min_balance_name = min(setup_scores_balance, key=lambda k: setup_scores_balance[k])
-    min_balance = setup_scores_balance[min_balance_name]
-    vitality_penalty = max(vitality_penalties) if vitality_penalties else 0.0
+            curr_games = target_games
+            for cand_obj in current_pool:
+                cand_obj.total_games_per_setup = curr_games
+                for sname, s_list in cand_obj.summaries_per_setup.items():
+                    cand_obj.combined_summary_per_setup[sname] = merge_batch_summaries(s_list)
+                cand_obj.update_metrics()
+                cand_obj.dt = round(time.time() - t_start, 2)
 
-    return {
-        "id": rule_id,
-        "name": rule_name,
-        "params": rule_params,
-        "score_4p": score_4p,
-        "score_4p_balance": score_4p_balance,
-        "setup_scores": setup_scores,
-        "setup_scores_balance": setup_scores_balance,
-        "setup_shares": setup_shares,
-        "min_setup": (min_setup_name, min_setup_score),
-        "min_balance": min_balance,
-        "min_balance_setup": min_balance_name,
-        "vitality_penalty": vitality_penalty,
-        "vitality_warnings": vitality_warnings,
-        "dt": dt,
-        "eras_avg": eras_avg, "eras_min": eras_min, "eras_max": eras_max,
-        "deadlock_pct": deadlock_pct,
-        "poverty_pct": poverty_pct,
-        "autodafe_avg": autodafe_avg,
-        "acc_avg": acc_avg,
-        "gold_avg": gold_avg,
-    }
+            base_lb, base_ub = base_stats.ci_95
+
+            # 4. Statistical & Successive Halving Pruning
+            active_survivors = [c for c in active_candidates if not c.is_pruned]
+            if active_survivors:
+                best_score = max(c.score_4p_balance for c in active_survivors)
+                ref_lb = max(base_lb, best_score - 2.5 * base_stats.score_se)
+
+                for c in active_survivors:
+                    c_lb, c_ub = c.ci_95
+
+                    # A. Telemetry & Vitality hard vetoes (SPRT early stop)
+                    if curr_games >= 200:
+                        if c.vitality_penalty > 0.0 and base_stats.vitality_penalty == 0.0:
+                            c.is_pruned = True
+                            c.prune_reason = f"Weto witalności (kara {c.vitality_penalty:.2f})"
+                            continue
+                        if c.deadlock_pct > 8.0:
+                            c.is_pruned = True
+                            c.prune_reason = f"Katastrofa deadlocków ({c.deadlock_pct:.1f}% > 8%)"
+                            continue
+                        if c.poverty_pct > 35.0:
+                            c.is_pruned = True
+                            c.prune_reason = f"Katastrofa biedy ({c.poverty_pct:.1f}% > 35%)"
+                            continue
+
+                    # B. Statistical Upper-Bound Pruning vs Base & Leader
+                    if curr_games >= 200:
+                        if c_ub < ref_lb - 0.10:
+                            c.is_pruned = True
+                            c.prune_reason = f"Statystycznie gorszy od Bazy/Lidera (UB {c_ub:.2f} < Ref LB {ref_lb:.2f})"
+                            continue
+
+                # C. Successive Halving Capacity Filter (Top-K by UCB)
+                remaining = [c for c in active_candidates if not c.is_pruned]
+                max_capacity = max(8, int(len(candidate_pool) / (2 ** (step_idx - 1))))
+                if len(remaining) > max_capacity:
+                    remaining.sort(key=lambda x: x.ci_95[1], reverse=True)
+                    for cut_c in remaining[max_capacity:]:
+                        cut_c.is_pruned = True
+                        cut_c.prune_reason = f"Successive Halving (odcięcie poza TOP {max_capacity})"
+
+            active_survivors = [c for c in active_candidates if not c.is_pruned]
+            pruned_count = len(all_candidates) - len(active_survivors)
+            print(
+                f"   📊 [Status N={curr_games}] Baza: {base_stats.score_4p_balance:.1f} pkt (±{base_stats.score_se:.2f}) | "
+                f"Aktywnych: {len(active_survivors)}/{len(all_candidates)} (Odrzucono: {pruned_count})"
+            )
+
+            # 5. Check Racing Stop & Convergence Conditions
+            if curr_games >= self.min_games and active_survivors:
+                # Rank active survivors
+                active_survivors.sort(key=lambda x: rank_key(x.to_result_dict(), mode=self.accept_mode))
+                leader = active_survivors[0]
+                l_lb, l_ub = leader.ci_95
+
+                # If leader itself is statistically worse than base: stop!
+                if l_ub < base_lb:
+                    print(f"   🛑 Lider ({leader.id}) jest statystycznie gorszy od Bazy (UB {l_ub:.2f} < Base LB {base_lb:.2f}). Kończę wyścig.")
+                    break
+
+                if len(active_survivors) == 1:
+                    if l_lb > base_ub:
+                        print(f"   🏆 Wyłoniono samotnego zwycięzcę: {leader.id} (LB {l_lb:.2f} > Base UB {base_ub:.2f}) po {curr_games} grach/setup.")
+                        break
+
+                elif len(active_survivors) >= 2:
+                    runner_up = active_survivors[1]
+                    r_lb, r_ub = runner_up.ci_95
+
+                    # Case A: Clear statistical separation
+                    if l_lb > r_ub and l_lb > base_ub:
+                        print(
+                            f"   🏆 Wyłoniono bezdyskusyjnego lidera: {leader.id} (LB {l_lb:.2f} > Drugi UB {r_ub:.2f}) "
+                            f"po {curr_games} grach/setup."
+                        )
+                        break
+
+                    # Case B: Indifference Zone (Effective Tie in noise margin)
+                    score_gap = abs(leader.score_4p_balance - runner_up.score_4p_balance)
+                    se_diff = math.sqrt(leader.score_se ** 2 + runner_up.score_se ** 2)
+
+                    if score_gap < self.epsilon_indiff and se_diff < self.epsilon_indiff and l_lb > base_ub:
+                        chosen = leader if leader.min_balance >= runner_up.min_balance else runner_up
+                        print(
+                            f"   🤝 Zbieżność w Strefie Nierozróżnialności: Δ={score_gap:.3f} < {self.epsilon_indiff:.2f} "
+                            f"(SE_diff={se_diff:.3f}). Wybrano {chosen.id} (lepsza podłoga). Kończę wyścig po {curr_games} grach/setup."
+                        )
+                        break
+
+        return base_stats, all_candidates
 
 
 def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: int = 42) -> dict:
@@ -263,31 +560,7 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     ]
     tests.extend(l4)
 
-    # Align candidate count to a multiple of 10 for 100% CPU parallelization across 10 cores
-    remainder = len(tests) % 10
-    if remainder != 0:
-        needed = 10 - remainder
-        extra_pool = [
-            ("L1_START_GOLD_PLUS2", "Złoto startowe: offset +2", {"start_gold_offset": 2}),
-            ("L1_START_GOLD_MINUS2", "Złoto startowe: offset -2", {"start_gold_offset": -2}),
-            ("L1_OBSERVED_PLUS2", "Próg Obserwowanej: offset +2", {"observed_threshold_offset": 2}),
-            ("L1_THRESHOLD_PLUS2", "Próg Oskarżenia: offset +2", {"threshold_offset": 2}),
-            ("L1_THRESHOLD_MINUS2", "Próg Oskarżenia: offset -2", {"threshold_offset": -2}),
-            ("L2_SO_STACKS_MINUS2", "Oficjum Stosy: offset -2", {"so_stacks_offset": -2}),
-            ("L2_CAA_RELICS_MINUS2", "Cienie Relikwie: offset -2", {"caa_relics_offset": -2}),
-            ("L2_KT_FRAGS_PLUS2", "Kabała Fragmenty: offset +2", {"kt_frags_offset": 2}),
-            ("L2_GC_FALLS_MINUS2", "Gildia Upadki: offset -2", {"gc_falls_offset": -2}),
-        ]
-        seen = {t[0] for t in tests}
-        for cid, cname, cparams in extra_pool:
-            if cid not in seen:
-                seen.add(cid)
-                tests.append((cid, cname, cparams))
-                if len(tests) % 10 == 0:
-                    break
-
     return tests
-
 
 
 def classify_card_mutation_intent(mut_tuple: tuple[str, str, dict]) -> str:
@@ -329,6 +602,22 @@ def get_mutation_faction(mut_tuple: tuple[str, str, dict]) -> str | None:
     return None
 
 
+def _normalize_faction_code(f_name: str) -> str:
+    """Normalizes any faction representation (slug, name, enum or abbreviation) to 2-3 letter code."""
+    f = f_name.lower().replace("-", "_").strip()
+    if "oficjum" in f or f == "so":
+        return "SO"
+    if "andalus" in f or "cienie_al" in f or f == "caa":
+        return "CAA"
+    if "korona" in f or "borgiowie" in f or f == "kb":
+        return "KB"
+    if "kabala" in f or "toledo" in f or f == "kt":
+        return "KT"
+    if "gildia" in f or f == "gc":
+        return "GC"
+    return f_name.upper()
+
+
 def generate_antagonistic_and_hybrid_candidates(
     base_res: dict, atomic_pool: list[tuple[str, str, dict]]
 ) -> list[tuple[str, str, dict]]:
@@ -340,7 +629,6 @@ def generate_antagonistic_and_hybrid_candidates(
     out: list[tuple[str, str, dict]] = []
 
     for sname in sorted(setup_scores.keys(), key=lambda k: setup_scores[k]):
-        score = setup_scores[sname]
         shares = setup_shares.get(sname, {})
         if not shares:
             continue
@@ -349,7 +637,8 @@ def generate_antagonistic_and_hybrid_candidates(
         dominant_prefixes = []
         struggling_prefixes = []
 
-        for f_code, pct in shares.items():
+        for f_raw, pct in shares.items():
+            f_code = _normalize_faction_code(f_raw)
             dev = pct - ideal_share
             if dev >= 1.5:
                 dominant_prefixes.append((f_code, dev))
@@ -358,8 +647,8 @@ def generate_antagonistic_and_hybrid_candidates(
 
         if not dominant_prefixes or not struggling_prefixes:
             sorted_f = sorted(shares.items(), key=lambda x: x[1])
-            struggling_prefixes = [(sorted_f[0][0], sorted_f[0][1] - ideal_share)]
-            dominant_prefixes = [(sorted_f[-1][0], sorted_f[-1][1] - ideal_share)]
+            struggling_prefixes = [(_normalize_faction_code(sorted_f[0][0]), sorted_f[0][1] - ideal_share)]
+            dominant_prefixes = [(_normalize_faction_code(sorted_f[-1][0]), sorted_f[-1][1] - ideal_share)]
 
         # 1. Antagonistic Pairs: Nerf Dominant + Buff Deficit
         for dom_f, _ in dominant_prefixes:
@@ -420,18 +709,6 @@ def generate_antagonistic_and_hybrid_candidates(
     return unique_out
 
 
-def cheap_funnel_flags(n: int, top_semifinalists: int, top_k: int) -> tuple[bool, bool]:
-
-    """Skip cheap screens when they wouldn't cut the pool. Confirm always runs.
-
-    Returns (run_fast, run_screen). If n ≤ top_k both are False — jump straight to ultra.
-    """
-    run_fast = n > top_semifinalists
-    after_fast = min(n, top_semifinalists) if run_fast else n
-    run_screen = after_fast > top_k
-    return run_fast, run_screen
-
-
 def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tuple[str, str, dict] | None:
     """Merges two mutations into a composite mutation (e.g. 2D pair or 3D triple)."""
     id1, name1, p1 = m1
@@ -468,42 +745,6 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
                     merged_params["card_overrides"][cid] = copy.deepcopy(c_dict)
 
     return (combined_id, combined_name, merged_params)
-
-
-def select_diverse_survivors(results: list[dict], cand_dict: dict, target_count: int) -> list[tuple[str, str, dict]]:
-    """Select a diverse set of candidates: global leaders + maximin leaders + setup champions."""
-    if len(results) <= target_count:
-        return [cand_dict[r["id"]] for r in results]
-
-    selected_ids = []
-
-    # 1. Top by global score_4p_balance (50% quota)
-    by_score = sorted(results, key=lambda r: -r.get("score_4p_balance", 0))
-    quota_global = max(1, target_count // 2)
-    for r in by_score:
-        if r["id"] not in selected_ids and len(selected_ids) < quota_global:
-            selected_ids.append(r["id"])
-
-    # 2. Top by weakest setup improvement (min_balance) (30% quota)
-    by_min = sorted(results, key=lambda r: -r.get("min_balance", 0))
-    quota_min = quota_global + max(1, int(target_count * 0.3))
-    for r in by_min:
-        if r["id"] not in selected_ids and len(selected_ids) < quota_min:
-            selected_ids.append(r["id"])
-
-    # 3. Setup champions for struggling setups (4p-core, 4p-no-kabala, 4p-no-oficjum)
-    for sname in ["4p-no-kabala", "4p-core", "4p-no-oficjum"]:
-        by_setup = sorted(results, key=lambda r: -r.get("setup_scores_balance", {}).get(sname, 0))
-        for r in by_setup[:2]:
-            if r["id"] not in selected_ids and len(selected_ids) < target_count:
-                selected_ids.append(r["id"])
-
-    # 4. Fill remaining slots from global sort
-    for r in by_score:
-        if r["id"] not in selected_ids and len(selected_ids) < target_count:
-            selected_ids.append(r["id"])
-
-    return [cand_dict[cid] for cid in selected_ids]
 
 
 def generate_and_save_telemetry_report(
@@ -631,64 +872,6 @@ def generate_and_save_telemetry_report(
             f"| `{d['setup']}` | {d['vitality_status']} | {d['vitality_penalty']:.3f} | {warn_str} |"
         )
 
-    # --- Section 3.1: Faction Attention Report (Kanon 4P) ---
-    faction_stats: dict[str, list[tuple[str, float, float]]] = {}
-    for d in setup_data:
-        ideal = d['ideal_share'] / 100.0
-        for fname, share_pct in d['shares'].items():
-            share = share_pct / 100.0
-            faction_stats.setdefault(fname, []).append((d['setup'], share, ideal))
-
-    report_lines.extend([
-        "",
-        "## 3.1. Frakcje Wymagające Uwagi (Kanon 4P)",
-        "",
-    ])
-
-    faction_summary = []
-    for fname, entries in sorted(faction_stats.items()):
-        avg_share = sum(s for _, s, _ in entries) / len(entries)
-        worst_setup = max(entries, key=lambda e: abs(e[1] - e[2]))
-        worst_dev = worst_setup[1] - worst_setup[2]
-        worst_dev_pct = worst_dev * 100.0
-        if abs(worst_dev_pct) > 5.0:
-            status = "🟡 DOMINUJE" if worst_dev > 0 else "🟡 SŁABA"
-        elif abs(worst_dev_pct) > 8.0:
-            status = "🔴 SILNIE ZABURZONA"
-        else:
-            status = "🟢 OK"
-        faction_summary.append((fname, avg_share * 100, worst_setup[0], worst_dev_pct, status))
-
-    report_lines.append("| Frakcja | Śr. Win Share (Kanon 4P) | Najgorszy Setup | Max Odchylenie od Ideału | Status |")
-    report_lines.append("| :--- | :---: | :--- | :---: | :--- |")
-    for fname, avg_s, ws_name, ws_dev, ws_status in sorted(faction_summary, key=lambda x: abs(x[3]), reverse=True):
-        dev_sign = f"+{ws_dev:.1f}%" if ws_dev > 0 else f"{ws_dev:.1f}%"
-        report_lines.append(f"| **{fname}** | {avg_s:.1f}% | `{ws_name}` | {dev_sign} | {ws_status} |")
-
-    weak_setups = [(d['setup'], d['score'], d['shares'], d['ideal_share']) for d in setup_data if d['score'] < 90.0]
-    if weak_setups:
-        report_lines.extend([
-            "",
-            "### Setupy poniżej Score 90 (wymagające poprawy):",
-            "",
-            "| Setup | Score | Główny problem |",
-            "| :--- | :---: | :--- |",
-        ])
-        for sname, sc, shares, ideal_s in sorted(weak_setups, key=lambda x: x[1]):
-            dom_f = max(shares.items(), key=lambda x: x[1])
-            sub_f = min(shares.items(), key=lambda x: x[1])
-            if dom_f[1] - ideal_s > 4.0:
-                prob = f"{dom_f[0]} dominuje ({dom_f[1]:.1f}% vs ideal {ideal_s:.1f}%)"
-            elif ideal_s - sub_f[1] > 4.0:
-                prob = f"{sub_f[0]} za słaba ({sub_f[1]:.1f}% vs ideal {ideal_s:.1f}%)"
-            else:
-                prob = "Nierównomierny rozkład pozostałych frakcji"
-            report_lines.append(f"| `{sname}` | {color_score(sc, bold=True)} | {prob} |")
-
-    # --- Section 4: Era & Timing Distribution ---
-    report_lines.extend([""])
-    report_lines.extend(generate_era_distribution_markdown(all_summaries))
-
     return save_and_archive_report(report_lines, "raport_telemetrii.md")
 
 
@@ -722,7 +905,7 @@ def generate_and_save_canon_optimization_report(
         "## 1. Wprowadzona Zmiana i Wynik Balansu Kanonu 4P",
         f"- **Wybrany Wariant ({phase}D):** `{rule_id}` — **{best_res_4p['name']}**",
         f"- **Opis Modyfikacji:** {change_desc}",
-        f"- **Wynik Kanonu 4P Balance:** {score_pair(base_res_4p['score_4p_balance'], best_res_4p['score_4p_balance'], colored=True)} pkt",
+        f"- **Wynik Kanonu 4P Balance:** {score_pair(base_res_4p['score_4p_balance'], best_res_4p['score_4p_balance'], colored=True)} pkt (±{best_res_4p.get('score_se', 0.0):.2f})",
         f"- **Rozbicie Setupów Kanonu 4P:**",
     ]
 
@@ -748,16 +931,17 @@ def generate_and_save_canon_optimization_report(
         "",
         "## 3. Ranking Przebadanych Kandydatów w tej Iteracji (TOP Finaliści 4P)",
         "",
-        "| Poz. | ID Wariantu | Nazwa / Opis | 4P Score (baza → test) | Deadlocks % | Pas Biedy % | Status |",
-        "| :---: | :---: | :--- | :---: | :---: | :---: | :---: |",
+        "| Poz. | ID Wariantu | Nazwa / Opis | 4P Score (baza → test) | CI 95% | Deadlocks % | Pas Biedy % | Status |",
+        "| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: |",
     ])
 
-    for idx, c in enumerate(all_ranked_candidates, 1):
+    for idx, c in enumerate(all_ranked_candidates[:30], 1):
         d_diff = c["score_4p_balance"] - base_res_4p["score_4p_balance"]
         status = "🌟 ZWYCIĘZCA" if c["id"] == best_res_4p["id"] else ("🟢 ZYSK" if d_diff > 0.0 else "⚪ STRATA/NEUTRALNY")
+        ci_str = f"[{c.get('ci_95', (0,0))[0]:.1f}, {c.get('ci_95', (0,0))[1]:.1f}]" if "ci_95" in c else "-"
         lines.append(
             f"| #{idx} | `{c['id']}` | {c['name']} | {score_pair(base_res_4p['score_4p_balance'], c['score_4p_balance'], colored=True)} | "
-            f"{c['deadlock_pct']:.1f}% | {c['poverty_pct']:.1f}% | {status} |"
+            f"`{ci_str}` | {c['deadlock_pct']:.1f}% | {c['poverty_pct']:.1f}% | {status} |"
         )
 
     return save_and_archive_report(lines, "raport_optymalizacji_kanonu.md")
@@ -857,15 +1041,17 @@ class Canon4PAutoBalancer:
         self.total_iterations = 0
         self.start_time = time.time()
         self.initial_version = CONFIG.version
-        self._base_in_band = False
         self._last_base_res: dict | None = None
+        
+        # Simulated Annealing parameters
+        self.temperature = getattr(self.args, "temperature", 0.40)
+        self.cooling_rate = getattr(self.args, "cooling_rate", 0.90)
+        self.min_temperature = getattr(self.args, "min_temperature", 0.05)
+
         signal.signal(signal.SIGINT, self._handle_sigint)
 
     def _accept_mode(self) -> str:
         return getattr(self.args, "accept_mode", "legacy")
-
-    def _rank(self, res: dict) -> tuple:
-        return rank_key(res, mode=self._accept_mode(), base_in_band=self._base_in_band)
 
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
@@ -888,64 +1074,19 @@ class Canon4PAutoBalancer:
         archive_path, _ = save_and_archive_report(report_lines, "kandydaci_recznej_ablacji.md")
         print(f"\n   📄 Raport ręcznej ablacji: {archive_path}")
 
-    def _execute_pool(self, task_func, task_list: list, label: str = "Testy 4P") -> list[dict]:
-        total = len(task_list)
-        if total == 0:
-            return []
-
-        workers = min(self.args.workers, total)
-        if workers <= 1:
-            results = []
-            t0 = time.time()
-            for idx, t in enumerate(task_list, 1):
-                res = task_func(t)
-                results.append(res)
-                elapsed = time.time() - t0
-                rate = idx / elapsed if elapsed > 0 else 0
-                eta_s = (total - idx) / rate if rate > 0 else 0
-                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<8s}")
-                sys.stdout.flush()
-            sys.stdout.write("\n")
-            return results
-
-        results = []
-        t0 = time.time()
-        with ProcessPoolExecutor(max_workers=workers) as executor:
-            from concurrent.futures import as_completed
-            future_to_task = {executor.submit(task_func, t): t for t in task_list}
-            best_so_far = None
-
-            for idx, future in enumerate(as_completed(future_to_task), 1):
-                res = future.result()
-                results.append(res)
-                if best_so_far is None or self._rank(res) < self._rank(best_so_far):
-                    best_so_far = res
-
-                elapsed = time.time() - t0
-                rate = idx / elapsed if elapsed > 0 else 0
-                eta_s = (total - idx) / rate if rate > 0 else 0
-                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
-                lead_id = best_so_far['id'][:26] if best_so_far else "-"
-                lead_sc = f"{best_so_far['score_4p_balance']:.1f}" if best_so_far else "-"
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} zad/s | ETA: {eta_str:<7s} | Lider 4P: {lead_id} ({lead_sc} pkt)  ")
-                sys.stdout.flush()
-
-        sys.stdout.write(f"\n   ✔ Ukończono {total} zadań w {round(time.time() - t0, 1)}s.\n")
-        return results
-
     def run(self):
         print("═══════════════════════════════════════════════════════════════════════")
-        print("   INQUISITIO-1492 — AUDYTOR KANONU 4P (Anchor-Based 4P Optimizer)     ")
-        print("  Doprowadzanie Kanonu 4P do 100% z diagnostyką wpływu na 3p i 5p      ")
+        print("   INQUISITIO-1492 — AUDYTOR KANONU 4P (Adaptive Monte Carlo Racer)    ")
+        print("  Doprowadzanie Kanonu 4P do 100% z dynamicznym doborem próby Monte Carlo")
         print("═══════════════════════════════════════════════════════════════════════")
         print(f"Bieżąca wersja bazowa:      {CONFIG.version}")
         print(f"Maksymalny czas sesji:      {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
         print(f"Maksymalnie patchów:        {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
         print(f"Kanon Setupy:               {', '.join(CANONICAL_4P_SETUPS)}")
-        print(f"Etap 1 (Szybki przesiew):   {self.args.fast_games} gier/setup ({len(CANONICAL_4P_SETUPS)} setupów 4p)")
-        print(f"Etap 2 (Głęboki przesiew):  {self.args.screen_games} gier/setup (TOP {self.args.top_semifinalists} półfinalistów)")
-        print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
+        print(f"Krok partii (Batch Step):   {self.args.batch_step} gier/setup ({len(CANONICAL_4P_SETUPS)} setupów 4p)")
+        print(f"Zakres partii w wyścigu:    {self.args.min_games} – {self.args.max_games} gier/setup")
+        print(f"Strefa Nierozróżnialności:  ε = {self.args.epsilon_indiff:.2f} pkt")
+        print(f"Simulated Annealing:        T_0 = {self.temperature:.2f}, cooling = {self.cooling_rate:.2f}")
         print(f"Wątki procesora:            {self.args.workers}")
         print(f"Tryb przyjęcia patcha:      {self._accept_mode()}")
         print(f"Archiwizacja raportów:     {REPORTS_DIR}/archive/<wersja>/")
@@ -956,8 +1097,8 @@ class Canon4PAutoBalancer:
 
         current_phase = 1
         beam_seeds: list[tuple[str, str, dict]] = []
-        consecutive_stalls = 0  # ile iteracji z rzędu bez patcha
-        loop_iteration = 0  # zawsze rośnie, niezależnie od sukcesu patcha
+        consecutive_stalls = 0
+        loop_iteration = 0
 
         while not self.stop_requested:
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -969,61 +1110,24 @@ class Canon4PAutoBalancer:
                 break
 
             iter_start = time.time()
-
-            # 1. Measure 4P Baseline
-            print(f"\n{'='*71}")
-            print(f"🔍 [POMIAR BAZOWY KANONU 4P] Diagnoza 5 setupów 4p (Próba: {self.args.confirm_games} gier/setup)...")
-            # Seed rotuje z każdą iteracją pętli (nie z patchem!), żeby nie mierzyć ciągle tego samego szumu
-            iter_seed = self.args.seed + loop_iteration
+            iter_seed = self.args.seed + loop_iteration * 97
             loop_iteration += 1
-            base_task = ((("BASE", "Bieżący stan Kanonu 4P", {}), self.args.confirm_games, iter_seed, setups),)
-            base_res = self._execute_pool(_run_single_test_task_4p, [base_task[0]], label="Baza 4P")[0]
-            self._last_base_res = base_res
 
-            print(f"   🎯 Wynik Kanonu 4P Balance: {color_score(base_res['score_4p_balance'], bold=True)} pkt")
-            print(
-                f"   📐 Balance (win share): {color_score(base_res['score_4p_balance'])} pkt | "
-                f"min `{base_res['min_balance_setup']}` {color_score(base_res['min_balance'])} | "
-                f"witalność kara {base_res['vitality_penalty']:.3f}"
-            )
-            self._base_in_band = setup_shares_in_range(base_res.get("setup_shares") or {}, *TARGET_BAND_PCT)
-            band_label = "w paśmie 20–30% → higiena" if self._base_in_band else "poza pasmem 20–30% → wspinaczka maximin"
-            print(f"   🎚️ Pasmo 4P: {band_label}")
-            warns = base_res.get("vitality_warnings") or []
-            if warns:
-                print("   💤 Witalność — martwe / kastracja (audytor ma to leczyć, nie zatrzymywać się na win share):")
-                for w in warns:
-                    print(f"      • {w}")
-            if self._accept_mode() == "band" and not table_has_share_foundation(base_res):
-                print(
-                    "\n🧱 Fundament: 4P poza czerwoną linią 15–35%. "
-                    "Wspinaczka aktywna — akceptuję kandydatów poprawiających rozkład frakcji."
-                )
-            if canon_should_stop(base_res, mode=self._accept_mode()):
-                print(f"\n🏁 Kanon 4P: {base_res['score_4p_balance']:.1f} pkt — optimum osiągnięte.")
-                break
-            for sname, sc in sorted(base_res["setup_scores"].items()):
-                bal = base_res["setup_scores_balance"].get(sname, sc)
-                print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt (balance {color_score(bal)})")
-            print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
-
-            # 2. Candidate Pool
+            # 1. Candidate Pool Generation
             atomic_pool = generate_all_atomic_candidates()
 
             if current_phase == 1 or not beam_seeds:
                 print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna pula atomowa L1–L4 ({len(atomic_pool)} kandydatów)...")
                 candidate_pool = atomic_pool
             else:
-                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Celowane pary antagonistyczne (Nerf Dominanta + Buff Deficytu) i komplementarne wiązki...")
+                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Celowane pary antagonistyczne i synergistyczne wiązki...")
                 composite_pool = []
 
-                # 1. Celowane pary antagonistyczne i hybrydowe
-                antag_pairs = generate_antagonistic_and_hybrid_candidates(base_res, atomic_pool)
-                composite_pool.extend(antag_pairs)
+                if self._last_base_res is not None:
+                    antag_pairs = generate_antagonistic_and_hybrid_candidates(self._last_base_res, atomic_pool)
+                    composite_pool.extend(antag_pairs)
 
-                # 2. Komplementarne łączenie nasion wiązki z regułami L1/L2 i kartami deficytowych frakcji
                 for seed_mut in beam_seeds:
-                    # Łączymy nasiona z kartami INNYCH frakcji (L3) oraz reprezentacją reguł systemowych (L1/L2)
                     seed_f = get_mutation_faction(seed_mut)
                     other_cards = [
                         m for m in atomic_pool
@@ -1033,7 +1137,6 @@ class Canon4PAutoBalancer:
                         m for m in atomic_pool
                         if classify_card_mutation_intent(m) == "SYSTEM"
                     ]
-                    # Bierzemy próbkę kart innych frakcji + reguły systemowe
                     selected_atomic = other_cards[:100] + sys_muts[:10]
                     for atomic_mut in selected_atomic:
                         merged = merge_mutations(seed_mut, atomic_mut)
@@ -1047,125 +1150,86 @@ class Canon4PAutoBalancer:
                         seen_ids.add(c[0])
                         candidate_pool.append(c)
 
-                # Zachowujemy pełną pulę celowanych wariantów złożonych dla Etapu 1
                 if len(candidate_pool) > 1500:
                     candidate_pool = candidate_pool[:1500]
 
-            print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Kanonu 4P.")
-            cand_dict = {c[0]: c for c in candidate_pool}
+            print(f"   🧬 Przygotowano {len(candidate_pool)} unikalnych kandydatów.")
 
-            run_fast, run_screen = cheap_funnel_flags(
-                len(candidate_pool), self.args.top_semifinalists, self.args.top_k
+            # 2. Run Adaptive Multi-Fidelity Race
+            racer = AdaptiveSequentialRacer(
+                setups=setups,
+                batch_step=self.args.batch_step,
+                min_games=self.args.min_games,
+                max_games=self.args.max_games,
+                epsilon_indiff=self.args.epsilon_indiff,
+                workers=self.args.workers,
+                accept_mode=self._accept_mode(),
+                min_delta=self.args.min_delta,
             )
-            survivors = list(candidate_pool)
 
-            # 3. ETAP 1/3: Szybki Przesiew (tylko jeśli pula > top_semifinalists)
-            if run_fast:
-                print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(survivors)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
-                stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, iter_seed, setups) for c in survivors]
-                stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label="Przesiew 4P 1/3")
-                stage1_results.sort(key=self._rank)
-                n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-                if n_semifinalists >= 10:
-                    n_semifinalists = (n_semifinalists // 10) * 10
-                survivors = select_diverse_survivors(stage1_results, cand_dict, n_semifinalists)
-            else:
-                print(f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): {len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie.")
+            base_stats, candidate_results = racer.run_race(
+                base_cand=("BASE", "Bieżący stan Kanonu 4P", {}),
+                candidate_pool=candidate_pool,
+                seed=iter_seed,
+            )
 
-            # 4. ETAP 2/3: Głęboki Przesiew (tylko jeśli pula po etapie 1 > top_k)
-            if run_screen:
-                print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam {len(survivors)} półfinalistów ({self.args.screen_games} gier/setup × 5 setupów) ---")
-                stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, iter_seed, setups) for c in survivors]
-                stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label="Przesiew 4P 2/3")
-                stage2_results.sort(key=self._rank)
-                n_finalists = min(self.args.top_k, len(stage2_results))
-                if n_finalists >= 10:
-                    n_finalists = (n_finalists // 10) * 10
-                survivors = select_diverse_survivors(stage2_results, cand_dict, n_finalists)
-            else:
-                print(f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): {len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra.")
+            base_res = base_stats.to_result_dict()
+            self._last_base_res = base_res
 
-            # 5. ETAP 3/3: Weryfikacja Ultra 4P
-            print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję {len(survivors)} finalistów ({self.args.confirm_games} gier/setup × 5 setupów) ---")
-            stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, iter_seed, setups) for c in survivors]
-            stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label="Weryfikacja 4P 3/3")
+            print(f"\n{'='*71}")
+            print(f"🎯 [WYNIK BAZOWY KANONU 4P] {color_score(base_res['score_4p_balance'], bold=True)} pkt (±{base_stats.score_se:.2f})")
+            print(
+                f"   📐 Balance (win share): {color_score(base_res['score_4p_balance'])} pkt | "
+                f"min `{base_res['min_balance_setup']}` {color_score(base_res['min_balance'])} | "
+                f"witalność kara {base_res['vitality_penalty']:.3f}"
+            )
+            for sname, sc in sorted(base_res["setup_scores"].items()):
+                bal = base_res["setup_scores_balance"].get(sname, sc)
+                print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt (balance {color_score(bal)})")
+            print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
 
-            stage3_results.sort(key=self._rank)
+            if canon_should_stop(base_res, mode=self._accept_mode()):
+                print(f"\n🏁 Kanon 4P: {base_res['score_4p_balance']:.1f} pkt — optimum osiągnięte.")
+                break
 
-            print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW KANONU 4P] tryb={self._accept_mode()}")
-            for idx, r in enumerate(stage3_results, 1):
-                decision = accept_candidate(
-                    base_res, r, mode=self._accept_mode(), min_delta=self.args.min_delta
-                )
-                d_4 = r["score_4p_balance"] - base_res["score_4p_balance"]
-                sign = f"+{d_4:.2f}" if d_4 > 0 else f"{d_4:.2f}"
-                mark = "✔" if decision.accepted else "✖"
-                print(
-                    f"   #{idx:2d} {mark} [{r['id'][:42]}...] 4P {base_res['score_4p_balance']:.1f} → {r['score_4p_balance']:.1f} "
-                    f"(Δ {sign}) min {r['min_balance']:.1f} | {decision.reason}"
-                )
+            # 3. Evaluate Survivors and Finalists
+            surviving_stats = [c for c in candidate_results if not c.is_pruned]
+            surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict(), mode=self._accept_mode()))
 
-            # Wybieramy najlepszego zaakceptowanego finalistę (według rankingu score_4p / witalności)
+            ranked_results = [c.to_result_dict() for c in surviving_stats]
+
             accepted_candidate = None
             best_ver_res = None
+            acceptance_reason = ""
 
-            for ver_res in stage3_results:
+            for cand_stat in surviving_stats:
+                cand_res = cand_stat.to_result_dict()
                 decision = accept_candidate(
-                    base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
+                    base_res, cand_res, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
+                
+                # Check standard acceptance
                 if decision.accepted:
-                    accepted_candidate = cand_dict[ver_res["id"]]
-                    best_ver_res = ver_res
+                    accepted_candidate = cand_stat.cand_tuple
+                    best_ver_res = cand_res
+                    acceptance_reason = decision.reason
                     break
-
-            if best_ver_res is not None:
-                d_lead = best_ver_res['score_4p_balance'] - base_res['score_4p_balance']
-                print(f"\n   → Wybrano `{best_ver_res['id']}` (zysk 4P Δ {d_lead:+.2f} pkt, min {best_ver_res.get('min_balance', 0):.1f})")
-
-
-            # 5b. WALIDACJA KRZYŻOWA — potwierdzenie na niezależnym seedzie
-            if accepted_candidate and best_ver_res is not None:
-                cross_seed = iter_seed + 9999  # Niezależne ziarno losowości
-                print(f"\n🔀 [WALIDACJA KRZYŻOWA] Potwierdzam zwycięzcę na niezależnym seedzie ({cross_seed})...")
-                print(f"   Testuję bazę i kandydata na {self.args.confirm_games} gier/setup × 5 setupów...")
-
-                cross_base_task = (("CROSS_BASE", "Baza krzyżowa", {}), self.args.confirm_games, cross_seed, setups)
-                cross_cand_task = (accepted_candidate, self.args.confirm_games, cross_seed, setups)
-                cross_results = self._execute_pool(
-                    _run_single_test_task_4p,
-                    [cross_base_task, cross_cand_task],
-                    label="Walidacja krzyżowa"
-                )
-
-                cross_base_res = None
-                cross_cand_res = None
-                for cr in cross_results:
-                    if cr["id"] == "CROSS_BASE":
-                        cross_base_res = cr
-                    else:
-                        cross_cand_res = cr
-
-                if cross_base_res and cross_cand_res:
-                    cross_decision = accept_candidate(
-                        cross_base_res, cross_cand_res,
-                        mode=self._accept_mode(), min_delta=self.args.min_delta
-                    )
-                    cross_d = cross_cand_res['score_4p_balance'] - cross_base_res['score_4p_balance']
-                    cross_dmin = float(cross_cand_res.get('min_balance', 0)) - float(cross_base_res.get('min_balance', 0))
-                    print(f"   🔀 Wynik krzyżowy: Δscore {cross_d:+.2f} pkt, Δmin {cross_dmin:+.2f} pkt")
-                    print(f"   🔀 Decyzja krzyżowa: {'✔ POTWIERDZONE' if cross_decision.accepted else '✖ ODRZUCONE'} — {cross_decision.reason}")
-
-                    if not cross_decision.accepted:
-                        print(f"\n   ⛔ ODRZUCONO PATCH — walidacja krzyżowa na seedzie {cross_seed} nie potwierdziła zysku.")
-                        print(f"      Kandydat `{best_ver_res['id']}` to szum statystyczny, a nie realna poprawa.")
-                        accepted_candidate = None
-                        best_ver_res = None
                 else:
-                    print(f"\n   ⛔ ODRZUCONO PATCH — błąd walidacji krzyżowej.")
-                    accepted_candidate = None
-                    best_ver_res = None
+                    # Check Simulated Annealing exploration step
+                    safe_telemetry, _ = telemetry_is_safe(cand_res)
+                    vit_ok = cand_res.get("vitality_penalty", 0.0) <= base_res.get("vitality_penalty", 0.0) + 1e-9
+                    d_score = cand_res["score_4p_balance"] - base_res["score_4p_balance"]
+                    d_min = cand_res["min_balance"] - base_res["min_balance"]
 
-            # 6. Apply Patch & Measure Collateral Impact
+                    if safe_telemetry and vit_ok and d_score >= -0.30 and d_min >= -0.40 and self.temperature > self.min_temperature:
+                        prob = math.exp(d_score / self.temperature)
+                        if random.random() < prob:
+                            accepted_candidate = cand_stat.cand_tuple
+                            best_ver_res = cand_res
+                            acceptance_reason = f"Simulated Annealing ucieczka z minimum (T={self.temperature:.2f}, P={prob:.2f}, Δ={d_score:+.2f})"
+                            break
+
+            # 4. Apply Patch & Measure Collateral Impact
             if accepted_candidate and best_ver_res is not None:
                 self.total_iterations += 1
                 rule_id, rule_name, rule_params = accepted_candidate
@@ -1176,7 +1240,6 @@ class Canon4PAutoBalancer:
                 old_version = raw_cfg.get("version", "v0.51")
                 mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, rule_params)
 
-                # Cross-impact diagnosis (all 16 setups before vs after)
                 print(f"\n🔬 [DIAGNOZA WPŁYWU NA POZOSTAŁE TRYBY (3P / 5P)]...")
                 diag_before = _run_full_diagnostic({}, games_per_setup=1000, seed=self.args.seed)
                 diag_after = _run_full_diagnostic(rule_params, games_per_setup=1000, seed=self.args.seed)
@@ -1195,7 +1258,7 @@ class Canon4PAutoBalancer:
                 print(f"   🌐 Globalny:  {diag_before['global_score']:.1f} → {diag_after['global_score']:.1f} pkt (`{dg_sign} pkt`)")
 
                 if self.args.dry_run:
-                    print(f"\n[DRY RUN] Zaakceptowano by modyfikację Kanonu 4P: {change_desc}")
+                    print(f"\n[DRY RUN] Zaakceptowano by modyfikację Kanonu 4P: {change_desc} ({acceptance_reason})")
                     current_phase += 1
                 else:
                     new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
@@ -1204,6 +1267,7 @@ class Canon4PAutoBalancer:
                     print(f"\n🎉 [ZAAKCEPTOWANO PATCH KANONU 4P #{self.total_iterations} — FAZA {current_phase}D]")
                     print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
                     print(f"   Modyfikacja:   {change_desc}")
+                    print(f"   Powód:         {acceptance_reason}")
 
                     version_archive_dir = REPORTS_DIR / "archive" / new_version
                     version_archive_dir.mkdir(parents=True, exist_ok=True)
@@ -1224,7 +1288,6 @@ class Canon4PAutoBalancer:
                         iter_elapsed,
                     )
 
-                    # Snapshot game_config.yaml in version archive
                     shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
 
                     print("   📊 Generuję pełny raport telemetrii Kanonu 4P (10 000 gier/setup)...")
@@ -1240,7 +1303,7 @@ class Canon4PAutoBalancer:
                         best_ver_res,
                         diag_before,
                         diag_after,
-                        stage3_results,
+                        ranked_results,
                         change_desc,
                         rule_id,
                         iter_elapsed,
@@ -1265,6 +1328,7 @@ class Canon4PAutoBalancer:
                     current_phase = 1
                     beam_seeds.clear()
                     consecutive_stalls = 0
+                    self.temperature = max(self.min_temperature, self.temperature * self.cooling_rate)
 
             else:
                 print(
@@ -1272,18 +1336,8 @@ class Canon4PAutoBalancer:
                     f"Buduję zaawansowane wiązki synergii dla słabych setupów..."
                 )
                 diverse_seeds = []
-                by_score = sorted(stage3_results, key=lambda r: -r.get("score_4p_balance", 0))
-                for r in by_score[:4]:
-                    diverse_seeds.append(cand_dict[r["id"]])
-                by_min = sorted(stage3_results, key=lambda r: -r.get("min_balance", 0))
-                for r in by_min[:4]:
-                    if cand_dict[r["id"]] not in diverse_seeds:
-                        diverse_seeds.append(cand_dict[r["id"]])
-                for sname in ["4p-no-kabala", "4p-core", "4p-no-oficjum"]:
-                    by_s = sorted(stage3_results, key=lambda r: -r.get("setup_scores_balance", {}).get(sname, 0))
-                    for r in by_s[:2]:
-                        if cand_dict[r["id"]] not in diverse_seeds:
-                            diverse_seeds.append(cand_dict[r["id"]])
+                for r in surviving_stats[:6]:
+                    diverse_seeds.append(r.cand_tuple)
 
                 if current_phase >= self.args.max_depth:
                     consecutive_stalls += 1
@@ -1308,15 +1362,22 @@ class Canon4PAutoBalancer:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor Kanonu 4P (Anchor-Based 4P Optimizer)")
+    parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor Kanonu 4P (Adaptive Monte Carlo Racer)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
-    parser.add_argument("--fast-games", type=int, default=300, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 300)")
-    parser.add_argument("--screen-games", type=int, default=1500, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 1500)")
-    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 5000)")
-    parser.add_argument("--top-semifinalists", type=int, default=40, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 40, wielokrotność 10)")
-    parser.add_argument("--top-k", type=int, default=20, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 20, wielokrotność 10)")
-    parser.add_argument("--beam-width", type=int, default=10, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 10, wielokrotność 10)")
+    
+    # Adaptive Monte Carlo Racing parameters
+    parser.add_argument("--batch-step", type=int, default=100, help="Rozmiar mikro-kroku partii na setup (domyślnie: 100)")
+    parser.add_argument("--min-games", type=int, default=400, help="Minimalna liczba gier/setup przed sprawdzeniem kryterium stopu (domyślnie: 400)")
+    parser.add_argument("--max-games", type=int, default=8000, help="Maksymalna liczba gier/setup w wyścigu (domyślnie: 8000)")
+    parser.add_argument("--epsilon-indiff", type=float, default=0.15, help="Próg strefy nierozróżnialności / szumu balansu w pkt (domyślnie: 0.15)")
+    
+    # Simulated Annealing parameters
+    parser.add_argument("--temperature", type=float, default=0.40, help="Początkowa temperatura wyżarzania (domyślnie: 0.40)")
+    parser.add_argument("--cooling-rate", type=float, default=0.90, help="Współczynnik chłodzenia po zaakceptowanym patchu (domyślnie: 0.90)")
+    parser.add_argument("--min-temperature", type=float, default=0.05, help="Minimalna temperatura wyżarzania (domyślnie: 0.05)")
+
+    parser.add_argument("--beam-width", type=int, default=10, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek")
     parser.add_argument("--max-depth", type=int, default=3, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 3)")
     parser.add_argument("--min-delta", type=float, default=0.50, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.50)")
 
@@ -1327,20 +1388,17 @@ def main():
         "--accept-mode",
         choices=("legacy", "band"),
         default="legacy",
-        help=(
-            "legacy (domyślnie): max średniej balansu 4P jak dawny auto_balancer (czysty gradient). "
-            "band: wspinaczka maximin poza pasmem 20–30%%, higiena zdrowia w paśmie."
-        ),
+        help="legacy (max średniej) vs band (maximin poza pasmem, higiena w paśmie)",
     )
 
-    args = parser.parse_args()
+    # Legacy compatibility arguments (kept for CLI backwards compatibility)
+    parser.add_argument("--fast-games", type=int, default=300, help="[Legacy alias]")
+    parser.add_argument("--screen-games", type=int, default=1500, help="[Legacy alias]")
+    parser.add_argument("--confirm-games", type=int, default=5000, help="[Legacy alias]")
+    parser.add_argument("--top-semifinalists", type=int, default=40, help="[Legacy alias]")
+    parser.add_argument("--top-k", type=int, default=20, help="[Legacy alias]")
 
-    if args.fast_games < 100:
-        args.fast_games = 100
-    if args.screen_games < 500:
-        args.screen_games = 500
-    if args.confirm_games < 5000:
-        args.confirm_games = 5000
+    args = parser.parse_args()
 
     auditor = Canon4PAutoBalancer(args)
     auditor.run()
