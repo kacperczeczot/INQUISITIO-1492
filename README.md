@@ -1,6 +1,3 @@
-[Strona główna](README.md)
-
-
 # INQUISITIO 1492: Cienie Toledo
 
 Karcianka z planszą (**3–5 graczy**, 60–90+ min) osadzona w XV-wiecznej Hiszpanii. Ciężka **intryga polityczna**: Herezja, Wielki Inkwizytor, Lochy/Marionetki, Haki, karty signature.
