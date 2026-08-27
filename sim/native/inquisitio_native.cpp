@@ -599,6 +599,7 @@ static inline void move_agent_step(GameStateNative& st, uint8_t fid, FastRng& rn
 static inline void take_economic_action(GameStateNative& st, uint8_t fid, FastRng& rng, const ConfigOverridesNative& ov) {
     int amt = std::max(0, ov.intrigue_gold_base + ov.intrigue_gold_offset);
     st.players[fid].gold += amt;
+    move_agent_step(st, fid, rng);
 }
 
 static inline bool card_condition_met_native(const GameStateNative& st, uint8_t fid, uint8_t card_idx);
