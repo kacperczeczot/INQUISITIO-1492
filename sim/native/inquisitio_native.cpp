@@ -617,19 +617,27 @@ static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, 
         const PlayerStateNative& r_pl = st.players[r_fid];
         float th = 0.0f;
         if (r_fid == SO) {
-            int so_c = 0;
-            for (int k = 0; k < 5; ++k) if (r_pl.condemned_rivals_mask & (1 << k)) so_c++;
-            if (so_c >= 2) th += 0.85f;
-            else if (so_c == 1) th += 0.40f;
-            if (r_pl.stacks >= 6) th += 0.85f;
-            else if (r_pl.stacks >= 4) th += 0.45f;
+            int condemns = 0;
+            for (int k = 0; k < 5; ++k) if (r_pl.condemned_rivals_mask & (1 << k)) condemns++;
+            if (condemns >= 2) th += 0.85f;
+            else if (condemns == 1) th += 0.40f;
+            if (r_pl.stacks >= 5) th += 0.75f;
         } else if (r_fid == CAA) {
-            if (r_pl.relics_evacuated >= 1) th += 0.70f;
-            if (st.sea_route_open) th += 0.20f;
+            if (r_pl.relics_evacuated >= 1) {
+                th += 0.85f;
+                if (st.sea_route_open) th += 0.25f;
+            } else {
+                bool on_relic = false;
+                for (int a = 0; a < r_pl.agent_count; ++a) {
+                    if (!r_pl.agents[a].arrested && st.relics_on_board[r_pl.agents[a].location] > 0) on_relic = true;
+                }
+                if (on_relic) th += 0.35f;
+            }
         } else if (r_fid == KB) {
-            int r_hooks = r_pl.distinct_hooks_ever();
-            if (r_pl.decrees_played >= 1 && r_hooks >= 1) th += 0.65f;
-            else if (r_hooks >= 2) th += 0.40f;
+            int r_hooks = r_pl.distinct_hooks();
+            if (r_hooks >= 2) th += 0.85f;
+            else if (r_hooks == 1) th += 0.35f;
+            if (r_pl.decrees_played >= 1) th += 0.30f;
         } else if (r_fid == KT) {
             if (r_pl.fragments >= 2) th += 0.75f;
             else if (r_pl.fragments == 1 && st.era >= 4) th += 0.30f;
