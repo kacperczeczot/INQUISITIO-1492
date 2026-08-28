@@ -5,13 +5,14 @@ faction: swiete-oficjum
 type: akcja
 layer: B
 cost: 1
-heresy: 0
+heresy: 1
 tags:
 - hook
 effect: Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.
 lore: Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.
 creates_hook: true
 ---
+
 
 
 

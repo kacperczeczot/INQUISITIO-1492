@@ -94,6 +94,26 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.87 (2026-08-29) — Kanon 4P: Karta `so-03` (Podejrzenie): `heresy` → `4` (Zysk 4P Δ +0.9 pkt)
+- **Wynik 4P:** Kanon **`87.5`** → **`88.4 pkt`** | Global **`49.0`** | 3p **`33.0`** | 5p **`25.6`**
+- **Modyfikacja (`L3_SO-03_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `heresy` → `4`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.72, Deadlocks 0.0%, Pas Biedy 4.7%.
+
+### 🟢 Patch v1.0-alpha.86 (2026-08-29) — Kanon 4P: Karta `so-03` (Podejrzenie): `gold` → `0` (Zysk 4P Δ +2.4 pkt)
+- **Wynik 4P:** Kanon **`85.1`** → **`87.5 pkt`** | Global **`48.6`** | 3p **`32.9`** | 5p **`25.4`**
+- **Modyfikacja (`L3_SO-03_GOLD_MINUS1`):** Karta `so-03` (Podejrzenie): `gold` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.73, Deadlocks 0.0%, Pas Biedy 4.8%.
+
+### 🟢 Patch v1.0-alpha.85 (2026-08-29) — Kanon 4P: Karta `so-09` (Świadek Koronny): `heresy` → `1` (Zysk 4P Δ +1.4 pkt)
+- **Wynik 4P:** Kanon **`83.7`** → **`85.1 pkt`** | Global **`47.6`** | 3p **`32.7`** | 5p **`24.9`**
+- **Modyfikacja (`L3_SO-09_HERESY_PLUS1`):** Karta `so-09` (Świadek Koronny): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.70, Deadlocks 0.0%, Pas Biedy 4.7%.
+
+### 🟢 Patch v1.0-alpha.84 (2026-08-29) — Kanon 4P: Karta `caa-11` (Nocna Zmiana Warty): `target_heresy` → `1` (Zysk 4P Δ +1.3 pkt)
+- **Wynik 4P:** Kanon **`82.4`** → **`83.7 pkt`** | Global **`47.0`** | 3p **`32.5`** | 5p **`24.7`**
+- **Modyfikacja (`L3_CAA-11_TARGET_HERESY_MINUS1`):** Karta `caa-11` (Nocna Zmiana Warty): `target_heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.74, Deadlocks 0.0%, Pas Biedy 4.8%.
+
 ### 🟢 Patch v1.0-alpha.83 (2026-08-29) — Kanon 4P: Karta `caa-10` (Echo Alhambry): `cost` → `2` (Zysk 4P Δ +1.1 pkt)
 - **Wynik 4P:** Kanon **`81.3`** → **`82.4 pkt`** | Global **`46.5`** | 3p **`32.4`** | 5p **`24.6`**
 - **Modyfikacja (`L3_CAA-10_COST_MINUS1`):** Karta `caa-10` (Echo Alhambry): `cost` → `2`.

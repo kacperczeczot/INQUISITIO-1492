@@ -1,4 +1,4 @@
-version: v1.0-alpha.87
+version: v1.0-alpha.85
 date: '2026-08-29'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -60,8 +60,8 @@ cards:
     action: frame_rival
     tags:
     - heresy
-    heresy: 4
-    gold: 0
+    heresy: 3
+    gold: 1
   so-04:
     name: Publiczne Ostrzeżenie
     type: akcja

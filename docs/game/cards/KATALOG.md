@@ -67,9 +67,9 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 2 |
-| `heresy` | 3 |
+| `heresy` | 4 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
-| `effect` | Wskaż rywala: +3 Herezja. Zyskaj 1 złoto. |
+| `effect` | Wskaż rywala: +3 Herezja. |
 | `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -169,7 +169,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora. |
 | `lore` | Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie. |

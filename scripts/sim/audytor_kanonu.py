@@ -347,7 +347,7 @@ class AdaptiveSequentialRacer:
         epsilon_indiff: float = 0.15,
         workers: int = 10,
         accept_mode: str = "legacy",
-        min_delta: float = 0.50,
+        min_delta: float = 0.05,
     ):
         self.setups = setups
         self.batch_step = batch_step
@@ -1496,7 +1496,7 @@ def main():
 
     parser.add_argument("--beam-width", type=int, default=10, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek")
     parser.add_argument("--max-depth", type=int, default=3, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 3)")
-    parser.add_argument("--min-delta", type=float, default=0.50, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.50)")
+    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
 
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")

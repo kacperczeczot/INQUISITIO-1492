@@ -4,7 +4,7 @@
 
 # INQUISITIO 1492 — Wariant 2-osobowy: „Wojna Cieni” (2x2p — Dual Control)
 
-### Suplement do Księgi Zasad · Wersja v1.0-alpha.83
+### Suplement do Księgi Zasad · Wersja v1.0-alpha.87
 
 Kanonem rozgrywki w *INQUISITIO 1492* jest skład 4-osobowy. W wariancie dla 2 graczy (**Wojna Cieni**) dwóch graczy kontroluje łącznie **4 frakcje** (po 2 frakcje na gracza) z zachowaniem 100% kanonicznych talii, mechanik i celów.
 
