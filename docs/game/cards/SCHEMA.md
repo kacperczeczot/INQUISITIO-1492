@@ -46,7 +46,7 @@ Frontmatter YAML jest **jedynym źródłem** treści karty (body po `---` puste)
 **Tak:** klimat, napięcie przy stole, co widzą rywale.  
 **Nie:** `Teach A/B/C`, `Cel A:`, ID kart (`so-04`, `kt-06+`), `sim`, `warstwa`, `reposition`, `double-dip`, `sweet spot`, `Finisher`, `czysta ekonomia`, angielski żargon balansu.
 
-Notatki playtestowe → [`playtesting/`](../../playtesting/), nie na kartę.
+Notatki playtestowe → [`data/playtesting/`](../../data/playtesting/), nie na kartę.
 
 ## Meta (zsynchronizowane z `game_config.yaml`)
 

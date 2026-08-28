@@ -12,8 +12,8 @@ Każdy model AI / asystent pracujący w tym repozytorium **MUSI** bezwzględnie 
 
 ---
 
-## 2. Obowiązkowy Wpis w Patch Notes (`playtesting/balance-notes.md`)
-* Każda modyfikacja pliku `data/data/game_config.yaml` musi zostać natychmiast odnotowana na samej górze sekcji patch notes w [playtesting/balance-notes.md](file:///Users/kacper/Documents/GitHub/INQUISITIO-1492/playtesting/balance-notes.md):
+## 2. Obowiązkowy Wpis w Patch Notes (`data/playtesting/balance-notes.md`)
+* Każda modyfikacja pliku `data/data/game_config.yaml` musi zostać natychmiast odnotowana na samej górze sekcji patch notes w [data/playtesting/balance-notes.md](file:///Users/kacper/Documents/GitHub/INQUISITIO-1492/data/playtesting/balance-notes.md):
   ```markdown
   ### 🟢 Patch v1.0-alpha.X (YYYY-MM-DD) — [Zwięzły opis zmiany]
   - **Wynik 4P:** [Przed → Po] / [Informacja o statusie]

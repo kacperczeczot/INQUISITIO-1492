@@ -29,7 +29,7 @@
 | [`../../game/mechanics/leksykon.md`](../../game/mechanics/leksykon.md) | Zamknięty język `effect` na kartach |
 | [`../../game/cards/SCHEMA.md`](../../game/cards/SCHEMA.md) | Anatomia pól karty |
 
-GDD: [`../gdd/Inquisitio_1492_GDD.md`](../gdd/Inquisitio_1492_GDD.md) · Roadmap: [`../roadmap.md`](../roadmap.md) · Setupy: [`../../playtesting/setups.md`](../../playtesting/setups.md)
+GDD: [`../gdd/Inquisitio_1492_GDD.md`](../gdd/Inquisitio_1492_GDD.md) · Roadmap: [`../roadmap.md`](../roadmap.md) · Setupy: [`../../data/playtesting/setups.md`](../../data/playtesting/setups.md)
 
 ---
 

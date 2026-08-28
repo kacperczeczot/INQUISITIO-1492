@@ -7,7 +7,7 @@
 * **Status:** ACCEPTED
 * **Data:** 2026-08-23
 * **Autorzy:** Antigravity & Designer
-* **Dotyczy:** `tools/sim/`, `sim/inquisitio/runner/`, `playtesting/`
+* **Dotyczy:** `tools/sim/`, `sim/inquisitio/runner/`, `data/playtesting/`
 
 ---
 
@@ -34,7 +34,7 @@ Testowanie hipotez na małych próbach (np. 100–500 partii) lub na pojedynczym
 
 ## 4. Niezmienniki Architektoniczne (Invariants)
 * 🛑 **ZAKAZ:** Generowania oficjalnych raportów archiwalnych na próbach mniejszych niż 5000 gier per setup.
-* 🛡️ **GWARANCJA:** Wszystkie raporty telemetryczne w `playtesting/sim-reports/` bazują na próbach rzędu 10 000 gier/setup.
+* 🛡️ **GWARANCJA:** Wszystkie raporty telemetryczne w `data/playtesting/sim-reports/` bazują na próbach rzędu 10 000 gier/setup.
 
 ---
 

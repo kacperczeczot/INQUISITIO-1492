@@ -174,7 +174,7 @@ Nowe słowo funkcyjne = wpis tutaj, nie improwizacja na karcie.
 | `Zapłać N złota` | `cost_gold` |
 | `Ty: +N Herezja` | `heresy` (pigułka); opcjonalnie smak w `heresy_text` |
 | „bez Herezji” / „Ty nie…” w `heresy_text` | usuń — pigułka wystarczy; `heresy_text` = wyłącznie klimat |
-| `Teach A` / `sim` / `reposition` / ID kart w `lore` | usuń — `lore` = klimat przy stole; notatki → `playtesting/` |
+| `Teach A` / `sim` / `reposition` / ID kart w `lore` | usuń — `lore` = klimat przy stole; notatki → `data/playtesting/` |
 | `Reakcja.` w `effect` | usuń (badge `type`) |
 | `SIGNATURE` / `Signature` w `effect` | usuń (badge **Specjalna**); zostaw `Łamie regułę „…”:` · Korona: `DEKRET N — Łamie regułę …` |
 | `— łamie regułę` (małe ł) | `— Łamie regułę` |

@@ -31,7 +31,7 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 ## 4. Rygor Procesowy i Integralność Dokumentacji
 - Każda zatwierdzona zmiana parametrów w `data/data/game_config.yaml` wymaga:
   1. Podbicia wersji `v1.0-alpha.X` $\to$ `v1.0-alpha.Y` i aktualizacji daty.
-  2. Rzetelnego wpisu w `playtesting/balance-notes.md` (bez cenzury i pomijania faktów).
+  2. Rzetelnego wpisu w `data/playtesting/balance-notes.md` (bez cenzury i pomijania faktów).
   3. Uruchomienia `src/.venv/bin/python3 scripts/sync_config.py`.
   4. Weryfikacji 100% testów `src/.venv/bin/pytest`.
 

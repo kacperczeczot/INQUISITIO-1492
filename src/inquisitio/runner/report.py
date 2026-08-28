@@ -8,7 +8,7 @@ from pathlib import Path
 from inquisitio.runner.batch import BatchSummary
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-REPORT_DIR = REPO_ROOT / "playtesting" / "sim-reports"
+REPORT_DIR = REPO_ROOT / "data" / "playtesting" / "sim-reports"
 
 
 def _ts() -> str:

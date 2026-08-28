@@ -27,9 +27,9 @@ Wersja **`v1.0-alpha.25`** stanowi punkt zwrotny projektu — to od tego wydania
 
 ### 📊 Raporty Telemetrii i Archiwum Symulacji
 
-Szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane automatycznie per wersja do katalogu [`playtesting/sim-reports/archive/`](sim-reports/archive/):
-- 📁 **Struktura i Opis Raportów:** [`playtesting/sim-reports/README.md`](sim-reports/README.md)
-- 📁 **Katalog Wszystkich Wydań:** [`playtesting/sim-reports/archive/`](sim-reports/archive/) (np. `archive/v1.0-alpha.25/`, `archive/v1.0-alpha.24/`)
+Szczegółowe dane symulacyjne, wskaźniki użyteczności 60 kart, wykresy monokultury talii i telemetria 16 setupów są generowane automatycznie per wersja do katalogu [`data/playtesting/sim-reports/archive/`](sim-reports/archive/):
+- 📁 **Struktura i Opis Raportów:** [`data/playtesting/sim-reports/README.md`](sim-reports/README.md)
+- 📁 **Katalog Wszystkich Wydań:** [`data/playtesting/sim-reports/archive/`](sim-reports/archive/) (np. `archive/v1.0-alpha.25/`, `archive/v1.0-alpha.24/`)
 - 📜 **Dziennik Zmian Balansu:** Szczegółowe wpisy i historia każdego patcha znajdują się poniżej w sekcji [Patch Notes](#-chronologiczna-historia-zmian-balansu-faza-prototypowa--patch-notes).
 
 Poza zakresem (świadomie): AI operuje na ogólnych heurystykach teorii gier stołowych; wolny tekst `effect` jest zmapowany na ustrukturyzowane handlery i pola YAML. `korona_borgiowie.era` / `hooks` w victory pozostają wyłączone z audytora makro (zgodnie z unifikacją 4P).
@@ -93,6 +93,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.81 (2026-08-28) — Kanon 4P: Korona Borgiowie: Dekrety offset -1 (Zysk 4P Δ +31.6 pkt)
+- **Wynik 4P:** Kanon **`20.7`** → **`52.3 pkt`** | Global **`31.2`** | 3p **`24.8`** | 5p **`14.4`**
+- **Modyfikacja (`L2_KB_DECREES_MINUS1`):** Korona Borgiowie: Dekrety offset -1.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.92, Deadlocks 0.0%, Pas Biedy 4.6%.
 
 ### 🟢 Patch v1.0-alpha.79 (2026-08-24) — Kanon 4P: Karta `kt-07` (Archiwum Ukryte): `heresy` → `0` (Zysk 4P Δ +2.1 pkt)
 - **Wynik 4P:** Kanon **`83.2`** → **`85.3 pkt`** | Global **`44.0`** | 3p **`31.0`** | 5p **`16.6`**
@@ -840,14 +845,14 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
   - GC: `gc-11` Fałszywe Świadectwo Cechu · `gc-12` Złodziejski Zwiad
 - **Audyt Poziomu 1** ([`archive/v0.76/audyt_level1_raport.md`](sim-reports/archive/v0.76/audyt_level1_raport.md), 3000 gier/setup): baza Global 🔴 **58.3** · **4p 68.8**. Telemetria bazy w normie (6.63 Er, deadlock 5.9%, pas biedy 5.3%, Autodafé 1.62, oskarżenia 3.71). **3p/5p odłożone** — wyjątki zasad dopiero po idealnym kanonie 4p.
   - Warianty **4p z zyskiem:** limit ręki 5→4 (**68.8 → 75.6, +6.8**) · agenci 3→2 (**+1.0**). Reszta L1 na 4p płaska lub na minus (złoto ±1, Autodafé ±1, ręka 6 **−23.0**, agenci 4 **−12.3**).
-- **Efekt (kanon 4p):** `4p-core` **79.6** (CAA 29.0 / SO 21.6 / KT 26.8 / KB 22.7 — wszystkie w paśmie 20–30%). Najsłabsze składy 4p: `4p-no-oficjum` 58.6 (GC 34.8%) · `4p-no-cienie` 60.8 (GC 34.1%). Raporty: `playtesting/sim-reports/archive/v0.76/`.
+- **Efekt (kanon 4p):** `4p-core` **79.6** (CAA 29.0 / SO 21.6 / KT 26.8 / KB 22.7 — wszystkie w paśmie 20–30%). Najsłabsze składy 4p: `4p-no-oficjum` 58.6 (GC 34.8%) · `4p-no-cienie` 60.8 (GC 34.1%). Raporty: `data/playtesting/sim-reports/archive/v0.76/`.
 
 ### 🟢 Patch v0.75 (2026-08-16) — Inteligentne Utility AI (Net ROI, Strefy Herezji, Taktyczny Pas) i Oczyszczenie Kart SSOT
 - **Wynik 4P:** Kanon **`34.4 pkt`** | Global **`35.8 pkt`** | 3p **`34.6 pkt`** | 5p **`38.3 pkt`**
 - **Modyfikacja Silnika & AI:**
   - `sim/inquisitio/agents/politics.py`: Wdrożenie wielokryterialnego Utility AI (ocena kosztu netto złota, strefy zagrożenia Herezją, frakcyjne drivery wygranej, rezerwacyjna wartość Pasa).
   - Oczyszczenie kart SSOT: Przywrócenie `gc-02` (Czarny Rynek) do `cost: 1, gold: 3, heresy: 1`, usunięcie zanieczyszczeń `gold: 1` z kart `caa-01`, `caa-04`, `gc-03`, `kt-03`, `kt-09`, `kt-10`, oczyszczenie `so-08`.
-- **Efekt:** Odsłonięcie autentycznego rozkładu balansu przy inteligentnych graczach. Drastyczny spadek Pasu Biedy z 24.6% do **5.3%–6.8%**, Deadlocki **0.7%**, Średnia Er **5.65**. Wszystkie raporty zarchiwizowane w `playtesting/sim-reports/archive/v0.75/`.
+- **Efekt:** Odsłonięcie autentycznego rozkładu balansu przy inteligentnych graczach. Drastyczny spadek Pasu Biedy z 24.6% do **5.3%–6.8%**, Deadlocki **0.7%**, Średnia Er **5.65**. Wszystkie raporty zarchiwizowane w `data/playtesting/sim-reports/archive/v0.75/`.
 
 ### 🟢 Patch v0.74 (2026-08-16) — Kanon 4P: Karta `kt-08` (Areszt Wiedzy): `cost` → `1` (Zysk 4P Δ +0.4 pkt)
 - **Wynik 4P:** Kanon **`95.9`** → **`96.3 pkt`** | Global **`76.4`** | 3p **`65.3`** | 5p **`70.7`**

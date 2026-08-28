@@ -52,7 +52,7 @@ sim/.venv/bin/python tools/sim/audit_stress_tests.py --games 500
 ### Ogólne parametry CLI dla wszystkich skryptów:
 - `--games <N>`: Liczba partii do symulacji na każdy setup (domyślnie: `300` dla audytów, `500` dla raportu głównego). Wyższa próba (np. `1000`+) podnosi dokładność statystyczną kosztem dłuższego czasu.
 - `--seed <S>`: Ziarno losowości (domyślnie: `42`). Zapewnia pełną powtarzalność wyników.
-- `--output <path>`: Własna ścieżka zapisu raportu Markdown (domyślnie raporty lądują w `playtesting/sim-reports/`).
+- `--output <path>`: Własna ścieżka zapisu raportu Markdown (domyślnie raporty lądują w `data/playtesting/sim-reports/`).
 
 ### Specialne filtry chirurgiczne dla Audytu Poziomu 3 (`audit_level3.py`):
 Pozwalają audytować wybrane właściwości lub frakcje bez konieczności uruchamiania pełnego zestawu kart:

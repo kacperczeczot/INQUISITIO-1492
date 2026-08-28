@@ -550,7 +550,7 @@ def sync_hierarchia(cfg: dict) -> list[str]:
 
 def sync_balance_notes(cfg: dict) -> list[str]:
     """Sync the live SSOT snapshot at the top of balance-notes.md (not patch history)."""
-    path = PROJECT_ROOT / "playtesting" / "balance-notes.md"
+    path = PROJECT_ROOT / "data" / "playtesting" / "balance-notes.md"
     if not path.exists():
         return []
     text = path.read_text(encoding="utf-8")
@@ -677,7 +677,7 @@ def sync_slownik(cfg: dict) -> list[str]:
 
 def sync_setups(cfg: dict) -> list[str]:
     """Sync setups.md with game_config.yaml."""
-    path = PROJECT_ROOT / "playtesting" / "setups.md"
+    path = PROJECT_ROOT / "data" / "playtesting" / "setups.md"
     if not path.exists():
         return []
     text = path.read_text(encoding="utf-8")

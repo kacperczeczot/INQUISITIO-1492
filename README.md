@@ -14,8 +14,8 @@ A/B w sim = teach / izolacja talii, nie osobny PnP.
 | GDD | [`docs/gdd/Inquisitio_1492_GDD.md`](docs/gdd/Inquisitio_1492_GDD.md) |
 | Zasady (hub) | [`docs/rules/README.md`](docs/rules/README.md) |
 | Księga zasad / słownik | [`docs/rules/ksiega.md`](docs/rules/ksiega.md) · [`docs/rules/slownik.md`](docs/rules/slownik.md) |
-| Setupy | [`playtesting/setups.md`](playtesting/setups.md) |
-| Balans | [`playtesting/balance-notes.md`](playtesting/balance-notes.md) |
+| Setupy | [`data/playtesting/setups.md`](data/playtesting/setups.md) |
+| Balans | [`data/playtesting/balance-notes.md`](data/playtesting/balance-notes.md) |
 | Sim | [`sim/README.md`](sim/README.md) |
 | Roadmap | [`docs/roadmap.md`](docs/roadmap.md) |
 
@@ -26,7 +26,7 @@ docs/           # GDD, zasady, lore, roadmap
 game/           # Frakcje, karty, plansza, mechaniki, komponenty
 sim/            # Silnik + agenci + metryki
 assets/         # PnP HTML (UI-only)
-playtesting/    # Setupy, balans, sesje
+data/playtesting/    # Setupy, balans, sesje
 tools/          # Generator PnP, katalog kart
 ```
 
@@ -36,7 +36,7 @@ tools/          # Generator PnP, katalog kart
 | :--- | :--- |
 | **Święte Oficjum** | **7 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka |
-| **Korona & Borgiowie** | **2 Dekrety** |
+| **Korona & Borgiowie** | **1 Dekrety** |
 | **Kabała z Toledo** | **3 Fragmenty** (od Ery 6) |
 | **Gildia Cieni** | **9 Upadki** |
 
@@ -45,9 +45,9 @@ Szczegóły: [`game/factions/`](game/factions/) · [`docs/rules/ksiega.md`](docs
 ## Szybki start
 
 1. Zasady → `docs/rules/ksiega.md` · lookup → `docs/rules/slownik.md`
-2. Setup → `playtesting/setups.md`
+2. Setup → `data/playtesting/setups.md`
 3. Karty → `game/cards/` · zbiorczo: `game/cards/KATALOG.md`
 4. Feel: `cd sim && python -m inquisitio feel --setup 3p-oficjum-alandalus-korona --seed 42 --layer C`
 5. Matryca: `python -m inquisitio matrix --games 100 --layers C --seed 42`
 6. PnP: `python tools/pnp/generate.py` → `assets/prototypes/`
-7. Po sesji → `playtesting/sessions/_TEMPLATE.md`
+7. Po sesji → `data/playtesting/sessions/_TEMPLATE.md`

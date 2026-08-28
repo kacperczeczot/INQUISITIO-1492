@@ -38,5 +38,5 @@ Wszystkie propozycje, zmiany parametrów i kod silnika muszą być w 100% zgodne
 ---
 
 ## 5. Pełna Przejrzystość i Rzetelność Dokumentacji
-- Wszelkie zmiany parametrów i poprawki silnika muszą być szczegółowo, bez pomijania niewygodnych faktów, odnotowane w `playtesting/balance-notes.md`.
+- Wszelkie zmiany parametrów i poprawki silnika muszą być szczegółowo, bez pomijania niewygodnych faktów, odnotowane w `data/playtesting/balance-notes.md`.
 - Każda zmiana w `data/data/game_config.yaml` wymaga uruchomienia `src/.venv/bin/python3 scripts/sync_config.py` oraz przejścia 100% testów `src/.venv/bin/pytest`.

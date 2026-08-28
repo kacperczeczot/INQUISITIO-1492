@@ -108,7 +108,7 @@ def save_and_archive_report(
         return out_path, out_path
 
     repo_root = Path(__file__).resolve().parent.parent.parent.parent
-    base_dir = repo_root / "playtesting" / "sim-reports"
+    base_dir = repo_root / "data" / "playtesting" / "sim-reports"
     archive_dir = base_dir / "archive" / CONFIG.version
 
     archive_path = archive_dir / filename

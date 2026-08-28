@@ -37,7 +37,7 @@ flowchart LR
 ## Backlog
 
 1. [x] Heavy sim + feel C + PnP UI
-2. [ ] Pierwsza sesja ludzka C + UX ([`../playtesting/sessions/_TEMPLATE.md`](../playtesting/sessions/_TEMPLATE.md))
+2. [ ] Pierwsza sesja ludzka C + UX ([`../data/playtesting/sessions/_TEMPLATE.md`](../data/playtesting/sessions/_TEMPLATE.md))
 3. [ ] Cięcia ze stołu → sim → docs
 4. [ ] Rulebook PL + FAQ (na bazie `docs/rules/ksiega.md` + `slownik.md` + sesje)
 5. [ ] Freeze → pixel art / 3D
@@ -50,6 +50,6 @@ python -m inquisitio matrix --games 100 --layers C --seed 42
 python -m inquisitio feel --setup 3p-oficjum-alandalus-korona --seed 42 --layer C
 ```
 
-Deadlocki C niskie; oskarżenia żywe. Notatki: [`../playtesting/balance-notes.md`](../playtesting/balance-notes.md).
+Deadlocki C niskie; oskarżenia żywe. Notatki: [`../data/playtesting/balance-notes.md`](../data/playtesting/balance-notes.md).
 
 **Werdykt fun = stół.** Sim tylko filtruje patologię.
