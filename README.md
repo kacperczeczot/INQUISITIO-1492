@@ -36,7 +36,7 @@ tools/          # Generator PnP, katalog kart
 | :--- | :--- |
 | **Święte Oficjum** | **7 Stosy** (spaleni agenci) **lub 3 Skazania** Werdyktem |
 | **Cienie Al-Andalus** | **2 Relikwie** + ścieżka |
-| **Korona & Borgiowie** | **1 Dekrety** |
+| **Korona & Borgiowie** | **2 Dekrety** |
 | **Kabała z Toledo** | **3 Fragmenty** (od Ery 6) |
 | **Gildia Cieni** | **9 Upadki** |
 

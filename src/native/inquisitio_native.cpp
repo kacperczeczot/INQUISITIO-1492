@@ -358,13 +358,24 @@ struct ConfigOverridesNative {
     int observed_threshold = 4;
     int hand_limit = 5;
     int max_eras = 14;
-
     int card_cost_overrides[60];
     bool has_card_cost_override[60];
+    uint8_t card_heresy_overrides[60];
+    bool has_card_heresy_override[60];
+    uint8_t card_target_heresy_overrides[60];
+    bool has_card_target_heresy_override[60];
+    uint8_t card_gold_overrides[60];
+    bool has_card_gold_override[60];
 
     ConfigOverridesNative() {
         std::memset(card_cost_overrides, 0, sizeof(card_cost_overrides));
         std::memset(has_card_cost_override, 0, sizeof(has_card_cost_override));
+        std::memset(card_heresy_overrides, 0, sizeof(card_heresy_overrides));
+        std::memset(has_card_heresy_override, 0, sizeof(has_card_heresy_override));
+        std::memset(card_target_heresy_overrides, 0, sizeof(card_target_heresy_overrides));
+        std::memset(has_card_target_heresy_override, 0, sizeof(has_card_target_heresy_override));
+        std::memset(card_gold_overrides, 0, sizeof(card_gold_overrides));
+        std::memset(has_card_gold_override, 0, sizeof(has_card_gold_override));
     }
 };
 
@@ -516,6 +527,18 @@ static inline int effective_card_cost(uint8_t card_idx, const GameStateNative& s
     return std::max(0, base_c + ov.card_cost_offset + sig_off + curfew);
 }
 
+static inline uint8_t effective_card_heresy(uint8_t card_idx, const ConfigOverridesNative& ov) {
+    return ov.has_card_heresy_override[card_idx] ? ov.card_heresy_overrides[card_idx] : CARD_DB[card_idx].heresy;
+}
+
+static inline uint8_t effective_card_target_heresy(uint8_t card_idx, const ConfigOverridesNative& ov) {
+    return ov.has_card_target_heresy_override[card_idx] ? ov.card_target_heresy_overrides[card_idx] : CARD_DB[card_idx].target_heresy;
+}
+
+static inline uint8_t effective_card_gold(uint8_t card_idx, const ConfigOverridesNative& ov) {
+    return ov.has_card_gold_override[card_idx] ? ov.card_gold_overrides[card_idx] : CARD_DB[card_idx].gold_gain;
+}
+
 static inline void check_winner_fast(GameStateNative& st, const ConfigOverridesNative& ov) {
     if (st.winner < 5) return;
     for (int p = 0; p < st.num_players; ++p) {
@@ -540,14 +563,14 @@ static inline void check_winner_fast(GameStateNative& st, const ConfigOverridesN
                 }
             }
         } else if (fid == KB) {
-            int decrees_need = std::max(1, 3 + ov.kb_decrees_offset);
+            int decrees_need = std::max(1, 2 + ov.kb_decrees_offset);
             int hooks_need = std::max(0, 2 + ov.kb_hooks_offset);
             if (pl.decrees_played >= decrees_need && pl.distinct_hooks() >= hooks_need) {
                 st.winner = fid; st.win_path_id = 4; return;
             }
         } else if (fid == KT) {
             int frag_need = std::max(1, 3 + ov.kt_frags_offset);
-            bool heresy_ok = pl.heresy <= (4 + ov.kt_heresy_tolerance);
+            bool heresy_ok = (pl.heresy >= 4 && pl.heresy <= (6 + ov.kt_heresy_tolerance));
             if (pl.kt10_played && pl.fragments >= frag_need && heresy_ok) {
                 st.winner = fid; st.win_path_id = 5; return;
             }
@@ -732,11 +755,14 @@ static inline __attribute__((always_inline)) int choose_card_heuristic(const Gam
         uint8_t c_idx = legal[i];
         const CardDef& c = CARD_DB[c_idx];
         int eff_cost = effective_card_cost(c_idx, st, ov);
+        uint8_t eff_gold = effective_card_gold(c_idx, ov);
+        uint8_t eff_heresy = effective_card_heresy(c_idx, ov);
+        uint8_t eff_target_heresy = effective_card_target_heresy(c_idx, ov);
 
         float u = 1.8f;
 
         // A. Net Gold
-        int net_gold = (int)c.gold_gain - eff_cost;
+        int net_gold = (int)eff_gold - eff_cost;
         if (net_gold > 0) u += (float)net_gold * 1.5f;
         else if (net_gold < 0) {
             u += (float)net_gold * 0.8f;
@@ -748,20 +774,20 @@ static inline __attribute__((always_inline)) int choose_card_heuristic(const Gam
         if (c_idx == 46 || c_idx == 47) u += (float)std::min(pl.heresy, 2) * 2.2f;
 
         // C. Heresy self-gain risk
-        if (c.heresy > 0) {
-            int post_h = pl.heresy + c.heresy;
+        if (eff_heresy > 0) {
+            int post_h = pl.heresy + eff_heresy;
             if (post_h >= ov.threshold) {
-                u -= (float)c.heresy * 4.5f;
+                u -= (float)eff_heresy * 4.5f;
             } else if (post_h >= ov.threshold - 1) {
-                u -= (float)c.heresy * 2.5f;
+                u -= (float)eff_heresy * 2.5f;
             } else if (has_so && post_h >= ov.observed_threshold) {
                 if (autodafe_near) {
-                    u -= (float)c.heresy * 3.0f;
+                    u -= (float)eff_heresy * 3.0f;
                 } else {
-                    u -= (float)c.heresy * 1.2f;
+                    u -= (float)eff_heresy * 1.2f;
                 }
             } else {
-                u -= (float)c.heresy * 0.3f;
+                u -= (float)eff_heresy * 0.3f;
             }
         }
 
@@ -773,9 +799,9 @@ static inline __attribute__((always_inline)) int choose_card_heuristic(const Gam
         }
 
         // E. Control, Hooks, Arrests, Framing
-        if (c.target_heresy > 0) {
-            u += (float)c.target_heresy * 1.4f;
-            if (max_threat >= 0.4f) u += (float)c.target_heresy * 1.8f * max_threat;
+        if (eff_target_heresy > 0) {
+            u += (float)eff_target_heresy * 1.4f;
+            if (max_threat >= 0.4f) u += (float)eff_target_heresy * 1.8f * max_threat;
         }
 
         if (c.creates_hook) {
@@ -1044,16 +1070,20 @@ static inline __attribute__((always_inline)) void apply_card_effect(GameStateNat
 
     st.cards_played[card_idx]++;
 
-    if (c.gold_gain > 0) {
-        pl.gold += c.gold_gain;
+    uint8_t eff_gold = effective_card_gold(card_idx, ov);
+    uint8_t eff_heresy = effective_card_heresy(card_idx, ov);
+    uint8_t eff_target_heresy = effective_card_target_heresy(card_idx, ov);
+
+    if (eff_gold > 0) {
+        pl.gold += eff_gold;
     }
 
-    if (c.heresy > 0) {
-        pl.heresy = std::min(10, pl.heresy + c.heresy);
+    if (eff_heresy > 0) {
+        pl.heresy = std::min(10, pl.heresy + eff_heresy);
     }
     
     // Reaction so-05: Wezwanie do Trybunału (triggers on self heresy OR target heresy)
-    if (c.heresy > 0 || c.target_heresy > 0) {
+    if (eff_heresy > 0 || eff_target_heresy > 0) {
         if (fid != SO && st.players[SO].hand_has(4)) {
             int so_cost = effective_card_cost(4, st, ov);
             if (st.players[SO].gold >= so_cost) {
@@ -1077,10 +1107,10 @@ static inline __attribute__((always_inline)) void apply_card_effect(GameStateNat
         pl.heresy = std::max(0, pl.heresy - 1);
     }
 
-    if (c.target_heresy > 0) {
+    if (eff_target_heresy > 0) {
         uint8_t victim = pick_rival_native(st, fid, rng);
-        st.players[victim].heresy = std::min(10, st.players[victim].heresy + c.target_heresy);
-        pl.frames_dealt += c.target_heresy;
+        st.players[victim].heresy = std::min(10, st.players[victim].heresy + eff_target_heresy);
+        pl.frames_dealt += eff_target_heresy;
     }
 
     if (c.agents_move > 0) {
@@ -2265,17 +2295,50 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         if ((val = PyDict_GetItemString(py_overrides, "hand_limit"))) ov.hand_limit = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "max_eras"))) ov.max_eras = (int)PyLong_AsLong(val);
 
-        PyObject* card_ov = PyDict_GetItemString(py_overrides, "card_cost_overrides");
-        if (card_ov && PyDict_Check(card_ov)) {
+        PyObject* card_cost_ov = PyDict_GetItemString(py_overrides, "card_cost_overrides");
+        if (card_cost_ov && PyDict_Check(card_cost_ov)) {
             PyObject *key, *val_cost;
             Py_ssize_t pos = 0;
-            while (PyDict_Next(card_ov, &pos, &key, &val_cost)) {
+            while (PyDict_Next(card_cost_ov, &pos, &key, &val_cost)) {
                 if (PyUnicode_Check(key) && PyLong_Check(val_cost)) {
                     const char* cid_str = PyUnicode_AsUTF8(key);
                     for (int c = 0; c < 60; ++c) {
                         if (std::strcmp(inq::CARD_DB[c].id, cid_str) == 0) {
                             ov.card_cost_overrides[c] = (int)PyLong_AsLong(val_cost);
                             ov.has_card_cost_override[c] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        PyObject* card_ov = PyDict_GetItemString(py_overrides, "card_overrides");
+        if (card_ov && PyDict_Check(card_ov)) {
+            PyObject *key, *val_dict;
+            Py_ssize_t pos = 0;
+            while (PyDict_Next(card_ov, &pos, &key, &val_dict)) {
+                if (PyUnicode_Check(key) && PyDict_Check(val_dict)) {
+                    const char* cid_str = PyUnicode_AsUTF8(key);
+                    for (int c = 0; c < 60; ++c) {
+                        if (std::strcmp(inq::CARD_DB[c].id, cid_str) == 0) {
+                            PyObject* v;
+                            if ((v = PyDict_GetItemString(val_dict, "cost"))) {
+                                ov.card_cost_overrides[c] = (int)PyLong_AsLong(v);
+                                ov.has_card_cost_override[c] = true;
+                            }
+                            if ((v = PyDict_GetItemString(val_dict, "heresy"))) {
+                                ov.card_heresy_overrides[c] = (uint8_t)PyLong_AsLong(v);
+                                ov.has_card_heresy_override[c] = true;
+                            }
+                            if ((v = PyDict_GetItemString(val_dict, "target_heresy"))) {
+                                ov.card_target_heresy_overrides[c] = (uint8_t)PyLong_AsLong(v);
+                                ov.has_card_target_heresy_override[c] = true;
+                            }
+                            if ((v = PyDict_GetItemString(val_dict, "gold"))) {
+                                ov.card_gold_overrides[c] = (uint8_t)PyLong_AsLong(v);
+                                ov.has_card_gold_override[c] = true;
+                            }
                             break;
                         }
                     }

@@ -16,6 +16,8 @@ lore: Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor bł�
 agents: 1
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [11-nocna-zmiana-warty](11-nocna-zmiana-warty.md)
 
 ---

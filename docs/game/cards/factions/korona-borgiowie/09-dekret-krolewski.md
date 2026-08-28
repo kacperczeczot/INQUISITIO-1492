@@ -17,6 +17,8 @@ lore: Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.
 breaks_rule: true
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [09-dekret-krolewski](09-dekret-krolewski.md)
 
 ---

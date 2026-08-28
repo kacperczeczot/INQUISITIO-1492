@@ -15,6 +15,8 @@ lore: Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.
 creates_hook: true
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [04-informator](04-informator.md)
 
 ---

@@ -101,7 +101,7 @@ Kart: **12**
 | `type` | reakcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
@@ -521,7 +521,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 2 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
 | `lore` | List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji. |
@@ -640,7 +640,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
 | `lore` | Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą. |

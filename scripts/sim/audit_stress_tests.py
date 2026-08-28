@@ -3,6 +3,7 @@
 import argparse
 import sys
 import time
+import os
 from pathlib import Path
 
 # Fix path to include sim directory

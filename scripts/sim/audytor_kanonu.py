@@ -295,21 +295,22 @@ def _simulate_flat_tasks_pool(
     if total == 0:
         return []
 
-    has_native = False
-    if workers <= 1:
+    from inquisitio.runner.batch import _HAS_NATIVE
+    if _HAS_NATIVE or workers <= 1:
         results = []
         t0 = time.time()
+        step_freq = max(1, total // 10)
         for idx, t in enumerate(task_list, 1):
             res = _run_single_batch_task(t)
             results.append(res)
-            if idx % 100 == 0 or idx == total:
+            if idx % step_freq == 0 or idx == total:
                 elapsed = time.time() - t0
                 rate = idx / elapsed if elapsed > 0 else 0
                 eta_s = (total - idx) / rate if rate > 0 else 0
                 eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:5.1f} bat/s | ETA: {eta_str:<8s}")
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:5.1f} bat/s | ETA: {eta_str:<8s}\n")
                 sys.stdout.flush()
-        sys.stdout.write("\n")
+        sys.stdout.write(f"   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
         return results
 
     results = []
@@ -1136,15 +1137,20 @@ class Canon4PAutoBalancer:
 
                 for seed_mut in beam_seeds:
                     seed_f = get_mutation_faction(seed_mut)
-                    other_cards = [
-                        m for m in atomic_pool
-                        if get_mutation_faction(m) is not None and get_mutation_faction(m) != seed_f
-                    ]
-                    sys_muts = [
-                        m for m in atomic_pool
-                        if classify_card_mutation_intent(m) == "SYSTEM"
-                    ]
-                    selected_atomic = other_cards[:100] + sys_muts[:10]
+                    # Group other candidates by faction to ensure even coverage across the entire game
+                    faction_groups: dict[str, list] = {}
+                    for m in atomic_pool:
+                        f = get_mutation_faction(m) or "SYSTEM"
+                        if f != seed_f:
+                            faction_groups.setdefault(f, []).append(m)
+
+                    selected_atomic = []
+                    rng_pool = random.Random(iter_seed + hash(seed_mut[0]) % 10007)
+                    for f, m_list in faction_groups.items():
+                        shuffled_m = list(m_list)
+                        rng_pool.shuffle(shuffled_m)
+                        selected_atomic.extend(shuffled_m[:50])
+
                     for atomic_mut in selected_atomic:
                         merged = merge_mutations(seed_mut, atomic_mut)
                         if merged:
@@ -1157,8 +1163,10 @@ class Canon4PAutoBalancer:
                         seen_ids.add(c[0])
                         candidate_pool.append(c)
 
-                if len(candidate_pool) > 1500:
-                    candidate_pool = candidate_pool[:1500]
+                if len(candidate_pool) > 2000:
+                    rng_comb = random.Random(iter_seed)
+                    rng_comb.shuffle(candidate_pool)
+                    candidate_pool = candidate_pool[:2000]
 
             print(f"   🧬 Przygotowano {len(candidate_pool)} unikalnych kandydatów.")
 
@@ -1215,17 +1223,40 @@ class Canon4PAutoBalancer:
                     base_res, cand_res, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
                 
-                # Check standard acceptance
+                # Strict Global Optimization Gate: Must strictly improve 4P Canon (Δ >= min_delta) with zero floor degradation
                 if decision.accepted:
                     accepted_candidate = cand_stat.cand_tuple
                     best_ver_res = cand_res
                     acceptance_reason = decision.reason
                     break
 
-            # 4. Apply Patch & Measure Collateral Impact
+            # 4. Apply Patch & Measure Collateral Impact (with Strict 10k Full Benchmark Gate)
             if accepted_candidate and best_ver_res is not None:
-                self.total_iterations += 1
                 rule_id, rule_name, rule_params = accepted_candidate
+
+                # MANDATORY VALIDATION GATE: Confirm on full 10,000 games/setup benchmark on standard seed
+                # Guarantee that official score is strictly monotonically increasing (NO false positives from micro-batches)
+                print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP]")
+                val_base = _run_full_diagnostic({}, games_per_setup=10000, seed=42)
+                val_cand = _run_full_diagnostic(rule_params, games_per_setup=10000, seed=42)
+
+                val_base_score = val_base["cat_scores"].get("4p", 0.0)
+                val_cand_score = val_cand["cat_scores"].get("4p", 0.0)
+                val_delta = val_cand_score - val_base_score
+
+                min_allowed_delta = max(0.05, getattr(self.args, "min_delta", 0.05))
+                if val_delta < min_allowed_delta:
+                    print(
+                        f"   ⛔ ODRZUCONO KANDYDATA NA PEŁNYM BENCHMARKU 10K: "
+                        f"Baza 10k: {val_base_score:.1f} pkt → Test 10k: {val_cand_score:.1f} pkt "
+                        f"(Δ = {val_delta:+.2f} pkt < wymaganego +{min_allowed_delta:.2f} pkt). "
+                        f"Fałszywy alarm wyścigu wyeliminowany."
+                    )
+                    accepted_candidate = None
+                    best_ver_res = None
+                    continue
+
+                self.total_iterations += 1
 
                 with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                     raw_cfg = yaml.safe_load(f)
@@ -1233,22 +1264,24 @@ class Canon4PAutoBalancer:
                 old_version = raw_cfg.get("version", "v0.51")
                 mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, rule_params)
 
-                print(f"\n🔬 [DIAGNOZA WPŁYWU NA POZOSTAŁE TRYBY (3P / 5P)]...")
-                diag_before = _run_full_diagnostic({}, games_per_setup=1000, seed=self.args.seed)
-                diag_after = _run_full_diagnostic(rule_params, games_per_setup=1000, seed=self.args.seed)
-
-                d_3 = diag_after["cat_scores"].get("3p", 0) - diag_before["cat_scores"].get("3p", 0)
-                d_5 = diag_after["cat_scores"].get("5p", 0) - diag_before["cat_scores"].get("5p", 0)
-                d_g = diag_after["global_score"] - diag_before["global_score"]
+                d_3 = val_cand["cat_scores"].get("3p", 0) - val_base["cat_scores"].get("3p", 0)
+                d_5 = val_cand["cat_scores"].get("5p", 0) - val_base["cat_scores"].get("5p", 0)
+                d_g = val_cand["global_score"] - val_base["global_score"]
 
                 d3_sign = f"+{d_3:.1f}" if d_3 > 0 else f"{d_3:.1f}"
                 d5_sign = f"+{d_5:.1f}" if d_5 > 0 else f"{d_5:.1f}"
                 dg_sign = f"+{d_g:.1f}" if d_g > 0 else f"{d_g:.1f}"
 
-                print(f"   🎯 4P Kanon:  {base_res['score_4p_balance']:.1f} → **{best_ver_res['score_4p_balance']:.1f} pkt** (Δ {best_ver_res['score_4p_balance'] - base_res['score_4p_balance']:+.2f} pkt)")
-                print(f"   👥 Wpływ 3p:  {diag_before['cat_scores'].get('3p',0):.1f} → {diag_after['cat_scores'].get('3p',0):.1f} pkt (`{d3_sign} pkt`)")
-                print(f"   👥 Wpływ 5p:  {diag_before['cat_scores'].get('5p',0):.1f} → {diag_after['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
-                print(f"   🌐 Globalny:  {diag_before['global_score']:.1f} → {diag_after['global_score']:.1f} pkt (`{dg_sign} pkt`)")
+                print(f"   🎯 4P Kanon (10k):  {val_base_score:.1f} → **{val_cand_score:.1f} pkt** (Δ {val_delta:+.2f} pkt)")
+                print(f"   👥 Wpływ 3p:        {val_base['cat_scores'].get('3p',0):.1f} → {val_cand['cat_scores'].get('3p',0):.1f} pkt (`{d3_sign} pkt`)")
+                print(f"   👥 Wpływ 5p:        {val_base['cat_scores'].get('5p',0):.1f} → {val_cand['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
+                print(f"   🌐 Globalny:        {val_base['global_score']:.1f} → {val_cand['global_score']:.1f} pkt (`{dg_sign} pkt`)")
+
+                # Format exact standardized structures for report and balance notes
+                rep_base_res = dict(base_res)
+                rep_base_res["score_4p_balance"] = val_base_score
+                rep_cand_res = dict(best_ver_res)
+                rep_cand_res["score_4p_balance"] = val_cand_score
 
                 if self.args.dry_run:
                     print(f"\n[DRY RUN] Zaakceptowano by modyfikację Kanonu 4P: {change_desc} ({acceptance_reason})")
@@ -1274,10 +1307,10 @@ class Canon4PAutoBalancer:
                         new_version,
                         change_desc,
                         rule_id,
-                        base_res,
-                        best_ver_res,
-                        diag_before,
-                        diag_after,
+                        rep_base_res,
+                        rep_cand_res,
+                        val_base,
+                        val_cand,
                         iter_elapsed,
                     )
 
@@ -1292,10 +1325,10 @@ class Canon4PAutoBalancer:
                         new_version,
                         self.total_iterations,
                         current_phase,
-                        base_res,
-                        best_ver_res,
-                        diag_before,
-                        diag_after,
+                        rep_base_res,
+                        rep_cand_res,
+                        val_base,
+                        val_cand,
                         ranked_results,
                         change_desc,
                         rule_id,
@@ -1308,10 +1341,10 @@ class Canon4PAutoBalancer:
                         new_version,
                         change_desc,
                         rule_id,
-                        base_res,
-                        best_ver_res,
-                        diag_before,
-                        diag_after,
+                        rep_base_res,
+                        rep_cand_res,
+                        val_base,
+                        val_cand,
                     )
 
                     print("   🔄 Synchronizuję dokumentację kart i reguł...")
@@ -1320,8 +1353,13 @@ class Canon4PAutoBalancer:
 
                     current_phase = 1
                     beam_seeds.clear()
-                    consecutive_stalls = 0
+
+                    # Simulated Annealing: Cool down temperature after each applied step
+                    old_t = self.temperature
                     self.temperature = max(self.min_temperature, self.temperature * self.cooling_rate)
+                    if old_t > self.min_temperature:
+                        print(f"   🌡️ [Simulated Annealing] Schłodzenie: T = {old_t:.3f} → {self.temperature:.3f} (cooling={self.cooling_rate:.2f})")
+                    consecutive_stalls = 0
 
             else:
                 print(
@@ -1329,8 +1367,16 @@ class Canon4PAutoBalancer:
                     f"Buduję zaawansowane wiązki synergii dla słabych setupów..."
                 )
                 diverse_seeds = []
-                for r in surviving_stats[:6]:
-                    diverse_seeds.append(r.cand_tuple)
+                seen_seed_factions = set()
+                # Ensure every faction with active mutations gets a seed in the combinatorial beam
+                for r in surviving_stats:
+                    f = get_mutation_faction(r.cand_tuple) or "SYSTEM"
+                    if f not in seen_seed_factions:
+                        seen_seed_factions.add(f)
+                        diverse_seeds.append(r.cand_tuple)
+                for r in surviving_stats:
+                    if r.cand_tuple not in diverse_seeds:
+                        diverse_seeds.append(r.cand_tuple)
 
                 if current_phase >= self.args.max_depth:
                     consecutive_stalls += 1

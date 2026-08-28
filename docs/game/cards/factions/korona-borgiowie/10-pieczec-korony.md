@@ -17,6 +17,8 @@ lore: Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.
 breaks_rule: true
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [korona-borgiowie](README.md) > [10-pieczec-korony](10-pieczec-korony.md)
 
 ---

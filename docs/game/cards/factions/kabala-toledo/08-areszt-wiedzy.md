@@ -14,6 +14,8 @@ lore: Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim
 arrest: true
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [08-areszt-wiedzy](08-areszt-wiedzy.md)
 
 ---

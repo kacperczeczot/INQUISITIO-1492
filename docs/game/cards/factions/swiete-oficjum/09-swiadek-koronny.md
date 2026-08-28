@@ -13,6 +13,8 @@ lore: Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia
 creates_hook: true
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [09-swiadek-koronny](09-swiadek-koronny.md)
 
 ---
