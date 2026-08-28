@@ -382,11 +382,12 @@ struct GameStateNative {
     uint8_t time_deck[10];
     uint8_t time_deck_count;
 
-    StagedPlayNative pending_plays[10];
-    int pending_count;
+    StagedPlayNative pending_plays[32];
+    uint8_t pending_count;
+    
+    uint8_t win_path_id;
 
     uint8_t winner;
-    uint8_t win_path_id;
 
     // Metrics counters
     int autodafe_count;
@@ -403,6 +404,7 @@ struct GameStateNative {
 
 // ─── Setup Presets ──────────────────────────────────────────────────────────
 static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const ConfigOverridesNative& ov) {
+    std::memset(&st, 0, sizeof(GameStateNative));
 
     st.era = 1;
     st.eras_since_autodafe = 0;
@@ -411,7 +413,6 @@ static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const Co
     st.pending_count = 0;
     st.winner = 5;
     st.win_path_id = 0;
-    std::memset(st.cards_played, 0, sizeof(st.cards_played));
 
     if (preset_id == 0) { // 4p-core: SO, CAA, KB, KT
         st.num_players = 4;
