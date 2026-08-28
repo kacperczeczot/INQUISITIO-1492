@@ -93,6 +93,17 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.82 (2026-08-29) — Kanon 4P: Karta `so-01` (Patrol Familiariuszy): `gold` → `4` (Zysk 4P Δ +3.7 pkt)
+- **Wynik 4P:** Kanon **`75.7`** → **`79.4 pkt`** | Global **`45.3`** | 3p **`32.2`** | 5p **`24.3`**
+- **Modyfikacja (`L3_SO-01_GOLD_PLUS1`):** Karta `so-01` (Patrol Familiariuszy): `gold` → `4`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.81, Deadlocks 0.0%, Pas Biedy 4.4%.
+
+### 🟢 Patch v1.0-alpha.81 (2026-08-29) — Kanon 4P: Karta `so-01` (Patrol Familiariuszy): `gold` → `3` (Zysk 4P Δ +4.3 pkt)
+- **Wynik 4P:** Kanon **`75.7`** → **`80.0 pkt`** | Global **`45.6`** | 3p **`32.3`** | 5p **`24.5`**
+- **Modyfikacja (`L3_SO-01_GOLD_PLUS1`):** Karta `so-01` (Patrol Familiariuszy): `gold` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.81, Deadlocks 0.0%, Pas Biedy 4.5%.
+
 ### 🟢 Patch v1.0-alpha.80 (2026-08-29) — Przejście na Silnik Natywny C++20, Eliminacja Błędów i Czysty Baseline SSOT
 - **Wynik 4P:** Kanon **`71.6 pkt`** (Core: `71.6`, No-Cienie: `63.6`, No-Kabała: `93.5`, No-Korona: `68.3`, No-Oficjum: `81.6`) | Global **`41.6`** | 3p **`30.7`** | 5p **`22.2`**
 - **Kluczowa Zmiana Architektoniczna:**
