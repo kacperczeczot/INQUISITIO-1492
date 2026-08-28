@@ -521,6 +521,51 @@ class AdaptiveSequentialRacer:
         return base_stats, all_candidates
 
 
+def extract_config_overrides(cfg: dict) -> dict:
+    """Extracts all card and victory rule deviations in cfg relative to the C++ hardcoded baseline snapshot."""
+    ov = {}
+    cards = cfg.get("cards", {})
+    card_ov = {}
+    for cid, cdata in cards.items():
+        diff = {}
+        for k in ["cost", "heresy", "target_heresy", "gold"]:
+            if k in cdata:
+                diff[k] = cdata[k]
+        if diff:
+            card_ov[cid] = diff
+    if card_ov:
+        ov["card_overrides"] = card_ov
+
+    vic = cfg.get("victory", {})
+    if "swiete_oficjum" in vic and "stacks" in vic["swiete_oficjum"]:
+        ov["so_stacks_offset"] = vic["swiete_oficjum"]["stacks"] - 7
+    if "korona_borgiowie" in vic and "decrees" in vic["korona_borgiowie"]:
+        ov["kb_decrees_offset"] = vic["korona_borgiowie"]["decrees"] - 2
+    if "cienie_al_andalus" in vic and "relics" in vic["cienie_al_andalus"]:
+        ov["caa_relics_offset"] = vic["cienie_al_andalus"]["relics"] - 2
+    if "kabala_toledo" in vic and "fragments" in vic["kabala_toledo"]:
+        ov["kt_frags_offset"] = vic["kabala_toledo"]["fragments"] - 3
+    if "gildia_cieni" in vic and "falls" in vic["gildia_cieni"]:
+        ov["gc_falls_offset"] = vic["gildia_cieni"]["falls"] - 9
+    return ov
+
+
+def merge_override_dicts(base_ov: dict, cand_ov: dict) -> dict:
+    """Merges candidate overrides on top of the current cumulative base overrides."""
+    res = copy.deepcopy(base_ov)
+    for k, v in cand_ov.items():
+        if k != "card_overrides":
+            res[k] = v
+        else:
+            if "card_overrides" not in res:
+                res["card_overrides"] = {}
+            for cid, cdict in v.items():
+                if cid not in res["card_overrides"]:
+                    res["card_overrides"][cid] = {}
+                res["card_overrides"][cid].update(cdict)
+    return res
+
+
 def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: int = 42) -> dict:
     """Runs a complete 16-setup diagnostic to measure 3p, 4p, 5p and global score."""
     all_setups = sorted(SETUP_PRESETS.keys())
@@ -1171,7 +1216,19 @@ class Canon4PAutoBalancer:
                     rng_comb.shuffle(candidate_pool)
                     candidate_pool = candidate_pool[:2000]
 
-            print(f"   🧬 Przygotowano {len(candidate_pool)} unikalnych kandydatów.")
+            with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
+                current_raw_cfg = yaml.safe_load(f)
+
+            curr_ver = current_raw_cfg.get("system", {}).get("version", current_raw_cfg.get("version", "v1.0-alpha.80"))
+            curr_base_overrides = extract_config_overrides(current_raw_cfg)
+
+            # Apply candidate mutations ON TOP OF the current cumulative configuration
+            effective_candidates = []
+            for cid, cname, cparams in candidate_pool:
+                merged_params = merge_override_dicts(curr_base_overrides, cparams)
+                effective_candidates.append((cid, cname, merged_params))
+
+            print(f"   🧬 Przygotowano {len(effective_candidates)} unikalnych kandydatów (baza: `{curr_ver}`).")
 
             # 2. Run Adaptive Multi-Fidelity Race
             racer = AdaptiveSequentialRacer(
@@ -1186,8 +1243,8 @@ class Canon4PAutoBalancer:
             )
 
             base_stats, candidate_results = racer.run_race(
-                base_cand=("BASE", "Bieżący stan Kanonu 4P", {}),
-                candidate_pool=candidate_pool,
+                base_cand=("BASE", f"Bieżący stan Kanonu 4P ({curr_ver})", curr_base_overrides),
+                candidate_pool=effective_candidates,
                 seed=iter_seed,
             )
 
@@ -1195,7 +1252,7 @@ class Canon4PAutoBalancer:
             self._last_base_res = base_res
 
             print(f"\n{'='*71}")
-            print(f"🎯 [WYNIK BAZOWY KANONU 4P] {color_score(base_res['score_4p_balance'], bold=True)} pkt (±{base_stats.score_se:.2f})")
+            print(f"🎯 [WYNIK BAZOWY KANONU 4P (`{curr_ver}`)] {color_score(base_res['score_4p_balance'], bold=True)} pkt (±{base_stats.score_se:.2f})")
             print(
                 f"   📐 Balance (win share): {color_score(base_res['score_4p_balance'])} pkt | "
                 f"min `{base_res['min_balance_setup']}` {color_score(base_res['min_balance'])} | "
@@ -1240,7 +1297,7 @@ class Canon4PAutoBalancer:
                 # MANDATORY VALIDATION GATE: Confirm on full 10,000 games/setup benchmark on standard seed
                 # Guarantee that official score is strictly monotonically increasing (NO false positives from micro-batches)
                 print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP]")
-                val_base = _run_full_diagnostic({}, games_per_setup=10000, seed=42)
+                val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=10000, seed=42)
                 val_cand = _run_full_diagnostic(rule_params, games_per_setup=10000, seed=42)
 
                 val_base_score = val_base["cat_scores"].get("4p", 0.0)

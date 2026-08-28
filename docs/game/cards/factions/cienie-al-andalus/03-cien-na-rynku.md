@@ -16,6 +16,8 @@ lore: Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cie
 agents: 1
 ---
 
+
+
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [03-cien-na-rynku](03-cien-na-rynku.md)
 
 ---
