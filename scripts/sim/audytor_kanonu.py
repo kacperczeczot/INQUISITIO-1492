@@ -1327,8 +1327,8 @@ class Canon4PAutoBalancer:
                     )
                     accepted_candidate = None
                     best_ver_res = None
-                    continue
 
+            if accepted_candidate and best_ver_res is not None and effective_rule_params is not None:
                 self.total_iterations += 1
 
                 with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
