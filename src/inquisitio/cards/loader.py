@@ -8,9 +8,11 @@ from typing import Any
 
 import yaml
 
-# repo: sim/inquisitio/cards/loader.py -> parents[3] = repo root
+# repo: src/inquisitio/cards/loader.py -> parents[3] = repo root
 REPO_ROOT = Path(__file__).resolve().parents[3]
-CARDS_ROOT = REPO_ROOT / "game" / "cards"
+CARDS_ROOT = REPO_ROOT / "docs" / "game" / "cards"
+if not CARDS_ROOT.exists():
+    CARDS_ROOT = REPO_ROOT / "game" / "cards"
 
 
 @dataclass
