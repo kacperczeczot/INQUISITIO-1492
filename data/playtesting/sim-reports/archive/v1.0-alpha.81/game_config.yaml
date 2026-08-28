@@ -1,4 +1,4 @@
-version: v1.0-alpha.82
+version: v1.0-alpha.81
 date: '2026-08-29'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -40,7 +40,7 @@ cards:
     action: move_agent
     tags:
     - move
-    gold: 4
+    gold: 3
     heresy: 2
   so-02:
     name: Skarbiec Trybunału

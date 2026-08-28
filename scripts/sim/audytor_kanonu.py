@@ -983,9 +983,10 @@ def update_balance_notes(
         f"- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er {best_res_4p['eras_avg']:.2f}, Deadlocks {best_res_4p['deadlock_pct']:.1f}%, Pas Biedy {best_res_4p['poverty_pct']:.1f}%.\n\n"
     )
 
-    history_heading = "## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)\n\n"
+    history_heading = "## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)"
     if history_heading in content:
-        content = content.replace(history_heading, history_heading + patch_note_block, 1)
+        idx = content.find(history_heading) + len(history_heading)
+        content = content[:idx] + "\n\n" + patch_note_block.strip() + "\n" + content[idx:].lstrip("\n")
 
     BALANCE_NOTES_PATH.write_text(content, encoding="utf-8")
 

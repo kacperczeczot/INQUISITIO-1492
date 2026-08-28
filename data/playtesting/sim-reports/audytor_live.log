@@ -1,80 +1,1 @@
-═══════════════════════════════════════════════════════════════════════
-   INQUISITIO-1492 — AUDYTOR KANONU 4P (Adaptive Monte Carlo Racer)    
-  Doprowadzanie Kanonu 4P do 100% z dynamicznym doborem próby Monte Carlo
-═══════════════════════════════════════════════════════════════════════
-Bieżąca wersja bazowa:      v1.0-alpha.81
-Maksymalny czas sesji:      Brak limitu (do optimum) godz.
-Maksymalnie patchów:        1
-Kanon Setupy:               4p-core, 4p-no-cienie, 4p-no-kabala, 4p-no-korona, 4p-no-oficjum
-Krok partii (Batch Step):   100 gier/setup (5 setupów 4p)
-Zakres partii w wyścigu:    400 – 8000 gier/setup
-Strefa Nierozróżnialności:  ε = 0.15 pkt
-Simulated Annealing:        T_0 = 0.40, cooling = 0.90
-Wątki procesora:            10
-Tryb przyjęcia patcha:      legacy
-Archiwizacja raportów:     /Users/kacper/Documents/GitHub/INQUISITIO-1492/data/playtesting/sim-reports/archive/<wersja>/
-═══════════════════════════════════════════════════════════════════════
-
-
-🌐 [FAZA 1D — KANON 4P] Pełna pula atomowa L1–L4 (656 kandydatów)...
-   🧬 Przygotowano 656 unikalnych kandydatów.
-
-🏁 [START WYŚCIGU ADAPTACYJNEGO] Pula: 656 kandydatów | Szczeble: [100, 200, 400, 800, 1600, 3200, 6400, 8000] gier/setup (Successive Halving)
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [ 328/3285] ( 10.0%) | 520.2 bat/s | ETA: 5s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [ 656/3285] ( 20.0%) | 513.7 bat/s | ETA: 5s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [ 984/3285] ( 30.0%) | 510.3 bat/s | ETA: 4s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [1312/3285] ( 39.9%) | 512.3 bat/s | ETA: 3s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [1640/3285] ( 49.9%) | 512.4 bat/s | ETA: 3s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [1968/3285] ( 59.9%) | 511.0 bat/s | ETA: 2s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [2296/3285] ( 69.9%) | 514.8 bat/s | ETA: 1s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [2624/3285] ( 79.9%) | 513.6 bat/s | ETA: 1s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [2952/3285] ( 89.9%) | 512.3 bat/s | ETA: 0s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [3280/3285] ( 99.8%) | 514.5 bat/s | ETA: 0s      
-⏳ [Szczebel #1/8 (N=100 gier) [656 kand]] [3285/3285] (100.0%) | 514.5 bat/s | ETA: 0s      
-   ✔ Ukończono 3285 zadań mikro-batchy w 6.4s.
-   📊 [Status N=100] Baza: 65.2 pkt (±7.89) | Aktywnych: 656/656 (Odrzucono: 0)
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [ 328/3285] ( 10.0%) | 511.5 bat/s | ETA: 5s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [ 656/3285] ( 20.0%) | 505.3 bat/s | ETA: 5s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [ 984/3285] ( 30.0%) | 514.0 bat/s | ETA: 4s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [1312/3285] ( 39.9%) | 512.7 bat/s | ETA: 3s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [1640/3285] ( 49.9%) | 511.2 bat/s | ETA: 3s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [1968/3285] ( 59.9%) | 511.4 bat/s | ETA: 2s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [2296/3285] ( 69.9%) | 511.8 bat/s | ETA: 1s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [2624/3285] ( 79.9%) | 510.3 bat/s | ETA: 1s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [2952/3285] ( 89.9%) | 511.6 bat/s | ETA: 0s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [3280/3285] ( 99.8%) | 508.3 bat/s | ETA: 0s      
-⏳ [Szczebel #2/8 (N=200 gier) [656 kand]] [3285/3285] (100.0%) | 508.0 bat/s | ETA: 0s      
-   ✔ Ukończono 3285 zadań mikro-batchy w 6.5s.
-   📊 [Status N=200] Baza: 69.5 pkt (±5.89) | Aktywnych: 319/656 (Odrzucono: 337)
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [ 160/1600] ( 10.0%) | 253.9 bat/s | ETA: 5s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [ 320/1600] ( 20.0%) | 263.2 bat/s | ETA: 4s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [ 480/1600] ( 30.0%) | 262.7 bat/s | ETA: 4s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [ 640/1600] ( 40.0%) | 260.1 bat/s | ETA: 3s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [ 800/1600] ( 50.0%) | 261.7 bat/s | ETA: 3s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [ 960/1600] ( 60.0%) | 261.0 bat/s | ETA: 2s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [1120/1600] ( 70.0%) | 258.6 bat/s | ETA: 1s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [1280/1600] ( 80.0%) | 259.2 bat/s | ETA: 1s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [1440/1600] ( 90.0%) | 259.3 bat/s | ETA: 0s      
-⏳ [Szczebel #3/8 (N=400 gier) [319 kand]] [1600/1600] (100.0%) | 258.8 bat/s | ETA: 0s      
-   ✔ Ukończono 1600 zadań mikro-batchy w 6.2s.
-   📊 [Status N=400] Baza: 74.1 pkt (±4.02) | Aktywnych: 164/656 (Odrzucono: 492)
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [  82/ 825] (  9.9%) | 133.1 bat/s | ETA: 5s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 164/ 825] ( 19.9%) | 131.6 bat/s | ETA: 5s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 246/ 825] ( 29.8%) | 129.5 bat/s | ETA: 4s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 328/ 825] ( 39.8%) | 130.3 bat/s | ETA: 3s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 410/ 825] ( 49.7%) | 131.3 bat/s | ETA: 3s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 492/ 825] ( 59.6%) | 130.9 bat/s | ETA: 2s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 574/ 825] ( 69.6%) | 131.1 bat/s | ETA: 1s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 656/ 825] ( 79.5%) | 131.4 bat/s | ETA: 1s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 738/ 825] ( 89.5%) | 131.3 bat/s | ETA: 0s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 820/ 825] ( 99.4%) | 131.1 bat/s | ETA: 0s      
-⏳ [Szczebel #4/8 (N=800 gier) [164 kand]] [ 825/ 825] (100.0%) | 131.1 bat/s | ETA: 0s      
-   ✔ Ukończono 825 zadań mikro-batchy w 6.3s.
-   📊 [Status N=800] Baza: 72.8 pkt (±2.88) | Aktywnych: 82/656 (Odrzucono: 574)
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [  41/ 415] (  9.9%) |  66.5 bat/s | ETA: 5s      
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [  82/ 415] ( 19.8%) |  66.5 bat/s | ETA: 5s      
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [ 123/ 415] ( 29.6%) |  65.7 bat/s | ETA: 4s      
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [ 164/ 415] ( 39.5%) |  64.9 bat/s | ETA: 3s      
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [ 205/ 415] ( 49.4%) |  64.8 bat/s | ETA: 3s      
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [ 246/ 415] ( 59.3%) |  64.6 bat/s | ETA: 2s      
-⏳ [Szczebel #5/8 (N=1600 gier) [82 kand]] [ 287/ 415] ( 69.2%) |  65.4 bat/s | ETA: 1s      
+update_balance_notes syntax valid
