@@ -572,7 +572,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 3 |
-| `heresy` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala. |
 | `lore` | Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone. |
@@ -994,7 +994,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
+| `effect` | Zyskaj 1 złoto. |
 | `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |
 | `tags` | gold, heresy |
 | `status` | prototyp |

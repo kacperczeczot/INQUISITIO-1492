@@ -94,6 +94,16 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.89 (2026-08-29) — Kanon 4P: Karta `gc-08` (Zatrute Złoto): `target_heresy` → `0` (Zysk 4P Δ +0.8 pkt)
+- **Wynik 4P:** Kanon **`89.3`** → **`90.1 pkt`** | Global **`49.5`** | 3p **`33.0`** | 5p **`25.5`**
+- **Modyfikacja (`L3_GC-08_TARGET_HERESY_MINUS1`):** Karta `gc-08` (Zatrute Złoto): `target_heresy` → `0`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.69, Deadlocks 0.0%, Pas Biedy 4.6%.
+
+### 🟢 Patch v1.0-alpha.88 (2026-08-29) — Kanon 4P: Karta `kb-08` (Przekupstwo Sędziego): `heresy` → `2` (Zysk 4P Δ +0.9 pkt)
+- **Wynik 4P:** Kanon **`88.4`** → **`89.3 pkt`** | Global **`49.3`** | 3p **`33.0`** | 5p **`25.5`**
+- **Modyfikacja (`L3_KB-08_HERESY_SET2`):** Karta `kb-08` (Przekupstwo Sędziego): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.70, Deadlocks 0.0%, Pas Biedy 4.6%.
+
 ### 🟢 Patch v1.0-alpha.87 (2026-08-29) — Kanon 4P: Karta `so-03` (Podejrzenie): `heresy` → `4` (Zysk 4P Δ +0.9 pkt)
 - **Wynik 4P:** Kanon **`87.5`** → **`88.4 pkt`** | Global **`49.0`** | 3p **`33.0`** | 5p **`25.6`**
 - **Modyfikacja (`L3_SO-03_HERESY_PLUS1`):** Karta `so-03` (Podejrzenie): `heresy` → `4`.

@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.87</span>
+              <span id="prev-meta-ver">v1.0-alpha.89</span>
             </div>
           </div>
         </div>
@@ -1578,6 +1578,7 @@
     "tags": [
       "verdict"
     ],
+    "heresy": 2,
     "lore": "Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone."
   },
   "kb-09": {
@@ -1906,7 +1907,7 @@
     "name": "Zatrute Złoto",
     "type": "akcja",
     "cost": 1,
-    "target_heresy": 1,
+    "target_heresy": 0,
     "gold": 1,
     "action": "gain_gold",
     "tags": [
@@ -2337,7 +2338,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.87';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.89';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

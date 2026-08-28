@@ -1,4 +1,4 @@
-version: v1.0-alpha.89
+version: v1.0-alpha.88
 date: '2026-08-29'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -614,7 +614,7 @@ cards:
     name: Zatrute Złoto
     type: akcja
     cost: 1
-    target_heresy: 0
+    target_heresy: 1
     gold: 1
     action: gain_gold
     tags:
