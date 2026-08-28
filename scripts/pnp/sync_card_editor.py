@@ -12,7 +12,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 CONFIG_PATH = REPO_ROOT / "data/game_config.yaml"
 EDITOR_PATH = REPO_ROOT / "assets" / "prototypes" / "card-editor.html"
-CARDS_DIR = REPO_ROOT / "game" / "cards"
+CARDS_DIR = REPO_ROOT / "docs" / "game" / "cards"
 
 
 def load_md_extras():

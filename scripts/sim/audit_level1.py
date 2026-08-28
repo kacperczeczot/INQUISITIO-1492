@@ -9,8 +9,8 @@ from datetime import datetime
 from pathlib import Path
 
 # Fix path to include sim directory
-SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
-sys.path.insert(0, str(SIM_DIR))
+SRC_DIR = Path(__file__).resolve().parent.parent.parent / "src"
+sys.path.insert(0, str(SRC_DIR))
 
 from inquisitio.config import CONFIG
 from inquisitio.engine.setup import SETUP_PRESETS

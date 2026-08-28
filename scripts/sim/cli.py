@@ -14,10 +14,10 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List
 
-TOOLS_SIM_DIR = Path(__file__).resolve().parent
-SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
+TOOLS_SRC_DIR = Path(__file__).resolve().parent
+SRC_DIR = TOOLS_SRC_DIR.parent.parent / "src"
 
-for p in (TOOLS_SIM_DIR, SIM_DIR):
+for p in (TOOLS_SRC_DIR, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 

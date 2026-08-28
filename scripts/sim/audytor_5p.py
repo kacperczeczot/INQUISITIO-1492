@@ -39,10 +39,10 @@ from pathlib import Path
 from typing import Any
 
 # Ensure sim and tools/sim directories are on path
-TOOLS_SIM_DIR = Path(__file__).resolve().parent
-SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
+TOOLS_SRC_DIR = Path(__file__).resolve().parent
+SRC_DIR = TOOLS_SRC_DIR.parent.parent / "src"
 
-for p in (TOOLS_SIM_DIR, SIM_DIR):
+for p in (TOOLS_SRC_DIR, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
@@ -74,8 +74,8 @@ from audytor_4p import (
     lookahead_next_action,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "balance-notes.md"
 
 SETUPS_5P = ["5p-full"]
 
@@ -473,7 +473,7 @@ class AutoBalancer5P:
             diag_after,
         )
         print("   🔄 Synchronizuję dokumentację kart i reguł...")
-        subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
+        subprocess.run([sys.executable, str(TOOLS_SRC_DIR.parent / "sync_config.py")])
         print("   ✔ Zaktualizowano katalog kart, opisy markdown, HTML i card-editor.")
 
     def run(self):

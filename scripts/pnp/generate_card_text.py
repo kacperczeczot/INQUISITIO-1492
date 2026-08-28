@@ -12,8 +12,8 @@ from typing import Any
 
 # Add repo root to path
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SIM_DIR = REPO_ROOT / "sim"
-sys.path.insert(0, str(SIM_DIR))
+SRC_DIR = REPO_ROOT / "src"
+sys.path.insert(0, str(SRC_DIR))
 
 import yaml
 from inquisitio.config import CONFIG
@@ -226,10 +226,10 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
 
 def sync_card_markdowns(dry_run: bool = True) -> list[str]:
     """
-    Aktualizuje pole `effect:` w plikach markdown kart (game/cards/) wygenerowanym tekstem z game_config.yaml.
+    Aktualizuje pole `effect:` w plikach markdown kart (docs/game/cards/) wygenerowanym tekstem z game_config.yaml.
     """
     cards_config = CONFIG.cards.raw()
-    cards_dir = REPO_ROOT / "game" / "cards"
+    cards_dir = REPO_ROOT / "docs" / "game" / "cards"
     updated_files = []
 
     for path in cards_dir.rglob("*.md"):

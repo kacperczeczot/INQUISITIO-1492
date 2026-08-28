@@ -34,10 +34,10 @@ from pathlib import Path
 from typing import Any
 
 # Ensure sim and tools/sim directories are on path
-TOOLS_SIM_DIR = Path(__file__).resolve().parent
-SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
+TOOLS_SRC_DIR = Path(__file__).resolve().parent
+SRC_DIR = TOOLS_SRC_DIR.parent.parent / "src"
 
-for p in (TOOLS_SIM_DIR, SIM_DIR):
+for p in (TOOLS_SRC_DIR, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
@@ -70,8 +70,8 @@ import audit_level1
 import audit_level2
 import audit_level4
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "balance-notes.md"
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -717,7 +717,7 @@ class Macro4PAutoBalancer:
             diag_after,
         )
         print("   🔄 Synchronizuję SSOT (zasady / YAML — bez talii kart)...")
-        subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
+        subprocess.run([sys.executable, str(TOOLS_SRC_DIR.parent / "sync_config.py")])
         print("   ✔ Zsynchronizowano config i księgę.")
 
     def run(self):

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Zbuduj zbiorczy katalog kart → game/cards/KATALOG.md (źródło: pliki YAML)."""
+"""Zbuduj zbiorczy katalog kart → docs/game/cards/KATALOG.md (źródło: pliki YAML)."""
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO / "sim"))
+sys.path.insert(0, str(REPO / "src"))
 
 from inquisitio.cards.loader import Card, load_all_cards  # noqa: E402
 
-OUT = REPO / "game" / "cards" / "KATALOG.md"
+OUT = REPO / "docs" / "game" / "cards" / "KATALOG.md"
 
 FACTION_ORDER = [
     ("swiete-oficjum", "Święte Oficjum"),
@@ -84,7 +84,7 @@ def build() -> str:
         "# Katalog kart — INQUISITIO 1492",
         "",
         "> **Auto-generowane.** Nie edytuj ręcznie.",
-        "> Źródło: pojedyncze pliki w `game/cards/factions/` i `game/cards/time-deck/`.",
+        "> Źródło: pojedyncze pliki w `docs/game/cards/factions/` i `docs/game/cards/time-deck/`.",
         "> Odśwież: `python3 tools/cards/build_catalog.py`",
         "",
         f"Łącznie kart: **{len(cards)}**",

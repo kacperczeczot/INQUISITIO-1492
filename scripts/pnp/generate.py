@@ -17,9 +17,9 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SIM_ROOT = REPO_ROOT / "sim"
-if str(SIM_ROOT) not in sys.path:
-    sys.path.insert(0, str(SIM_ROOT))
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from inquisitio.cards.loader import Card, cards_for_faction, load_all_cards  # noqa: E402
 

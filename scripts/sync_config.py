@@ -788,9 +788,9 @@ def sync_readme(cfg: dict) -> list[str]:
 
 def sync_cards(cfg: dict) -> list[str]:
     """Sync card markdown files (parameters + effect text), KATALOG.md, and card-editor.html from game_config.yaml."""
-    from tools.pnp.generate_card_text import sync_card_markdowns
-    from tools.cards.build_catalog import main as build_catalog_main
-    from tools.pnp.sync_card_editor import main as sync_card_editor_main
+    from scripts.pnp.generate_card_text import sync_card_markdowns
+    from scripts.cards.build_catalog import main as build_catalog_main
+    from scripts.pnp.sync_card_editor import main as sync_card_editor_main
 
     # 1. Sync card parameters (cost, layer, type) & effect text
     updated_files = sync_card_markdowns(dry_run=False)
@@ -801,10 +801,10 @@ def sync_cards(cfg: dict) -> list[str]:
     # 3. Sync card-editor.html CARDS_DATABASE
     sync_card_editor_main()
 
-    res = [f"Zsynchronizowano {len(cfg.get('cards', {}))} kart w game/cards/"]
+    res = [f"Zsynchronizowano {len(cfg.get('cards', {}))} kart w docs/game/cards/"]
     if updated_files:
         res.append(f"Zaktualizowano opisy efektów dla {len(updated_files)} kart")
-    res.append("Przegenerowano game/cards/KATALOG.md")
+    res.append("Przegenerowano docs/game/cards/KATALOG.md")
     res.append("Zsynchronizowano baza kart w card-editor.html")
     return res
 
@@ -866,7 +866,7 @@ def main():
     print("═══════════════════════════════════════════════════════")
     print()
     print("Następne kroki:")
-    print("  1. Sprawdź zmiany: git diff docs/ game/cards/ data/playtesting/")
+    print("  1. Sprawdź zmiany: git diff docs/ docs/game/cards/ data/playtesting/")
     print("  2. Uruchom testy: sim/.venv/bin/pytest sim/tests/ -q")
 
 

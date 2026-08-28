@@ -31,10 +31,10 @@ from pathlib import Path
 from typing import Any
 
 # Ensure sim and tools/sim directories are on path
-TOOLS_SIM_DIR = Path(__file__).resolve().parent
-SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
+TOOLS_SRC_DIR = Path(__file__).resolve().parent
+SRC_DIR = TOOLS_SRC_DIR.parent.parent / "src"
 
-for p in (TOOLS_SIM_DIR, SIM_DIR):
+for p in (TOOLS_SRC_DIR, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
@@ -54,7 +54,7 @@ from inquisitio.runner.scoring import (
     evaluate_vitality,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "sim-reports"
 OUTPUT_REPORT_PATH = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
 REPORT_GAMES_MIN = 5000
 
@@ -547,7 +547,7 @@ def run_full_ablation_audit_4p(
             "layer": card.layer,
         }
 
-    # 3. Build Time Deck Ablation Tasks (dynamic from game/cards/time-deck)
+    # 3. Build Time Deck Ablation Tasks (dynamic from docs/game/cards/time-deck)
     from inquisitio.cards.loader import time_cards as get_time_cards
     actual_time_cards = get_time_cards(max_layer="C")
     time_cards = [(tc.id, tc.name) for tc in actual_time_cards]

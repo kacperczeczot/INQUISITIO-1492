@@ -7,8 +7,8 @@ import sys
 import time
 from pathlib import Path
 
-SIM_DIR = Path(__file__).resolve().parent.parent.parent / "sim"
-sys.path.insert(0, str(SIM_DIR))
+SRC_DIR = Path(__file__).resolve().parent.parent.parent / "src"
+sys.path.insert(0, str(SRC_DIR))
 
 from inquisitio.engine.setup import SETUP_PRESETS
 from inquisitio.runner.batch import run_batch

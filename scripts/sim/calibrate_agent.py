@@ -4,9 +4,9 @@
 import sys, time
 from pathlib import Path
 
-SIM_DIR = Path(__file__).resolve().parent.parent / "sim"
+SRC_DIR = Path(__file__).resolve().parent.parent / "src"
 TOOLS_DIR = Path(__file__).resolve().parent
-for p in (str(SIM_DIR), str(TOOLS_DIR)):
+for p in (str(SRC_DIR), str(TOOLS_DIR)):
     if p not in sys.path:
         sys.path.insert(0, p)
 

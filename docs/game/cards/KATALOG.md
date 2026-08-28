@@ -1,11 +1,7 @@
-[Strona główna](../../../README.md) > [cards](README.md) > [KATALOG](KATALOG.md)
-
----
-
 # Katalog kart — INQUISITIO 1492
 
 > **Auto-generowane.** Nie edytuj ręcznie.
-> Źródło: pojedyncze pliki w `game/cards/factions/` i `game/cards/time-deck/`.
+> Źródło: pojedyncze pliki w `docs/game/cards/factions/` i `docs/game/cards/time-deck/`.
 > Odśwież: `python3 tools/cards/build_catalog.py`
 
 Łącznie kart: **70**

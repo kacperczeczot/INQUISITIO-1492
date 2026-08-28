@@ -44,10 +44,10 @@ from pathlib import Path
 from typing import Any
 
 # Ensure sim and tools/sim directories are on path
-TOOLS_SIM_DIR = Path(__file__).resolve().parent
-SIM_DIR = TOOLS_SIM_DIR.parent.parent / "sim"
+TOOLS_SRC_DIR = Path(__file__).resolve().parent
+SRC_DIR = TOOLS_SRC_DIR.parent.parent / "src"
 
-for p in (TOOLS_SIM_DIR, SIM_DIR):
+for p in (TOOLS_SRC_DIR, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
@@ -72,8 +72,8 @@ from inquisitio.runner.scoring import (
     color_score,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "balance-notes.md"
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -552,7 +552,7 @@ class ProblemCardOptimizer:
 
                     # Update balance notes and sync
                     update_balance_notes_entry(old_ver, new_ver, change_desc, best["id"], base_score, best["score_avg"], p_res)
-                    subprocess.run([sys.executable, str(TOOLS_SIM_DIR.parent / "sync_config.py")])
+                    subprocess.run([sys.executable, str(TOOLS_SRC_DIR.parent / "sync_config.py")])
                     print(f"🎉 [ZAAKCEPTOWANO PATCH KARTY #{self.total_patches_applied + 1}] `{old_ver}` → **`{new_ver}`** ({change_desc})")
                     self.total_patches_applied += 1
                 else:
