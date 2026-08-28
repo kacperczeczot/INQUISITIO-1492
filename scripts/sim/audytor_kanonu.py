@@ -1125,6 +1125,8 @@ class Canon4PAutoBalancer:
         if self._last_base_res is None:
             return
         candidates = collect_manual_ablation_candidates(self._last_base_res)
+        if not candidates:
+            return
         print_manual_ablation_summary(
             candidates,
             version=CONFIG.version,
