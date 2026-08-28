@@ -99,3 +99,8 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 ## 13. Ścisły Nadzór nad Cyklem Życia Procesów w Tle (Process Lifecycle Lockdown)
 - **Zakaz porzucania procesów:** Każde zadanie asynchroniczne uruchomione w tle musi być stale monitorowane za pomocą harmonogramu (`schedule`) lub zakończone (`manage_task kill`) przed oddaniem głosu użytkownikowi.
 - **Zakaz samowolnych pętli w tle:** Skrypty działające w tle nie mogą w pętli modyfikować plików konfiguracyjnych i podbijać wersji bez jawnego punktu kontrolnego i zgody użytkownika.
+
+---
+
+## 14. Rygor Narzędziowy i Ślepego Posłuszeństwa
+- **Bezwzględny zakaz omijania narzędzi Antigravity:** Asystentowi surowo zabrania się używania komend powłoki (np. `cat << EOF > ...`, `echo`) do tworzenia, edycji lub dopisywania zawartości do plików na dysku. Wszelkie modyfikacje kodu muszą odbywać się wyłącznie przez dedykowane, natywne narzędzia asystenta (`write_to_file`, `multi_replace_file_content`). To kluczowy wymóg IDE.

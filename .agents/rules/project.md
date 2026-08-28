@@ -43,3 +43,7 @@ Szczegółowe reguły operacyjne są podzielone na wyspecjalizowane pliki w tym 
 > **SSOT:** Wszystkie parametry gry żyją wyłącznie w `data/game_config.yaml`. Silnik i dokumentacja są synchronizowane przez `scripts/sync_config.py`.
 
 > **Zgodność z ADR:** Każda propozycja musi być spójna z aktywnymi rekordami w `docs/adr/`.
+
+> **Czystość Głównego Katalogu:** KATEGORYCZNY ZAKAZ tworzenia skryptów tymczasowych (np. `compare_py_cpp.py`) w głównym katalogu repozytorium. Należy używać wyłącznie folderu `scratch/` agenta.
+
+> **Ścisłe Ścieżki:** Zawsze używaj prefiksu `data/` dla logów testowych, np. `data/playtesting/`, a nie samego `playtesting/`.
