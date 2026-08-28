@@ -94,6 +94,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.81 (2026-08-29) — Kanon 4P: Karta `kb-10` (Pieczęć Korony): `gold` → `2` (Zysk 4P Δ +2.4 pkt)
+- **Wynik 4P:** Kanon **`75.7`** → **`78.1 pkt`** | Global **`44.4`** | 3p **`31.7`** | 5p **`23.5`**
+- **Modyfikacja (`L3_KB-10_GOLD_SET2`):** Karta `kb-10` (Pieczęć Korony): `gold` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.6%.
+
 ### 🟢 Patch v1.0-alpha.80 (2026-08-29) — Przejście na Silnik Natywny C++20, Eliminacja Błędów i Czysty Baseline SSOT
 - **Wynik 4P:** Kanon **`75.7 pkt`** (Core: `71.6`, No-Cienie: `63.6`, No-Kabała: `93.5`, No-Korona: `68.3`, No-Oficjum: `81.6`) | Global **`41.6`** | 3p **`30.7`** | 5p **`22.2`**
 - **Kluczowa Zmiana Architektoniczna:**

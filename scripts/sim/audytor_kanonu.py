@@ -154,6 +154,7 @@ def _run_single_batch_task(task_args: tuple[int, str, int, int, str, dict | None
 class CandidateStats:
     """Represents a candidate's complete accumulated Monte Carlo race statistics."""
     cand_tuple: tuple[str, str, dict]
+    delta_tuple: tuple[str, str, dict] | None = None
     total_games_per_setup: int = 0
     summaries_per_setup: dict[str, list[BatchSummary]] = field(default_factory=dict)
     combined_summary_per_setup: dict[str, BatchSummary] = field(default_factory=dict)
@@ -362,10 +363,17 @@ class AdaptiveSequentialRacer:
         base_cand: tuple[str, str, dict],
         candidate_pool: list[tuple[str, str, dict]],
         seed: int,
+        delta_pool: list[tuple[str, str, dict]] | None = None,
     ) -> tuple[CandidateStats, list[CandidateStats]]:
         """Conducts iterative micro-batch racing with statistical pruning and indifference zone stopping."""
-        base_stats = CandidateStats(base_cand)
-        active_candidates = [CandidateStats(c) for c in candidate_pool]
+        base_stats = CandidateStats(base_cand, delta_tuple=base_cand)
+        if delta_pool and len(delta_pool) == len(candidate_pool):
+            active_candidates = [
+                CandidateStats(cand_tuple=c, delta_tuple=d)
+                for c, d in zip(candidate_pool, delta_pool)
+            ]
+        else:
+            active_candidates = [CandidateStats(c, delta_tuple=c) for c in candidate_pool]
         all_candidates = list(active_candidates)
 
         # ─── Geometric Rung Ladder (Successive Halving) ──────────────────────
@@ -1246,6 +1254,7 @@ class Canon4PAutoBalancer:
                 base_cand=("BASE", f"Bieżący stan Kanonu 4P ({curr_ver})", curr_base_overrides),
                 candidate_pool=effective_candidates,
                 seed=iter_seed,
+                delta_pool=candidate_pool,
             )
 
             base_res = base_stats.to_result_dict()
@@ -1274,6 +1283,7 @@ class Canon4PAutoBalancer:
             ranked_results = [c.to_result_dict() for c in surviving_stats]
 
             accepted_candidate = None
+            effective_rule_params = None
             best_ver_res = None
             acceptance_reason = ""
 
@@ -1285,20 +1295,21 @@ class Canon4PAutoBalancer:
                 
                 # Strict Global Optimization Gate: Must strictly improve 4P Canon (Δ >= min_delta) with zero floor degradation
                 if decision.accepted:
-                    accepted_candidate = cand_stat.cand_tuple
+                    accepted_candidate = cand_stat.delta_tuple if cand_stat.delta_tuple else cand_stat.cand_tuple
+                    effective_rule_params = cand_stat.cand_tuple[2]
                     best_ver_res = cand_res
                     acceptance_reason = decision.reason
                     break
 
             # 4. Apply Patch & Measure Collateral Impact (with Strict 10k Full Benchmark Gate)
-            if accepted_candidate and best_ver_res is not None:
-                rule_id, rule_name, rule_params = accepted_candidate
+            if accepted_candidate and best_ver_res is not None and effective_rule_params is not None:
+                rule_id, rule_name, delta_params = accepted_candidate
 
                 # MANDATORY VALIDATION GATE: Confirm on full 10,000 games/setup benchmark on standard seed
                 # Guarantee that official score is strictly monotonically increasing (NO false positives from micro-batches)
                 print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP]")
                 val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=10000, seed=42)
-                val_cand = _run_full_diagnostic(rule_params, games_per_setup=10000, seed=42)
+                val_cand = _run_full_diagnostic(effective_rule_params, games_per_setup=10000, seed=42)
 
                 val_base_score = val_base["cat_scores"].get("4p", 0.0)
                 val_cand_score = val_cand["cat_scores"].get("4p", 0.0)
@@ -1322,7 +1333,7 @@ class Canon4PAutoBalancer:
                     raw_cfg = yaml.safe_load(f)
 
                 old_version = raw_cfg.get("version", "v0.51")
-                mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, rule_params)
+                mod_cfg, change_desc = apply_mutation_to_config(raw_cfg, rule_id, delta_params)
 
                 d_3 = val_cand["cat_scores"].get("3p", 0) - val_base["cat_scores"].get("3p", 0)
                 d_5 = val_cand["cat_scores"].get("5p", 0) - val_base["cat_scores"].get("5p", 0)
