@@ -109,16 +109,34 @@ def save_and_archive_report(
 
     repo_root = Path(__file__).resolve().parent.parent.parent.parent
     base_dir = repo_root / "data" / "playtesting" / "sim-reports"
-    archive_dir = base_dir / "archive" / CONFIG.version
+    
+    # 1. Try extracting version directly from report text
+    ver = None
+    m_ver = re.search(r"Wersja(?: Balansu)?:\s*[`'\"]?(v1\.0-alpha\.\d+)[`'\"]?", report_text)
+    if m_ver:
+        ver = m_ver.group(1)
 
+    # 2. Try reading from game_config.yaml
+    config_src = repo_root / "data/game_config.yaml"
+    if not ver and config_src.exists():
+        import yaml
+        try:
+            with open(config_src, "r", encoding="utf-8") as f:
+                cdata = yaml.safe_load(f)
+                ver = cdata.get("system", {}).get("version")
+        except Exception:
+            pass
+    if not ver:
+        ver = CONFIG.version
+
+    archive_dir = base_dir / "archive" / ver
     archive_path = archive_dir / filename
 
     archive_dir.mkdir(parents=True, exist_ok=True)
     archive_path.write_text(report_text, encoding="utf-8")
 
-    # Automatically snapshot game_config.yaml in the archive folder
-    config_src = repo_root / "data/game_config.yaml"
-    if config_src.exists():
+    # Automatically snapshot game_config.yaml in the archive folder if matching or present
+    if config_src.exists() and not (archive_dir / "game_config.yaml").exists():
         shutil.copy2(config_src, archive_dir / "game_config.yaml")
 
     return archive_path, archive_path

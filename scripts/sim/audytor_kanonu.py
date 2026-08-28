@@ -760,6 +760,7 @@ def generate_and_save_telemetry_report(
     games_per_setup: int = 10000,
     seed: int = 42,
     setups: list[str] | None = None,
+    win_overrides: dict | None = None,
 ) -> tuple[Path, Path | None]:
     """Generates and archives raport_telemetrii.md for the given version across Kanon 4P setups."""
     if setups is None:
@@ -768,9 +769,10 @@ def generate_and_save_telemetry_report(
     setup_data = []
     all_summaries = []
     thresh = int(CONFIG.system.accusation_threshold)
+    ov = win_overrides or {}
 
     for sname in setups:
-        summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=thresh)
+        summary = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", threshold=thresh, win_overrides=ov)
         all_summaries.append(summary)
         score = calculate_setup_score(summary)
         balance = calculate_balance_score(summary)
@@ -1317,7 +1319,12 @@ class Canon4PAutoBalancer:
                     shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
 
                     print("   📊 Generuję pełny raport telemetrii Kanonu 4P (10 000 gier/setup)...")
-                    generate_and_save_telemetry_report(new_version, games_per_setup=10000, seed=self.args.seed)
+                    generate_and_save_telemetry_report(
+                        new_version,
+                        games_per_setup=10000,
+                        seed=self.args.seed,
+                        win_overrides=best_cand.get("rule_params", {}),
+                    )
 
                     print("   📝 Generuję szczegółowy raport optymalizacji Kanonu 4P...")
                     generate_and_save_canon_optimization_report(

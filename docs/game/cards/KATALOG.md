@@ -220,7 +220,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom. |
