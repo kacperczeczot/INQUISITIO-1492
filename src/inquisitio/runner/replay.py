@@ -43,7 +43,7 @@ def inspect_game(setup: str = "4p-core", seed: int = 42, layer: str = "C", thres
 
     return "\n".join(lines)
 
-def save_replay_report(setup: str = "4p-core", seed: int = 42, out_dir: str = "/Users/kacper/Documents/GitHub/INQUISITIO-1492/playtesting/sim-reports/game_replays"):
+def save_replay_report(setup: str = "4p-core", seed: int = 42, out_dir: str = "data/playtesting/sim-reports/game_replays"):
     out_path = Path(out_dir)
     out_path.mkdir(parents=True, exist_ok=True)
 

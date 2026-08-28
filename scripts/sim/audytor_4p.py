@@ -70,8 +70,8 @@ import audit_level1
 import audit_level2
 import audit_level4
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -486,7 +486,7 @@ def update_balance_notes_4p(
     diag_before: dict,
     diag_after: dict,
 ):
-    """Automatically update playtesting/balance-notes.md with patch note entry."""
+    """Automatically update data/playtesting/balance-notes.md with patch note entry."""
     if not BALANCE_NOTES_PATH.exists():
         return
 
@@ -705,7 +705,7 @@ class Macro4PAutoBalancer:
             iter_elapsed,
         )
         shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
-        print("   📑 Aktualizuję playtesting/balance-notes.md...")
+        print("   📑 Aktualizuję data/playtesting/balance-notes.md...")
         update_balance_notes_4p(
             old_version,
             new_version,

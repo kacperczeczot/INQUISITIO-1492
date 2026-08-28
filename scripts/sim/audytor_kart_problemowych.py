@@ -72,8 +72,8 @@ from inquisitio.runner.scoring import (
     color_score,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -374,7 +374,7 @@ def update_balance_notes_entry(
     best_score: float,
     best_res: dict[str, Any],
 ):
-    """Adds entry to playtesting/balance-notes.md."""
+    """Adds entry to data/playtesting/balance-notes.md."""
     if not BALANCE_NOTES_PATH.exists():
         return
     content = BALANCE_NOTES_PATH.read_text(encoding="utf-8")

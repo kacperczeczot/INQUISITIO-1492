@@ -65,7 +65,7 @@ def main():
     elapsed = round(time.time() - t_start, 1)
     print("\n═══════════════════════════════════════════════════════════════")
     print(f"✅ GRAND MONTE CARLO AUDIT ZAKOŃCZONY W {elapsed}s ({round(elapsed/60, 1)} min)!")
-    print("Wszystkie raporty zarchiwizowane w: playtesting/sim-reports/archive/{wersja}/")
+    print("Wszystkie raporty zarchiwizowane w: data/playtesting/sim-reports/archive/{wersja}/")
     print("═══════════════════════════════════════════════════════════════")
 
 

@@ -15,7 +15,7 @@ Specjalistyczne narzędzie analityczne do badania wkładu każdego pojedynczego 
   3. Mechaniki L1/L2/L4: **skrajna wartość albo wyłączenie** (połowa / podwojenie / off).
      Nudges ±1 są w `audit_level1.py` / `audit_level2.py` / `audit_level4.py`, nie tutaj.
 
-Generuje raport w: playtesting/sim-reports/raport_uzytecznosci_i_wplywu_4p.md oraz archiwizuje w archive/{version}/.
+Generuje raport w: data/playtesting/sim-reports/raport_uzytecznosci_i_wplywu_4p.md oraz archiwizuje w archive/{version}/.
 """
 from __future__ import annotations
 
@@ -54,7 +54,7 @@ from inquisitio.runner.scoring import (
     evaluate_vitality,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
 OUTPUT_REPORT_PATH = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
 REPORT_GAMES_MIN = 5000
 

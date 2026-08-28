@@ -7,7 +7,7 @@ Usage:
 Reads game_config.yaml (Single Source of Truth) and propagates
 values into:
   • docs/rules/ksiega.md  (CONFIG-marked sections)
-  • playtesting/simulation_guide.md  (norm references)
+  • data/playtesting/simulation_guide.md  (norm references)
 """
 from __future__ import annotations
 
@@ -623,7 +623,7 @@ def sync_balance_notes(cfg: dict) -> list[str]:
         )
 
     path.write_text(text, encoding="utf-8")
-    return ["Zsynchronizowano playtesting/balance-notes.md (snapshot SSOT)"]
+    return ["Zsynchronizowano data/playtesting/balance-notes.md (snapshot SSOT)"]
 
 
 def sync_slownik(cfg: dict) -> list[str]:
@@ -699,7 +699,7 @@ def sync_setups(cfg: dict) -> list[str]:
     text = re.sub(r"\| Limit Er \| \*\*\d+\*\* \| \*\*\d+\*\* \|", f"| Limit Er | **{me}** | **{me}** |", text)
 
     path.write_text(text, encoding="utf-8")
-    return ["Zsynchronizowano playtesting/setups.md"]
+    return ["Zsynchronizowano data/playtesting/setups.md"]
 
 
 def sync_readme(cfg: dict) -> list[str]:
@@ -866,7 +866,7 @@ def main():
     print("═══════════════════════════════════════════════════════")
     print()
     print("Następne kroki:")
-    print("  1. Sprawdź zmiany: git diff docs/ game/cards/ playtesting/")
+    print("  1. Sprawdź zmiany: git diff docs/ game/cards/ data/playtesting/")
     print("  2. Uruchom testy: sim/.venv/bin/pytest sim/tests/ -q")
 
 

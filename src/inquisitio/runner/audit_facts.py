@@ -82,7 +82,7 @@ def save_and_archive_report(
     custom_out: str | None = None,
     min_games_per_setup: int | None = None,
 ) -> tuple[Path, Path]:
-    """Write report directly to playtesting/sim-reports/archive/{version}/ with game_config.yaml snapshot.
+    """Write report directly to data/playtesting/sim-reports/archive/{version}/ with game_config.yaml snapshot.
     Enforces ADR-0014: Hard prohibition on saving reports with < 5000 games per setup.
     """
     if min_games_per_setup is not None and min_games_per_setup < 5000:

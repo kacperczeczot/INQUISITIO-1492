@@ -174,7 +174,7 @@ ICONS_SVG: dict[str, str] = {
 }
 
 
-# PnP / 4p SSOT — żetony puli i cut sheet (playtesting/setups.md, game_config.yaml)
+# PnP / 4p SSOT — żetony puli i cut sheet (data/playtesting/setups.md, game_config.yaml)
 PNP_TOKEN_COUNTS: dict[str, int] = {
     "inquisitor": 1,
     "inquisitor_patrol": 1,

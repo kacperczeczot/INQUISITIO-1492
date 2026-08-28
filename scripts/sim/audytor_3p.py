@@ -18,8 +18,8 @@ Główne założenia metodologiczne:
      Bramka witalności: proteza skazań/stosów −1 przy martwej ścieżce jest odrzucana.
   5. Pełna automatyzacja dokumentacji i SSOT:
      - Zapisuje wyjątki per-3p pod sekcjami '3p:' w game_config.yaml (z podbiciem wersji)
-     - playtesting/sim-reports/archive/<wersja>/audytor_3p_log.md
-     - playtesting/balance-notes.md
+     - data/playtesting/sim-reports/archive/<wersja>/audytor_3p_log.md
+     - data/playtesting/balance-notes.md
      - Pełna synchronizacja kart, katalogu i zasad (sync_config.py)
 """
 from __future__ import annotations
@@ -74,8 +74,8 @@ from audytor_4p import (
     lookahead_next_action,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
 
 SETUPS_3P = [s for s, pl in SETUP_PRESETS.items() if len(pl) == 3]
 
@@ -267,7 +267,7 @@ def update_balance_notes_3p(
     diag_before: dict,
     diag_after: dict,
 ):
-    """Automatically update playtesting/balance-notes.md with patch note entry."""
+    """Automatically update data/playtesting/balance-notes.md with patch note entry."""
     if not BALANCE_NOTES_PATH.exists():
         return
 
@@ -461,7 +461,7 @@ class AutoBalancer3P:
             iter_elapsed,
         )
         shutil.copy2(_CONFIG_PATH, version_archive_dir / "game_config.yaml")
-        print("   📑 Aktualizuję playtesting/balance-notes.md...")
+        print("   📑 Aktualizuję data/playtesting/balance-notes.md...")
         update_balance_notes_3p(
             old_version,
             new_version,
