@@ -36,5 +36,6 @@ temp/
 *.pdf
 !docs/**/*.pdf
 
-# Logi symulacji / testów na żywo
+# Logi
+*.log
 data/playtesting/sim-reports/*.log
