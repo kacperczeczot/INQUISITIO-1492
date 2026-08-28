@@ -1207,7 +1207,7 @@ class Canon4PAutoBalancer:
                     for f, m_list in faction_groups.items():
                         shuffled_m = list(m_list)
                         rng_pool.shuffle(shuffled_m)
-                        selected_atomic.extend(shuffled_m[:50])
+                        selected_atomic.extend(shuffled_m[:100])
 
                     for atomic_mut in selected_atomic:
                         merged = merge_mutations(seed_mut, atomic_mut)
@@ -1221,10 +1221,10 @@ class Canon4PAutoBalancer:
                         seen_ids.add(c[0])
                         candidate_pool.append(c)
 
-                if len(candidate_pool) > 2000:
+                if len(candidate_pool) > 4000:
                     rng_comb = random.Random(iter_seed)
                     rng_comb.shuffle(candidate_pool)
-                    candidate_pool = candidate_pool[:2000]
+                    candidate_pool = candidate_pool[:4000]
 
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 current_raw_cfg = yaml.safe_load(f)
@@ -1459,14 +1459,10 @@ class Canon4PAutoBalancer:
                 if current_phase >= self.args.max_depth:
                     consecutive_stalls += 1
                     print(f"\n🛑 Osiągnięto maksymalną głębokość wiązek ({self.args.max_depth}D) bez znalezienia patcha.")
-                    if consecutive_stalls >= 5:
-                        print(f"   ⛔ {consecutive_stalls} pełnych cykli 1D-3D bez efektu. Przestrzeń mutacji wyczerpana. Kończę.")
-                        break
-                    else:
-                        print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}/5).")
-                        current_phase = 1
-                        self.args.seed += 137
-                        beam_seeds.clear()
+                    print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
+                    current_phase = 1
+                    self.args.seed += 137
+                    beam_seeds.clear()
                 else:
                     beam_seeds = diverse_seeds[:self.args.beam_width]
                     current_phase += 1
@@ -1494,7 +1490,7 @@ def main():
     parser.add_argument("--cooling-rate", type=float, default=0.90, help="Współczynnik chłodzenia po zaakceptowanym patchu (domyślnie: 0.90)")
     parser.add_argument("--min-temperature", type=float, default=0.05, help="Minimalna temperatura wyżarzania (domyślnie: 0.05)")
 
-    parser.add_argument("--beam-width", type=int, default=10, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek")
+    parser.add_argument("--beam-width", type=int, default=20, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 20)")
     parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 4)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
 
