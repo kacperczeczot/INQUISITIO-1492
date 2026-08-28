@@ -1323,7 +1323,7 @@ class Canon4PAutoBalancer:
                         new_version,
                         games_per_setup=10000,
                         seed=self.args.seed,
-                        win_overrides=best_cand.get("rule_params", {}),
+                        win_overrides=rule_params,
                     )
 
                     print("   📝 Generuję szczegółowy raport optymalizacji Kanonu 4P...")
