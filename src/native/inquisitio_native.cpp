@@ -350,6 +350,7 @@ struct ConfigOverridesNative {
     int kb_decrees_offset = 0;
     int kb_hooks_offset = 0;
     int kt_frags_offset = 0;
+    int kt_heresy_tolerance = 0;
     int gc_falls_offset = 0;
     int sea_route_era = 4;
     int autodafe_cooldown = 4;
@@ -385,7 +386,7 @@ struct GameStateNative {
     int pending_count;
 
     uint8_t winner;
-    const char* win_path;
+    uint8_t win_path_id;
 
     // Metrics counters
     int autodafe_count;
@@ -403,13 +404,13 @@ struct GameStateNative {
 // ─── Setup Presets ──────────────────────────────────────────────────────────
 static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const ConfigOverridesNative& ov) {
 
-    st.era = 0;
+    st.era = 1;
     st.eras_since_autodafe = 0;
     st.sea_route_open = false;
     st.inquisitor_location = TRYBUNAL;
     st.pending_count = 0;
-    st.winner = NO_FACTION;
-    st.win_path = "";
+    st.winner = 5;
+    st.win_path_id = 0;
     std::memset(st.cards_played, 0, sizeof(st.cards_played));
 
     if (preset_id == 0) { // 4p-core: SO, CAA, KB, KT
@@ -514,49 +515,48 @@ static inline int effective_card_cost(uint8_t card_idx, const GameStateNative& s
     return std::max(0, base_c + ov.card_cost_offset + sig_off + curfew);
 }
 
-static inline uint8_t check_winner_fast(GameStateNative& st, const ConfigOverridesNative& ov) {
-    for (int i = 0; i < st.num_players; ++i) {
-        uint8_t fid = st.turn_order[i];
+static inline void check_winner_fast(GameStateNative& st, const ConfigOverridesNative& ov) {
+    if (st.winner < 5) return;
+    for (int p = 0; p < st.num_players; ++p) {
+        uint8_t fid = st.turn_order[p];
         const PlayerStateNative& pl = st.players[fid];
-
         if (fid == SO) {
-            int stack_need = std::max(1, (st.num_players <= 3 ? 6 : (st.num_players == 4 ? 7 : 8)) + ov.so_stacks_offset);
-            int condemn_need = std::max(1, (st.num_players <= 3 ? 2 : 3) + ov.so_condemns_offset);
+            int condemn_need = std::max(1, 3 + ov.so_condemns_offset);
+            int stack_need = std::max(1, 7 + ov.so_stacks_offset);
             int condemns = 0;
             for (int k = 0; k < 5; ++k) if (pl.condemned_rivals_mask & (1 << k)) condemns++;
             if (condemns >= condemn_need) {
-                st.winner = fid; st.win_path = "so_condemns"; return fid;
+                st.winner = fid; st.win_path_id = 1; return;
             }
             if (pl.stacks >= stack_need) {
-                st.winner = fid; st.win_path = "so_stacks"; return fid;
+                st.winner = fid; st.win_path_id = 2; return;
             }
         } else if (fid == CAA) {
             int relic_need = std::max(1, 2 + ov.caa_relics_offset);
             if (pl.relics_evacuated >= relic_need) {
                 if (st.sea_route_open || pl.path_via_double || pl.avoided_autodafe || pl.shadow_exit) {
-                    st.winner = fid; st.win_path = "caa_sea_route"; return fid;
+                    st.winner = fid; st.win_path_id = 3; return;
                 }
             }
         } else if (fid == KB) {
-            int decrees_need = std::max(1, 2 + ov.kb_decrees_offset);
+            int decrees_need = std::max(1, 3 + ov.kb_decrees_offset);
             int hooks_need = std::max(0, 2 + ov.kb_hooks_offset);
             if (pl.decrees_played >= decrees_need && pl.distinct_hooks() >= hooks_need) {
-                st.winner = fid; st.win_path = "kb_main"; return fid;
+                st.winner = fid; st.win_path_id = 4; return;
             }
         } else if (fid == KT) {
             int frag_need = std::max(1, 3 + ov.kt_frags_offset);
-            bool heresy_ok = (pl.heresy >= 4 && pl.heresy <= 6);
+            bool heresy_ok = pl.heresy <= (4 + ov.kt_heresy_tolerance);
             if (pl.kt10_played && pl.fragments >= frag_need && heresy_ok) {
-                st.winner = fid; st.win_path = "kt_codex"; return fid;
+                st.winner = fid; st.win_path_id = 5; return;
             }
         } else if (fid == GC) {
             int falls_need = std::max(1, 9 + ov.gc_falls_offset);
             if (pl.falls >= falls_need) {
-                st.winner = fid; st.win_path = "gc_falls"; return fid;
+                st.winner = fid; st.win_path_id = 6; return;
             }
         }
     }
-    return NO_FACTION;
 }
 
 static inline void draw_cards(PlayerStateNative& pl, int n, FastRng& rng) {
@@ -674,10 +674,10 @@ static inline void take_economic_action(GameStateNative& st, uint8_t fid, FastRn
     move_agent_step(st, fid, rng);
 }
 
-static inline bool card_condition_met_native(const GameStateNative& st, uint8_t fid, uint8_t card_idx);
+static inline __attribute__((always_inline)) bool card_condition_met_native(const GameStateNative& st, uint8_t fid, uint8_t card_idx);
 
 // Canonical heuristic card choice matching Python PoliticsAgent
-static inline int choose_card_heuristic(const GameStateNative& st, uint8_t fid, const uint8_t* legal, int legal_count, FastRng& rng, const ConfigOverridesNative& ov) {
+static inline __attribute__((always_inline)) int choose_card_heuristic(const GameStateNative& st, uint8_t fid, const uint8_t* legal, int legal_count, FastRng& rng, const ConfigOverridesNative& ov) {
     if (legal_count == 0) return -1;
     const PlayerStateNative& pl = st.players[fid];
 
@@ -1037,9 +1037,9 @@ static inline bool card_fiasco_native(const GameStateNative& st, uint8_t fid, ui
     return false;
 }
 
-static inline void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t card_idx, FastRng& rng, const ConfigOverridesNative& ov) {
-    const CardDef& c = CARD_DB[card_idx];
+static inline __attribute__((always_inline)) void apply_card_effect(GameStateNative& st, uint8_t fid, uint8_t card_idx, FastRng& rng, const ConfigOverridesNative& ov) {
     PlayerStateNative& pl = st.players[fid];
+    const CardDef& c = CARD_DB[card_idx];
 
     st.cards_played[card_idx]++;
 
@@ -1758,7 +1758,8 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                     }
                 }
             }
-            if (check_winner_fast(st, ov) != NO_FACTION) return;
+            check_winner_fast(st, ov);
+            if (st.winner < 5) return;
         }
     }
 
@@ -1923,7 +1924,8 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
         }
     }
 
-    if (check_winner_fast(st, ov) != NO_FACTION) return;
+    check_winner_fast(st, ov);
+    if (st.winner < 5) return;
 
     // 3. Resolve pending plays (by location 0..4, then turn_order)
     for (uint8_t loc = 0; loc < 5; ++loc) {
@@ -1936,14 +1938,16 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                         continue;
                     }
                     apply_card_effect(st, fid, st.pending_plays[sp].card_idx, rng, ov);
-                    if (check_winner_fast(st, ov) != NO_FACTION) return;
+                    check_winner_fast(st, ov);
+                    if (st.winner < 5) return;
                 }
             }
         }
     }
     st.pending_count = 0;
 
-    if (check_winner_fast(st, ov) != NO_FACTION) return;
+    check_winner_fast(st, ov);
+    if (st.winner < 5) return;
 
     // Interrogations
     for (int i = 0; i < st.num_players; ++i) {
@@ -2013,7 +2017,7 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
             if (accused_cnt == 0) continue;
 
             bool so_near_win = false;
-            int so_cond_need = std::max(1, (st.num_players <= 3 ? 2 : 3) + ov.so_condemns_offset);
+            int so_cond_need = std::max(1, 3 + ov.so_condemns_offset);
             int so_stack_need = std::max(1, 7 + ov.so_stacks_offset);
             int so_conds = 0;
             for (int k = 0; k < 5; ++k) if (st.players[SO].condemned_rivals_mask & (1 << k)) so_conds++;
@@ -2124,10 +2128,12 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
                 // Failed accusation penalty
                 st.players[fid].heresy = std::min(10, st.players[fid].heresy + 1);
             }
-            if (check_winner_fast(st, ov) != NO_FACTION) return;
+            check_winner_fast(st, ov);
+            if (st.winner < 5) return;
         }
     }
-    if (check_winner_fast(st, ov) != NO_FACTION) return;
+    check_winner_fast(st, ov);
+    if (st.winner < 5) return;
 
     // ── Phase III: Upkeep & First Player Rotation ──
     for (int i = 0; i < st.num_players; ++i) {
@@ -2155,7 +2161,8 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     }
 }
 
-static inline uint8_t play_game_fast(int preset_id, uint64_t seed, const ConfigOverridesNative& ov, int& out_eras, const char*& out_path, GameStateNative& final_st) {
+// Main game loop returning winner ID (0-4) or 5 for tie
+static inline uint8_t play_game_fast(int preset_id, uint64_t seed, const ConfigOverridesNative& ov, int& out_eras, uint8_t& out_path_id, GameStateNative& final_st) {
     FastRng rng;
     rng.seed(seed);
     init_game(final_st, preset_id, rng, ov);
@@ -2163,16 +2170,16 @@ static inline uint8_t play_game_fast(int preset_id, uint64_t seed, const ConfigO
     for (int era = 1; era <= ov.max_eras; ++era) {
         final_st.era = era;
         play_turn_era(final_st, rng, ov);
-        if (final_st.winner != NO_FACTION) {
+        if (final_st.winner != 5) {
             out_eras = era;
-            out_path = final_st.win_path;
+            out_path_id = final_st.win_path_id;
             return final_st.winner;
         }
     }
 
     // Tie-break after max eras
     out_eras = ov.max_eras;
-    out_path = "tiebreak";
+    out_path_id = 7;
     final_st.deadlocks++;
 
     uint8_t best_f = final_st.turn_order[0];
@@ -2291,11 +2298,12 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     long long total_end_gold = 0;
     long long total_end_heresy = 0;
     long long total_poor_turns = 0;
-    std::map<std::string, int> win_paths;
+    int win_paths[8] = {0};
     int card_plays[60] = {0};
 
     unsigned int n_threads = std::thread::hardware_concurrency();
     if (n_threads == 0) n_threads = 4;
+    if (num_games <= 2000) n_threads = 1; // Prevent ProcessPoolExecutor macOS fork crash
     int games_per_thread = num_games / n_threads;
 
     struct ThreadResult {
@@ -2314,57 +2322,43 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         long long end_gold = 0;
         long long end_heresy = 0;
         long long poor_turns = 0;
-        std::map<std::string, int> paths;
+        int paths[8] = {0};
         int cards[60] = {0};
     };
 
-    std::vector<std::future<ThreadResult>> futures;
-
-    for (unsigned int t = 0; t < n_threads; ++t) {
-        int count = (t == n_threads - 1) ? (num_games - t * games_per_thread) : games_per_thread;
-        uint64_t thread_seed = seed + t * 1000003ULL;
-
-        futures.push_back(std::async(std::launch::async, [preset_id, thread_seed, ov, count]() {
-            ThreadResult res;
-            inq::GameStateNative st;
-            for (int g = 0; g < count; ++g) {
-                int eras = 0;
-                const char* path = "";
-                uint8_t w = inq::play_game_fast(preset_id, thread_seed + g, ov, eras, path, st);
-                if (w < 5) res.wins[w]++;
-                res.eras += eras;
-                if (eras >= 0 && eras <= 12) res.dist[eras]++;
-                res.deadlocks += st.deadlocks;
-                res.passes += st.forced_passes;
-                res.sampled += st.legal_moves_sampled;
-                res.accusations += st.accusations;
-                res.convictions += st.convictions;
-                res.autodafe += st.autodafe_count;
-                res.hooks_created += st.hooks_created;
-                res.hooks_forced += st.hooks_forced;
-                res.doubles_created += st.doubles_created;
-                res.paths[path]++;
-
-                for (int i = 0; i < st.num_players; ++i) {
-                    uint8_t fid = st.turn_order[i];
-                    res.end_gold += st.players[fid].gold;
-                    res.end_heresy += st.players[fid].heresy;
-                    if (st.players[fid].gold <= 1) res.poor_turns++;
-                }
-
-                for (int c = 0; c < 60; ++c) {
-                    res.cards[c] += st.cards_played[c];
-                }
+    if (n_threads == 1) {
+        ThreadResult r;
+        inq::GameStateNative st;
+        for (int g = 0; g < num_games; ++g) {
+            int eras = 0;
+            uint8_t path_id = 0;
+            uint8_t w = inq::play_game_fast(preset_id, seed + g, ov, eras, path_id, st);
+            if (w < 5) r.wins[w]++;
+            r.eras += eras;
+            if (eras >= 0 && eras <= 12) r.dist[eras]++;
+            r.deadlocks += st.deadlocks;
+            r.passes += st.forced_passes;
+            r.sampled += st.legal_moves_sampled;
+            r.accusations += st.accusations;
+            r.convictions += st.convictions;
+            r.autodafe += st.autodafe_count;
+            r.hooks_created += st.hooks_created;
+            r.hooks_forced += st.hooks_forced;
+            r.doubles_created += st.doubles_created;
+            if (path_id < 8) r.paths[path_id]++;
+            for (int i = 0; i < st.num_players; ++i) {
+                uint8_t fid = st.turn_order[i];
+                r.end_gold += st.players[fid].gold;
+                r.end_heresy += st.players[fid].heresy;
+                if (st.players[fid].gold <= 1) r.poor_turns++;
             }
-            return res;
-        }));
-    }
-
-    for (auto& f : futures) {
-        ThreadResult r = f.get();
+            for (int c = 0; c < 60; ++c) {
+                r.cards[c] += st.cards_played[c];
+            }
+        }
         for (int i = 0; i < 5; ++i) win_counts[i] += r.wins[i];
         total_eras += r.eras;
-        for (int e = 0; e <= 12; ++e) era_dist[e] += r.dist[e];
+        for (int i = 0; i <= 12; ++i) era_dist[i] += r.dist[i];
         deadlocks += r.deadlocks;
         forced_passes += r.passes;
         legal_moves_sampled += r.sampled;
@@ -2377,11 +2371,74 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         total_end_gold += r.end_gold;
         total_end_heresy += r.end_heresy;
         total_poor_turns += r.poor_turns;
-        for (auto const& [k, v] : r.paths) {
-            win_paths[k] += v;
-        }
+        for (int i = 0; i < 8; ++i) win_paths[i] += r.paths[i];
         for (int c = 0; c < 60; ++c) {
             card_plays[c] += r.cards[c];
+        }
+    } else {
+        std::vector<std::future<ThreadResult>> futures;
+
+        for (unsigned int t = 0; t < n_threads; ++t) {
+            int count = (t == n_threads - 1) ? (num_games - t * games_per_thread) : games_per_thread;
+            uint64_t thread_seed = seed + t * 1000003ULL;
+
+            futures.push_back(std::async(std::launch::async, [preset_id, thread_seed, ov, count]() {
+                ThreadResult res;
+                inq::GameStateNative st;
+                for (int g = 0; g < count; ++g) {
+                    int eras = 0;
+                    uint8_t path_id = 0;
+                    uint8_t w = inq::play_game_fast(preset_id, thread_seed + g, ov, eras, path_id, st);
+                    if (w < 5) res.wins[w]++;
+                    res.eras += eras;
+                    if (eras >= 0 && eras <= 12) res.dist[eras]++;
+                    res.deadlocks += st.deadlocks;
+                    res.passes += st.forced_passes;
+                    res.sampled += st.legal_moves_sampled;
+                    res.accusations += st.accusations;
+                    res.convictions += st.convictions;
+                    res.autodafe += st.autodafe_count;
+                    res.hooks_created += st.hooks_created;
+                    res.hooks_forced += st.hooks_forced;
+                    res.doubles_created += st.doubles_created;
+                    if (path_id < 8) res.paths[path_id]++;
+
+                    for (int i = 0; i < st.num_players; ++i) {
+                        uint8_t fid = st.turn_order[i];
+                        res.end_gold += st.players[fid].gold;
+                        res.end_heresy += st.players[fid].heresy;
+                        if (st.players[fid].gold <= 1) res.poor_turns++;
+                    }
+
+                    for (int c = 0; c < 60; ++c) {
+                        res.cards[c] += st.cards_played[c];
+                    }
+                }
+                return res;
+            }));
+        }
+
+        for (auto& f : futures) {
+            ThreadResult r = f.get();
+            for (int i = 0; i < 5; ++i) win_counts[i] += r.wins[i];
+            total_eras += r.eras;
+            for (int e = 0; e <= 12; ++e) era_dist[e] += r.dist[e];
+            deadlocks += r.deadlocks;
+            forced_passes += r.passes;
+            legal_moves_sampled += r.sampled;
+            accusations += r.accusations;
+            convictions += r.convictions;
+            autodafe_count += r.autodafe;
+            hooks_created += r.hooks_created;
+            hooks_forced += r.hooks_forced;
+            doubles_created += r.doubles_created;
+            total_end_gold += r.end_gold;
+            total_end_heresy += r.end_heresy;
+            total_poor_turns += r.poor_turns;
+            for (int i = 0; i < 8; ++i) win_paths[i] += r.paths[i];
+            for (int c = 0; c < 60; ++c) {
+                card_plays[c] += r.cards[c];
+            }
         }
     }
 
@@ -2400,9 +2457,14 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     Py_DECREF(py_wins);
 
     // 2. win_paths dict
+    static const char* PATH_NAMES[8] = {
+        "", "so_condemns", "so_stacks", "caa_sea_route", "kb_main", "kt_codex", "gc_falls", "tiebreak"
+    };
     PyObject* py_paths = PyDict_New();
-    for (auto const& [k, v] : win_paths) {
-        PyDict_SetItemString(py_paths, k.c_str(), PyLong_FromLong(v));
+    for (int i = 1; i < 8; ++i) {
+        if (win_paths[i] > 0) {
+            PyDict_SetItemString(py_paths, PATH_NAMES[i], PyLong_FromLong(win_paths[i]));
+        }
     }
     PyDict_SetItemString(py_res, "win_paths", py_paths);
     Py_DECREF(py_paths);

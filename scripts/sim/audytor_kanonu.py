@@ -91,8 +91,8 @@ from manual_ablation_hints import (
     print_manual_ablation_summary,
 )
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "playtesting" / "sim-reports"
-BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "playtesting" / "balance-notes.md"
+REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "sim-reports"
+BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data", "playtesting" / "balance-notes.md"
 LIVE_LOG_PATH = REPORTS_DIR / "audytor_live.log"
 
 import multiprocessing
@@ -964,7 +964,7 @@ def update_balance_notes(
     diag_before: dict,
     diag_after: dict,
 ):
-    """Automatically update playtesting/balance-notes.md with the new measured scores and patch note entry."""
+    """Automatically update data/playtesting/balance-notes.md with the new measured scores and patch note entry."""
     if not BALANCE_NOTES_PATH.exists():
         return
 
@@ -1302,7 +1302,7 @@ class Canon4PAutoBalancer:
                         iter_elapsed,
                     )
 
-                    print("   📑 Aktualizuję playtesting/balance-notes.md...")
+                    print("   📑 Aktualizuję data/playtesting/balance-notes.md...")
                     update_balance_notes(
                         old_version,
                         new_version,
@@ -1399,8 +1399,15 @@ def main():
 
 if __name__ == "__main__":
     import multiprocessing
-    try:
-        multiprocessing.set_start_method("fork")
-    except RuntimeError:
-        pass
+    import platform
+    if platform.system() == "Darwin":
+        try:
+            multiprocessing.set_start_method("spawn")
+        except RuntimeError:
+            pass
+    else:
+        try:
+            multiprocessing.set_start_method("fork")
+        except RuntimeError:
+            pass
     main()
