@@ -94,6 +94,16 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.83 (2026-08-29) — Kanon 4P: Karta `caa-10` (Echo Alhambry): `cost` → `2` (Zysk 4P Δ +1.1 pkt)
+- **Wynik 4P:** Kanon **`81.3`** → **`82.4 pkt`** | Global **`46.5`** | 3p **`32.4`** | 5p **`24.6`**
+- **Modyfikacja (`L3_CAA-10_COST_MINUS1`):** Karta `caa-10` (Echo Alhambry): `cost` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.71, Deadlocks 0.0%, Pas Biedy 4.8%.
+
+### 🟢 Patch v1.0-alpha.82 (2026-08-29) — Kanon 4P: Karta `so-12` (Straż Trybunalska): `heresy` → `2` (Zysk 4P Δ +3.2 pkt)
+- **Wynik 4P:** Kanon **`78.1`** → **`81.3 pkt`** | Global **`46.0`** | 3p **`32.3`** | 5p **`24.4`**
+- **Modyfikacja (`L3_SO-12_HERESY_PLUS1`):** Karta `so-12` (Straż Trybunalska): `heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.73, Deadlocks 0.0%, Pas Biedy 4.8%.
+
 ### 🟢 Patch v1.0-alpha.81 (2026-08-29) — Kanon 4P: Karta `kb-10` (Pieczęć Korony): `gold` → `2` (Zysk 4P Δ +2.4 pkt)
 - **Wynik 4P:** Kanon **`75.7`** → **`78.1 pkt`** | Global **`44.4`** | 3p **`31.7`** | 5p **`23.5`**
 - **Modyfikacja (`L3_KB-10_GOLD_SET2`):** Karta `kb-10` (Pieczęć Korony): `gold` → `2`.
@@ -108,10 +118,6 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
   4. **Dynamiczne Nadpisywanie Wszystkich Atrybutów Kart:** Rozszerzono C-API o dynamiczną obsługę modyfikacji w locie dla parametrów: `cost`, `heresy`, `target_heresy` oraz `gold`. Silnik C++ w 100% dynamicznie uwzględnia mutacje kart optymalizatora bez konieczności rekompilacji.
   5. **Żelazna Bramka Walidacji 10k (Zero Ujemnych Delt):** Wprowadzono bezwzględny wymóg walidacji kandydata na benchmarku $10\,000$ partii na stałym ziarnie przed jakąkolwiek akceptacją patcha ($\Delta \ge +0.05\text{ pkt}$). Wyeliminowano fałszywe alarmy z mikro-prób i zagwarantowano idealną ciągłość historyczną (wynik startowy wersji $N$ jest zawsze równy wynikowi końcowemu wersji $N-1$).
 - **Telemetria Bazowa:** Średnia Er `5.79`, Deadlocks `0.0%`, Pas Biedy `4.6%`, Autodafé / partię `1.50`, Oskarżenia / partię `7.80`.
-
-
-
-
 
 ### 🟢 Patch v1.0-alpha.79 (2026-08-24) — Kanon 4P: Karta `kt-07` (Archiwum Ukryte): `heresy` → `0` (Zysk 4P Δ +2.1 pkt)
 - **Wynik 4P:** Kanon **`83.2`** → **`85.3 pkt`** | Global **`44.0`** | 3p **`31.0`** | 5p **`16.6`**

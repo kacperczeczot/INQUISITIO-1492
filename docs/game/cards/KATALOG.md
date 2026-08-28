@@ -220,7 +220,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom. |
@@ -395,7 +395,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | C |
-| `cost_gold` | 3 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |

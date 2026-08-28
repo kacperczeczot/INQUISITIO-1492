@@ -4,7 +4,7 @@ name: Echo Alhambry
 faction: cienie-al-andalus
 type: signature
 layer: C
-cost: 3
+cost: 2
 heresy: 0
 tags:
 - signature
@@ -17,6 +17,7 @@ heresy_text: Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.
 lore: As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.
 breaks_rule: true
 ---
+
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [10-echo-alhambry](10-echo-alhambry.md)
 

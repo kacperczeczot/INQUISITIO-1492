@@ -1039,7 +1039,7 @@ def update_balance_notes(
     history_heading = "## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)"
     if history_heading in content:
         idx = content.find(history_heading) + len(history_heading)
-        content = content[:idx] + "\n\n" + patch_note_block.strip() + "\n" + content[idx:].lstrip("\n")
+        content = content[:idx] + "\n\n" + patch_note_block.strip() + "\n\n" + content[idx:].lstrip("\n")
 
     BALANCE_NOTES_PATH.write_text(content, encoding="utf-8")
 
