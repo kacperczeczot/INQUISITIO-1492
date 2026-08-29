@@ -4,9 +4,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-TOOLS_SIM = Path(__file__).resolve().parents[2] / "tools" / "sim"
-if str(TOOLS_SIM) not in sys.path:
-    sys.path.insert(0, str(TOOLS_SIM))
+SCRIPTS_SIM = Path(__file__).resolve().parents[2] / "scripts" / "sim"
+if str(SCRIPTS_SIM) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_SIM))
 
 from audytor_kanonu import AdaptiveSequentialRacer, CandidateStats
 from inquisitio.engine.setup import SETUP_PRESETS
