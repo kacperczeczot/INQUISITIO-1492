@@ -291,6 +291,60 @@ def select_diverse_beam_seeds(all_candidate_stats: list, beam_width: int = 60) -
     return seeds[:beam_width]
 
 
+def generate_intra_card_and_macro_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates comprehensive intra-card multi-param combinations (2D and 3D on the SAME card)
+    plus pure macro combinations (2D and 3D on L1/L2/L4 game rules).
+    
+    This provides an intermediate phase (Faza 1.5D) exploring deep multi-parameter redesigns
+    of individual cards and global game parameters before running the 1.3M cross-card 2D search.
+    """
+    card_atoms_by_id: dict[str, list[tuple[str, str, dict]]] = {}
+    macro_atoms: list[tuple[str, str, dict]] = []
+
+    for mut in atomic_pool:
+        tag, _, params = mut
+        card_overrides = params.get("card_overrides")
+        if card_overrides:
+            cid = list(card_overrides.keys())[0]
+            card_atoms_by_id.setdefault(cid, []).append(mut)
+        else:
+            macro_atoms.append(mut)
+
+    seen_ids = set()
+    candidates = []
+
+    def add_merged(merged):
+        if merged and merged[0] not in seen_ids:
+            seen_ids.add(merged[0])
+            candidates.append(merged)
+
+    # 1. Intra-card 2D pairs and 3D trios on the exact SAME card
+    for cid, atoms in card_atoms_by_id.items():
+        n = len(atoms)
+        for i in range(n):
+            for j in range(i + 1, n):
+                pair = merge_mutations(atoms[i], atoms[j])
+                if pair:
+                    add_merged(pair)
+                    # Try 3D trios on this same card
+                    for k in range(j + 1, n):
+                        trio = merge_mutations(pair, atoms[k])
+                        add_merged(trio)
+
+    # 2. Pure macro 2D pairs and 3D trios
+    n_macro = len(macro_atoms)
+    for i in range(n_macro):
+        for j in range(i + 1, n_macro):
+            pair = merge_mutations(macro_atoms[i], macro_atoms[j])
+            if pair:
+                add_merged(pair)
+                for k in range(j + 1, n_macro):
+                    trio = merge_mutations(pair, macro_atoms[k])
+                    add_merged(trio)
+
+    return candidates
+
+
 def generate_all_2d_pairwise_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
     """Generates the COMPLETE 100% unconstrained pairwise combinations (N*(N-1)/2) from the atomic pool.
     
@@ -706,7 +760,6 @@ class Canon4PAutoBalancer:
         setups = CANONICAL_4P_SETUPS
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
         val_base_10k: dict | None = None
-
         current_phase = 1
         beam_seeds: list[tuple[str, str, dict]] = []
         consecutive_stalls = 0
@@ -731,12 +784,19 @@ class Canon4PAutoBalancer:
             atomic_pool = generate_all_atomic_candidates()
 
             if current_phase == 1:
+                phase_label = "1D"
                 print(f"\n🌐 [FAZA 1D — KANON 4P] 100% Pełna uniwersalna pula atomowa L1–L4 ({len(atomic_pool)} modyfikacji)...")
                 candidate_pool = atomic_pool
             elif current_phase == 2:
-                print(f"\n🌐 [FAZA 2D — KANON 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH PAR (bez pomijania żadnej kombinacji)...")
+                phase_label = "1.5D"
+                print(f"\n🌐 [FAZA 1.5D — KANON 4P] GŁĘBOKI REBALANS POJEDYNCZEJ KARTY I CZYSTE MAKRO (100% kombinacji 2D/3D intra-card & pure macro)...")
+                candidate_pool = generate_intra_card_and_macro_candidates(atomic_pool)
+            elif current_phase == 3:
+                phase_label = "2D"
+                print(f"\n🌐 [FAZA 2D — KANON 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH PAR (cross-card, bez pomijania żadnej kombinacji)...")
                 candidate_pool = generate_all_2d_pairwise_candidates(atomic_pool)
             else:
+                phase_label = "3D"
                 lagging_setup = self._last_base_res.get("min_balance_setup", "") if self._last_base_res else ""
                 print(f"\n🌐 [FAZA 3D — KANON 4P] Wytrych Deficytu Frakcji (dla `{lagging_setup}`, {len(beam_seeds)} nasion 2D × {len(atomic_pool)} atomów)...")
                 candidate_pool = generate_3d_deficit_candidates(beam_seeds, atomic_pool, lagging_faction=lagging_setup)
@@ -769,15 +829,17 @@ class Canon4PAutoBalancer:
 
             target_floor = pending_patch["best_res"]["score_4p_balance"] if pending_patch else None
             base_stats, candidate_results = racer.run_race(
-                base_cand=("BASE", f"Bieżący stan Kanonu 4P ({curr_ver})", curr_base_overrides),
+                base_cand=("BASE", f"Baza ({curr_ver})", curr_base_overrides),
                 candidate_pool=effective_candidates,
                 seed=iter_seed,
                 delta_pool=candidate_pool,
+                label_prefix=f"WYŚCIG KANONU 4P — FAZA {phase_label}",
+                target_score_floor=target_floor,
                 base_stats_cache=cached_base_stats,
-                target_floor_score=target_floor,
             )
             cached_base_stats = base_stats
 
+            # Cache baseline diagnostic
             base_res = base_stats.to_result_dict()
             self._last_base_res = base_res
 
@@ -822,7 +884,7 @@ class Canon4PAutoBalancer:
 
                 val_base_score = val_base_10k["cat_scores"].get("4p", 0.0)
                 finalists_to_test = nominal_qualifiers[:5]
-                print(f"\n🔍 [TEST GENERALNY 10 000 GIER/SETUP — FAZA {current_phase}D] Badam grupę {len(finalists_to_test)} finalistów wyścigu na benchmarku 10k...")
+                print(f"\n🔍 [TEST GENERALNY 10 000 GIER/SETUP — FAZA {phase_label}] Badam grupę {len(finalists_to_test)} finalistów wyścigu na benchmarku 10k...")
 
                 for rank_idx, (cand_stat, cand_res, decision) in enumerate(finalists_to_test, 1):
                     cand_eff_params = cand_stat.cand_tuple[2]
@@ -850,7 +912,7 @@ class Canon4PAutoBalancer:
                             "best_res": cert_res,
                             "effective_params": cand_eff_params,
                             "reason": decision.reason,
-                            "phase": current_phase,
+                            "phase": phase_label,
                             "val_base": val_base_10k,
                             "val_cand": val_cand,
                             "val_delta": val_delta,
@@ -873,25 +935,28 @@ class Canon4PAutoBalancer:
                 # We found a verified, 10k-certified improvement at current depth!
                 # Apply it IMMEDIATELY without wasting hours on speculative lookahead!
                 print(
-                    f"\n🎯 [GREEDY-FIRST WDROŻENIE] Znaleziono w 100% zweryfikowany zysk w Fazie {current_phase}D: "
+                    f"\n🎯 [GREEDY-FIRST WDROŻENIE] Znaleziono w 100% zweryfikowany zysk w Fazie {phase_label}: "
                     f"{best_candidate_at_depth['cand_tuple'][1]} (10k: **{best_candidate_at_depth['best_res']['score_4p_balance']:.1f} pkt**, Δ = {best_candidate_at_depth['val_delta']:+.2f} pkt).\n"
                     f"   🌟 Wdrażam patch natychmiast, by natychmiast podnieść bazę i odblokować kolejny krok!"
                 )
                 should_apply_patch = True
                 patch_to_apply = best_candidate_at_depth
             else:
-                # Current depth (e.g. 1D) has reached a local plateau (no single-card improvement exists).
-                # Escalation logic: 1D (100% atoms) -> 2D (100% pairs) -> 3D (Faction Deficit Wytrych) -> Reset
+                # Current depth has reached a local plateau.
+                # Escalation logic: 1D (atoms) -> 1.5D (intra-card/macro 2D/3D) -> 2D (all cross-card pairs) -> 3D (deficit wytrych) -> Reset
                 if current_phase == 1:
                     current_phase = 2
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1D] Brak poprawki w 1D. Przechodzę do FAZY 2D (100% pełne przeszukanie wszystkich par)...\n")
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1D] Brak poprawki w 1D. Przechodzę do FAZY 1.5D (wieloparametrowy rebalans pojedynczej karty i czyste makro)...\n")
                 elif current_phase == 2:
                     current_phase = 3
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1.5D] Brak poprawki w 1.5D. Przechodzę do FAZY 2D (100% pełne przeszukanie wszystkich par cross-card)...\n")
+                elif current_phase == 3:
+                    current_phase = 4
                     beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=60)
                     print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w całym 2D. Przechodzę do FAZY 3D (Wytrych Deficytu Frakcji z {len(beam_seeds)} nasion 2D)...\n")
                 else:
                     consecutive_stalls += 1
-                    print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
+                    print(f"\n🛑 Zbadano pełną głębokość do Fazy 3D bez znalezienia patcha.")
                     print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
                     current_phase = 1
                     self.args.seed += 137
