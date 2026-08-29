@@ -10,7 +10,7 @@
 
 | # | Karta |
 |:---|:---|
-| 01 | [Rytuał Przejścia](01-rytual-przejscia.md) |
+| 01 | [Ścieżka Wtajemniczenia](01-sciezka-wtajemniczenia.md) |
 | 02 | [Transmutacja Złota](02-transmutacja-zlota.md) |
 | 03 | [Zakazana Wiedza](03-zakazana-wiedza.md) |
 | 04 | [Zwierciadło](04-zwierciadlo.md) |

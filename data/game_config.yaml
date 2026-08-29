@@ -424,7 +424,7 @@ cards:
     tags:
     - hook
   kt-01:
-    name: Rytuał Przejścia
+    name: Ścieżka Wtajemniczenia
     type: akcja
     cost: 1
     agents: 1

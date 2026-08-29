@@ -653,20 +653,20 @@ Kart: **12**
 
 Kart: **12**
 
-### `kt-01` — Rytuał Przejścia
+### `kt-01` — Ścieżka Wtajemniczenia
 
 | Pole | Wartość |
 | :--- | :--- |
 | `id` | kt-01 |
-| `name` | Rytuał Przejścia |
+| `name` | Ścieżka Wtajemniczenia |
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 0 |
-| `heresy_text` | Symboliczne przejście przez próg nie budzi alarmu familiariuszy. |
+| `heresy_text` | Wędrówka ścieżkami mądrości pozostaje niewidoczna dla niewtajemniczonych. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę. |
+| `lore` | Dyskretne kroki adepta po ścieżkach Toledo nie przyciągają wzroku inkwizytorów. |
 | `tags` | move, fragment |
 | `status` | prototyp |
 
