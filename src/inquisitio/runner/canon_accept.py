@@ -126,7 +126,7 @@ def _score(res: dict) -> float:
     return float(res.get("score_4p_balance") or res.get("score_4p") or 0.0)
 
 
-def rank_key(res: dict, *, mode: str = "band", base_in_band: bool = False) -> tuple:
+def rank_key(res: dict) -> tuple:
     """Sort key (lower is better) for the 4P funnel.
 
     Prioritizes vitality compliance (vit penalty == 0), then win-share balance descending,
@@ -145,117 +145,31 @@ def accept_candidate(
     base: dict,
     cand: dict,
     *,
-    mode: str = "legacy",
     min_delta: float = 0.05,
 ) -> AcceptDecision:
     """Decide whether a verified 4P candidate may be applied."""
-    if mode == "legacy":
-        safe, msg = telemetry_is_safe(cand)
-        if not safe:
-            return AcceptDecision(False, msg, "legacy")
-        # Hard Vitality Gate: Do not accept any patch that carries vitality penalty > 0.10
-        cand_vit = cand.get("vitality_penalty", 0.0)
-        base_vit = base.get("vitality_penalty", 0.0)
-        if cand_vit > 0.10:
-            return AcceptDecision(False, f"legacy: naruszenie witalności (kara {cand_vit:.3f} > 0.10)", "legacy")
-        if cand_vit > base_vit + 1e-9:
-            return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand_vit:.2f} > {base_vit:.2f})", "legacy")
-        d = _score(cand) - _score(base)
-        dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
-        # 1. Zysk ogólny bez istotnego psucia podłogi
-        if d >= min_delta and dmin >= -0.50:
-            return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta} (dmin {dmin:+.2f})", "legacy")
-        # 2. Jednoczesna poprawa średniej i podłogi (Pareto improvement)
-        if d >= 0.15 and dmin >= 0.15:
-            return AcceptDecision(True, f"legacy Pareto Δscore {d:+.2f} & Δmin {dmin:+.2f}", "legacy")
-        # 3. Bardzo duży zysk ogólny dopuszczający lekki trade-off
-        if d >= 1.50 and dmin >= -0.75:
-            return AcceptDecision(True, f"legacy Duży skok Δscore {d:+.2f} (dmin {dmin:+.2f})", "legacy")
-        # 4. Istotna poprawa podłogi (Maximin)
-        if dmin >= 0.50 and d >= 0.0:
-            return AcceptDecision(True, f"legacy Maximin Δmin {dmin:+.2f} (Δscore {d:+.2f})", "legacy")
-        return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} nie spełniają kryteriów bezpieczeństwa", "legacy")
-
-    if mode != "band":
-        raise ValueError(f"Unknown accept mode: {mode!r}")
-
-    base_shares = base.get("setup_shares") or {}
-    cand_shares = cand.get("setup_shares") or {}
-    climbing = not setup_shares_in_range(base_shares, *TARGET_BAND_PCT)
-
-    if not table_has_share_foundation(base):
-        # Base is outside 15–35% red line. Accept any candidate that doesn't
-        # regress — when deep in the red zone, every small step counts.
-        safe_f, msg_f = telemetry_is_safe(cand, relax_era=True)
-        if not safe_f:
-            return AcceptDecision(False, f"fundament: {msg_f}", "foundation")
-        if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
-            return AcceptDecision(False, "fundament: witalność gorsza niż baza", "foundation")
-        if table_has_share_foundation(cand):
-            return AcceptDecision(True, "fundament: kandydat wciąga frakcje w 15–35%", "foundation")
-        dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
-        dscore = _score(cand) - _score(base)
-        if dscore < -1e-9 and dmin < -1e-9:
-            return AcceptDecision(
-                False,
-                f"fundament: Δscore {dscore:+.2f} i Δmin {dmin:+.2f} oba ujemne",
-                "foundation",
-            )
-        return AcceptDecision(True, f"fundament: wspinaczka Δmin {dmin:+.2f} Δscore {dscore:+.2f}", "foundation")
-
-    safe, msg = telemetry_is_safe(cand, relax_era=climbing)
+    safe, msg = telemetry_is_safe(cand)
     if not safe:
-        return AcceptDecision(False, msg, "climb" if climbing else "hygiene")
-
-    if cand.get("vitality_penalty", 0.0) > base.get("vitality_penalty", 0.0) + 1e-9:
-        return AcceptDecision(False, "witalność gorsza niż baza", "climb")
-
-    if not setup_shares_in_range(cand_shares, *RED_LINE_PCT):
-        return AcceptDecision(False, "frakcja poza czerwoną linią 15–35%", "climb")
-
-    base_scores = base.get("setup_scores_balance") or base.get("setup_scores") or {}
-    cand_scores = cand.get("setup_scores_balance") or cand.get("setup_scores") or {}
-    raw_base_core = base.get("core") if base.get("core") is not None else base_scores.get(CORE_SETUP, 0.0)
-    raw_cand_core = cand.get("core") if cand.get("core") is not None else cand_scores.get(CORE_SETUP, 0.0)
-    base_core = float(raw_base_core or 0.0)
-    cand_core = float(raw_cand_core or 0.0)
-
-    if base_core >= CORE_SCORE_FLOOR and cand_core < CORE_SCORE_FLOOR:
-        return AcceptDecision(
-            False,
-            f"{CORE_SETUP} spadł poniżej {CORE_SCORE_FLOOR:.0f} pkt",
-            "hygiene",
-        )
-
-
-    dscore = _score(cand) - _score(base)
+        return AcceptDecision(False, msg, "legacy")
+    # Hard Vitality Gate: Do not accept any patch that carries vitality penalty > 0.10
+    cand_vit = cand.get("vitality_penalty", 0.0)
+    base_vit = base.get("vitality_penalty", 0.0)
+    if cand_vit > 0.10:
+        return AcceptDecision(False, f"legacy: naruszenie witalności (kara {cand_vit:.3f} > 0.10)", "legacy")
+    if cand_vit > base_vit + 1e-9:
+        return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand_vit:.2f} > {base_vit:.2f})", "legacy")
+    d = _score(cand) - _score(base)
     dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
-
-    base_in_band = setup_shares_in_range(base_shares, *TARGET_BAND_PCT)
-    cand_in_band = setup_shares_in_range(cand_shares, *TARGET_BAND_PCT)
-
-    if not base_in_band:
-        # Wspinaczka: stół poza pasmem 20-30%
-        # Akceptujemy wzrost globalnego wyniku LUB solidną poprawę najsłabszego setupu (z tolerancją na szum statystyczny)
-        if dscore >= min_delta or (dmin >= 0.3 and dscore >= -0.3):
-            return AcceptDecision(True, f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f}", "climb")
-        return AcceptDecision(
-            False,
-            f"wspinaczka: Δscore {dscore:+.2f} Δmin {dmin:+.2f} < {min_delta}",
-            "climb",
-        )
-
-    # Baza jest w paśmie 20-30% (Higiena i dopracowanie optimum)
-    if not cand_in_band and dscore < min_delta:
-        return AcceptDecision(False, "higiena: wyszedł z pasma 20–30%", "hygiene")
-    if health_improved(cand, base):
-        return AcceptDecision(True, "higiena: poprawa zdrowia, pasmo utrzymane", "hygiene")
-    if dscore >= min_delta or dmin >= min_delta:
-        return AcceptDecision(True, f"higiena: Δscore {dscore:+.2f} Δmin {dmin:+.2f} w paśmie", "hygiene")
-    return AcceptDecision(
-        False,
-        f"higiena: Δscore {dscore:+.2f} Δmin {dmin:+.2f} < {min_delta} i brak poprawy zdrowia",
-        "hygiene",
-    )
-
-
+    # 1. Zysk ogólny bez istotnego psucia podłogi
+    if d >= min_delta and dmin >= -0.50:
+        return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta} (dmin {dmin:+.2f})", "legacy")
+    # 2. Jednoczesna poprawa średniej i podłogi (Pareto improvement)
+    if d >= 0.15 and dmin >= 0.15:
+        return AcceptDecision(True, f"legacy Pareto Δscore {d:+.2f} & Δmin {dmin:+.2f}", "legacy")
+    # 3. Bardzo duży zysk ogólny dopuszczający lekki trade-off
+    if d >= 1.50 and dmin >= -0.75:
+        return AcceptDecision(True, f"legacy Duży skok Δscore {d:+.2f} (dmin {dmin:+.2f})", "legacy")
+    # 4. Istotna poprawa podłogi (Maximin)
+    if dmin >= 0.50 and d >= 0.0:
+        return AcceptDecision(True, f"legacy Maximin Δmin {dmin:+.2f} (Δscore {d:+.2f})", "legacy")
+    return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} nie spełniają kryteriów bezpieczeństwa", "legacy")

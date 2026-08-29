@@ -736,16 +736,11 @@ class Canon4PAutoBalancer:
         self.start_time = time.time()
         self.initial_version = CONFIG.version
         self._last_base_res: dict | None = None
-        
-        # Simulated Annealing parameters
-        self.temperature = getattr(self.args, "temperature", 0.40)
-        self.cooling_rate = getattr(self.args, "cooling_rate", 0.90)
-        self.min_temperature = getattr(self.args, "min_temperature", 0.05)
 
         signal.signal(signal.SIGINT, self._handle_sigint)
 
     def _accept_mode(self) -> str:
-        return getattr(self.args, "accept_mode", "legacy")
+        return "legacy"
 
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
@@ -782,7 +777,6 @@ class Canon4PAutoBalancer:
         print(f"Krok partii (Batch Step):   {self.args.batch_step} gier/setup ({len(CANONICAL_4P_SETUPS)} setupów 4p)")
         print(f"Zakres partii w wyścigu:    {self.args.min_games} – {self.args.max_games} gier/setup")
         print(f"Strefa Nierozróżnialności:  ε = {self.args.epsilon_indiff:.2f} pkt")
-        print(f"Simulated Annealing:        T_0 = {self.temperature:.2f}, cooling = {self.cooling_rate:.2f}")
         print(f"Wątki procesora:            {self.args.workers}")
         print(f"Tryb przyjęcia patcha:      {self._accept_mode()}")
         print(f"Archiwizacja raportów:     {REPORTS_DIR}/archive/<wersja>/")
@@ -1083,6 +1077,7 @@ class Canon4PAutoBalancer:
                     val_base_10k = None
                 else:
                     new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
+                    CONFIG.reload()
                     iter_elapsed = round(time.time() - iter_start, 2)
 
                     print(f"\n🎉 [ZAAKCEPTOWANO PATCH KANONU 4P #{self.total_iterations} — FAZA {patch_phase}D]")
@@ -1159,12 +1154,6 @@ class Canon4PAutoBalancer:
                     pending_patch = None
                     cached_base_stats = None
                     val_base_10k = None
-
-                    # Simulated Annealing: Cool down temperature after each applied step
-                    old_t = self.temperature
-                    self.temperature = max(self.min_temperature, self.temperature * self.cooling_rate)
-                    if old_t > self.min_temperature:
-                        print(f"   🌡️ [Simulated Annealing] Schłodzenie: T = {old_t:.3f} → {self.temperature:.3f} (cooling={self.cooling_rate:.2f})")
                     consecutive_stalls = 0
 
         self._emit_manual_ablation_review()
@@ -1185,11 +1174,6 @@ def main():
     parser.add_argument("--epsilon-indiff", type=float, default=0.15, help="Próg strefy nierozróżnialności / szumu balansu w pkt (domyślnie: 0.15)")
     parser.add_argument("--min-lookahead-delta", type=float, default=0.05, help="Minimalny przyrost punktowy nad wstrzymanym patchem wymagany do eskalacji D->D+1 (pkt, domyślnie: 0.05)")
     
-    # Simulated Annealing parameters
-    parser.add_argument("--temperature", type=float, default=0.40, help="Początkowa temperatura wyżarzania (domyślnie: 0.40)")
-    parser.add_argument("--cooling-rate", type=float, default=0.90, help="Współczynnik chłodzenia po zaakceptowanym patchu (domyślnie: 0.90)")
-    parser.add_argument("--min-temperature", type=float, default=0.05, help="Minimalna temperatura wyżarzania (domyślnie: 0.05)")
-
     parser.add_argument("--beam-width", type=int, default=20, help="Liczba najlepszych kandydatów kwalifikowanych do nasion kolejnej fazy wiązek (domyślnie: 20)")
     parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 4)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
@@ -1197,12 +1181,6 @@ def main():
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
-    parser.add_argument(
-        "--accept-mode",
-        choices=("legacy", "band"),
-        default="legacy",
-        help="legacy (max średniej) vs band (maximin poza pasmem, higiena w paśmie)",
-    )
 
     # Legacy compatibility arguments (kept for CLI backwards compatibility)
     parser.add_argument("--fast-games", type=int, default=300, help="[Legacy alias]")

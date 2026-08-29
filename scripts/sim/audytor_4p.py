@@ -16,7 +16,6 @@ Główne założenia metodologiczne:
      Jeśli głębiej nic lepszego, wdraża wcześniejszy wektor. 1D bez zysku i tak idzie w 2D.
   4. HUD = win share (`calculate_balance_score`). Witalność / martwe dual-win są **veto i ranking**,
      nie składnikiem 4P Score. Obniżenie progu uśpionej ścieżki to proteza — odrzucane.
-  5. Przyjęcie patcha: `canon_accept` tryb `band` (jak kanon).
 """
 from __future__ import annotations
 
@@ -45,6 +44,7 @@ import yaml
 from inquisitio.config import CONFIG, _CONFIG_PATH
 from inquisitio.config_updater import apply_mutation_to_config, save_config_and_bump_version
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
+from inquisitio.runner.adaptive_racer import AdaptiveSequentialRacer
 from inquisitio.runner.batch import run_batch
 from inquisitio.runner.balance import faction_shares as win_shares
 from inquisitio.runner.canon_accept import (
@@ -641,14 +641,13 @@ class Macro4PAutoBalancer:
         self.total_iterations = 0
         self.start_time = time.time()
         self.stop_requested = False
-        self._base_in_band = False
         signal.signal(signal.SIGINT, self._handle_sigint)
 
     def _accept_mode(self) -> str:
-        return getattr(self.args, "accept_mode", "band")
+        return getattr(self.args, "accept_mode", "legacy")
 
     def _rank(self, res: dict) -> tuple:
-        return rank_key(res, mode=self._accept_mode(), base_in_band=self._base_in_band)
+        return rank_key(res)
 
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
@@ -740,6 +739,7 @@ class Macro4PAutoBalancer:
             return
 
         new_version, _saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
+        CONFIG.reload()
         iter_elapsed = round(time.time() - iter_start, 2)
         print(f"\n🎉 [ZAAKCEPTOWANO PATCH KANONU 4P MAKRO #{self.total_iterations} — FAZA {phase}D]")
         print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
@@ -786,8 +786,7 @@ class Macro4PAutoBalancer:
         print(f"Maksymalny czas sesji:      {self.args.hours if self.args.hours else 'Brak limitu (do optimum)'} godz.")
         print(f"Maksymalnie patchów:        {self.args.max_iters if self.args.max_iters else 'Brak (do optimum)'}")
         print(f"Kanon Setupy:               {', '.join(CANONICAL_4P_SETUPS)}")
-        print(f"Etap 1/2:                   tanie tylko gdy pula > TOP {self.args.top_semifinalists}/{self.args.top_k} (inaczej samo ultra {self.args.confirm_games} g)")
-        print(f"Etap 3 (Weryfikacja Ultra): {self.args.confirm_games} gier/setup (TOP {self.args.top_k} finalistów)")
+        print(f"Weryfikacja Ultra:          {self.args.confirm_games} gier/setup")
         print(f"Lookahead +1D:              max głębokość {self.args.max_depth}D (1D zawsze zagląda w 2D)")
         print(f"Wątki procesora:            {self.args.workers}")
         print(f"Tryb przyjęcia patcha:      {self._accept_mode()} (witalność w rankingu; bez kart L3)")
@@ -821,19 +820,11 @@ class Macro4PAutoBalancer:
                 f"min `{base_res['min_balance_setup']}` {color_score(base_res['min_balance'])} | "
                 f"witalność kara {base_res['vitality_penalty']:.3f}"
             )
-            self._base_in_band = setup_shares_in_range(base_res.get("setup_shares") or {}, *TARGET_BAND_PCT)
-            band_label = "w paśmie 20–30% → higiena" if self._base_in_band else "poza pasmem 20–30% → wspinaczka maximin"
-            print(f"   🎚️ Pasmo 4P: {band_label}")
             warns = base_res.get("vitality_warnings") or []
             if warns:
                 print("   💤 Witalność (użyteczność dual-win) — audytor leczy to makro, nie obniżeniem progu:")
                 for w in warns:
                     print(f"      • {w}")
-            if self._accept_mode() == "band" and not table_has_share_foundation(base_res):
-                print(
-                    "\n🧱 Fundament: 4P poza czerwoną linią 15–35%. "
-                    "Wspinaczka aktywna — akceptuję kandydatów poprawiających rozkład frakcji."
-                )
             if canon_should_stop(base_res, mode=self._accept_mode()):
                 print(f"\n🏁 Kanon 4P: {base_res['score_4p']:.1f} pkt — optimum osiągnięte.")
                 break
@@ -878,67 +869,57 @@ class Macro4PAutoBalancer:
                     break
 
                 cand_dict = {c[0]: c for c in candidate_pool}
-                run_fast, run_screen = cheap_funnel_flags(
-                    len(candidate_pool), self.args.top_semifinalists, self.args.top_k
+                
+                # 2A. Wyścig Adaptive Monte Carlo Racer (od 400 do max_games)
+                racer = AdaptiveSequentialRacer(
+                    setups=setups,
+                    batch_step=self.args.batch_step,
+                    min_games=self.args.min_games,
+                    max_games=self.args.max_games,
+                    epsilon_indiff=self.args.epsilon_indiff,
+                    workers=self.args.workers,
+                    min_delta=self.args.min_delta,
                 )
-                survivors = list(candidate_pool)
-
-                if run_fast:
-                    print(f"\n--- [ETAP 1/3: SZYBKI PRZESIEW 4P] Testuję {len(survivors)} kandydatów ({self.args.fast_games} gier/setup × 5 setupów) ---")
-                    stage1_tasks = [((c[0], c[1], c[2]), self.args.fast_games, self.args.seed, setups) for c in survivors]
-                    stage1_results = self._execute_pool(_run_single_test_task_4p, stage1_tasks, label=f"Przesiew 4P 1/3")
-                    stage1_results.sort(key=self._rank)
-                    n_semifinalists = min(self.args.top_semifinalists, len(stage1_results))
-                    if n_semifinalists >= 10:
-                        n_semifinalists = (n_semifinalists // 10) * 10
-                    survivors = [cand_dict[r["id"]] for r in stage1_results[:n_semifinalists]]
-                else:
-                    print(
-                        f"\n⏭️ Pomijam etap 1 ({self.args.fast_games} g): "
-                        f"{len(survivors)} ≤ TOP {self.args.top_semifinalists} — przesiew nic nie tnie."
-                    )
-
-                if run_screen:
-                    print(f"\n--- [ETAP 2/3: GŁĘBOKI PRZESIEW 4P] Badam {len(survivors)} ({self.args.screen_games} gier/setup × 5 setupów) ---")
-                    stage2_tasks = [((c[0], c[1], c[2]), self.args.screen_games, self.args.seed, setups) for c in survivors]
-                    stage2_results = self._execute_pool(_run_single_test_task_4p, stage2_tasks, label=f"Przesiew 4P 2/3")
-                    stage2_results.sort(key=self._rank)
-                    n_finalists = min(self.args.top_k, len(stage2_results))
-                    if n_finalists >= 10:
-                        n_finalists = (n_finalists // 10) * 10
-                    survivors = [cand_dict[r["id"]] for r in stage2_results[:n_finalists]]
-                else:
-                    print(
-                        f"\n⏭️ Pomijam etap 2 ({self.args.screen_games} g): "
-                        f"{len(survivors)} ≤ TOP {self.args.top_k} — idę na ultra."
-                    )
-
-                print(f"\n--- [ETAP 3/3: WERYFIKACJA ULTRA 4P] Weryfikuję {len(survivors)} ({self.args.confirm_games} gier/setup × 5 setupów) ---")
-                stage3_tasks = [((c[0], c[1], c[2]), self.args.confirm_games, self.args.seed, setups) for c in survivors]
-                stage3_results = self._execute_pool(_run_single_test_task_4p, stage3_tasks, label=f"Weryfikacja 4P 3/3")
-
-                stage3_results.sort(key=self._rank)
-
-                print(f"\n📊 [WYNIKI WERYFIKACJI FINALISTÓW KANONU 4P] {current_phase}D")
-                for idx, r in enumerate(stage3_results, 1):
-                    decision = accept_macro_candidate(
-                        base_res, r, mode=self._accept_mode(), min_delta=self.args.min_delta
-                    )
-                    print(
-                        f"   #{idx:2d} [{r['id'][:42]}...] win share {r.get('score_4p_balance', r['score_4p']):.1f} | "
-                        f"witalność {r.get('vitality_penalty', 0):.3f} | {decision.reason}"
-                    )
-
+                
+                target_floor = pending_res["score_4p_balance"] if pending_res else None
+                base_stats, candidate_results = racer.run_race(
+                    base_cand=("BASE", "Baza", {}),
+                    candidate_pool=candidate_pool,
+                    seed=self.args.seed,
+                    delta_pool=None,
+                    label_prefix=f"WYŚCIG MAKRO 4P — FAZA {current_phase}D",
+                    target_floor_score=target_floor,
+                    base_stats_cache=None,
+                )
+                
+                surviving_stats = [c for c in candidate_results if not c.is_pruned]
+                surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict()))
+                
                 accepted_candidate = None
                 best_ver_res = None
-                for ver_res in stage3_results:
+                
+                if surviving_stats:
+                    # Bierzemy top lidera po wyścigu i weryfikujemy go na twardej próbie 10k
+                    leader_stats = surviving_stats[0]
+                    leader_cand = cand_dict[leader_stats.id]
+                    print(f"\n--- [OSTATECZNA WERYFIKACJA 10K] Lider z wyścigu: {leader_cand[1]} ---")
+                    
+                    stage3_task = ((leader_cand[0], leader_cand[1], leader_cand[2]), self.args.confirm_games, self.args.seed, setups)
+                    stage3_results = self._execute_pool(_run_single_test_task_4p, [stage3_task], label=f"Weryfikacja SSOT 10k")
+                    ver_res = stage3_results[0]
+                    
                     decision = accept_macro_candidate(
-                        base_res, ver_res, mode=self._accept_mode(), min_delta=self.args.min_delta
+                        base_res, ver_res, min_delta=self.args.min_delta
                     )
+                    
+                    print(
+                        f"   [WERYFIKACJA 10k] win share {ver_res.get('score_4p_balance', ver_res['score_4p']):.1f} | "
+                        f"witalność {ver_res.get('vitality_penalty', 0):.3f} | {decision.reason}"
+                    )
+                    
                     if decision.accepted:
-                        accepted_candidate = cand_dict[ver_res["id"]]
+                        accepted_candidate = leader_cand
                         best_ver_res = ver_res
-                        break
 
                 if accepted_candidate is not None and best_ver_res is not None:
                     print(
@@ -957,19 +938,16 @@ class Macro4PAutoBalancer:
                     break
                 else:
                     if current_phase >= max_depth:
-                        print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
+                        print(
+                            f"\n🏁 Brak zmian makro przynoszących zysk w 4P na {current_phase}D "
+                            f"(lookahead +1D wyczerpany). Bieżący stan jest lokalnym optimum puli."
+                        )
                         search_exhausted = True
                         break
                     else:
                         current_phase += 1
                         print(f"🔄 [ŚLEPY ZAUŁEK {current_phase-1}D] Brak zysku w {current_phase-1}D. Przechodzę do 100% wyczerpującej FAZY {current_phase}D...\n")
-
-                print(
-                    f"\n🏁 Brak zmian makro przynoszących zysk w 4P na {current_phase}D "
-                    f"(lookahead +1D wyczerpany). Bieżący stan jest lokalnym optimum puli."
-                )
-                search_exhausted = True
-                break
+                        continue
 
             if self.args.dry_run and applied:
                 break
@@ -985,34 +963,29 @@ def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 Audytor 4P Makro (Adaptive Lookahead +1D)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas działania w godzinach (np. 4.0)")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
-    parser.add_argument("--fast-games", type=int, default=200, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 200)")
-    parser.add_argument("--screen-games", type=int, default=1000, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 1000)")
-    parser.add_argument("--confirm-games", type=int, default=10000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 10000)")
-    parser.add_argument("--top-semifinalists", type=int, default=40, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 40, wielokrotność 10)")
-    parser.add_argument("--top-k", type=int, default=20, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 20, wielokrotność 10)")
+
+    # Adaptive Monte Carlo Racing parameters
+    parser.add_argument("--batch-step", type=int, default=400, help="Rozmiar mikro-kroku partii na setup (domyślnie: 400)")
+    parser.add_argument("--min-games", type=int, default=400, help="Minimalna liczba gier/setup przed sprawdzeniem kryterium stopu (domyślnie: 400)")
+    parser.add_argument("--max-games", type=int, default=6400, help="Maksymalna liczba gier/setup w wyścigu (domyślnie: 6400)")
+    parser.add_argument("--epsilon-indiff", type=float, default=0.15, help="Próg strefy nierozróżnialności / szumu balansu w pkt (domyślnie: 0.15)")
+
+    parser.add_argument("--confirm-games", type=int, default=10000, help="Liczba gier weryfikujących SSOT (domyślnie: 10000)")
     parser.add_argument("--beam-width", type=int, default=10, help="Nasiona wiązki 2D/3D (domyślnie: 10, wielokrotność 10)")
-    parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość Lookahead +1D (domyślnie: 4)")
+    parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość wiązek kombinacji n-D (domyślnie: 4)")
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 4P wymagany do wdrożenia patcha (pkt, domyślnie: 0.05)")
     parser.add_argument("--workers", type=int, default=min(os.cpu_count() or 4, 10), help="Liczba procesów równoległych")
     parser.add_argument("--seed", type=int, default=42, help="Ziarno generatora liczb losowych")
     parser.add_argument("--dry-run", action="store_true", help="Tryb symulacji bez zapisywania zmian do game_config.yaml")
     parser.add_argument(
         "--accept-mode",
-        choices=("legacy", "band"),
-        default="band",
-        help=(
-            "band (domyślnie): win share + witalność jak kanon — maximin poza pasmem 20–30%%, "
-            "higiena w paśmie, stop gdy stół żywy. Bez kart L3. "
-            "legacy: max blended 4P (kosmetyka +0.1)."
-        ),
+        choices=("legacy",),
+        default="legacy",
+        help="Tryb akceptacji patcha (domyślnie: legacy)",
     )
 
     args = parser.parse_args()
 
-    if args.fast_games < 100:
-        args.fast_games = 100
-    if args.screen_games < 500:
-        args.screen_games = 500
     if args.confirm_games < 10000:
         args.confirm_games = 10000
     if args.max_depth < 2:

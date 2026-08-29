@@ -325,6 +325,7 @@ class ProblemCardChirurg:
                         old_v = fresh_raw_cfg.get("version", "v1.0-alpha.96")
                         mod_cfg, change_desc = apply_mutation_to_config(fresh_raw_cfg, cand_tup[0], cand_tup[2])
                         new_v, _ = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
+                        CONFIG.reload()
                         print(f"   ✔ Wdrożono patch chirurgiczny: `{old_v}` → **`{new_v}`**")
                         subprocess.run([sys.executable, str(TOOLS_SRC_DIR.parent / "sync_config.py")])
                         curr_ver = new_v

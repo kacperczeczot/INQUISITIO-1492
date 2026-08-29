@@ -367,7 +367,7 @@ class AdaptiveSequentialRacer:
 
             # 5. Convergence & Early Stop Check
             if curr_games >= self.min_games and active_survivors:
-                active_survivors.sort(key=lambda x: rank_key(x.to_result_dict(), mode=self.accept_mode))
+                active_survivors.sort(key=lambda x: rank_key(x.to_result_dict()))
                 leader = active_survivors[0]
                 l_lb, l_ub = leader.ci_95
 

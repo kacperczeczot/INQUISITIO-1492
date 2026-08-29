@@ -119,12 +119,12 @@ def test_canon_debt_empty_when_no_flags():
 
 
 def test_archive_report_rejects_screen_sized_samples():
-    assert REPORT_GAMES_MIN == 5000
-    assert_report_sample_size(5000, screen=False)
+    assert REPORT_GAMES_MIN == 10000
+    assert_report_sample_size(10000, screen=False)
     assert_report_sample_size(400, screen=True)
     try:
         assert_report_sample_size(400, screen=False)
     except SystemExit as exc:
-        assert "5000" in str(exc)
+        assert "10000" in str(exc)
     else:
         raise AssertionError("400 gier nie może iść do archiwum")

@@ -329,12 +329,11 @@ class AutoBalancer5P:
         setups = SETUPS_5P
         racer = AdaptiveSequentialRacer(
             setups=setups,
-            batch_step=400,
-            min_games=400,
-            max_games=6400,
-            epsilon_indiff=0.15,
+            batch_step=self.args.batch_step,
+            min_games=self.args.min_games,
+            max_games=self.args.max_games,
+            epsilon_indiff=self.args.epsilon_indiff,
             workers=self.args.workers,
-            accept_mode="legacy",
             min_delta=self.args.min_delta,
         )
 
@@ -401,7 +400,7 @@ class AutoBalancer5P:
             cached_base_stats = base_stats
 
             surviving_stats = [c for c in ranked_stats if not c.is_pruned]
-            surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict(), mode="legacy"))
+            surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict()))
 
             base_res = base_stats.to_result_dict()
             accepted_candidate = None
@@ -414,7 +413,6 @@ class AutoBalancer5P:
                 decision = accept_candidate(
                     base_res,
                     cand_res,
-                    mode="legacy",
                     min_delta=self.args.min_delta,
                 )
                 if decision.accepted:
@@ -429,8 +427,8 @@ class AutoBalancer5P:
                 rule_id, rule_name, delta_params = accepted_candidate
 
                 print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP — FORMAT 5P FULL]")
-                val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=10000, seed=42)
-                val_cand = _run_full_diagnostic(effective_rule_params, games_per_setup=10000, seed=42)
+                val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=self.args.confirm_games, seed=42)
+                val_cand = _run_full_diagnostic(effective_rule_params, games_per_setup=self.args.confirm_games, seed=42)
 
                 val_base_5p = val_base["cat_scores"].get("5p", 0.0)
                 val_cand_5p = val_cand["cat_scores"].get("5p", 0.0)
@@ -465,6 +463,7 @@ class AutoBalancer5P:
                     current_phase += 1
                 else:
                     new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
+                    CONFIG.reload()
                     iter_elapsed = round(time.time() - iter_start, 2)
 
                     print(f"\n🎉 [ZAAKCEPTOWANO PATCH 5P #{self.total_iterations} — FAZA {current_phase}D]")
@@ -527,6 +526,14 @@ def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 — Audytor 5P (Adaptive Monte Carlo Racer)")
     parser.add_argument("--hours", type=float, default=None, help="Maksymalny czas sesji w godzinach")
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów")
+    
+    # Adaptive Monte Carlo Racing parameters
+    parser.add_argument("--batch-step", type=int, default=400, help="Rozmiar mikro-kroku partii na setup (domyślnie: 400)")
+    parser.add_argument("--min-games", type=int, default=400, help="Minimalna liczba gier/setup przed sprawdzeniem kryterium stopu (domyślnie: 400)")
+    parser.add_argument("--max-games", type=int, default=6400, help="Maksymalna liczba gier/setup w wyścigu (domyślnie: 6400)")
+    parser.add_argument("--epsilon-indiff", type=float, default=0.15, help="Próg strefy nierozróżnialności / szumu balansu w pkt (domyślnie: 0.15)")
+    parser.add_argument("--confirm-games", type=int, default=10000, help="Liczba gier weryfikujących SSOT (domyślnie: 10000)")
+    
     parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk punktowy dla 5P (domyślnie: 0.05)")
     parser.add_argument("--beam-width", type=int, default=20, help="Szerokość wiązki synergii (domyślnie: 20)")
     parser.add_argument("--max-depth", type=int, default=4, help="Maksymalna głębokość wiązek kombinacji (domyślnie: 4)")

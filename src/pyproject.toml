@@ -24,7 +24,7 @@ include = ["inquisitio*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = [".", "../tools/sim"]
+pythonpath = [".", "../scripts/sim"]
 
 [tool.pyright]
-extraPaths = [".", "../tools/sim"]
+extraPaths = [".", "../scripts/sim"]
