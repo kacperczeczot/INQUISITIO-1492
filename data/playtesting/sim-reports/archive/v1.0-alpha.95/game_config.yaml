@@ -1,4 +1,4 @@
-version: v1.0-alpha.96
+version: v1.0-alpha.95
 date: '2026-08-29'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -10,7 +10,7 @@ system:
   cards_per_era: 2
   era_income: 1
   intrigue_gold: 1
-  observed_threshold: 3
+  observed_threshold: 4
   accusation_threshold: 7
 victory:
   swiete_oficjum:
@@ -205,14 +205,14 @@ cards:
   caa-05:
     name: Ukryty Kurier
     type: akcja
-    cost: 0
+    cost: 1
     evacuate_relic: 1
     action: evacuate_relic
     condition: relic_present
     kurier_limit: 1
     tags:
     - relic
-    gold: 4
+    gold: 2
     target_heresy: 3
   caa-06:
     name: Ucieczka z Lochów
@@ -615,7 +615,7 @@ cards:
     tags:
     - arrest
     - heresy
-    gold: 3
+    gold: 2
   gc-08:
     name: Zatrute Złoto
     type: akcja

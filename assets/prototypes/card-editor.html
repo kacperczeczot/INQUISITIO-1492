@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.93</span>
+              <span id="prev-meta-ver">v1.0-alpha.96</span>
             </div>
           </div>
         </div>
@@ -1189,13 +1189,15 @@
     "name": "Wezwanie do Trybunału",
     "type": "reakcja",
     "cost": 0,
-    "target_heresy": 1,
+    "target_heresy": 3,
     "action": "frame_rival",
     "target_scope": "triggering_rival",
     "trigger": "rival_plays_heresy_gte_1",
     "tags": [
       "reaction"
     ],
+    "heresy": 3,
+    "gold": 2,
     "lore": "Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję."
   },
   "so-06": {
@@ -1357,7 +1359,7 @@
   "caa-05": {
     "name": "Ukryty Kurier",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "evacuate_relic": 1,
     "action": "evacuate_relic",
     "condition": "relic_present",
@@ -1365,7 +1367,7 @@
     "tags": [
       "relic"
     ],
-    "gold": 3,
+    "gold": 4,
     "target_heresy": 3,
     "lore": "Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar."
   },
@@ -1903,7 +1905,7 @@
       "arrest",
       "heresy"
     ],
-    "gold": 0,
+    "gold": 3,
     "heresy_text": "Ciało w kanałach Gildii mówi więcej niż świadek na rynku.",
     "lore": "Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami."
   },
@@ -2342,7 +2344,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.93';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.96';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

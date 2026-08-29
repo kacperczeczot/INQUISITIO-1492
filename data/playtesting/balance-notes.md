@@ -44,7 +44,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
-| **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |
+| **Próg Obserwowanej** | **3** | **3** | **3** | Czysta to 0–2. Od **3** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **15** | **15** | **15** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
@@ -93,6 +93,21 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.96 (2026-08-29) — Kanon 4P: Próg Obserwowanej: offset -1 (nowy: 3) + Karta `gc-08` (Zatrute Złoto): `gold` → `0` + Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-05` (Ukryty Kurier): `gold` → `4` + Karta `gc-07` (Skrytobójstwo): `gold` → `3` (Zysk 4P Δ +0.3 pkt)
+- **Wynik 4P:** Kanon **`94.2`** → **`94.5 pkt`** | Global **`51.1`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja (`L1_OBSERVED_MINUS1__L3_CAA-05_C0_G4__L3_GC-07_GOLD_PLUS1__L3_GC-08_GOLD_MINUS1`):** Próg Obserwowanej: offset -1 (nowy: 3) + Karta `gc-08` (Zatrute Złoto): `gold` → `0` + Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-05` (Ukryty Kurier): `gold` → `4` + Karta `gc-07` (Skrytobójstwo): `gold` → `3`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.9%.
+
+### 🟢 Patch v1.0-alpha.95 (2026-08-29) — Kanon 4P: Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `3` + Karta `gc-07` (Skrytobójstwo): `gold` → `2` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`94.1`** → **`94.2 pkt`** | Global **`51.0`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja (`L3_GC-07_GOLD_SET2__L3_SO-05_TARGET_HERESY_PLUS2`):** Karta `so-05` (Wezwanie do Trybunału): `target_heresy` → `3` + Karta `gc-07` (Skrytobójstwo): `gold` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.9%.
+
+### 🟢 Patch v1.0-alpha.94 (2026-08-29) — Kanon 4P: Karta `so-05` (Wezwanie do Trybunału): `heresy` → `3` + Karta `so-05` (Wezwanie do Trybunału): `gold` → `2` + Karta `caa-05` (Ukryty Kurier): `gold` → `2` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`94.0`** → **`94.1 pkt`** | Global **`51.0`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja (`L3_CAA-05_GOLD_MINUS1__L3_SO-05_GOLD_SET2__L3_SO-05_HERESY_PLUS2`):** Karta `so-05` (Wezwanie do Trybunału): `heresy` → `3` + Karta `so-05` (Wezwanie do Trybunału): `gold` → `2` + Karta `caa-05` (Ukryty Kurier): `gold` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.9%.
 
 ### 🟢 Patch v1.0-alpha.93 (2026-08-29) — Kanon 4P: Karta `gc-05` (Fałszywy Świadek): `cost` → `1` + Karta `gc-05` (Fałszywy Świadek): `heresy` → `0` + Karta `gc-07` (Skrytobójstwo): `gold` → `0` + Karta `caa-12` (Skrytka w Murach): `cost` → `1` (Zysk 4P Δ +0.2 pkt)
 - **Wynik 4P:** Kanon **`93.8`** → **`94.0 pkt`** | Global **`51.0`** | 3p **`33.1`** | 5p **`25.8`**

@@ -820,61 +820,38 @@ class Canon4PAutoBalancer:
                             f"Szum wyścigu odrzucony. Sprawdzam kolejnego finalistę..."
                         )
 
-            # Anti-Greedy Lookahead Decision Engine
+            # Decision Engine: Greedy-First + Multi-D Fallback
             should_apply_patch = False
             patch_to_apply = None
 
             if found_better_at_this_depth and best_candidate_at_depth:
-                cand_delta = best_candidate_at_depth["val_delta"]
-                prev_pending_score = pending_patch["best_res"]["score_4p_balance"] if pending_patch else (val_base_10k["cat_scores"].get("4p", 0.0) if val_base_10k else base_res["score_4p_balance"])
-                min_lookahead_gain = getattr(self.args, "min_lookahead_delta", 0.05)
-                cand_gain_over_pending = best_candidate_at_depth["best_res"]["score_4p_balance"] - prev_pending_score
-
-                if cand_gain_over_pending >= min_lookahead_gain:
-                    pending_patch = best_candidate_at_depth
-                    print(
-                        f"\n🔍 [ANTI-GREEDY LOOKAHEAD +1D] Nowy certyfikowany lider w Fazie {current_phase}D: "
-                        f"{best_candidate_at_depth['cand_tuple'][1]} (10k: **{best_candidate_at_depth['best_res']['score_4p_balance']:.1f} pkt**, przyrost nad wstrzymanym: +{cand_gain_over_pending:.2f} pkt).\n"
-                        f"   ✋ WSTRZYMUJĘ natychmiastowe wdrożenie i eskaluję do Fazy {current_phase + 1}D, "
-                        f"by sprawdzić czy głębsze synergie dadzą jeszcze wyższy certyfikowany zysk..."
-                    )
-                    beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=self.args.beam_width)
-                    current_phase += 1
-                    continue
-                else:
-                    # Deeper search brought diminishing returns (< min_lookahead_gain) -> Apply the confirmed global best vector!
-                    print(
-                        f"\n🎯 [LOOKAHEAD ZASADA MALEJĄCYCH PRZYROSTÓW] Faza {current_phase}D wniosła przyrost 10k +{cand_gain_over_pending:.2f} pkt "
-                        f"(poniżej progu eskalacji {min_lookahead_gain:.2f} pkt).\n"
-                        f"   🌟 Zatrzymuję dalszą eskalację drzewa i wdrażam sprawdzony globalny wektor synergii!"
-                    )
-                    should_apply_patch = True
-                    patch_to_apply = best_candidate_at_depth if best_candidate_at_depth["best_res"]["score_4p_balance"] > prev_pending_score else pending_patch
+                # We found a verified, 10k-certified improvement at current depth!
+                # Apply it IMMEDIATELY without wasting hours on speculative lookahead!
+                print(
+                    f"\n🎯 [GREEDY-FIRST WDROŻENIE] Znaleziono w 100% zweryfikowany zysk w Fazie {current_phase}D: "
+                    f"{best_candidate_at_depth['cand_tuple'][1]} (10k: **{best_candidate_at_depth['best_res']['score_4p_balance']:.1f} pkt**, Δ = {best_candidate_at_depth['val_delta']:+.2f} pkt).\n"
+                    f"   🌟 Wdrażam patch natychmiast, by natychmiast podnieść bazę i odblokować kolejny krok!"
+                )
+                should_apply_patch = True
+                patch_to_apply = best_candidate_at_depth
             else:
-                if pending_patch is not None:
-                    # Deeper level produced no further 10k-certified gains -> The held pending patch is the confirmed global optimum!
-                    print(
-                        f"\n🎯 [ANTI-GREEDY LOOKAHEAD] Faza {current_phase}D nie pobiła wstrzymanego certyfikowanego wektora z Fazy {pending_patch['phase']}D.\n"
-                        f"   🌟 Wdrażam sprawdzony globalny wektor synergii: {pending_patch['cand_tuple'][1]}"
-                    )
-                    should_apply_patch = True
-                    patch_to_apply = pending_patch
+                # Current depth (e.g. 1D) has reached a local plateau (no single-card improvement exists).
+                # ONLY NOW do we escalate to higher dimensions (2D, 3D...) to break local minima!
+                max_depth = getattr(self.args, "max_depth", 4)
+                beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=getattr(self.args, "beam_width", 60))
+
+                if current_phase >= max_depth or not beam_seeds:
+                    consecutive_stalls += 1
+                    print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
+                    print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
+                    current_phase = 1
+                    self.args.seed += 137
+                    beam_seeds.clear()
+                    val_base_10k = None
                 else:
-                    # No pending patch and no 10k-certified improvement at this depth -> escalate deeper to search for emergent synergies
-                    beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=self.args.beam_width)
-                    max_depth = getattr(self.args, "max_depth", 12)
-                    if current_phase >= max_depth or not beam_seeds:
-                        consecutive_stalls += 1
-                        print(f"\n🛑 Zbadano głębokość do Fazy {current_phase}D bez znalezienia patcha.")
-                        print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
-                        current_phase = 1
-                        self.args.seed += 137
-                        beam_seeds.clear()
-                        val_base_10k = None
-                    else:
-                        current_phase += 1
-                        print(f"🔄 Brak certyfikowanego zysku 10k w {current_phase-1}D. Eksploruję wielowymiarowe synergie w FAZIE {current_phase}D ({len(beam_seeds)} nasion pełnego spektrum)...\n")
-                    continue
+                    current_phase += 1
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK {current_phase-1}D] Brak zysku w {current_phase-1}D. Eskaluję do wielowymiarowych synergii w FAZIE {current_phase}D ({len(beam_seeds)} nasion pełnego spektrum)...\n")
+                continue
 
 
             # 4. Mandatory SSOT Commit (patch_to_apply is already 10k-certified!)

@@ -621,7 +621,7 @@ cards:
     type: akcja
     cost: 1
     target_heresy: 0
-    gold: 1
+    gold: 0
     action: gain_gold
     tags:
     - gold

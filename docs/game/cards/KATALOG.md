@@ -101,9 +101,9 @@ Kart: **12**
 | `type` | reakcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 1 |
+| `heresy` | 3 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +3 Herezja. Zyskaj 2 złota. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -310,7 +310,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
@@ -557,7 +557,7 @@ Kart: **12**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala z Herezją ≥ 4. |
+| `effect` | Załóż Hak na rywala z Herezją ≥ 3. |
 | `lore` | Korona poluje na już brudnych. Dwa Haki zaczynają się tu. |
 | `tags` | hook |
 | `status` | prototyp |
@@ -767,7 +767,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Załóż Hak na rywala z Herezją ≥ 4. |
+| `effect` | Załóż Hak na rywala z Herezją ≥ 3. |
 | `lore` | Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze. |
 | `tags` | hook |
 | `status` | prototyp |
