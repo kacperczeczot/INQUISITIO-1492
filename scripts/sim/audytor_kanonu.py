@@ -664,6 +664,7 @@ class Canon4PAutoBalancer:
 
         setups = CANONICAL_4P_SETUPS
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
+        val_base_10k: dict | None = None
 
         current_phase = 1
         beam_seeds: list[tuple[str, str, dict]] = []
@@ -751,51 +752,91 @@ class Canon4PAutoBalancer:
                 print(f"\n🏁 Kanon 4P: {base_res['score_4p_balance']:.1f} pkt — optimum osiągnięte.")
                 break
 
-            # 3. Evaluate Survivors & Anti-Greedy Frontier
+            # 3. Evaluate Phase Finalists on the Mandatory 10k Ground-Truth Benchmark
             surviving_stats = [c for c in candidate_results if not c.is_pruned]
             surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict(), mode=self._accept_mode()))
             ranked_results = [c.to_result_dict() for c in surviving_stats]
 
-            found_better_at_this_depth = False
-            best_candidate_at_depth = None
-
+            nominal_qualifiers = []
             for cand_stat in surviving_stats:
                 cand_res = cand_stat.to_result_dict()
                 decision = accept_candidate(
                     base_res, cand_res, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
                 if decision.accepted:
-                    accepted_tuple = cand_stat.delta_tuple if cand_stat.delta_tuple else cand_stat.cand_tuple
-                    best_candidate_at_depth = {
-                        "cand_tuple": accepted_tuple,
-                        "cand_stat": cand_stat,
-                        "best_res": cand_res,
-                        "effective_params": cand_stat.cand_tuple[2],
-                        "reason": decision.reason,
-                        "phase": current_phase,
-                    }
-                    found_better_at_this_depth = True
-                    break
+                    nominal_qualifiers.append((cand_stat, cand_res, decision))
+
+            found_better_at_this_depth = False
+            best_candidate_at_depth = None
+
+            if nominal_qualifiers:
+                # Ensure 10k baseline benchmark is calculated once and cached
+                if val_base_10k is None:
+                    print(f"\n🔍 [BENCHMARK BAZOWY 10 000 GIER/SETUP — DLA BAZY `{curr_ver}`] Obliczam stan referencyjny...")
+                    val_base_10k = _run_full_diagnostic(curr_base_overrides, games_per_setup=10000, seed=42)
+
+                val_base_score = val_base_10k["cat_scores"].get("4p", 0.0)
+                finalists_to_test = nominal_qualifiers[:5]
+                print(f"\n🔍 [TEST GENERALNY 10 000 GIER/SETUP — FAZA {current_phase}D] Badam grupę {len(finalists_to_test)} finalistów wyścigu na benchmarku 10k...")
+
+                for rank_idx, (cand_stat, cand_res, decision) in enumerate(finalists_to_test, 1):
+                    cand_eff_params = cand_stat.cand_tuple[2]
+                    cand_tup = cand_stat.delta_tuple if cand_stat.delta_tuple else cand_stat.cand_tuple
+
+                    val_cand = _run_full_diagnostic(cand_eff_params, games_per_setup=10000, seed=42)
+                    val_cand_score = val_cand["cat_scores"].get("4p", 0.0)
+                    val_delta = val_cand_score - val_base_score
+
+                    if val_delta >= self.args.min_delta:
+                        print(
+                            f"   ✅ [CERTYFIKACJA 10K — FINALISTA #{rank_idx}] {cand_tup[1]}\n"
+                            f"      🎯 4P Kanon 10k: {val_base_score:.1f} → **{val_cand_score:.1f} pkt** "
+                            f"(Δ = {val_delta:+.2f} pkt >= +{self.args.min_delta:.2f} pkt). POTWIERDZONO!"
+                        )
+                        cert_res = dict(cand_res)
+                        cert_res["score_4p_balance"] = val_cand_score
+                        cert_res["setup_scores_balance"] = {
+                            s: val_cand["setup_scores"].get(s, 0.0) for s in CANONICAL_4P_SETUPS
+                        }
+
+                        best_candidate_at_depth = {
+                            "cand_tuple": cand_tup,
+                            "cand_stat": cand_stat,
+                            "best_res": cert_res,
+                            "effective_params": cand_eff_params,
+                            "reason": decision.reason,
+                            "phase": current_phase,
+                            "val_base": val_base_10k,
+                            "val_cand": val_cand,
+                            "val_delta": val_delta,
+                        }
+                        found_better_at_this_depth = True
+                        break
+                    else:
+                        print(
+                            f"   ⛔ [ODRZUCONY FINALISTA #{rank_idx}] {cand_tup[1]}: "
+                            f"Baza 10k: {val_base_score:.1f} pkt → Test 10k: {val_cand_score:.1f} pkt "
+                            f"(Δ = {val_delta:+.2f} pkt < wymaganego +{self.args.min_delta:.2f} pkt). "
+                            f"Szum wyścigu odrzucony. Sprawdzam kolejnego finalistę..."
+                        )
 
             # Anti-Greedy Lookahead Decision Engine
             should_apply_patch = False
             patch_to_apply = None
 
             if found_better_at_this_depth and best_candidate_at_depth:
-                cand_delta = best_candidate_at_depth["best_res"]["score_4p_balance"] - base_res["score_4p_balance"]
-                
-                # If this candidate is strictly better than any previously held pending patch
-                prev_pending_score = pending_patch["best_res"]["score_4p_balance"] if pending_patch else base_res["score_4p_balance"]
+                cand_delta = best_candidate_at_depth["val_delta"]
+                prev_pending_score = pending_patch["best_res"]["score_4p_balance"] if pending_patch else (val_base_10k["cat_scores"].get("4p", 0.0) if val_base_10k else base_res["score_4p_balance"])
                 min_lookahead_gain = getattr(self.args, "min_lookahead_delta", 0.05)
                 cand_gain_over_pending = best_candidate_at_depth["best_res"]["score_4p_balance"] - prev_pending_score
 
                 if cand_gain_over_pending >= min_lookahead_gain:
                     pending_patch = best_candidate_at_depth
                     print(
-                        f"\n🔍 [ANTI-GREEDY LOOKAHEAD +1D] Znaleziono nową poprawkę w Fazie {current_phase}D: "
-                        f"{best_candidate_at_depth['cand_tuple'][1]} (+{cand_delta:.2f} pkt, przyrost nad wstrzymanym: +{cand_gain_over_pending:.2f} pkt).\n"
+                        f"\n🔍 [ANTI-GREEDY LOOKAHEAD +1D] Nowy certyfikowany lider w Fazie {current_phase}D: "
+                        f"{best_candidate_at_depth['cand_tuple'][1]} (10k: **{best_candidate_at_depth['best_res']['score_4p_balance']:.1f} pkt**, przyrost nad wstrzymanym: +{cand_gain_over_pending:.2f} pkt).\n"
                         f"   ✋ WSTRZYMUJĘ natychmiastowe wdrożenie i eskaluję do Fazy {current_phase + 1}D, "
-                        f"by sprawdzić czy głębsze synergie dadzą jeszcze wyższy zysk globalny..."
+                        f"by sprawdzić czy głębsze synergie dadzą jeszcze wyższy certyfikowany zysk..."
                     )
                     beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=self.args.beam_width)
                     current_phase += 1
@@ -803,7 +844,7 @@ class Canon4PAutoBalancer:
                 else:
                     # Deeper search brought diminishing returns (< min_lookahead_gain) -> Apply the confirmed global best vector!
                     print(
-                        f"\n🎯 [LOOKAHEAD ZASADA MALEJĄCYCH PRZYROSTÓW] Faza {current_phase}D wniosła przyrost +{cand_gain_over_pending:.2f} pkt "
+                        f"\n🎯 [LOOKAHEAD ZASADA MALEJĄCYCH PRZYROSTÓW] Faza {current_phase}D wniosła przyrost 10k +{cand_gain_over_pending:.2f} pkt "
                         f"(poniżej progu eskalacji {min_lookahead_gain:.2f} pkt).\n"
                         f"   🌟 Zatrzymuję dalszą eskalację drzewa i wdrażam sprawdzony globalny wektor synergii!"
                     )
@@ -811,15 +852,15 @@ class Canon4PAutoBalancer:
                     patch_to_apply = best_candidate_at_depth if best_candidate_at_depth["best_res"]["score_4p_balance"] > prev_pending_score else pending_patch
             else:
                 if pending_patch is not None:
-                    # Deeper level produced no further gains -> The held pending patch is the confirmed global optimum!
+                    # Deeper level produced no further 10k-certified gains -> The held pending patch is the confirmed global optimum!
                     print(
-                        f"\n🎯 [ANTI-GREEDY LOOKAHEAD] Faza {current_phase}D nie pobiła wstrzymanego wektora z Fazy {pending_patch['phase']}D.\n"
+                        f"\n🎯 [ANTI-GREEDY LOOKAHEAD] Faza {current_phase}D nie pobiła wstrzymanego certyfikowanego wektora z Fazy {pending_patch['phase']}D.\n"
                         f"   🌟 Wdrażam sprawdzony globalny wektor synergii: {pending_patch['cand_tuple'][1]}"
                     )
                     should_apply_patch = True
                     patch_to_apply = pending_patch
                 else:
-                    # No pending patch and no improvement at this depth -> escalate deeper to search for emergent synergies
+                    # No pending patch and no 10k-certified improvement at this depth -> escalate deeper to search for emergent synergies
                     beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=self.args.beam_width)
                     max_depth = getattr(self.args, "max_depth", 12)
                     if current_phase >= max_depth or not beam_seeds:
@@ -829,41 +870,25 @@ class Canon4PAutoBalancer:
                         current_phase = 1
                         self.args.seed += 137
                         beam_seeds.clear()
+                        val_base_10k = None
                     else:
                         current_phase += 1
-                        print(f"🔄 Brak bezpośredniego zysku w {current_phase-1}D. Eksploruję wielowymiarowe synergie w FAZIE {current_phase}D ({len(beam_seeds)} nasion pełnego spektrum)...\n")
+                        print(f"🔄 Brak certyfikowanego zysku 10k w {current_phase-1}D. Eksploruję wielowymiarowe synergie w FAZIE {current_phase}D ({len(beam_seeds)} nasion pełnego spektrum)...\n")
                     continue
 
 
-            # 4. Mandatory 10k Validation Gate & SSOT Commit
+            # 4. Mandatory SSOT Commit (patch_to_apply is already 10k-certified!)
             if should_apply_patch and patch_to_apply:
                 rule_id, rule_name, delta_params = patch_to_apply["cand_tuple"]
                 effective_rule_params = patch_to_apply["effective_params"]
                 best_ver_res = patch_to_apply["best_res"]
                 acceptance_reason = patch_to_apply["reason"]
                 patch_phase = patch_to_apply["phase"]
-
-                print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP — DLA WEKTORA {patch_phase}D]")
-                val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=10000, seed=42)
-                val_cand = _run_full_diagnostic(effective_rule_params, games_per_setup=10000, seed=42)
-
+                val_base = patch_to_apply["val_base"]
+                val_cand = patch_to_apply["val_cand"]
+                val_delta = patch_to_apply["val_delta"]
                 val_base_score = val_base["cat_scores"].get("4p", 0.0)
                 val_cand_score = val_cand["cat_scores"].get("4p", 0.0)
-                val_delta = val_cand_score - val_base_score
-
-                min_allowed_delta = max(0.05, getattr(self.args, "min_delta", 0.05))
-                if val_delta < min_allowed_delta:
-                    print(
-                        f"   ⛔ ODRZUCONO KANDYDATA NA PEŁNYM BENCHMARKU 10K: "
-                        f"Baza 10k: {val_base_score:.1f} pkt → Test 10k: {val_cand_score:.1f} pkt "
-                        f"(Δ = {val_delta:+.2f} pkt < wymaganego +{min_allowed_delta:.2f} pkt). "
-                        f"Fałszywy alarm wyścigu wyeliminowany."
-                    )
-                    pending_patch = None
-                    cached_base_stats = None
-                    current_phase = 1
-                    beam_seeds.clear()
-                    continue
 
                 self.total_iterations += 1
 
@@ -881,6 +906,7 @@ class Canon4PAutoBalancer:
                 d5_sign = f"+{d_5:.1f}" if d_5 > 0 else f"{d_5:.1f}"
                 dg_sign = f"+{d_g:.1f}" if d_g > 0 else f"{d_g:.1f}"
 
+                print(f"\n🔍 [WDROŻENIE CERTYFIKOWANEGO PATCHA 10K — DLA WEKTORA {patch_phase}D]")
                 print(f"   🎯 4P Kanon (10k):  {val_base_score:.1f} → **{val_cand_score:.1f} pkt** (Δ {val_delta:+.2f} pkt)")
                 print(f"   👥 Wpływ 3p:        {val_base['cat_scores'].get('3p',0):.1f} → {val_cand['cat_scores'].get('3p',0):.1f} pkt (`{d3_sign} pkt`)")
                 print(f"   👥 Wpływ 5p:        {val_base['cat_scores'].get('5p',0):.1f} → {val_cand['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
@@ -903,6 +929,7 @@ class Canon4PAutoBalancer:
                     pending_patch = None
                     current_phase = 1
                     beam_seeds.clear()
+                    val_base_10k = None
                 else:
                     new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
                     iter_elapsed = round(time.time() - iter_start, 2)
@@ -977,6 +1004,7 @@ class Canon4PAutoBalancer:
                     beam_seeds.clear()
                     pending_patch = None
                     cached_base_stats = None
+                    val_base_10k = None
 
                     # Simulated Annealing: Cool down temperature after each applied step
                     old_t = self.temperature
