@@ -233,9 +233,9 @@ class AdaptiveSequentialRacer:
     def __init__(
         self,
         setups: list[str],
-        batch_step: int = 100,
+        batch_step: int = 400,
         min_games: int = 400,
-        max_games: int = 8000,
+        max_games: int = 6400,
         epsilon_indiff: float = 0.15,
         workers: int = 10,
         accept_mode: str = "legacy",
@@ -269,11 +269,12 @@ class AdaptiveSequentialRacer:
             active_candidates = [CandidateStats(c, delta_tuple=c) for c in candidate_pool]
         all_candidates = list(active_candidates)
 
+        # ─── Optimal 3-Rung Geometry (x4 scale: [400, 1600, 6400]) ──────────
         rungs = []
-        r = max(100, self.batch_step)
+        r = max(400, self.min_games)
         while r < self.max_games:
             rungs.append(r)
-            r *= 2
+            r *= 4
         if not rungs or rungs[-1] < self.max_games:
             rungs.append(self.max_games)
 

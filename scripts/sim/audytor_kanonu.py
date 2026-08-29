@@ -1049,9 +1049,9 @@ def main():
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
     
     # Adaptive Monte Carlo Racing parameters
-    parser.add_argument("--batch-step", type=int, default=100, help="Rozmiar mikro-kroku partii na setup (domyślnie: 100)")
+    parser.add_argument("--batch-step", type=int, default=400, help="Rozmiar mikro-kroku partii na setup (domyślnie: 400)")
     parser.add_argument("--min-games", type=int, default=400, help="Minimalna liczba gier/setup przed sprawdzeniem kryterium stopu (domyślnie: 400)")
-    parser.add_argument("--max-games", type=int, default=8000, help="Maksymalna liczba gier/setup w wyścigu (domyślnie: 8000)")
+    parser.add_argument("--max-games", type=int, default=6400, help="Maksymalna liczba gier/setup w wyścigu (domyślnie: 6400)")
     parser.add_argument("--epsilon-indiff", type=float, default=0.15, help="Próg strefy nierozróżnialności / szumu balansu w pkt (domyślnie: 0.15)")
     
     # Simulated Annealing parameters

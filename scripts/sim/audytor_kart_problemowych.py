@@ -284,9 +284,9 @@ class ProblemCardOptimizer:
 
         racer = AdaptiveSequentialRacer(
             setups=CANONICAL_4P_SETUPS,
-            batch_step=100,
+            batch_step=400,
             min_games=400,
-            max_games=8000,
+            max_games=6400,
             epsilon_indiff=0.15,
             workers=self.args.workers,
             accept_mode="legacy",
