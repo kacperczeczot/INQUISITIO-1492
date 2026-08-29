@@ -819,10 +819,10 @@ class Canon4PAutoBalancer:
                 phase_label = "3D"
                 lagging_setup = self._last_base_res.get("min_balance_setup", "") if self._last_base_res else ""
                 if not beam_seeds_3d:
-                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=60)
+                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=100)
                 if not beam_seeds_3d:
-                    beam_seeds_3d = atomic_pool[:60]
-                print(f"\n🌐 [FAZA 3D — KANON 4P] Wytrych Deficytu Frakcji (dla `{lagging_setup}`, {len(beam_seeds_3d)} nasion 2D × {len(atomic_pool)} atomów)...")
+                    beam_seeds_3d = atomic_pool[:100]
+                print(f"\n🌐 [FAZA 3D — KANON 4P] 15-MINUTOWY DIVERSE BEAM SEARCH 3D ({len(beam_seeds_3d)} nasion 2D × {len(atomic_pool)} atomów, priorytet: `{lagging_setup}`)...")
                 candidate_pool = generate_3d_deficit_candidates(beam_seeds_3d, atomic_pool, lagging_faction=lagging_setup)
 
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
@@ -977,8 +977,8 @@ class Canon4PAutoBalancer:
                     print(f"\n🔄 [ŚLEPY ZAUŁEK 1.5D] Brak poprawki w 1.5D. Przechodzę do FAZY 2D ({len(beam_seeds_2d)} nasion w 15-minutowym wyścigu)...\n")
                 elif current_phase == 3:
                     current_phase = 4
-                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results, beam_width=60)
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w 2D. Przechodzę do FAZY 3D (Wytrych Deficytu Frakcji z {len(beam_seeds_3d)} nasion 2D)...\n")
+                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results, beam_width=100)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w 2D. Przechodzę do FAZY 3D ({len(beam_seeds_3d)} nasion 2D w 15-minutowym wyścigu 3D)...\n")
                 else:
                     consecutive_stalls += 1
                     print(f"\n🛑 Zbadano pełną głębokość do Fazy 3D bez znalezienia patcha.")
