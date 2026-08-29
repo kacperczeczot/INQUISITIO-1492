@@ -366,6 +366,8 @@ struct ConfigOverridesNative {
     bool has_card_target_heresy_override[60];
     uint8_t card_gold_overrides[60];
     bool has_card_gold_override[60];
+    bool has_card_disabled[60];
+    bool has_time_card_disabled[10];
 
     ConfigOverridesNative() {
         std::memset(card_cost_overrides, 0, sizeof(card_cost_overrides));
@@ -376,6 +378,8 @@ struct ConfigOverridesNative {
         std::memset(has_card_target_heresy_override, 0, sizeof(has_card_target_heresy_override));
         std::memset(card_gold_overrides, 0, sizeof(card_gold_overrides));
         std::memset(has_card_gold_override, 0, sizeof(has_card_gold_override));
+        std::memset(has_card_disabled, 0, sizeof(has_card_disabled));
+        std::memset(has_time_card_disabled, 0, sizeof(has_time_card_disabled));
     }
 };
 
@@ -494,29 +498,37 @@ static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const Co
         pl.agents[1] = {fid, home, false, false, fid};
         pl.agents[2] = {fid, RYNEK, false, false, fid};
 
-        // Initialize deck (12 faction cards)
+        // Initialize deck (only non-disabled faction cards)
         uint8_t deck_cards[12];
+        int deck_card_count = 0;
         for (int c = 0; c < 12; ++c) {
-            deck_cards[c] = fid * 12 + c;
+            int cid = fid * 12 + c;
+            if (!ov.has_card_disabled[cid]) {
+                deck_cards[deck_card_count++] = (uint8_t)cid;
+            }
         }
-        rng.shuffle(deck_cards, 12);
+        rng.shuffle(deck_cards, deck_card_count);
 
-        pl.hand_count = ov.hand_limit;
-        for (int h = 0; h < ov.hand_limit; ++h) {
+        pl.hand_count = (uint8_t)std::min((int)ov.hand_limit, deck_card_count);
+        for (int h = 0; h < pl.hand_count; ++h) {
             pl.hand[h] = deck_cards[h];
         }
 
-        pl.deck_count = 12 - ov.hand_limit;
+        pl.deck_count = (uint8_t)(deck_card_count - pl.hand_count);
         for (int d = 0; d < pl.deck_count; ++d) {
-            pl.deck[d] = deck_cards[ov.hand_limit + d];
+            pl.deck[d] = deck_cards[pl.hand_count + d];
         }
         pl.discard_count = 0;
     }
 
     // Time deck initialized and shuffled AFTER player decks (matching Python setup.py)
-    for (int t = 0; t < 10; ++t) st.time_deck[t] = (uint8_t)t;
-    rng.shuffle(st.time_deck, 10);
-    st.time_deck_count = 10;
+    st.time_deck_count = 0;
+    for (int t = 0; t < 10; ++t) {
+        if (!ov.has_time_card_disabled[t]) {
+            st.time_deck[st.time_deck_count++] = (uint8_t)t;
+        }
+    }
+    rng.shuffle(st.time_deck, st.time_deck_count);
 }
 
 static inline int effective_card_cost(uint8_t card_idx, const GameStateNative& st, const ConfigOverridesNative& ov) {
@@ -2343,6 +2355,34 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
                         }
                     }
                 }
+            }
+        }
+
+        PyObject* disabled_cards_ov = PyDict_GetItemString(py_overrides, "disabled_cards");
+        if (disabled_cards_ov && (PyList_Check(disabled_cards_ov) || PyTuple_Check(disabled_cards_ov) || PySet_Check(disabled_cards_ov))) {
+            PyObject* iter = PyObject_GetIter(disabled_cards_ov);
+            if (iter) {
+                PyObject* item;
+                while ((item = PyIter_Next(iter))) {
+                    if (PyUnicode_Check(item)) {
+                        const char* cid_str = PyUnicode_AsUTF8(item);
+                        for (int c = 0; c < 60; ++c) {
+                            if (std::strcmp(inq::CARD_DB[c].id, cid_str) == 0) {
+                                ov.has_card_disabled[c] = true;
+                                break;
+                            }
+                        }
+                        if (std::strncmp(cid_str, "t-", 2) == 0 || std::strncmp(cid_str, "t_", 2) == 0 ||
+                            std::strncmp(cid_str, "T-", 2) == 0 || std::strncmp(cid_str, "T_", 2) == 0) {
+                            int t_idx = std::atoi(cid_str + 2) - 1;
+                            if (t_idx >= 0 && t_idx < 10) {
+                                ov.has_time_card_disabled[t_idx] = true;
+                            }
+                        }
+                    }
+                    Py_DECREF(item);
+                }
+                Py_DECREF(iter);
             }
         }
     }
