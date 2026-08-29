@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.91</span>
+              <span id="prev-meta-ver">v1.0-alpha.92</span>
             </div>
           </div>
         </div>
@@ -1151,7 +1151,7 @@
     "tags": [
       "gold"
     ],
-    "target_heresy": 1,
+    "target_heresy": 2,
     "heresy": 2,
     "heresy_text": "Konfiskata majątku skazańców to prawny obowiązek trybunału.",
     "lore": "Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie."
@@ -1303,14 +1303,14 @@
   "caa-01": {
     "name": "Przejście Podziemiami",
     "type": "akcja",
-    "cost": 1,
+    "cost": 2,
     "agents": 1,
     "action": "move_agent",
     "tags": [
       "move"
     ],
     "target_heresy": 1,
-    "heresy": 1,
+    "heresy": 2,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
   },
@@ -1382,7 +1382,7 @@
       "arrest"
     ],
     "heresy": 0,
-    "target_heresy": 2,
+    "target_heresy": 1,
     "heresy_text": "Klucz od strażnika, który nigdy nie służył Koronie.",
     "lore": "Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą."
   },
@@ -1458,7 +1458,7 @@
       "move",
       "inquisitor"
     ],
-    "gold": 3,
+    "gold": 1,
     "target_heresy": 1,
     "lore": "Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku."
   },
@@ -1652,6 +1652,8 @@
     "tags": [
       "move"
     ],
+    "gold": 1,
+    "heresy": 1,
     "heresy_text": "Symboliczne przejście przez próg nie budzi alarmu familiariuszy.",
     "lore": "Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę."
   },
@@ -2339,7 +2341,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.91';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.92';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

@@ -777,11 +777,14 @@ class Canon4PAutoBalancer:
                 
                 # If this candidate is strictly better than any previously held pending patch
                 prev_pending_score = pending_patch["best_res"]["score_4p_balance"] if pending_patch else base_res["score_4p_balance"]
-                if best_candidate_at_depth["best_res"]["score_4p_balance"] > prev_pending_score:
+                min_lookahead_gain = getattr(self.args, "min_lookahead_delta", 0.35)
+                cand_gain_over_pending = best_candidate_at_depth["best_res"]["score_4p_balance"] - prev_pending_score
+
+                if cand_gain_over_pending >= min_lookahead_gain:
                     pending_patch = best_candidate_at_depth
                     print(
                         f"\n🔍 [ANTI-GREEDY LOOKAHEAD +1D] Znaleziono nową poprawkę w Fazie {current_phase}D: "
-                        f"{best_candidate_at_depth['cand_tuple'][1]} (+{cand_delta:.2f} pkt).\n"
+                        f"{best_candidate_at_depth['cand_tuple'][1]} (+{cand_delta:.2f} pkt, przyrost nad wstrzymanym: +{cand_gain_over_pending:.2f} pkt).\n"
                         f"   ✋ WSTRZYMUJĘ natychmiastowe wdrożenie i eskaluję do Fazy {current_phase + 1}D, "
                         f"by sprawdzić czy głębsze synergie dadzą jeszcze wyższy zysk globalny..."
                     )
@@ -789,9 +792,14 @@ class Canon4PAutoBalancer:
                     current_phase += 1
                     continue
                 else:
-                    # Deeper search did not beat the held pending patch -> Apply the held global best
+                    # Deeper search brought diminishing returns (< min_lookahead_gain) -> Apply the confirmed global best vector!
+                    print(
+                        f"\n🎯 [LOOKAHEAD ZASADA MALEJĄCYCH PRZYROSTÓW] Faza {current_phase}D wniosła przyrost +{cand_gain_over_pending:.2f} pkt "
+                        f"(poniżej progu eskalacji {min_lookahead_gain:.2f} pkt).\n"
+                        f"   🌟 Zatrzymuję dalszą eskalację drzewa i wdrażam sprawdzony globalny wektor synergii!"
+                    )
                     should_apply_patch = True
-                    patch_to_apply = pending_patch
+                    patch_to_apply = best_candidate_at_depth if best_candidate_at_depth["best_res"]["score_4p_balance"] > prev_pending_score else pending_patch
             else:
                 if pending_patch is not None:
                     # Deeper level produced no further gains -> The held pending patch is the confirmed global optimum!

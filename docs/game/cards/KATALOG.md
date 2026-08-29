@@ -52,7 +52,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | Konfiskata majątku skazańców to prawny obowiązek trybunału. |
-| `effect` | Zyskaj 2 złota. Wskaż rywala: +1 Herezja. |
+| `effect` | Zyskaj 2 złota. Wskaż rywala: +2 Herezja. |
 | `lore` | Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie. |
 | `tags` | gold |
 | `status` | prototyp |
@@ -242,8 +242,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
-| `heresy` | 1 |
+| `cost_gold` | 2 |
+| `heresy` | 2 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec. |
@@ -663,7 +663,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | Symboliczne przejście przez próg nie budzi alarmu familiariuszy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę. |

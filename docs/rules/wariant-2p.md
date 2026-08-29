@@ -4,7 +4,7 @@
 
 # INQUISITIO 1492 — Wariant 2-osobowy: „Wojna Cieni” (2x2p — Dual Control)
 
-### Suplement do Księgi Zasad · Wersja v1.0-alpha.91
+### Suplement do Księgi Zasad · Wersja v1.0-alpha.92
 
 Kanonem rozgrywki w *INQUISITIO 1492* jest skład 4-osobowy. W wariancie dla 2 graczy (**Wojna Cieni**) dwóch graczy kontroluje łącznie **4 frakcje** (po 2 frakcje na gracza) z zachowaniem 100% kanonicznych talii, mechanik i celów.
 
@@ -49,14 +49,14 @@ Twoja frakcja **nie może** przesłuchiwać w Lochach, aresztować ani zakłada�
 ---
 
 ### 6. Limit Czasu Gry
-Gra trwa maksymalnie **14 Er** (talia Kroniki Dziejów: 10 kart z przetasowaniem po wyczerpaniu).
+Gra trwa maksymalnie **15 Er** (talia Kroniki Dziejów: 10 kart z przetasowaniem po wyczerpaniu).
 
 ---
 
 ### 7. Warunek Zwycięstwa: Podwójne Zwycięstwo
 Wygrywa gracz, którego **OBIE kontrolowane frakcje** jednocześnie spełnią swoje pełne cele kanoniczne w Fazie III.
 
-#### Rozstrzyganie remisów po 14. Erze (Tie-breaker):
+#### Rozstrzyganie remisów po 15. Erze (Tie-breaker):
 1. Gracz posiadający **1 w pełni zrealizowany cel** + większy postęp na 2. frakcji.
 2. Przy remisie: **niższa suma Herezji** obu kontrolowanych frakcji.
 3. Dalszy remis: **wyższa łączna suma złota** obu kontrolowanych frakcji.

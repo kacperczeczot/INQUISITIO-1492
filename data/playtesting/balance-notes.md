@@ -46,8 +46,8 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **4** | **4** | **4** | Czysta to 0–3. Od **4** Autodafé pali na Stos (nie areszt). |
 | **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **7** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
-| **Maksymalna Liczba Er** | **14** | **14** | **14** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
-| **Cooldown Autodafé** | **4 Ery** | **4 Ery** | **4 Ery** | Zunifikowany cooldown co 4 Ery (pierwsze możliwe od Ery 4). |
+| **Maksymalna Liczba Er** | **15** | **15** | **15** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
+| **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
 | **Akcja Gospodarcza** | **+1 zł** | **+1 zł** | **+1 zł** | Faza I Opcja B. Jarmark na Rynku: +2. |
 | **Złoto Startowe** | **4 zł** | **4 zł** | **4 zł** | Zunifikowane 4 zł dla wszystkich składów graczy. |
@@ -93,6 +93,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.92 (2026-08-29) — Kanon 4P: Limit Er: offset +1 (nowy: 15) + Cooldown Autodafé: offset -1 (nowy: 3) + Karta `caa-06` (Ucieczka z Lochów): `target_heresy` → `1` + Karta `kt-01` (Rytuał Przejścia): `gold` → `1`, `heresy` → `1` + Karta `caa-01` (Przejście Podziemiami): `cost` → `2`, `heresy` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `gold` → `1` + Karta `so-02` (Skarbiec Trybunału): `target_heresy` → `2` (Zysk 4P Δ +1.7 pkt)
+- **Wynik 4P:** Kanon **`92.1`** → **`93.8 pkt`** | Global **`50.9`** | 3p **`33.1`** | 5p **`25.7`**
+- **Modyfikacja (`L3_CAA-06_TARGET_HERESY_MINUS1__L3_KT-01_G1_H1__L3_CAA-01_C2_H2__L3_CAA-11_GOLD_MINUS2__L1_MAX_ERAS_PLUS1__L3_SO-02_TARGET_HERESY_PLUS1__L1_AUTODAFE_COOLDOWN_MINUS1`):** Limit Er: offset +1 (nowy: 15) + Cooldown Autodafé: offset -1 (nowy: 3) + Karta `caa-06` (Ucieczka z Lochów): `target_heresy` → `1` + Karta `kt-01` (Rytuał Przejścia): `gold` → `1`, `heresy` → `1` + Karta `caa-01` (Przejście Podziemiami): `cost` → `2`, `heresy` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `gold` → `1` + Karta `so-02` (Skarbiec Trybunału): `target_heresy` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.76, Deadlocks 0.0%, Pas Biedy 4.8%.
 
 ### 🟢 Patch v1.0-alpha.91 (2026-08-29) — Kanon 4P: Karta `gc-07` (Skrytobójstwo): `gold` → `2` (Zysk 4P Δ +0.1 pkt)
 - **Wynik 4P:** Kanon **`92.0`** → **`92.1 pkt`** | Global **`50.0`** | 3p **`32.7`** | 5p **`25.1`**
