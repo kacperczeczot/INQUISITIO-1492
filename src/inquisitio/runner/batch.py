@@ -94,6 +94,24 @@ def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict
         "heresy_sum": heresy_sum,
     }
 
+import copy
+from inquisitio.config import CONFIG
+
+def merge_override_dicts(base_dict: dict, delta_dict: dict) -> dict:
+    """Deep merges delta_dict on top of base_dict."""
+    out = copy.deepcopy(base_dict)
+    for k, v in delta_dict.items():
+        if k == "card_overrides":
+            if "card_overrides" not in out:
+                out["card_overrides"] = {}
+            for cid, c_dict in v.items():
+                if cid not in out["card_overrides"]:
+                    out["card_overrides"][cid] = {}
+                out["card_overrides"][cid].update(c_dict)
+        else:
+            out[k] = v
+    return out
+
 def run_batch(
     games: int = 100,
     *,
@@ -114,6 +132,12 @@ def run_batch(
     if setup_name not in SETUP_PRESETS:
         setup_name = "3p-oficjum-alandalus-korona"
 
+    active_overrides = CONFIG.get_active_overrides()
+    if win_overrides is None:
+        effective_overrides = active_overrides
+    else:
+        effective_overrides = merge_override_dicts(active_overrides, win_overrides)
+
     if _HAS_NATIVE and inquisitio_native is not None:
         res = inquisitio_native.run_batch(
             games=games,
@@ -121,7 +145,7 @@ def run_batch(
             seed=seed,
             threshold=threshold,
             layer=layer,
-            win_overrides=win_overrides or {},
+            win_overrides=effective_overrides,
         )
         return BatchSummary(
             games=games,

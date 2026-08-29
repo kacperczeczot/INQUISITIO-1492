@@ -127,6 +127,36 @@ class GameConfig:
         """Full raw dict."""
         return self._raw
 
+    def get_active_overrides(self) -> dict[str, Any]:
+        """Extracts all card and victory rule deviations in cfg relative to the C++ hardcoded baseline snapshot."""
+        ov: dict[str, Any] = {}
+        cards = self._raw.get("cards", {})
+        card_ov: dict[str, Any] = {}
+        for cid, cdata in cards.items():
+            if not isinstance(cdata, dict):
+                continue
+            diff = {}
+            for k in ["cost", "heresy", "target_heresy", "gold"]:
+                if k in cdata:
+                    diff[k] = cdata[k]
+            if diff:
+                card_ov[cid] = diff
+        if card_ov:
+            ov["card_overrides"] = card_ov
+
+        vic = self._raw.get("victory", {})
+        if "swiete_oficjum" in vic and "stacks" in vic["swiete_oficjum"]:
+            ov["so_stacks_offset"] = vic["swiete_oficjum"]["stacks"] - 7
+        if "korona_borgiowie" in vic and "decrees" in vic["korona_borgiowie"]:
+            ov["kb_decrees_offset"] = vic["korona_borgiowie"]["decrees"] - 2
+        if "cienie_al_andalus" in vic and "relics" in vic["cienie_al_andalus"]:
+            ov["caa_relics_offset"] = vic["cienie_al_andalus"]["relics"] - 2
+        if "kabala_toledo" in vic and "fragments" in vic["kabala_toledo"]:
+            ov["kt_frags_offset"] = vic["kabala_toledo"]["fragments"] - 3
+        if "gildia_cieni" in vic and "falls" in vic["gildia_cieni"]:
+            ov["gc_falls_offset"] = vic["gildia_cieni"]["falls"] - 9
+        return ov
+
     def reload(self, path: Path | None = None) -> None:
         """Re-read the YAML file (useful after editing)."""
         self.__init__(path)  # type: ignore[misc]
