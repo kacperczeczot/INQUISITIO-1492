@@ -255,9 +255,10 @@ class AdaptiveSequentialRacer:
         seed: int,
         delta_pool: list[tuple[str, str, dict]] | None = None,
         label_prefix: str = "WYŚCIG ADAPTACYJNY",
+        base_stats_cache: CandidateStats | None = None,
     ) -> tuple[CandidateStats, list[CandidateStats]]:
         """Conducts iterative micro-batch racing with pure statistical 95% CI pruning."""
-        base_stats = CandidateStats(base_cand, delta_tuple=base_cand)
+        base_stats = copy.deepcopy(base_stats_cache) if base_stats_cache is not None else CandidateStats(base_cand, delta_tuple=base_cand)
         if delta_pool and len(delta_pool) == len(candidate_pool):
             active_candidates = [
                 CandidateStats(cand_tuple=c, delta_tuple=d)
@@ -294,7 +295,8 @@ class AdaptiveSequentialRacer:
                 print(f"   🛑 Wszyscy kandydaci zostali statystycznie wyeliminowani (N={curr_games} gier/setup).")
                 break
 
-            current_pool = [base_stats] + survivors
+            need_simulate_base = base_stats.total_games_per_setup < target_games
+            current_pool = ([base_stats] if need_simulate_base else []) + survivors
 
             task_list = []
             task_map = {}
@@ -408,9 +410,9 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
     id1, name1, p1 = m1
     id2, name2, p2 = m2
 
-    keys1 = set(p1.keys()) - {"card_overrides"}
-    keys2 = set(p2.keys()) - {"card_overrides"}
-    if keys1 & keys2:
+    parts1 = id1.split("__")
+    parts2 = id2.split("__")
+    if set(parts1) & set(parts2):
         return None
 
     cards1 = p1.get("card_overrides", {})
@@ -420,8 +422,13 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
             if set(c_dict.keys()) & set(cards1[cid].keys()):
                 return None
 
-    combined_id = f"{id1}__{id2}"
-    combined_name = f"{name1} + {name2}"
+    # Canonical sorting of atomic mutation parts eliminates commutative duplicates (A+B == B+A)
+    all_parts = sorted(parts1 + parts2)
+    combined_id = "__".join(all_parts)
+
+    names1 = [n.strip() for n in name1.split("+")]
+    names2 = [n.strip() for n in name2.split("+")]
+    combined_name = " + ".join(sorted(names1 + names2))
 
     merged_params = copy.deepcopy(p1)
     for k, v in p2.items():

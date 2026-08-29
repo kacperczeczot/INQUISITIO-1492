@@ -288,6 +288,7 @@ class AutoBalancer5P:
         current_phase = 1
         beam_seeds: list[tuple[str, str, dict]] = []
         consecutive_stalls = 0
+        cached_base_stats = None
 
         print("═══════════════════════════════════════════════════════════════════════")
         print("   INQUISITIO-1492 — AUDYTOR 5P (Adaptive Monte Carlo Racer)          ")
@@ -345,7 +346,9 @@ class AutoBalancer5P:
                 seed=iter_seed,
                 delta_pool=delta_pool,
                 label_prefix=f"WYŚCIG 5P — FAZA {current_phase}D",
+                base_stats_cache=cached_base_stats,
             )
+            cached_base_stats = base_stats
 
             surviving_stats = [c for c in ranked_stats if not c.is_pruned]
             surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict(), mode="legacy"))
@@ -457,6 +460,7 @@ class AutoBalancer5P:
 
                     current_phase = 1
                     beam_seeds.clear()
+                    cached_base_stats = None
                     consecutive_stalls = 0
             else:
                 diverse_seeds = [r.cand_tuple for r in surviving_stats]

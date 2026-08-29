@@ -666,6 +666,7 @@ class Canon4PAutoBalancer:
         consecutive_stalls = 0
         loop_iteration = 0
         pending_patch: dict[str, Any] | None = None
+        cached_base_stats = None
 
         while not self.stop_requested:
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -721,7 +722,9 @@ class Canon4PAutoBalancer:
                 candidate_pool=effective_candidates,
                 seed=iter_seed,
                 delta_pool=candidate_pool,
+                base_stats_cache=cached_base_stats,
             )
+            cached_base_stats = base_stats
 
             base_res = base_stats.to_result_dict()
             self._last_base_res = base_res
@@ -851,6 +854,7 @@ class Canon4PAutoBalancer:
                         f"Fałszywy alarm wyścigu wyeliminowany."
                     )
                     pending_patch = None
+                    cached_base_stats = None
                     current_phase = 1
                     beam_seeds.clear()
                     continue
@@ -966,6 +970,7 @@ class Canon4PAutoBalancer:
                     current_phase = 1
                     beam_seeds.clear()
                     pending_patch = None
+                    cached_base_stats = None
 
                     # Simulated Annealing: Cool down temperature after each applied step
                     old_t = self.temperature
