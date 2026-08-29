@@ -94,6 +94,21 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.99 (2026-08-29) — Kanon 4P: Karta `caa-01` (Przejście Podziemiami): `cost` → `1`, `heresy` → `1` + Karta `kb-08` (Przekupstwo Sędziego): `heresy` → `1`
+- **Wynik 4P:** Kanon **`94.7`** → **`93.9 pkt`** | Global **`51.2`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja:** `caa-01` (Przejście Podziemiami): `cost: 2 → 1`, `heresy: 2 → 1` oraz `kb-08` (Przekupstwo Sędziego): `heresy: 2 → 1`.
+- **Efekt:** Likwidacja nadmiernego autopodatku (Self-Harm Tax) przy zachowaniu płynności i stabilności stołu 4P.
+
+### 🟢 Patch v1.0-alpha.98 (2026-08-29) — Kanon 4P: Karta `so-11` (Dekret Czystości Wiary): `cost` → `0` (Eliminacja Disruptora)
+- **Wynik 4P:** Kanon **`94.6`** → **`94.7 pkt`** | Global **`51.2`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja:** `so-11` (Dekret Czystości Wiary): `cost: 1 → 0`.
+- **Efekt:** Likwidacja statusu Disruptora, +1zł zysku netto rekompensuje 1☣ własnej herezji.
+
+### 🟢 Patch v1.0-alpha.97 (2026-08-29) — Kanon 4P: Karta `caa-08` (Kaptur Nocy): `cost` → `2` + Karta `caa-08` (Kaptur Nocy): `gold` → `2` + Karta `so-05` (Wezwanie do Trybunału): `gold` → `3` + Karta `so-05` (Wezwanie do Trybunału): `heresy` → `4` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`94.5`** → **`94.6 pkt`** | Global **`51.2`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja (`L3_CAA-08_COST_MINUS1__L3_CAA-08_GOLD_MINUS1__L3_SO-05_G3_H4`):** Karta `caa-08` (Kaptur Nocy): `cost` → `2` + Karta `caa-08` (Kaptur Nocy): `gold` → `2` + Karta `so-05` (Wezwanie do Trybunału): `gold` → `3` + Karta `so-05` (Wezwanie do Trybunału): `heresy` → `4`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.9%.
+
 ### 🟢 Patch v1.0-alpha.96 (2026-08-29) — Kanon 4P: Próg Obserwowanej: offset -1 (nowy: 3) + Karta `gc-08` (Zatrute Złoto): `gold` → `0` + Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-05` (Ukryty Kurier): `gold` → `4` + Karta `gc-07` (Skrytobójstwo): `gold` → `3` (Zysk 4P Δ +0.3 pkt)
 - **Wynik 4P:** Kanon **`94.2`** → **`94.5 pkt`** | Global **`51.1`** | 3p **`33.1`** | 5p **`25.8`**
 - **Modyfikacja (`L1_OBSERVED_MINUS1__L3_CAA-05_C0_G4__L3_GC-07_GOLD_PLUS1__L3_GC-08_GOLD_MINUS1`):** Próg Obserwowanej: offset -1 (nowy: 3) + Karta `gc-08` (Zatrute Złoto): `gold` → `0` + Karta `caa-05` (Ukryty Kurier): `cost` → `0` + Karta `caa-05` (Ukryty Kurier): `gold` → `4` + Karta `gc-07` (Skrytobójstwo): `gold` → `3`.

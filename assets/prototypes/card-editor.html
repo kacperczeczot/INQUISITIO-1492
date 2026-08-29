@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.96</span>
+              <span id="prev-meta-ver">v1.0-alpha.99</span>
             </div>
           </div>
         </div>
@@ -1196,8 +1196,8 @@
     "tags": [
       "reaction"
     ],
-    "heresy": 3,
-    "gold": 2,
+    "heresy": 4,
+    "gold": 3,
     "lore": "Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję."
   },
   "so-06": {
@@ -1276,7 +1276,7 @@
   "so-11": {
     "name": "Dekret Czystości Wiary",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "target_heresy": 1,
     "gold": 1,
     "action": "frame_rival",
@@ -1305,14 +1305,14 @@
   "caa-01": {
     "name": "Przejście Podziemiami",
     "type": "akcja",
-    "cost": 2,
+    "cost": 1,
     "agents": 1,
     "action": "move_agent",
     "tags": [
       "move"
     ],
     "target_heresy": 1,
-    "heresy": 2,
+    "heresy": 1,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
   },
@@ -1405,7 +1405,7 @@
   "caa-08": {
     "name": "Kaptur Nocy",
     "type": "akcja",
-    "cost": 3,
+    "cost": 2,
     "heresy": 0,
     "action": "move_agent",
     "condition": "has_double_agent",
@@ -1414,7 +1414,7 @@
       "heresy"
     ],
     "target_heresy": 2,
-    "gold": 3,
+    "gold": 2,
     "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
     "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
   },
@@ -1580,7 +1580,7 @@
     "tags": [
       "verdict"
     ],
-    "heresy": 2,
+    "heresy": 1,
     "lore": "Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone."
   },
   "kb-09": {
@@ -2344,7 +2344,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.96';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.99';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

@@ -1,6 +1,6 @@
 # Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja v1.0-alpha.99
 
-**Wersja Gry:** `v1.0-alpha.99` | **Data Badania:** 2026-08-29 22:50 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42
+**Wersja Gry:** `v1.0-alpha.99` | **Data Badania:** 2026-08-29 22:52 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42
 **4P Score (win share):** 🟢 ** 93.9** pkt | **Witalność (osobna kara):** `0.000` | **Śr. Er:** `5.76` | **Deadlocki:** `0.0%` | **Pas Biedy:** `4.5%`
 **Udziały 4P:** CAA 24.3% · GC 25.0% · KB 24.4% · KT 25.1% · SO 26.1%
 

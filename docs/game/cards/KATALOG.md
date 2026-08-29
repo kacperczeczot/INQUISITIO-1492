@@ -101,9 +101,9 @@ Kart: **12**
 | `type` | reakcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 3 |
+| `heresy` | 4 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +3 Herezja. Zyskaj 2 złota. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +3 Herezja. Zyskaj 3 złota. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -202,7 +202,7 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
@@ -242,8 +242,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
-| `heresy` | 2 |
+| `cost_gold` | 1 |
+| `heresy` | 1 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec. |
@@ -361,7 +361,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 3 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
@@ -572,7 +572,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 3 |
-| `heresy` | 2 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala. |
 | `lore` | Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone. |
