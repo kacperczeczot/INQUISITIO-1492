@@ -4,8 +4,8 @@ name: Przejście Podziemiami
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 2
-heresy: 2
+cost: 1
+heresy: 1
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.

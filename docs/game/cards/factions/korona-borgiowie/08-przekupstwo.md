@@ -5,7 +5,7 @@ faction: korona-borgiowie
 type: akcja
 layer: B
 cost: 3
-heresy: 2
+heresy: 1
 tags:
 - verdict
 effect: W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala.

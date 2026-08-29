@@ -231,7 +231,7 @@ static CardDef CARD_DB[60] = {
     {"kb-05", KB, 2, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_DECREE | TAG_HOOK},
     {"kb-06", KB, 2, 0, 0, 0, 0, true, false, false, 0, NO_LOCATION, TAG_ARREST},
     {"kb-07", KB, 2, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_HOOK},
-    {"kb-08", KB, 3, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
+    {"kb-08", KB, 3, 1, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_NONE},
     {"kb-09", KB, 2, 0, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_SIGNATURE | TAG_DECREE | TAG_HERESY},
     {"kb-10", KB, 4, 1, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_SIGNATURE | TAG_DECREE | TAG_HERESY},
     {"kb-11", KB, 1, 0, 1, 0, 1, false, false, false, 0, NO_LOCATION, TAG_MOVE | TAG_GOLD},
