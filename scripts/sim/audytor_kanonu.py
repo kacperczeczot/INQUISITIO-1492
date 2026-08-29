@@ -980,14 +980,11 @@ class Canon4PAutoBalancer:
                     beam_seeds_3d = select_diverse_beam_seeds(candidate_results, beam_width=100)
                     print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w 2D. Przechodzę do FAZY 3D ({len(beam_seeds_3d)} nasion 2D w 15-minutowym wyścigu 3D)...\n")
                 else:
-                    consecutive_stalls += 1
-                    print(f"\n🛑 Zbadano pełną głębokość do Fazy 3D bez znalezienia patcha.")
-                    print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
-                    current_phase = 1
-                    self.args.seed += 137
-                    beam_seeds_2d.clear()
-                    beam_seeds_3d.clear()
-                    val_base_10k = None
+                    print(f"\n🛑 [PLATEAU — WYCZERPANIE PRZESTRZENI 1D–3D]")
+                    print(f"   Zbadano pełne spektrum faz: 1D (atomy) → 1.5D (karty/makro) → 2D (wiązka par) → 3D (wiązka trójek).")
+                    print(f"   Żadna kombinacja nie przyniosła certyfikowanego zysku ≥ +{self.args.min_delta:.2f} pkt na benchmarku 10k.")
+                    print(f"   🏁 Kończę pracę audytora zgodnie z zasadą Twardego Stopu. Oczekuję na dyspozycję użytkownika.")
+                    break
                 continue
 
 
