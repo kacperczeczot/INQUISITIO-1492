@@ -94,6 +94,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.93 (2026-08-29) — Kanon 4P: Karta `gc-05` (Fałszywy Świadek): `cost` → `1` + Karta `gc-05` (Fałszywy Świadek): `heresy` → `0` + Karta `gc-07` (Skrytobójstwo): `gold` → `0` + Karta `caa-12` (Skrytka w Murach): `cost` → `1` (Zysk 4P Δ +0.2 pkt)
+- **Wynik 4P:** Kanon **`93.8`** → **`94.0 pkt`** | Global **`51.0`** | 3p **`33.1`** | 5p **`25.8`**
+- **Modyfikacja (`L3_CAA-12_COST_PLUS1__L3_GC-05_C1_H0__L3_GC-07_GOLD_MINUS2`):** Karta `gc-05` (Fałszywy Świadek): `cost` → `1` + Karta `gc-05` (Fałszywy Świadek): `heresy` → `0` + Karta `gc-07` (Skrytobójstwo): `gold` → `0` + Karta `caa-12` (Skrytka w Murach): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.9%.
+
 ### 🟢 Patch v1.0-alpha.92 (2026-08-29) — Kanon 4P: Limit Er: offset +1 (nowy: 15) + Cooldown Autodafé: offset -1 (nowy: 3) + Karta `caa-06` (Ucieczka z Lochów): `target_heresy` → `1` + Karta `kt-01` (Rytuał Przejścia): `gold` → `1`, `heresy` → `1` + Karta `caa-01` (Przejście Podziemiami): `cost` → `2`, `heresy` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `gold` → `1` + Karta `so-02` (Skarbiec Trybunału): `target_heresy` → `2` (Zysk 4P Δ +1.7 pkt)
 - **Wynik 4P:** Kanon **`92.1`** → **`93.8 pkt`** | Global **`50.9`** | 3p **`33.1`** | 5p **`25.7`**
 - **Modyfikacja (`L3_CAA-06_TARGET_HERESY_MINUS1__L3_KT-01_G1_H1__L3_CAA-01_C2_H2__L3_CAA-11_GOLD_MINUS2__L1_MAX_ERAS_PLUS1__L3_SO-02_TARGET_HERESY_PLUS1__L1_AUTODAFE_COOLDOWN_MINUS1`):** Limit Er: offset +1 (nowy: 15) + Cooldown Autodafé: offset -1 (nowy: 3) + Karta `caa-06` (Ucieczka z Lochów): `target_heresy` → `1` + Karta `kt-01` (Rytuał Przejścia): `gold` → `1`, `heresy` → `1` + Karta `caa-01` (Przejście Podziemiami): `cost` → `2`, `heresy` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `gold` → `1` + Karta `so-02` (Skarbiec Trybunału): `target_heresy` → `2`.

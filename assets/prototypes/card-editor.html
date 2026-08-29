@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.92</span>
+              <span id="prev-meta-ver">v1.0-alpha.93</span>
             </div>
           </div>
         </div>
@@ -1465,7 +1465,7 @@
   "caa-12": {
     "name": "Skrytka w Murach",
     "type": "akcja",
-    "cost": 0,
+    "cost": 1,
     "heresy": 0,
     "gold": 4,
     "action": "gain_gold",
@@ -1868,7 +1868,7 @@
   "gc-05": {
     "name": "Fałszywy Świadek",
     "type": "reakcja",
-    "cost": 0,
+    "cost": 1,
     "change_vote": true,
     "vote_change_limit": 1,
     "action": "frame_rival",
@@ -1876,6 +1876,7 @@
     "tags": [
       "reaction"
     ],
+    "heresy": 0,
     "lore": "Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole."
   },
   "gc-06": {
@@ -1902,7 +1903,7 @@
       "arrest",
       "heresy"
     ],
-    "gold": 2,
+    "gold": 0,
     "heresy_text": "Ciało w kanałach Gildii mówi więcej niż świadek na rynku.",
     "lore": "Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami."
   },
@@ -2341,7 +2342,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.92';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.93';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

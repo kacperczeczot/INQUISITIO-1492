@@ -4,7 +4,7 @@ name: Skrytka w Murach
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 0
+cost: 1
 heresy: 0
 tags:
 - gold
@@ -13,6 +13,7 @@ effect: Zyskaj 4 złota.
 lore: Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień.
 gold: 2
 ---
+
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [12-skrytka-w-murach](12-skrytka-w-murach.md)
 

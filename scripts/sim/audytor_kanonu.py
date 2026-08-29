@@ -84,7 +84,7 @@ import audit_level1
 import audit_level2
 import audit_level3
 import audit_level4
-from audytor_4p import is_ablation_off
+from audytor_4p import is_ablation_off, is_frozen_identity_knob
 from manual_ablation_hints import (
     collect_manual_ablation_candidates,
     format_manual_ablation_report,
@@ -169,24 +169,28 @@ def generate_all_atomic_candidates() -> list[tuple[str, str, dict]]:
     l1 = [
         t
         for t in audit_level1.build_level1_tests()
-        if t[0] != "L1_BAZA" and not is_ablation_off(t[0], t[2])
+        if t[0] != "L1_BAZA" and not is_ablation_off(t[0], t[2]) and not is_frozen_identity_knob(t[0], t[2])
     ]
     tests.extend(l1)
 
     l2 = [
         t
         for t in audit_level2.build_level2_tests()
-        if t[0] != "L2_BAZA" and not is_ablation_off(t[0], t[2])
+        if t[0] != "L2_BAZA" and not is_ablation_off(t[0], t[2]) and not is_frozen_identity_knob(t[0], t[2])
     ]
     tests.extend(l2)
 
-    l3 = [t for t in audit_level3.build_level3_tests(param_filter="cost,heresy,gold,target_heresy") if t[0] != "L3_BAZA"]
+    l3 = [
+        t
+        for t in audit_level3.build_level3_tests(param_filter="cost,heresy,gold,target_heresy")
+        if t[0] != "L3_BAZA" and not is_frozen_identity_knob(t[0], t[2])
+    ]
     tests.extend(l3)
 
     l4 = [
         t
         for t in audit_level4.build_level4_tests()
-        if t[0] != "L4_BAZA" and not is_ablation_off(t[0], t[2])
+        if t[0] != "L4_BAZA" and not is_ablation_off(t[0], t[2]) and not is_frozen_identity_knob(t[0], t[2])
     ]
     tests.extend(l4)
 

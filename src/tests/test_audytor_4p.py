@@ -91,7 +91,7 @@ def test_macro_pool_has_no_cards_or_l3():
         if cd is not None:
             assert int(cd) not in (0, 99)
     assert all("TIME_DECK" not in tid for tid in ids)
-    assert "L1_HAND_LIMIT_PLUS1" in ids
+    assert "L1_HAND_LIMIT_PLUS1" not in ids
     assert "L1_MAX_ERAS_PLUS1" not in ids
     assert "L1_AUTODAFE_COOLDOWN_PLUS1" in ids
 
@@ -160,10 +160,10 @@ def test_ablation_off_rejected_at_accept():
 def test_max_eras_pm1_is_frozen_identity():
     assert is_frozen_identity_knob("L1_MAX_ERAS_PLUS1", {"max_eras_offset": 1})
     assert is_frozen_identity_knob("L1_MAX_ERAS_MINUS1", {"max_eras_offset": -1})
-    assert not is_frozen_identity_knob("L1_HAND_LIMIT_PLUS1", {"hand_limit_offset": 1})
+    assert is_frozen_identity_knob("L1_HAND_LIMIT_PLUS1", {"hand_limit_offset": 1})
     assert not is_frozen_identity_knob("L1_AUTODAFE_COOLDOWN_PLUS1", {"cooldown_offset": 1})
     ids = {c[0] for c in generate_all_atomic_candidates_macro()}
-    assert "L1_HAND_LIMIT_PLUS1" in ids
+    assert "L1_HAND_LIMIT_PLUS1" not in ids
     assert "L1_MAX_ERAS_PLUS1" not in ids
     assert "L1_MAX_ERAS_MINUS1" not in ids
     assert "L1_AUTODAFE_COOLDOWN_PLUS1" in ids

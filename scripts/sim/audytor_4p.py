@@ -243,6 +243,7 @@ _DEAD_PATH_CRUTCH = (
 # Żywe ±1 (złoto, Gospodarcza, próg oskarżenia, Obserwowana, Er, karty/erę, era KT/CAA, CD Autodafé, ręka, liczniki C, szlak ±1)
 _FROZEN_ID_MARKERS = (
     "AGENTS",
+    "HAND_LIMIT",
     "VERDICT_SECRET",
     "KB_HOOKS",
     "KB_ERA",
@@ -255,6 +256,8 @@ _FROZEN_ID_MARKERS = (
 _FROZEN_PARAM_KEYS = (
     "agents_offset",
     "agents_per_player",
+    "hand_limit_offset",
+    "hand_limit",
     "verdict_secret",
     "kb_hooks_offset",
     "kb_era_offset",

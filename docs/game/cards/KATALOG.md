@@ -429,7 +429,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 4 złota. |
@@ -940,7 +940,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | reakcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit: 1 / Erę. |
