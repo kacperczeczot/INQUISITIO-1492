@@ -47,3 +47,13 @@ Wszystkie propozycje, zmiany parametrów i kod silnika muszą być w 100% zgodne
 - Folder archiwalny (`data/playtesting/sim-reports/archive/v1.0-alpha.X/`) reprezentuje zapieczętowany stan danej wersji gry.
 - Wszelkie eksperymenty, grid-search parametrów i strojenie wag decyzyjnych muszą odbywać się w izolacji (`scratch/` / pamięć) i nie mogą nadpisywać raportów aktywnej wersji.
 - Raport telemetrii oraz raport użyteczności/ablacji dla danej wersji muszą być generowane zawsze synchronicznie z identycznego stanu silnika i konfiguracji SSOT.
+
+---
+
+## 7. Spójność Narracyjno-Mechaniczna Kart przy Reworku (Nazwa, Opis, Lore i SSOT)
+- Przy każdym reworku lub rekalibracji karty (zmiana kosztu, herezji, tagów, logiki działania, efektu lub roli):
+  1. **Weryfikacja tożsamości i nazwy:** Należy bezwzględnie sprawdzić, czy obecna nazwa karty nadal pasuje do jej nowej mechaniki i roli na stole. W razie rozdźwięku należy zaproponować lub zaktualizować nazwę.
+  2. **Regeneracja opisów zasad:** Opis mechaniczny (`opis mechaniczny`), treść herezji (`heresy_text`) oraz warunki zagrania muszą być zaktualizowane w 100% zgodnie z nowymi parametrami.
+  3. **Aktualizacja warstwy fabularnej (Lore / Cytat):** Tekst klimatyczny / lore musi harmonizować z nowym kosztem, ryzykiem (herezją) i akcją karty.
+  4. **Pełna synchronizacja plików:** Zmiany muszą zostać natychmiast odzwierciedlone w `data/game_config.yaml`, `src/native/inquisitio_native.cpp`, `docs/game/cards/KATALOG.md`, indywidualnym pliku karty w `docs/game/cards/factions/...` oraz `assets/prototypes/card-editor.html`.
+

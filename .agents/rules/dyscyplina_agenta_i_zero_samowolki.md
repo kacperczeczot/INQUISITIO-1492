@@ -111,3 +111,10 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 - **Kategoryczny zakaz zanieczyszczania i nadpisywania folderów archiwalnych (`archive/vX.XX/`):** Folder archiwalny danej wersji na dysku (`data/playtesting/sim-reports/archive/v1.0-alpha.X/`) jest nienaruszalnym, zapieczętowanym snapshotem stanu gry (`game_config.yaml`, `raport_telemetrii_4p.md`, `raport_uzytecznosci_i_wplywu_4p.md`).
 - **Zakaz eksperymentów „w locie” na aktywnej wersji:** Wszelkie testy „na sucho” (dry-run, grid-search parametrów, próbne warianty wag AI w C++/Pythonie) **MUSZĄ** działać w pamięci lub w izolowanym folderze roboczym `scratch/`. Kategorycznie zabrania się uruchamiania skryptów generujących oficjalne raporty bez wcześniejszego formalnego zatwierdzenia zmian i podbicia wersji.
 - **Wymóg atomowej synchronizacji raportów:** Każde formalne podbicie wersji gry (`v1.0-alpha.X` $\to$ `v1.0-alpha.Y`) wymaga wygenerowania **jednocześnie i synchronicznie** kompletu raportów (telemetrii oraz wpływu/ablacji) z identycznego stanu silnika, tak aby nigdy nie doszło do rozbieżności telemetrii i win-share pomiędzy raportami tej samej wersji.
+
+---
+
+## 16. Spójność Narracyjno-Mechaniczna Kart przy Reworku (Nazwa, Opis, Lore i SSOT)
+- **Obowiązek weryfikacji tożsamości karty:** Przy reworku (zmianie mechaniki, kosztu, herezji lub roli karty) asystent ma bezwzględny obowiązek zweryfikować spójność nazwy, opisu mechanicznego oraz tekstu fabularnego (lore).
+- **Zakaz pozostawiania nieaktualnych opisów:** Jeżeli karta traci herezję lub zyskuje inną funkcję, tekst zasad, `heresy_text` oraz cytat muszą zostać natychmiast zaktualizowane we wszystkich plikach (`game_config.yaml`, `KATALOG.md`, plik markdown w `docs/game/cards/factions/...`, `card-editor.html`).
+
