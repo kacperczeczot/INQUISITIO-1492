@@ -1,6 +1,6 @@
 # Raport Telemetrii i Szans Wygranych (Win Shares) dla Wszystkich 16 Setupów — Wersja Balansu: v1.0-alpha.99
 
-**Wersja Balansu:** `v1.0-alpha.99` | **Data:** 2026-08-29 22:51 | **Wielkość Próby:** 10000 gier/setup (160000 gier łącznie) | **Czas Symulacji:** 0.22s
+**Wersja Balansu:** `v1.0-alpha.99` | **Data:** 2026-08-29 22:57 | **Wielkość Próby:** 10000 gier/setup (160000 gier łącznie) | **Czas Symulacji:** 0.18s
 
 *Score* = ogólny wskaźnik zdrowia (win share skorygowany o kary witalności i minimalnej długości gry ≥ 5.0 Er).
 *Balance* = czysta symetria szans wygranych frakcji (win share vs ideal).
