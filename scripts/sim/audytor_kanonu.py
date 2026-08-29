@@ -291,15 +291,56 @@ def select_diverse_beam_seeds(all_candidate_stats: list, beam_width: int = 60) -
     return seeds[:beam_width]
 
 
+def generate_all_2d_pairwise_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates the COMPLETE 100% unconstrained pairwise combinations (N*(N-1)/2) from the atomic pool.
+    
+    Zero artificial filtering, zero heuristic pruning. Pure exhaustive search of all ~1.3M possible pairs.
+    """
+    seen_ids = set()
+    pairs = []
+    n = len(atomic_pool)
+    for i in range(n):
+        mut_a = atomic_pool[i]
+        for j in range(i + 1, n):
+            mut_b = atomic_pool[j]
+            merged = merge_mutations(mut_a, mut_b)
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                pairs.append(merged)
+    return pairs
+
+
+def generate_3d_deficit_candidates(
+    beam_seeds: list[tuple[str, str, dict]],
+    atomic_pool: list[tuple[str, str, dict]],
+    lagging_faction: str | None = None,
+) -> list[tuple[str, str, dict]]:
+    """Generates 3D trios by crossing 2D surviving seeds with atomic mutations,
+    prioritizing interactions related to the lagging faction / deficit area.
+    """
+    seen_ids = set()
+    trios = []
+    prioritized_pool = atomic_pool
+    if lagging_faction:
+        code = _normalize_faction_code(lagging_faction)
+        prioritized_pool = sorted(
+            atomic_pool,
+            key=lambda x: 0 if f"_{code}_" in x[0] or f"_{code}-" in x[0] or code.lower() in x[1].lower() else 1
+        )
+    for seed_mut in beam_seeds:
+        for atomic_mut in prioritized_pool:
+            merged = merge_mutations(seed_mut, atomic_mut)
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                trios.append(merged)
+    return trios
+
+
 def generate_all_composite_candidates(
     beam_seeds: list[tuple[str, str, dict]],
     atomic_pool: list[tuple[str, str, dict]],
 ) -> list[tuple[str, str, dict]]:
-    """Generates the full unconstrained combinatorial cross-product between beam seeds and atomic mutations.
-    
-    Zero artificial faction filtering, zero heuristic intent restrictions.
-    Pure search space exploration checking only for physical card/parameter collision validity.
-    """
+    """Generates the full combinatorial cross-product between beam seeds and atomic mutations."""
     seen_ids = set()
     composite_pool = []
     for seed_mut in beam_seeds:
@@ -686,15 +727,19 @@ class Canon4PAutoBalancer:
             iter_seed = self.args.seed + loop_iteration * 97
             loop_iteration += 1
 
-            # 1. Candidate Pool Generation (Unconstrained Tree Frontier)
+            # 1. Candidate Pool Generation
             atomic_pool = generate_all_atomic_candidates()
 
-            if current_phase == 1 or not beam_seeds:
-                print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna uniwersalna pula atomowa L1–L4 ({len(atomic_pool)} kandydatów)...")
+            if current_phase == 1:
+                print(f"\n🌐 [FAZA 1D — KANON 4P] 100% Pełna uniwersalna pula atomowa L1–L4 ({len(atomic_pool)} modyfikacji)...")
                 candidate_pool = atomic_pool
+            elif current_phase == 2:
+                print(f"\n🌐 [FAZA 2D — KANON 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH PAR (bez pomijania żadnej kombinacji)...")
+                candidate_pool = generate_all_2d_pairwise_candidates(atomic_pool)
             else:
-                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Pełna przestrzeń kombinatoryczna ({len(beam_seeds)} nasion × {len(atomic_pool)} atomów)...")
-                candidate_pool = generate_all_composite_candidates(beam_seeds, atomic_pool)
+                lagging_setup = self._last_base_res.get("min_balance_setup", "") if self._last_base_res else ""
+                print(f"\n🌐 [FAZA 3D — KANON 4P] Wytrych Deficytu Frakcji (dla `{lagging_setup}`, {len(beam_seeds)} nasion 2D × {len(atomic_pool)} atomów)...")
+                candidate_pool = generate_3d_deficit_candidates(beam_seeds, atomic_pool, lagging_faction=lagging_setup)
 
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 current_raw_cfg = yaml.safe_load(f)
@@ -836,11 +881,15 @@ class Canon4PAutoBalancer:
                 patch_to_apply = best_candidate_at_depth
             else:
                 # Current depth (e.g. 1D) has reached a local plateau (no single-card improvement exists).
-                # ONLY NOW do we escalate to higher dimensions (2D, 3D...) to break local minima!
-                max_depth = getattr(self.args, "max_depth", 4)
-                beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=getattr(self.args, "beam_width", 60))
-
-                if current_phase >= max_depth or not beam_seeds:
+                # Escalation logic: 1D (100% atoms) -> 2D (100% pairs) -> 3D (Faction Deficit Wytrych) -> Reset
+                if current_phase == 1:
+                    current_phase = 2
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1D] Brak poprawki w 1D. Przechodzę do FAZY 2D (100% pełne przeszukanie wszystkich par)...\n")
+                elif current_phase == 2:
+                    current_phase = 3
+                    beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=60)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w całym 2D. Przechodzę do FAZY 3D (Wytrych Deficytu Frakcji z {len(beam_seeds)} nasion 2D)...\n")
+                else:
                     consecutive_stalls += 1
                     print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
                     print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
@@ -848,9 +897,6 @@ class Canon4PAutoBalancer:
                     self.args.seed += 137
                     beam_seeds.clear()
                     val_base_10k = None
-                else:
-                    current_phase += 1
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK {current_phase-1}D] Brak zysku w {current_phase-1}D. Eskaluję do wielowymiarowych synergii w FAZIE {current_phase}D ({len(beam_seeds)} nasion pełnego spektrum)...\n")
                 continue
 
 
