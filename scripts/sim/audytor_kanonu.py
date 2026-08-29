@@ -1207,7 +1207,7 @@ def main():
     # Legacy compatibility arguments (kept for CLI backwards compatibility)
     parser.add_argument("--fast-games", type=int, default=300, help="[Legacy alias]")
     parser.add_argument("--screen-games", type=int, default=1500, help="[Legacy alias]")
-    parser.add_argument("--confirm-games", type=int, default=5000, help="[Legacy alias]")
+    parser.add_argument("--confirm-games", type=int, default=10000, help="[Legacy alias]")
     parser.add_argument("--top-semifinalists", type=int, default=40, help="[Legacy alias]")
     parser.add_argument("--top-k", type=int, default=20, help="[Legacy alias]")
 

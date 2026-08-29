@@ -987,7 +987,7 @@ def main():
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
     parser.add_argument("--fast-games", type=int, default=200, help="Liczba gier w Etapie 1 na 5 setupach 4p (domyślnie: 200)")
     parser.add_argument("--screen-games", type=int, default=1000, help="Liczba gier w Etapie 2 na 5 setupach 4p (domyślnie: 1000)")
-    parser.add_argument("--confirm-games", type=int, default=5000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 5000)")
+    parser.add_argument("--confirm-games", type=int, default=10000, help="Liczba gier w Etapie 3 na 5 setupach 4p (domyślnie: 10000)")
     parser.add_argument("--top-semifinalists", type=int, default=40, help="Liczba półfinalistów sprawdzanych w Etapie 2 (domyślnie: 40, wielokrotność 10)")
     parser.add_argument("--top-k", type=int, default=20, help="Liczba finalistów sprawdzanych w Etapie 3 (domyślnie: 20, wielokrotność 10)")
     parser.add_argument("--beam-width", type=int, default=10, help="Nasiona wiązki 2D/3D (domyślnie: 10, wielokrotność 10)")
@@ -1013,8 +1013,8 @@ def main():
         args.fast_games = 100
     if args.screen_games < 500:
         args.screen_games = 500
-    if args.confirm_games < 5000:
-        args.confirm_games = 5000
+    if args.confirm_games < 10000:
+        args.confirm_games = 10000
     if args.max_depth < 2:
         args.max_depth = 2
 

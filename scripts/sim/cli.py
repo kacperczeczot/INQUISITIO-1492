@@ -5,7 +5,7 @@ Komendy:
   1. audit:    python tools/sim/cli.py audit [--setup canon-4p|4p-core|all] [--games 2000] [--layer C]
   2. solve:    python tools/sim/cli.py solve [--games 1500] [--workers 10]
   3. test:     python tools/sim/cli.py test --override "so-02:target_heresy=0,caa-06:gold=1" [--games 2000]
-  4. baseline: python tools/sim/cli.py baseline [--games 5000]
+  4. baseline: python tools/sim/cli.py baseline [--games 10000]
 """
 
 import argparse
@@ -207,7 +207,7 @@ def main() -> None:
     # Audit
     p_audit = subparsers.add_parser("audit", help="Uruchamia audyt balansu")
     p_audit.add_argument("--setup", default="canon-4p", help="canon-4p | all-3p | all-5p | all | nazwa setupu")
-    p_audit.add_argument("--games", type=int, default=5000, help="Liczba gier na setup (domyślnie 5000)")
+    p_audit.add_argument("--games", type=int, default=10000, help="Liczba gier na setup (domyślnie 10000)")
     p_audit.add_argument("--layer", default="C", help="Warstwa kart (A, B, C)")
     p_audit.add_argument("--seed", type=int, default=42, help="Seed generatora")
     p_audit.add_argument("--workers", type=int, default=10, help="Wątki CPU")

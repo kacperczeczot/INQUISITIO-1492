@@ -123,7 +123,7 @@ def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Audit Level 4 Niche Variants")
-    parser.add_argument("--games", type=int, default=5000, help="Number of games per setup (ADR-0014: >= 5000)")
+    parser.add_argument("--games", type=int, default=10000, help="Number of games per setup (ADR-0014: >= 10000)")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
     parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")

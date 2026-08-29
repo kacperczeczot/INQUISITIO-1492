@@ -58,7 +58,7 @@ from inquisitio.runner.scoring import (
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "sim-reports"
 OUTPUT_REPORT_PATH = REPORTS_DIR / "current" / "raport_uzytecznosci_i_wplywu_4p.md"
-REPORT_GAMES_MIN = 5000
+REPORT_GAMES_MIN = 10000
 
 CANONICAL_4P_SETUPS = [
     "4p-core",
@@ -459,7 +459,7 @@ def build_all_mechanic_tasks(games_per_setup: int, seed: int, setups: list[str])
 
 
 def assert_report_sample_size(games_per_setup: int, *, screen: bool) -> None:
-    """Archive reports need 5000 games/setup. Smaller N is screen-only."""
+    """Archive reports need 10000 games/setup. Smaller N is screen-only."""
     if screen:
         return
     if games_per_setup < REPORT_GAMES_MIN:
@@ -470,7 +470,7 @@ def assert_report_sample_size(games_per_setup: int, *, screen: bool) -> None:
 
 
 def run_full_ablation_audit_4p(
-    games_per_setup: int = 5000,
+    games_per_setup: int = 10000,
     seed: int = 42,
     workers: int = 10,
     skip_cards: bool = False,
@@ -1051,7 +1051,7 @@ def main():
     parser.add_argument(
         "--screen",
         action="store_true",
-        help="Przesiew: wolno <5000 gier/setup, nie zapisuje raportu do archive/",
+        help="Przesiew: wolno <10000 gier/setup, nie zapisuje raportu do archive/",
     )
 
     args = parser.parse_args()

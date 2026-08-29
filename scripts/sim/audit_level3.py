@@ -207,7 +207,7 @@ def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Granular Level 3 Card Parameter Audit")
-    parser.add_argument("--games", type=int, default=5000, help="Number of games per setup (ADR-0014: >= 5000)")
+    parser.add_argument("--games", type=int, default=10000, help="Number of games per setup (ADR-0014: >= 10000)")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--param", type=str, default="cost,heresy", help="Filter params: cost, heresy, target_heresy, gold, or all")
     parser.add_argument("--faction", type=str, default="all", help="Filter faction: so, caa, kb, kt, gc, or all")

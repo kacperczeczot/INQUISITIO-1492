@@ -20,12 +20,12 @@ PYTHON_BIN = sys.executable
 
 AUDIT_PIPELINE = [
     ("1. Raport Główny (Telemetria i Win Shares 5 setupów 4P)", TOOLS_SRC_DIR / "generate_report.py", ["--games", "10000", "--players", "4", "--seed", "42"]),
-    ("2. Poziom 1 (Mechaniki Systemowe i Offsety 4P)", TOOLS_SRC_DIR / "audit_level1.py", ["--games", "5000", "--players", "4", "--seed", "42"]),
-    ("3. Poziom 2 (Warunki Zwycięstwa i Skalowanie 4P)", TOOLS_SRC_DIR / "audit_level2.py", ["--games", "5000", "--players", "4", "--seed", "42"]),
-    ("4. Poziom 3 (Parametry Wszystkich 50 Kart - Koszt/Herezja 4P)", TOOLS_SRC_DIR / "audit_level3.py", ["--games", "5000", "--players", "4", "--param", "cost,heresy", "--seed", "42"]),
-    ("5. Poziom 4 (Warianty Niszowe i Edykty 4P)", TOOLS_SRC_DIR / "audit_level4.py", ["--games", "5000", "--players", "4", "--seed", "42"]),
-    ("6. Testy Stresu Ekonomicznego (Poverty Stress 4P)", TOOLS_SRC_DIR / "audit_stress_tests.py", ["--games", "5000", "--players", "4", "--seed", "42"]),
-    ("7. Badanie Użyteczności i Wpływu Elementów (Feature & Card Impact 4P)", TOOLS_SRC_DIR / "feature_impact_4p.py", ["--games", "5000", "--seed", "42"]),
+    ("2. Poziom 1 (Mechaniki Systemowe i Offsety 4P)", TOOLS_SRC_DIR / "audit_level1.py", ["--games", "10000", "--players", "4", "--seed", "42"]),
+    ("3. Poziom 2 (Warunki Zwycięstwa i Skalowanie 4P)", TOOLS_SRC_DIR / "audit_level2.py", ["--games", "10000", "--players", "4", "--seed", "42"]),
+    ("4. Poziom 3 (Parametry Wszystkich 50 Kart - Koszt/Herezja 4P)", TOOLS_SRC_DIR / "audit_level3.py", ["--games", "10000", "--players", "4", "--param", "cost,heresy", "--seed", "42"]),
+    ("5. Poziom 4 (Warianty Niszowe i Edykty 4P)", TOOLS_SRC_DIR / "audit_level4.py", ["--games", "10000", "--players", "4", "--seed", "42"]),
+    ("6. Testy Stresu Ekonomicznego (Poverty Stress 4P)", TOOLS_SRC_DIR / "audit_stress_tests.py", ["--games", "10000", "--players", "4", "--seed", "42"]),
+    ("7. Badanie Użyteczności i Wpływu Elementów (Feature & Card Impact 4P)", TOOLS_SRC_DIR / "feature_impact_4p.py", ["--games", "10000", "--seed", "42"]),
 ]
 
 
