@@ -187,9 +187,7 @@ def _simulate_flat_tasks_pool(
     if total == 0:
         return []
 
-    from inquisitio.runner.batch import _HAS_NATIVE
-
-    if _HAS_NATIVE or workers <= 1:
+    if workers <= 1 or total < 50:
         results = []
         t0 = time.time()
         step_freq = max(1, total // 10)
@@ -208,7 +206,7 @@ def _simulate_flat_tasks_pool(
 
     results = []
     t0 = time.time()
-    chunk_size = max(1, min(10, total // (workers * 4)))
+    chunk_size = max(1, min(50, total // (workers * 8)))
     step_freq = max(1, total // 10)
     with ProcessPoolExecutor(max_workers=workers) as executor:
         for idx, res in enumerate(executor.map(_run_single_batch_task, task_list, chunksize=chunk_size), 1):
@@ -233,8 +231,8 @@ class AdaptiveSequentialRacer:
     def __init__(
         self,
         setups: list[str],
-        batch_step: int = 400,
-        min_games: int = 400,
+        batch_step: int = 100,
+        min_games: int = 100,
         max_games: int = 6400,
         epsilon_indiff: float = 0.15,
         workers: int = 10,
@@ -269,9 +267,9 @@ class AdaptiveSequentialRacer:
             active_candidates = [CandidateStats(c, delta_tuple=c) for c in candidate_pool]
         all_candidates = list(active_candidates)
 
-        # ─── Optimal 3-Rung Geometry (x4 scale: [400, 1600, 6400]) ──────────
+        # ─── Optimal 4-Rung Geometry (x4 scale: [100, 400, 1600, 6400]) ──────
         rungs = []
-        r = max(400, self.min_games)
+        r = max(100, self.min_games)
         while r < self.max_games:
             rungs.append(r)
             r *= 4

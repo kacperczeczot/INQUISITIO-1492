@@ -777,7 +777,7 @@ class Canon4PAutoBalancer:
                 
                 # If this candidate is strictly better than any previously held pending patch
                 prev_pending_score = pending_patch["best_res"]["score_4p_balance"] if pending_patch else base_res["score_4p_balance"]
-                min_lookahead_gain = getattr(self.args, "min_lookahead_delta", 0.35)
+                min_lookahead_gain = getattr(self.args, "min_lookahead_delta", 0.05)
                 cand_gain_over_pending = best_candidate_at_depth["best_res"]["score_4p_balance"] - prev_pending_score
 
                 if cand_gain_over_pending >= min_lookahead_gain:
@@ -986,10 +986,11 @@ def main():
     parser.add_argument("--max-iters", type=int, default=None, help="Maksymalna liczba udanych patchów przed zatrzymaniem")
     
     # Adaptive Monte Carlo Racing parameters
-    parser.add_argument("--batch-step", type=int, default=400, help="Rozmiar mikro-kroku partii na setup (domyślnie: 400)")
-    parser.add_argument("--min-games", type=int, default=400, help="Minimalna liczba gier/setup przed sprawdzeniem kryterium stopu (domyślnie: 400)")
+    parser.add_argument("--batch-step", type=int, default=100, help="Rozmiar mikro-kroku partii na setup (domyślnie: 100)")
+    parser.add_argument("--min-games", type=int, default=100, help="Minimalna liczba gier/setup przed sprawdzeniem kryterium stopu (domyślnie: 100)")
     parser.add_argument("--max-games", type=int, default=6400, help="Maksymalna liczba gier/setup w wyścigu (domyślnie: 6400)")
     parser.add_argument("--epsilon-indiff", type=float, default=0.15, help="Próg strefy nierozróżnialności / szumu balansu w pkt (domyślnie: 0.15)")
+    parser.add_argument("--min-lookahead-delta", type=float, default=0.05, help="Minimalny przyrost punktowy nad wstrzymanym patchem wymagany do eskalacji D->D+1 (pkt, domyślnie: 0.05)")
     
     # Simulated Annealing parameters
     parser.add_argument("--temperature", type=float, default=0.40, help="Początkowa temperatura wyżarzania (domyślnie: 0.40)")
