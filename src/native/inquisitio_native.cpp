@@ -2403,7 +2403,13 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
                                 break;
                             }
                         }
-                        if (std::strncmp(cid_str, "t-", 2) == 0 || std::strncmp(cid_str, "t_", 2) == 0 ||
+                        if (std::strncmp(cid_str, "time-", 5) == 0 || std::strncmp(cid_str, "time_", 5) == 0 ||
+                            std::strncmp(cid_str, "TIME-", 5) == 0 || std::strncmp(cid_str, "TIME_", 5) == 0) {
+                            int t_idx = std::atoi(cid_str + 5) - 1;
+                            if (t_idx >= 0 && t_idx < 10) {
+                                ov.has_time_card_disabled[t_idx] = true;
+                            }
+                        } else if (std::strncmp(cid_str, "t-", 2) == 0 || std::strncmp(cid_str, "t_", 2) == 0 ||
                             std::strncmp(cid_str, "T-", 2) == 0 || std::strncmp(cid_str, "T_", 2) == 0) {
                             int t_idx = std::atoi(cid_str + 2) - 1;
                             if (t_idx >= 0 && t_idx < 10) {

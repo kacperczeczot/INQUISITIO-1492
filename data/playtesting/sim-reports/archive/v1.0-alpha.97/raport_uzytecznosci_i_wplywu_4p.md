@@ -1,6 +1,6 @@
 # Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja v1.0-alpha.97
 
-**Wersja Gry:** `v1.0-alpha.97` | **Data Badania:** 2026-08-29 22:41 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42
+**Wersja Gry:** `v1.0-alpha.97` | **Data Badania:** 2026-08-29 22:42 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42
 **4P Score (win share):** 🟢 ** 93.6** pkt | **Witalność (osobna kara):** `0.000` | **Śr. Er:** `5.76` | **Deadlocki:** `0.0%` | **Pas Biedy:** `4.9%`
 **Udziały 4P:** CAA 24.5% · GC 24.9% · KB 25.0% · KT 25.4% · SO 25.3%
 
@@ -14,7 +14,7 @@ Kubełki klasyfikatora i ostrzeżenia witalności z bieżącego runu.
 
 - **Autopodatek (SELF_HARM):** 3/60
 - **DEAD_WEIGHT:** `gc-05` Fałszywy Świadek, `gc-08` Zatrute Złoto, `so-05` Wezwanie do Trybunału, `so-09` Świadek Koronny
-- **Karty Kroniki |Δ4P| ≤ 0.8:** 10/10
+- **Karty Kroniki |Δ4P| ≤ 0.8:** 6/10
 - **Ablacja całej Kroniki (`L4_NO_TIME_DECK`):** Δ4P -27.0 (STABILIZER)
 - **Mechaniki WEAK/NEUTRAL:** Szlak Morski: era 4 → nigdy (99)
 
@@ -170,16 +170,16 @@ Badanie wpływu wyłączenia każdej pojedynczej karty z **Talii Czasu** na temp
 
 | ID | Karta Wydarzenia | 4P Score | $\Delta$ 4P | Średnia Er | Deadlock % | Status Roli w Kronice |
 | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| `time-01` | **Kapitulacja Grenady** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-02` | **Godzina Policyjna** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-03` | **Flota Odkrywców** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-04` | **Rewizja w Dzielnicach** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-05` | **Gorączka Donosów** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-06` | **Nocna Obława** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-07` | **Bunt w Lochach** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-08` | **Święte Przymierze** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-09` | **Jarmark Królewski** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
-| `time-10` | **Amnestia Biskupia** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
+| `time-01` | **Kapitulacja Grenady** | 93.6 → 🟢 ** 93.2** (`🔻 -0.4`) | `-0.4 pkt` | 5.80 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
+| `time-02` | **Godzina Policyjna** | 93.6 → 🟢 ** 93.7** (`⬆️ +0.1`) | `+0.1 pkt` | 5.77 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
+| `time-03` | **Flota Odkrywców** | 93.6 → 🟢 ** 92.4** (`🔻 -1.2`) | `-1.2 pkt` | 5.83 Er | 0.0% | 🟢 Stabilizator tempa |
+| `time-04` | **Rewizja w Dzielnicach** | 93.6 → 🟢 ** 90.7** (`🔻 -2.9`) | `-2.9 pkt` | 5.81 Er | 0.0% | 🟢 Stabilizator tempa |
+| `time-05` | **Gorączka Donosów** | 93.6 → 🟢 ** 93.7** (`⬆️ +0.1`) | `+0.1 pkt` | 5.77 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
+| `time-06` | **Nocna Obława** | 93.6 → 🟢 ** 93.8** (`⬆️ +0.2`) | `+0.2 pkt` | 5.77 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
+| `time-07` | **Bunt w Lochach** | 93.6 → 🟢 ** 92.5** (`🔻 -1.1`) | `-1.1 pkt` | 5.77 Er | 0.0% | 🟢 Stabilizator tempa |
+| `time-08` | **Święte Przymierze** | 93.6 → 🟡 ** 85.5** (`🔻 -8.1`) | `-8.1 pkt` | 5.68 Er | 0.0% | 🟢 Stabilizator tempa |
+| `time-09` | **Jarmark Królewski** | 93.6 → 🟢 ** 93.4** (`🔻 -0.2`) | `-0.2 pkt` | 5.78 Er | 0.0% | 💤 Martwa karta kroniki (Δ≈0) |
+| `time-10` | **Amnestia Biskupia** | 93.6 → 🟢 ** 92.9** (`🔻 -0.7`) | `-0.7 pkt` | 5.75 Er | 0.0% | ⚖️ Neutralna Kronika |
 
 ---
 
