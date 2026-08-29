@@ -405,6 +405,22 @@ def generate_3d_deficit_candidates(
     return trios
 
 
+def generate_4d_composite_candidates(
+    beam_seeds_3d: list[tuple[str, str, dict]],
+    atomic_pool: list[tuple[str, str, dict]],
+) -> list[tuple[str, str, dict]]:
+    """Generates 4D bundles by crossing surviving 3D seeds with atomic mutations."""
+    seen_ids = set()
+    quads = []
+    for seed_mut in beam_seeds_3d:
+        for atomic_mut in atomic_pool:
+            merged = merge_mutations(seed_mut, atomic_mut)
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                quads.append(merged)
+    return quads
+
+
 def generate_all_composite_candidates(
     beam_seeds: list[tuple[str, str, dict]],
     atomic_pool: list[tuple[str, str, dict]],
@@ -776,8 +792,10 @@ class Canon4PAutoBalancer:
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
         val_base_10k: dict | None = None
         current_phase = 1
+        current_beam_width = 100
         beam_seeds_2d: list[tuple[str, str, dict]] = []
         beam_seeds_3d: list[tuple[str, str, dict]] = []
+        beam_seeds_4d: list[tuple[str, str, dict]] = []
         consecutive_stalls = 0
         loop_iteration = 0
         pending_patch: dict[str, Any] | None = None
@@ -793,7 +811,7 @@ class Canon4PAutoBalancer:
                 break
 
             iter_start = time.time()
-            iter_seed = self.args.seed + loop_iteration * 97
+            iter_seed = self.args.seed
             loop_iteration += 1
 
             # 1. Candidate Pool Generation
@@ -808,22 +826,30 @@ class Canon4PAutoBalancer:
                 print(f"\n🌐 [FAZA 1.5D — KANON 4P] GŁĘBOKI REBALANS POJEDYNCZEJ KARTY I CZYSTE MAKRO (100% kombinacji 2D/3D intra-card & pure macro)...")
                 candidate_pool = generate_intra_card_and_macro_candidates(atomic_pool)
             elif current_phase == 3:
-                phase_label = "2D"
+                phase_label = f"2D (Beam {current_beam_width})"
                 if not beam_seeds_2d:
-                    beam_seeds_2d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=100)
+                    beam_seeds_2d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=current_beam_width)
                 if not beam_seeds_2d:
-                    beam_seeds_2d = atomic_pool[:100]
-                print(f"\n🌐 [FAZA 2D — KANON 4P] 15-MINUTOWY DIVERSE BEAM SEARCH ({len(beam_seeds_2d)} zróżnicowanych nasion × {len(atomic_pool)} atomów)...")
+                    beam_seeds_2d = atomic_pool[:current_beam_width]
+                print(f"\n🌐 [FAZA 2D — KANON 4P] DIVERSE BEAM SEARCH ({len(beam_seeds_2d)} zróżnicowanych nasion × {len(atomic_pool)} atomów)...")
                 candidate_pool = generate_2d_beam_candidates(beam_seeds_2d, atomic_pool)
-            else:
-                phase_label = "3D"
+            elif current_phase == 4:
+                phase_label = f"3D (Beam {current_beam_width})"
                 lagging_setup = self._last_base_res.get("min_balance_setup", "") if self._last_base_res else ""
                 if not beam_seeds_3d:
-                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=100)
+                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=current_beam_width)
                 if not beam_seeds_3d:
-                    beam_seeds_3d = atomic_pool[:100]
-                print(f"\n🌐 [FAZA 3D — KANON 4P] 15-MINUTOWY DIVERSE BEAM SEARCH 3D ({len(beam_seeds_3d)} nasion 2D × {len(atomic_pool)} atomów, priorytet: `{lagging_setup}`)...")
+                    beam_seeds_3d = atomic_pool[:current_beam_width]
+                print(f"\n🌐 [FAZA 3D — KANON 4P] DIVERSE BEAM SEARCH 3D ({len(beam_seeds_3d)} nasion 2D × {len(atomic_pool)} atomów, priorytet: `{lagging_setup}`)...")
                 candidate_pool = generate_3d_deficit_candidates(beam_seeds_3d, atomic_pool, lagging_faction=lagging_setup)
+            else:
+                phase_label = "4D (Synergia 4-kartowa)"
+                if not beam_seeds_4d:
+                    beam_seeds_4d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=60)
+                if not beam_seeds_4d:
+                    beam_seeds_4d = atomic_pool[:60]
+                print(f"\n🌐 [FAZA 4D — KANON 4P] GŁĘBOKA EKSPLORACJA WIĄZEK 4-KARTOWYCH ({len(beam_seeds_4d)} nasion 3D × {len(atomic_pool)} atomów)...")
+                candidate_pool = generate_4d_composite_candidates(beam_seeds_4d, atomic_pool)
 
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 current_raw_cfg = yaml.safe_load(f)
@@ -973,18 +999,32 @@ class Canon4PAutoBalancer:
                     print(f"\n🔄 [ŚLEPY ZAUŁEK 1D] Brak poprawki w 1D. Przechodzę do FAZY 1.5D (wieloparametrowy rebalans pojedynczej karty i czyste makro)...\n")
                 elif current_phase == 2:
                     current_phase = 3
-                    beam_seeds_2d = select_diverse_beam_seeds(candidate_results, beam_width=100)
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1.5D] Brak poprawki w 1.5D. Przechodzę do FAZY 2D ({len(beam_seeds_2d)} nasion w 15-minutowym wyścigu)...\n")
+                    beam_seeds_2d = select_diverse_beam_seeds(candidate_results, beam_width=current_beam_width)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1.5D] Brak poprawki w 1.5D. Przechodzę do FAZY 2D ({len(beam_seeds_2d)} nasion w Diverse Beam Search)...\n")
                 elif current_phase == 3:
                     current_phase = 4
-                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results, beam_width=100)
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w 2D. Przechodzę do FAZY 3D ({len(beam_seeds_3d)} nasion 2D w 15-minutowym wyścigu 3D)...\n")
+                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results, beam_width=current_beam_width)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w 2D. Przechodzę do FAZY 3D ({len(beam_seeds_3d)} nasion 2D w Diverse Beam Search 3D)...\n")
+                elif current_phase == 4:
+                    current_phase = 5
+                    beam_seeds_4d = select_diverse_beam_seeds(candidate_results, beam_width=60)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 3D] Brak poprawki w 3D. Przechodzę do FAZY 4D ({len(beam_seeds_4d)} nasion 3D w eksploracji wiązek 4-kartowych)...\n")
                 else:
-                    print(f"\n🛑 [PLATEAU — WYCZERPANIE PRZESTRZENI 1D–3D]")
-                    print(f"   Zbadano pełne spektrum faz: 1D (atomy) → 1.5D (karty/makro) → 2D (wiązka par) → 3D (wiązka trójek).")
-                    print(f"   Żadna kombinacja nie przyniosła certyfikowanego zysku ≥ +{self.args.min_delta:.2f} pkt na benchmarku 10k.")
-                    print(f"   🏁 Kończę pracę audytora zgodnie z zasadą Twardego Stopu. Oczekuję na dyspozycję użytkownika.")
-                    break
+                    if current_beam_width < 300:
+                        current_beam_width += 100
+                        print(f"\n🔄 [POSZERZENIE WIĄZKI — CONTINUOUS BEAM EXPANSION]")
+                        print(f"   Wyczerpano głębokość 1D–4D przy beam_width={current_beam_width - 100}.")
+                        print(f"   Poszerzam wiązkę do {current_beam_width} nasion i wznawiam poszukiwanie od Fazy 2D na deterministycznym ziarnie...")
+                        current_phase = 3
+                        beam_seeds_2d.clear()
+                        beam_seeds_3d.clear()
+                        beam_seeds_4d.clear()
+                    else:
+                        print(f"\n🛑 [GLOBALNE PLATEAU — OSIĄGNIĘTO LIMIT GŁĘBOKOŚCI I SZEROKOŚCI WIĄZKI]")
+                        print(f"   Zbadano pełne spektrum 1D → 1.5D → 2D → 3D → 4D przy maksymalnej szerokości wiązki (beam_width={current_beam_width}).")
+                        print(f"   Żadna kombinacja nie przyniosła certyfikowanego zysku ≥ +{self.args.min_delta:.2f} pkt na benchmarku 10k.")
+                        print(f"   🏁 Kończę pracę audytora. Wszystkie nasiona i kierunki zostały wyczerpane.")
+                        break
                 continue
 
 
@@ -1112,7 +1152,10 @@ class Canon4PAutoBalancer:
                     print("   ✔ Zaktualizowano katalog kart, opisy markdown, HTML i card-editor.")
 
                     current_phase = 1
-                    beam_seeds.clear()
+                    current_beam_width = 100
+                    beam_seeds_2d.clear()
+                    beam_seeds_3d.clear()
+                    beam_seeds_4d.clear()
                     pending_patch = None
                     cached_base_stats = None
                     val_base_10k = None
