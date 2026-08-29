@@ -104,3 +104,10 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 
 ## 14. Rygor Narzędziowy i Ślepego Posłuszeństwa
 - **Bezwzględny zakaz omijania narzędzi Antigravity:** Asystentowi surowo zabrania się używania komend powłoki (np. `cat << EOF > ...`, `echo`) do tworzenia, edycji lub dopisywania zawartości do plików na dysku. Wszelkie modyfikacje kodu muszą odbywać się wyłącznie przez dedykowane, natywne narzędzia asystenta (`write_to_file`, `multi_replace_file_content`). To kluczowy wymóg IDE.
+
+---
+
+## 15. Nienaruszalność i Atomowość Archiwum Wersji (Archive Immutability & Sync Lock)
+- **Kategoryczny zakaz zanieczyszczania i nadpisywania folderów archiwalnych (`archive/vX.XX/`):** Folder archiwalny danej wersji na dysku (`data/playtesting/sim-reports/archive/v1.0-alpha.X/`) jest nienaruszalnym, zapieczętowanym snapshotem stanu gry (`game_config.yaml`, `raport_telemetrii_4p.md`, `raport_uzytecznosci_i_wplywu_4p.md`).
+- **Zakaz eksperymentów „w locie” na aktywnej wersji:** Wszelkie testy „na sucho” (dry-run, grid-search parametrów, próbne warianty wag AI w C++/Pythonie) **MUSZĄ** działać w pamięci lub w izolowanym folderze roboczym `scratch/`. Kategorycznie zabrania się uruchamiania skryptów generujących oficjalne raporty bez wcześniejszego formalnego zatwierdzenia zmian i podbicia wersji.
+- **Wymóg atomowej synchronizacji raportów:** Każde formalne podbicie wersji gry (`v1.0-alpha.X` $\to$ `v1.0-alpha.Y`) wymaga wygenerowania **jednocześnie i synchronicznie** kompletu raportów (telemetrii oraz wpływu/ablacji) z identycznego stanu silnika, tak aby nigdy nie doszło do rozbieżności telemetrii i win-share pomiędzy raportami tej samej wersji.

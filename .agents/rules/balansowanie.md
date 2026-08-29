@@ -40,3 +40,10 @@ Wszystkie propozycje, zmiany parametrów i kod silnika muszą być w 100% zgodne
 ## 5. Pełna Przejrzystość i Rzetelność Dokumentacji
 - Wszelkie zmiany parametrów i poprawki silnika muszą być szczegółowo, bez pomijania niewygodnych faktów, odnotowane w `data/playtesting/balance-notes.md`.
 - Każda zmiana w `data/data/game_config.yaml` wymaga uruchomienia `src/.venv/bin/python3 scripts/sync_config.py` oraz przejścia 100% testów `src/.venv/bin/pytest`.
+
+---
+
+## 6. Integralność i Nienaruszalność Archiwum Wersji (Archive Immutability)
+- Folder archiwalny (`data/playtesting/sim-reports/archive/v1.0-alpha.X/`) reprezentuje zapieczętowany stan danej wersji gry.
+- Wszelkie eksperymenty, grid-search parametrów i strojenie wag decyzyjnych muszą odbywać się w izolacji (`scratch/` / pamięć) i nie mogą nadpisywać raportów aktywnej wersji.
+- Raport telemetrii oraz raport użyteczności/ablacji dla danej wersji muszą być generowane zawsze synchronicznie z identycznego stanu silnika i konfiguracji SSOT.
