@@ -39,7 +39,7 @@ FACTION_NAMES = {
 
 
 def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", card_filter: str | None = None):
-    """Generate granular ±1 card parameter tests based on filters."""
+    """Generate comprehensive card parameter and intra-card multi-param tests without arbitrary limits."""
     cards = load_all_cards()
     tests = [
         ("L3_BAZA", "Baza (Bieżące parametry wszystkich kart)", {})
@@ -59,75 +59,89 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
         c = cards[cid]
         faction_prefix = cid.split("-")[0]
 
-        # Apply faction filter
         if faction_filter != "all" and faction_prefix != faction_filter:
             continue
 
-        # Apply card filter
         if card_filter and cid.lower() != card_filter.lower():
             continue
 
-        # Generate parameter tests for this card
+        # 1. Granular +/-1 and +/-2 shifts
         for p in params_to_test:
             curr_val = getattr(c, p, 0)
 
-            # Test +1
-            test_id_p = f"L3_{cid.upper()}_{p.upper()}_PLUS1"
-            name_p = f"{cid.upper()} ({c.name}): {p} {curr_val} → {curr_val + 1}"
-            overrides_p = {"card_overrides": {cid: {p: curr_val + 1}}}
-            tests.append((test_id_p, name_p, overrides_p))
+            # Delta +1, +2
+            for d in (1, 2):
+                new_v = curr_val + d
+                test_id_p = f"L3_{cid.upper()}_{p.upper()}_PLUS{d}"
+                name_p = f"{cid.upper()} ({c.name}): {p} {curr_val} → {new_v}"
+                tests.append((test_id_p, name_p, {"card_overrides": {cid: {p: new_v}}}))
 
-            # Test extended values for gold if curr_val == 0
-            if p == "gold" and curr_val == 0:
-                for ext_val in [1, 2, 3]:
-                    test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
-                    name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
-                    overrides_ext = {"card_overrides": {cid: {p: ext_val}}}
-                    tests.append((test_id_ext, name_ext, overrides_ext))
+            # Delta -1, -2 (if within valid range)
+            for d in (1, 2):
+                if curr_val >= d:
+                    new_v = curr_val - d
+                    test_id_m = f"L3_{cid.upper()}_{p.upper()}_MINUS{d}"
+                    name_m = f"{cid.upper()} ({c.name}): {p} {curr_val} → {new_v}"
+                    tests.append((test_id_m, name_m, {"card_overrides": {cid: {p: new_v}}}))
 
-            # Test extended values for target_heresy if curr_val == 0
-            if p == "target_heresy" and curr_val == 0:
-                for ext_val in [1, 2]:
-                    test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
-                    name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
-                    overrides_ext = {"card_overrides": {cid: {p: ext_val}}}
-                    tests.append((test_id_ext, name_ext, overrides_ext))
+            # Extended absolute set values when base is 0
+            if curr_val == 0:
+                if p == "gold":
+                    for ext_val in [1, 2, 3]:
+                        test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                        name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                        tests.append((test_id_ext, name_ext, {"card_overrides": {cid: {p: ext_val}}}))
+                elif p in ("target_heresy", "heresy"):
+                    for ext_val in [1, 2]:
+                        test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                        name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                        tests.append((test_id_ext, name_ext, {"card_overrides": {cid: {p: ext_val}}}))
 
-            # Test extended values for heresy if curr_val == 0
-            if p == "heresy" and curr_val == 0:
-                for ext_val in [1, 2]:
-                    test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
-                    name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
-                    overrides_ext = {"card_overrides": {cid: {p: ext_val}}}
-                    tests.append((test_id_ext, name_ext, overrides_ext))
+        # 2. Single-card Intra-card Multi-dimensional Pairs (Cost & Gold, Cost & Heresy, Gold & Heresy)
+        curr_cost = getattr(c, "cost", 0)
+        curr_gold = getattr(c, "gold", 0)
+        curr_heresy = getattr(c, "heresy", 0)
+        curr_th = getattr(c, "target_heresy", 0)
 
-            # Test -1 (if curr_val > 0)
-            if curr_val > 0:
-                test_id_m = f"L3_{cid.upper()}_{p.upper()}_MINUS1"
-                name_m = f"{cid.upper()} ({c.name}): {p} {curr_val} → {curr_val - 1}"
-                overrides_m = {"card_overrides": {cid: {p: curr_val - 1}}}
-                tests.append((test_id_m, name_m, overrides_m))
+        # Cost + Heresy trade-offs
+        for d_c in (-1, 1):
+            for d_h in (-1, 1):
+                nc = max(0, curr_cost + d_c)
+                nh = max(0, curr_heresy + d_h)
+                if (nc != curr_cost or nh != curr_heresy):
+                    tid = f"L3_{cid.upper()}_C{nc}_H{nh}"
+                    tname = f"{cid.upper()} ({c.name}): koszt {curr_cost}→{nc}, herezja {curr_heresy}→{nh}"
+                    tests.append((tid, tname, {"card_overrides": {cid: {"cost": nc, "heresy": nh}}}))
 
-    # Ensure total candidate count is aligned to a multiple of 10 for 100% CPU core efficiency (no idle worker tail)
-    remainder = len(tests) % 10
-    if remainder != 0:
-        needed = 10 - remainder
-        sig_cards = [cid for cid, card in sorted(cards.items()) if card.type == "signature" or card.breaks_rule or cid.endswith("-10") or cid.endswith("-05") or cid.endswith("-01")]
-        extra_tests = []
-        for cid in sig_cards:
-            c = cards[cid]
-            for p in params_to_test:
-                curr_val = getattr(c, p, 0)
-                test_id_p2 = f"L3_{cid.upper()}_{p.upper()}_PLUS2"
-                if not any(t[0] == test_id_p2 for t in tests) and not any(t[0] == test_id_p2 for t in extra_tests):
-                    extra_tests.append((test_id_p2, f"{cid.upper()} ({c.name}): {p} {curr_val} → {curr_val + 2} (+2)", {"card_overrides": {cid: {p: curr_val + 2}}}))
-                    if len(extra_tests) == needed:
-                        break
-            if len(extra_tests) == needed:
-                break
-        tests.extend(extra_tests)
+        # Cost + Gold trade-offs
+        for d_c in (-1, 1):
+            for d_g in (1, 2):
+                nc = max(0, curr_cost + d_c)
+                ng = max(0, curr_gold + d_g)
+                if (nc != curr_cost or ng != curr_gold):
+                    tid = f"L3_{cid.upper()}_C{nc}_G{ng}"
+                    tname = f"{cid.upper()} ({c.name}): koszt {curr_cost}→{nc}, złoto {curr_gold}→{ng}"
+                    tests.append((tid, tname, {"card_overrides": {cid: {"cost": nc, "gold": ng}}}))
 
-    return tests
+        # Gold + Heresy trade-offs
+        for d_g in (-1, 1):
+            for d_h in (-1, 1):
+                ng = max(0, curr_gold + d_g)
+                nh = max(0, curr_heresy + d_h)
+                if (ng != curr_gold or nh != curr_heresy):
+                    tid = f"L3_{cid.upper()}_G{ng}_H{nh}"
+                    tname = f"{cid.upper()} ({c.name}): złoto {curr_gold}→{ng}, herezja {curr_heresy}→{nh}"
+                    tests.append((tid, tname, {"card_overrides": {cid: {"gold": ng, "heresy": nh}}}))
+
+    # Deduplicate tests
+    seen = set()
+    unique_tests = []
+    for t in tests:
+        if t[0] not in seen:
+            seen.add(t[0])
+            unique_tests.append(t)
+
+    return unique_tests
 
 
 def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:

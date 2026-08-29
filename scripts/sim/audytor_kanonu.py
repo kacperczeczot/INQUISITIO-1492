@@ -237,106 +237,24 @@ def _normalize_faction_code(f_name: str) -> str:
     f = f_name.lower().replace("-", "_").strip()
     if "oficjum" in f or f == "so":
         return "SO"
-    if "andalus" in f or "cienie_al" in f or f == "caa":
-        return "CAA"
-    if "korona" in f or "borgiowie" in f or f == "kb":
-        return "KB"
-    if "kabala" in f or "toledo" in f or f == "kt":
-        return "KT"
-    if "gildia" in f or f == "gc":
-        return "GC"
-    return f_name.upper()
-
-
-def generate_antagonistic_and_hybrid_candidates(
-    base_res: dict, atomic_pool: list[tuple[str, str, dict]]
+def generate_all_composite_candidates(
+    beam_seeds: list[tuple[str, str, dict]],
+    atomic_pool: list[tuple[str, str, dict]],
 ) -> list[tuple[str, str, dict]]:
-    """Generates targeted 2D candidates (Antagonistic pairs, Hybrids, Intra-faction shifts)
-    focused on directly solving the weakest setups in the 4P canon.
+    """Generates the full unconstrained combinatorial cross-product between beam seeds and atomic mutations.
+    
+    Zero artificial faction filtering, zero heuristic intent restrictions.
+    Pure search space exploration checking only for physical card/parameter collision validity.
     """
-    setup_scores = base_res.get("setup_scores", {})
-    setup_shares = base_res.get("setup_shares", {})
-    out: list[tuple[str, str, dict]] = []
-
-    for sname in sorted(setup_scores.keys(), key=lambda k: setup_scores[k]):
-        shares = setup_shares.get(sname, {})
-        if not shares:
-            continue
-
-        ideal_share = 25.0
-        dominant_prefixes = []
-        struggling_prefixes = []
-
-        for f_raw, pct in shares.items():
-            f_code = _normalize_faction_code(f_raw)
-            dev = pct - ideal_share
-            if dev >= 1.5:
-                dominant_prefixes.append((f_code, dev))
-            elif dev <= -1.5:
-                struggling_prefixes.append((f_code, dev))
-
-        if not dominant_prefixes or not struggling_prefixes:
-            sorted_f = sorted(shares.items(), key=lambda x: x[1])
-            struggling_prefixes = [(_normalize_faction_code(sorted_f[0][0]), sorted_f[0][1] - ideal_share)]
-            dominant_prefixes = [(_normalize_faction_code(sorted_f[-1][0]), sorted_f[-1][1] - ideal_share)]
-
-        # 1. Antagonistic Pairs: Nerf Dominant + Buff Deficit
-        for dom_f, _ in dominant_prefixes:
-            dom_nerfs = [
-                m for m in atomic_pool
-                if get_mutation_faction(m) == dom_f and classify_card_mutation_intent(m) == "NERF"
-            ]
-            for strug_f, _ in struggling_prefixes:
-                strug_buffs = [
-                    m for m in atomic_pool
-                    if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "BUFF"
-                ]
-
-                for m_nerf in dom_nerfs:
-                    for m_buff in strug_buffs:
-                        merged = merge_mutations(m_nerf, m_buff)
-                        if merged:
-                            out.append(merged)
-
-        # 2. Hybrids: L3 Buff/Nerf + L1/L2 System Rules
-        sys_rules = [
-            m for m in atomic_pool
-            if classify_card_mutation_intent(m) == "SYSTEM" and not m[0].startswith("L4_")
-        ]
-        for strug_f, _ in struggling_prefixes:
-            strug_buffs = [
-                m for m in atomic_pool
-                if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "BUFF"
-            ]
-            for m_buff in strug_buffs:
-                for s_rule in sys_rules:
-                    merged = merge_mutations(m_buff, s_rule)
-                    if merged:
-                        out.append(merged)
-
-        # 3. Intra-faction Rebalance
-        for strug_f, _ in struggling_prefixes:
-            f_buffs = [
-                m for m in atomic_pool
-                if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "BUFF"
-            ]
-            f_nerfs = [
-                m for m in atomic_pool
-                if get_mutation_faction(m) == strug_f and classify_card_mutation_intent(m) == "NERF"
-            ]
-            for mb in f_buffs:
-                for mn in f_nerfs:
-                    merged = merge_mutations(mb, mn)
-                    if merged:
-                        out.append(merged)
-
-    seen = set()
-    unique_out = []
-    for c in out:
-        if c[0] not in seen:
-            seen.add(c[0])
-            unique_out.append(c)
-    return unique_out
+    seen_ids = set()
+    composite_pool = []
+    for seed_mut in beam_seeds:
+        for atomic_mut in atomic_pool:
+            merged = merge_mutations(seed_mut, atomic_mut)
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                composite_pool.append(merged)
+    return composite_pool
 
 
 
@@ -697,6 +615,7 @@ class Canon4PAutoBalancer:
         beam_seeds: list[tuple[str, str, dict]] = []
         consecutive_stalls = 0
         loop_iteration = 0
+        pending_patch: dict[str, Any] | None = None
 
         while not self.stop_requested:
             if time_limit_sec and (time.time() - self.start_time) >= time_limit_sec:
@@ -711,52 +630,15 @@ class Canon4PAutoBalancer:
             iter_seed = self.args.seed + loop_iteration * 97
             loop_iteration += 1
 
-            # 1. Candidate Pool Generation
+            # 1. Candidate Pool Generation (Unconstrained Tree Frontier)
             atomic_pool = generate_all_atomic_candidates()
 
             if current_phase == 1 or not beam_seeds:
-                print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna pula atomowa L1–L4 ({len(atomic_pool)} kandydatów)...")
+                print(f"\n🌐 [FAZA 1D — KANON 4P] Pełna uniwersalna pula atomowa L1–L4 ({len(atomic_pool)} kandydatów)...")
                 candidate_pool = atomic_pool
             else:
-                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Celowane pary antagonistyczne i synergistyczne wiązki...")
-                composite_pool = []
-
-                if self._last_base_res is not None:
-                    antag_pairs = generate_antagonistic_and_hybrid_candidates(self._last_base_res, atomic_pool)
-                    composite_pool.extend(antag_pairs)
-
-                for seed_mut in beam_seeds:
-                    seed_f = get_mutation_faction(seed_mut)
-                    # Group other candidates by faction to ensure even coverage across the entire game
-                    faction_groups: dict[str, list] = {}
-                    for m in atomic_pool:
-                        f = get_mutation_faction(m) or "SYSTEM"
-                        if f != seed_f:
-                            faction_groups.setdefault(f, []).append(m)
-
-                    selected_atomic = []
-                    rng_pool = random.Random(iter_seed + hash(seed_mut[0]) % 10007)
-                    for f, m_list in faction_groups.items():
-                        shuffled_m = list(m_list)
-                        rng_pool.shuffle(shuffled_m)
-                        selected_atomic.extend(shuffled_m[:100])
-
-                    for atomic_mut in selected_atomic:
-                        merged = merge_mutations(seed_mut, atomic_mut)
-                        if merged:
-                            composite_pool.append(merged)
-
-                seen_ids = set()
-                candidate_pool = []
-                for c in composite_pool:
-                    if c[0] not in seen_ids:
-                        seen_ids.add(c[0])
-                        candidate_pool.append(c)
-
-                if len(candidate_pool) > 4000:
-                    rng_comb = random.Random(iter_seed)
-                    rng_comb.shuffle(candidate_pool)
-                    candidate_pool = candidate_pool[:4000]
+                print(f"\n🌐 [FAZA {current_phase}D — KANON 4P] Pełna przestrzeń kombinatoryczna ({len(beam_seeds)} nasion × {len(atomic_pool)} atomów)...")
+                candidate_pool = generate_all_composite_candidates(beam_seeds, atomic_pool)
 
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 current_raw_cfg = yaml.safe_load(f)
@@ -764,7 +646,7 @@ class Canon4PAutoBalancer:
             curr_ver = current_raw_cfg.get("system", {}).get("version", current_raw_cfg.get("version", "v1.0-alpha.80"))
             curr_base_overrides = extract_config_overrides(current_raw_cfg)
 
-            # Apply candidate mutations ON TOP OF the current cumulative configuration
+            # Apply candidate mutations ON TOP OF current cumulative configuration
             effective_candidates = []
             for cid, cname, cparams in candidate_pool:
                 merged_params = merge_override_dicts(curr_base_overrides, cparams)
@@ -810,38 +692,91 @@ class Canon4PAutoBalancer:
                 print(f"\n🏁 Kanon 4P: {base_res['score_4p_balance']:.1f} pkt — optimum osiągnięte.")
                 break
 
-            # 3. Evaluate Survivors and Finalists
+            # 3. Evaluate Survivors & Anti-Greedy Frontier
             surviving_stats = [c for c in candidate_results if not c.is_pruned]
             surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict(), mode=self._accept_mode()))
-
             ranked_results = [c.to_result_dict() for c in surviving_stats]
 
-            accepted_candidate = None
-            effective_rule_params = None
-            best_ver_res = None
-            acceptance_reason = ""
+            found_better_at_this_depth = False
+            best_candidate_at_depth = None
 
             for cand_stat in surviving_stats:
                 cand_res = cand_stat.to_result_dict()
                 decision = accept_candidate(
                     base_res, cand_res, mode=self._accept_mode(), min_delta=self.args.min_delta
                 )
-                
-                # Strict Global Optimization Gate: Must strictly improve 4P Canon (Δ >= min_delta) with zero floor degradation
                 if decision.accepted:
-                    accepted_candidate = cand_stat.delta_tuple if cand_stat.delta_tuple else cand_stat.cand_tuple
-                    effective_rule_params = cand_stat.cand_tuple[2]
-                    best_ver_res = cand_res
-                    acceptance_reason = decision.reason
+                    accepted_tuple = cand_stat.delta_tuple if cand_stat.delta_tuple else cand_stat.cand_tuple
+                    best_candidate_at_depth = {
+                        "cand_tuple": accepted_tuple,
+                        "cand_stat": cand_stat,
+                        "best_res": cand_res,
+                        "effective_params": cand_stat.cand_tuple[2],
+                        "reason": decision.reason,
+                        "phase": current_phase,
+                    }
+                    found_better_at_this_depth = True
                     break
 
-            # 4. Apply Patch & Measure Collateral Impact (with Strict 10k Full Benchmark Gate)
-            if accepted_candidate and best_ver_res is not None and effective_rule_params is not None:
-                rule_id, rule_name, delta_params = accepted_candidate
+            # Anti-Greedy Lookahead Decision Engine
+            should_apply_patch = False
+            patch_to_apply = None
 
-                # MANDATORY VALIDATION GATE: Confirm on full 10,000 games/setup benchmark on standard seed
-                # Guarantee that official score is strictly monotonically increasing (NO false positives from micro-batches)
-                print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP]")
+            if found_better_at_this_depth and best_candidate_at_depth:
+                cand_delta = best_candidate_at_depth["best_res"]["score_4p_balance"] - base_res["score_4p_balance"]
+                
+                # If this candidate is strictly better than any previously held pending patch
+                prev_pending_score = pending_patch["best_res"]["score_4p_balance"] if pending_patch else base_res["score_4p_balance"]
+                if best_candidate_at_depth["best_res"]["score_4p_balance"] > prev_pending_score:
+                    pending_patch = best_candidate_at_depth
+                    print(
+                        f"\n🔍 [ANTI-GREEDY LOOKAHEAD +1D] Znaleziono nową poprawkę w Fazie {current_phase}D: "
+                        f"{best_candidate_at_depth['cand_tuple'][1]} (+{cand_delta:.2f} pkt).\n"
+                        f"   ✋ WSTRZYMUJĘ natychmiastowe wdrożenie i eskaluję do Fazy {current_phase + 1}D, "
+                        f"by sprawdzić czy głębsze synergie dadzą jeszcze wyższy zysk globalny..."
+                    )
+                    diverse_seeds = [r.cand_tuple for r in surviving_stats]
+                    beam_seeds = diverse_seeds[:self.args.beam_width]
+                    current_phase += 1
+                    continue
+                else:
+                    # Deeper search did not beat the held pending patch -> Apply the held global best
+                    should_apply_patch = True
+                    patch_to_apply = pending_patch
+            else:
+                if pending_patch is not None:
+                    # Deeper level produced no further gains -> The held pending patch is the confirmed global optimum!
+                    print(
+                        f"\n🎯 [ANTI-GREEDY LOOKAHEAD] Faza {current_phase}D nie pobiła wstrzymanego wektora z Fazy {pending_patch['phase']}D.\n"
+                        f"   🌟 Wdrażam sprawdzony globalny wektor synergii: {pending_patch['cand_tuple'][1]}"
+                    )
+                    should_apply_patch = True
+                    patch_to_apply = pending_patch
+                else:
+                    # No pending patch and no improvement at this depth -> escalate deeper to search for emergent synergies
+                    diverse_seeds = [r.cand_tuple for r in surviving_stats]
+                    if current_phase >= self.args.max_depth:
+                        consecutive_stalls += 1
+                        print(f"\n🛑 Osiągnięto maksymalną głębokość drzewa ({self.args.max_depth}D) bez znalezienia patcha.")
+                        print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
+                        current_phase = 1
+                        self.args.seed += 137
+                        beam_seeds.clear()
+                    else:
+                        beam_seeds = diverse_seeds[:self.args.beam_width]
+                        current_phase += 1
+                        print(f"🔄 Brak zysku w 1D-izolacji. Eskaluję do FAZY {current_phase}D, by sprawdzić wielokartowe synergie ({len(beam_seeds)} nasion)...\n")
+                    continue
+
+            # 4. Mandatory 10k Validation Gate & SSOT Commit
+            if should_apply_patch and patch_to_apply:
+                rule_id, rule_name, delta_params = patch_to_apply["cand_tuple"]
+                effective_rule_params = patch_to_apply["effective_params"]
+                best_ver_res = patch_to_apply["best_res"]
+                acceptance_reason = patch_to_apply["reason"]
+                patch_phase = patch_to_apply["phase"]
+
+                print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP — DLA WEKTORA {patch_phase}D]")
                 val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=10000, seed=42)
                 val_cand = _run_full_diagnostic(effective_rule_params, games_per_setup=10000, seed=42)
 
@@ -857,10 +792,11 @@ class Canon4PAutoBalancer:
                         f"(Δ = {val_delta:+.2f} pkt < wymaganego +{min_allowed_delta:.2f} pkt). "
                         f"Fałszywy alarm wyścigu wyeliminowany."
                     )
-                    accepted_candidate = None
-                    best_ver_res = None
+                    pending_patch = None
+                    current_phase = 1
+                    beam_seeds.clear()
+                    continue
 
-            if accepted_candidate and best_ver_res is not None and effective_rule_params is not None:
                 self.total_iterations += 1
 
                 with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
@@ -896,12 +832,14 @@ class Canon4PAutoBalancer:
 
                 if self.args.dry_run:
                     print(f"\n[DRY RUN] Zaakceptowano by modyfikację Kanonu 4P: {change_desc} ({acceptance_reason})")
-                    current_phase += 1
+                    pending_patch = None
+                    current_phase = 1
+                    beam_seeds.clear()
                 else:
                     new_version, saved_path = save_config_and_bump_version(mod_cfg, _CONFIG_PATH, bump_version=True)
                     iter_elapsed = round(time.time() - iter_start, 2)
 
-                    print(f"\n🎉 [ZAAKCEPTOWANO PATCH KANONU 4P #{self.total_iterations} — FAZA {current_phase}D]")
+                    print(f"\n🎉 [ZAAKCEPTOWANO PATCH KANONU 4P #{self.total_iterations} — FAZA {patch_phase}D]")
                     print(f"   Wersja:        `{old_version}` → **`{new_version}`**")
                     print(f"   Modyfikacja:   {change_desc}")
                     print(f"   Powód:         {acceptance_reason}")
@@ -913,7 +851,7 @@ class Canon4PAutoBalancer:
                     log_canon_iteration(
                         log_path,
                         self.total_iterations,
-                        current_phase,
+                        patch_phase,
                         old_version,
                         new_version,
                         change_desc,
@@ -940,7 +878,7 @@ class Canon4PAutoBalancer:
                         old_version,
                         new_version,
                         self.total_iterations,
-                        current_phase,
+                        patch_phase,
                         rep_base_res,
                         rep_cand_res,
                         val_base,
@@ -969,6 +907,7 @@ class Canon4PAutoBalancer:
 
                     current_phase = 1
                     beam_seeds.clear()
+                    pending_patch = None
 
                     # Simulated Annealing: Cool down temperature after each applied step
                     old_t = self.temperature
@@ -976,35 +915,6 @@ class Canon4PAutoBalancer:
                     if old_t > self.min_temperature:
                         print(f"   🌡️ [Simulated Annealing] Schłodzenie: T = {old_t:.3f} → {self.temperature:.3f} (cooling={self.cooling_rate:.2f})")
                     consecutive_stalls = 0
-
-            else:
-                print(
-                    f"\n⚪ Brak bezpośredniego zwycięzcy w Fazie {current_phase}D. "
-                    f"Buduję zaawansowane wiązki synergii dla słabych setupów..."
-                )
-                diverse_seeds = []
-                seen_seed_factions = set()
-                # Ensure every faction with active mutations gets a seed in the combinatorial beam
-                for r in surviving_stats:
-                    f = get_mutation_faction(r.cand_tuple) or "SYSTEM"
-                    if f not in seen_seed_factions:
-                        seen_seed_factions.add(f)
-                        diverse_seeds.append(r.cand_tuple)
-                for r in surviving_stats:
-                    if r.cand_tuple not in diverse_seeds:
-                        diverse_seeds.append(r.cand_tuple)
-
-                if current_phase >= self.args.max_depth:
-                    consecutive_stalls += 1
-                    print(f"\n🛑 Osiągnięto maksymalną głębokość wiązek ({self.args.max_depth}D) bez znalezienia patcha.")
-                    print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
-                    current_phase = 1
-                    self.args.seed += 137
-                    beam_seeds.clear()
-                else:
-                    beam_seeds = diverse_seeds[:self.args.beam_width]
-                    current_phase += 1
-                    print(f"🔄 Zakwalifikowano {len(beam_seeds)} nasion synergii i ESKALUJĘ DO FAZY {current_phase}D...\n")
 
         self._emit_manual_ablation_review()
         print(f"\n═══════════════════════════════════════════════════════════════════════")

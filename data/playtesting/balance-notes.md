@@ -94,6 +94,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.91 (2026-08-29) — Kanon 4P: Karta `gc-07` (Skrytobójstwo): `gold` → `2` (Zysk 4P Δ +0.1 pkt)
+- **Wynik 4P:** Kanon **`92.0`** → **`92.1 pkt`** | Global **`50.0`** | 3p **`32.7`** | 5p **`25.1`**
+- **Modyfikacja (`L3_GC-07_GOLD_SET2`):** Karta `gc-07` (Skrytobójstwo): `gold` → `2`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.75, Deadlocks 0.0%, Pas Biedy 4.9%.
+
 ### 🟢 Patch v1.0-alpha.90 (2026-08-29) — Kanon 4P: Karta `kt-12` (Strażnik Archiwum): `heresy` → `0` + Karta `kt-12` (Strażnik Archiwum): `cost` → `1` (Zysk 4P Δ +1.9 pkt)
 - **Wynik 4P:** Kanon **`90.1`** → **`92.0 pkt`** | Global **`49.9`** | 3p **`32.7`** | 5p **`25.1`**
 - **Modyfikacja (`L3_KT-12_HERESY_MINUS1__L3_KT-12_COST_PLUS1`):** Karta `kt-12` (Strażnik Archiwum): `heresy` → `0` + Karta `kt-12` (Strażnik Archiwum): `cost` → `1`.
