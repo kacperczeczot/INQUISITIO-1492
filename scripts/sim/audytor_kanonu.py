@@ -339,43 +339,6 @@ def generate_antagonistic_and_hybrid_candidates(
     return unique_out
 
 
-def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tuple[str, str, dict] | None:
-    """Merges two mutations into a composite mutation (e.g. 2D pair or 3D triple)."""
-    id1, name1, p1 = m1
-    id2, name2, p2 = m2
-
-    # Check for direct conflicts on atomic keys
-    keys1 = set(p1.keys()) - {"card_overrides"}
-    keys2 = set(p2.keys()) - {"card_overrides"}
-    if keys1 & keys2:
-        return None
-
-    # Check for conflicts on same card parameters
-    cards1 = p1.get("card_overrides", {})
-    cards2 = p2.get("card_overrides", {})
-    for cid, c_dict in cards2.items():
-        if cid in cards1:
-            if set(c_dict.keys()) & set(cards1[cid].keys()):
-                return None
-
-    combined_id = f"{id1}__{id2}"
-    combined_name = f"{name1} + {name2}"
-
-    merged_params = copy.deepcopy(p1)
-    for k, v in p2.items():
-        if k != "card_overrides":
-            merged_params[k] = v
-        else:
-            if "card_overrides" not in merged_params:
-                merged_params["card_overrides"] = {}
-            for cid, c_dict in v.items():
-                if cid in merged_params["card_overrides"]:
-                    merged_params["card_overrides"][cid].update(c_dict)
-                else:
-                    merged_params["card_overrides"][cid] = copy.deepcopy(c_dict)
-
-    return (combined_id, combined_name, merged_params)
-
 
 def generate_and_save_telemetry_report(
     version: str,
