@@ -38,9 +38,11 @@ for p in (TOOLS_SRC_DIR, SRC_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
+import yaml
 from inquisitio.cards.loader import load_all_cards
-from inquisitio.config import CONFIG
+from inquisitio.config import CONFIG, _CONFIG_PATH
 from inquisitio.engine.setup import SETUP_PRESETS, FactionId
+from inquisitio.runner.adaptive_racer import extract_config_overrides, merge_override_dicts
 from inquisitio.runner.audit_facts import score_pair, save_and_archive_report
 from inquisitio.runner.batch import run_batch
 from inquisitio.runner.impact_taxonomy import (
@@ -493,9 +495,14 @@ def run_full_ablation_audit_4p(
         print("TRYB:                      PRZESIEW (--screen) — bez archiwum")
     print("═══════════════════════════════════════════════════════════════════════\n")
 
+    # Load active cumulative config overrides
+    with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
+        raw_cfg = yaml.safe_load(f)
+    curr_base_overrides = extract_config_overrides(raw_cfg)
+
     # 1. Baseline 4P Measurement
     print(f"🔍 [1/4] POMIAR BAZOWY KANONU 4P (Wszystkie elementy aktywne)...")
-    base_task = ("BASE_4P", "Kanon 4P — Wszystkie Elementy Aktywne", {}, games_per_setup, seed, setups)
+    base_task = ("BASE_4P", "Kanon 4P — Wszystkie Elementy Aktywne", curr_base_overrides, games_per_setup, seed, setups)
     base_res = _run_ablation_task_4p(base_task)
 
     print(
@@ -531,7 +538,7 @@ def run_full_ablation_audit_4p(
         card_tasks.append((
             f"ABLATION_{cid.upper()}",
             f"Brak karty {cid} ({card_name})",
-            {"disabled_cards": [cid]},
+            merge_override_dicts(curr_base_overrides, {"disabled_cards": [cid]}),
             games_per_setup,
             seed,
             setups,
@@ -556,7 +563,7 @@ def run_full_ablation_audit_4p(
         time_tasks.append((
             f"TIME_{t_id.upper().replace('-', '_')}",
             f"Brak wydarzenia {t_id} ({t_name})",
-            {"disabled_cards": [t_id]},
+            merge_override_dicts(curr_base_overrides, {"disabled_cards": [t_id]}),
             games_per_setup,
             seed,
             setups,
@@ -564,7 +571,7 @@ def run_full_ablation_audit_4p(
 
     # 4. Build Full System & Victory Path Ablation Tasks
     mech_tasks_raw = build_all_mechanic_tasks(games_per_setup, seed, setups)
-    mech_tasks = [(t[0], t[1], t[3], t[4], t[5], t[6]) for t in mech_tasks_raw]
+    mech_tasks = [(t[0], t[1], merge_override_dicts(curr_base_overrides, t[3]), t[4], t[5], t[6]) for t in mech_tasks_raw]
     mech_meta = {t[0]: {"id": t[0], "name": t[1], "category": t[2], "overrides": t[3]} for t in mech_tasks_raw}
 
     if skip_cards:
