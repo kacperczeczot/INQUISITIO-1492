@@ -234,13 +234,27 @@ def get_mutation_faction(mut_tuple: tuple[str, str, dict]) -> str | None:
 
 def _normalize_faction_code(f_name: str) -> str:
     """Normalizes any faction representation (slug, name, enum or abbreviation) to 2-3 letter code."""
+    f = f_name.lower().replace("-", "_").strip()
+    if "oficjum" in f or f == "so":
+        return "SO"
+    if "andalus" in f or "cienie_al" in f or f == "caa":
+        return "CAA"
+    if "korona" in f or "borgiowie" in f or f == "kb":
+        return "KB"
+    if "kabala" in f or "toledo" in f or f == "kt":
+        return "KT"
+    if "gildia" in f or f == "gc":
+        return "GC"
+    return f_name.upper()
+
+
 def select_diverse_beam_seeds(all_candidate_stats: list, beam_width: int = 60) -> list[tuple[str, str, dict]]:
     """Selects a rich, balanced set of seeds representing the full spectrum:
     - Top positive candidates (promising leads)
     - Strongest negative/antagonist mutations (nerfs and counterweights across all factions)
     - Diverse structural modifiers
     """
-    sorted_all = sorted(all_candidate_stats, key=lambda c: c.score, reverse=True)
+    sorted_all = sorted(all_candidate_stats, key=lambda c: getattr(c, "score_4p_balance", getattr(c, "score_4p", 0.0)), reverse=True)
     if not sorted_all:
         return []
 
