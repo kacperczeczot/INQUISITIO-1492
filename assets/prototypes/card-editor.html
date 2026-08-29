@@ -1305,14 +1305,15 @@
   "caa-01": {
     "name": "Przejście Podziemiami",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "agents": 1,
     "action": "move_agent",
     "tags": [
-      "move"
+      "move",
+      "relic"
     ],
-    "target_heresy": 1,
-    "heresy": 1,
+    "target_heresy": 0,
+    "heresy": 0,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec."
   },
@@ -1573,14 +1574,16 @@
   "kb-08": {
     "name": "Przekupstwo Sędziego",
     "type": "akcja",
-    "cost": 3,
+    "cost": 2,
     "creates_hook": true,
     "verdict_weight": 2,
     "action": "creates_hook",
     "tags": [
-      "verdict"
+      "verdict",
+      "hook",
+      "gold"
     ],
-    "heresy": 1,
+    "heresy": 0,
     "lore": "Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone."
   },
   "kb-09": {
@@ -1652,10 +1655,11 @@
     "agents": 1,
     "action": "move_agent",
     "tags": [
-      "move"
+      "move",
+      "fragment"
     ],
-    "gold": 1,
-    "heresy": 1,
+    "gold": 0,
+    "heresy": 0,
     "heresy_text": "Symboliczne przejście przez próg nie budzi alarmu familiariuszy.",
     "lore": "Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę."
   },

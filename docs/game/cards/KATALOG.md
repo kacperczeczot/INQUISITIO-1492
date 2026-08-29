@@ -242,12 +242,12 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
-| `heresy` | 1 |
+| `cost_gold` | 0 |
+| `heresy` | 0 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec. |
-| `tags` | move |
+| `tags` | move, relic |
 | `status` | prototyp |
 
 ### `caa-02` — Złoto z Kryjówki
@@ -571,12 +571,12 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 3 |
-| `heresy` | 1 |
+| `cost_gold` | 2 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala. |
 | `lore` | Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone. |
-| `tags` | verdict |
+| `tags` | verdict, hook, gold |
 | `status` | prototyp |
 
 ### `kb-09` — Dekret Królewski
@@ -663,11 +663,11 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Symboliczne przejście przez próg nie budzi alarmu familiariuszy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Ustawiasz się pod Lochy i Trybunał, gdzie Fragmenty czekają na właściwą winę. |
-| `tags` | move |
+| `tags` | move, fragment |
 | `status` | prototyp |
 
 ### `kt-02` — Transmutacja Złota
