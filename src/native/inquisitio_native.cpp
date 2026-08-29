@@ -344,6 +344,11 @@ struct ConfigOverridesNative {
     int intrigue_gold_base = 1;
     int era_income_offset = 0;
     int cards_per_era = 2;
+    int start_gold = 4;
+    int agent_count = 3;
+    int inquisitor_speed = 1;
+    bool no_time_deck = false;
+    int time_deck_interval = 1;
     int so_stacks_offset = 0;
     int so_condemns_offset = 0;
     int caa_relics_offset = 0;
@@ -473,8 +478,8 @@ static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const Co
         PlayerStateNative& pl = st.players[fid];
         pl.faction = fid;
         pl.heresy = 0;
-        pl.gold = 4;
-        pl.agent_count = 3;
+        pl.gold = ov.start_gold;
+        pl.agent_count = (uint8_t)std::clamp(ov.agent_count, 1, 4);
         pl.stacks = 0;
         pl.condemned_rivals_mask = 0;
         pl.relics_evacuated = 0;
@@ -494,9 +499,11 @@ static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const Co
         pl.frames_dealt = 0;
 
         uint8_t home = HOMES[fid];
-        pl.agents[0] = {fid, home, false, false, fid};
-        pl.agents[1] = {fid, home, false, false, fid};
-        pl.agents[2] = {fid, RYNEK, false, false, fid};
+        for (int a = 0; a < pl.agent_count; ++a) {
+            uint8_t init_loc = (a == 2) ? RYNEK : home;
+            if (a == 3) init_loc = PALAC;
+            pl.agents[a] = {fid, init_loc, false, false, fid};
+        }
 
         // Initialize deck (only non-disabled faction cards)
         uint8_t deck_cards[12];
@@ -891,7 +898,8 @@ static inline __attribute__((always_inline)) int choose_card_heuristic(const Gam
                 else if (pl.distinct_hooks_ever() < 2) u += 2.0f;
             }
         } else if (fid == KT) {
-            int frags_left = std::max(0, 3 - pl.fragments);
+            int req_frags = std::max(1, 3 + ov.kt_frags_offset);
+            int frags_left = std::max(0, req_frags - pl.fragments);
             if (c.tags & TAG_FRAGMENT) {
                 u += 4.5f;
                 if (frags_left <= 1) u += 3.0f;
@@ -901,7 +909,7 @@ static inline __attribute__((always_inline)) int choose_card_heuristic(const Gam
             if (c_idx == 41) u += 5.0f; // kt-06
             if (c_idx == 44) u += 5.0f; // kt-09
             if (c_idx == 45) { // kt-10
-                if (pl.fragments >= 3) u += 20.0f;
+                if (pl.fragments >= req_frags) u += 20.0f;
                 else u -= 20.0f;
             }
             if (c_idx == 36 || c_idx == 37 || c_idx == 39 || c_idx == 42 || c_idx == 43 || c_idx == 46 || c_idx == 47) {
@@ -1872,8 +1880,12 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
     }
 
     if (naslanie_winner != 255) {
-        uint8_t tgt = naslanie_target[naslanie_winner];
-        st.inquisitor_location = STEP_TOWARD_TABLE[st.inquisitor_location][tgt];
+        if (ov.inquisitor_speed > 0) {
+            uint8_t tgt = naslanie_target[naslanie_winner];
+            for (int step = 0; step < ov.inquisitor_speed; ++step) {
+                st.inquisitor_location = STEP_TOWARD_TABLE[st.inquisitor_location][tgt];
+            }
+        }
     } else {
         uint8_t chooser = st.turn_order[0];
         int min_h = 999;
@@ -1885,32 +1897,36 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
             }
         }
 
-        int r_counts[5] = {0};
-        for (int p = 0; p < st.num_players; ++p) {
-            uint8_t f = st.turn_order[p];
-            if (f == chooser) continue;
-            const PlayerStateNative& pl = st.players[f];
-            for (int a = 0; a < pl.agent_count; ++a) {
-                if (!pl.agents[a].arrested && pl.agents[a].location < 5) {
-                    r_counts[pl.agents[a].location]++;
+        if (ov.inquisitor_speed > 0) {
+            for (int step = 0; step < ov.inquisitor_speed; ++step) {
+                int r_counts[5] = {0};
+                for (int p = 0; p < st.num_players; ++p) {
+                    uint8_t f = st.turn_order[p];
+                    if (f == chooser) continue;
+                    const PlayerStateNative& pl = st.players[f];
+                    for (int a = 0; a < pl.agent_count; ++a) {
+                        if (!pl.agents[a].arrested && pl.agents[a].location < 5) {
+                            r_counts[pl.agents[a].location]++;
+                        }
+                    }
                 }
+
+                uint8_t cur_inq = st.inquisitor_location;
+                uint8_t n_cnt = NEIGHBOR_COUNTS[cur_inq];
+                uint8_t best_dest = cur_inq;
+                int best_score = r_counts[cur_inq];
+
+                for (int i = 0; i < n_cnt; ++i) {
+                    uint8_t nb = NEIGHBORS[cur_inq][i];
+                    int nb_score = r_counts[nb];
+                    if (nb_score > best_score) {
+                        best_score = nb_score;
+                        best_dest = nb;
+                    }
+                }
+                st.inquisitor_location = best_dest;
             }
         }
-
-        uint8_t cur_inq = st.inquisitor_location;
-        uint8_t n_cnt = NEIGHBOR_COUNTS[cur_inq];
-        uint8_t best_dest = cur_inq;
-        int best_score = r_counts[cur_inq];
-
-        for (int i = 0; i < n_cnt; ++i) {
-            uint8_t nb = NEIGHBORS[cur_inq][i];
-            int nb_score = r_counts[nb];
-            if (nb_score > best_score) {
-                best_score = nb_score;
-                best_dest = nb;
-            }
-        }
-        st.inquisitor_location = best_dest;
     }
 
     // Marionette detection under Inquisitor (+2 heresy, double agent removed)
@@ -2189,9 +2205,11 @@ static inline void play_turn_era(GameStateNative& st, FastRng& rng, const Config
 
     // Time Edict resolution
     st.active_time_edict = 255;
-    if (st.time_deck_count > 0) {
-        uint8_t edict = st.time_deck[--st.time_deck_count];
-        resolve_time_edict_native(st, edict, rng, ov);
+    if (!ov.no_time_deck && (st.era % std::max(1, ov.time_deck_interval) == 0)) {
+        if (st.time_deck_count > 0) {
+            uint8_t edict = st.time_deck[--st.time_deck_count];
+            resolve_time_edict_native(st, edict, rng, ov);
+        }
     }
 
     // Rotate turn order
@@ -2289,8 +2307,18 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         PyObject* val;
         if ((val = PyDict_GetItemString(py_overrides, "card_cost_offset"))) ov.card_cost_offset = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "sig_cost_offset"))) ov.sig_cost_offset = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "intrigue_gold"))) ov.intrigue_gold_base = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "intrigue_gold_offset"))) ov.intrigue_gold_offset = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "era_income_offset"))) ov.era_income_offset = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "start_gold"))) ov.start_gold = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "start_gold_offset"))) ov.start_gold += (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "agents"))) ov.agent_count = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "agents_per_player"))) ov.agent_count = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "agents_offset"))) ov.agent_count += (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "inquisitor_speed"))) ov.inquisitor_speed = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "no_time_deck"))) ov.no_time_deck = (val == Py_True || (PyLong_Check(val) && PyLong_AsLong(val) != 0));
+        if ((val = PyDict_GetItemString(py_overrides, "time_deck_freq"))) ov.time_deck_interval = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "time_deck_interval"))) ov.time_deck_interval = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "cards_per_era"))) ov.cards_per_era = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "cards_per_era_offset"))) ov.cards_per_era += (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "so_stacks_offset"))) ov.so_stacks_offset = (int)PyLong_AsLong(val);
@@ -2303,8 +2331,11 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         if ((val = PyDict_GetItemString(py_overrides, "sea_route_era"))) ov.sea_route_era = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "autodafe_cooldown"))) ov.autodafe_cooldown = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "threshold"))) ov.threshold = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "accusation_threshold"))) ov.threshold = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "threshold_offset"))) ov.threshold += (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "observed_threshold"))) ov.observed_threshold = (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "hand_limit"))) ov.hand_limit = (int)PyLong_AsLong(val);
+        if ((val = PyDict_GetItemString(py_overrides, "hand_limit_offset"))) ov.hand_limit += (int)PyLong_AsLong(val);
         if ((val = PyDict_GetItemString(py_overrides, "max_eras"))) ov.max_eras = (int)PyLong_AsLong(val);
 
         PyObject* card_cost_ov = PyDict_GetItemString(py_overrides, "card_cost_overrides");

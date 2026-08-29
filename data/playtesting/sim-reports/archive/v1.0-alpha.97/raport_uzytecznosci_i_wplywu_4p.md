@@ -1,6 +1,6 @@
 # Raport Użyteczności i Wpływu Elementów w Kanonie 4P (Ablation & Impact Audit 4P) — Wersja v1.0-alpha.97
 
-**Wersja Gry:** `v1.0-alpha.97` | **Data Badania:** 2026-08-29 22:37 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42
+**Wersja Gry:** `v1.0-alpha.97` | **Data Badania:** 2026-08-29 22:41 | **Próba:** 5000 gier/setup (25000 gier na wariant) | **Ziarno:** 42
 **4P Score (win share):** 🟢 ** 93.6** pkt | **Witalność (osobna kara):** `0.000` | **Śr. Er:** `5.76` | **Deadlocki:** `0.0%` | **Pas Biedy:** `4.9%`
 **Udziały 4P:** CAA 24.5% · GC 24.9% · KB 25.0% · KT 25.4% · SO 25.3%
 
@@ -15,9 +15,8 @@ Kubełki klasyfikatora i ostrzeżenia witalności z bieżącego runu.
 - **Autopodatek (SELF_HARM):** 3/60
 - **DEAD_WEIGHT:** `gc-05` Fałszywy Świadek, `gc-08` Zatrute Złoto, `so-05` Wezwanie do Trybunału, `so-09` Świadek Koronny
 - **Karty Kroniki |Δ4P| ≤ 0.8:** 10/10
-- **Ablacja całej Kroniki (`L4_NO_TIME_DECK`):** Δ4P +0.0 (DEAD)
+- **Ablacja całej Kroniki (`L4_NO_TIME_DECK`):** Δ4P -27.0 (STABILIZER)
 - **Mechaniki WEAK/NEUTRAL:** Szlak Morski: era 4 → nigdy (99)
-- **Mechaniki DEAD:** Próg Oskarżenia: 7 → 1; Próg Oskarżenia: 7 → 14; Złoto startowe: 4zł → 0zł (wyłączenie); Złoto startowe: 4zł → 8zł; Liczba Agentów: 3 → 1; Liczba Agentów: 3 → 6; Limit kart na ręce: 5 → 1; Limit kart na ręce: 5 → 10; Kabała: fragmenty 3 → 1; Akcja Gospodarcza: 0zł (brak zysku złota); Akcja Gospodarcza: 1 → 2 (podwojenie); Kronika Dziejów: całkowite wyłączenie; Kronika Dziejów: co 3 Ery (spowolniony zegar); Inkwizytor Patrol: ruch 1 → 0 (wyłączenie); Inkwizytor Patrol: ruch x2 (podwojona prędkość)
 
 ---
 
@@ -190,9 +189,9 @@ Mechaniki w tym raporcie: **skraj albo wyłączenie**. Testy ±1 są w `audit_le
 
 | Kategoria Mechaniki | Liczba Testów | Rola w Ekosystemie Kanonu 4P | Rekomendacja Balansowa |
 | :--- | :---: | :--- | :--- |
-| 👑 / 🛡️ **Filary i Bezpieczniki** | **15** | Ablacja wali w stół — gracze czują tę gałkę | **Cel kanonu** |
+| 👑 / 🛡️ **Filary i Bezpieczniki** | **30** | Ablacja wali w stół — gracze czują tę gałkę | **Cel kanonu** |
 | ⚠️ **Za słabe dźwignie** | **1** | Rusza share, nie trzyma stołu — nie jest „zbalansowana” | **Wzmocnić aż będzie filarem** |
-| 💤 **Martwe / uśpione ścieżki** | **15** | Dual-win z witalności albo ablacja Δ≈0 | Wada pomiaru, nie harmonia |
+| 💤 **Martwe / uśpione ścieżki** | **0** | Dual-win z witalności albo ablacja Δ≈0 | Wada pomiaru, nie harmonia |
 | ⚠️ / 💡 **Wady bieżącej wartości** | **0** | Inna wartość gałki **podnosi** 4P — obecny setting szkodzi | **Przekręcić albo rework** |
 
 ### 4.0. ⚠️ Problematyczne mechaniki (osobny wykaz)
@@ -200,21 +199,6 @@ Wszystkie mechaniki z grup **DEAD**, **WEAK/NEUTRAL** i **DISRUPTOR**: ścieżki
 
 | Badany Podsystem | Kategoria | 4P Score | $\Delta$ 4P | Klasyfikacja |
 | :--- | :--- | :---: | :---: | :--- |
-| **Akcja Gospodarcza: 0zł (brak zysku złota)** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Akcja Gospodarcza: 1 → 2 (podwojenie)** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Inkwizytor Patrol: ruch 1 → 0 (wyłączenie)** | Poziom 4: Warianty i Modyfikatory | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Inkwizytor Patrol: ruch x2 (podwojona prędkość)** | Poziom 4: Warianty i Modyfikatory | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kabała: fragmenty 3 → 1** | Poziom 2: Warunki Zwycięstwa | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kronika Dziejów: całkowite wyłączenie** | Poziom 4: Warianty i Modyfikatory | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kronika Dziejów: co 3 Ery (spowolniony zegar)** | Poziom 4: Warianty i Modyfikatory | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Liczba Agentów: 3 → 1** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Liczba Agentów: 3 → 6** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Limit kart na ręce: 5 → 1** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Limit kart na ręce: 5 → 10** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Próg Oskarżenia: 7 → 1** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Próg Oskarżenia: 7 → 14** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Złoto startowe: 4zł → 0zł (wyłączenie)** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Złoto startowe: 4zł → 8zł** | Poziom 1: System Core | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
 | **Szlak Morski: era 4 → nigdy (99)** | Poziom 4: Warianty i Modyfikatory | 93.6 → 🟢 ** 92.7** (`🔻 -0.9`) | `-0.9 pkt` | ⚠️ ZA SŁABA DŹWIGNIA (rusza share, nie trzyma stołu) |
 
 ### 4.1. ⚙️ Poziom 1: Główne Mechaniki Systemowe (Global System Core)
@@ -222,18 +206,18 @@ Wszystkie mechaniki z grup **DEAD**, **WEAK/NEUTRAL** i **DISRUPTOR**: ścieżki
 | Badany Podsystem / Modyfikator L1 | 4P Score | $\Delta$ 4P | Śr. Er | Deadlock % | Pas Biedy % | Klasyfikacja w Matrycy 3x3 |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Limit Er: 15 → 7 (skrajna presja)** | 93.6 → 🟡 ** 86.3** (`🔻 -7.3`) | `-7.3 pkt` | 5.64 Er | 9.3% | 4.9% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
-| **Próg Oskarżenia: 7 → 1** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Próg Oskarżenia: 7 → 14** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Złoto startowe: 4zł → 0zł (wyłączenie)** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Złoto startowe: 4zł → 8zł** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Liczba Agentów: 3 → 1** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Liczba Agentów: 3 → 6** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Limit kart na ręce: 5 → 1** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Limit kart na ręce: 5 → 10** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
+| **Próg Oskarżenia: 7 → 1** | 93.6 → 🔴 ** 26.3** (`🔻 -67.3`) | `-67.3 pkt` | 5.36 Er | 0.0% | 2.8% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Próg Oskarżenia: 7 → 14** | 93.6 → 🔴 ** 32.6** (`🔻 -61.0`) | `-61.0 pkt` | 6.38 Er | 0.0% | 5.2% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Złoto startowe: 4zł → 0zł (wyłączenie)** | 93.6 → 🔴 ** 51.3** (`🔻 -42.3`) | `-42.3 pkt` | 6.51 Er | 0.0% | 12.7% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Złoto startowe: 4zł → 8zł** | 93.6 → 🔴 ** 32.2** (`🔻 -61.4`) | `-61.4 pkt` | 5.04 Er | 0.0% | 1.7% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Liczba Agentów: 3 → 1** | 93.6 → 🔴 ** 33.9** (`🔻 -59.7`) | `-59.7 pkt` | 6.68 Er | 0.0% | 6.0% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Liczba Agentów: 3 → 6** | 93.6 → 🟠 ** 69.8** (`🔻 -23.8`) | `-23.8 pkt` | 5.44 Er | 0.0% | 4.7% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Limit kart na ręce: 5 → 1** | 93.6 → 🔴 **  5.4** (`🔻 -88.2`) | `-88.2 pkt` | 8.60 Er | 0.8% | 38.7% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Limit kart na ręce: 5 → 10** | 93.6 → 🔴 **  9.8** (`🔻 -83.8`) | `-83.8 pkt` | 4.77 Er | 0.0% | 3.6% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Autodafé: cooldown 3 → 0 (co erę)** | 93.6 → 🔴 ** 11.3** (`🔻 -82.3`) | `-82.3 pkt` | 4.88 Er | 0.0% | 5.4% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Autodafé: całkowite wyłączenie** | 93.6 → 🔴 ** 63.4** (`🔻 -30.2`) | `-30.2 pkt` | 5.96 Er | 0.0% | 5.0% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
-| **Akcja Gospodarcza: 0zł (brak zysku złota)** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Akcja Gospodarcza: 1 → 2 (podwojenie)** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
+| **Akcja Gospodarcza: 0zł (brak zysku złota)** | 93.6 → 🔴 ** 52.5** (`🔻 -41.1`) | `-41.1 pkt` | 5.87 Er | 0.0% | 7.9% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Akcja Gospodarcza: 1 → 2 (podwojenie)** | 93.6 → 🔴 ** 46.1** (`🔻 -47.5`) | `-47.5 pkt` | 5.62 Er | 0.0% | 3.8% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Próg Obserwowanej: 3 → 2 (skrajna presja)** | 93.6 → 🟠 ** 78.5** (`🔻 -15.1`) | `-15.1 pkt` | 5.68 Er | 0.0% | 4.9% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 
 ### 4.2. ⚔️ Poziom 2: Asymetryczne Warunki Zwycięstwa (Victory Paths)
@@ -248,8 +232,8 @@ Wszystkie mechaniki z grup **DEAD**, **WEAK/NEUTRAL** i **DISRUPTOR**: ścieżki
 | **Korona: dekrety 2 → 4** | 93.6 → 🔴 ** 34.0** (`🔻 -59.6`) | `-59.6 pkt` | 6.02 Er | 0.0% | 4.9% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Korona: wymóg haków 2 → 0** | 93.6 → 🟡 ** 80.4** (`🔻 -13.2`) | `-13.2 pkt` | 5.71 Er | 0.0% | 4.9% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
 | **Korona: wymóg haków 2 → 4** | 93.6 → 🔴 ** 33.9** (`🔻 -59.7`) | `-59.7 pkt` | 6.02 Er | 0.0% | 4.9% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
-| **Kabała: fragmenty 3 → 1** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kabała: fragmenty 3 → 6** | 93.6 → 🔴 ** 37.0** (`🔻 -56.6`) | `-56.6 pkt` | 6.08 Er | 0.0% | 5.1% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Kabała: fragmenty 3 → 1** | 93.6 → 🔴 ** 54.8** (`🔻 -38.8`) | `-38.8 pkt` | 5.99 Er | 0.0% | 5.3% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Kabała: fragmenty 3 → 6** | 93.6 → 🔴 ** 34.3** (`🔻 -59.3`) | `-59.3 pkt` | 6.05 Er | 0.0% | 4.9% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Gildia: upadki 9 → 1** | 93.6 → 🔴 ** 18.1** (`🔻 -75.5`) | `-75.5 pkt` | 2.97 Er | 0.0% | 2.5% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 | **Gildia: upadki 9 → 18** | 93.6 → 🔴 ** 32.9** (`🔻 -60.7`) | `-60.7 pkt` | 6.02 Er | 0.0% | 5.0% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
 
@@ -257,10 +241,10 @@ Wszystkie mechaniki z grup **DEAD**, **WEAK/NEUTRAL** i **DISRUPTOR**: ścieżki
 
 | Badany Wariant / Modyfikator L4 | 4P Score | $\Delta$ 4P | Śr. Er | Deadlock % | Pas Biedy % | Klasyfikacja w Matrycy 3x3 |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Kronika Dziejów: całkowite wyłączenie** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Kronika Dziejów: co 3 Ery (spowolniony zegar)** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Inkwizytor Patrol: ruch 1 → 0 (wyłączenie)** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
-| **Inkwizytor Patrol: ruch x2 (podwojona prędkość)** | 93.6 → 🟢 ** 93.6** (`= 0.0`) | `0.0 pkt` | 5.76 Er | 0.0% | 4.9% | 💤 MARTWA MECHANIKA (Δ≈0 — klauzula nie gra) |
+| **Kronika Dziejów: całkowite wyłączenie** | 93.6 → 🟠 ** 66.6** (`🔻 -27.0`) | `-27.0 pkt` | 5.80 Er | 0.0% | 5.6% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Kronika Dziejów: co 3 Ery (spowolniony zegar)** | 93.6 → 🟠 ** 74.7** (`🔻 -18.9`) | `-18.9 pkt` | 5.80 Er | 0.0% | 5.5% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Inkwizytor Patrol: ruch 1 → 0 (wyłączenie)** | 93.6 → 🔴 ** 37.7** (`🔻 -55.9`) | `-55.9 pkt` | 6.37 Er | 0.0% | 4.9% | 👑 KRYTYCZNY FILAR (Core Engine Pillar) |
+| **Inkwizytor Patrol: ruch x2 (podwojona prędkość)** | 93.6 → 🟡 ** 83.1** (`🔻 -10.5`) | `-10.5 pkt` | 5.72 Er | 0.0% | 5.0% | 🛡️ ISTOTNY BEZPIECZNIK (Important Safeguard) |
 | **Szlak Morski: era 4 → nigdy (99)** | 93.6 → 🟢 ** 92.7** (`🔻 -0.9`) | `-0.9 pkt` | 5.77 Er | 0.0% | 4.9% | ⚠️ ZA SŁABA DŹWIGNIA (rusza share, nie trzyma stołu) |
 
 ---
