@@ -834,7 +834,7 @@ class Canon4PAutoBalancer:
                 seed=iter_seed,
                 delta_pool=candidate_pool,
                 label_prefix=f"WYŚCIG KANONU 4P — FAZA {phase_label}",
-                target_score_floor=target_floor,
+                target_floor_score=target_floor,
                 base_stats_cache=cached_base_stats,
             )
             cached_base_stats = base_stats
