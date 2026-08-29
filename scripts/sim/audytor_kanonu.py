@@ -346,10 +346,7 @@ def generate_intra_card_and_macro_candidates(atomic_pool: list[tuple[str, str, d
 
 
 def generate_all_2d_pairwise_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
-    """Generates the COMPLETE 100% unconstrained pairwise combinations (N*(N-1)/2) from the atomic pool.
-    
-    Zero artificial filtering, zero heuristic pruning. Pure exhaustive search of all ~1.3M possible pairs.
-    """
+    """Generates the COMPLETE 100% unconstrained pairwise combinations (N*(N-1)/2) from the atomic pool."""
     seen_ids = set()
     pairs = []
     n = len(atomic_pool)
@@ -358,6 +355,24 @@ def generate_all_2d_pairwise_candidates(atomic_pool: list[tuple[str, str, dict]]
         for j in range(i + 1, n):
             mut_b = atomic_pool[j]
             merged = merge_mutations(mut_a, mut_b)
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                pairs.append(merged)
+    return pairs
+
+
+def generate_2d_beam_candidates(
+    beam_seeds: list[tuple[str, str, dict]],
+    atomic_pool: list[tuple[str, str, dict]],
+) -> list[tuple[str, str, dict]]:
+    """Generates a high-power 2D pairwise pool (~120k pairs, ~15 min budget)
+    by crossing top diverse seeds with the complete atomic modification pool.
+    """
+    seen_ids = set()
+    pairs = []
+    for seed_mut in beam_seeds:
+        for atomic_mut in atomic_pool:
+            merged = merge_mutations(seed_mut, atomic_mut)
             if merged and merged[0] not in seen_ids:
                 seen_ids.add(merged[0])
                 pairs.append(merged)
@@ -761,7 +776,8 @@ class Canon4PAutoBalancer:
         time_limit_sec = (self.args.hours * 3600) if self.args.hours else None
         val_base_10k: dict | None = None
         current_phase = 1
-        beam_seeds: list[tuple[str, str, dict]] = []
+        beam_seeds_2d: list[tuple[str, str, dict]] = []
+        beam_seeds_3d: list[tuple[str, str, dict]] = []
         consecutive_stalls = 0
         loop_iteration = 0
         pending_patch: dict[str, Any] | None = None
@@ -793,13 +809,21 @@ class Canon4PAutoBalancer:
                 candidate_pool = generate_intra_card_and_macro_candidates(atomic_pool)
             elif current_phase == 3:
                 phase_label = "2D"
-                print(f"\n🌐 [FAZA 2D — KANON 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH PAR (cross-card, bez pomijania żadnej kombinacji)...")
-                candidate_pool = generate_all_2d_pairwise_candidates(atomic_pool)
+                if not beam_seeds_2d:
+                    beam_seeds_2d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=100)
+                if not beam_seeds_2d:
+                    beam_seeds_2d = atomic_pool[:100]
+                print(f"\n🌐 [FAZA 2D — KANON 4P] 15-MINUTOWY DIVERSE BEAM SEARCH ({len(beam_seeds_2d)} zróżnicowanych nasion × {len(atomic_pool)} atomów)...")
+                candidate_pool = generate_2d_beam_candidates(beam_seeds_2d, atomic_pool)
             else:
                 phase_label = "3D"
                 lagging_setup = self._last_base_res.get("min_balance_setup", "") if self._last_base_res else ""
-                print(f"\n🌐 [FAZA 3D — KANON 4P] Wytrych Deficytu Frakcji (dla `{lagging_setup}`, {len(beam_seeds)} nasion 2D × {len(atomic_pool)} atomów)...")
-                candidate_pool = generate_3d_deficit_candidates(beam_seeds, atomic_pool, lagging_faction=lagging_setup)
+                if not beam_seeds_3d:
+                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results if 'candidate_results' in locals() else [], beam_width=60)
+                if not beam_seeds_3d:
+                    beam_seeds_3d = atomic_pool[:60]
+                print(f"\n🌐 [FAZA 3D — KANON 4P] Wytrych Deficytu Frakcji (dla `{lagging_setup}`, {len(beam_seeds_3d)} nasion 2D × {len(atomic_pool)} atomów)...")
+                candidate_pool = generate_3d_deficit_candidates(beam_seeds_3d, atomic_pool, lagging_faction=lagging_setup)
 
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 current_raw_cfg = yaml.safe_load(f)
@@ -943,24 +967,26 @@ class Canon4PAutoBalancer:
                 patch_to_apply = best_candidate_at_depth
             else:
                 # Current depth has reached a local plateau.
-                # Escalation logic: 1D (atoms) -> 1.5D (intra-card/macro 2D/3D) -> 2D (all cross-card pairs) -> 3D (deficit wytrych) -> Reset
+                # Escalation logic: 1D (atoms) -> 1.5D (intra-card/macro 2D/3D) -> 2D (15-min beam) -> 3D (deficit wytrych) -> Reset
                 if current_phase == 1:
                     current_phase = 2
                     print(f"\n🔄 [ŚLEPY ZAUŁEK 1D] Brak poprawki w 1D. Przechodzę do FAZY 1.5D (wieloparametrowy rebalans pojedynczej karty i czyste makro)...\n")
                 elif current_phase == 2:
                     current_phase = 3
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1.5D] Brak poprawki w 1.5D. Przechodzę do FAZY 2D (100% pełne przeszukanie wszystkich par cross-card)...\n")
+                    beam_seeds_2d = select_diverse_beam_seeds(candidate_results, beam_width=100)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 1.5D] Brak poprawki w 1.5D. Przechodzę do FAZY 2D ({len(beam_seeds_2d)} nasion w 15-minutowym wyścigu)...\n")
                 elif current_phase == 3:
                     current_phase = 4
-                    beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=60)
-                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w całym 2D. Przechodzę do FAZY 3D (Wytrych Deficytu Frakcji z {len(beam_seeds)} nasion 2D)...\n")
+                    beam_seeds_3d = select_diverse_beam_seeds(candidate_results, beam_width=60)
+                    print(f"\n🔄 [ŚLEPY ZAUŁEK 2D] Brak poprawki w 2D. Przechodzę do FAZY 3D (Wytrych Deficytu Frakcji z {len(beam_seeds_3d)} nasion 2D)...\n")
                 else:
                     consecutive_stalls += 1
                     print(f"\n🛑 Zbadano pełną głębokość do Fazy 3D bez znalezienia patcha.")
                     print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
                     current_phase = 1
                     self.args.seed += 137
-                    beam_seeds.clear()
+                    beam_seeds_2d.clear()
+                    beam_seeds_3d.clear()
                     val_base_10k = None
                 continue
 
