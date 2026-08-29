@@ -4,7 +4,7 @@ name: Dekret Czystości Wiary
 faction: swiete-oficjum
 type: akcja
 layer: B
-cost: 1
+cost: 0
 heresy: 1
 tags:
 - heresy

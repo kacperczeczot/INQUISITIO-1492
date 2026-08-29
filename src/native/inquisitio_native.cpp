@@ -208,7 +208,7 @@ static CardDef CARD_DB[60] = {
     {"so-08", SO, 0, 0, 0, 3, 0, false, false, false, 0, NO_LOCATION, TAG_INQUISITOR | TAG_HERESY},
     {"so-09", SO, 1, 0, 0, 0, 0, false, true, false, 0, NO_LOCATION, TAG_HOOK},
     {"so-10", SO, 5, 1, 0, 0, 0, false, false, true, 2, NO_LOCATION, TAG_SIGNATURE | TAG_AUTODAFE | TAG_HERESY},
-    {"so-11", SO, 1, 1, 1, 1, 0, false, false, false, 0, NO_LOCATION, TAG_HERESY | TAG_GOLD},
+    {"so-11", SO, 0, 1, 1, 1, 0, false, false, false, 0, NO_LOCATION, TAG_HERESY | TAG_GOLD},
     {"so-12", SO, 1, 0, 1, 1, 1, false, false, false, 0, NO_LOCATION, TAG_MOVE | TAG_GOLD},
     // CIENIE-AL-ANDALUS (CAA)
     {"caa-01", CAA, 1, 1, 1, 0, 1, false, false, false, 0, NO_LOCATION, TAG_MOVE},
