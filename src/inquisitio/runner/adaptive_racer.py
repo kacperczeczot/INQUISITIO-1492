@@ -1,7 +1,7 @@
 """INQUISITIO-1492 — Generic Adaptive Sequential Racer Core Module.
 
 Provides high-performance Multi-Fidelity Monte Carlo racing with:
-  1. Successive Halving geometry (rungs).
+  1. Multi-fidelity geometric ladder (rungs: 400 -> 1600 -> 6400).
   2. Pure Statistical Confidence Interval (95% CI) pruning without arbitrary capacity cuts.
   3. Delta-Method Standard Error for win-share balance scores.
   4. Parallel execution of flattened setup tasks across native C++20 workers.
@@ -283,7 +283,7 @@ class AdaptiveSequentialRacer:
 
         print(
             f"\n🏁 [{label_prefix}] Pula: {len(active_candidates)} kandydatów | "
-            f"Szczeble: {rungs} gier/setup (Successive Halving)"
+            f"Szczeble: {rungs} gier/setup (95% CI Statistical Pruning)"
         )
 
         for step_idx, target_games in enumerate(rungs, 1):

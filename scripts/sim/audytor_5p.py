@@ -3,7 +3,7 @@
 
 Autonomous optimizer for 5-player format exceptions (5p-full), powered by:
   1. Native C++20 simulation core.
-  2. Multi-Fidelity Adaptive Sequential Racer (5p-full, Successive Halving, 95% CI statistical pruning).
+  2. Multi-Fidelity Adaptive Sequential Racer (5p-full, 95% CI statistical pruning).
   3. Multi-dimensional Combinatorial Beam Search (1D -> 2D -> 3D -> 4D).
   4. Mandatory 10,000 games/setup validation gate with 4P Canon Collateral Guard.
   5. Strict SSOT automation (game_config.yaml '5p:' exceptions, sync_config, balance-notes.md).

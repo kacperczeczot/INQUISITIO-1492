@@ -3,7 +3,7 @@
 
 Autonomous optimizer for 3-player format exceptions, powered by:
   1. Native C++20 simulation core.
-  2. Multi-Fidelity Adaptive Sequential Racer (10 3P setups, Successive Halving, 95% CI statistical pruning).
+  2. Multi-Fidelity Adaptive Sequential Racer (10 3P setups, 95% CI statistical pruning).
   3. Multi-dimensional Combinatorial Beam Search (1D -> 2D -> 3D -> 4D).
   4. Mandatory 10,000 games/setup validation gate with 4P Canon Collateral Guard.
   5. Strict SSOT automation (game_config.yaml '3p:' exceptions, sync_config, balance-notes.md).
