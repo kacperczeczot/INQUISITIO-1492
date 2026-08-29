@@ -94,6 +94,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.90 (2026-08-29) — Kanon 4P: Karta `kt-12` (Strażnik Archiwum): `heresy` → `0` + Karta `kt-12` (Strażnik Archiwum): `cost` → `1` (Zysk 4P Δ +1.9 pkt)
+- **Wynik 4P:** Kanon **`90.1`** → **`92.0 pkt`** | Global **`49.9`** | 3p **`32.7`** | 5p **`25.1`**
+- **Modyfikacja (`L3_KT-12_HERESY_MINUS1__L3_KT-12_COST_PLUS1`):** Karta `kt-12` (Strażnik Archiwum): `heresy` → `0` + Karta `kt-12` (Strażnik Archiwum): `cost` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.77, Deadlocks 0.0%, Pas Biedy 4.9%.
+
 ### 🟢 Patch v1.0-alpha.89 (2026-08-29) — Kanon 4P: Karta `gc-08` (Zatrute Złoto): `target_heresy` → `0` (Zysk 4P Δ +0.8 pkt)
 - **Wynik 4P:** Kanon **`89.3`** → **`90.1 pkt`** | Global **`49.5`** | 3p **`33.0`** | 5p **`25.5`**
 - **Modyfikacja (`L3_GC-08_TARGET_HERESY_MINUS1`):** Karta `gc-08` (Zatrute Złoto): `target_heresy` → `0`.

@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.89</span>
+              <span id="prev-meta-ver">v1.0-alpha.90</span>
             </div>
           </div>
         </div>
@@ -1798,8 +1798,8 @@
   "kt-12": {
     "name": "Strażnik Archiwum",
     "type": "akcja",
-    "cost": 0,
-    "heresy": 1,
+    "cost": 1,
+    "heresy": 0,
     "agents": 1,
     "action": "move_agent",
     "tags": [
@@ -2338,7 +2338,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.89';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.90';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

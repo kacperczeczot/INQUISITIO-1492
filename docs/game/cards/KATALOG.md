@@ -849,8 +849,8 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
-| `heresy` | 1 |
+| `cost_gold` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
 | `lore` | Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach. |

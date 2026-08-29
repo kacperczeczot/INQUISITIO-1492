@@ -438,16 +438,16 @@ class AdaptiveSequentialRacer:
 
             base_lb, base_ub = base_stats.ci_95
 
-            # 4. Statistical & Successive Halving Pruning
+            # 4. Pure Statistical Pruning (No artificial count-based halving)
             active_survivors = [c for c in active_candidates if not c.is_pruned]
             if active_survivors:
                 best_score = max(c.score_4p_balance for c in active_survivors)
-                ref_lb = max(base_lb, best_score - 2.5 * base_stats.score_se)
+                ref_lb = max(base_lb + self.min_delta, best_score - 2.5 * base_stats.score_se)
 
                 for c in active_survivors:
                     c_lb, c_ub = c.ci_95
 
-                    # A. Telemetry & Vitality hard vetoes (SPRT early stop)
+                    # A. Telemetry & Vitality hard vetoes
                     if curr_games >= 200:
                         if c.vitality_penalty > 0.0 and base_stats.vitality_penalty == 0.0:
                             c.is_pruned = True
@@ -462,21 +462,13 @@ class AdaptiveSequentialRacer:
                             c.prune_reason = f"Katastrofa biedy ({c.poverty_pct:.1f}% > 35%)"
                             continue
 
-                    # B. Statistical Upper-Bound Pruning vs Base & Leader
+                    # B. Pure Statistical Upper-Bound Pruning vs Base & Leader (95% CI)
+                    # Prune ONLY candidates whose upper confidence bound has NO chance of reaching Base + min_delta
                     if curr_games >= 200:
-                        if c_ub < ref_lb - 0.10:
+                        if c_ub < ref_lb - 0.05:
                             c.is_pruned = True
-                            c.prune_reason = f"Statystycznie gorszy od Bazy/Lidera (UB {c_ub:.2f} < Ref LB {ref_lb:.2f})"
+                            c.prune_reason = f"Brak statystycznych szans na zysk (UB {c_ub:.2f} < Wymagany LB {ref_lb:.2f})"
                             continue
-
-                # C. Successive Halving Capacity Filter (Top-K by UCB)
-                remaining = [c for c in active_candidates if not c.is_pruned]
-                max_capacity = max(8, int(len(candidate_pool) / (2 ** (step_idx - 1))))
-                if len(remaining) > max_capacity:
-                    remaining.sort(key=lambda x: x.ci_95[1], reverse=True)
-                    for cut_c in remaining[max_capacity:]:
-                        cut_c.is_pruned = True
-                        cut_c.prune_reason = f"Successive Halving (odcięcie poza TOP {max_capacity})"
 
             active_survivors = [c for c in active_candidates if not c.is_pruned]
             pruned_count = len(all_candidates) - len(active_survivors)

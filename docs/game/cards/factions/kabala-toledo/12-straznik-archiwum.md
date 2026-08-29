@@ -4,8 +4,8 @@ name: Strażnik Archiwum
 faction: kabala-toledo
 type: akcja
 layer: A
-cost: 0
-heresy: 1
+cost: 1
+heresy: 0
 tags:
 - move
 - heresy
@@ -13,6 +13,7 @@ effect: Przesuń swojego Agenta o 1 lokację.
 lore: Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach.
 agents: 1
 ---
+
 
 
 
