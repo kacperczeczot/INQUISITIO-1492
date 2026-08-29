@@ -206,22 +206,20 @@ def _simulate_flat_tasks_pool(
 
     results = []
     t0 = time.time()
-    chunk_size = max(1, min(50, total // (workers * 8)))
-    step_freq = max(1, total // 10)
+    chunk_size = max(50, min(2000, total // (workers * 8)))
+    step_freq = max(100, total // 100)
     with ProcessPoolExecutor(max_workers=workers) as executor:
         for idx, res in enumerate(executor.map(_run_single_batch_task, task_list, chunksize=chunk_size), 1):
             results.append(res)
-            elapsed = time.time() - t0
-            rate = idx / elapsed if elapsed > 0 else 0
-            eta_s = (total - idx) / rate if rate > 0 else 0
-            eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
             if idx % step_freq == 0 or idx == total:
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} bat/s | ETA: {eta_str:<8s}\n")
-            else:
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:4.1f} bat/s | ETA: {eta_str:<8s}")
-            sys.stdout.flush()
+                elapsed = time.time() - t0
+                rate = idx / elapsed if elapsed > 0 else 0
+                eta_s = (total - idx) / rate if rate > 0 else 0
+                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
+                sys.stdout.write(f"\r⏳ [{label}] [{idx:7d}/{total:7d}] ({idx*100.0/total:5.1f}%) | {rate:5.1f} bat/s | ETA: {eta_str:<8s}")
+                sys.stdout.flush()
 
-    sys.stdout.write(f"   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
+    sys.stdout.write(f"\n   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
     return results
 
 
@@ -300,23 +298,23 @@ class AdaptiveSequentialRacer:
             current_pool = ([base_stats] if need_simulate_base else []) + survivors
 
             task_list = []
-            task_map = {}
+            task_map = []
             task_idx = 0
 
-            for cand_obj in current_pool:
+            for cand_idx, cand_obj in enumerate(current_pool):
                 for sname in self.setups:
                     task_seed = seed + step_idx * 10007 + (hash(cand_obj.id) % 5003)
                     task_args = (task_idx, sname, task_seed, 8, "C", cand_obj.params, delta_games)
                     task_list.append(task_args)
-                    task_map[task_idx] = (cand_obj, sname)
+                    task_map.append((cand_idx, sname))
                     task_idx += 1
 
             step_label = f"Szczebel #{step_idx}/{len(rungs)} (N={target_games} gier) [{len(survivors)} kand]"
             batch_results = _simulate_flat_tasks_pool(task_list, self.workers, label=step_label)
 
             for t_id, summary in batch_results:
-                cand_obj, sname = task_map[t_id]
-                cand_obj.summaries_per_setup.setdefault(sname, []).append(summary)
+                cand_idx, sname = task_map[t_id]
+                current_pool[cand_idx].summaries_per_setup.setdefault(sname, []).append(summary)
 
             curr_games = target_games
             for cand_obj in current_pool:
