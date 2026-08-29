@@ -255,6 +255,60 @@ def log_3p_iteration(
         f.write(row + "\n")
 
 
+def generate_all_macro_pairwise_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates 100% full unconstrained pairwise combinations of macro rules (N*(N-1)/2)."""
+    seen_ids = set()
+    pairs = []
+    n = len(atomic_pool)
+    for i in range(n):
+        for j in range(i + 1, n):
+            merged = merge_mutations(atomic_pool[i], atomic_pool[j])
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                pairs.append(merged)
+    return pairs
+
+
+def generate_all_macro_3d_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates 100% full unconstrained 3-way combinations of macro rules (N*(N-1)*(N-2)/6)."""
+    seen_ids = set()
+    trios = []
+    n = len(atomic_pool)
+    for i in range(n):
+        for j in range(i + 1, n):
+            pair = merge_mutations(atomic_pool[i], atomic_pool[j])
+            if not pair:
+                continue
+            for k in range(j + 1, n):
+                trio = merge_mutations(pair, atomic_pool[k])
+                if trio and trio[0] not in seen_ids:
+                    seen_ids.add(trio[0])
+                    trios.append(trio)
+    return trios
+
+
+def generate_all_macro_4d_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates 100% full unconstrained 4-way combinations of macro rules."""
+    seen_ids = set()
+    quads = []
+    n = len(atomic_pool)
+    for i in range(n):
+        for j in range(i + 1, n):
+            pair = merge_mutations(atomic_pool[i], atomic_pool[j])
+            if not pair:
+                continue
+            for k in range(j + 1, n):
+                trio = merge_mutations(pair, atomic_pool[k])
+                if not trio:
+                    continue
+                for l in range(k + 1, n):
+                    quad = merge_mutations(trio, atomic_pool[l])
+                    if quad and quad[0] not in seen_ids:
+                        seen_ids.add(quad[0])
+                        quads.append(quad)
+    return quads
+
+
 class AutoBalancer3P:
     """Autonomous continuous balancer for 3-player format exceptions."""
 
@@ -315,23 +369,19 @@ class AutoBalancer3P:
 
             atomic_pool = drop_dead_path_crutches({}, generate_all_atomic_candidates_3p())
 
-            if current_phase == 1 or not beam_seeds:
+            if current_phase == 1:
+                print(f"\n🌐 [FAZA 1D — MAKRO 3P] 100% Pełna uniwersalna pula atomowa ({len(atomic_pool)} modyfikacji)...")
                 candidate_pool = atomic_pool
-                delta_pool = list(atomic_pool)
+            elif current_phase == 2:
+                print(f"\n🌐 [FAZA 2D — MAKRO 3P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH PAR (bez nasion)...")
+                candidate_pool = generate_all_macro_pairwise_candidates(atomic_pool)
+            elif current_phase == 3:
+                print(f"\n🌐 [FAZA 3D — MAKRO 3P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH TRÓJEK...")
+                candidate_pool = generate_all_macro_3d_candidates(atomic_pool)
             else:
-                composite_pool = []
-                for seed_mut in beam_seeds:
-                    for atomic_mut in atomic_pool:
-                        merged = merge_mutations(seed_mut, atomic_mut)
-                        if merged:
-                            composite_pool.append(merged)
-                seen_ids = set()
-                candidate_pool = []
-                for c in composite_pool:
-                    if c[0] not in seen_ids:
-                        seen_ids.add(c[0])
-                        candidate_pool.append(c)
-                delta_pool = list(candidate_pool)
+                print(f"\n🌐 [FAZA 4D — MAKRO 3P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH CZWÓREK...")
+                candidate_pool = generate_all_macro_4d_candidates(atomic_pool)
+            delta_pool = list(candidate_pool)
 
             # Apply candidate mutations ON TOP OF base overrides
             effective_candidates = []
@@ -461,22 +511,18 @@ class AutoBalancer3P:
                     print("   ✔ Zaktualizowano konfigurację.")
 
                     current_phase = 1
-                    beam_seeds.clear()
                     cached_base_stats = None
                     consecutive_stalls = 0
             else:
-                diverse_seeds = [r.cand_tuple for r in surviving_stats]
                 if current_phase >= self.args.max_depth:
                     consecutive_stalls += 1
-                    print(f"\n🛑 Osiągnięto maksymalną głębokość wiązek 3P ({self.args.max_depth}D).")
-                    print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna (cykl {consecutive_stalls})...")
+                    print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
+                    print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls})...")
                     current_phase = 1
                     self.args.seed += 137
-                    beam_seeds.clear()
                 else:
-                    beam_seeds = diverse_seeds[:self.args.beam_width]
                     current_phase += 1
-                    print(f"🔄 Zakwalifikowano {len(beam_seeds)} nasion 3P i ESKALUJĘ DO FAZY {current_phase}D...\n")
+                    print(f"🔄 [ŚLEPY ZAUŁEK {current_phase-1}D] Brak zysku w {current_phase-1}D. Przechodzę do 100% wyczerpującej FAZY {current_phase}D...\n")
 
 
 def main():

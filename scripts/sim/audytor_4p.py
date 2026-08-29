@@ -479,6 +479,60 @@ def merge_mutations(m1: tuple[str, str, dict], m2: tuple[str, str, dict]) -> tup
     return (combined_id, combined_name, merged_params)
 
 
+def generate_all_macro_pairwise_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates 100% full unconstrained pairwise combinations of macro rules (N*(N-1)/2)."""
+    seen_ids = set()
+    pairs = []
+    n = len(atomic_pool)
+    for i in range(n):
+        for j in range(i + 1, n):
+            merged = merge_mutations(atomic_pool[i], atomic_pool[j])
+            if merged and merged[0] not in seen_ids:
+                seen_ids.add(merged[0])
+                pairs.append(merged)
+    return pairs
+
+
+def generate_all_macro_3d_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates 100% full unconstrained 3-way combinations of macro rules (N*(N-1)*(N-2)/6)."""
+    seen_ids = set()
+    trios = []
+    n = len(atomic_pool)
+    for i in range(n):
+        for j in range(i + 1, n):
+            pair = merge_mutations(atomic_pool[i], atomic_pool[j])
+            if not pair:
+                continue
+            for k in range(j + 1, n):
+                trio = merge_mutations(pair, atomic_pool[k])
+                if trio and trio[0] not in seen_ids:
+                    seen_ids.add(trio[0])
+                    trios.append(trio)
+    return trios
+
+
+def generate_all_macro_4d_candidates(atomic_pool: list[tuple[str, str, dict]]) -> list[tuple[str, str, dict]]:
+    """Generates 100% full unconstrained 4-way combinations of macro rules."""
+    seen_ids = set()
+    quads = []
+    n = len(atomic_pool)
+    for i in range(n):
+        for j in range(i + 1, n):
+            pair = merge_mutations(atomic_pool[i], atomic_pool[j])
+            if not pair:
+                continue
+            for k in range(j + 1, n):
+                trio = merge_mutations(pair, atomic_pool[k])
+                if not trio:
+                    continue
+                for l in range(k + 1, n):
+                    quad = merge_mutations(trio, atomic_pool[l])
+                    if quad and quad[0] not in seen_ids:
+                        seen_ids.add(quad[0])
+                        quads.append(quad)
+    return quads
+
+
 def update_balance_notes_4p(
     old_version: str,
     new_version: str,
@@ -804,48 +858,25 @@ class Macro4PAutoBalancer:
                     search_exhausted = True
                     break
 
-                if current_phase == 1 or not beam_seeds:
-                    print(f"\n🌐 [FAZA 1D — MAKRO 4P] Pula L1/L2/L4 ±1, bez kart / bez ablacji ({len(atomic_pool)} wariantów)...")
+                if current_phase == 1:
+                    print(f"\n🌐 [FAZA 1D — MAKRO 4P] 100% Pełna uniwersalna pula atomowa ({len(atomic_pool)} modyfikacji)...")
                     candidate_pool = atomic_pool
+                elif current_phase == 2:
+                    print(f"\n🌐 [FAZA 2D — MAKRO 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH PAR (bez nasion)...")
+                    candidate_pool = generate_all_macro_pairwise_candidates(atomic_pool)
+                elif current_phase == 3:
+                    print(f"\n🌐 [FAZA 3D — MAKRO 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH TRÓJEK...")
+                    candidate_pool = generate_all_macro_3d_candidates(atomic_pool)
                 else:
-                    print(f"\n🌐 [FAZA {current_phase}D — MAKRO 4P] Wiązki 4P (TOP {len(beam_seeds)} nasion × {len(atomic_pool)} mechanik)...")
-                    composite_pool = []
-                    for seed_mut in beam_seeds:
-                        for atomic_mut in atomic_pool:
-                            merged = merge_mutations(seed_mut, atomic_mut)
-                            if merged:
-                                composite_pool.append(merged)
-
-                    seen_ids = set()
-                    candidate_pool = []
-                    for c in composite_pool:
-                        norm_id = "__".join(sorted(c[0].split("__")))
-                        if norm_id not in seen_ids:
-                            seen_ids.add(norm_id)
-                            candidate_pool.append(c)
+                    print(f"\n🌐 [FAZA 4D — MAKRO 4P] 100% PEŁNE PRZESZUKANIE WSZYSTKICH CZWÓREK...")
+                    candidate_pool = generate_all_macro_4d_candidates(atomic_pool)
 
                 print(f"   🧬 Wygenerowano {len(candidate_pool)} unikalnych kandydatów dla Kanonu 4P.")
                 if not candidate_pool:
-                    action = lookahead_next_action(
-                        depth=current_phase,
-                        max_depth=max_depth,
-                        has_pending=pending_cand is not None,
-                        found_better=False,
-                    )
-                    if action == "apply_pending" and pending_cand is not None and pending_res is not None:
-                        print(f"\n🛑 Brak kombinacji {current_phase}D — wdrażam held {pending_phase}D.")
-                        self._commit_patch(
-                            accepted_candidate=pending_cand,
-                            best_ver_res=pending_res,
-                            base_res=base_res,
-                            phase=pending_phase or current_phase,
-                            iter_start=iter_start,
-                        )
-                        applied = True
-                    else:
-                        print(f"\n🏁 Brak dalszych niekolidujących kombinacji na {current_phase}D.")
-                        search_exhausted = True
+                    print(f"\n🏁 Brak dalszych niekolidujących kombinacji na {current_phase}D.")
+                    search_exhausted = True
                     break
+
                 cand_dict = {c[0]: c for c in candidate_pool}
                 run_fast, run_screen = cheap_funnel_flags(
                     len(candidate_pool), self.args.top_semifinalists, self.args.top_k
@@ -909,65 +940,12 @@ class Macro4PAutoBalancer:
                         best_ver_res = ver_res
                         break
 
-                if accepted_candidate is None or best_ver_res is None:
-                    found_better = False
-                elif pending_res is None:
-                    found_better = True
-                else:
-                    found_better = macro_vector_beats(
-                        best_ver_res, pending_res, self.args.min_delta
-                    )
-
-                action = lookahead_next_action(
-                    depth=current_phase,
-                    max_depth=max_depth,
-                    has_pending=pending_cand is not None,
-                    found_better=found_better,
-                )
-                top_beam = drop_dead_path_crutches(
-                    base_res,
-                    [cand_dict[r["id"]] for r in stage3_results[: self.args.beam_width] if r["id"] in cand_dict],
-                )
-
-                if action == "hold_and_deeper" and accepted_candidate is not None:
-                    pending_cand = accepted_candidate
-                    pending_res = best_ver_res
-                    pending_phase = current_phase
-                    beam_seeds = top_beam
-                    cand_id_str = pending_cand[0] if pending_cand else ""
+                if accepted_candidate is not None and best_ver_res is not None:
                     print(
-                        f"\n✨ Nowe optimum na {current_phase}D (`{cand_id_str}`) — "
-                        f"NIE wdrażam, lookahead {current_phase + 1}D ({len(beam_seeds)} nasion)."
+                        f"\n🎯 [GREEDY-FIRST WDROŻENIE 4P] Znaleziono w 100% zweryfikowany zysk w Fazie {current_phase}D: "
+                        f"{accepted_candidate[1]} ({best_ver_res.get('score_4p_balance', best_ver_res['score_4p']):.1f} pkt).\n"
+                        f"   🌟 Wdrażam patch natychmiast, by podnieść bazę i odblokować kolejny krok!"
                     )
-                    current_phase += 1
-                    continue
-
-                if action == "deeper_empty":
-                    beam_seeds = top_beam
-                    print(
-                        f"\n⚪ Brak wariantu do przyjęcia w 1D — i tak sprawdzam 2D "
-                        f"(lookahead +1D, {len(beam_seeds)} nasion)."
-                    )
-                    current_phase += 1
-                    continue
-
-                if action == "apply_pending" and pending_cand is not None and pending_res is not None:
-                    print(
-                        f"\n🛑 {current_phase}D nie przebiło held {pending_phase}D "
-                        f"(`{pending_cand[0]}`) — wdrażam wcześniejszy wektor."
-                    )
-                    self._commit_patch(
-                        accepted_candidate=pending_cand,
-                        best_ver_res=pending_res,
-                        base_res=base_res,
-                        phase=pending_phase or current_phase,
-                        iter_start=iter_start,
-                    )
-                    applied = True
-                    break
-
-                if action == "apply_current" and accepted_candidate is not None and best_ver_res is not None:
-                    print(f"\n🏁 Max głębokość {max_depth}D — wdrażam bieżący wektor (`{accepted_candidate[0]}`).")
                     self._commit_patch(
                         accepted_candidate=accepted_candidate,
                         best_ver_res=best_ver_res,
@@ -977,6 +955,14 @@ class Macro4PAutoBalancer:
                     )
                     applied = True
                     break
+                else:
+                    if current_phase >= max_depth:
+                        print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
+                        search_exhausted = True
+                        break
+                    else:
+                        current_phase += 1
+                        print(f"🔄 [ŚLEPY ZAUŁEK {current_phase-1}D] Brak zysku w {current_phase-1}D. Przechodzę do 100% wyczerpującej FAZY {current_phase}D...\n")
 
                 print(
                     f"\n🏁 Brak zmian makro przynoszących zysk w 4P na {current_phase}D "
