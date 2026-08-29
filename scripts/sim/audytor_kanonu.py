@@ -882,11 +882,17 @@ class Canon4PAutoBalancer:
                 print(f"   👥 Wpływ 5p:        {val_base['cat_scores'].get('5p',0):.1f} → {val_cand['cat_scores'].get('5p',0):.1f} pkt (`{d5_sign} pkt`)")
                 print(f"   🌐 Globalny:        {val_base['global_score']:.1f} → {val_cand['global_score']:.1f} pkt (`{dg_sign} pkt`)")
 
-                # Format exact standardized structures for report and balance notes
+                # Format exact standardized structures for report and balance notes (10k certified SSOT)
                 rep_base_res = dict(base_res)
                 rep_base_res["score_4p_balance"] = val_base_score
+                rep_base_res["setup_scores_balance"] = {
+                    s: val_base["setup_scores"].get(s, 0.0) for s in CANONICAL_4P_SETUPS
+                }
                 rep_cand_res = dict(best_ver_res)
                 rep_cand_res["score_4p_balance"] = val_cand_score
+                rep_cand_res["setup_scores_balance"] = {
+                    s: val_cand["setup_scores"].get(s, 0.0) for s in CANONICAL_4P_SETUPS
+                }
 
                 if self.args.dry_run:
                     print(f"\n[DRY RUN] Zaakceptowano by modyfikację Kanonu 4P: {change_desc} ({acceptance_reason})")
