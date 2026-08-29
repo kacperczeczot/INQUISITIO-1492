@@ -721,12 +721,14 @@ class Canon4PAutoBalancer:
                 min_delta=self.args.min_delta,
             )
 
+            target_floor = pending_patch["best_res"]["score_4p_balance"] if pending_patch else None
             base_stats, candidate_results = racer.run_race(
                 base_cand=("BASE", f"Bieżący stan Kanonu 4P ({curr_ver})", curr_base_overrides),
                 candidate_pool=effective_candidates,
                 seed=iter_seed,
                 delta_pool=candidate_pool,
                 base_stats_cache=cached_base_stats,
+                target_floor_score=target_floor,
             )
             cached_base_stats = base_stats
 

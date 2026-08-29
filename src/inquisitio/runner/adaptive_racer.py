@@ -256,6 +256,7 @@ class AdaptiveSequentialRacer:
         delta_pool: list[tuple[str, str, dict]] | None = None,
         label_prefix: str = "WYŚCIG ADAPTACYJNY",
         base_stats_cache: CandidateStats | None = None,
+        target_floor_score: float | None = None,
     ) -> tuple[CandidateStats, list[CandidateStats]]:
         """Conducts iterative micro-batch racing with pure statistical 95% CI pruning."""
         base_stats = copy.deepcopy(base_stats_cache) if base_stats_cache is not None else CandidateStats(base_cand, delta_tuple=base_cand)
@@ -331,7 +332,8 @@ class AdaptiveSequentialRacer:
             active_survivors = [c for c in active_candidates if not c.is_pruned]
             if active_survivors:
                 best_score = max(c.score_4p_balance for c in active_survivors)
-                ref_lb = max(base_lb + self.min_delta, best_score - 2.5 * base_stats.score_se)
+                floor_lb = (target_floor_score + self.min_delta - 2.5 * base_stats.score_se) if target_floor_score is not None else (base_lb + self.min_delta)
+                ref_lb = max(base_lb + self.min_delta, floor_lb, best_score - 2.5 * base_stats.score_se)
 
                 for c in active_survivors:
                     c_lb, c_ub = c.ci_95
