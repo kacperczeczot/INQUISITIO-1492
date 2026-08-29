@@ -7,12 +7,12 @@
 - **Wybrany Wariant (2D):** `L3_KT-12_HERESY_MINUS1__L3_KT-12_COST_PLUS1` — **KT-12 (Strażnik Archiwum): heresy 1 → 0 + KT-12 (Strażnik Archiwum): cost 0 → 1**
 - **Opis Modyfikacji:** Karta `kt-12` (Strażnik Archiwum): `heresy` → `0` + Karta `kt-12` (Strażnik Archiwum): `cost` → `1`
 - **Wynik Kanonu 4P Balance:** 90.1 → 🟢 ** 92.0** (`⬆️ +1.9`) pkt (±0.85)
-- **Rozbicie Setupów Kanonu 4P:**
-  - `4p-core`: 90.0 → 90.4 (`⬆️ +0.4`) pkt
-  - `4p-no-cienie`: 81.9 → 83.2 (`⬆️ +1.3`) pkt
-  - `4p-no-kabala`: 96.0 → 95.4 (`🔻 -0.6`) pkt
-  - `4p-no-korona`: 88.3 → 94.1 (`⬆️ +5.8`) pkt
-  - `4p-no-oficjum`: 97.7 → 98.6 (`⬆️ +0.9`) pkt
+- **Rozbicie Setupów Kanonu 4P (10 000 gier/setup):**
+  - `4p-core`: 84.8 → 85.0 (`⬆️ +0.2`) pkt
+  - `4p-no-cienie`: 82.5 → 84.3 (`⬆️ +1.8`) pkt
+  - `4p-no-kabala`: 96.2 → 97.5 (`⬆️ +1.3`) pkt
+  - `4p-no-korona`: 89.1 → 94.1 (`⬆️ +5.0`) pkt
+  - `4p-no-oficjum`: 98.0 → 98.9 (`⬆️ +0.9`) pkt
 
 ## 2. Diagnostyka Wpływu Kolateralnego na Pozostałe Tryby (3P / 5P)
 - **Tryb 3-osobowy (3p Avg):** 33.0 → 32.7 (`🔻 -0.3`) pkt
