@@ -234,9 +234,45 @@ def get_mutation_faction(mut_tuple: tuple[str, str, dict]) -> str | None:
 
 def _normalize_faction_code(f_name: str) -> str:
     """Normalizes any faction representation (slug, name, enum or abbreviation) to 2-3 letter code."""
-    f = f_name.lower().replace("-", "_").strip()
-    if "oficjum" in f or f == "so":
-        return "SO"
+def select_diverse_beam_seeds(all_candidate_stats: list, beam_width: int = 60) -> list[tuple[str, str, dict]]:
+    """Selects a rich, balanced set of seeds representing the full spectrum:
+    - Top positive candidates (promising leads)
+    - Strongest negative/antagonist mutations (nerfs and counterweights across all factions)
+    - Diverse structural modifiers
+    """
+    sorted_all = sorted(all_candidate_stats, key=lambda c: c.score, reverse=True)
+    if not sorted_all:
+        return []
+
+    seeds = []
+    seen = set()
+
+    def add_cand(cand):
+        tup = cand.delta_tuple if getattr(cand, "delta_tuple", None) else cand.cand_tuple
+        if tup[0] not in seen:
+            seen.add(tup[0])
+            seeds.append(tup)
+
+    # 1. Top performers (positive momentum)
+    for c in sorted_all[:beam_width // 2]:
+        add_cand(c)
+
+    # 2. Strongest antagonist / negative mutations (essential for compensatory pairs A- + B- -> AB+)
+    bottom_half = sorted_all[len(sorted_all) // 2:]
+    for c in reversed(bottom_half):
+        add_cand(c)
+        if len(seeds) >= (beam_width * 4 // 5):
+            break
+
+    # 3. Ensure representation across all factions
+    for c in sorted_all:
+        if len(seeds) >= beam_width:
+            break
+        add_cand(c)
+
+    return seeds[:beam_width]
+
+
 def generate_all_composite_candidates(
     beam_seeds: list[tuple[str, str, dict]],
     atomic_pool: list[tuple[str, str, dict]],
@@ -735,8 +771,7 @@ class Canon4PAutoBalancer:
                         f"   ✋ WSTRZYMUJĘ natychmiastowe wdrożenie i eskaluję do Fazy {current_phase + 1}D, "
                         f"by sprawdzić czy głębsze synergie dadzą jeszcze wyższy zysk globalny..."
                     )
-                    diverse_seeds = [r.cand_tuple for r in surviving_stats]
-                    beam_seeds = diverse_seeds[:self.args.beam_width]
+                    beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=self.args.beam_width)
                     current_phase += 1
                     continue
                 else:
@@ -754,19 +789,20 @@ class Canon4PAutoBalancer:
                     patch_to_apply = pending_patch
                 else:
                     # No pending patch and no improvement at this depth -> escalate deeper to search for emergent synergies
-                    diverse_seeds = [r.cand_tuple for r in surviving_stats]
-                    if current_phase >= self.args.max_depth:
+                    beam_seeds = select_diverse_beam_seeds(candidate_results, beam_width=self.args.beam_width)
+                    max_depth = getattr(self.args, "max_depth", 12)
+                    if current_phase >= max_depth or not beam_seeds:
                         consecutive_stalls += 1
-                        print(f"\n🛑 Osiągnięto maksymalną głębokość drzewa ({self.args.max_depth}D) bez znalezienia patcha.")
+                        print(f"\n🛑 Zbadano głębokość do Fazy {current_phase}D bez znalezienia patcha.")
                         print(f"   🔄 Resetuję do Fazy 1D z przesunięciem ziarna eksploracji (pełny cykl {consecutive_stalls}). Kontynuuję poszukiwanie synergii...")
                         current_phase = 1
                         self.args.seed += 137
                         beam_seeds.clear()
                     else:
-                        beam_seeds = diverse_seeds[:self.args.beam_width]
                         current_phase += 1
-                        print(f"🔄 Brak zysku w 1D-izolacji. Eskaluję do FAZY {current_phase}D, by sprawdzić wielokartowe synergie ({len(beam_seeds)} nasion)...\n")
+                        print(f"🔄 Brak bezpośredniego zysku w {current_phase-1}D. Eksploruję wielowymiarowe synergie w FAZIE {current_phase}D ({len(beam_seeds)} nasion pełnego spektrum)...\n")
                     continue
+
 
             # 4. Mandatory 10k Validation Gate & SSOT Commit
             if should_apply_patch and patch_to_apply:
