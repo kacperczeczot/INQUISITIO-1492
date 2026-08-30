@@ -101,9 +101,9 @@ Kart: **12**
 | `type` | reakcja |
 | `layer` | A |
 | `cost_gold` | 0 |
-| `heresy` | 4 |
+| `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +3 Herezja. Zyskaj 3 złota. |
+| `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. |
 | `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
 | `tags` | reaction |
 | `status` | prototyp |
@@ -296,7 +296,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce. |
-| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 6 złota. |
+| `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -361,7 +361,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
@@ -974,8 +974,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 0 |
-| `heresy` | 0 |
+| `cost_gold` | 1 |
+| `heresy` | 1 |
 | `heresy_text` | Ciało w kanałach Gildii mówi więcej niż świadek na rynku. |
 | `effect` | Aresztuj Agenta rywala w Gildii lub na Rynku. |
 | `lore` | Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami. |
@@ -991,10 +991,10 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 1 złoto. |
+| `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |
 | `tags` | gold, heresy |
 | `status` | prototyp |

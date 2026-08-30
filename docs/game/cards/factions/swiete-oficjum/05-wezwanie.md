@@ -5,14 +5,14 @@ faction: swiete-oficjum
 type: reakcja
 layer: A
 cost: 0
-heresy: 4
+heresy: 1
 tags:
 - reaction
-effect: 'Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +3 Herezja. Zyskaj
-  3 złota.'
+effect: 'Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja.'
 lore: Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.
 target_heresy: 1
 ---
+
 
 
 

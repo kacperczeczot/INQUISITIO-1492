@@ -230,7 +230,7 @@ def check_card_effects_and_utility(cfg: dict[str, Any]) -> list[str]:
                         raw.get("move_relic"),
                         raw.get("breaks_rule"),
                         raw.get("trigger"),
-                        raw.get("action") in ("send_inquisitor", "move_agent", "frame_rival", "arrest"),
+                        raw.get("action") in ("send_inquisitor", "move_agent", "frame_rival", "arrest", "interrogate", "evacuate_relic", "creates_hook", "autodafe"),
                     ]
                 )
                 if not has_value:

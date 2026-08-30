@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.135</span>
+              <span id="prev-meta-ver">v1.0-alpha.136</span>
             </div>
           </div>
         </div>
@@ -1180,8 +1180,6 @@
     "tags": [
       "inquisitor"
     ],
-    "gold": 2,
-    "target_heresy": 1,
     "heresy_text": "Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.",
     "lore": "Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel."
   },
@@ -1189,15 +1187,14 @@
     "name": "Wezwanie do Trybunału",
     "type": "reakcja",
     "cost": 0,
-    "target_heresy": 3,
+    "target_heresy": 1,
     "action": "frame_rival",
     "target_scope": "triggering_rival",
     "trigger": "rival_plays_heresy_gte_1",
     "tags": [
       "reaction"
     ],
-    "heresy": 4,
-    "gold": 3,
+    "heresy": 1,
     "lore": "Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję."
   },
   "so-06": {
@@ -1225,7 +1222,6 @@
     "tags": [
       "interrogation"
     ],
-    "gold": 2,
     "lore": "Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję."
   },
   "so-08": {
@@ -1240,7 +1236,6 @@
       "inquisitor",
       "heresy"
     ],
-    "gold": 3,
     "heresy_text": "Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.",
     "lore": "Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne."
   },
@@ -1341,7 +1336,6 @@
       "relic",
       "heresy"
     ],
-    "gold": 4,
     "heresy_text": "Kupcy rozpoznają obce oblicze w tłumie na placu.",
     "lore": "Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień."
   },
@@ -1354,7 +1348,6 @@
     "tags": [
       "heresy"
     ],
-    "gold": 6,
     "heresy_text": "Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce.",
     "lore": "Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę."
   },
@@ -1369,8 +1362,6 @@
     "tags": [
       "relic"
     ],
-    "gold": 4,
-    "target_heresy": 3,
     "lore": "Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar."
   },
   "caa-06": {
@@ -1385,9 +1376,6 @@
       "move",
       "arrest"
     ],
-    "heresy": 0,
-    "target_heresy": 1,
-    "gold": 1,
     "heresy_text": "Klucz od strażnika, który nigdy nie służył Koronie.",
     "lore": "Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą."
   },
@@ -1401,14 +1389,13 @@
     "tags": [
       "hook"
     ],
-    "gold": 4,
     "heresy_text": "Bractwo zna imiona sąsiadów lepiej niż proboszczowie.",
     "lore": "Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni."
   },
   "caa-08": {
     "name": "Kaptur Nocy",
     "type": "akcja",
-    "cost": 2,
+    "cost": 1,
     "heresy": 1,
     "action": "move_agent",
     "condition": "has_double_agent",
@@ -1416,8 +1403,6 @@
       "double",
       "heresy"
     ],
-    "target_heresy": 2,
-    "gold": 1,
     "heresy_text": "Marionetka w obcych szeregach zostawia ślad w rejestrze gości.",
     "lore": "Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę."
   },
@@ -1906,8 +1891,8 @@
   "gc-07": {
     "name": "Skrytobójstwo",
     "type": "akcja",
-    "cost": 0,
-    "heresy": 0,
+    "cost": 1,
+    "heresy": 1,
     "arrest": true,
     "action": "arrest",
     "target_loc": "guild_or_market",
@@ -1915,15 +1900,14 @@
       "arrest",
       "heresy"
     ],
-    "gold": 3,
     "heresy_text": "Ciało w kanałach Gildii mówi więcej niż świadek na rynku.",
     "lore": "Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami."
   },
   "gc-08": {
     "name": "Zatrute Złoto",
     "type": "akcja",
-    "cost": 2,
-    "target_heresy": 0,
+    "cost": 1,
+    "target_heresy": 1,
     "gold": 1,
     "action": "gain_gold",
     "tags": [
@@ -2355,7 +2339,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.135';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.136';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;
