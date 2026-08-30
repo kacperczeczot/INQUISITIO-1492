@@ -9,11 +9,13 @@ heresy: 0
 tags:
 - move
 - relic
-effect: Przesuń swojego Agenta o 1 lokację.
+effect: Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto.
 heresy_text: Tunele starej Toledo znane tylko wtajemniczonym w bractwie.
 lore: Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów.
+gold: 1
 agents: 1
 ---
+
 
 
 

@@ -4,15 +4,18 @@ name: Kurier Relikwii
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 0
+cost: 1
 heresy: 0
 tags:
 - relic
 - move
-effect: Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.
+effect: Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji. Zyskaj 1
+  złoto.
 lore: Ocalone manuskrypty i relikwie przodków są warte więcej niż całe złoto kastylijskiej
   korony.
+gold: 1
 ---
+
 
 
 

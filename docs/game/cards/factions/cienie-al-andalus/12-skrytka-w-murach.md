@@ -5,7 +5,7 @@ faction: cienie-al-andalus
 type: akcja
 layer: A
 cost: 1
-heresy: 1
+heresy: 0
 tags:
 - gold
 - heresy
@@ -14,6 +14,7 @@ lore: Stare mauretańskie złoto ukryte w murach pałacowych czekało na ten dec
   dzień.
 gold: 3
 ---
+
 
 
 

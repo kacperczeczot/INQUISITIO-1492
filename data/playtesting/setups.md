@@ -61,47 +61,51 @@ pytest tests/test_balance.py -v
 
 ---
 
-## 3 graczy
+## 3 graczy (Format 3P)
 
 Cel: czytelny stół (~60–90 min), dramat Werdyktu / Inkwizytora bez pełnego szumu 5 frakcji.
 
-### Rekomendowane składy
+### 🌟 Oficjalnie Rekomendowane Składy dla 3P (Score ≥ 85.0)
 
-| Kod / skład | Co testuje |
-| :--- | :--- |
-| Oficjum + Cienie + Korona | Terror / Relikwie / Dekrety+Haki |
-| Oficjum + Kabała + Gildia | Sweet spot Herezji vs Upadek vs Stosy |
-| Cienie + Korona + Gildia | Polityka i szantaż (Inkwizytor jako neutralny NPC) |
-| Oficjum + Cienie + Gildia | Stosy vs Relikwie vs Upadek |
+W formacie 3-osobowym rekomendujemy wyłącznie zestawienia osiągające certyfikowany, wysoki wynik balansu (**Score ≥ 85.0**):
 
-### Notatki 3p
+| Setup / Kod | Skład Frakcji | Balans Win-Share (Score) | Styl rozgrywki i Dynamika Stołu |
+| :--- | :--- | :---: | :--- |
+| **`3p-cienie-korona-gildia`** | **Cienie + Korona + Gildia** | 🟡 **89.3**<br>(32.0% / 31.4% / 36.6%) | **👑 Pakt Kupiecki & Intryga:** Inkwizytor działa jako neutralny NPC na planszy. Najwyżej zbalansowany i najbardziej płynny format dla 3 graczy — brak bezpośredniego terroru gracza Inkwizycji, gra oparta na szantażu, handlu i wpływach. |
+| **`3p-oficjum-korona-kabala`** | **Oficjum + Korona + Kabała** | 🟡 **86.2**<br>(29.4% / 34.6% / 36.0%) | **⚔️ Władza, Trybunał i Tajemnica:** Pełna równowaga trójkąta z graczem Inkwizycji. Władza świecka (Korona) szachuje Trybunał (Oficjum), a Kabała manipuluje Sefirotami w Złotym Paśmie Herezji [4, 6]. |
 
-- Gildia i Kabała mają mniej celów — metryki Haków / wrabiania mogą być ostrzejsze.
-- Pierwsza sesja: preferuj **Oficjum + Cienie + Korona**.
-
----
-
-## 4 graczy
-
-Cel: asymetria + sojusze, bez pełnej piątki.
-
-### Którą frakcję wyłączyć
-
-| Wyłącz | Styl rozgrywki przy stole |
-| :--- | :--- |
-| **Gildia Cieni** | Czystszy stół; fokus Relikwie / Stosy / Dekrety |
-| **Kabała z Toledo** | Mniej manewru Herezją; ostrzejszy Werdykt |
-| **Korona** | Mniej Haków/Dekretów; ostrzejsze Relikwie i Stosy |
-| **Cienie Al-Andalus** | Brak ewakuacji — fokus Herezja / Upadek / Stosy |
-| **Święte Oficjum** | Inkwizytor jako neutralny NPC na planszy |
-
-Domyślnie pierwsza sesja 4p: **wyłącz Gildię**.
+> [!WARNING]
+> **Pozostałe Składy 3P (Warianty Asymetryczne / Dla Doświadczonych Graczy):**
+> Składy poniżej progu 85.0 (np. `3p-oficjum-alandalus-gildia` 82.4, `3p-oficjum-korona-gildia` 80.5, `3p-cienie-kabala-gildia` 78.6, `3p-korona-kabala-gildia` 72.0, `3p-cienie-korona-kabala` 70.2) oraz układy spolaryzowane (`3p-oficjum-kabala-gildia` 59.6, `3p-oficjum-alandalus-korona` 51.9, `3p-oficjum-alandalus-kabala` 49.3) cechują się ostrzejszą asymetrią i wymagają od graczy aktywnej gry przeciwko uciekającemu liderowi (*Anti-Leader / Kingmaker Resistance*).
 
 ---
 
-## 5 graczy
+## 4 graczy (Kanon 4P — Główny Format Gry)
 
-Wszystkie frakcje. Pełny chaos Haków, Marionetek i Werdyktów (~90+ min).
+Podstawowy kanon turniejowy i pudełkowy gry INQUISITIO-1492 ([ADR-0002](../docs/adr/0002-kanon-4p-jako-bezwzgledna-kotwica-balansu.md)). 
+
+### 🌟 2 Główne Rekomendowane Składy dla 4P (Elita Balansu Score > 93.0)
+
+W formacie 4-osobowym rekomendujemy przede wszystkim dwa flagowe zestawienia oferujące najwyższy możliwy poziom matematycznej symetrii szans:
+
+| Setup / Kod | Skład Frakcji | Balans Win-Share (Score) | Rekomendacja i Zastosowanie |
+| :--- | :--- | :---: | :--- |
+| **`4p-no-korona`**<br>*(bez Korony)* | **Oficjum + Cienie + Kabała + Gildia** | 🟢 **97.2**<br>(24.2% / 25.1% / 24.9% / 25.8%) | **🏆 Kanon Turniejowy z Graczem Inkwizycji:** Niemal idealna symetria szans (~25% per frakcja). Pełna, ostra interakcja: polowanie na Herezję, procesy Trybunału, ucieczka Szlakiem Morskim i Upadki Gildii. |
+| **`4p-no-oficjum`**<br>*(bez Oficjum)* | **Cienie + Korona + Kabała + Gildia** | 🟢 **93.2**<br>(23.0% / 26.0% / 25.3% / 25.7%) | **👑 Król Czystej Gry Politycznej:** Inkwizytor działa jako bezstronny, neutralny NPC na planszy — gra opiera się na czystej intrydze, handlu, Dekretach i wpływach dworskich bez presji procesowej gracza Inkwizycji. |
+
+### Pozostałe Składy 4P (Warianty Alternatywne i Wprowadzające)
+
+* **`4p-no-kabala`** (Score: **90.7** 🟢) — Oficjum + Cienie + Korona + Gildia. Klasyczny format wpływów i terroru bez manipulacji mistycyzmem Kabały.
+* **`4p-no-cienie`** (Score: **83.7** 🟡) — Oficjum + Korona + Kabała + Gildia. Brak ewakuacji Relikwii — bezwzględna presja lochów, Dekretów i sądów.
+* **`4p-core`** / `4p-no-gildia` (Score: **82.4** 🟡) — Oficjum + Cienie + Korona + Kabała. **Kanon Narracyjny na Pierwszą Grę:** 4 pierwotne frakcje historyczne Hiszpanii 1492 roku bez skomplikowanych łańcuchów Upadków Gildii. Idealne do nauki zasad.
+
+---
+
+## 5 graczy (Format 5P Full)
+
+| Setup / Kod | Skład Frakcji | Balans Win-Share (Score) | Rekomendacja i Styl |
+| :--- | :--- | :---: | :--- |
+| **`5p-full`** | **Wszystkie 5 frakcji** | 🟢 **92.2**<br>(19.6% / 21.2% / 20.0% / 21.0% / 18.2%) | **👑 Pełny Majestat Asymetrii:** Wszystkie frakcje przy stole (~20% na frakcję). Pełna sieć Haków, Marionetek, Procesów, Dekretów i Ucieczki (~90+ min). |
 
 ---
 

@@ -5,7 +5,7 @@ faction: gildia-cieni
 type: akcja
 layer: A
 cost: 1
-heresy: 2
+heresy: 3
 tags:
 - heresy
 effect: 'Wskaż rywala: +1 Herezja.'
@@ -14,6 +14,7 @@ lore: Zakazana księga podłożona do komnaty rywala sprowadzi na niego inkwizyc
   przed południem.
 target_heresy: 1
 ---
+
 
 
 

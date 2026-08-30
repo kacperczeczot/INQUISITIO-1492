@@ -4,7 +4,7 @@ name: Echo Alhambry
 faction: cienie-al-andalus
 type: signature
 layer: A
-cost: 2
+cost: 3
 heresy: 0
 tags:
 - signature
@@ -16,8 +16,10 @@ effect: 'Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma
 heresy_text: Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.
 lore: Echo dawnej chwały Andaluzji rozbrzmiewa w sercach tych, którzy nigdy nie złożyli
   broni.
+gold: 1
 breaks_rule: Relikwia tylko ze Szlaku Morskiego
 ---
+
 
 
 

@@ -220,7 +220,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 2 |
+| `heresy` | 3 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed oblicze sprawiedliwości. |
@@ -245,7 +245,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. |
 | `lore` | Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów. |
 | `tags` | move, relic |
 | `status` | prototyp |
@@ -259,8 +259,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
-| `heresy` | 1 |
+| `cost_gold` | 2 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
 | `lore` | Skarby ukryte w murach przed upadkiem Grenady finansują walkę o ocalenie dziedzictwa. |
@@ -276,7 +276,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Kupcy rozpoznają obce oblicze w tłumie na placu. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. |
@@ -296,7 +296,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce. |
-| `effect` | Wskaż rywala: +1 Herezja. |
+| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 2 złota. |
 | `lore` | Porzucony burnus i ślad w zaułku kierują inkwizytorów w ślepą uliczkę, z dala od prawdziwych uciekinierów. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -327,7 +327,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
 | `effect` | Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację. |
@@ -378,10 +378,10 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji. |
+| `effect` | Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji. Zyskaj 1 złoto. |
 | `lore` | Ocalone manuskrypty i relikwie przodków są warte więcej niż całe złoto kastylijskiej korony. |
 | `tags` | relic, move |
 | `status` | prototyp |
@@ -395,7 +395,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | signature |
 | `layer` | A |
-| `cost_gold` | 2 |
+| `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
@@ -412,8 +412,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
-| `heresy` | 0 |
+| `cost_gold` | 3 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w labiryncie nocy. |
@@ -430,7 +430,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
 | `lore` | Stare mauretańskie złoto ukryte w murach pałacowych czekało na ten decydujący dzień. |
@@ -784,7 +784,7 @@ Kart: **12**
 | `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał. |
-| `effect` | Aresztuj Agenta rywala w Lochach lub w Trybunale. |
+| `effect` | Aresztuj Agenta rywala w Lochach lub w Trybunale. Zyskaj 1 złoto. |
 | `lore` | Strażnicy wiedzy wiedzą, jak zamknąć w lochu każdego, kto zbezcześci święte manuskrypty. |
 | `tags` | arrest |
 | `status` | prototyp |
@@ -872,8 +872,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
-| `heresy` | 1 |
+| `cost_gold` | 1 |
+| `heresy` | 3 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota. |
 | `lore` | Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym na całą noc. |
@@ -907,7 +907,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 2 |
+| `heresy` | 3 |
 | `heresy_text` | Zakazana księga ląduje w cudzej komnacie o świcie. |
 | `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Zakazana księga podłożona do komnaty rywala sprowadzi na niego inkwizycję jeszcze przed południem. |
@@ -991,10 +991,10 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
+| `effect` | Zyskaj 3 złota. Wskaż rywala: +1 Herezja. |
 | `lore` | Pieniądze pachnące trucizną parzą dłonie tego, kto przyjmie je w godzinie chciwości. |
 | `tags` | gold, heresy |
 | `status` | prototyp |

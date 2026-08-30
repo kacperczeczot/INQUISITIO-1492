@@ -4,16 +4,17 @@ name: Zatrute Złoto
 faction: gildia-cieni
 type: akcja
 layer: A
-cost: 1
+cost: 0
 heresy: 1
 tags:
 - gold
 - heresy
-effect: 'Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.'
+effect: 'Zyskaj 3 złota. Wskaż rywala: +1 Herezja.'
 lore: Pieniądze pachnące trucizną parzą dłonie tego, kto przyjmie je w godzinie chciwości.
-gold: 1
+gold: 3
 target_heresy: 1
 ---
+
 
 
 

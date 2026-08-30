@@ -1504,7 +1504,7 @@ static inline bool card_condition_met_native(const GameStateNative& st, uint8_t 
 
     // caa-10 (21)
     if (card_idx == 21) {
-        if (st.sea_route_open || pl.path_via_double) return true;
+        if (st.sea_route_open || pl.path_via_double || pl.avoided_autodafe || pl.shadow_exit) return true;
         for (int p = 0; p < st.num_players; ++p) {
             uint8_t r = st.turn_order[p];
             if (r != fid) {

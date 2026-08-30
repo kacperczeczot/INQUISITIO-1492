@@ -8,12 +8,14 @@ cost: 3
 heresy: 0
 tags:
 - arrest
-effect: Aresztuj Agenta rywala w Lochach lub w Trybunale.
+effect: Aresztuj Agenta rywala w Lochach lub w Trybunale. Zyskaj 1 złoto.
 heresy_text: Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał.
 lore: Strażnicy wiedzy wiedzą, jak zamknąć w lochu każdego, kto zbezcześci święte
   manuskrypty.
+gold: 1
 arrest: true
 ---
+
 
 
 

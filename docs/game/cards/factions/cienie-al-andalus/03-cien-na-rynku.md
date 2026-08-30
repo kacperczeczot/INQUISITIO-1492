@@ -4,7 +4,7 @@ name: Cień na Rynku
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 1
+cost: 2
 heresy: 1
 tags:
 - move
@@ -17,6 +17,7 @@ lore: W gwarze targowiska najłatwiej przekazać zakazany zwój lub ostrzec brac
 gold: 1
 agents: 1
 ---
+
 
 
 

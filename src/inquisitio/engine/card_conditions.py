@@ -49,7 +49,14 @@ def card_condition_met(state: GameState, fid: FactionId, card: Card) -> bool:
             for other in state.players.values()
             for ag in other.agents
         )
-        return quiet or via_double or state.sea_route_open
+        return (
+            quiet
+            or via_double
+            or state.sea_route_open
+            or getattr(pl, "avoided_autodafe", False)
+            or getattr(pl, "shadow_exit", False)
+            or getattr(pl, "path_via_double", False)
+        )
     if cond == "rival_has_hook_or_double_or_autodafe":
         for rival in state.turn_order:
             if rival == fid:

@@ -4,8 +4,8 @@ name: Nocna Zmiana Warty
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 2
-heresy: 0
+cost: 3
+heresy: 1
 tags:
 - move
 - inquisitor
@@ -17,6 +17,7 @@ gold: 1
 target_heresy: 1
 agents: 1
 ---
+
 
 
 

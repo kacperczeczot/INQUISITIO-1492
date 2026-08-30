@@ -45,7 +45,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **3** | **3** | **3** | Czysta to 0–2. Od **3** Autodafé pali na Stos (nie areszt). |
-| **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **8** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
+| **Próg Oskarżenia (Krytyczna)** | **6** | **7** | **8** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **15** | **15** | **15** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
@@ -93,6 +93,130 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🌐 Patch v1.0-alpha.164 (2026-08-30) — Global Auditor: Karta `gc-01` (Przekupiony Strażnik): `heresy` → `3` (Zysk Global Δ +0.4 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-01_HERESY_PLUS2` -> Karta `gc-01` (Przekupiony Strażnik): `heresy` → `3`
+- **Wynik Globalny:** 86.2 → **86.6**
+- **Balans 4P:** 90.0 → 90.3
+- **Balans 3P:** 71.7 → 72.3
+- **Balans 5P:** 96.8 → 97.1
+
+### 🌐 Patch v1.0-alpha.163 (2026-08-30) — Global Auditor: Karta `caa-10` (Echo Alhambry): `cost` → `3` + Karta `caa-10` (Echo Alhambry): `gold` → `1` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-10_C3_G1` -> Karta `caa-10` (Echo Alhambry): `cost` → `3` + Karta `caa-10` (Echo Alhambry): `gold` → `1`
+- **Wynik Globalny:** 86.0 → **86.2**
+- **Balans 4P:** 90.2 → 90.0
+- **Balans 3P:** 72.2 → 71.7
+- **Balans 5P:** 95.5 → 96.8
+
+### 🌐 Patch v1.0-alpha.162 (2026-08-30) — Global Auditor: Karta `gc-03` (Podrzucenie Księgi): `heresy` → `3` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-03_HERESY_PLUS1` -> Karta `gc-03` (Podrzucenie Księgi): `heresy` → `3`
+- **Wynik Globalny:** 85.8 → **86.0**
+- **Balans 4P:** 90.1 → 90.2
+- **Balans 3P:** 72.1 → 72.2
+- **Balans 5P:** 95.3 → 95.5
+
+### 🌐 Patch v1.0-alpha.161 (2026-08-30) — Global Auditor: Karta `kt-08` (Areszt Wiedzy): `gold` → `1` + Karta `kt-08` (Areszt Wiedzy): `heresy` → `0` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_KT-08_G1_H0` -> Karta `kt-08` (Areszt Wiedzy): `gold` → `1` + Karta `kt-08` (Areszt Wiedzy): `heresy` → `0`
+- **Wynik Globalny:** 85.7 → **85.8**
+- **Balans 4P:** 89.6 → 90.1
+- **Balans 3P:** 73.6 → 72.1
+- **Balans 5P:** 94.0 → 95.3
+
+### 🌐 Patch v1.0-alpha.160 (2026-08-30) — Global Auditor: Karta `so-12` (Straż Trybunalska): `heresy` → `3` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_SO-12_HERESY_PLUS1` -> Karta `so-12` (Straż Trybunalska): `heresy` → `3`
+- **Wynik Globalny:** 85.6 → **85.7**
+- **Balans 4P:** 89.9 → 89.6
+- **Balans 3P:** 72.9 → 73.6
+- **Balans 5P:** 93.9 → 94.0
+
+### 🌐 Patch v1.0-alpha.159 (2026-08-30) — Global Auditor: Karta `caa-01` (Przejście Podziemiami): `cost` → `0` + Karta `caa-01` (Przejście Podziemiami): `gold` → `1` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-01_C0_G1` -> Karta `caa-01` (Przejście Podziemiami): `cost` → `0` + Karta `caa-01` (Przejście Podziemiami): `gold` → `1`
+- **Wynik Globalny:** 85.5 → **85.6**
+- **Balans 4P:** 89.8 → 89.9
+- **Balans 3P:** 72.9 → 72.9
+- **Balans 5P:** 93.8 → 93.9
+
+### 🌐 Patch v1.0-alpha.158 (2026-08-30) — Global Auditor: Karta `caa-06` (Ucieczka z Lochów): `cost` → `1` + Karta `caa-06` (Ucieczka z Lochów): `heresy` → `0` (Zysk Global Δ +0.3 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-06_C1_H0` -> Karta `caa-06` (Ucieczka z Lochów): `cost` → `1` + Karta `caa-06` (Ucieczka z Lochów): `heresy` → `0`
+- **Wynik Globalny:** 85.2 → **85.5**
+- **Balans 4P:** 89.1 → 89.8
+- **Balans 3P:** 72.1 → 72.9
+- **Balans 5P:** 94.3 → 93.8
+
+### 🌐 Patch v1.0-alpha.157 (2026-08-30) — Global Auditor: Karta `caa-11` (Nocna Zmiana Warty): `cost` → `3` + Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `1` (Zysk Global Δ +0.6 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-11_C3_H1` -> Karta `caa-11` (Nocna Zmiana Warty): `cost` → `3` + Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `1`
+- **Wynik Globalny:** 84.6 → **85.2**
+- **Balans 4P:** 89.7 → 89.1
+- **Balans 3P:** 71.8 → 72.1
+- **Balans 5P:** 92.2 → 94.3
+
+### 🌐 Patch v1.0-alpha.156 (2026-08-30) — Global Auditor: Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-04_C0_G2` -> Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `2`
+- **Wynik Globalny:** 84.5 → **84.6**
+- **Balans 4P:** 90.4 → 89.7
+- **Balans 3P:** 71.9 → 71.8
+- **Balans 5P:** 91.3 → 92.2
+
+### 🌐 Patch v1.0-alpha.155 (2026-08-30) — Global Auditor: Karta `gc-01` (Przekupiony Strażnik): `cost` → `1` + Karta `gc-01` (Przekupiony Strażnik): `heresy` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-01_C1_H2` -> Karta `gc-01` (Przekupiony Strażnik): `cost` → `1` + Karta `gc-01` (Przekupiony Strażnik): `heresy` → `2`
+- **Wynik Globalny:** 84.4 → **84.5**
+- **Balans 4P:** 91.1 → 90.4
+- **Balans 3P:** 71.2 → 71.9
+- **Balans 5P:** 90.8 → 91.3
+
+### 🌐 Patch v1.0-alpha.154 (2026-08-30) — Global Auditor: Karta `caa-02` (Złoto z Kryjówki): `cost` → `2` + Karta `caa-02` (Złoto z Kryjówki): `heresy` → `0` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-02_C2_H0` -> Karta `caa-02` (Złoto z Kryjówki): `cost` → `2` + Karta `caa-02` (Złoto z Kryjówki): `heresy` → `0`
+- **Wynik Globalny:** 84.3 → **84.4**
+- **Balans 4P:** 91.2 → 91.1
+- **Balans 3P:** 71.2 → 71.2
+- **Balans 5P:** 90.4 → 90.8
+
+### 🟢 Patch v1.0-alpha.153 (2026-08-30) — Format 3P: Próg oskarżenia (3p): 6 (Zysk 3P Δ +1.7 pkt)
+- **Wynik 3P:** 3p **`71.7`** → **`73.4 pkt`** | Kanon 4P **`91.2`** | 5p **`93.2`** | Global **`85.8`**
+- **Modyfikacja (`L1_THRESHOLD_MINUS1__L1_THRESHOLD_PLUS1`):** Próg oskarżenia (3p): 6.
+- **Efekt:** Optymalizacja Formatu 3P (wyjątki `3p:`). Telemetria: Średnia Er 6.62, Deadlocks 0.1%, Pas Biedy 2.1%.
+
+### 🟢 Patch v1.0-alpha.152 (2026-08-30) — Optymalizacja Silnika AI: Weryfikacja Ścieżek Ewakuacji CAA-10 & Obronne Oczyszczanie Herezji
+- **Modyfikacja:** Poprawka silnika weryfikacji warunków wygranej `caa-10` (uwzględnienie `avoided_autodafe`, `shadow_exit`, `path_via_double`) oraz implementacja obronnego skalowania kart oczyszczania z Herezji (`caa-08`, `kb-05`, `kt-11`, `kt-12`, `gc-08`) w obecności Inkwizycji (`min(pl.heresy, dec) * (3.8 if has_so and pl.heresy >= 2 else 2.2)`). Usystematyzowanie rekomendacji dla formatów 3P & 4P w `setups.md`.
+- **Wynik Globalny:** **82.8**
+- **Balans 4P:** **90.6** (Kanon: `4p-no-oficjum` 97.8, `4p-no-korona` 95.4, `4p-core` 87.9, `4p-no-kabala` 87.9, `4p-no-cienie` 84.2)
+- **Balans 3P:** **70.2** (Rekomendowane: `3p-oficjum-korona-kabala` 91.9, `3p-cienie-korona-gildia` 86.7, `3p-oficjum-alandalus-gildia` 83.9)
+- **Balans 5P:** **87.6**
+
+### 🌐 Patch v1.0-alpha.151 (2026-08-30) — Global Auditor: Karta `caa-12` (Skrytka w Murach): `gold` → `3` + Karta `caa-12` (Skrytka w Murach): `heresy` → `0` (Zysk Global Δ +0.6 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-12_G3_H0` -> Karta `caa-12` (Skrytka w Murach): `gold` → `3` + Karta `caa-12` (Skrytka w Murach): `heresy` → `0`
+- **Wynik Globalny:** 83.7 → **84.3**
+- **Balans 4P:** 90.9 → 91.2
+- **Balans 3P:** 70.2 → 71.2
+- **Balans 5P:** 90.1 → 90.4
+
+### 🌐 Patch v1.0-alpha.150 (2026-08-30) — Global Auditor: Karta `caa-09` (Kurier Relikwii): `gold` → `1` + Karta `caa-09` (Kurier Relikwii): `heresy` → `0` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-09_G1_H0` -> Karta `caa-09` (Kurier Relikwii): `gold` → `1` + Karta `caa-09` (Kurier Relikwii): `heresy` → `0`
+- **Wynik Globalny:** 83.5 → **83.7**
+- **Balans 4P:** 90.7 → 90.9
+- **Balans 3P:** 69.0 → 70.2
+- **Balans 5P:** 90.7 → 90.1
+
+### 🌐 Patch v1.0-alpha.149 (2026-08-30) — Global Auditor: Karta `caa-03` (Cień na Rynku): `cost` → `2` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-03_COST_PLUS1` -> Karta `caa-03` (Cień na Rynku): `cost` → `2`
+- **Wynik Globalny:** 83.3 → **83.5**
+- **Balans 4P:** 91.2 → 90.7
+- **Balans 3P:** 69.2 → 69.0
+- **Balans 5P:** 89.5 → 90.7
+
+### 🌐 Patch v1.0-alpha.148 (2026-08-30) — Global Auditor: Karta `gc-08` (Zatrute Złoto): `cost` → `0` + Karta `gc-08` (Zatrute Złoto): `gold` → `3` (Zysk Global Δ +0.7 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-08_C0_G3` -> Karta `gc-08` (Zatrute Złoto): `cost` → `0` + Karta `gc-08` (Zatrute Złoto): `gold` → `3`
+- **Wynik Globalny:** 82.6 → **83.3**
+- **Balans 4P:** 91.1 → 91.2
+- **Balans 3P:** 69.6 → 69.2
+- **Balans 5P:** 87.1 → 89.5
+
+### 🌐 Patch v1.0-alpha.147 (2026-08-30) — Global Auditor: Karta `caa-09` (Kurier Relikwii): `cost` → `1` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-09_COST_PLUS1` -> Karta `caa-09` (Kurier Relikwii): `cost` → `1`
+- **Wynik Globalny:** 82.5 → **82.6**
+- **Balans 4P:** 90.6 → 91.1
+- **Balans 3P:** 70.7 → 69.6
+- **Balans 5P:** 86.2 → 87.1
 
 ### 🟢 Patch v1.0-alpha.146 (2026-08-30) — Format 3P: Złoto startowe (3p): 4 (Zysk 3P Δ +0.8 pkt)
 - **Wynik 3P:** 3p **`70.1`** → **`70.9 pkt`** | Kanon 4P **`90.6`** | 5p **`90.0`** | Global **`83.8`**

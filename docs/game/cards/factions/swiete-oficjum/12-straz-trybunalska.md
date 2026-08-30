@@ -5,7 +5,7 @@ faction: swiete-oficjum
 type: akcja
 layer: A
 cost: 1
-heresy: 2
+heresy: 3
 tags:
 - move
 - gold
@@ -16,6 +16,7 @@ gold: 1
 target_heresy: 1
 agents: 1
 ---
+
 
 
 

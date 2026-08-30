@@ -4,7 +4,7 @@ name: Ucieczka z Lochów
 faction: cienie-al-andalus
 type: akcja
 layer: A
-cost: 0
+cost: 1
 heresy: 0
 tags:
 - move
@@ -15,6 +15,7 @@ lore: Podrobiony klucz i przekupiony strażnik otwierają kraty lochów nim nade
   świt.
 agents: 1
 ---
+
 
 
 

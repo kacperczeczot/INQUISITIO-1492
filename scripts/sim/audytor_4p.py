@@ -825,7 +825,7 @@ class Macro4PAutoBalancer:
                 print("   💤 Witalność (użyteczność dual-win) — audytor leczy to makro, nie obniżeniem progu:")
                 for w in warns:
                     print(f"      • {w}")
-            if canon_should_stop(base_res, mode=self._accept_mode()):
+            if canon_should_stop(base_res):
                 print(f"\n🏁 Kanon 4P: {base_res['score_4p']:.1f} pkt — optimum osiągnięte.")
                 break
             for sname, bal in sorted(base_res["setup_scores_balance"].items()):

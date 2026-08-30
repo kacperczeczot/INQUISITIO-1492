@@ -4,8 +4,8 @@ name: Przekupiony Strażnik
 faction: gildia-cieni
 type: akcja
 layer: A
-cost: 2
-heresy: 1
+cost: 1
+heresy: 3
 tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota.
@@ -15,6 +15,7 @@ lore: Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślep
 gold: 2
 agents: 1
 ---
+
 
 
 

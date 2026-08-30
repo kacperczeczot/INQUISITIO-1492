@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.146</span>
+              <span id="prev-meta-ver">v1.0-alpha.164</span>
             </div>
           </div>
         </div>
@@ -1293,7 +1293,7 @@
       "gold"
     ],
     "target_heresy": 1,
-    "heresy": 2,
+    "heresy": 3,
     "lore": "Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed oblicze sprawiedliwości."
   },
   "caa-01": {
@@ -1307,25 +1307,26 @@
       "relic"
     ],
     "heresy": 0,
+    "gold": 1,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów."
   },
   "caa-02": {
     "name": "Złoto z Kryjówki",
     "type": "akcja",
-    "cost": 1,
+    "cost": 2,
     "gold": 3,
     "action": "gain_gold",
     "tags": [
       "gold"
     ],
-    "heresy": 1,
+    "heresy": 0,
     "lore": "Skarby ukryte w murach przed upadkiem Grenady finansują walkę o ocalenie dziedzictwa."
   },
   "caa-03": {
     "name": "Cień na Rynku",
     "type": "akcja",
-    "cost": 1,
+    "cost": 2,
     "heresy": 1,
     "agents": 1,
     "action": "move_agent",
@@ -1347,6 +1348,7 @@
     "tags": [
       "heresy"
     ],
+    "gold": 2,
     "heresy_text": "Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce.",
     "lore": "Porzucony burnus i ślad w zaułku kierują inkwizytorów w ślepą uliczkę, z dala od prawdziwych uciekinierów."
   },
@@ -1366,7 +1368,7 @@
   "caa-06": {
     "name": "Ucieczka z Lochów",
     "type": "akcja",
-    "cost": 0,
+    "cost": 1,
     "agents": 1,
     "free_agent": true,
     "action": "move_agent",
@@ -1375,6 +1377,7 @@
       "move",
       "arrest"
     ],
+    "heresy": 0,
     "heresy_text": "Klucz od strażnika, który nigdy nie służył Koronie.",
     "lore": "Podrobiony klucz i przekupiony strażnik otwierają kraty lochów nim nadejdzie świt."
   },
@@ -1408,7 +1411,7 @@
   "caa-09": {
     "name": "Kurier Relikwii",
     "type": "akcja",
-    "cost": 0,
+    "cost": 1,
     "move_relic": true,
     "action": "move_agent",
     "target_loc": "neighbor_location",
@@ -1416,12 +1419,14 @@
       "relic",
       "move"
     ],
+    "gold": 1,
+    "heresy": 0,
     "lore": "Ocalone manuskrypty i relikwie przodków są warte więcej niż całe złoto kastylijskiej korony."
   },
   "caa-10": {
     "name": "Echo Alhambry",
     "type": "signature",
-    "cost": 2,
+    "cost": 3,
     "heresy": 0,
     "evacuate_relic": 2,
     "action": "evacuate_relic",
@@ -1433,13 +1438,14 @@
       "relic",
       "heresy"
     ],
+    "gold": 1,
     "heresy_text": "Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.",
     "lore": "Echo dawnej chwały Andaluzji rozbrzmiewa w sercach tych, którzy nigdy nie złożyli broni."
   },
   "caa-11": {
     "name": "Nocna Zmiana Warty",
     "type": "akcja",
-    "cost": 2,
+    "cost": 3,
     "agents": 1,
     "move_inquisitor": true,
     "action": "move_agent",
@@ -1449,14 +1455,14 @@
     ],
     "gold": 1,
     "target_heresy": 1,
-    "heresy": 0,
+    "heresy": 1,
     "lore": "Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w labiryncie nocy."
   },
   "caa-12": {
     "name": "Skrytka w Murach",
     "type": "akcja",
     "cost": 1,
-    "heresy": 1,
+    "heresy": 0,
     "gold": 3,
     "action": "gain_gold",
     "tags": [
@@ -1732,6 +1738,8 @@
     "tags": [
       "arrest"
     ],
+    "gold": 1,
+    "heresy": 0,
     "heresy_text": "Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał.",
     "lore": "Strażnicy wiedzy wiedzą, jak zamknąć w lochu każdego, kto zbezcześci święte manuskrypty."
   },
@@ -1801,13 +1809,13 @@
   "gc-01": {
     "name": "Przekupiony Strażnik",
     "type": "akcja",
-    "cost": 2,
+    "cost": 1,
     "agents": 1,
     "action": "move_agent",
     "tags": [
       "move"
     ],
-    "heresy": 1,
+    "heresy": 3,
     "gold": 2,
     "heresy_text": "Strażnik zna cenę milczenia lepiej niż modlitwy.",
     "lore": "Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym na całą noc."
@@ -1834,7 +1842,7 @@
     "tags": [
       "heresy"
     ],
-    "heresy": 2,
+    "heresy": 3,
     "heresy_text": "Zakazana księga ląduje w cudzej komnacie o świcie.",
     "lore": "Zakazana księga podłożona do komnaty rywala sprowadzi na niego inkwizycję jeszcze przed południem."
   },
@@ -1896,9 +1904,9 @@
   "gc-08": {
     "name": "Zatrute Złoto",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "target_heresy": 1,
-    "gold": 1,
+    "gold": 3,
     "action": "gain_gold",
     "tags": [
       "gold",
@@ -2328,7 +2336,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.146';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.164';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;
