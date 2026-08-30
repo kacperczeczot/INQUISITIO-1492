@@ -75,13 +75,23 @@ FACTION_NAMES = {
 }
 
 
-def _run_full_diagnostic(rule_params: dict, games_per_setup: int = 1000, seed: int = 42) -> dict:
+def _run_full_diagnostic(raw_cfg: dict, delta_params: dict | None = None, games_per_setup: int = 1000, seed: int = 42) -> dict:
     """Runs a complete 16-setup diagnostic to measure 3p, 4p, 5p and global score."""
+    from inquisitio.runner.adaptive_racer import extract_config_overrides, merge_override_dicts
     all_setups = sorted(SETUP_PRESETS.keys())
     summaries = []
     setup_scores = {}
     for sname in all_setups:
-        s = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", win_overrides=rule_params)
+        pc = len(SETUP_PRESETS[sname])
+        stype = "5p" if pc == 5 else ("3p" if pc == 3 else "4p")
+        base_params = extract_config_overrides(raw_cfg, setup_type=stype)
+
+        if pc == 3 and delta_params:
+            eff_params = merge_override_dicts(base_params, delta_params)
+        else:
+            eff_params = base_params
+
+        s = run_batch(games=games_per_setup, setup=sname, seed=seed, layer="C", win_overrides=eff_params)
         summaries.append(s)
         setup_scores[sname] = calculate_setup_score(s)
 
@@ -364,7 +374,7 @@ class AutoBalancer3P:
                 current_raw_cfg = yaml.safe_load(f)
 
             curr_ver = current_raw_cfg.get("system", {}).get("version", current_raw_cfg.get("version", "v1.0-alpha.90"))
-            curr_base_overrides = extract_config_overrides(current_raw_cfg)
+            curr_base_overrides = extract_config_overrides(current_raw_cfg, setup_type="3p")
 
             atomic_pool = drop_dead_path_crutches({}, generate_all_atomic_candidates_3p())
 
@@ -408,6 +418,7 @@ class AutoBalancer3P:
             best_ver_res = None
             acceptance_reason = ""
 
+            best_rejection = ""
             for cand_stat in surviving_stats:
                 cand_res = cand_stat.to_result_dict()
                 decision = accept_candidate(
@@ -421,14 +432,17 @@ class AutoBalancer3P:
                     best_ver_res = cand_res
                     acceptance_reason = decision.reason
                     break
+                else:
+                    if not best_rejection:
+                        best_rejection = f"Odpadł najlepszy kandydat: {decision.reason}"
 
             # Validation Gate with 4P Canon Collateral Guard
             if accepted_candidate and best_ver_res is not None and effective_rule_params is not None:
                 rule_id, rule_name, delta_params = accepted_candidate
 
-                print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP — FORMAT 3P]")
-                val_base = _run_full_diagnostic(curr_base_overrides, games_per_setup=self.args.confirm_games, seed=42)
-                val_cand = _run_full_diagnostic(effective_rule_params, games_per_setup=self.args.confirm_games, seed=42)
+                print(f"\n🔍 [RYGORYSTYCZNA BRAMKA WALIDACJI 10 000 GIER/SETUP — FORMAT 3P (ALL)]")
+                val_base = _run_full_diagnostic(current_raw_cfg, delta_params=None, games_per_setup=self.args.confirm_games, seed=42)
+                val_cand = _run_full_diagnostic(current_raw_cfg, delta_params=delta_params, games_per_setup=self.args.confirm_games, seed=42)
 
                 val_base_3p = val_base["cat_scores"].get("3p", 0.0)
                 val_cand_3p = val_cand["cat_scores"].get("3p", 0.0)
@@ -514,14 +528,16 @@ class AutoBalancer3P:
                     consecutive_stalls = 0
             else:
                 if current_phase >= self.args.max_depth:
-                    consecutive_stalls += 1
-                    print(f"\n🛑 Zbadano pełną głębokość do Fazy {current_phase}D bez znalezienia patcha.")
-                    print(f"   🔄 Resetuję do Fazy 1D z nowym ziarnem rozdań (cykl {consecutive_stalls})...")
-                    current_phase = 1
-                    self.args.seed += 137
+                    print(
+                        f"\n🏁 Brak zmian makro przynoszących zysk w 3P na {current_phase}D "
+                        f"(lookahead wyczerpany). Bieżący stan jest lokalnym optimum puli."
+                    )
+                    break
                 else:
+                    if best_rejection:
+                        print(f"   ⛔ {best_rejection}")
+                    print(f"🔄 [ŚLEPY ZAUŁEK {current_phase}D] Brak zysku w {current_phase}D. Przechodzę do 100% wyczerpującej FAZY {current_phase + 1}D...\n\n")
                     current_phase += 1
-                    print(f"🔄 [ŚLEPY ZAUŁEK {current_phase-1}D] Brak zysku w {current_phase-1}D. Przechodzę do 100% wyczerpującej FAZY {current_phase}D...\n")
 
 
 def main():

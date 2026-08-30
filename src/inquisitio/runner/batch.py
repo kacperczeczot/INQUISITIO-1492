@@ -132,13 +132,17 @@ def run_batch(
     if setup_name not in SETUP_PRESETS:
         setup_name = "3p-oficjum-alandalus-korona"
 
-    active_overrides = CONFIG.get_active_overrides()
+    pc = len(SETUP_PRESETS.get(setup_name, [1, 2, 3, 4]))
+    stype = "5p" if pc == 5 else ("3p" if pc == 3 else "4p")
+    active_overrides = CONFIG.get_active_overrides(setup_type=stype)
     if win_overrides is None:
         effective_overrides = active_overrides
     else:
         effective_overrides = merge_override_dicts(active_overrides, win_overrides)
 
     if _HAS_NATIVE and inquisitio_native is not None:
+        import multiprocessing
+        n_threads = 1 if multiprocessing.current_process().name != "MainProcess" else 0
         res = inquisitio_native.run_batch(
             games=games,
             setup=setup_name,
@@ -146,6 +150,7 @@ def run_batch(
             threshold=threshold,
             layer=layer,
             win_overrides=effective_overrides,
+            threads=n_threads,
         )
         return BatchSummary(
             games=games,

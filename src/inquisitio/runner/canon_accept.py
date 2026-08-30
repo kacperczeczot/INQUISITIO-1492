@@ -151,15 +151,21 @@ def accept_candidate(
     safe, msg = telemetry_is_safe(cand)
     if not safe:
         return AcceptDecision(False, msg, "legacy")
-    # Hard Vitality Gate: Do not accept any patch that carries vitality penalty > 0.10
-    cand_vit = cand.get("vitality_penalty", 0.0)
-    base_vit = base.get("vitality_penalty", 0.0)
-    if cand_vit > 0.10:
-        return AcceptDecision(False, f"legacy: naruszenie witalności (kara {cand_vit:.3f} > 0.10)", "legacy")
-    if cand_vit > base_vit + 1e-9:
-        return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand_vit:.2f} > {base_vit:.2f})", "legacy")
+    # Exceptional Score Bypass for Vitality
+    # If the patch breaks vitality, we reject it UNLESS it provides a massive score boost (e.g. > 3.0)
     d = _score(cand) - _score(base)
     dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+    
+    cand_vit = cand.get("vitality_penalty", 0.0)
+    base_vit = base.get("vitality_penalty", 0.0)
+    
+    if cand_vit > 0.10:
+        if d < 3.0 or dmin < 0.0:
+            return AcceptDecision(False, f"legacy: naruszenie witalności (kara {cand_vit:.3f} > 0.10)", "legacy")
+    elif cand_vit > base_vit + 1e-9:
+        if d < 3.0 or dmin < 0.0:
+            return AcceptDecision(False, f"legacy: witalność gorsza niż baza (kara {cand_vit:.2f} > {base_vit:.2f})", "legacy")
+            
     # 1. Zysk ogólny bez istotnego psucia podłogi
     if d >= min_delta and dmin >= -0.50:
         return AcceptDecision(True, f"legacy Δscore {d:+.2f} ≥ {min_delta} (dmin {dmin:+.2f})", "legacy")
@@ -173,3 +179,49 @@ def accept_candidate(
     if dmin >= 0.50 and d >= 0.0:
         return AcceptDecision(True, f"legacy Maximin Δmin {dmin:+.2f} (Δscore {d:+.2f})", "legacy")
     return AcceptDecision(False, f"legacy Δscore {d:+.2f} i Δmin {dmin:+.2f} nie spełniają kryteriów bezpieczeństwa", "legacy")
+
+def accept_global_candidate(
+    base: dict,
+    cand: dict,
+    *,
+    min_delta: float = 0.05,
+) -> AcceptDecision:
+    """Decide whether a candidate improves the global balance (3p+4p+5p)."""
+    safe, msg = telemetry_is_safe(cand)
+    if not safe:
+        return AcceptDecision(False, msg, "global")
+    # Exceptional Score Bypass for Vitality
+    # If the patch breaks vitality, we reject it UNLESS it provides a massive global score boost (e.g. > 1.5)
+    d = float(cand.get("score_global", 0.0)) - float(base.get("score_global", 0.0))
+    dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+    
+    cand_vit = cand.get("vitality_penalty", 0.0)
+    base_vit = base.get("vitality_penalty", 0.0)
+    if cand_vit > 0.10:
+        if d < 1.5 or dmin < 0.0:
+            warns = cand.get("vitality_warnings", [])
+            warn_str = "; ".join(warns[:2]) + ("..." if len(warns) > 2 else "")
+            return AcceptDecision(False, f"Global: naruszenie witalności (kara {cand_vit:.3f} > 0.10) - {warn_str}", "global")
+    elif cand_vit > base_vit + 1e-9:
+        if d < 1.5 or dmin < 0.0:
+            warns = cand.get("vitality_warnings", [])
+            warn_str = "; ".join(warns[:2]) + ("..." if len(warns) > 2 else "")
+            return AcceptDecision(False, f"Global: witalność gorsza niż baza (kara {cand_vit:.2f} > {base_vit:.2f}) - {warn_str}", "global")
+        
+    d = float(cand.get("score_global", 0.0)) - float(base.get("score_global", 0.0))
+    dmin = float(cand.get("min_balance", 0.0)) - float(base.get("min_balance", 0.0))
+    
+    # 4P sanity check (max -3.0 drop allowed)
+    d4p = float(cand.get("score_4p", 0.0)) - float(base.get("score_4p", 0.0))
+    if d4p < -3.0:
+         return AcceptDecision(False, f"Global: wynik 4P zepsuty zbyt drastycznie (Δ4P {d4p:+.2f} < -3.0)", "global")
+
+    # Zysk globalny
+    if d >= min_delta and dmin >= -0.50:
+        return AcceptDecision(True, f"Global Δscore {d:+.2f} ≥ {min_delta} (dmin {dmin:+.2f})", "global")
+    if d >= 0.15 and dmin >= 0.15:
+        return AcceptDecision(True, f"Global Pareto Δscore {d:+.2f} & Δmin {dmin:+.2f}", "global")
+    if d >= 1.50 and dmin >= -1.00:
+        return AcceptDecision(True, f"Global Duży skok Δscore {d:+.2f} (dmin {dmin:+.2f})", "global")
+        
+    return AcceptDecision(False, f"Global Δscore {d:+.2f} i Δmin {dmin:+.2f} nie spełniają kryteriów zysku", "global")

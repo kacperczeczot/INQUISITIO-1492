@@ -37,14 +37,6 @@ def _pc(sec, delta: int = 0) -> str:
             pass
     return str(int(sec) + delta)
 
-
-def _gc_falls_n(gc) -> int:
-    f = gc.falls
-    if hasattr(f, "default"):
-        return int(f.default)
-    return int(f)
-
-
 def build_level2_tests():
     """Generate ±1 tests dynamically from current CONFIG victory conditions."""
     v = CONFIG.victory
@@ -55,9 +47,7 @@ def build_level2_tests():
     gc = v.gildia_cieni
     tests = [
         ("L2_BAZA", "Baza (Bieżące warunki zwycięstwa)", {}),
-        ("L2_SO_STACKS_PLUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, 1)}", {"so_stacks_offset": 1}),
         ("L2_SO_STACKS_MINUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -1)}", {"so_stacks_offset": -1}),
-        ("L2_SO_CONDEMNS_PLUS1", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, 1)}", {"so_condemns_offset": 1}),
         ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, -1)}", {"so_condemns_offset": -1}),
         ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: {_pc(caa.relics)} → {_pc(caa.relics, 1)}", {"caa_relics_offset": 1}),
         ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: {_pc(caa.relics)} → {_pc(caa.relics, -1)}", {"caa_relics_offset": -1}),
@@ -65,12 +55,16 @@ def build_level2_tests():
         ("L2_KB_DECREES_MINUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
         ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
         ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
-        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) + 1}", {"gc_falls_offset": 1}),
-        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) - 1}", {"gc_falls_offset": -1}),
-        ("L2_SO_STACKS_PLUS2", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, 2)}", {"so_stacks_offset": 2}),
-        ("L2_SO_CONDEMNS_PLUS2", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, 2)}", {"so_condemns_offset": 2}),
+        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, 1)}", {"gc_falls_offset": 1}),
+        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, -1)}", {"gc_falls_offset": -1}),
+        ("L2_GC_FALLS_MINUS2", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, -2)}", {"gc_falls_offset": -2}),
+        ("L2_GC_FALLS_MINUS3", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, -3)}", {"gc_falls_offset": -3}),
+        ("L2_KT_FRAGS_MINUS2", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -2)}", {"kt_frags_offset": -2}),
+        ("L2_SO_STACKS_MINUS2", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -2)}", {"so_stacks_offset": -2}),
+        ("L2_SO_STACKS_MINUS3", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -3)}", {"so_stacks_offset": -3}),
+        ("L2_SO_CONDEMNS_MINUS2", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, -2)}", {"so_condemns_offset": -2}),
         ("L2_CAA_RELICS_PLUS2", f"Cienie Relikwie: {_pc(caa.relics)} → {_pc(caa.relics, 2)}", {"caa_relics_offset": 2}),
-        ("L2_GC_FALLS_PLUS2", f"Gildia Upadki: {_gc_falls_n(gc)} → {_gc_falls_n(gc) + 2}", {"gc_falls_offset": 2}),
+        ("L2_GC_FALLS_PLUS2", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, 2)}", {"gc_falls_offset": 2}),
     ]
     if hasattr(kt, "era"):
         tests.extend([

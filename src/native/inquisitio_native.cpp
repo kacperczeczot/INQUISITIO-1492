@@ -434,24 +434,40 @@ static void init_game(GameStateNative& st, int preset_id, FastRng& rng, const Co
     st.winner = 5;
     st.win_path_id = 0;
 
-    if (preset_id == 0) { // 4p-core: SO, CAA, KB, KT
-        st.num_players = 4;
-        st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = KT;
-    } else if (preset_id == 1) { // 4p-no-cienie: SO, KB, KT, GC
-        st.num_players = 4;
-        st.turn_order[0] = SO; st.turn_order[1] = KB; st.turn_order[2] = KT; st.turn_order[3] = GC;
-    } else if (preset_id == 2) { // 4p-no-kabala: SO, CAA, KB, GC
-        st.num_players = 4;
-        st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = GC;
-    } else if (preset_id == 3) { // 4p-no-korona: SO, CAA, KT, GC
-        st.num_players = 4;
-        st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KT; st.turn_order[3] = GC;
-    } else if (preset_id == 4) { // 4p-no-oficjum: CAA, KB, KT, GC
-        st.num_players = 4;
-        st.turn_order[0] = CAA; st.turn_order[1] = KB; st.turn_order[2] = KT; st.turn_order[3] = GC;
+    if (preset_id == 0) { // 4p-core
+        st.num_players = 4; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = KT;
+    } else if (preset_id == 1) { // 4p-no-cienie
+        st.num_players = 4; st.turn_order[0] = SO; st.turn_order[1] = KB; st.turn_order[2] = KT; st.turn_order[3] = GC;
+    } else if (preset_id == 2) { // 4p-no-kabala
+        st.num_players = 4; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = GC;
+    } else if (preset_id == 3) { // 4p-no-korona
+        st.num_players = 4; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KT; st.turn_order[3] = GC;
+    } else if (preset_id == 4) { // 4p-no-oficjum
+        st.num_players = 4; st.turn_order[0] = CAA; st.turn_order[1] = KB; st.turn_order[2] = KT; st.turn_order[3] = GC;
+    } else if (preset_id == 5) { // 5p-full
+        st.num_players = 5; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = KT; st.turn_order[4] = GC;
+    } else if (preset_id == 6) { // 3p-oficjum-alandalus-korona
+        st.num_players = 3; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB;
+    } else if (preset_id == 7) { // 3p-oficjum-kabala-gildia
+        st.num_players = 3; st.turn_order[0] = SO; st.turn_order[1] = KT; st.turn_order[2] = GC;
+    } else if (preset_id == 8) { // 3p-cienie-korona-gildia
+        st.num_players = 3; st.turn_order[0] = CAA; st.turn_order[1] = KB; st.turn_order[2] = GC;
+    } else if (preset_id == 9) { // 3p-oficjum-alandalus-gildia
+        st.num_players = 3; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = GC;
+    } else if (preset_id == 10) { // 3p-oficjum-alandalus-kabala
+        st.num_players = 3; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KT;
+    } else if (preset_id == 11) { // 3p-oficjum-korona-gildia
+        st.num_players = 3; st.turn_order[0] = SO; st.turn_order[1] = KB; st.turn_order[2] = GC;
+    } else if (preset_id == 12) { // 3p-oficjum-korona-kabala
+        st.num_players = 3; st.turn_order[0] = SO; st.turn_order[1] = KB; st.turn_order[2] = KT;
+    } else if (preset_id == 13) { // 3p-cienie-korona-kabala
+        st.num_players = 3; st.turn_order[0] = CAA; st.turn_order[1] = KB; st.turn_order[2] = KT;
+    } else if (preset_id == 14) { // 3p-cienie-kabala-gildia
+        st.num_players = 3; st.turn_order[0] = CAA; st.turn_order[1] = KT; st.turn_order[2] = GC;
+    } else if (preset_id == 15) { // 3p-korona-kabala-gildia
+        st.num_players = 3; st.turn_order[0] = KB; st.turn_order[1] = KT; st.turn_order[2] = GC;
     } else { // default: 4p-core
-        st.num_players = 4;
-        st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = KT;
+        st.num_players = 4; st.turn_order[0] = SO; st.turn_order[1] = CAA; st.turn_order[2] = KB; st.turn_order[3] = KT;
     }
 
     st.accused_this_era_mask = 0;
@@ -2285,10 +2301,11 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     const char* layer = "C";
     PyObject* py_win_overrides = NULL;
     PyObject* py_overrides = NULL;
+    int py_threads = 0;
 
-    static const char* kwlist[] = {"games", "setup", "seed", "threshold", "layer", "win_overrides", "overrides", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|isKizOO", (char**)kwlist,
-                                     &num_games, &setup_str, &seed, &threshold, &layer, &py_win_overrides, &py_overrides)) {
+    static const char* kwlist[] = {"games", "setup", "seed", "threshold", "layer", "win_overrides", "overrides", "threads", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|isKizOOi", (char**)kwlist,
+                                     &num_games, &setup_str, &seed, &threshold, &layer, &py_win_overrides, &py_overrides, &py_threads)) {
         return NULL;
     }
 
@@ -2301,6 +2318,17 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     else if (std::strcmp(setup_str, "4p-no-kabala") == 0) preset_id = 2;
     else if (std::strcmp(setup_str, "4p-no-korona") == 0) preset_id = 3;
     else if (std::strcmp(setup_str, "4p-no-oficjum") == 0) preset_id = 4;
+    else if (std::strcmp(setup_str, "5p-full") == 0) preset_id = 5;
+    else if (std::strcmp(setup_str, "3p-oficjum-alandalus-korona") == 0) preset_id = 6;
+    else if (std::strcmp(setup_str, "3p-oficjum-kabala-gildia") == 0) preset_id = 7;
+    else if (std::strcmp(setup_str, "3p-cienie-korona-gildia") == 0) preset_id = 8;
+    else if (std::strcmp(setup_str, "3p-oficjum-alandalus-gildia") == 0) preset_id = 9;
+    else if (std::strcmp(setup_str, "3p-oficjum-alandalus-kabala") == 0) preset_id = 10;
+    else if (std::strcmp(setup_str, "3p-oficjum-korona-gildia") == 0) preset_id = 11;
+    else if (std::strcmp(setup_str, "3p-oficjum-korona-kabala") == 0) preset_id = 12;
+    else if (std::strcmp(setup_str, "3p-cienie-korona-kabala") == 0) preset_id = 13;
+    else if (std::strcmp(setup_str, "3p-cienie-kabala-gildia") == 0) preset_id = 14;
+    else if (std::strcmp(setup_str, "3p-korona-kabala-gildia") == 0) preset_id = 15;
 
     inq::ConfigOverridesNative ov;
     if (py_overrides && PyDict_Check(py_overrides)) {
@@ -2443,8 +2471,12 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     int card_plays[60] = {0};
 
     unsigned int n_threads = std::thread::hardware_concurrency();
-    if (n_threads == 0) n_threads = 4;
-    if (num_games <= 2000) n_threads = 1; // Prevent ProcessPoolExecutor macOS fork crash
+    if (py_threads > 0) {
+        n_threads = py_threads;
+    } else {
+        if (n_threads == 0) n_threads = 4;
+        if (num_games <= 2000) n_threads = 1; // Prevent ProcessPoolExecutor macOS fork crash
+    }
     int games_per_thread = num_games / n_threads;
 
     struct ThreadResult {

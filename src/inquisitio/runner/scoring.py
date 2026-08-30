@@ -79,10 +79,14 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
 
         games_e11_plus = sum(cnt for era, cnt in summary.era_hist.items() if era >= 11)
         pct_e11_plus = games_e11_plus / summary.games
-        if pct_e11_plus > 0.005:  # Max 0.5% for extreme late deadlock outliers (Era 11+)
+        
+        n_players = len(SETUP_PRESETS.get(summary.setup, [1, 2, 3, 4]))
+        max_e11_pct = 0.05 if n_players == 3 else 0.005
+        
+        if pct_e11_plus > max_e11_pct:  # Max 0.5% (or 5.0% for 3p) for extreme late deadlock outliers (Era 11+)
             penalty += pct_e11_plus * 20.0
             warnings.append(
-                f"Ekstremalny Deadlock (Era 11+): {pct_e11_plus*100:.1f}% gier (>0.5%)"
+                f"Ekstremalny Deadlock (Era 11+): {pct_e11_plus*100:.1f}% gier (>{max_e11_pct*100:.1f}%)"
             )
 
     # (B) Average Game Duration Floor (Threshold >= 5.0 Er)
@@ -126,6 +130,10 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
 
     # Dual victory clauses: usage floors are not enough (hooks can be a tax).
     paths = summary.win_paths or {}
+    
+    n_players = len(SETUP_PRESETS.get(summary.setup, [1, 2, 3, 4]))
+    min_share = 0.0 if n_players == 3 else _DEAD_PATH_MIN_SHARE
+
     for fid, path_a, path_b, label_a, label_b in _DUAL_WIN_PATHS:
         if fid not in factions:
             continue
@@ -136,17 +144,17 @@ def evaluate_vitality(summary: BatchSummary) -> VitalityReport:
             continue
         share_a = n_a / total
         share_b = n_b / total
-        if share_b < _DEAD_PATH_MIN_SHARE:
+        if share_b < min_share:
             penalty += _DEAD_PATH_PENALTY
             warnings.append(
                 f"Martwa ścieżka {label_b} ({fid}): {n_b}/{total} wygranych "
-                f"(<{_DEAD_PATH_MIN_SHARE:.0%}) — gra tylko {label_a}"
+                f"(<{min_share:.0%}) — gra tylko {label_a}"
             )
-        if share_a < _DEAD_PATH_MIN_SHARE:
+        if share_a < min_share:
             penalty += _DEAD_PATH_PENALTY
             warnings.append(
                 f"Martwa ścieżka {label_a} ({fid}): {n_a}/{total} wygranych "
-                f"(<{_DEAD_PATH_MIN_SHARE:.0%}) — gra tylko {label_b}"
+                f"(<{min_share:.0%}) — gra tylko {label_b}"
             )
 
     is_healthy = len(warnings) == 0

@@ -56,6 +56,8 @@ def build_level1_tests():
         ("L1_MAX_ERAS_MINUS1", f"Limit Er: {s.max_eras} → {s.max_eras - 1}", {"max_eras_offset": -1}),
         ("L1_START_GOLD_PLUS1", f"Złoto startowe: {_pc(g)}zł → {_pc(g, 1)}zł", {"start_gold_offset": 1}),
         ("L1_START_GOLD_MINUS1", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -1)}zł", {"start_gold_offset": -1}),
+        ("L1_START_GOLD_MINUS2", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -2)}zł", {"start_gold_offset": -2}),
+        ("L1_START_GOLD_MINUS3", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -3)}zł", {"start_gold_offset": -3}),
         ("L1_AGENTS_PLUS1", f"Agenci: {s.agents_per_player} → {s.agents_per_player + 1}", {"agents_offset": 1}),
         ("L1_AGENTS_MINUS1", f"Agenci: {s.agents_per_player} → {s.agents_per_player - 1}", {"agents_offset": -1}),
         ("L1_HAND_LIMIT_PLUS1", f"Limit ręki: {_pc(h)} → {_pc(h, 1)}", {"hand_limit_offset": 1}),

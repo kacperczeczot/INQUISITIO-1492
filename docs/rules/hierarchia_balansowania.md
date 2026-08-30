@@ -37,7 +37,7 @@ Fundamenty systemu obowiązujące bezwzględnie we wszystkich wariantach gry:
 - **Maksymalny limit Er:** `15 Er` (bezpiecznik + tie-break: najbliższy celowi, potem najniższa Herezja)
 - **Strefy Herezji:** Czysta `0–2`; Obserwowana od `3` do `T−1`; Krytyczna `≥T`
 - **Próg Obserwowanej:** `≥3` (Autodafé: Stos zamiast aresztu)
-- **Próg Oskarżenia na Dworze:** `Herezja ≥ 5`
+- **Próg Oskarżenia na Dworze:** `Herezja ≥ 7`
 - **Liczba Agentów per gracz:** `3 Agenci`
 - **Cooldown Autodafé Inkwizytora:** Max `co 3 Ery`
 

@@ -127,11 +127,11 @@ class GameConfig:
         """Full raw dict."""
         return self._raw
 
-    def get_active_overrides(self) -> dict[str, Any]:
-        """Extracts all card and victory rule deviations in cfg relative to the C++ hardcoded baseline snapshot."""
-        ov: dict[str, Any] = {}
+    def get_active_overrides(self, setup_type: str = "4p") -> dict:
+        """Returns overrides relative to the C++ hardcoded baseline snapshot."""
+        ov = {}
         cards = self._raw.get("cards", {})
-        card_ov: dict[str, Any] = {}
+        card_ov = {}
         for cid, cdata in cards.items():
             if not isinstance(cdata, dict):
                 continue
@@ -144,17 +144,22 @@ class GameConfig:
         if card_ov:
             ov["card_overrides"] = card_ov
 
+        def _get_val(val, stype):
+            if isinstance(val, dict):
+                return val.get(stype, val.get("4p", 0))
+            return val
+
         vic = self._raw.get("victory", {})
         if "swiete_oficjum" in vic and "stacks" in vic["swiete_oficjum"]:
-            ov["so_stacks_offset"] = vic["swiete_oficjum"]["stacks"] - 7
+            ov["so_stacks_offset"] = _get_val(vic["swiete_oficjum"]["stacks"], setup_type) - 7
         if "korona_borgiowie" in vic and "decrees" in vic["korona_borgiowie"]:
-            ov["kb_decrees_offset"] = vic["korona_borgiowie"]["decrees"] - 2
+            ov["kb_decrees_offset"] = _get_val(vic["korona_borgiowie"]["decrees"], setup_type) - 2
         if "cienie_al_andalus" in vic and "relics" in vic["cienie_al_andalus"]:
-            ov["caa_relics_offset"] = vic["cienie_al_andalus"]["relics"] - 2
+            ov["caa_relics_offset"] = _get_val(vic["cienie_al_andalus"]["relics"], setup_type) - 2
         if "kabala_toledo" in vic and "fragments" in vic["kabala_toledo"]:
-            ov["kt_frags_offset"] = vic["kabala_toledo"]["fragments"] - 3
+            ov["kt_frags_offset"] = _get_val(vic["kabala_toledo"]["fragments"], setup_type) - 3
         if "gildia_cieni" in vic and "falls" in vic["gildia_cieni"]:
-            ov["gc_falls_offset"] = vic["gildia_cieni"]["falls"] - 9
+            ov["gc_falls_offset"] = _get_val(vic["gildia_cieni"]["falls"], setup_type) - 9
         return ov
 
     def reload(self, path: Path | None = None) -> None:

@@ -55,6 +55,7 @@ class CandidateStats:
     setup_shares: dict[str, dict[str, float]] = field(default_factory=dict)
     score_4p: float = 0.0
     score_4p_balance: float = 0.0
+    score_global: float = 0.0
     score_se: float = 0.0
     min_balance: float = 0.0
     min_balance_setup: str = ""
@@ -121,11 +122,18 @@ class CandidateStats:
         self.setup_scores = setup_scores
         self.setup_scores_balance = setup_scores_balance
         self.setup_shares = setup_shares
+        
+        # Obliczenia stare dla zgodności
         self.score_4p = round(sum(setup_scores.values()) / n_s, 1) if n_s else 0.0
         self.score_4p_balance = (
             round(sum(setup_scores_balance.values()) / n_s, 1) if n_s else 0.0
         )
         self.score_se = round((math.sqrt(sum(s ** 2 for s in setup_ses)) / n_s), 3) if n_s else 0.0
+
+        # Nowe obliczenia globalne
+        from inquisitio.runner.scoring import calculate_category_scores, calculate_global_score
+        cat_scores = calculate_category_scores(summaries)
+        self.score_global = calculate_global_score(cat_scores)
 
         min_sname = min(setup_scores_balance, key=lambda k: setup_scores_balance[k]) if setup_scores_balance else ""
         self.min_balance_setup = min_sname
@@ -458,11 +466,14 @@ def merge_override_dicts(base_dict: dict, delta_dict: dict) -> dict:
                     out["card_overrides"][cid] = {}
                 out["card_overrides"][cid].update(c_dict)
         else:
-            out[k] = v
+            if k.endswith("_offset") and k in out:
+                out[k] += v
+            else:
+                out[k] = v
     return out
 
 
-def extract_config_overrides(cfg: dict) -> dict:
+def extract_config_overrides(cfg: dict, setup_type: str = "4p") -> dict:
     """Extracts all card and victory rule deviations in cfg relative to the C++ hardcoded baseline snapshot."""
     ov = {}
     cards = cfg.get("cards", {})
@@ -477,15 +488,38 @@ def extract_config_overrides(cfg: dict) -> dict:
     if card_ov:
         ov["card_overrides"] = card_ov
 
+    def _get_val(val, stype):
+        if isinstance(val, dict):
+            return val.get(stype, val.get("4p", 0))
+        return val
+
+    sys = cfg.get("system", {})
+    if "accusation_threshold" in sys:
+        ov["threshold_offset"] = _get_val(sys["accusation_threshold"], setup_type) - 7
+    if "start_gold" in sys:
+        ov["start_gold_offset"] = _get_val(sys["start_gold"], setup_type) - 4
+    if "hand_limit" in sys:
+        ov["hand_limit_offset"] = _get_val(sys["hand_limit"], setup_type) - 5
+    if "max_eras" in sys:
+        ov["max_eras_offset"] = _get_val(sys["max_eras"], setup_type) - 15
+    if "cards_per_era" in sys:
+        ov["cards_per_era_offset"] = _get_val(sys["cards_per_era"], setup_type) - 2
+    if "intrigue_gold" in sys:
+        ov["intrigue_gold_offset"] = _get_val(sys["intrigue_gold"], setup_type) - 1
+    if "observed_threshold" in sys:
+        ov["observed_threshold_offset"] = _get_val(sys["observed_threshold"], setup_type) - 3
+    if "autodafe_cooldown" in sys:
+        ov["cooldown_offset"] = _get_val(sys["autodafe_cooldown"], setup_type) - 3
+
     vic = cfg.get("victory", {})
     if "swiete_oficjum" in vic and "stacks" in vic["swiete_oficjum"]:
-        ov["so_stacks_offset"] = vic["swiete_oficjum"]["stacks"] - 7
+        ov["so_stacks_offset"] = _get_val(vic["swiete_oficjum"]["stacks"], setup_type) - 7
     if "korona_borgiowie" in vic and "decrees" in vic["korona_borgiowie"]:
-        ov["kb_decrees_offset"] = vic["korona_borgiowie"]["decrees"] - 2
+        ov["kb_decrees_offset"] = _get_val(vic["korona_borgiowie"]["decrees"], setup_type) - 2
     if "cienie_al_andalus" in vic and "relics" in vic["cienie_al_andalus"]:
-        ov["caa_relics_offset"] = vic["cienie_al_andalus"]["relics"] - 2
+        ov["caa_relics_offset"] = _get_val(vic["cienie_al_andalus"]["relics"], setup_type) - 2
     if "kabala_toledo" in vic and "fragments" in vic["kabala_toledo"]:
-        ov["kt_frags_offset"] = vic["kabala_toledo"]["fragments"] - 3
+        ov["kt_frags_offset"] = _get_val(vic["kabala_toledo"]["fragments"], setup_type) - 3
     if "gildia_cieni" in vic and "falls" in vic["gildia_cieni"]:
-        ov["gc_falls_offset"] = vic["gildia_cieni"]["falls"] - 9
+        ov["gc_falls_offset"] = _get_val(vic["gildia_cieni"]["falls"], setup_type) - 9
     return ov

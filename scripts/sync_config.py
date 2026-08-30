@@ -94,7 +94,7 @@ def _gildia_text(cfg: dict) -> str:
 def _gc_falls_pair(cfg: dict) -> tuple[int, int | None]:
     gc = cfg["victory"]["gildia_cieni"]["falls"]
     if isinstance(gc, dict):
-        d = int(gc["default"])
+        d = int(gc.get("4p", gc.get("default", 9)))
         n = int(gc.get("no_oficjum", d))
         return d, None if d == n else n
     return int(gc), None
