@@ -97,6 +97,10 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ### 🌐 Patch v1.0-alpha.170 (2026-08-30) — Przywrócenie kanonicznych progów oskarżenia (3p: 6, 4p: 7, 5p: 8)
 - **Modyfikacja:** Przywrócenie organicznej fizyki stołu i kanonicznych progów oskarżenia zgodnie z Konstytucją ADR i Hierarchią Balansowania.
 - **Konfiguracja progów:** 3p: 6 | 4p: 7 | 5p: 8 (usunięcie sztucznego dryfu progów L1)
+- **Wynik Globalny:** 87.3 → **86.5**
+- **Balans 4P:** 92.3 → 91.2
+- **Balans 3P:** 72.3 → 71.7
+- **Balans 5P:** 97.2 → 96.5
 - **Cel:** Odblokowanie pełnej przestrzeni Strefy Obserwowanej (3..6 w 4P) i skupienie dalszej optymalizacji na kartach frakcji (Poziom 3).
 
 ### 🌐 Patch v1.0-alpha.169 (2026-08-30) — Global Auditor: Próg oskarżenia (4p): offset -1 (nowy: 4) (Zysk Global Δ +0.4 pkt)
