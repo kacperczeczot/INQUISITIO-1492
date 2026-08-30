@@ -83,7 +83,7 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora. |
 | `effect` | Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta. Limit: 1 nasłanie / gracza / Erę. |
@@ -503,8 +503,8 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
-| `heresy` | 0 |
+| `cost_gold` | 4 |
+| `heresy` | 1 |
 | `heresy_text` | Faworyzm dworu budzi zazdrość kortegan i biskupów. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala. |
 | `lore` | Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret. |

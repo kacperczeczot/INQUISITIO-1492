@@ -4,7 +4,7 @@ name: Publiczne Ostrzeżenie
 faction: swiete-oficjum
 type: akcja
 layer: A
-cost: 1
+cost: 0
 heresy: 0
 tags:
 - inquisitor
@@ -13,6 +13,7 @@ effect: 'Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta. Lim
 heresy_text: Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.
 lore: Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel.
 ---
+
 
 
 

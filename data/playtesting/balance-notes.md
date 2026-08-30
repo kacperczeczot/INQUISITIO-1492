@@ -94,6 +94,175 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🌐 Patch v1.0-alpha.134 (2026-08-30) — Global Auditor: Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `6` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-04_C0_G6` -> Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `6`
+- **Wynik Globalny:** 86.3 → **86.4**
+- **Balans 4P:** 91.9 → 91.8
+- **Balans 3P:** 71.1 → 71.1
+- **Balans 5P:** 95.9 → 96.2
+
+### 🌐 Patch v1.0-alpha.133 (2026-08-30) — Global Auditor: Karta `so-09` (Świadek Koronny): `heresy` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_SO-09_HERESY_PLUS1` -> Karta `so-09` (Świadek Koronny): `heresy` → `2`
+- **Wynik Globalny:** 86.2 → **86.3**
+- **Balans 4P:** 92.1 → 91.9
+- **Balans 3P:** 70.4 → 71.1
+- **Balans 5P:** 96.1 → 95.9
+
+### 🌐 Patch v1.0-alpha.132 (2026-08-30) — Global Auditor: Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-11_COST_PLUS2` -> Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `2`
+- **Wynik Globalny:** 86.1 → **86.2**
+- **Balans 4P:** 92.5 → 92.1
+- **Balans 3P:** 70.3 → 70.4
+- **Balans 5P:** 95.4 → 96.1
+
+### 🌐 Patch v1.0-alpha.131 (2026-08-30) — Global Auditor: Karta `kt-09` (Fragment Kodeksu): `cost` → `2` + Karta `kt-09` (Fragment Kodeksu): `gold` → `1` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_KT-09_C2_G1` -> Karta `kt-09` (Fragment Kodeksu): `cost` → `2` + Karta `kt-09` (Fragment Kodeksu): `gold` → `1`
+- **Wynik Globalny:** 86.0 → **86.1**
+- **Balans 4P:** 92.9 → 92.5
+- **Balans 3P:** 69.8 → 70.3
+- **Balans 5P:** 95.4 → 95.4
+
+### 🌐 Patch v1.0-alpha.130 (2026-08-30) — Global Auditor: Karta `gc-08` (Zatrute Złoto): `gold` → `0` + Karta `gc-08` (Zatrute Złoto): `heresy` → `1` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-08_G0_H1` -> Karta `gc-08` (Zatrute Złoto): `gold` → `0` + Karta `gc-08` (Zatrute Złoto): `heresy` → `1`
+- **Wynik Globalny:** 85.8 → **86.0**
+- **Balans 4P:** 92.8 → 92.9
+- **Balans 3P:** 69.8 → 69.8
+- **Balans 5P:** 94.8 → 95.4
+
+### 🌐 Patch v1.0-alpha.129 (2026-08-30) — Global Auditor: Karta `gc-11` (Fałszywe Świadectwo Cechu): `gold` → `1` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `5` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-11_G1_H5` -> Karta `gc-11` (Fałszywe Świadectwo Cechu): `gold` → `1` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `5`
+- **Wynik Globalny:** 85.7 → **85.8**
+- **Balans 4P:** 92.6 → 92.8
+- **Balans 3P:** 69.7 → 69.8
+- **Balans 5P:** 94.8 → 94.8
+
+### 🌐 Patch v1.0-alpha.128 (2026-08-30) — Global Auditor: Karta `gc-12` (Złodziejski Zwiad): `cost` → `1` + Karta `gc-12` (Złodziejski Zwiad): `gold` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-12_C1_G2` -> Karta `gc-12` (Złodziejski Zwiad): `cost` → `1` + Karta `gc-12` (Złodziejski Zwiad): `gold` → `2`
+- **Wynik Globalny:** 85.6 → **85.7**
+- **Balans 4P:** 92.4 → 92.6
+- **Balans 3P:** 69.6 → 69.7
+- **Balans 5P:** 94.9 → 94.8
+
+### 🌐 Patch v1.0-alpha.127 (2026-08-30) — Global Auditor: Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `5` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-04_C0_G5` -> Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `5`
+- **Wynik Globalny:** 85.5 → **85.6**
+- **Balans 4P:** 93.1 → 92.4
+- **Balans 3P:** 70.0 → 69.6
+- **Balans 5P:** 93.3 → 94.9
+
+### 🌐 Patch v1.0-alpha.126 (2026-08-30) — Global Auditor: Karta `caa-08` (Kaptur Nocy): `gold` → `1` + Karta `caa-08` (Kaptur Nocy): `heresy` → `1` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-08_G1_H1` -> Karta `caa-08` (Kaptur Nocy): `gold` → `1` + Karta `caa-08` (Kaptur Nocy): `heresy` → `1`
+- **Wynik Globalny:** 85.3 → **85.5**
+- **Balans 4P:** 93.4 → 93.1
+- **Balans 3P:** 69.8 → 70.0
+- **Balans 5P:** 92.6 → 93.3
+
+### 🌐 Patch v1.0-alpha.125 (2026-08-30) — Global Auditor: Karta `gc-02` (Czarny Rynek): `gold` → `3` + Karta `gc-02` (Czarny Rynek): `heresy` → `0` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-02_G3_H0` -> Karta `gc-02` (Czarny Rynek): `gold` → `3` + Karta `gc-02` (Czarny Rynek): `heresy` → `0`
+- **Wynik Globalny:** 85.2 → **85.3**
+- **Balans 4P:** 92.0 → 93.4
+- **Balans 3P:** 69.7 → 69.8
+- **Balans 5P:** 93.9 → 92.6
+
+### 🌐 Patch v1.0-alpha.124 (2026-08-30) — Global Auditor: Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `1` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `gold` → `1` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-11_C1_G1` -> Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `1` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `gold` → `1`
+- **Wynik Globalny:** 85.0 → **85.2**
+- **Balans 4P:** 92.0 → 92.0
+- **Balans 3P:** 69.6 → 69.7
+- **Balans 5P:** 93.3 → 93.9
+
+### 🌐 Patch v1.0-alpha.123 (2026-08-30) — Global Auditor: Karta `caa-11` (Nocna Zmiana Warty): `cost` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `0` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-11_C2_H0` -> Karta `caa-11` (Nocna Zmiana Warty): `cost` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `0`
+- **Wynik Globalny:** 84.9 → **85.0**
+- **Balans 4P:** 92.0 → 92.0
+- **Balans 3P:** 69.7 → 69.6
+- **Balans 5P:** 93.0 → 93.3
+
+### 🌐 Patch v1.0-alpha.122 (2026-08-30) — Global Auditor: Karta `kt-10` (Pieczęć Salomona): `gold` → `1` + Karta `kt-10` (Pieczęć Salomona): `heresy` → `0` (Zysk Global Δ +0.6 pkt)
+- **Modyfikacja:** `BAZA__L3_KT-10_G1_H0` -> Karta `kt-10` (Pieczęć Salomona): `gold` → `1` + Karta `kt-10` (Pieczęć Salomona): `heresy` → `0`
+- **Wynik Globalny:** 84.3 → **84.9**
+- **Balans 4P:** 92.0 → 92.0
+- **Balans 3P:** 68.9 → 69.7
+- **Balans 5P:** 92.0 → 93.0
+
+### 🌐 Patch v1.0-alpha.121 (2026-08-30) — Global Auditor: Karta `caa-02` (Złoto z Kryjówki): `cost` → `1` + Karta `caa-02` (Złoto z Kryjówki): `heresy` → `1` (Zysk Global Δ +0.3 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-02_C1_H1` -> Karta `caa-02` (Złoto z Kryjówki): `cost` → `1` + Karta `caa-02` (Złoto z Kryjówki): `heresy` → `1`
+- **Wynik Globalny:** 84.0 → **84.3**
+- **Balans 4P:** 92.4 → 92.0
+- **Balans 3P:** 68.9 → 68.9
+- **Balans 5P:** 90.6 → 92.0
+
+### 🌐 Patch v1.0-alpha.120 (2026-08-30) — Global Auditor: Karta `caa-08` (Kaptur Nocy): `heresy` → `1` (Zysk Global Δ +0.4 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-08_HERESY_PLUS1` -> Karta `caa-08` (Kaptur Nocy): `heresy` → `1`
+- **Wynik Globalny:** 83.6 → **84.0**
+- **Balans 4P:** 92.2 → 92.4
+- **Balans 3P:** 68.7 → 68.9
+- **Balans 5P:** 90.0 → 90.6
+
+### 🌐 Patch v1.0-alpha.119 (2026-08-30) — Global Auditor: Karta `kb-04` (Faworyt Dworu): `heresy` → `3` (Zysk Global Δ +0.3 pkt)
+- **Modyfikacja:** `BAZA__L3_KB-04_HERESY_PLUS2` -> Karta `kb-04` (Faworyt Dworu): `heresy` → `3`
+- **Wynik Globalny:** 83.3 → **83.6**
+- **Balans 4P:** 92.2 → 92.2
+- **Balans 3P:** 68.1 → 68.7
+- **Balans 5P:** 89.5 → 90.0
+
+### 🌐 Patch v1.0-alpha.118 (2026-08-30) — Global Auditor: Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-11_HERESY_SET2` -> Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `2`
+- **Wynik Globalny:** 83.2 → **83.3**
+- **Balans 4P:** 92.1 → 92.2
+- **Balans 3P:** 68.1 → 68.1
+- **Balans 5P:** 89.3 → 89.5
+
+### 🌐 Patch v1.0-alpha.117 (2026-08-30) — Global Auditor: Karta `caa-03` (Cień na Rynku): `cost` → `0` + Karta `caa-03` (Cień na Rynku): `gold` → `4` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-03_C0_G4` -> Karta `caa-03` (Cień na Rynku): `cost` → `0` + Karta `caa-03` (Cień na Rynku): `gold` → `4`
+- **Wynik Globalny:** 83.1 → **83.2**
+- **Balans 4P:** 92.3 → 92.1
+- **Balans 3P:** 68.2 → 68.1
+- **Balans 5P:** 88.9 → 89.3
+
+### 🌐 Patch v1.0-alpha.116 (2026-08-30) — Global Auditor: Karta `gc-05` (Fałszywy Świadek): `cost` → `2` + Karta `gc-05` (Fałszywy Świadek): `heresy` → `1` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-05_C2_H1` -> Karta `gc-05` (Fałszywy Świadek): `cost` → `2` + Karta `gc-05` (Fałszywy Świadek): `heresy` → `1`
+- **Wynik Globalny:** 82.9 → **83.1**
+- **Balans 4P:** 91.9 → 92.3
+- **Balans 3P:** 68.2 → 68.2
+- **Balans 5P:** 88.6 → 88.9
+
+
+
+
+### 🌐 Patch v1.0-alpha.115 (2026-08-30) — Global Auditor: Karta `caa-06` (Ucieczka z Lochów): `cost` → `0` + Karta `caa-06` (Ucieczka z Lochów): `gold` → `1` (Zysk Global Δ +0.5 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-06_C0_G1` -> Karta `caa-06` (Ucieczka z Lochów): `cost` → `0` + Karta `caa-06` (Ucieczka z Lochów): `gold` → `1`
+- **Wynik Globalny:** 82.4 → **82.9**
+- **Balans 4P:** 91.0 → 91.9
+- **Balans 3P:** 67.4 → 68.2
+- **Balans 5P:** 88.7 → 88.6
+
+### 🌐 Patch v1.0-alpha.114 (2026-08-30) — Global Auditor: Karta `gc-11` (Fałszywe Świadectwo Cechu): `gold` → `0` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `4` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-11_G0_H4` -> Karta `gc-11` (Fałszywe Świadectwo Cechu): `gold` → `0` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `4`
+- **Wynik Globalny:** 82.3 → **82.4**
+- **Balans 4P:** 91.5 → 91.0
+- **Balans 3P:** 67.0 → 67.4
+- **Balans 5P:** 88.5 → 88.7
+
+### 🌐 Patch v1.0-alpha.113 (2026-08-30) — Global Auditor: Karta `gc-11` (Fałszywe Świadectwo Cechu): `cost` → `0` + Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy` → `3` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `L3_GC-11_C0_H3`
+- **Wynik Globalny:** 82.2 → **82.3**
+- **Balans 4P:** 92.8 → 91.5
+- **Balans 3P:** 67.0 → 67.0
+- **Balans 5P:** 86.8 → 88.5
+
+### 🌐 Patch v1.0-alpha.112 (2026-08-30) — Global Auditor: Karta `caa-07` (Szantaż Bractwa): `cost` → `0` + Karta `caa-07` (Szantaż Bractwa): `gold` → `4` (Zysk Global Δ +1.6 pkt)
+- **Modyfikacja:** `L3_CAA-07_C0_G4`
+- **Wynik Globalny:** 80.6 → **82.2**
+- **Balans 4P:** 91.3 → 92.8
+- **Balans 3P:** 66.3 → 67.0
+- **Balans 5P:** 84.3 → 86.8
+
+### 🟢 Patch v1.0-alpha.109 (2026-08-30) — Kanon 4P: Karta `kb-04` (Faworyt Dworu): `gold` → `0` + Karta `kb-04` (Faworyt Dworu): `heresy` → `1` (Zysk 4P Δ +0.5 pkt)
+- **Wynik 4P:** Kanon **`92.2`** → **`92.7 pkt`** | Global **`69.8`** | 3p **`54.2`** | 5p **`62.6`**
+- **Modyfikacja (`L3_KB-04_G0_H1`):** Karta `kb-04` (Faworyt Dworu): `gold` → `0` + Karta `kb-04` (Faworyt Dworu): `heresy` → `1`.
+- **Efekt:** Optymalizacja Kanonu 4P. Telemetria: Średnia Er 5.78, Deadlocks 0.0%, Pas Biedy 4.0%.
+
 ### 🟢 Patch v1.0-alpha.106 (2026-08-30) — Format 3P: SO Skazania (3p): 2 (Decyzja Projektowa)
 - **Wynik 3P:** Ręczna korekta balansu (Custom Base dla Audytora Globalnego).
 - **Modyfikacja:** `victory.swiete_oficjum.condemns.3p: 3 → 2`.

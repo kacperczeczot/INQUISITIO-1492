@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.105</span>
+              <span id="prev-meta-ver">v1.0-alpha.109</span>
             </div>
           </div>
         </div>
@@ -1173,14 +1173,14 @@
   "so-04": {
     "name": "Publiczne Ostrzeżenie",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "action": "send_inquisitor",
     "target_loc": "agent_location",
     "inquisitor_send_limit": 1,
     "tags": [
       "inquisitor"
     ],
-    "gold": 1,
+    "gold": 2,
     "target_heresy": 1,
     "heresy_text": "Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.",
     "lore": "Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel."
@@ -1521,8 +1521,8 @@
   "kb-04": {
     "name": "Faworyt Dworu",
     "type": "akcja",
-    "cost": 2,
-    "heresy": 0,
+    "cost": 4,
+    "heresy": 1,
     "agents": 1,
     "creates_hook": true,
     "action": "creates_hook",
@@ -1531,6 +1531,7 @@
       "move",
       "heresy"
     ],
+    "gold": 0,
     "heresy_text": "Faworyzm dworu budzi zazdrość kortegan i biskupów.",
     "lore": "Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret."
   },
@@ -2348,7 +2349,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.105';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.109';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

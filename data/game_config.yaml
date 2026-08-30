@@ -1,4 +1,4 @@
-version: v1.0-alpha.106
+version: v1.0-alpha.134
 date: '2026-08-30'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -77,13 +77,13 @@ cards:
   so-04:
     name: Publiczne Ostrzeżenie
     type: akcja
-    cost: 1
+    cost: 0
     action: send_inquisitor
     target_loc: agent_location
     inquisitor_send_limit: 1
     tags:
     - inquisitor
-    gold: 1
+    gold: 2
     target_heresy: 1
   so-05:
     name: Wezwanie do Trybunału
@@ -139,7 +139,7 @@ cards:
     condition: rival_in_dungeon_or_inquisitor
     tags:
     - hook
-    heresy: 1
+    heresy: 2
   so-10:
     name: Oczyść Miasto
     type: signature
@@ -189,11 +189,12 @@ cards:
   caa-02:
     name: Złoto z Kryjówki
     type: akcja
-    cost: 0
+    cost: 1
     gold: 3
     action: gain_gold
     tags:
     - gold
+    heresy: 1
   caa-03:
     name: Cień na Rynku
     type: akcja
@@ -205,7 +206,7 @@ cards:
     - move
     - relic
     - heresy
-    gold: 2
+    gold: 4
   caa-04:
     name: Fałszywy Trop
     type: akcja
@@ -214,7 +215,7 @@ cards:
     action: frame_rival
     tags:
     - heresy
-    gold: 3
+    gold: 6
   caa-05:
     name: Ukryty Kurier
     type: akcja
@@ -240,6 +241,7 @@ cards:
     - arrest
     heresy: 0
     target_heresy: 1
+    gold: 1
   caa-07:
     name: Szantaż Bractwa
     type: akcja
@@ -249,19 +251,19 @@ cards:
     target_loc: neighbor_location
     tags:
     - hook
-    gold: 3
+    gold: 4
   caa-08:
     name: Kaptur Nocy
     type: akcja
     cost: 2
-    heresy: 0
+    heresy: 1
     action: move_agent
     condition: has_double_agent
     tags:
     - double
     - heresy
     target_heresy: 2
-    gold: 2
+    gold: 1
   caa-09:
     name: Kurier Relikwii
     type: akcja
@@ -289,7 +291,7 @@ cards:
   caa-11:
     name: Nocna Zmiana Warty
     type: akcja
-    cost: 1
+    cost: 2
     agents: 1
     move_inquisitor: true
     action: move_agent
@@ -298,6 +300,7 @@ cards:
     - inquisitor
     gold: 1
     target_heresy: 1
+    heresy: 0
   caa-12:
     name: Skrytka w Murach
     type: akcja
@@ -339,8 +342,8 @@ cards:
   kb-04:
     name: Faworyt Dworu
     type: akcja
-    cost: 2
-    heresy: 0
+    cost: 4
+    heresy: 3
     agents: 1
     creates_hook: true
     action: creates_hook
@@ -348,6 +351,7 @@ cards:
     - hook
     - move
     - heresy
+    gold: 0
   kb-05:
     name: List Żelazny
     type: akcja
@@ -475,13 +479,13 @@ cards:
   kt-05:
     name: Wskazówka Cyklu
     type: akcja
-    cost: 1
+    cost: 2
     grant_fragment: 1
     action: grant_fragment
     condition: agent_in_dungeon_or_tribunal
     tags:
     - fragment
-    heresy: 1
+    heresy: 0
   kt-06:
     name: Przesłuchanie Imienia
     type: akcja
@@ -507,7 +511,7 @@ cards:
   kt-08:
     name: Areszt Wiedzy
     type: akcja
-    cost: 1
+    cost: 3
     arrest: true
     action: arrest
     target_loc: dungeon_or_tribunal
@@ -516,7 +520,7 @@ cards:
   kt-09:
     name: Fragment Kodeksu
     type: akcja
-    cost: 1
+    cost: 2
     heresy: 1
     grant_fragment: 1
     action: grant_fragment
@@ -524,6 +528,7 @@ cards:
     tags:
     - fragment
     - heresy
+    gold: 1
   kt-10:
     name: Pieczęć Salomona
     type: signature
@@ -539,6 +544,7 @@ cards:
     - fragment
     heresy: 0
     heresy_decrease: 2
+    gold: 1
   kt-11:
     name: Medytacja Sefirot
     type: akcja
@@ -574,7 +580,7 @@ cards:
     name: Czarny Rynek
     type: akcja
     cost: 0
-    gold: 2
+    gold: 3
     action: gain_gold
     tags:
     - gold
@@ -603,14 +609,14 @@ cards:
   gc-05:
     name: Fałszywy Świadek
     type: reakcja
-    cost: 1
+    cost: 2
     change_vote: true
     vote_change_limit: 1
     action: frame_rival
     trigger: after_verdict_majority_revealed
     tags:
     - reaction
-    heresy: 0
+    heresy: 1
   gc-06:
     name: Szantaż
     type: akcja
@@ -637,12 +643,12 @@ cards:
     type: akcja
     cost: 1
     target_heresy: 0
-    gold: 1
+    gold: 0
     action: gain_gold
     tags:
     - gold
     - heresy
-    heresy: 2
+    heresy: 1
   gc-09:
     name: Lista Dłużników
     type: akcja
@@ -672,20 +678,21 @@ cards:
   gc-11:
     name: Fałszywe Świadectwo Cechu
     type: akcja
-    cost: 0
+    cost: 2
     target_heresy: 1
     action: frame_rival
     tags:
     - heresy
     - hook
-    heresy: 2
+    heresy: 5
+    gold: 1
   gc-12:
     name: Złodziejski Zwiad
     type: akcja
-    cost: 0
+    cost: 1
     heresy: 2
     agents: 1
-    gold: 1
+    gold: 2
     action: move_agent
     tags:
     - move
