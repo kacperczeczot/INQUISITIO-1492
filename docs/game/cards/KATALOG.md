@@ -276,7 +276,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Kupcy rozpoznają obce oblicze w tłumie na placu. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |

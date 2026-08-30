@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.140</span>
+              <span id="prev-meta-ver">v1.0-alpha.141</span>
             </div>
           </div>
         </div>
@@ -1326,7 +1326,7 @@
   "caa-03": {
     "name": "Cień na Rynku",
     "type": "akcja",
-    "cost": 0,
+    "cost": 1,
     "heresy": 1,
     "agents": 1,
     "action": "move_agent",
@@ -1335,6 +1335,7 @@
       "relic",
       "heresy"
     ],
+    "gold": 1,
     "heresy_text": "Kupcy rozpoznają obce oblicze w tłumie na placu.",
     "lore": "Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień."
   },
@@ -2339,7 +2340,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.140';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.141';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

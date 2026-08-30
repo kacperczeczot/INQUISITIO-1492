@@ -787,10 +787,11 @@ def sync_readme(cfg: dict) -> list[str]:
 
 
 def sync_cards(cfg: dict) -> list[str]:
-    """Sync card markdown files (parameters + effect text), KATALOG.md, and card-editor.html from game_config.yaml."""
+    """Sync card markdown files (parameters + effect text), KATALOG.md, card-editor.html, and all prototype HTMLs from game_config.yaml."""
     from scripts.pnp.generate_card_text import sync_card_markdowns
     from scripts.cards.build_catalog import main as build_catalog_main
     from scripts.pnp.sync_card_editor import main as sync_card_editor_main
+    from scripts.pnp.generate import main as generate_pnp_main
 
     # 1. Sync card parameters (cost, layer, type) & effect text
     updated_files = sync_card_markdowns(dry_run=False)
@@ -801,11 +802,15 @@ def sync_cards(cfg: dict) -> list[str]:
     # 3. Sync card-editor.html CARDS_DATABASE
     sync_card_editor_main()
 
+    # 4. Generate all Print & Play prototypes in assets/prototypes/
+    generate_pnp_main()
+
     res = [f"Zsynchronizowano {len(cfg.get('cards', {}))} kart w docs/game/cards/"]
     if updated_files:
         res.append(f"Zaktualizowano opisy efektów dla {len(updated_files)} kart")
     res.append("Przegenerowano docs/game/cards/KATALOG.md")
     res.append("Zsynchronizowano baza kart w card-editor.html")
+    res.append("Wygenerowano 12 zaktualizowanych prototypów PnP w assets/prototypes/")
     return res
 
 

@@ -94,6 +94,13 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🌐 Patch v1.0-alpha.141 (2026-08-30) — Global Auditor: Karta `caa-03` (Cień na Rynku): `cost` → `1` + Karta `caa-03` (Cień na Rynku): `gold` → `1` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-03_C1_G1` -> Karta `caa-03` (Cień na Rynku): `cost` → `1` + Karta `caa-03` (Cień na Rynku): `gold` → `1`
+- **Wynik Globalny:** 81.6 → **81.7**
+- **Balans 4P:** 90.7 → 91.0
+- **Balans 3P:** 71.2 → 71.0
+- **Balans 5P:** 83.0 → 83.0
+
 ### 🌐 Patch v1.0-alpha.140 (2026-08-30) — Global Auditor: Karta `gc-10` (Upadek Domu): `heresy` → `0` (Zysk Global Δ +5.2 pkt)
 - **Modyfikacja:** `BAZA__L3_GC-10_HERESY_MINUS2` -> Karta `gc-10` (Upadek Domu): `heresy` → `0`
 - **Wynik Globalny:** 76.4 → **81.6**
