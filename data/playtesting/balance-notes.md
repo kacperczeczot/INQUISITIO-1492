@@ -94,6 +94,32 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.146 (2026-08-30) — Format 3P: Złoto startowe (3p): 4 (Zysk 3P Δ +0.8 pkt)
+- **Wynik 3P:** 3p **`70.1`** → **`70.9 pkt`** | Kanon 4P **`90.6`** | 5p **`90.0`** | Global **`83.8`**
+- **Modyfikacja (`L1_START_GOLD_MINUS1`):** Złoto startowe (3p): 4.
+- **Efekt:** Optymalizacja Formatu 3P (wyjątki `3p:`). Telemetria: Średnia Er 6.54, Deadlocks 0.1%, Pas Biedy 2.2%.
+
+### 🌐 Patch v1.0-alpha.145 (2026-08-30) — Global Auditor: Karta `gc-01` (Przekupiony Strażnik): `cost` → `2` + Karta `gc-01` (Przekupiony Strażnik): `gold` → `2` (Zysk Global Δ +0.4 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-01_C2_G2` -> Karta `gc-01` (Przekupiony Strażnik): `cost` → `2` + Karta `gc-01` (Przekupiony Strażnik): `gold` → `2`
+- **Wynik Globalny:** 82.1 → **82.5**
+- **Balans 4P:** 90.4 → 90.6
+- **Balans 3P:** 70.3 → 70.7
+- **Balans 5P:** 85.5 → 86.2
+
+### 🌐 Patch v1.0-alpha.144 (2026-08-30) — Global Auditor: Karta `so-09` (Świadek Koronny): `cost` → `0` + Karta `so-09` (Świadek Koronny): `heresy` → `3` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_SO-09_C0_H3` -> Karta `so-09` (Świadek Koronny): `cost` → `0` + Karta `so-09` (Świadek Koronny): `heresy` → `3`
+- **Wynik Globalny:** 81.9 → **82.1**
+- **Balans 4P:** 90.4 → 90.4
+- **Balans 3P:** 70.4 → 70.3
+- **Balans 5P:** 84.8 → 85.5
+
+### 🌐 Patch v1.0-alpha.143 (2026-08-30) — Global Auditor: Karta `kb-02` (Pobór Podatków): `cost` → `0` + Karta `kb-02` (Pobór Podatków): `heresy` → `0` (Zysk Global Δ +1.7 pkt)
+- **Modyfikacja:** `BAZA__L3_KB-02_C0_H0` -> Karta `kb-02` (Pobór Podatków): `cost` → `0` + Karta `kb-02` (Pobór Podatków): `heresy` → `0`
+- **Wynik Globalny:** 80.2 → **81.9**
+- **Balans 4P:** 89.9 → 90.4
+- **Balans 3P:** 70.5 → 70.4
+- **Balans 5P:** 80.2 → 84.8
+
 ### 🟢 Patch v1.0-alpha.142 (2026-08-30) — Pełna Sanacja i Oczyszczenie Pól-Widm (Ghost Fields) Kart
 - **Modyfikacja:**
   - Oczyszczenie martwych pól `gold: 0`, `target_heresy: 0`, `agents: 0` z kart: `caa-01`, `gc-04`, `gc-09`, `kb-01`, `kb-04`, `kb-09`, `kb-10`, `kb-11`, `kt-01`, `kt-10`.
