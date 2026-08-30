@@ -54,7 +54,7 @@ def build_level1_tests():
         cur_t = t[p_key] if isinstance(t, dict) or hasattr(t, "__getitem__") else int(t)
         for d in (1, 2):
             tests.append((f"L1_THRESHOLD_{p_key.upper()}_PLUS{d}", f"Próg Oskarżenia ({p_key}): {cur_t} → {cur_t + d}", {f"threshold_{p_key}_offset": d}))
-            if cur_t - d >= 1:
+            if cur_t - d >= 6:
                 tests.append((f"L1_THRESHOLD_{p_key.upper()}_MINUS{d}", f"Próg Oskarżenia ({p_key}): {cur_t} → {cur_t - d}", {f"threshold_{p_key}_offset": -d}))
 
     # --- 2. Format-specific Starting Gold (3p, 4p, 5p) ---

@@ -45,7 +45,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **3** | **3** | **3** | Czysta to 0–2. Od **3** Autodafé pali na Stos (nie areszt). |
-| **Próg Oskarżenia (Krytyczna)** | **6** | **5** | **8** | Kanon 4p = **5**. Obserwowana kończy się na T−1. |
+| **Próg Oskarżenia (Krytyczna)** | **6** | **7** | **8** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **15** | **15** | **15** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
@@ -93,6 +93,25 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🌐 Patch v1.0-alpha.170 (2026-08-30) — Przywrócenie kanonicznych progów oskarżenia (3p: 6, 4p: 7, 5p: 8)
+- **Modyfikacja:** Przywrócenie organicznej fizyki stołu i kanonicznych progów oskarżenia zgodnie z Konstytucją ADR i Hierarchią Balansowania.
+- **Konfiguracja progów:** 3p: 6 | 4p: 7 | 5p: 8 (usunięcie sztucznego dryfu progów L1)
+- **Cel:** Odblokowanie pełnej przestrzeni Strefy Obserwowanej (3..6 w 4P) i skupienie dalszej optymalizacji na kartach frakcji (Poziom 3).
+
+### 🌐 Patch v1.0-alpha.169 (2026-08-30) — Global Auditor: Próg oskarżenia (4p): offset -1 (nowy: 4) (Zysk Global Δ +0.4 pkt)
+- **Modyfikacja:** `BAZA__L1_THRESHOLD_4P_MINUS1` -> Próg oskarżenia (4p): offset -1 (nowy: 4)
+- **Wynik Globalny:** 86.9 → **87.3**
+- **Balans 4P:** 90.6 → 92.3
+- **Balans 3P:** 73.0 → 72.3
+- **Balans 5P:** 97.2 → 97.2
+
+### 🌐 Patch v1.0-alpha.168 (2026-08-30) — Global Auditor: Próg oskarżenia (3p): offset -1 (nowy: 5) (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L1_THRESHOLD_3P_MINUS1` -> Próg oskarżenia (3p): offset -1 (nowy: 5)
+- **Wynik Globalny:** 86.7 → **86.9**
+- **Balans 4P:** 90.6 → 90.6
+- **Balans 3P:** 72.3 → 73.0
+- **Balans 5P:** 97.2 → 97.2
 
 ### 🌐 Patch v1.0-alpha.167 (2026-08-30) — Global Auditor: Próg oskarżenia (4p): offset -1 (nowy: 5) (Zysk Global Δ +0.6 pkt)
 - **Modyfikacja:** `BAZA__L1_THRESHOLD_4P_MINUS1` -> Próg oskarżenia (4p): offset -1 (nowy: 5)

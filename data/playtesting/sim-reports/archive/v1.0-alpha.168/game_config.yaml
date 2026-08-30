@@ -1,4 +1,4 @@
-version: v1.0-alpha.170
+version: v1.0-alpha.168
 date: '2026-08-30'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -15,8 +15,8 @@ system:
   intrigue_gold: 1
   observed_threshold: 3
   accusation_threshold:
-    3p: 6
-    4p: 7
+    3p: 5
+    4p: 5
     5p: 8
 victory:
   swiete_oficjum:
