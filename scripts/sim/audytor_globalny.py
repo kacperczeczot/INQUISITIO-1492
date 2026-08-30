@@ -28,6 +28,7 @@ from audytor_kanonu import select_diverse_beam_seeds
 import audit_level1
 import audit_level2
 import audit_level3
+import audit_level4
 
 BALANCE_NOTES_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "balance-notes.md"
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "playtesting" / "sim-reports"
@@ -111,6 +112,12 @@ def log_global_iteration(
         f.write(row + "\n")
 
 def generate_global_pool():
+    """Generates complete universal atomic pool across all 4 levels:
+    - Level 1: System Macro Rules (thresholds, observed, cards/era, era_income, intrigue_gold, max_eras, autodafe_cooldown, start_gold, agents)
+    - Level 2: Faction Victory Goals (stacks, condemns, relics, decrees, hooks, fragments, falls across 3p/4p/5p)
+    - Level 3: All Card Parameters (cost, heresy, target_heresy, gold, agents across all 60 cards)
+    - Level 4: Niche Variants & Economy Rules (sea route, time deck, card/sig cost offsets)
+    """
     pool = []
     def _add_split(tests):
         for tid, tname, tdict in tests:
@@ -121,16 +128,22 @@ def generate_global_pool():
     _add_split(audit_level1.build_level1_tests())
     _add_split(audit_level2.build_level2_tests())
     
-    # L3 cards (global)
-    for tid, tname, tdict in audit_level3.build_level3_tests(param_filter="cost,heresy"):
+    # L3 cards (global - ALL parameters: cost, heresy, target_heresy, gold, agents)
+    for tid, tname, tdict in audit_level3.build_level3_tests(param_filter="all"):
         if tid.endswith("BAZA") or not tdict: continue
         pool.append((tid, f"[L3] {tname}", tdict))
+        
+    # L4 variants & economy
+    _add_split(audit_level4.build_level4_tests())
+    
     return pool
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Grand Combo Auditor (Beam Search Optimizer)")
-    parser.add_argument("--beam-width", type=int, default=15, help="Szerokość wiązki (ile najlepszych mutacji przechodzi do kolejnej fazy)")
-    parser.add_argument("--max-depth", type=int, default=5, help="Maksymalna głębokość przeszukiwania (kombosy N-wymiarowe)")
+    parser = argparse.ArgumentParser(description="Grand Combo Auditor (Global Beam Search Optimizer)")
+    parser.add_argument("--beam-width", type=int, default=20, help="Szerokość wiązki (ile najlepszych mutacji przechodzi do kolejnej fazy)")
+    parser.add_argument("--max-depth", type=int, default=6, help="Maksymalna głębokość przeszukiwania (kombosy N-wymiarowe)")
+    parser.add_argument("--min-delta", type=float, default=0.05, help="Minimalny zysk globalny do wdrożenia patcha")
+    parser.add_argument("--continuous", action="store_true", default=True, help="Tryb pracy ciągłej bez przedwczesnego wyłączania")
     return parser.parse_args()
 
 def main():
@@ -285,12 +298,18 @@ def main():
 
         if not patch_found:
             print("\n═══════════════════════════════════════════════════════════════════════")
-            print(f"🎉 PODSUMOWANIE: OSIĄGNIĘTO GLOBALNE OPTIMUM!")
-            print(f"🏆 Końcowa synergia: {current_base_cand[1]}")
-            if base_dict:
-                print(f"   Wynik Globalny: {base_dict['score_global']:.2f}")
-                print(f"   Minimalny Balans: {base_dict['min_balance']:.2f}%")
-            break
+            print(f"🔍 [STATUS EKSPLORACJI] Wyczerpano badaną wiązkę kombinacji do głębokości #{args.max_depth}.")
+            if args.continuous:
+                print("🔄 [TRYB CIĄGŁY] Odświeżam pełną pulę parametrów i rozpoczynam nowy cykl poszukiwań...")
+                atomic_pool = generate_global_pool()
+                base_dict_10k = _run_full_diagnostic({}, games_per_setup=10000, seed=42 + iteration)
+                time.sleep(1)
+            else:
+                print(f"🏆 Końcowy wynik: {current_base_cand[1]}")
+                if base_dict:
+                    print(f"   Wynik Globalny: {base_dict['score_global']:.2f}")
+                    print(f"   Minimalny Balans: {base_dict['min_balance']:.2f}%")
+                break
             
         iteration += 1
         
