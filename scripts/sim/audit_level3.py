@@ -52,6 +52,14 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
 
     sorted_card_ids = sorted(cards.keys())
 
+    PARAM_HARD_BOUNDS = {
+        "cost": (0, 5),
+        "gold": (0, 3),
+        "heresy": (0, 3),
+        "target_heresy": (0, 2),
+        "agents": (0, 2),
+    }
+
     for cid in sorted_card_ids:
         if cid.startswith("time-"):
             continue
@@ -65,21 +73,23 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
         if card_filter and cid.lower() != card_filter.lower():
             continue
 
-        # 1. Granular +/-1 and +/-2 shifts
+        # 1. Granular +/-1 and +/-2 shifts within hard bounds
         for p in params_to_test:
             curr_val = getattr(c, p, 0)
+            min_bound, max_bound = PARAM_HARD_BOUNDS.get(p, (0, 10))
 
             # Delta +1, +2
             for d in (1, 2):
                 new_v = curr_val + d
-                test_id_p = f"L3_{cid.upper()}_{p.upper()}_PLUS{d}"
-                name_p = f"{cid.upper()} ({c.name}): {p} {curr_val} → {new_v}"
-                tests.append((test_id_p, name_p, {"card_overrides": {cid: {p: new_v}}}))
+                if min_bound <= new_v <= max_bound:
+                    test_id_p = f"L3_{cid.upper()}_{p.upper()}_PLUS{d}"
+                    name_p = f"{cid.upper()} ({c.name}): {p} {curr_val} → {new_v}"
+                    tests.append((test_id_p, name_p, {"card_overrides": {cid: {p: new_v}}}))
 
             # Delta -1, -2 (if within valid range)
             for d in (1, 2):
-                if curr_val >= d:
-                    new_v = curr_val - d
+                new_v = curr_val - d
+                if min_bound <= new_v <= max_bound and curr_val >= d:
                     test_id_m = f"L3_{cid.upper()}_{p.upper()}_MINUS{d}"
                     name_m = f"{cid.upper()} ({c.name}): {p} {curr_val} → {new_v}"
                     tests.append((test_id_m, name_m, {"card_overrides": {cid: {p: new_v}}}))
@@ -88,46 +98,48 @@ def build_level3_tests(param_filter: str = "all", faction_filter: str = "all", c
             if curr_val == 0:
                 if p == "gold":
                     for ext_val in [1, 2, 3]:
-                        test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
-                        name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
-                        tests.append((test_id_ext, name_ext, {"card_overrides": {cid: {p: ext_val}}}))
+                        if min_bound <= ext_val <= max_bound:
+                            test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                            name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                            tests.append((test_id_ext, name_ext, {"card_overrides": {cid: {p: ext_val}}}))
                 elif p in ("target_heresy", "heresy"):
                     for ext_val in [1, 2]:
-                        test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
-                        name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
-                        tests.append((test_id_ext, name_ext, {"card_overrides": {cid: {p: ext_val}}}))
+                        if min_bound <= ext_val <= max_bound:
+                            test_id_ext = f"L3_{cid.upper()}_{p.upper()}_SET{ext_val}"
+                            name_ext = f"{cid.upper()} ({c.name}): dodaj {p} = {ext_val}"
+                            tests.append((test_id_ext, name_ext, {"card_overrides": {cid: {p: ext_val}}}))
 
-        # 2. Single-card Intra-card Multi-dimensional Pairs (Cost & Gold, Cost & Heresy, Gold & Heresy)
+        # 2. Single-card Intra-card Multi-dimensional Pairs within Hard Bounds
         curr_cost = getattr(c, "cost", 0)
         curr_gold = getattr(c, "gold", 0)
         curr_heresy = getattr(c, "heresy", 0)
         curr_th = getattr(c, "target_heresy", 0)
 
-        # Cost + Heresy trade-offs
+        # Cost + Heresy trade-offs (cost 0..5, heresy 0..3)
         for d_c in (-1, 1):
             for d_h in (-1, 1):
-                nc = max(0, curr_cost + d_c)
-                nh = max(0, curr_heresy + d_h)
+                nc = max(0, min(5, curr_cost + d_c))
+                nh = max(0, min(3, curr_heresy + d_h))
                 if (nc != curr_cost or nh != curr_heresy):
                     tid = f"L3_{cid.upper()}_C{nc}_H{nh}"
                     tname = f"{cid.upper()} ({c.name}): koszt {curr_cost}→{nc}, herezja {curr_heresy}→{nh}"
                     tests.append((tid, tname, {"card_overrides": {cid: {"cost": nc, "heresy": nh}}}))
 
-        # Cost + Gold trade-offs
+        # Cost + Gold trade-offs (cost 0..5, gold 0..3)
         for d_c in (-1, 1):
             for d_g in (1, 2):
-                nc = max(0, curr_cost + d_c)
-                ng = max(0, curr_gold + d_g)
+                nc = max(0, min(5, curr_cost + d_c))
+                ng = max(0, min(3, curr_gold + d_g))
                 if (nc != curr_cost or ng != curr_gold):
                     tid = f"L3_{cid.upper()}_C{nc}_G{ng}"
                     tname = f"{cid.upper()} ({c.name}): koszt {curr_cost}→{nc}, złoto {curr_gold}→{ng}"
                     tests.append((tid, tname, {"card_overrides": {cid: {"cost": nc, "gold": ng}}}))
 
-        # Gold + Heresy trade-offs
+        # Gold + Heresy trade-offs (gold 0..3, heresy 0..3)
         for d_g in (-1, 1):
             for d_h in (-1, 1):
-                ng = max(0, curr_gold + d_g)
-                nh = max(0, curr_heresy + d_h)
+                ng = max(0, min(3, curr_gold + d_g))
+                nh = max(0, min(3, curr_heresy + d_h))
                 if (ng != curr_gold or nh != curr_heresy):
                     tid = f"L3_{cid.upper()}_G{ng}_H{nh}"
                     tname = f"{cid.upper()} ({c.name}): złoto {curr_gold}→{ng}, herezja {curr_heresy}→{nh}"

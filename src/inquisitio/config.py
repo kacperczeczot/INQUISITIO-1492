@@ -129,6 +129,27 @@ class GameConfig:
             if sg < 0:
                 raise ConfigValidationError(f"Złoto startowe w {p_key} nie może być ujemne: {sg}")
 
+        # 4. Check card property bounds (Hard bounds for economic sanity & game balance)
+        cards = raw.get("cards", {})
+        for cid, c in cards.items():
+            if not isinstance(c, dict):
+                continue
+            cost = int(c.get("cost", 0))
+            if cost < 0 or cost > 5:
+                raise ConfigValidationError(f"Karta '{cid}' ma koszt {cost} poza dozwolonym zakresem [0, 5]!")
+            gold = int(c.get("gold", 0))
+            if gold < 0 or gold > 3:
+                raise ConfigValidationError(f"Karta '{cid}' daje złoto {gold} poza dozwolonym zakresem [0, 3]!")
+            heresy = int(c.get("heresy", 0))
+            if heresy < 0 or heresy > 3:
+                raise ConfigValidationError(f"Karta '{cid}' ma herezję {heresy} poza dozwolonym zakresem [0, 3]!")
+            th = int(c.get("target_heresy", 0))
+            if th < 0 or th > 2:
+                raise ConfigValidationError(f"Karta '{cid}' ma target_heresy {th} poza dozwolonym zakresem [0, 2]!")
+            agents = int(c.get("agents", 0))
+            if agents < 0 or agents > 2:
+                raise ConfigValidationError(f"Karta '{cid}' ma agents {agents} poza dozwolonym zakresem [0, 2]!")
+
     # ── Convenience helpers ──────────────────────────────────────
 
     def threshold_for(self, n_players: int) -> int:

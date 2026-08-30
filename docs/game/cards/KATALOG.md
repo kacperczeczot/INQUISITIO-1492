@@ -66,10 +66,10 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 2 |
-| `heresy` | 4 |
+| `cost_gold` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
-| `effect` | Wskaż rywala: +3 Herezja. |
+| `effect` | Wskaż rywala: +1 Herezja. |
 | `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -430,9 +430,9 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 4 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
@@ -1042,8 +1042,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
-| `heresy` | 5 |
+| `cost_gold` | 0 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
 | `lore` | Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu. |

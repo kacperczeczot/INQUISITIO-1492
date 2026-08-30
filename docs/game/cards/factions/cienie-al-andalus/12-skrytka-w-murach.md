@@ -5,14 +5,15 @@ faction: cienie-al-andalus
 type: akcja
 layer: A
 cost: 1
-heresy: 0
+heresy: 1
 tags:
 - gold
 - heresy
-effect: Zyskaj 4 złota.
+effect: Zyskaj 3 złota.
 lore: Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień.
 gold: 2
 ---
+
 
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [12-skrytka-w-murach](12-skrytka-w-murach.md)
