@@ -94,6 +94,14 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.135 (2026-08-30) — Rekalibracja Gildii Cieni: Karta `gc-08` (Zatrute Złoto)
+- **Modyfikacja:** Karta `gc-08` (Zatrute Złoto): `cost: 1 → 2`, `gold: 0 → 1`
+- **Wynik Globalny:** 83.1 → **83.4 pkt** (`⬆️ +0.3`)
+- **Balans 4P:** 88.6 → **88.8 pkt** (`⬆️ +0.2`)
+- **Balans 3P:** 69.8 → **70.0 pkt** (`⬆️ +0.2`)
+- **Balans 5P:** 90.9 → **91.4 pkt** (`⬆️ +0.5`)
+- **Efekt:** Naprawa mechaniczna karty ekonomicznej Gildii Cieni (usunięcie martwego efektu `gold: 0` z v134) ze zrównoważonym kosztem 2 złote; monotoniczny zysk we wszystkich formatach rozgrywki (3P/4P/5P) i zachowana pełna witalność.
+
 ### 🌐 Patch v1.0-alpha.134 (2026-08-30) — Global Auditor: Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `6` (Zysk Global Δ +0.1 pkt)
 - **Modyfikacja:** `BAZA__L3_CAA-04_C0_G6` -> Karta `caa-04` (Fałszywy Trop): `cost` → `0` + Karta `caa-04` (Fałszywy Trop): `gold` → `6`
 - **Wynik Globalny:** 86.3 → **86.4**

@@ -4,15 +4,16 @@ name: Fałszywe Świadectwo Cechu
 faction: gildia-cieni
 type: akcja
 layer: B
-cost: 0
-heresy: 2
+cost: 2
+heresy: 5
 tags:
 - heresy
 - hook
-effect: 'Wskaż rywala: +1 Herezja.'
+effect: 'Wskaż rywala: +1 Herezja. Zyskaj 1 złoto.'
 lore: Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu.
 target_heresy: 1
 ---
+
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [11-falszywe-swiadectwo](11-falszywe-swiadectwo.md)
 

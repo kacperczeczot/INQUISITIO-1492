@@ -169,7 +169,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora. |
 | `lore` | Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie. |
@@ -259,8 +259,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
-| `heresy` | 0 |
+| `cost_gold` | 1 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
 | `lore` | Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację. |
@@ -296,7 +296,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce. |
-| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 3 złota. |
+| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 6 złota. |
 | `lore` | Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę. |
 | `tags` | heresy |
 | `status` | prototyp |
@@ -362,7 +362,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 2 |
-| `heresy` | 0 |
+| `heresy` | 1 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
 | `lore` | Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę. |
@@ -412,7 +412,7 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. |
@@ -504,7 +504,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 4 |
-| `heresy` | 1 |
+| `heresy` | 3 |
 | `heresy_text` | Faworyzm dworu budzi zazdrość kortegan i biskupów. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala. |
 | `lore` | Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret. |
@@ -730,8 +730,8 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
-| `heresy` | 1 |
+| `cost_gold` | 2 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto. |
 | `lore` | Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale. |
@@ -781,7 +781,7 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
+| `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał. |
 | `effect` | Aresztuj Agenta rywala w Lochach lub w Trybunale. |
@@ -798,7 +798,7 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | C |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
 | `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. |
@@ -892,7 +892,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zyskaj 2 złota. |
+| `effect` | Zyskaj 3 złota. |
 | `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
@@ -940,8 +940,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | reakcja |
 | `layer` | A |
-| `cost_gold` | 1 |
-| `heresy` | 0 |
+| `cost_gold` | 2 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit: 1 / Erę. |
 | `lore` | Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole. |
@@ -991,8 +991,8 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 1 |
-| `heresy` | 2 |
+| `cost_gold` | 2 |
+| `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 1 złoto. |
 | `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |
@@ -1042,10 +1042,10 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 0 |
-| `heresy` | 2 |
+| `cost_gold` | 2 |
+| `heresy` | 5 |
 | `heresy_text` | — |
-| `effect` | Wskaż rywala: +1 Herezja. |
+| `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
 | `lore` | Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu. |
 | `tags` | heresy, hook |
 | `status` | prototyp |
@@ -1059,7 +1059,7 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 0 |
+| `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |

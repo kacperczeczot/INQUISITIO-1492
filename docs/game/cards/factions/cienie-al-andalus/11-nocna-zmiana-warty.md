@@ -4,7 +4,7 @@ name: Nocna Zmiana Warty
 faction: cienie-al-andalus
 type: akcja
 layer: B
-cost: 1
+cost: 2
 heresy: 0
 tags:
 - move
@@ -15,6 +15,7 @@ lore: Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor bł�
   zaułku.
 agents: 1
 ---
+
 
 
 

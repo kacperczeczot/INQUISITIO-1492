@@ -4,7 +4,7 @@ name: Złodziejski Zwiad
 faction: gildia-cieni
 type: akcja
 layer: A
-cost: 0
+cost: 1
 heresy: 2
 tags:
 - move
@@ -16,6 +16,7 @@ lore: Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze pr
 agents: 1
 gold: 1
 ---
+
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [12-zlodziejski-zwiad](12-zlodziejski-zwiad.md)
 
