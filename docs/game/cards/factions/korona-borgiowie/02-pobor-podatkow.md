@@ -14,7 +14,9 @@ lore: 'Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — sta
 
   '
 gold: 2
+target_heresy: 1
 ---
+
 
 
 

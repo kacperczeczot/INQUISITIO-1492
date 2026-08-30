@@ -3,7 +3,7 @@ id: kb-10
 name: Pieczęć Korony
 faction: korona-borgiowie
 type: signature
-layer: C
+layer: A
 cost: 4
 heresy: 1
 tags:
@@ -14,8 +14,9 @@ effect: 'DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli ma
   na ≥ 2 graczach: zwycięstwo.'
 heresy_text: Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu.
 lore: Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie.
-breaks_rule: true
+breaks_rule: zwycięstwo tylko po Erze
 ---
+
 
 
 

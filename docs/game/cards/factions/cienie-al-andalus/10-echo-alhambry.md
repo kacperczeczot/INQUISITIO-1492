@@ -3,7 +3,7 @@ id: caa-10
 name: Echo Alhambry
 faction: cienie-al-andalus
 type: signature
-layer: C
+layer: A
 cost: 2
 heresy: 0
 tags:
@@ -15,8 +15,9 @@ effect: 'Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma
   Twoich Agentów.'
 heresy_text: Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.
 lore: As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.
-breaks_rule: true
+breaks_rule: Relikwia tylko ze Szlaku Morskiego
 ---
+
 
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [10-echo-alhambry](10-echo-alhambry.md)

@@ -3,7 +3,7 @@ id: caa-09
 name: Kurier Relikwii
 faction: cienie-al-andalus
 type: akcja
-layer: C
+layer: A
 cost: 0
 heresy: 0
 tags:
@@ -12,6 +12,7 @@ tags:
 effect: Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.
 lore: Bluff kierunku Relikwii jest połową gry Cieni.
 ---
+
 
 
 

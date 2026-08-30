@@ -3,7 +3,7 @@ id: gc-08
 name: Zatrute Złoto
 faction: gildia-cieni
 type: akcja
-layer: B
+layer: A
 cost: 1
 heresy: 1
 tags:
@@ -11,9 +11,10 @@ tags:
 - heresy
 effect: 'Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.'
 lore: Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.
-target_heresy: 1
 gold: 1
+target_heresy: 1
 ---
+
 
 
 

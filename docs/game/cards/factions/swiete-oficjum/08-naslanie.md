@@ -3,7 +3,7 @@ id: so-08
 name: Nasłanie Inkwizytora
 faction: swiete-oficjum
 type: akcja
-layer: B
+layer: A
 cost: 0
 heresy: 0
 tags:
@@ -14,6 +14,7 @@ effect: 'Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / 
 heresy_text: Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.
 lore: Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
 ---
+
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [08-naslanie](08-naslanie.md)
 

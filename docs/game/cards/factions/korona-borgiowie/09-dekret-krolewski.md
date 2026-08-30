@@ -3,7 +3,7 @@ id: kb-09
 name: Dekret Królewski
 faction: korona-borgiowie
 type: signature
-layer: C
+layer: A
 cost: 2
 heresy: 0
 tags:
@@ -14,8 +14,9 @@ effect: 'DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: W
   Haka. Odmowa: +3 Herezja.'
 heresy_text: Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.
 lore: Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.
-breaks_rule: true
+breaks_rule: 1 wymuszenie Haka / gracza / Erę
 ---
+
 
 
 

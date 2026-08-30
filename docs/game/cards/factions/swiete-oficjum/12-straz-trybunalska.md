@@ -12,9 +12,11 @@ tags:
 effect: Przesuń swojego Agenta o 1 lokację.
 lore: Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach
   heretykom.
-agents: 1
 gold: 1
+target_heresy: 1
+agents: 1
 ---
+
 
 
 

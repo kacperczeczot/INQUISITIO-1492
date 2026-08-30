@@ -3,7 +3,7 @@ id: kt-08
 name: Areszt Wiedzy
 faction: kabala-toledo
 type: akcja
-layer: B
+layer: A
 cost: 3
 heresy: 0
 tags:
@@ -13,6 +13,7 @@ heresy_text: Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał.
 lore: Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem.
 arrest: true
 ---
+
 
 
 

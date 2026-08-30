@@ -116,7 +116,7 @@ Kart: **12**
 | `name` | Areszt Trybunalski |
 | `faction` | swiete-oficjum |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie. |
@@ -133,7 +133,7 @@ Kart: **12**
 | `name` | Przesłuchanie Oficjum |
 | `faction` | swiete-oficjum |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -150,7 +150,7 @@ Kart: **12**
 | `name` | Nasłanie Inkwizytora |
 | `faction` | swiete-oficjum |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze. |
@@ -167,7 +167,7 @@ Kart: **12**
 | `name` | Świadek Koronny |
 | `faction` | swiete-oficjum |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | — |
@@ -184,7 +184,7 @@ Kart: **12**
 | `name` | Oczyść Miasto |
 | `faction` | swiete-oficjum |
 | `type` | signature |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 5 |
 | `heresy` | 1 |
 | `heresy_text` | Autodafé z rozkazu trybunału pali strach, nie tylko drewno. |
@@ -201,7 +201,7 @@ Kart: **12**
 | `name` | Dekret Czystości Wiary |
 | `faction` | swiete-oficjum |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 0 |
 | `heresy` | 1 |
 | `heresy_text` | — |
@@ -326,7 +326,7 @@ Kart: **12**
 | `name` | Ucieczka z Lochów |
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
@@ -343,7 +343,7 @@ Kart: **12**
 | `name` | Szantaż Bractwa |
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Bractwo zna imiona sąsiadów lepiej niż proboszczowie. |
@@ -360,7 +360,7 @@ Kart: **12**
 | `name` | Kaptur Nocy |
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
@@ -377,7 +377,7 @@ Kart: **12**
 | `name` | Kurier Relikwii |
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -394,7 +394,7 @@ Kart: **12**
 | `name` | Echo Alhambry |
 | `faction` | cienie-al-andalus |
 | `type` | signature |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
@@ -411,7 +411,7 @@ Kart: **12**
 | `name` | Nocna Zmiana Warty |
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -521,7 +521,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 2 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
 | `lore` | List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji. |
@@ -536,7 +536,7 @@ Kart: **12**
 | `name` | Areszt Królewski |
 | `faction` | korona-borgiowie |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Królewski areszt ma precedens starszy niż bulla papieska. |
@@ -553,7 +553,7 @@ Kart: **12**
 | `name` | Szantaż Pieczęcią |
 | `faction` | korona-borgiowie |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -570,7 +570,7 @@ Kart: **12**
 | `name` | Przekupstwo Sędziego |
 | `faction` | korona-borgiowie |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -587,7 +587,7 @@ Kart: **12**
 | `name` | Dekret Królewski |
 | `faction` | korona-borgiowie |
 | `type` | signature |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać. |
@@ -604,7 +604,7 @@ Kart: **12**
 | `name` | Pieczęć Korony |
 | `faction` | korona-borgiowie |
 | `type` | signature |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 4 |
 | `heresy` | 1 |
 | `heresy_text` | Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu. |
@@ -638,9 +638,9 @@ Kart: **12**
 | `name` | Szantaż Salonowy |
 | `faction` | korona-borgiowie |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 2 |
+| `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
 | `lore` | Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą. |
@@ -746,7 +746,7 @@ Kart: **12**
 | `name` | Przesłuchanie Imienia |
 | `faction` | kabala-toledo |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -763,7 +763,7 @@ Kart: **12**
 | `name` | Archiwum Ukryte |
 | `faction` | kabala-toledo |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -780,7 +780,7 @@ Kart: **12**
 | `name` | Areszt Wiedzy |
 | `faction` | kabala-toledo |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 3 |
 | `heresy` | 0 |
 | `heresy_text` | Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał. |
@@ -797,7 +797,7 @@ Kart: **12**
 | `name` | Fragment Kodeksu |
 | `faction` | kabala-toledo |
 | `type` | akcja |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
@@ -814,7 +814,7 @@ Kart: **12**
 | `name` | Pieczęć Salomona |
 | `faction` | kabala-toledo |
 | `type` | signature |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 4 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -831,7 +831,7 @@ Kart: **12**
 | `name` | Medytacja Sefirot |
 | `faction` | kabala-toledo |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -956,7 +956,7 @@ Kart: **12**
 | `name` | Szantaż |
 | `faction` | gildia-cieni |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 3 |
 | `heresy` | 1 |
 | `heresy_text` | — |
@@ -973,7 +973,7 @@ Kart: **12**
 | `name` | Skrytobójstwo |
 | `faction` | gildia-cieni |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Ciało w kanałach Gildii mówi więcej niż świadek na rynku. |
@@ -990,7 +990,7 @@ Kart: **12**
 | `name` | Zatrute Złoto |
 | `faction` | gildia-cieni |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | — |
@@ -1007,7 +1007,7 @@ Kart: **12**
 | `name` | Lista Dłużników |
 | `faction` | gildia-cieni |
 | `type` | akcja |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
@@ -1024,7 +1024,7 @@ Kart: **12**
 | `name` | Upadek Domu |
 | `faction` | gildia-cieni |
 | `type` | signature |
-| `layer` | C |
+| `layer` | A |
 | `cost_gold` | 4 |
 | `heresy` | 0 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
@@ -1041,7 +1041,7 @@ Kart: **12**
 | `name` | Fałszywe Świadectwo Cechu |
 | `faction` | gildia-cieni |
 | `type` | akcja |
-| `layer` | B |
+| `layer` | A |
 | `cost_gold` | 0 |
 | `heresy` | 2 |
 | `heresy_text` | — |

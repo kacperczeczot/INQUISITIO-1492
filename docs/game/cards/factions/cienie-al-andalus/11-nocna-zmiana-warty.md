@@ -3,7 +3,7 @@ id: caa-11
 name: Nocna Zmiana Warty
 faction: cienie-al-andalus
 type: akcja
-layer: B
+layer: A
 cost: 2
 heresy: 0
 tags:
@@ -13,8 +13,11 @@ effect: 'Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej l
   docelowej: przesuń go o 1 lokację.'
 lore: Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym
   zaułku.
+gold: 1
+target_heresy: 1
 agents: 1
 ---
+
 
 
 

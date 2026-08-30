@@ -178,7 +178,6 @@ cards:
     tags:
     - move
     - relic
-    target_heresy: 0
     heresy: 0
   caa-02:
     name: Złoto z Kryjówki
@@ -305,7 +304,6 @@ cards:
     tags:
     - move
     heresy: 1
-    target_heresy: 0
   kb-02:
     name: Pobór Podatków
     type: akcja
@@ -336,7 +334,6 @@ cards:
     - hook
     - move
     - heresy
-    gold: 0
   kb-05:
     name: List Żelazny
     type: akcja
@@ -389,7 +386,6 @@ cards:
     - signature
     - decree
     - heresy
-    gold: 0
   kb-10:
     name: Pieczęć Korony
     type: signature
@@ -403,8 +399,6 @@ cards:
     - signature
     - decree
     - heresy
-    target_heresy: 0
-    gold: 2
   kb-11:
     name: Tajny Emisariusz
     type: akcja
@@ -415,7 +409,6 @@ cards:
     - move
     - gold
     target_heresy: 1
-    gold: 0
   kb-12:
     name: Szantaż Salonowy
     type: akcja
@@ -433,7 +426,6 @@ cards:
     tags:
     - move
     - fragment
-    gold: 0
     heresy: 0
   kt-02:
     name: Transmutacja Złota
@@ -529,7 +521,6 @@ cards:
     - fragment
     heresy: 0
     heresy_decrease: 2
-    gold: 1
   kt-11:
     name: Medytacja Sefirot
     type: akcja
@@ -591,7 +582,6 @@ cards:
     tags:
     - hook
     - heresy
-    target_heresy: 0
   gc-05:
     name: Fałszywy Świadek
     type: reakcja
@@ -646,7 +636,6 @@ cards:
     tags:
     - hook
     - fall
-    gold: 0
   gc-10:
     name: Upadek Domu
     type: signature

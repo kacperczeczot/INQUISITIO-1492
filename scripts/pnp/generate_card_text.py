@@ -16,7 +16,7 @@ SRC_DIR = REPO_ROOT / "src"
 sys.path.insert(0, str(SRC_DIR))
 
 import yaml
-from inquisitio.config import CONFIG
+from inquisitio.config import CONFIG, GameConfig
 
 
 def declension_pl(n: int, nom_sg: str, gen_sg: str, gen_pl: str) -> str:
@@ -228,7 +228,8 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
     """
     Aktualizuje pole `effect:` w plikach markdown kart (docs/game/cards/) wygenerowanym tekstem z game_config.yaml.
     """
-    cards_config = CONFIG.cards.raw()
+    fresh_config = GameConfig()
+    cards_config = fresh_config.cards.raw()
     cards_dir = REPO_ROOT / "docs" / "game" / "cards"
     updated_files = []
 
@@ -251,52 +252,55 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
             gen_text = generate_card_effect_text(cid, cfg_card)
             curr_text = str(meta.get("effect") or "").strip()
 
-            cfg_cost = cfg_card.get("cost", meta.get("cost", 0))
-            cfg_heresy = cfg_card.get("heresy", meta.get("heresy", 0))
-            cfg_type = cfg_card.get("type", meta.get("type", "akcja"))
-            cfg_layer = cfg_card.get("layer", meta.get("layer", "A"))
+            cfg_cost = cfg_card.get("cost", 0)
+            cfg_heresy = cfg_card.get("heresy", 0)
+            cfg_type = cfg_card.get("type", "akcja")
+            cfg_layer = cfg_card.get("layer", "A")
+            cfg_gold = cfg_card.get("gold")
+            cfg_target_heresy = cfg_card.get("target_heresy")
+            cfg_agents = cfg_card.get("agents")
 
             param_changed = (
-                meta.get("cost") != cfg_cost
-                or meta.get("heresy") != cfg_heresy
-                or meta.get("type") != cfg_type
-                or meta.get("layer") != cfg_layer
+                meta.get("cost", meta.get("cost_gold", 0)) != cfg_cost
+                or meta.get("heresy", 0) != cfg_heresy
+                or meta.get("type", "akcja") != cfg_type
+                or meta.get("layer", "A") != cfg_layer
+                or meta.get("gold") != cfg_gold
+                or meta.get("target_heresy") != cfg_target_heresy
+                or meta.get("agents") != cfg_agents
                 or gen_text != curr_text
             )
 
             if param_changed:
-                meta["cost"] = cfg_cost
-                meta["heresy"] = cfg_heresy
-                meta["type"] = cfg_type
-                meta["layer"] = cfg_layer
-                meta["effect"] = gen_text
                 if not dry_run:
                     clean_meta = {}
-                    for k in ["id", "name", "faction", "type", "layer", "cost", "heresy"]:
-                        if k in meta:
-                            clean_meta[k] = meta[k]
+                    clean_meta["id"] = cid
+                    clean_meta["name"] = cfg_card.get("name", meta.get("name", cid))
+                    clean_meta["faction"] = meta.get("faction", "")
+                    clean_meta["type"] = cfg_type
+                    clean_meta["layer"] = cfg_layer
+                    clean_meta["cost"] = cfg_cost
+                    clean_meta["heresy"] = cfg_heresy
                     if "tags" in cfg_card:
                         clean_meta["tags"] = cfg_card["tags"]
                     elif meta.get("tags"):
                         clean_meta["tags"] = meta["tags"]
-                    if meta.get("effect"):
-                        clean_meta["effect"] = meta["effect"]
+                    clean_meta["effect"] = gen_text
                     if meta.get("heresy_text"):
                         clean_meta["heresy_text"] = meta["heresy_text"]
                     if meta.get("lore"):
                         clean_meta["lore"] = meta["lore"]
-                    for flag in ["target_heresy", "agents", "gold"]:
-                        if meta.get(flag):
-                            clean_meta[flag] = meta[flag]
-                    for flag in ["creates_hook", "breaks_rule", "arrest"]:
-                        val = meta.get(flag)
-                        if val:
+
+                    # SSOT synchronization for gameplay flags
+                    for flag in ["gold", "target_heresy", "agents", "creates_hook", "breaks_rule", "arrest"]:
+                        val = cfg_card.get(flag)
+                        if val is not None and val != 0 and val != False:
                             clean_meta[flag] = val
 
                     new_yaml = yaml.dump(clean_meta, allow_unicode=True, sort_keys=False)
                     new_content = f"---\n{new_yaml}---\n" + "---".join(parts[2:])
                     path.write_text(new_content, encoding="utf-8")
-                updated_files.append(f"{cid} (cost:{meta.get('cost')}, heresy:{meta.get('heresy')}): {curr_text} -> {gen_text}")
+                updated_files.append(f"{cid}: synced from game_config.yaml")
         except Exception as e:
             print(f"Error processing {path}: {e}")
 

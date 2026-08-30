@@ -3,7 +3,7 @@ id: caa-07
 name: Szantaż Bractwa
 faction: cienie-al-andalus
 type: akcja
-layer: B
+layer: A
 cost: 0
 heresy: 0
 tags:
@@ -13,6 +13,7 @@ heresy_text: Bractwo zna imiona sąsiadów lepiej niż proboszczowie.
 lore: Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni.
 creates_hook: true
 ---
+
 
 
 

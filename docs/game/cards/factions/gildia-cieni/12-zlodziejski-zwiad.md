@@ -13,9 +13,10 @@ tags:
 effect: Przesuń swojego Agenta o 1 lokację.
 lore: Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi
   pełną sakiewkę.
+gold: 2
 agents: 1
-gold: 1
 ---
+
 
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [12-zlodziejski-zwiad](12-zlodziejski-zwiad.md)

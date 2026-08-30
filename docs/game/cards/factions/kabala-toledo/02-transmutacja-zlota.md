@@ -10,8 +10,9 @@ tags:
 - gold
 effect: Zyskaj 3 złota.
 lore: Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku.
-gold: 2
+gold: 3
 ---
+
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [02-transmutacja-zlota](02-transmutacja-zlota.md)
 

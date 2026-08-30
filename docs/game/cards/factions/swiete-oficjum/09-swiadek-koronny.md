@@ -3,7 +3,7 @@ id: so-09
 name: Świadek Koronny
 faction: swiete-oficjum
 type: akcja
-layer: B
+layer: A
 cost: 1
 heresy: 2
 tags:
@@ -12,6 +12,7 @@ effect: Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.
 lore: Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.
 creates_hook: true
 ---
+
 
 
 

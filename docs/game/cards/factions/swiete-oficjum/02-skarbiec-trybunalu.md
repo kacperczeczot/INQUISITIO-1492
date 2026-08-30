@@ -12,7 +12,9 @@ effect: 'Zyskaj 2 złota. Wskaż rywala: +2 Herezja.'
 heresy_text: Konfiskata majątku skazańców to prawny obowiązek trybunału.
 lore: Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie.
 gold: 2
+target_heresy: 2
 ---
+
 
 
 

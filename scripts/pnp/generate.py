@@ -3008,10 +3008,69 @@ def generate(out_dir: Path, layer: str, bw: bool = False) -> list[Path]:
     return written
 
 
+def find_chrome_binary() -> str | None:
+    """Finds Google Chrome or Chromium executable on the system."""
+    import shutil
+
+    candidates = [
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Chromium.app/Contents/MacOS/Chromium",
+        "google-chrome",
+        "chromium",
+    ]
+    for c in candidates:
+        if Path(c).exists():
+            return c
+        w = shutil.which(c)
+        if w:
+            return w
+    return None
+
+
+def compile_all_pdfs(out_dir: Path) -> list[Path]:
+    """Compiles all prototype HTML files into PDFs using Headless Chrome."""
+    import subprocess
+
+    chrome = find_chrome_binary()
+    if not chrome:
+        return []
+
+    targets = [
+        "cards-all-print",
+        "board",
+        "player-boards",
+        "tokens",
+        "ksiega-zasad",
+        "slownik",
+        "wariant-2p",
+    ]
+    compiled = []
+    for name in targets:
+        html_file = out_dir / f"{name}.html"
+        pdf_file = out_dir / f"{name}.pdf"
+        if not html_file.exists():
+            continue
+        cmd = [
+            chrome,
+            "--headless",
+            "--disable-gpu",
+            f"--print-to-pdf={pdf_file.resolve()}",
+            "--no-pdf-header-footer",
+            f"file://{html_file.resolve()}",
+        ]
+        try:
+            subprocess.run(cmd, capture_output=True, check=False)
+            if pdf_file.exists() and pdf_file.stat().st_size > 0:
+                compiled.append(pdf_file)
+        except Exception:
+            pass
+    return compiled
+
+
 def main(argv: list[str] | None = None) -> int:
     import shutil
 
-    p = argparse.ArgumentParser(description="PnP HTML: UI-only print layout")
+    p = argparse.ArgumentParser(description="PnP HTML & PDF: UI-only print layout")
     p.add_argument(
         "--layer",
         default="C",
@@ -3029,6 +3088,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Desaturacja kart (grayscale) pod druk Xerox",
     )
+    p.add_argument(
+        "--no-pdf",
+        action="store_true",
+        help="Pomiń automatyczną kompilację plików PDF przez Headless Chrome",
+    )
     args = p.parse_args(argv)
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -3038,6 +3102,12 @@ def main(argv: list[str] | None = None) -> int:
             if legacy.is_dir():
                 shutil.rmtree(legacy)
     paths = generate(out, args.layer, bw=args.bw)
+
+    if not args.no_pdf:
+        compiled_pdfs = compile_all_pdfs(out)
+        if compiled_pdfs:
+            print(f"Compiled {len(compiled_pdfs)} PDF files in {out}")
+
     print(f"Wrote {len(paths)} files → {out}")
     for path in paths:
         print(f"  {path.relative_to(REPO_ROOT)}")

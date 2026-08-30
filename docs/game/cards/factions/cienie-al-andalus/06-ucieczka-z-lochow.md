@@ -3,7 +3,7 @@ id: caa-06
 name: Ucieczka z Lochów
 faction: cienie-al-andalus
 type: akcja
-layer: B
+layer: A
 cost: 0
 heresy: 0
 tags:
@@ -14,6 +14,7 @@ heresy_text: Klucz od strażnika, który nigdy nie służył Koronie.
 lore: Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą.
 agents: 1
 ---
+
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [06-ucieczka-z-lochow](06-ucieczka-z-lochow.md)
 

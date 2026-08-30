@@ -3,7 +3,7 @@ id: so-11
 name: Dekret Czystości Wiary
 faction: swiete-oficjum
 type: akcja
-layer: B
+layer: A
 cost: 0
 heresy: 1
 tags:
@@ -11,9 +11,10 @@ tags:
 - gold
 effect: 'Wskaż rywala: +1 Herezja. Zyskaj 1 złoto.'
 lore: Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń.
-target_heresy: 1
 gold: 1
+target_heresy: 1
 ---
+
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [11-dekret-czystosci](11-dekret-czystosci.md)
 

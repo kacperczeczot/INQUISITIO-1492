@@ -10,8 +10,9 @@ tags:
 - gold
 effect: Zyskaj 3 złota.
 lore: Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację.
-gold: 2
+gold: 3
 ---
+
 
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [02-zloto-kryjowki](02-zloto-kryjowki.md)
