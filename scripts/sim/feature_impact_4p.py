@@ -480,6 +480,7 @@ def run_full_ablation_audit_4p(
     workers: int = 10,
     skip_cards: bool = False,
     screen: bool = False,
+    force: bool = False,
 ) -> Path | None:
     """4P ablation: L1/L2/L4 mechanics always; faction + time cards unless skip_cards."""
     assert_report_sample_size(games_per_setup, screen=screen)
@@ -1031,7 +1032,7 @@ def run_full_ablation_audit_4p(
         print("\n⚠️ PRZESIEW — wynik tylko na konsoli, archiwum nie ruszane.")
         return None
 
-    report_path, arch_path = save_and_archive_report(lines, "raport_uzytecznosci_i_wplywu_4p.md")
+    report_path, arch_path = save_and_archive_report(lines, "raport_uzytecznosci_i_wplywu_4p.md", allow_overwrite=force)
     print(f"\n✅ PEŁNY RAPORT UŻYTECZNOŚCI I WPŁYWU 4P WYGENEROWANY POMYŚLNIE!")
     print(f"   Raport:    {report_path}")
     print(f"   Archiwum:  {arch_path}\n")
@@ -1058,6 +1059,11 @@ def main():
         action="store_true",
         help="Przesiew: wolno <10000 gier/setup, nie zapisuje raportu do archive/",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Zezwól na nadpisanie istniejącego raportu w archiwum",
+    )
 
     args = parser.parse_args()
     run_full_ablation_audit_4p(
@@ -1066,6 +1072,7 @@ def main():
         workers=args.workers,
         skip_cards=args.no_cards,
         screen=args.screen,
+        force=args.force,
     )
 
 

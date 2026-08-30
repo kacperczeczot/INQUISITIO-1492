@@ -10,13 +10,14 @@ tags:
 - move
 - relic
 - heresy
-effect: Przesuń swojego Agenta o 1 lokację.
+effect: Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto.
 heresy_text: Kupcy rozpoznają obce oblicze w tłumie na placu.
 lore: W gwarze targowiska najłatwiej przekazać zakazany zwój lub ostrzec braci przed
   obławą.
 gold: 1
 agents: 1
 ---
+
 
 
 

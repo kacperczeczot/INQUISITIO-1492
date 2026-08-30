@@ -96,6 +96,13 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
         # Wzorzec: move_agent + move_inquisitor (np. caa-11 Nocna Zmiana Warty)
         if data.get("move_inquisitor"):
             parts.append("Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold >= 2:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "gain_gold":
         if gold == 1:
             parts.append("Zyskaj 1 złoto.")
@@ -127,6 +134,13 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             parts.append("Przesuń Inkwizytora do lokacji ze swoim Agentem.")
         else:
             parts.append("Przesuń Inkwizytora.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold >= 2:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "arrest":
         if tloc == "same_location":
             parts.append("Aresztuj Agenta rywala w lokacji swojego Agenta.")
@@ -138,6 +152,13 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             parts.append("Aresztuj Agenta rywala w Gildii lub na Rynku.")
         else:
             parts.append("Aresztuj Agenta rywala.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold >= 2:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "interrogate":
         if tloc == "dungeon":
             parts.append("Wykonaj Przesłuchanie na aresztowanego Agenta rywala.")
@@ -145,6 +166,13 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
             parts.append("Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment.")
         else:
             parts.append("Wykonaj Przesłuchanie.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold >= 2:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "creates_hook":
         if data.get("mark_fall") and condition == "rival_has_hook_or_double_or_autodafe":
             parts.append("Oznacz Upadek wobec tego rywala.")
@@ -168,6 +196,13 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
 
         if data.get("on_refusal") == "mark_fall":
             parts.append("Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold >= 2:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "autodafe":
         parts.append("Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos.")
     elif act == "evacuate_relic":
@@ -186,8 +221,14 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
         parts.append("Zyskaj Fragment.")
         if condition == "agent_in_dungeon_or_tribunal":
             parts.append("Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto.")
+        if gold == 1:
+            parts.append("Zyskaj 1 złoto.")
+        elif gold and gold >= 2:
+            noun = declension_pl(gold, "złoto", "złota", "złota")
+            parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
     elif act == "heresy_adjust":
-        # Wzorzec: heresy_adjust — korekta własnej Herezji (np. kt-11 Medytacja Sefirot)
         decrease = data.get("heresy_decrease", 0)
         increase = data.get("heresy_increase", 0)
         if decrease and increase:
@@ -201,6 +242,8 @@ def generate_card_effect_text(cid: str, data: dict[str, Any]) -> str:
         elif gold and gold > 1:
             noun = declension_pl(gold, "złoto", "złota", "złota")
             parts.append(f"Zyskaj {gold} {noun}.")
+        if theresy:
+            parts.append(f"Wskaż rywala: +{theresy} Herezja.")
 
     # 4. Zwroty Limitów Anti-AP
     inq_lim = data.get("inquisitor_send_limit")

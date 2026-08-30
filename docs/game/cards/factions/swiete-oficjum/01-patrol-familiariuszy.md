@@ -8,13 +8,14 @@ cost: 1
 heresy: 2
 tags:
 - move
-effect: Przesuń swojego Agenta o 1 lokację.
+effect: Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota.
 heresy_text: Familiariusze obchodzą miasto pod szyldem porządku i prawa.
 lore: Cisi bracia zakonni krążą po bruku Toledo, nasłuchując każdego szeptu niezgodnego
   z dogmatem.
 gold: 2
 agents: 1
 ---
+
 
 
 

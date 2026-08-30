@@ -10,13 +10,14 @@ tags:
 - move
 - inquisitor
 effect: 'Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji
-  docelowej: przesuń go o 1 lokację.'
+  docelowej: przesuń go o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.'
 lore: Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w labiryncie
   nocy.
 gold: 1
 target_heresy: 1
 agents: 1
 ---
+
 
 
 

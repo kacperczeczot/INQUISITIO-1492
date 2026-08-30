@@ -9,12 +9,14 @@ heresy: 1
 tags:
 - fragment
 - heresy
-effect: 'Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment.'
+effect: 'Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment.
+  Zyskaj 1 złoto.'
 heresy_text: Pergamin Salomona brudzi palce i sumienie.
 lore: Odnaleziony fragment starożytnego Kodeksu przybliża nas do poznania ostatecznej
   tajemnicy stworzenia.
 gold: 1
 ---
+
 
 
 

@@ -8,13 +8,14 @@ cost: 1
 heresy: 1
 tags:
 - move
-effect: Przesuń swojego Agenta o 1 lokację.
+effect: Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto.
 heresy_text: Strażnik zna cenę milczenia lepiej niż modlitwy.
 lore: Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym
   na całą noc.
 gold: 1
 agents: 1
 ---
+
 
 
 

@@ -35,7 +35,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | Familiariusze obchodzą miasto pod szyldem porządku i prawa. |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota. |
 | `lore` | Cisi bracia zakonni krążą po bruku Toledo, nasłuchując każdego szeptu niezgodnego z dogmatem. |
 | `tags` | move |
 | `status` | prototyp |
@@ -120,7 +120,7 @@ Kart: **12**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie. |
-| `effect` | Aresztuj Agenta rywala w lokacji swojego Agenta. |
+| `effect` | Aresztuj Agenta rywala w lokacji swojego Agenta. Wskaż rywala: +1 Herezja. |
 | `lore` | Kute żelazem bramy trybunalskich kazamatów zamykają się za każdym, kogo dosięgnie oskarżenie. |
 | `tags` | arrest |
 | `status` | prototyp |
@@ -222,7 +222,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | — |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed oblicze sprawiedliwości. |
 | `tags` | move, gold |
 | `status` | prototyp |
@@ -279,7 +279,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Kupcy rozpoznają obce oblicze w tłumie na placu. |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. |
 | `lore` | W gwarze targowiska najłatwiej przekazać zakazany zwój lub ostrzec braci przed obławą. |
 | `tags` | move, relic, heresy |
 | `status` | prototyp |
@@ -415,7 +415,7 @@ Kart: **12**
 | `cost_gold` | 2 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w labiryncie nocy. |
 | `tags` | move, inquisitor |
 | `status` | prototyp |
@@ -625,7 +625,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Wskaż rywala: +1 Herezja. |
 | `lore` | Złote pierścienie i listy polecające otwierają przed naszymi ludźmi każde drzwi w Toledo. |
 | `tags` | move, gold |
 | `status` | prototyp |
@@ -801,7 +801,7 @@ Kart: **12**
 | `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
-| `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. |
+| `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. Zyskaj 1 złoto. |
 | `lore` | Odnaleziony fragment starożytnego Kodeksu przybliża nas do poznania ostatecznej tajemnicy stworzenia. |
 | `tags` | fragment, heresy |
 | `status` | prototyp |
@@ -835,7 +835,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. |
+| `effect` | Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony w oczach świata. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
@@ -875,7 +875,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 1 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. |
 | `lore` | Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym na całą noc. |
 | `tags` | move |
 | `status` | prototyp |
@@ -1062,7 +1062,7 @@ Kart: **12**
 | `cost_gold` | 1 |
 | `heresy` | 2 |
 | `heresy_text` | — |
-| `effect` | Przesuń swojego Agenta o 1 lokację. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota. |
 | `lore` | Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi pełną sakiewkę. |
 | `tags` | move, gold, heresy |
 | `status` | prototyp |

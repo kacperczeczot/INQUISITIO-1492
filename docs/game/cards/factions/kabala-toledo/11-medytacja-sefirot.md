@@ -9,12 +9,13 @@ heresy: 0
 tags:
 - gold
 - heresy
-effect: Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto.
+effect: 'Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.'
 lore: Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony w
   oczach świata.
 gold: 1
 target_heresy: 1
 ---
+
 
 
 

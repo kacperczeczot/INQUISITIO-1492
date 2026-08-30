@@ -8,13 +8,14 @@ cost: 2
 heresy: 0
 tags:
 - arrest
-effect: Aresztuj Agenta rywala w lokacji swojego Agenta.
+effect: 'Aresztuj Agenta rywala w lokacji swojego Agenta. Wskaż rywala: +1 Herezja.'
 heresy_text: Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie.
 lore: Kute żelazem bramy trybunalskich kazamatów zamykają się za każdym, kogo dosięgnie
   oskarżenie.
 target_heresy: 1
 arrest: true
 ---
+
 
 
 

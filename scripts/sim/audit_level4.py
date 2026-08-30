@@ -128,6 +128,7 @@ def main():
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4, help="Number of parallel worker processes")
     parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")
+    parser.add_argument("--force", action="store_true", help="Zezwól na nadpisanie istniejącego raportu w archiwum")
     args = parser.parse_args()
 
     games_per_setup = args.games
@@ -273,7 +274,7 @@ def main():
     ])
 
     default_report_name = f"audyt_level4_raport_{args.players}p.md" if args.players else "audyt_level4_raport.md"
-    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output)
+    out_path, archive_path = save_and_archive_report(report_lines, default_report_name, args.output, allow_overwrite=args.force)
 
     print("========================================================")
     print(f"AUDYT POZIOMU 4 ZAKOŃCZONY W {elapsed}s!")

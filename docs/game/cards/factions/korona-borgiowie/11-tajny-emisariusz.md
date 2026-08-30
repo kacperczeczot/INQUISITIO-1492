@@ -9,12 +9,13 @@ heresy: 0
 tags:
 - move
 - gold
-effect: Przesuń swojego Agenta o 1 lokację.
+effect: 'Przesuń swojego Agenta o 1 lokację. Wskaż rywala: +1 Herezja.'
 lore: Złote pierścienie i listy polecające otwierają przed naszymi ludźmi każde drzwi
   w Toledo.
 target_heresy: 1
 agents: 1
 ---
+
 
 
 

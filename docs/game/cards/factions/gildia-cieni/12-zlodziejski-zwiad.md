@@ -10,12 +10,13 @@ tags:
 - move
 - gold
 - heresy
-effect: Przesuń swojego Agenta o 1 lokację.
+effect: Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota.
 lore: Dla zwinnego kieszonkowca nocny spacer wąskimi uliczkami Toledo zawsze przynosi
   pełną sakiewkę.
 gold: 2
 agents: 1
 ---
+
 
 
 
