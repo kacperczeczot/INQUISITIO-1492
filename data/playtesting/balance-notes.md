@@ -94,6 +94,17 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.142 (2026-08-30) — Pełna Sanacja i Oczyszczenie Pól-Widm (Ghost Fields) Kart
+- **Modyfikacja:**
+  - Oczyszczenie martwych pól `gold: 0`, `target_heresy: 0`, `agents: 0` z kart: `caa-01`, `gc-04`, `gc-09`, `kb-01`, `kb-04`, `kb-09`, `kb-10`, `kb-11`, `kt-01`, `kt-10`.
+  - Usunięcie pasożytniczych parametrów `gold: 2` i `target_heresy: 0` z finiszera `kb-10` (*Pieczęć Korony*) oraz `gold: 1` z `kt-10` (*Pieczęć Salomona*).
+  - Wdrożenie automatycznej kompilacji PDF (`HeadlessChrome`) w `scripts/pnp/generate.py`.
+  - Naprawienie błędu w `scripts/pnp/generate_card_text.py` — od teraz wszystkie pola (`cost`, `heresy`, `gold`, `target_heresy`, `agents`) są bezwzględnie synchronizowane z SSOT do plików Markdown i KATALOG.md.
+- **Wynik Globalny (16 setupów):** **77.1 pkt** (próba 160 000 partii)
+- **Balans 4P:** **89.9 pkt** (`4p-core`: 96.4, `4p-no-korona`: 97.8, `4p-no-oficjum`: 92.3)
+- **Balans 5P:** **80.2 pkt**
+- **Balans 3P:** **70.4 pkt**
+
 ### 🌐 Patch v1.0-alpha.141 (2026-08-30) — Global Auditor: Karta `caa-03` (Cień na Rynku): `cost` → `1` + Karta `caa-03` (Cień na Rynku): `gold` → `1` (Zysk Global Δ +0.1 pkt)
 - **Modyfikacja:** `BAZA__L3_CAA-03_C1_G1` -> Karta `caa-03` (Cień na Rynku): `cost` → `1` + Karta `caa-03` (Cień na Rynku): `gold` → `1`
 - **Wynik Globalny:** 81.6 → **81.7**
