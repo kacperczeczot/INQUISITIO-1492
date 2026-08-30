@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import copy
 import math
+import multiprocessing
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
@@ -85,11 +86,21 @@ class CandidateStats:
     def params(self) -> dict:
         return self.cand_tuple[2]
 
+    def get_primary_score(self, metric: str = "4p") -> float:
+        if metric == "global":
+            return getattr(self, "score_global", 0.0)
+        return self.score_4p_balance
+
+    def get_ci_95(self, metric: str = "4p") -> tuple[float, float]:
+        """Returns [Lower 95% Bound, Upper 95% Bound] for target metric."""
+        margin = 1.96 * self.score_se
+        score = self.get_primary_score(metric)
+        return (round(score - margin, 2), round(score + margin, 2))
+
     @property
     def ci_95(self) -> tuple[float, float]:
-        """Returns [Lower 95% Bound, Upper 95% Bound]."""
-        margin = 1.96 * self.score_se
-        return (round(self.score_4p_balance - margin, 2), round(self.score_4p_balance + margin, 2))
+        """Returns [Lower 95% Bound, Upper 95% Bound] (default 4p for backwards compat)."""
+        return self.get_ci_95("4p")
 
     def update_metrics(self) -> None:
         """Recomputes all balance, SE, vitality, and telemetry metrics from combined summaries."""
@@ -123,14 +134,12 @@ class CandidateStats:
         self.setup_scores_balance = setup_scores_balance
         self.setup_shares = setup_shares
         
-        # Obliczenia stare dla zgodności
         self.score_4p = round(sum(setup_scores.values()) / n_s, 1) if n_s else 0.0
         self.score_4p_balance = (
             round(sum(setup_scores_balance.values()) / n_s, 1) if n_s else 0.0
         )
         self.score_se = round((math.sqrt(sum(s ** 2 for s in setup_ses)) / n_s), 3) if n_s else 0.0
 
-        # Nowe obliczenia globalne
         from inquisitio.runner.scoring import calculate_category_scores, calculate_global_score
         cat_scores = calculate_category_scores(summaries)
         self.score_global = calculate_global_score(cat_scores)
@@ -168,13 +177,12 @@ class CandidateStats:
             "setup_scores": self.setup_scores,
             "setup_scores_balance": self.setup_scores_balance,
             "setup_shares": self.setup_shares,
-            "min_setup": (min_setup_name, min_setup_score),
             "min_balance": self.min_balance,
             "min_balance_setup": self.min_balance_setup,
+            "min_setup": min_setup_name,
+            "min_setup_score": min_setup_score,
             "vitality_penalty": self.vitality_penalty,
             "vitality_warnings": self.vitality_warnings,
-            "dt": self.dt,
-            "total_games_per_setup": self.total_games_per_setup,
             "eras_avg": self.eras_avg,
             "eras_min": self.eras_min,
             "eras_max": self.eras_max,
@@ -183,49 +191,48 @@ class CandidateStats:
             "autodafe_avg": self.autodafe_avg,
             "acc_avg": self.acc_avg,
             "gold_avg": self.gold_avg,
+            "total_games": self.total_games_per_setup,
+            "dt": self.dt,
         }
 
 
+def _default_rank_key(res: dict) -> tuple:
+    return (-res.get("score_4p_balance", 0.0), -res.get("min_balance", 0.0))
+
+
+def _global_rank_key(res: dict) -> tuple:
+    return (-res.get("score_global", 0.0), -res.get("min_balance", 0.0))
+
+
 def _simulate_flat_tasks_pool(
-    task_list: list[tuple[int, str, int, int, str, dict | None, int]],
-    workers: int,
-    label: str = "Testy Symulacji",
+    tasks: list[tuple[int, str, int, int, str, dict | None, int]],
+    workers: int = 10,
+    label: str = "Symulacja",
 ) -> list[tuple[int, BatchSummary]]:
-    """Executes a flat list of setup micro-batches in parallel across all CPU cores."""
-    total = len(task_list)
+    """Runs flat list of micro-batch tasks across workers with clean single-line progress indicator."""
+    total = len(tasks)
     if total == 0:
         return []
 
-    if workers <= 1 or total < 50:
-        results = []
-        t0 = time.time()
-        step_freq = max(1, total // 10)
-        for idx, t in enumerate(task_list, 1):
-            res = _run_single_batch_task(t)
-            results.append(res)
-            if idx % step_freq == 0 or idx == total:
-                elapsed = time.time() - t0
-                rate = idx / elapsed if elapsed > 0 else 0
-                eta_s = (total - idx) / rate if rate > 0 else 0
-                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:4d}/{total:4d}] ({idx*100.0/total:5.1f}%) | {rate:5.1f} bat/s | ETA: {eta_str:<8s}\n")
-                sys.stdout.flush()
-        sys.stdout.write(f"   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
-        return results
-
     results = []
     t0 = time.time()
-    chunk_size = max(50, min(2000, total // (workers * 8)))
-    step_freq = max(100, total // 100)
-    with ProcessPoolExecutor(max_workers=workers) as executor:
-        for idx, res in enumerate(executor.map(_run_single_batch_task, task_list, chunksize=chunk_size), 1):
-            results.append(res)
-            if idx % step_freq == 0 or idx == total:
+
+    with multiprocessing.Pool(processes=workers) as pool:
+        for done_count, (task_idx, summary) in enumerate(
+            pool.imap_unordered(_run_single_batch_task, tasks, chunksize=max(1, total // (workers * 8))),
+            1,
+        ):
+            results.append((task_idx, summary))
+            if done_count == total or done_count % max(1, total // 100) == 0:
+                pct = done_count / total * 100.0
                 elapsed = time.time() - t0
-                rate = idx / elapsed if elapsed > 0 else 0
-                eta_s = (total - idx) / rate if rate > 0 else 0
-                eta_str = f"{int(eta_s // 60)}m {int(eta_s % 60):02d}s" if eta_s >= 60 else f"{int(eta_s)}s"
-                sys.stdout.write(f"\r⏳ [{label}] [{idx:7d}/{total:7d}] ({idx*100.0/total:5.1f}%) | {rate:5.1f} bat/s | ETA: {eta_str:<8s}")
+                speed = done_count / elapsed if elapsed > 0 else 0
+                eta = (total - done_count) / speed if speed > 0 else 0
+                mins, secs = divmod(int(eta), 60)
+                sys.stdout.write(
+                    f"\r⏳ [{label}] [{done_count:>7}/{total:>7}] ({pct:>5.1f}%) | "
+                    f"{speed:>5.1f} bat/s | ETA: {mins:02d}m {secs:02d}s "
+                )
                 sys.stdout.flush()
 
     sys.stdout.write(f"\n   ✔ Ukończono {total} zadań mikro-batchy w {round(time.time() - t0, 1)}s.\n")
@@ -244,6 +251,7 @@ class AdaptiveSequentialRacer:
         epsilon_indiff: float = 0.15,
         workers: int = 10,
         min_delta: float = 0.05,
+        target_metric: str = "4p",
     ):
         self.setups = setups
         self.batch_step = batch_step
@@ -252,6 +260,7 @@ class AdaptiveSequentialRacer:
         self.epsilon_indiff = epsilon_indiff
         self.workers = workers
         self.min_delta = min_delta
+        self.target_metric = target_metric
 
     def run_race(
         self,
@@ -274,7 +283,6 @@ class AdaptiveSequentialRacer:
             active_candidates = [CandidateStats(c, delta_tuple=c) for c in candidate_pool]
         all_candidates = list(active_candidates)
 
-        # ─── Optimal 3-Rung Geometry (x4 scale: [400, 1600, 6400]) ──────────
         rungs = []
         r = max(400, self.min_games)
         while r < self.max_games:
@@ -288,7 +296,7 @@ class AdaptiveSequentialRacer:
 
         print(
             f"\n🏁 [{label_prefix}] Pula: {len(active_candidates)} kandydatów | "
-            f"Szczeble: {rungs} gier/setup (95% CI Statistical Pruning)"
+            f"Szczeble: {rungs} gier/setup (Metryka: {self.target_metric.upper()}, 95% CI Statistical Pruning)"
         )
 
         for step_idx, target_games in enumerate(rungs, 1):
@@ -331,23 +339,20 @@ class AdaptiveSequentialRacer:
                 cand_obj.update_metrics()
                 cand_obj.dt = round(time.time() - t_start, 2)
 
-            base_lb, base_ub = base_stats.ci_95
+            base_lb, base_ub = base_stats.get_ci_95(self.target_metric)
+            base_score = base_stats.get_primary_score(self.target_metric)
 
             # 4. Pure Statistical CI Pruning
             active_survivors = [c for c in active_candidates if not c.is_pruned]
             if active_survivors:
-                best_score = max(c.score_4p_balance for c in active_survivors)
-                floor_lb = (target_floor_score + self.min_delta - 2.5 * base_stats.score_se) if target_floor_score is not None else (base_lb + self.min_delta)
-                ref_lb = max(base_lb + self.min_delta, floor_lb, best_score - 2.5 * base_stats.score_se)
-
                 for c in active_survivors:
-                    c_lb, c_ub = c.ci_95
+                    c_lb, c_ub = c.get_ci_95(self.target_metric)
 
-                    # A. Telemetry & Vitality hard vetoes
-                    if curr_games >= 200:
-                        if c.vitality_penalty > 0.0 and base_stats.vitality_penalty == 0.0:
+                    # A. Telemetry & Vitality hard vetoes (only on large samples >= 1600 games)
+                    if curr_games >= 1600:
+                        if c.vitality_penalty > 0.10:
                             c.is_pruned = True
-                            c.prune_reason = f"Weto witalności (kara {c.vitality_penalty:.2f})"
+                            c.prune_reason = f"Weto witalności (kara {c.vitality_penalty:.2f} > 0.10)"
                             continue
                         if c.deadlock_pct > 8.0:
                             c.is_pruned = True
@@ -358,9 +363,10 @@ class AdaptiveSequentialRacer:
                             c.prune_reason = f"Katastrofa biedy ({c.poverty_pct:.1f}% > 35%)"
                             continue
 
-                    # B. Pure Statistical Upper-Bound Pruning vs Base & Leader (95% CI)
-                    if curr_games >= 200:
-                        if c_ub < ref_lb - 0.05:
+                    # B. Pure Statistical Upper-Bound Pruning vs Base (95% CI)
+                    if curr_games >= 400:
+                        ref_lb = base_lb + self.min_delta
+                        if c_ub < ref_lb - 0.20:
                             c.is_pruned = True
                             c.prune_reason = f"Brak statystycznych szans na zysk (UB {c_ub:.2f} < Wymagany LB {ref_lb:.2f})"
                             continue
@@ -368,15 +374,16 @@ class AdaptiveSequentialRacer:
             active_survivors = [c for c in active_candidates if not c.is_pruned]
             pruned_count = len(all_candidates) - len(active_survivors)
             print(
-                f"   📊 [Status N={curr_games}] Baza: {base_stats.score_4p_balance:.1f} pkt (±{base_stats.score_se:.2f}) | "
+                f"   📊 [Status N={curr_games}] Baza ({self.target_metric.upper()}): {base_score:.1f} pkt (±{base_stats.score_se:.2f}) | "
                 f"Aktywnych: {len(active_survivors)}/{len(all_candidates)} (Odrzucono: {pruned_count})"
             )
 
             # 5. Convergence & Early Stop Check
             if curr_games >= self.min_games and active_survivors:
-                active_survivors.sort(key=lambda x: rank_key(x.to_result_dict()))
+                r_key = _global_rank_key if self.target_metric == "global" else _default_rank_key
+                active_survivors.sort(key=lambda x: r_key(x.to_result_dict()))
                 leader = active_survivors[0]
-                l_lb, l_ub = leader.ci_95
+                l_lb, l_ub = leader.get_ci_95(self.target_metric)
 
                 if l_ub < base_lb:
                     print(f"   🛑 Lider ({leader.id}) jest statystycznie gorszy od Bazy (UB {l_ub:.2f} < Base LB {base_lb:.2f}). Kończę wyścig.")
@@ -389,7 +396,7 @@ class AdaptiveSequentialRacer:
 
                 elif len(active_survivors) >= 2:
                     runner_up = active_survivors[1]
-                    r_lb, r_ub = runner_up.ci_95
+                    r_lb, r_ub = runner_up.get_ci_95(self.target_metric)
 
                     if l_lb > r_ub and l_lb > base_ub:
                         print(
@@ -398,7 +405,7 @@ class AdaptiveSequentialRacer:
                         )
                         break
 
-                    score_gap = abs(leader.score_4p_balance - runner_up.score_4p_balance)
+                    score_gap = abs(leader.get_primary_score(self.target_metric) - runner_up.get_primary_score(self.target_metric))
                     se_diff = math.sqrt(leader.score_se ** 2 + runner_up.score_se ** 2)
 
                     if score_gap < self.epsilon_indiff and se_diff < self.epsilon_indiff and l_lb > base_ub:

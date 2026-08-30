@@ -164,6 +164,7 @@ def main():
         epsilon_indiff=0.15,
         workers=10,
         min_delta=0.05,
+        target_metric="global",
     )
     
     current_base_cand = ("BAZA", "Konfiguracja Startowa", {})
@@ -244,7 +245,7 @@ def main():
                     cand_dict_10k = _run_full_diagnostic(delta_params, games_per_setup=10000, seed=42)
                     
                     delta_10k = cand_dict_10k['score_global'] - base_dict_10k['score_global']
-                    if delta_10k > 0.05:
+                    if delta_10k >= args.min_delta:
                         print(f"   ✅ [CERTYFIKACJA 10K ZDANA] Zysk: +{delta_10k:.2f} pkt!")
                         best_accepted_cand = cand_stat
                         best_decision = decision
