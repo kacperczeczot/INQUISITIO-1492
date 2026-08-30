@@ -209,6 +209,54 @@ do odrzuconych pomysłów (np. przywracał N=100 po dwukrotnym usunięciu).
 
 ---
 
+## §13. ZAKAZ ŁATANIA OBJAWÓW ZAMIAST PRZYCZYN — ZASADA ROOT CAUSE FIRST
+
+**Problem, który rozwiązuje:** Agent wielokrotnie modyfikował progi witalności, bramki
+akceptacji i scoring jako pierwszą reakcję na "audytor nie wdraża zmian", zamiast
+zbadać dlaczego. W rezultacie oscylował między "poluzuj bramkę" → "audytor oszalał"
+→ "przywróć bramkę" → "audytor znów zablokowany" w nieskończonej pętli.
+
+**Zasada:**
+- Jeśli audytor nie wdraża zmian mimo tragicznych wyników balansu, agent
+  NIE MOŻE modyfikować progów akceptacji (`scoring.py`, `canon_accept.py`,
+  witalność) jako PIERWSZEJ reakcji.
+- Pierwszym krokiem MUSI być analiza root cause w kolejności:
+  1. **Fizyka gry:** Czy warunki zwycięstwa są matematycznie wykonalne?
+     (np. condemns=3 przy 2 rywałach = NIEMOŻLIWE)
+  2. **Bug w silniku:** Czy symulacja testuje to, co myśli że testuje?
+     (np. offset vs wartość bezwzględna)
+  3. **Bug w konfiguracji:** Czy config jest spójny?
+     (np. dict zamiast int po pierwszym patchu)
+  4. **Dopiero na końcu:** Czy progi akceptacji/witalności są faktycznie
+     zbyt restrykcyjne?
+- Modyfikacja progów jest dopuszczalna WYŁĄCZNIE po udowodnieniu (z danymi!),
+  że konfiguracja jest prawidłowa, silnik działa poprawnie, a problem leży
+  FAKTYCZNIE w progu.
+
+---
+
+## §14. OBOWIĄZEK TESTOWANIA NOWYCH SKRYPTÓW PRZED PREZENTACJĄ
+
+**Problem, który rozwiązuje:** Agent napisał od zera `audytor_globalny.py`, dumnie
+go zaprezentował jako "gotowy do uruchomienia", po czym skrypt crashował 3× z rzędu
+na nieistniejących argumentach API (`as_dict=True`, `target_setups`), został przepisany
+od nowa i crashował dalej.
+
+**Zasada:**
+- Nowy skrypt NIE MOŻE być prezentowany użytkownikowi jako "gotowy do uruchomienia"
+  bez wcześniejszego:
+  1. **Uruchomienia** go przynajmniej raz (dry-run).
+  2. Potwierdzenia, że przechodzi przez **inicjalizację** bez crashy.
+  3. **Weryfikacji API:** Sprawdzenia (grep/view) że KAŻDA wywoływana
+     funkcja/klasa zewnętrzna (`load_all_cards()`, `AdaptiveSequentialRacer()`)
+     akceptuje przekazywane argumenty w bieżącej wersji kodu.
+- Jeśli agent tworzy skrypt korzystający z istniejącego API, MUSI NAJPIERW
+  przeczytać sygnatury wywoływanych funkcji, a nie zgadywać parametry.
+- Agent MUSI wyraźnie napisać: "Uruchomiłem dry-run, wynik: [...]"
+  zamiast "Kod jest gotowy, śmiało uruchamiaj".
+
+---
+
 ## PODSUMOWANIE PRIORYTETÓW
 
 1. **Mierz, nie deklaruj.** Twierdzenie = dowód z testu, nie intencja.
@@ -223,3 +271,5 @@ do odrzuconych pomysłów (np. przywracał N=100 po dwukrotnym usunięciu).
 10. **Projektuj przed implementacją.** Pełny plan → zatwierdzenie → dopiero commit.
 11. **Pokaż obliczenia.** Czas = wzór, nie "optymistyczne przeczucie".
 12. **Prowadź rejestr.** Zamknięte decyzje = nie do ruszania bez jawnej zgody.
+13. **Szukaj przyczyny, nie objawu.** Audytor nie wdraża? Sprawdź fizykę gry → bug silnika → config → dopiero progi.
+14. **Testuj przed prezentacją.** Nowy skrypt = dry-run + weryfikacja API, nie "śmiało uruchamiaj".

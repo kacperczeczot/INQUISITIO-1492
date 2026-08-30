@@ -118,3 +118,38 @@ Przed przedstawieniem jakiejkolwiek propozycji zmiany parametrów zwycięstwa lu
 - **Obowiązek weryfikacji tożsamości karty:** Przy reworku (zmianie mechaniki, kosztu, herezji lub roli karty) asystent ma bezwzględny obowiązek zweryfikować spójność nazwy, opisu mechanicznego oraz tekstu fabularnego (lore).
 - **Zakaz pozostawiania nieaktualnych opisów:** Jeżeli karta traci herezję lub zyskuje inną funkcję, tekst zasad, `heresy_text` oraz cytat muszą zostać natychmiast zaktualizowane we wszystkich plikach (`game_config.yaml`, `KATALOG.md`, plik markdown w `docs/game/cards/factions/...`, `card-editor.html`).
 
+---
+
+## 17. Bezwzględny Zakaz Zastępowania Narzędzi (No "cat << EOF" Ban) i Zakaz Archiwalnych "Hotfixów"
+- **Zero tolerancji dla `cat << EOF`:** Asystentowi **KATEGORYCZNIE** zabrania się używania komend powłoki `cat` w terminalu do tworzenia plików testowych (`scratch.py`) lub dopisywania kodu. Do operacji na plikach należy **zawsze i bez wyjątku** używać natywnego narzędzia `write_to_file`. To złamanie zaufania IDE i logiki systemu!
+- **Zakaz nadpisywania (Hotfix) istniejących archiwów:** Jeżeli wygenerowany w przeszłości, zapieczętowany raport (np. `archive/v1.0-alpha.133/raport_telemetrii.md`) zawiera błędy wskaźników (np. zera z powodu błędu silnika C++), asystentowi **zabrania się** samodzielnego regenerowania i cichego nadpisywania tego pliku. Taki błąd należy naprawić w kodzie, zweryfikować na plikach tymczasowych (w folderze `scratch/`), a oficjalny raport wygenerować **dopiero przy nowym, legalnym patchu** (np. `v1.0-alpha.134`). Archiwum to relikt historyczny, a nie brudnopis do poprawek błędów.
+
+---
+
+## 18. Obowiązkowy Audyt Fizyki Gry (Game Physics Sanity Check)
+- **Przed JAKĄKOLWIEK próbą optymalizacji** parametrów zwycięstwa dla danego formatu graczy, asystent **MUSI** zweryfikować **MATEMATYCZNĄ WYKONALNOŚĆ** każdej mechaniki.
+- **Przykład krytyczny:** Warunek zwycięstwa wymagający skazania `N` **unikalnych** rywali jest fizycznie niewykonalny, gdy przy stole jest `< N` rywali (np. `condemns: 3` w grze 3-osobowej, gdzie jest tylko 2 rywali). To jest błąd konfiguracji, **NIE** problem algorytmu optymalizacyjnego, scoringu ani witalności.
+- **Obowiązek natychmiastowego zgłoszenia:** Znalezienie takiej niewykonalności **MUSI** być natychmiast zgłoszone użytkownikowi jako przyczyna źródłowa (root cause), zamiast godzinami szukać obejść w `scoring.py`, `canon_accept.py` czy modyfikować progi witalności.
+- **Checklist fizyki gry (przed optymalizacją):**
+  1. Czy warunki zwycięstwa są matematycznie osiągalne dla danej liczby graczy?
+  2. Czy talia fizycznie zawiera wystarczającą liczbę kart potrzebnych do spełnienia warunku?
+  3. Czy wymagana liczba interakcji (np. skazań, oskarżeń) nie przekracza liczby rywali przy stole?
+
+---
+
+## 19. Zakaz Obrony Absurdalnych Wyników Algorytmu (No Bullshit Rationalization)
+- **Jeśli optymalizator wygeneruje wynik drastycznie odbiegający od rozsądku** (np. skok parametru o >100%, pompowanie wartości w każdej iteracji, wartości kompletnie oderwane od designu gry), asystent **MUSI natychmiast** potraktować to jako **SYMPTOM BUGU**, nie jako "fascynujące zjawisko matematyczne".
+- **ZABRANIA SIĘ** pisania esejów, elaboratów i rozwlekłych uzasadnień broniących absurdalnych decyzji algorytmu (np. "18 stosów to piękno matematyki", "żaden człowiek by na to nie wpadł"). Prawidłowa reakcja to: **STOP → diagnoza → sprawdź czy to bug → napraw → dopiero potem raportuj**.
+- **Zasada 3x:** Jeśli parametr zmienia się w tym samym kierunku przez 3 kolejne iteracje audytora, asystent **MUSI** zatrzymać proces i zweryfikować, czy silnik faktycznie testuje to, co zapisuje (rozbieżność offset vs wartość bezwzględna).
+
+---
+
+## 20. Wymóg Pełnego Dry-Run Przed Deklaracją Gotowości (Mandatory Pre-Flight Check)
+- **Przed napisaniem** „gotowe", „naprawione", „możesz uruchamiać", „sprawne", „w 100%" asystent **MUSI**:
+  1. **Uruchomić** skrypt/proces z argumentami identycznymi jak te, które użyje użytkownik.
+  2. **POCZEKAĆ** na zakończenie lub co najmniej przejście przez fazę inicjalizacji i pierwszy cykl logiki (nie tylko import modułów).
+  3. **Zweryfikować** brak crashy, `TypeError`, `KeyError`, `UnboundLocalError` i innych wyjątków.
+  4. **Dopiero po potwierdzeniu** braku błędów — napisać potwierdzenie, cytując konkretny wynik testu (np. "test przeszedł, pierwsze 21 batchy ukończone bez błędów").
+- **ZABRANIA SIĘ** deklaracji gotowości wyłącznie na podstawie edycji kodu ("zmieniłem linijkę, powinno działać"). To prowadzi do niekończącej się pętli crash → fix → "gotowe" → crash.
+- **Kara za złamanie:** Jeśli po deklaracji "gotowe" skrypt crashuje w ciągu pierwszych 30 sekund działania, asystent **MUSI** w następnej wiadomości wprost przyznać: "Złamałem zasadę §20 — zadeklarowałem gotowość bez dry-runa" i natychmiast przeprowadzić pełny audyt (§2 z antidote).
+
