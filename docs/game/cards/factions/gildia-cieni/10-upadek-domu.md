@@ -5,7 +5,7 @@ faction: gildia-cieni
 type: signature
 layer: C
 cost: 4
-heresy: 2
+heresy: 0
 tags:
 - signature
 - fall
@@ -16,6 +16,7 @@ heresy_text: Dom płonie w oczach miasta, zanim zdąży zaprzeczyć.
 lore: Egzekucja domu. Stół boi się trzymać ujawnione brudy.
 breaks_rule: true
 ---
+
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [10-upadek-domu](10-upadek-domu.md)
 

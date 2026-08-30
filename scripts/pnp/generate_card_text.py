@@ -233,7 +233,7 @@ def sync_card_markdowns(dry_run: bool = True) -> list[str]:
     updated_files = []
 
     for path in cards_dir.rglob("*.md"):
-        if path.name.upper() in ("SCHEMA.MD", "KATALOG.MD", "README.MD"):
+        if path.name.upper() in ("SCHEMA.MD", "KATALOG.MD", "README.MD", "PUNKTY_ODNIESIENIA_GENEZY_TALII.MD", "GENEZA_TALII.MD"):
             continue
         content = path.read_text(encoding="utf-8")
         parts = content.split("---")

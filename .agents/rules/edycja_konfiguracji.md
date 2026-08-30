@@ -46,6 +46,18 @@ Każdy model AI / asystent pracujący w tym repozytorium **MUSI** bezwzględnie 
 ## 5. Obowiązkowa Weryfikacja Testami
 * Przed zakończeniem zadania należy uruchomić pełny zestaw testów:
   ```bash
-  src/.venv/bin/pytest
+  python3 -m pytest
+  python3 scripts/verify_hygiene.py
   ```
 * Wszystkie testy muszą zakończyć się statusem **PASSED** (brak błędów i regresji).
+
+---
+
+## 6. Obowiązkowy Punkt Odniesienia do Genezy Kart (Baseline Genesis Reference)
+* **Punkt odniesienia:** Przed każdą edycją kart należy sprawdzić ich oryginalny zamysł w [docs/game/cards/PUNKTY_ODNIESIENIA_GENEZY_TALII.md](file:///Users/kacper/Documents/GitHub/INQUISITIO-1492/docs/game/cards/PUNKTY_ODNIESIENIA_GENEZY_TALII.md) oraz [data/playtesting/baseline_deck_genesis.yaml](file:///Users/kacper/Documents/GitHub/INQUISITIO-1492/data/playtesting/baseline_deck_genesis.yaml).
+* **Narzędzie diffa:** Do porównywania bieżących kart z bazą genezy służy narzędzie:
+  ```bash
+  python3 scripts/sim/compare_with_genesis.py
+  ```
+* **Twarde limity kart:** Wszelkie zmiany parametrów kart muszą bezwzględnie mieścić się w sztywnych granicach: `cost: 0..5`, `gold: 0..3`, `heresy: 0..3`, `target_heresy: 0..2`, `agents: 0..2`.
+

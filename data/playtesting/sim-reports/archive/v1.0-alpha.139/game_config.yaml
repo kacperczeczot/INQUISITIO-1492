@@ -1,4 +1,4 @@
-version: v1.0-alpha.140
+version: v1.0-alpha.139
 date: '2026-08-30'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -650,7 +650,7 @@ cards:
     name: Upadek Domu
     type: signature
     cost: 4
-    heresy: 0
+    heresy: 2
     mark_fall: true
     action: creates_hook
     condition: rival_has_hook_or_double_or_autodafe

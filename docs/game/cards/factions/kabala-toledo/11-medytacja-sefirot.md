@@ -4,7 +4,7 @@ name: Medytacja Sefirot
 faction: kabala-toledo
 type: akcja
 layer: B
-cost: 2
+cost: 1
 heresy: 0
 tags:
 - gold
@@ -13,6 +13,7 @@ effect: Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto.
 lore: Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony.
 gold: 1
 ---
+
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [11-medytacja-sefirot](11-medytacja-sefirot.md)
 

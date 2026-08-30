@@ -94,6 +94,27 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🌐 Patch v1.0-alpha.140 (2026-08-30) — Global Auditor: Karta `gc-10` (Upadek Domu): `heresy` → `0` (Zysk Global Δ +5.2 pkt)
+- **Modyfikacja:** `BAZA__L3_GC-10_HERESY_MINUS2` -> Karta `gc-10` (Upadek Domu): `heresy` → `0`
+- **Wynik Globalny:** 76.4 → **81.6**
+- **Balans 4P:** 84.1 → 90.7
+- **Balans 3P:** 74.7 → 71.2
+- **Balans 5P:** 70.5 → 83.0
+
+### 🌐 Patch v1.0-alpha.139 (2026-08-30) — Global Auditor: Karta `kt-11` (Medytacja Sefirot): `cost` → `1` + Karta `kt-11` (Medytacja Sefirot): `heresy` → `0` (Zysk Global Δ +0.6 pkt)
+- **Modyfikacja:** `BAZA__L3_KT-11_C1_H0` -> Karta `kt-11` (Medytacja Sefirot): `cost` → `1` + Karta `kt-11` (Medytacja Sefirot): `heresy` → `0`
+- **Wynik Globalny:** 75.8 → **76.4**
+- **Balans 4P:** 85.2 → 84.1
+- **Balans 3P:** 67.0 → 74.7
+- **Balans 5P:** 75.3 → 70.5
+
+### 🌐 Patch v1.0-alpha.138 (2026-08-30) — Global Auditor: Karta `caa-08` (Kaptur Nocy): `heresy` → `0` (Zysk Global Δ +5.2 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-08_HERESY_MINUS1` -> Karta `caa-08` (Kaptur Nocy): `heresy` → `0`
+- **Wynik Globalny:** 70.6 → **75.8**
+- **Balans 4P:** 80.1 → 85.2
+- **Balans 3P:** 66.5 → 67.0
+- **Balans 5P:** 65.2 → 75.3
+
 ### 🟢 Patch v1.0-alpha.137 (2026-08-30) — Wdrożenie Twardych Limitów Kart i Oczyszczenie Anomalii
 - **Modyfikacja:** 
   - Karta `so-03` (Podejrzenie): `heresy: 4 → 2`, `target_heresy: 3 → 1`, `cost: 2 → 1`

@@ -362,7 +362,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | B |
 | `cost_gold` | 1 |
-| `heresy` | 1 |
+| `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
 | `lore` | Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę. |
@@ -832,7 +832,7 @@ Kart: **12**
 | `faction` | kabala-toledo |
 | `type` | akcja |
 | `layer` | B |
-| `cost_gold` | 2 |
+| `cost_gold` | 1 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. |
@@ -1026,7 +1026,7 @@ Kart: **12**
 | `type` | signature |
 | `layer` | C |
 | `cost_gold` | 4 |
-| `heresy` | 2 |
+| `heresy` | 0 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
 | `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
 | `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
