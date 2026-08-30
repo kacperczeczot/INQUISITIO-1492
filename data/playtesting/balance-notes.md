@@ -94,6 +94,18 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🟢 Patch v1.0-alpha.137 (2026-08-30) — Wdrożenie Twardych Limitów Kart i Oczyszczenie Anomalii
+- **Modyfikacja:** 
+  - Karta `so-03` (Podejrzenie): `heresy: 4 → 2`, `target_heresy: 3 → 1`, `cost: 2 → 1`
+  - Karta `caa-12` (Skrytka w Murach): `gold: 4 → 3`, `heresy: 0 → 1`
+  - Karta `gc-11` (Fałszywe Świadectwo Cechu): `heresy: 5 → 2`, `cost: 2 → 0`
+  - Wdrożenie twardych limitów parametrów kart w SSOT (`src/inquisitio/config.py`), generatorze mutacji (`audit_level3.py`) oraz weryfikatorze (`verify_hygiene.py`).
+- **Wynik Globalny:** 75.6 → **70.6 pkt** (`🔻 -5.0`)
+- **Balans 4P:** 84.4 → **80.1 pkt** (`🔻 -4.3`)
+- **Balans 3P:** 69.2 → **66.5 pkt** (`🔻 -2.7`)
+- **Balans 5P:** 73.3 → **65.2 pkt** (`🔻 -8.1`)
+- **Efekt:** Pełne zabezpieczenie silnika przed nielegalnymi wartościami i patologicznymi mutacjami; ostateczne usunięcie ukrytych anomalii na kartach `so-03`, `caa-12` i `gc-11` oraz zapieczętowanie granic fizycznych w silniku gry.
+
 ### 🟢 Patch v1.0-alpha.136 (2026-08-30) — Kompleksowa Sanacja Talii: Naprawa `gc-08` i Usunięcie Sztucznych Dopalaczy
 - **Modyfikacja:** 
   - Karta `gc-08` (Zatrute Złoto): `cost: 1`, `gold: 1`, `target_heresy: 1`, `heresy: 1` — przywrócenie kanonicznego efektu (*„Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.”*)
