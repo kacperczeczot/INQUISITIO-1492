@@ -13,9 +13,12 @@ tags:
 effect: 'DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie
   Haka. Odmowa: +3 Herezja.'
 heresy_text: Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać.
-lore: Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru.
+lore: Królewski edykt nie podlega dyskusji — opór wobec korony jest tożsamy ze zdradą
+  stanu.
 breaks_rule: 1 wymuszenie Haka / gracza / Erę
 ---
+
+
 
 
 

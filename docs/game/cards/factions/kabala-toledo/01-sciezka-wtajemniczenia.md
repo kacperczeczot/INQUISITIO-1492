@@ -11,9 +11,11 @@ tags:
 - fragment
 effect: Przesuń swojego Agenta o 1 lokację.
 heresy_text: Wędrówka ścieżkami mądrości pozostaje niewidoczna dla niewtajemniczonych.
-lore: Dyskretne kroki adepta po ścieżkach Toledo nie przyciągają wzroku inkwizytorów.
+lore: Dyskretne kroki adepta po bruku Toledo nie przyciągają wzroku czujnych inkwizytorów.
 agents: 1
 ---
+
+
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [01-sciezka-wtajemniczenia](01-sciezka-wtajemniczenia.md)
 

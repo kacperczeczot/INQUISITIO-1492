@@ -10,9 +10,12 @@ tags:
 - decree
 - hook
 effect: Załóż Hak na rywala.
-lore: List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji.
+lore: Królewski list żelazny chroni przed szubienicą, lecz czyni jego posiadacza wiecznym
+  dłużnikiem tronu.
 creates_hook: true
 ---
+
+
 
 
 

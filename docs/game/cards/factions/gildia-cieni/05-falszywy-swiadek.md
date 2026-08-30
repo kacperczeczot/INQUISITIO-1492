@@ -9,8 +9,11 @@ heresy: 1
 tags:
 - reaction
 effect: 'Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit: 1 / Erę.'
-lore: Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole.
+lore: Za odpowiednią sumę fałszywy świadek przysięgnie przed trybunałem na wszystkie
+  świętości.
 ---
+
+
 
 
 

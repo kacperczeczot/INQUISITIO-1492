@@ -10,9 +10,12 @@ tags:
 - heresy
 effect: 'Wskaż rywala: +1 Herezja.'
 heresy_text: Zakazana księga ląduje w cudzej komnacie o świcie.
-lore: 'Klasyczny frame: zakazana księga ląduje w cudzej komnacie.'
+lore: Zakazana księga podłożona do komnaty rywala sprowadzi na niego inkwizycję jeszcze
+  przed południem.
 target_heresy: 1
 ---
+
+
 
 
 

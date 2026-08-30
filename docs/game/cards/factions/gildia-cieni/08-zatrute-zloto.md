@@ -10,10 +10,12 @@ tags:
 - gold
 - heresy
 effect: 'Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.'
-lore: Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej.
+lore: Pieniądze pachnące trucizną parzą dłonie tego, kto przyjmie je w godzinie chciwości.
 gold: 1
 target_heresy: 1
 ---
+
+
 
 
 

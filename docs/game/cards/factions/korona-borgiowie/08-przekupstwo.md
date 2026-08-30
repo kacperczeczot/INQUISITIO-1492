@@ -11,9 +11,12 @@ tags:
 - hook
 - gold
 effect: W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala.
-lore: Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone.
+lore: Każdy wyrok ma swoją cenę, a waga sprawiedliwości przechyla się tam, gdzie padnie
+  cięższe złoto.
 creates_hook: true
 ---
+
+
 
 
 

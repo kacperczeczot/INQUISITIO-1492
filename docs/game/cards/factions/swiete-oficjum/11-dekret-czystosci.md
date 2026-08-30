@@ -10,10 +10,13 @@ tags:
 - heresy
 - gold
 effect: 'Wskaż rywala: +1 Herezja. Zyskaj 1 złoto.'
-lore: Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń.
+lore: Kto odmawia posłuszeństwa dekretom wiary, sam wydaje na siebie wyrok wiecznego
+  potępienia.
 gold: 1
 target_heresy: 1
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [11-dekret-czystosci](11-dekret-czystosci.md)

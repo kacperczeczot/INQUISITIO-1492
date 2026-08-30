@@ -10,9 +10,12 @@ tags:
 - move
 - heresy
 effect: Przesuń swojego Agenta o 1 lokację.
-lore: Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach.
+lore: Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach
+  przeznaczenia.
 agents: 1
 ---
+
+
 
 
 

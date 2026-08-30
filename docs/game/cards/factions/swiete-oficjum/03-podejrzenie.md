@@ -10,9 +10,12 @@ tags:
 - heresy
 effect: 'Wskaż rywala: +1 Herezja.'
 heresy_text: Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku.
-lore: Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie.
+lore: Jeden donos wrzucony do puszki w katedrze wystarczy, by cień podejrzeń padł
+  na całą rodzinę.
 target_heresy: 1
 ---
+
+
 
 
 

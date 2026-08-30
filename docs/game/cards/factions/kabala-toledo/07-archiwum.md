@@ -9,9 +9,12 @@ heresy: 0
 tags:
 - hook
 effect: Załóż Hak na rywala z Herezją ≥ 3.
-lore: Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze.
+lore: W podziemiach synagogi spoczywają archiwa, o których istnieniu biskupi nie śmią
+  nawet marzyć.
 creates_hook: true
 ---
+
+
 
 
 

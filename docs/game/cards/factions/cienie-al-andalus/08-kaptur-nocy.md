@@ -11,8 +11,11 @@ tags:
 - heresy
 effect: 'Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację.'
 heresy_text: Marionetka w obcych szeregach zostawia ślad w rejestrze gości.
-lore: Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę.
+lore: Złamany szantażem urzędnik wykonuje nasze polecenia, nie mając pojęcia, komu
+  naprawdę służy.
 ---
+
+
 
 
 

@@ -11,9 +11,11 @@ tags:
 - fall
 effect: 'Załóż Hak na rywala. Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec
   tego rywala.'
-lore: Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole.
+lore: Dług zaciągnięty w podziemiach Gildii spłaca się majątkiem, wolnością albo krwią.
 creates_hook: true
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [09-lista-dluznikow](09-lista-dluznikow.md)

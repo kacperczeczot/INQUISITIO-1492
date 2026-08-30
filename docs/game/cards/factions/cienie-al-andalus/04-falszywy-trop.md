@@ -10,9 +10,12 @@ tags:
 - heresy
 effect: 'Wskaż rywala: +1 Herezja.'
 heresy_text: Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce.
-lore: Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę.
+lore: Porzucony burnus i ślad w zaułku kierują inkwizytorów w ślepą uliczkę, z dala
+  od prawdziwych uciekinierów.
 target_heresy: 1
 ---
+
+
 
 
 

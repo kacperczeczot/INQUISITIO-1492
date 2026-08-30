@@ -9,9 +9,12 @@ heresy: 1
 tags:
 - reaction
 effect: 'Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja.'
-lore: Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję.
+lore: Gdy zbrojni strażnicy pukają nocą do wrót, w Toledo nie ma człowieka, który
+  czułby się bezpieczny.
 target_heresy: 1
 ---
+
+
 
 
 

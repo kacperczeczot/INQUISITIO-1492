@@ -10,9 +10,12 @@ tags:
 - heresy
 effect: 'Wskaż rywala: +1 Herezja.'
 heresy_text: Zwierciadło odbija winę na obce imię w rejestrze familiariuszy.
-lore: Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr.
+lore: Mistyczne zwierciadło odbija złą wolę prześladowców, kierując ich gniew na inne
+  imię.
 target_heresy: 1
 ---
+
+
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [04-zwierciadlo](04-zwierciadlo.md)
 

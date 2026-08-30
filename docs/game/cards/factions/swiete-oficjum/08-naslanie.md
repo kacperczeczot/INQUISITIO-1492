@@ -12,8 +12,11 @@ tags:
 effect: 'Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza
   / Erę.'
 heresy_text: Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze.
-lore: Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne.
+lore: Widok czarnego habitu i płonącej pochodni Inkwizytora paraliżuje całe dzielnice
+  Toledo.
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [08-naslanie](08-naslanie.md)

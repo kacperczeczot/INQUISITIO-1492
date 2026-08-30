@@ -11,9 +11,11 @@ tags:
 - relic
 effect: Przesuń swojego Agenta o 1 lokację.
 heresy_text: Tunele starej Toledo znane tylko wtajemniczonym w bractwie.
-lore: Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec.
+lore: Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów.
 agents: 1
 ---
+
+
 
 
 

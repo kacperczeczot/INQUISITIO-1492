@@ -11,9 +11,12 @@ tags:
 - arrest
 effect: Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację.
 heresy_text: Klucz od strażnika, który nigdy nie służył Koronie.
-lore: Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą.
+lore: Podrobiony klucz i przekupiony strażnik otwierają kraty lochów nim nadejdzie
+  świt.
 agents: 1
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [06-ucieczka-z-lochow](06-ucieczka-z-lochow.md)

@@ -10,10 +10,13 @@ tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.
 heresy_text: Strażnik zna cenę milczenia lepiej niż modlitwy.
-lore: Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż.
+lore: Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym
+  na całą noc.
 gold: 1
 agents: 1
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [01-przekupiony-straznik](01-przekupiony-straznik.md)

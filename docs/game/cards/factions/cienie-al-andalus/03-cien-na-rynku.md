@@ -12,10 +12,13 @@ tags:
 - heresy
 effect: Przesuń swojego Agenta o 1 lokację.
 heresy_text: Kupcy rozpoznają obce oblicze w tłumie na placu.
-lore: Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień.
+lore: W gwarze targowiska najłatwiej przekazać zakazany zwój lub ostrzec braci przed
+  obławą.
 gold: 1
 agents: 1
 ---
+
+
 
 
 

@@ -36,7 +36,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | Familiariusze obchodzą miasto pod szyldem porządku i prawa. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt. |
+| `lore` | Cisi bracia zakonni krążą po bruku Toledo, nasłuchując każdego szeptu niezgodnego z dogmatem. |
 | `tags` | move |
 | `status` | prototyp |
 
@@ -53,7 +53,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | Konfiskata majątku skazańców to prawny obowiązek trybunału. |
 | `effect` | Zyskaj 2 złota. Wskaż rywala: +2 Herezja. |
-| `lore` | Rywale widzą paliwo Oficjum — kasę pod areszt i przesłuchanie. |
+| `lore` | Złoto skonfiskowane heretykom zasila machinerię trybunału i opłaca setki donosicieli. |
 | `tags` | gold |
 | `status` | prototyp |
 
@@ -70,7 +70,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | Oskarżenie z urzędu niesie pieczęć Trybunału, nie plotkę rynku. |
 | `effect` | Wskaż rywala: +1 Herezja. |
-| `lore` | Publiczne napiętnowanie wrabia pod Krytyczną, zanim padnie nasłanie. |
+| `lore` | Jeden donos wrzucony do puszki w katedrze wystarczy, by cień podejrzeń padł na całą rodzinę. |
 | `tags` | heresy |
 | `status` | prototyp |
 
@@ -87,7 +87,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora. |
 | `effect` | Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta. Limit: 1 nasłanie / gracza / Erę. |
-| `lore` | Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel. |
+| `lore` | Dzwon zwiastujący procesję pokutną zmusza grzeszników do natychmiastowego opuszczenia miasta. |
 | `tags` | inquisitor |
 | `status` | prototyp |
 
@@ -104,7 +104,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Jeśli rywal zagrywa kartę z Herezją ≥ 1: Wskaż tego rywala: +1 Herezja. |
-| `lore` | Rywale wahają się przed brudnymi kartami, gdy Oficjum trzyma tę reakcję. |
+| `lore` | Gdy zbrojni strażnicy pukają nocą do wrót, w Toledo nie ma człowieka, który czułby się bezpieczny. |
 | `tags` | reaction |
 | `status` | prototyp |
 
@@ -121,7 +121,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie. |
 | `effect` | Aresztuj Agenta rywala w lokacji swojego Agenta. |
-| `lore` | Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem. |
+| `lore` | Kute żelazem bramy trybunalskich kazamatów zamykają się za każdym, kogo dosięgnie oskarżenie. |
 | `tags` | arrest |
 | `status` | prototyp |
 
@@ -138,7 +138,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Wykonaj Przesłuchanie na aresztowanego Agenta rywala. Limit: 1 / gracza / Erę. |
-| `lore` | Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję. |
+| `lore` | W kamiennych podziemiach trybunału milczenie jest tylko chwilową iluzją przed nieuchronnym wyznaniem. |
 | `tags` | interrogation |
 | `status` | prototyp |
 
@@ -155,7 +155,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Powtórne wezwanie Inkwizytora w jednym tygodniu budzi szepty na dworze. |
 | `effect` | Przesuń Inkwizytora do lokacji ze swoim Agentem. Limit: 1 nasłanie / gracza / Erę. |
-| `lore` | Cały stół przestawia plany Autodafé i uników — zagrożenie terytorialne. |
+| `lore` | Widok czarnego habitu i płonącej pochodni Inkwizytora paraliżuje całe dzielnice Toledo. |
 | `tags` | inquisitor, heresy |
 | `status` | prototyp |
 
@@ -172,7 +172,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora. |
-| `lore` | Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie. |
+| `lore` | Świadek, który otrzymał rozgrzeszenie w zamian za zeznania, jest najgroźniejszą bronią oskarżyciela. |
 | `tags` | hook |
 | `status` | prototyp |
 
@@ -189,7 +189,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Autodafé z rozkazu trybunału pali strach, nie tylko drewno. |
 | `effect` | Łamie regułę „Autodafé / 3 Ery”: Ogłoś Autodafé w lokacji Inkwizytora. Jeśli Agent rywala jest w lokacji Inkwizytora: Zyskaj Stos. |
-| `lore` | Kulminacja terroru — ucieczka z lokacji Inkwizytora albo panika. |
+| `lore` | Dym z placu Zocodover unosi się ku niebiosom, oczyszczając miasto z grzechu i buntu. |
 | `tags` | signature, autodafe, heresy |
 | `status` | prototyp |
 
@@ -206,7 +206,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
-| `lore` | Kto odmawia daniny na rzecz Trybunału, ten sam rzuca na siebie cień podejrzeń. |
+| `lore` | Kto odmawia posłuszeństwa dekretom wiary, sam wydaje na siebie wyrok wiecznego potępienia. |
 | `tags` | heresy, gold |
 | `status` | prototyp |
 
@@ -223,7 +223,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach heretykom. |
+| `lore` | Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed oblicze sprawiedliwości. |
 | `tags` | move, gold |
 | `status` | prototyp |
 
@@ -246,7 +246,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Cichy krok pod Relikwię albo z dala od Inkwizytora, zanim ktoś zauważy wzorzec. |
+| `lore` | Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów. |
 | `tags` | move, relic |
 | `status` | prototyp |
 
@@ -263,7 +263,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
-| `lore` | Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację. |
+| `lore` | Skarby ukryte w murach przed upadkiem Grenady finansują walkę o ocalenie dziedzictwa. |
 | `tags` | gold |
 | `status` | prototyp |
 
@@ -280,7 +280,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Kupcy rozpoznają obce oblicze w tłumie na placu. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Agent przeciąga Relikwię ku Rynkowi i Gildii, zanim ktoś dostrzeże cień. |
+| `lore` | W gwarze targowiska najłatwiej przekazać zakazany zwój lub ostrzec braci przed obławą. |
 | `tags` | move, relic, heresy |
 | `status` | prototyp |
 
@@ -297,7 +297,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Familiariusze łapią fałszywy trop, podrzucany przez cudze ręce. |
 | `effect` | Wskaż rywala: +1 Herezja. |
-| `lore` | Bluff „to nie my”, gdy Inkwizytor zmierza w Twoją stronę. |
+| `lore` | Porzucony burnus i ślad w zaułku kierują inkwizytorów w ślepą uliczkę, z dala od prawdziwych uciekinierów. |
 | `tags` | heresy |
 | `status` | prototyp |
 
@@ -314,7 +314,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit: 1 / Erę. |
-| `lore` | Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar. |
+| `lore` | Zaufany posłaniec przemyka nocą przez bramy miejskie, niosąc relikwię ku bezpiecznym górom. |
 | `tags` | relic |
 | `status` | prototyp |
 
@@ -331,7 +331,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Klucz od strażnika, który nigdy nie służył Koronie. |
 | `effect` | Uwolnij swojego aresztowanego Agenta z Lochów. Przesuń tego Agenta o 1 lokację. |
-| `lore` | Psuje plan Przesłuchania. Trzymanie Cieni w Lochach to wyścig z ich kasą. |
+| `lore` | Podrobiony klucz i przekupiony strażnik otwierają kraty lochów nim nadejdzie świt. |
 | `tags` | move, arrest |
 | `status` | prototyp |
 
@@ -348,7 +348,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Bractwo zna imiona sąsiadów lepiej niż proboszczowie. |
 | `effect` | Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta. |
-| `lore` | Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni. |
+| `lore` | Wiemy, jakie tajemnice skrywasz w alkowie — jeden nasz krok i trybunał pozna całą prawdę. |
 | `tags` | hook |
 | `status` | prototyp |
 
@@ -365,7 +365,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Marionetka w obcych szeregach zostawia ślad w rejestrze gości. |
 | `effect` | Jeśli masz Marionetkę: Przesuń Marionetkę o 1 lokację. |
-| `lore` | Złamany Agent jako kurier Relikwii. Skandal, gdy ktoś wykryje Marionetkę. |
+| `lore` | Złamany szantażem urzędnik wykonuje nasze polecenia, nie mając pojęcia, komu naprawdę służy. |
 | `tags` | double, heresy |
 | `status` | prototyp |
 
@@ -382,7 +382,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji. |
-| `lore` | Bluff kierunku Relikwii jest połową gry Cieni. |
+| `lore` | Ocalone manuskrypty i relikwie przodków są warte więcej niż całe złoto kastylijskiej korony. |
 | `tags` | relic, move |
 | `status` | prototyp |
 
@@ -399,7 +399,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym. |
 | `effect` | Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma Inkwizytora w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji Twoich Agentów. |
-| `lore` | As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej. |
+| `lore` | Echo dawnej chwały Andaluzji rozbrzmiewa w sercach tych, którzy nigdy nie złożyli broni. |
 | `tags` | signature, relic, heresy |
 | `status` | prototyp |
 
@@ -416,7 +416,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. |
-| `lore` | Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w ślepym zaułku. |
+| `lore` | Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w labiryncie nocy. |
 | `tags` | move, inquisitor |
 | `status` | prototyp |
 
@@ -433,7 +433,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
-| `lore` | Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień. |
+| `lore` | Stare mauretańskie złoto ukryte w murach pałacowych czekało na ten decydujący dzień. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
 
@@ -456,7 +456,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Królewski nakaz wiąże bez pytania biskupów o zgodę. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Ustawiasz figurę pod Pałac lub pod przyszły Hak; wygląda na rutynę dworu. |
+| `lore` | Królewski rozkaz z pieczęcią z laku łamie każdy opór i otwiera najpilniej strzeżone wrota. |
 | `tags` | move |
 | `status` | prototyp |
 
@@ -473,7 +473,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. Wskaż rywala: +1 Herezja. |
-| `lore` | Korona zbiera daninę pod Dekrety i przekupstwa. Sygnał bogactwa — stać Cię na Areszt i kartę specjalną. |
+| `lore` | Skarbiec korony musi być pełny, by opłacić lojalność wielmożów i milczenie kardynałów. |
 | `tags` | gold |
 | `status` | prototyp |
 
@@ -490,7 +490,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Szept z sali tronowej dociera do familiariusza szybciej niż msza. |
 | `effect` | Wskaż rywala: +1 Herezja. |
-| `lore` | Polityczne ukłucie; często celujesz w kogoś pod przyszły Hak (≥4). |
+| `lore` | Zatruty szept w królewskiej alkowie potrafi zniszczyć ród potężniejszy niż armia zbrojnych. |
 | `tags` | heresy |
 | `status` | prototyp |
 
@@ -507,7 +507,7 @@ Kart: **12**
 | `heresy` | 3 |
 | `heresy_text` | Faworyzm dworu budzi zazdrość kortegan i biskupów. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala. |
-| `lore` | Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret. |
+| `lore` | Faworyt dworu cieszy się łaską królowej, dopóki jego użyteczność przewyższa jego ambicję. |
 | `tags` | hook, move, heresy |
 | `status` | prototyp |
 
@@ -524,7 +524,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
-| `lore` | List żelazny kupuje dźwignię dworu — i milczenie o Twojej reputacji. |
+| `lore` | Królewski list żelazny chroni przed szubienicą, lecz czyni jego posiadacza wiecznym dłużnikiem tronu. |
 | `tags` | decree, hook |
 | `status` | prototyp |
 
@@ -541,7 +541,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Królewski areszt ma precedens starszy niż bulla papieska. |
 | `effect` | Aresztuj Agenta rywala w Pałacu lub w lokacji ze swoim Agentem. |
-| `lore` | Pałac staje się pułapką; Twoja obecność gdziekolwiek to groźba aresztu. |
+| `lore` | Królewscy halabardnicy nie pytają o winę — wykonują wolę suwerena z bezwzględną precyzją. |
 | `tags` | arrest |
 | `status` | prototyp |
 
@@ -558,7 +558,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Herezją ≥ 3. |
-| `lore` | Korona poluje na już brudnych. Dwa Haki zaczynają się tu. |
+| `lore` | Papieska bulla i królewska pieczęć dają władzę, przed którą uginają się najtwardsze karki. |
 | `tags` | hook |
 | `status` | prototyp |
 
@@ -575,7 +575,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | W następnym Werdykcie Twój głos ma wagę 2. Załóż Hak na rywala. |
-| `lore` | Otwarty handel wyrokiem. Następne Oskarżenie będzie przechylone. |
+| `lore` | Każdy wyrok ma swoją cenę, a waga sprawiedliwości przechyla się tam, gdzie padnie cięższe złoto. |
 | `tags` | verdict, hook, gold |
 | `status` | prototyp |
 
@@ -592,7 +592,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Absolutyzm wymusza posłuszeństwo, którego Kościół nie śmie nazwać. |
 | `effect` | DEKRET 1 — Łamie regułę „1 wymuszenie Haka / gracza / Erę”: Wymuś spełnienie Haka. Odmowa: +3 Herezja. |
-| `lore` | Absolutyzm wymaga przygotowania. Bez Haka Dekret tylko liczy się do toru. |
+| `lore` | Królewski edykt nie podlega dyskusji — opór wobec korony jest tożsamy ze zdradą stanu. |
 | `tags` | signature, decree, heresy |
 | `status` | prototyp |
 
@@ -609,7 +609,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Dwie pieczęcie na dwóch gardłach — tak brzmi koniec oporu. |
 | `effect` | DEKRET 2 — Łamie regułę „zwycięstwo tylko po Erze”: Jeśli masz aktywne Haki na ≥ 2 graczach: zwycięstwo. |
-| `lore` | Stół musi zerwać Twoje Haki, zanim zbierzesz obie pieczęcie. |
+| `lore` | Gdy obie pieczęcie spoczną na pergaminie, żaden wielmoża w Kastylii nie zdoła podnieść głowy. |
 | `tags` | signature, decree, heresy |
 | `status` | prototyp |
 
@@ -626,7 +626,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Złote pierścienie i listy polecające otwierają każde drzwi w Toledo. |
+| `lore` | Złote pierścienie i listy polecające otwierają przed naszymi ludźmi każde drzwi w Toledo. |
 | `tags` | move, gold |
 | `status` | prototyp |
 
@@ -643,7 +643,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
-| `lore` | Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą. |
+| `lore` | Jedno niedyskretne słowo przy królewskim stole staje się wieczystą smyczą w naszych rękach. |
 | `tags` | hook |
 | `status` | prototyp |
 
@@ -666,7 +666,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Wędrówka ścieżkami mądrości pozostaje niewidoczna dla niewtajemniczonych. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Dyskretne kroki adepta po ścieżkach Toledo nie przyciągają wzroku inkwizytorów. |
+| `lore` | Dyskretne kroki adepta po bruku Toledo nie przyciągają wzroku czujnych inkwizytorów. |
 | `tags` | move, fragment |
 | `status` | prototyp |
 
@@ -683,7 +683,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
-| `lore` | Alchemia sakiewki — budżet pod Imię i Kodeks bez hałasu rynku. |
+| `lore` | Alchemia i wiedza przodków pozwalają pomnażać kruszec z dala od chciwych oczu poborców. |
 | `tags` | gold |
 | `status` | prototyp |
 
@@ -700,7 +700,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu. |
 | `effect` | Zyskaj Fragment. |
-| `lore` | Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną. |
+| `lore` | Karty tajemnego Kodeksu świecą blaskiem widocznym tylko dla oczu wtajemniczonych. |
 | `tags` | fragment, heresy |
 | `status` | prototyp |
 
@@ -717,7 +717,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Zwierciadło odbija winę na obce imię w rejestrze familiariuszy. |
 | `effect` | Wskaż rywala: +1 Herezja. |
-| `lore` | Ktoś ma być brudniejszy od Ciebie, zanim familiariusze domkną rejestr. |
+| `lore` | Mistyczne zwierciadło odbija złą wolę prześladowców, kierując ich gniew na inne imię. |
 | `tags` | heresy |
 | `status` | prototyp |
 
@@ -734,7 +734,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz Agenta w Lochach lub Trybunale: Zyskaj 1 złoto. |
-| `lore` | Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale. |
+| `lore` | Układ gwiazd nad Toledo wskazuje godzinę, w której pieczęć wiedzy może zostać otwarta. |
 | `tags` | fragment |
 | `status` | prototyp |
 
@@ -751,7 +751,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment. Limit: 1 / Erę. |
-| `lore` | Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej” opcji Marionetki. |
+| `lore` | Imię wyryte na pergaminie zawiera w sobie moc wiązania woli i odsłaniania tajemnic. |
 | `tags` | interrogation, fragment |
 | `status` | prototyp |
 
@@ -768,7 +768,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Herezją ≥ 3. |
-| `lore` | Szantaż z archiwum win. Celujesz w tych, którzy już są na radarze. |
+| `lore` | W podziemiach synagogi spoczywają archiwa, o których istnieniu biskupi nie śmią nawet marzyć. |
 | `tags` | hook |
 | `status` | prototyp |
 
@@ -785,7 +785,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał. |
 | `effect` | Aresztuj Agenta rywala w Lochach lub w Trybunale. |
-| `lore` | Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem. |
+| `lore` | Strażnicy wiedzy wiedzą, jak zamknąć w lochu każdego, kto zbezcześci święte manuskrypty. |
 | `tags` | arrest |
 | `status` | prototyp |
 
@@ -802,7 +802,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Pergamin Salomona brudzi palce i sumienie. |
 | `effect` | Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment. |
-| `lore` | Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko. |
+| `lore` | Odnaleziony fragment starożytnego Kodeksu przybliża nas do poznania ostatecznej tajemnicy stworzenia. |
 | `tags` | fragment, heresy |
 | `status` | prototyp |
 
@@ -819,7 +819,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty zwycięstwo. |
-| `lore` | Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6. |
+| `lore` | Gdy Pieczęć Salomona zostanie domknięta, pradawna mądrość zatriumfuje nad mrokiem prześladowań. |
 | `tags` | signature, fragment |
 | `status` | prototyp |
 
@@ -836,7 +836,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zmniejsz swoją Herezję o 1. Zyskaj 1 złoto. |
-| `lore` | Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony. |
+| `lore` | Waga losu wymaga idealnej równowagi — ani zbyt czysty, ani zbyt splamiony w oczach świata. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
 
@@ -853,7 +853,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach. |
+| `lore` | Kto zagląda w pergaminy Salomona, ten nieświadomie zostawia swój ślad na kartach przeznaczenia. |
 | `tags` | move, heresy |
 | `status` | prototyp |
 
@@ -876,7 +876,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
 | `effect` | Przesuń swojego Agenta o 1 lokację. |
-| `lore` | Cichy ruch pod Rynek/Gildię, skąd później bierzesz areszt i szantaż. |
+| `lore` | Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym na całą noc. |
 | `tags` | move |
 | `status` | prototyp |
 
@@ -893,7 +893,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 3 złota. |
-| `lore` | Handel spod lady — stół czuje, że Gildia ma gotówkę na brud. |
+| `lore` | Handel spod lady i przemyt w zaułkach portowych — w piwnicach Toledo kupisz wszystko: od noża po fałszywe rozgrzeszenie. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
 
@@ -910,7 +910,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | Zakazana księga ląduje w cudzej komnacie o świcie. |
 | `effect` | Wskaż rywala: +1 Herezja. |
-| `lore` | Klasyczny frame: zakazana księga ląduje w cudzej komnacie. |
+| `lore` | Zakazana księga podłożona do komnaty rywala sprowadzi na niego inkwizycję jeszcze przed południem. |
 | `tags` | heresy |
 | `status` | prototyp |
 
@@ -927,7 +927,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Donosiciel pamięta twarz i zapach srebra. |
 | `effect` | Załóż Hak na rywala. |
-| `lore` | Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę. |
+| `lore` | Donosiciel z zaułka nie żąda wiele, lecz pamięta każdą twarz i każdy brudny sekret miasta. |
 | `tags` | hook, heresy |
 | `status` | prototyp |
 
@@ -944,7 +944,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Podczas Werdyktu, po ujawnieniu większości: Zmień swój głos. Limit: 1 / Erę. |
-| `lore` | Zdrada w ostatniej chwili. Nikt nie ufa Twojemu „tak” przy stole. |
+| `lore` | Za odpowiednią sumę fałszywy świadek przysięgnie przed trybunałem na wszystkie świętości. |
 | `tags` | reaction |
 | `status` | prototyp |
 
@@ -961,7 +961,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. |
-| `lore` | Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek. |
+| `lore` | List z dowodem zdrady leży na stole — albo zapłacisz naszą cenę, albo jutro zawiśniesz. |
 | `tags` | hook |
 | `status` | prototyp |
 
@@ -978,7 +978,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | Ciało w kanałach Gildii mówi więcej niż świadek na rynku. |
 | `effect` | Aresztuj Agenta rywala w Gildii lub na Rynku. |
-| `lore` | Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami. |
+| `lore` | Ciało w mrocznym kanale Toledo mówi więcej niż sto kazań o kruchości ludzkiego żywota. |
 | `tags` | arrest, heresy |
 | `status` | prototyp |
 
@@ -995,7 +995,7 @@ Kart: **12**
 | `heresy` | 1 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
-| `lore` | Prezent, który brudzi — kasa w jednej dłoni, piętno w drugiej. |
+| `lore` | Pieniądze pachnące trucizną parzą dłonie tego, kto przyjmie je w godzinie chciwości. |
 | `tags` | gold, heresy |
 | `status` | prototyp |
 
@@ -1012,7 +1012,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala. Jeśli Odmowa tego Haka w tej Erze: Oznacz Upadek wobec tego rywala. |
-| `lore` | Odmowa przestaje być tania — płacisz Upadkiem frakcji. Dramat długu przy stole. |
+| `lore` | Dług zaciągnięty w podziemiach Gildii spłaca się majątkiem, wolnością albo krwią. |
 | `tags` | hook, fall |
 | `status` | prototyp |
 
@@ -1029,7 +1029,7 @@ Kart: **12**
 | `heresy` | 0 |
 | `heresy_text` | Dom płonie w oczach miasta, zanim zdąży zaprzeczyć. |
 | `effect` | Łamie regułę „Upadek tylko z odmowy Haka”: Jeśli rywal ma ujawniony Hak, Marionetkę lub Autodafé w lokacji kluczowej: Oznacz Upadek wobec tego rywala. |
-| `lore` | Egzekucja domu. Stół boi się trzymać ujawnione brudy. |
+| `lore` | Gdy upada potężny ród, w ruinach jego pałacu ucztują ci, którzy pociągali za sznurki z cienia. |
 | `tags` | signature, fall, heresy |
 | `status` | prototyp |
 
@@ -1046,7 +1046,7 @@ Kart: **12**
 | `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Wskaż rywala: +1 Herezja. Zyskaj 1 złoto. |
-| `lore` | Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu. |
+| `lore` | Podrobiony podpis na wekslu to najtańszy i najszybszy sposób na zrujnowanie wielkiego rodu. |
 | `tags` | heresy, hook |
 | `status` | prototyp |
 

@@ -11,11 +11,10 @@ tags:
 - fragment
 effect: 'Wykonaj Przesłuchanie. Jeśli +2 Herezja lub Hak: Zyskaj Fragment. Limit:
   1 / Erę.'
-lore: 'Wiedza z bólu imienia. Stół widzi, że wybierasz Fragment kosztem „łagodniejszej”
-  opcji Marionetki.
-
-  '
+lore: Imię wyryte na pergaminie zawiera w sobie moc wiązania woli i odsłaniania tajemnic.
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [06-przesluchanie-imienia](06-przesluchanie-imienia.md)

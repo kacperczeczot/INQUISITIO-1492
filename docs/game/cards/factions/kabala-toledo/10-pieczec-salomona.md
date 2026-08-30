@@ -10,9 +10,12 @@ tags:
 - signature
 - fragment
 effect: 'Łamie regułę „Herezja tylko z karty”: Jeśli masz 3 Fragmenty zwycięstwo.'
-lore: Stół musi zbić Ci Fragmenty albo wypchnąć Cię z 4–6.
+lore: Gdy Pieczęć Salomona zostanie domknięta, pradawna mądrość zatriumfuje nad mrokiem
+  prześladowań.
 breaks_rule: Herezja tylko z karty
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [10-pieczec-salomona](10-pieczec-salomona.md)

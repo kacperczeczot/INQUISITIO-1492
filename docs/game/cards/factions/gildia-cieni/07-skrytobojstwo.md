@@ -11,9 +11,12 @@ tags:
 - heresy
 effect: Aresztuj Agenta rywala w Gildii lub na Rynku.
 heresy_text: Ciało w kanałach Gildii mówi więcej niż świadek na rynku.
-lore: Terroryzujesz dwie lokacje handlu. Rywal unika Rynku albo płaci Lochami.
+lore: Ciało w mrocznym kanale Toledo mówi więcej niż sto kazań o kruchości ludzkiego
+  żywota.
 arrest: true
 ---
+
+
 
 
 

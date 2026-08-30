@@ -10,9 +10,12 @@ tags:
 - arrest
 effect: Aresztuj Agenta rywala w Lochach lub w Trybunale.
 heresy_text: Uczeń w lochach to zasób Korony — tak twierdzi sam Trybunał.
-lore: Kara za wchodzenie w święte i podziemne miejsca wiedzy. Synergia z Twoim Przesłuchaniem.
+lore: Strażnicy wiedzy wiedzą, jak zamknąć w lochu każdego, kto zbezcześci święte
+  manuskrypty.
 arrest: true
 ---
+
+
 
 
 

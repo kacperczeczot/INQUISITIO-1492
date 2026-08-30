@@ -10,10 +10,13 @@ tags:
 - arrest
 effect: Aresztuj Agenta rywala w lokacji swojego Agenta.
 heresy_text: Areszt trybunalski ma moc, której dwór nie kwestionuje publicznie.
-lore: Otwarty terror pozycji. Rywal unika Twojego pola albo płaci Przesłuchaniem.
+lore: Kute żelazem bramy trybunalskich kazamatów zamykają się za każdym, kogo dosięgnie
+  oskarżenie.
 target_heresy: 1
 arrest: true
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [06-areszt-trybunalski](06-areszt-trybunalski.md)

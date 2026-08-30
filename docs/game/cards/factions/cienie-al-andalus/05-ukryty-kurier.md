@@ -10,8 +10,11 @@ tags:
 - relic
 effect: 'Jeśli masz Agenta w lokacji z Relikwią: Ewakuuj Relikwię z tej lokacji. Limit:
   1 / Erę.'
-lore: Cichy port po pierwszej ewakuacji — druga Relikwia znika bez fanfar.
+lore: Zaufany posłaniec przemyka nocą przez bramy miejskie, niosąc relikwię ku bezpiecznym
+  górom.
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [cienie-al-andalus](README.md) > [05-ukryty-kurier](05-ukryty-kurier.md)

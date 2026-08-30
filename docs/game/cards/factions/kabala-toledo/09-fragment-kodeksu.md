@@ -11,9 +11,12 @@ tags:
 - heresy
 effect: 'Jeśli masz ≥1 Fragment i Agenta w Lochach lub Trybunale: Zyskaj Fragment.'
 heresy_text: Pergamin Salomona brudzi palce i sumienie.
-lore: Jawny postęp do trzech Fragmentów. Oficjum wie, kiedy jesteś blisko.
+lore: Odnaleziony fragment starożytnego Kodeksu przybliża nas do poznania ostatecznej
+  tajemnicy stworzenia.
 gold: 1
 ---
+
+
 
 
 

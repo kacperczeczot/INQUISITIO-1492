@@ -10,10 +10,13 @@ tags:
 - heresy
 - hook
 effect: 'Wskaż rywala: +1 Herezja. Zyskaj 1 złoto.'
-lore: Podrobiony podpis na wekslu to najtańszy sposób na zrujnowanie wielkiego rodu.
+lore: Podrobiony podpis na wekslu to najtańszy i najszybszy sposób na zrujnowanie
+  wielkiego rodu.
 gold: 1
 target_heresy: 1
 ---
+
+
 
 
 

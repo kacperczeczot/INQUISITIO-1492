@@ -10,9 +10,12 @@ tags:
 - gold
 - heresy
 effect: Zyskaj 3 złota.
-lore: Stare mauretańskie złoto ukryte w zaprawie murów pałacowych czekało na ten dzień.
+lore: Stare mauretańskie złoto ukryte w murach pałacowych czekało na ten decydujący
+  dzień.
 gold: 3
 ---
+
+
 
 
 

@@ -9,9 +9,12 @@ heresy: 2
 tags:
 - hook
 effect: Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.
-lore: Szantaż „w imię wiary”. Odmowa = Herezja — ofiara często spełnia żądanie.
+lore: Świadek, który otrzymał rozgrzeszenie w zamian za zeznania, jest najgroźniejszą
+  bronią oskarżyciela.
 creates_hook: true
 ---
+
+
 
 
 

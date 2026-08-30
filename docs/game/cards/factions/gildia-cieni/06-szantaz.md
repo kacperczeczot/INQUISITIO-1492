@@ -9,9 +9,12 @@ heresy: 1
 tags:
 - hook
 effect: Załóż Hak na rywala.
-lore: Uniwersalny szantaż podziemia. Fundament pod Listę Dłużników i Upadek.
+lore: List z dowodem zdrady leży na stole — albo zapłacisz naszą cenę, albo jutro
+  zawiśniesz.
 creates_hook: true
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [gildia-cieni](README.md) > [06-szantaz](06-szantaz.md)

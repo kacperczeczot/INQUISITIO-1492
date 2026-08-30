@@ -11,8 +11,10 @@ tags:
 - heresy
 effect: Zyskaj Fragment.
 heresy_text: Zakazane strony Kodeksu świecą tylko dla wtajemniczonych oczu.
-lore: Pierwszy Fragment bez lochów — świadome wejście w Obserwowaną.
+lore: Karty tajemnego Kodeksu świecą blaskiem widocznym tylko dla oczu wtajemniczonych.
 ---
+
+
 
 [Strona główna](../../../../../README.md) > [kabala-toledo](README.md) > [03-zakazana-wiedza](03-zakazana-wiedza.md)
 

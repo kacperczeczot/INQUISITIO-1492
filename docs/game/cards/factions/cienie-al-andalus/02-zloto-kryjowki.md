@@ -9,9 +9,11 @@ heresy: 1
 tags:
 - gold
 effect: Zyskaj 3 złota.
-lore: Ukryty skarb bractwa — stół widzi, że Cienie mają kasę na ewakuację.
+lore: Skarby ukryte w murach przed upadkiem Grenady finansują walkę o ocalenie dziedzictwa.
 gold: 3
 ---
+
+
 
 
 

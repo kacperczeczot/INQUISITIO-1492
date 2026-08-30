@@ -10,9 +10,12 @@ tags:
 - hook
 effect: Załóż Hak na rywala z Agentem w sąsiedniej lokacji swojego Agenta.
 heresy_text: Bractwo zna imiona sąsiadów lepiej niż proboszczowie.
-lore: Szantaż z bliska — „wiemy, gdzie stoisz”. Wymusza dystans od Cieni.
+lore: Wiemy, jakie tajemnice skrywasz w alkowie — jeden nasz krok i trybunał pozna
+  całą prawdę.
 creates_hook: true
 ---
+
+
 
 
 

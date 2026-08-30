@@ -14,9 +14,12 @@ effect: 'Łamie regułę „Relikwia tylko ze Szlaku Morskiego”: Jeśli nie ma
   w lokacji lub masz Marionetkę lub Szlak jest otwarty: Ewakuuj do 2 Relikwii z lokacji
   Twoich Agentów.'
 heresy_text: Dwie Relikwie znikają w jednej nocy — nie czyni tak pielgrzym.
-lore: As przed Flotą Kolumba. Oficjum musi palić Cieni wcześniej.
+lore: Echo dawnej chwały Andaluzji rozbrzmiewa w sercach tych, którzy nigdy nie złożyli
+  broni.
 breaks_rule: Relikwia tylko ze Szlaku Morskiego
 ---
+
+
 
 
 

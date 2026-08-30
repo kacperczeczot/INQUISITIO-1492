@@ -11,9 +11,12 @@ tags:
 - heresy
 effect: Załóż Hak na rywala.
 heresy_text: Donosiciel pamięta twarz i zapach srebra.
-lore: Donos bez oficjalnego pieczęci — fundament pod Upadek i odmowę.
+lore: Donosiciel z zaułka nie żąda wiele, lecz pamięta każdą twarz i każdy brudny
+  sekret miasta.
 creates_hook: true
 ---
+
+
 
 
 

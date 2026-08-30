@@ -10,9 +10,12 @@ tags:
 - gold
 - heresy
 effect: Zyskaj 3 złota.
-lore: Handel spod lady — stół czuje, że Gildia ma gotówkę na brud.
+lore: 'Handel spod lady i przemyt w zaułkach portowych — w piwnicach Toledo kupisz
+  wszystko: od noża po fałszywe rozgrzeszenie.'
 gold: 3
 ---
+
+
 
 
 

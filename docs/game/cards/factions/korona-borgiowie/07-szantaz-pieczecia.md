@@ -9,9 +9,12 @@ heresy: 0
 tags:
 - hook
 effect: Załóż Hak na rywala z Herezją ≥ 3.
-lore: Korona poluje na już brudnych. Dwa Haki zaczynają się tu.
+lore: Papieska bulla i królewska pieczęć dają władzę, przed którą uginają się najtwardsze
+  karki.
 creates_hook: true
 ---
+
+
 
 
 

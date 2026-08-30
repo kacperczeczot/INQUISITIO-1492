@@ -10,10 +10,13 @@ tags:
 - move
 effect: Przesuń swojego Agenta o 1 lokację.
 heresy_text: Familiariusze obchodzą miasto pod szyldem porządku i prawa.
-lore: Cichy obrót przed patrolem Inkwizytora albo zbliżenie do rywala pod areszt.
+lore: Cisi bracia zakonni krążą po bruku Toledo, nasłuchując każdego szeptu niezgodnego
+  z dogmatem.
 gold: 2
 agents: 1
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [01-patrol-familiariuszy](01-patrol-familiariuszy.md)

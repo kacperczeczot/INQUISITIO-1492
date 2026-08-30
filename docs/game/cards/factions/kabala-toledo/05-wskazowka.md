@@ -10,8 +10,11 @@ tags:
 - fragment
 effect: 'Jeśli masz Agenta w Lochach lub Trybunale: Zyskaj Fragment. Jeśli nie masz
   Agenta w Lochach lub Trybunale: Zyskaj 1 złoto.'
-lore: Drugi Fragment wymaga miejsca wiedzy — Agent przy Kodeksie w Lochach lub Trybunale.
+lore: Układ gwiazd nad Toledo wskazuje godzinę, w której pieczęć wiedzy może zostać
+  otwarta.
 ---
+
+
 
 
 

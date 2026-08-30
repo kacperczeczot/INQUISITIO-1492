@@ -10,12 +10,14 @@ tags:
 - move
 - gold
 effect: Przesuń swojego Agenta o 1 lokację.
-lore: Ciężkie kroki zbrojnych w habitach niosą spokój wiernym i paraliżujący strach
-  heretykom.
+lore: Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed
+  oblicze sprawiedliwości.
 gold: 1
 target_heresy: 1
 agents: 1
 ---
+
+
 
 
 

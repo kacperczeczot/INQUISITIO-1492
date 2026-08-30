@@ -12,10 +12,13 @@ tags:
 - heresy
 effect: Przesuń swojego Agenta o 1 lokację. Załóż Hak na rywala.
 heresy_text: Faworyzm dworu budzi zazdrość kortegan i biskupów.
-lore: Stół widzi faworyta z żetonem szantażu, zanim padnie Dekret.
+lore: Faworyt dworu cieszy się łaską królowej, dopóki jego użyteczność przewyższa
+  jego ambicję.
 agents: 1
 creates_hook: true
 ---
+
+
 
 
 

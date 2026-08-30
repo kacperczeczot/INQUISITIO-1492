@@ -10,8 +10,11 @@ tags:
 - relic
 - move
 effect: Przenieś Relikwię z lokacji swojego Agenta do sąsiedniej lokacji.
-lore: Bluff kierunku Relikwii jest połową gry Cieni.
+lore: Ocalone manuskrypty i relikwie przodków są warte więcej niż całe złoto kastylijskiej
+  korony.
 ---
+
+
 
 
 

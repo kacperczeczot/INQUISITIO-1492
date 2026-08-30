@@ -10,8 +10,11 @@ tags:
 - interrogation
 effect: 'Wykonaj Przesłuchanie na aresztowanego Agenta rywala. Limit: 1 / gracza /
   Erę.'
-lore: Prywatna władza. Ofiara negocjuje przy stole, zanim wybierzesz opcję.
+lore: W kamiennych podziemiach trybunału milczenie jest tylko chwilową iluzją przed
+  nieuchronnym wyznaniem.
 ---
+
+
 
 
 [Strona główna](../../../../../README.md) > [swiete-oficjum](README.md) > [07-przesluchanie](07-przesluchanie.md)

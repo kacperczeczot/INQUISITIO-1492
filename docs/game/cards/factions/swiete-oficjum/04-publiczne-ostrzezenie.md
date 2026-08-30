@@ -11,8 +11,11 @@ tags:
 effect: 'Przesuń Inkwizytora o 1 lokację w stronę lokacji swojego Agenta. Limit: 1
   nasłanie / gracza / Erę.'
 heresy_text: Familiariusze wskazują kierunek patrolu Wielkiego Inkwizytora.
-lore: Oficjum daje sygnał patrolu, powoli naprowadzając Inkwizytora na cel.
+lore: Dzwon zwiastujący procesję pokutną zmusza grzeszników do natychmiastowego opuszczenia
+  miasta.
 ---
+
+
 
 
 
