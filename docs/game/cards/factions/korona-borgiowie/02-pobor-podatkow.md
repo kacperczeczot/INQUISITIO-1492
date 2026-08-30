@@ -4,7 +4,7 @@ name: Pobór Podatków
 faction: korona-borgiowie
 type: akcja
 layer: A
-cost: 1
+cost: 0
 heresy: 0
 tags:
 - gold
@@ -13,6 +13,7 @@ lore: Skarbiec korony musi być pełny, by opłacić lojalność wielmożów i m
 gold: 2
 target_heresy: 1
 ---
+
 
 
 

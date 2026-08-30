@@ -4,8 +4,8 @@ name: Świadek Koronny
 faction: swiete-oficjum
 type: akcja
 layer: A
-cost: 1
-heresy: 2
+cost: 0
+heresy: 3
 tags:
 - hook
 effect: Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora.
@@ -13,6 +13,7 @@ lore: Świadek, który otrzymał rozgrzeszenie w zamian za zeznania, jest najgro
   bronią oskarżyciela.
 creates_hook: true
 ---
+
 
 
 

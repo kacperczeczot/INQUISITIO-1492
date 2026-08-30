@@ -168,8 +168,8 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
-| `heresy` | 2 |
+| `cost_gold` | 0 |
+| `heresy` | 3 |
 | `heresy_text` | — |
 | `effect` | Załóż Hak na rywala z Agentem w Lochach lub w lokacji Inkwizytora. |
 | `lore` | Świadek, który otrzymał rozgrzeszenie w zamian za zeznania, jest najgroźniejszą bronią oskarżyciela. |
@@ -469,7 +469,7 @@ Kart: **12**
 | `faction` | korona-borgiowie |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
 | `effect` | Zyskaj 2 złota. Wskaż rywala: +1 Herezja. |
@@ -872,10 +872,10 @@ Kart: **12**
 | `faction` | gildia-cieni |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 2 |
 | `heresy` | 1 |
 | `heresy_text` | Strażnik zna cenę milczenia lepiej niż modlitwy. |
-| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota. |
 | `lore` | Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym na całą noc. |
 | `tags` | move |
 | `status` | prototyp |

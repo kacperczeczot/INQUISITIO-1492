@@ -27,7 +27,7 @@ FACTION_NAMES = {
 
 def main():
     parser = argparse.ArgumentParser(description="INQUISITIO-1492 - Generate Telemetry Report")
-    parser.add_argument("--games", type=int, default=10000, help="Number of games per setup (ADR-0014: >= 10000)")
+    parser.add_argument("--games", type=int, default=100000, help="Number of games per setup (ADR-0014: >= 10000)")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed")
     parser.add_argument("--players", type=int, default=None, choices=[3, 4, 5], help="Filter setups by player count")
     parser.add_argument("--output", type=str, default=None, help="Output markdown path")

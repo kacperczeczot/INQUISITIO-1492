@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.142</span>
+              <span id="prev-meta-ver">v1.0-alpha.146</span>
             </div>
           </div>
         </div>
@@ -1241,14 +1241,14 @@
   "so-09": {
     "name": "Świadek Koronny",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "creates_hook": true,
     "action": "creates_hook",
     "condition": "rival_in_dungeon_or_inquisitor",
     "tags": [
       "hook"
     ],
-    "heresy": 2,
+    "heresy": 3,
     "lore": "Świadek, który otrzymał rozgrzeszenie w zamian za zeznania, jest najgroźniejszą bronią oskarżyciela."
   },
   "so-10": {
@@ -1481,13 +1481,14 @@
   "kb-02": {
     "name": "Pobór Podatków",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "gold": 2,
     "action": "gain_gold",
     "tags": [
       "gold"
     ],
     "target_heresy": 1,
+    "heresy": 0,
     "lore": "Skarbiec korony musi być pełny, by opłacić lojalność wielmożów i milczenie kardynałów."
   },
   "kb-03": {
@@ -1800,14 +1801,14 @@
   "gc-01": {
     "name": "Przekupiony Strażnik",
     "type": "akcja",
-    "cost": 1,
+    "cost": 2,
     "agents": 1,
     "action": "move_agent",
     "tags": [
       "move"
     ],
     "heresy": 1,
-    "gold": 1,
+    "gold": 2,
     "heresy_text": "Strażnik zna cenę milczenia lepiej niż modlitwy.",
     "lore": "Dźwięk złotych dukatów w sakiewce strażnika potrafi uczynić go ślepym i głuchym na całą noc."
   },
@@ -2327,7 +2328,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.142';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.146';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;
