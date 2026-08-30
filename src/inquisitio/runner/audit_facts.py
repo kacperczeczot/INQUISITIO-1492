@@ -81,9 +81,11 @@ def save_and_archive_report(
     filename: str,
     custom_out: str | None = None,
     min_games_per_setup: int | None = None,
+    allow_overwrite: bool = False,
 ) -> tuple[Path, Path]:
     """Write report directly to data/playtesting/sim-reports/archive/{version}/ with game_config.yaml snapshot.
     Enforces ADR-0014: Hard prohibition on saving reports with < 5000 games per setup.
+    Enforces Rule 15: Hard prohibition on overwriting sealed archive snapshots without explicit flag.
     """
     if min_games_per_setup is not None and min_games_per_setup < 5000:
         raise ValueError(
@@ -103,6 +105,11 @@ def save_and_archive_report(
 
     if custom_out:
         out_path = Path(custom_out)
+        if out_path.exists() and "archive" in out_path.parts and not allow_overwrite:
+            raise PermissionError(
+                f"⛔ ARCHIVE SEAL VIOLATION: Raport '{out_path}' już istnieje w archiwum i jest zapieczętowany! "
+                "Podbij wersję w game_config.yaml zamiast nadpisywać historię."
+            )
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(report_text, encoding="utf-8")
         return out_path, out_path
@@ -131,6 +138,12 @@ def save_and_archive_report(
 
     archive_dir = base_dir / "archive" / ver
     archive_path = archive_dir / filename
+
+    if archive_path.exists() and not allow_overwrite:
+        raise PermissionError(
+            f"⛔ ARCHIVE SEAL VIOLATION: Raport '{archive_path}' już istnieje i jest zapieczętowany! "
+            f"Wersja {ver} została już zarchiwizowana. Podbij wersję w game_config.yaml."
+        )
 
     archive_dir.mkdir(parents=True, exist_ok=True)
     archive_path.write_text(report_text, encoding="utf-8")

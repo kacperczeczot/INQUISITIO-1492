@@ -63,6 +63,11 @@ class _Section:
         return f"_Section({self._data!r})"
 
 
+class ConfigValidationError(ValueError):
+    """Raised when game configuration violates physical or mathematical invariants."""
+    pass
+
+
 class GameConfig:
     """Typed accessor for game_config.yaml."""
 
@@ -70,6 +75,7 @@ class GameConfig:
         p = path or _CONFIG_PATH
         with open(p, encoding="utf-8") as f:
             self._raw: dict[str, Any] = yaml.safe_load(f)
+        self.validate_invariants(self._raw)
         self.version = str(self._raw.get("version", "v1.12"))
         self.system = _Section(self._raw["system"])
         self.victory = _Section(self._raw["victory"])
@@ -78,6 +84,51 @@ class GameConfig:
         self.variants = _Section(self._raw["variants"])
         self.telemetry_norms = _Section(self._raw["telemetry_norms"])
 
+    @staticmethod
+    def validate_invariants(raw: dict[str, Any]) -> None:
+        """Validate generic mathematical and physical invariants of the configuration."""
+        vic = raw.get("victory", {})
+        sys = raw.get("system", {})
+
+        def _get_p_val(val: Any, p_key: str, default: int = 0) -> int:
+            if isinstance(val, dict):
+                return int(val.get(p_key, val.get("4p", default)))
+            if val is None:
+                return default
+            return int(val)
+
+        # 1. Check unique rival interaction limits (e.g. condemns)
+        so = vic.get("swiete_oficjum", {})
+        condemns = so.get("condemns")
+        if condemns is not None:
+            for p_count, p_key in [(3, "3p"), (4, "4p"), (5, "5p")]:
+                c_val = _get_p_val(condemns, p_key, 3)
+                max_rivals = p_count - 1
+                if c_val > max_rivals:
+                    raise ConfigValidationError(
+                        f"Fizyczna niemożliwość: 'condemns' ({c_val}) dla formatu {p_key} "
+                        f"przekracza maksymalną liczbę rywali przy stole ({max_rivals})!"
+                    )
+
+        # 2. Check victory requirements positivity
+        for faction, reqs in vic.items():
+            if not isinstance(reqs, dict):
+                continue
+            for req_name, req_val in reqs.items():
+                for p_key in ["3p", "4p", "5p"]:
+                    v = _get_p_val(req_val, p_key, 1)
+                    if v <= 0:
+                        raise ConfigValidationError(
+                            f"Nieprawidłowy warunek zwycięstwa: {faction}.{req_name} w {p_key} wynosi {v} <= 0."
+                        )
+
+        # 3. Check system positivity
+        start_gold = sys.get("start_gold", 4)
+        for p_key in ["3p", "4p", "5p"]:
+            sg = _get_p_val(start_gold, p_key, 4)
+            if sg < 0:
+                raise ConfigValidationError(f"Złoto startowe w {p_key} nie może być ujemne: {sg}")
+
     # ── Convenience helpers ──────────────────────────────────────
 
     def threshold_for(self, n_players: int) -> int:
@@ -85,6 +136,8 @@ class GameConfig:
         t = self.system.accusation_threshold
         if hasattr(t, "raw"):
             t = t.raw()
+        elif type(t).__name__ == "_Section":
+            t = t._data
         if isinstance(t, (int, float)):
             return int(t)
         if isinstance(t, dict):
