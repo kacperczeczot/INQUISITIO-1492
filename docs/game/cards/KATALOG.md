@@ -412,8 +412,8 @@ Kart: **12**
 | `faction` | cienie-al-andalus |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 3 |
-| `heresy` | 1 |
+| `cost_gold` | 2 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Jeśli Inkwizytor jest w Twojej lokacji docelowej: przesuń go o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Zmienić latarnika, zgasić pochodnię w zaułku — i oto inkwizytor błądzi w labiryncie nocy. |

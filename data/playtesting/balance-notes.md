@@ -94,6 +94,13 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
 
+### 🌐 Patch v1.0-alpha.165 (2026-08-30) — Global Auditor: Karta `caa-11` (Nocna Zmiana Warty): `cost` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-11_C2_H2` -> Karta `caa-11` (Nocna Zmiana Warty): `cost` → `2` + Karta `caa-11` (Nocna Zmiana Warty): `heresy` → `2`
+- **Wynik Globalny:** 86.6 → **86.7**
+- **Balans 4P:** 90.3 → 90.6
+- **Balans 3P:** 72.3 → 72.3
+- **Balans 5P:** 97.1 → 97.2
+
 ### 🌐 Patch v1.0-alpha.164 (2026-08-30) — Global Auditor: Karta `gc-01` (Przekupiony Strażnik): `heresy` → `3` (Zysk Global Δ +0.4 pkt)
 - **Modyfikacja:** `BAZA__L3_GC-01_HERESY_PLUS2` -> Karta `gc-01` (Przekupiony Strażnik): `heresy` → `3`
 - **Wynik Globalny:** 86.2 → **86.6**
