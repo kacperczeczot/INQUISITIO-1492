@@ -168,7 +168,6 @@ def run_batch(
         effective_overrides = merge_override_dicts(active_overrides, resolved_win)
 
     if _HAS_NATIVE and inquisitio_native is not None:
-        import multiprocessing
         n_threads = 1 if multiprocessing.current_process().name != "MainProcess" else 0
         res = inquisitio_native.run_batch(
             games=games,

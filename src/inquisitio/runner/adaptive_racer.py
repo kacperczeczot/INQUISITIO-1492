@@ -494,38 +494,44 @@ def extract_config_overrides(cfg: dict, setup_type: str = "4p") -> dict:
     if card_ov:
         ov["card_overrides"] = card_ov
 
-    def _get_val(val, stype):
+    def _get_val(val: Any, stype: str, default: int = 0) -> int:
+        if val is None:
+            return default
         if isinstance(val, dict):
-            return val.get(stype, val.get("4p", 0))
-        return val
+            res = val.get(stype, val.get("4p", default))
+            return int(res) if res is not None else default
+        try:
+            return int(val)
+        except (ValueError, TypeError):
+            return default
 
     sys = cfg.get("system", {})
     if "accusation_threshold" in sys:
-        ov["threshold_offset"] = _get_val(sys["accusation_threshold"], setup_type) - 7
+        ov["threshold_offset"] = _get_val(sys["accusation_threshold"], setup_type, 7) - 7
     if "start_gold" in sys:
-        ov["start_gold_offset"] = _get_val(sys["start_gold"], setup_type) - 4
+        ov["start_gold_offset"] = _get_val(sys["start_gold"], setup_type, 4) - 4
     if "hand_limit" in sys:
-        ov["hand_limit_offset"] = _get_val(sys["hand_limit"], setup_type) - 5
+        ov["hand_limit_offset"] = _get_val(sys["hand_limit"], setup_type, 5) - 5
     if "max_eras" in sys:
-        ov["max_eras_offset"] = _get_val(sys["max_eras"], setup_type) - 15
+        ov["max_eras_offset"] = _get_val(sys["max_eras"], setup_type, 15) - 15
     if "cards_per_era" in sys:
-        ov["cards_per_era_offset"] = _get_val(sys["cards_per_era"], setup_type) - 2
+        ov["cards_per_era_offset"] = _get_val(sys["cards_per_era"], setup_type, 2) - 2
     if "intrigue_gold" in sys:
-        ov["intrigue_gold_offset"] = _get_val(sys["intrigue_gold"], setup_type) - 1
+        ov["intrigue_gold_offset"] = _get_val(sys["intrigue_gold"], setup_type, 1) - 1
     if "observed_threshold" in sys:
-        ov["observed_threshold_offset"] = _get_val(sys["observed_threshold"], setup_type) - 3
+        ov["observed_threshold_offset"] = _get_val(sys["observed_threshold"], setup_type, 3) - 3
     if "autodafe_cooldown" in sys:
-        ov["cooldown_offset"] = _get_val(sys["autodafe_cooldown"], setup_type) - 3
+        ov["cooldown_offset"] = _get_val(sys["autodafe_cooldown"], setup_type, 3) - 3
 
     vic = cfg.get("victory", {})
     if "swiete_oficjum" in vic and "stacks" in vic["swiete_oficjum"]:
-        ov["so_stacks_offset"] = _get_val(vic["swiete_oficjum"]["stacks"], setup_type) - 7
+        ov["so_stacks_offset"] = _get_val(vic["swiete_oficjum"]["stacks"], setup_type, 7) - 7
     if "korona_borgiowie" in vic and "decrees" in vic["korona_borgiowie"]:
-        ov["kb_decrees_offset"] = _get_val(vic["korona_borgiowie"]["decrees"], setup_type) - 2
+        ov["kb_decrees_offset"] = _get_val(vic["korona_borgiowie"]["decrees"], setup_type, 2) - 2
     if "cienie_al_andalus" in vic and "relics" in vic["cienie_al_andalus"]:
-        ov["caa_relics_offset"] = _get_val(vic["cienie_al_andalus"]["relics"], setup_type) - 2
+        ov["caa_relics_offset"] = _get_val(vic["cienie_al_andalus"]["relics"], setup_type, 2) - 2
     if "kabala_toledo" in vic and "fragments" in vic["kabala_toledo"]:
-        ov["kt_frags_offset"] = _get_val(vic["kabala_toledo"]["fragments"], setup_type) - 3
+        ov["kt_frags_offset"] = _get_val(vic["kabala_toledo"]["fragments"], setup_type, 3) - 3
     if "gildia_cieni" in vic and "falls" in vic["gildia_cieni"]:
-        ov["gc_falls_offset"] = _get_val(vic["gildia_cieni"]["falls"], setup_type) - 9
+        ov["gc_falls_offset"] = _get_val(vic["gildia_cieni"]["falls"], setup_type, 9) - 9
     return ov
