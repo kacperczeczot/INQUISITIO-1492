@@ -160,6 +160,7 @@ class CandidateStats:
             "id": self.id,
             "name": self.name,
             "params": self.params,
+            "score_global": getattr(self, "score_global", 0.0),
             "score_4p": self.score_4p,
             "score_4p_balance": self.score_4p_balance,
             "score_se": self.score_se,
