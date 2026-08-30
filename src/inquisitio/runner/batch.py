@@ -97,6 +97,32 @@ def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict
 import copy
 from inquisitio.config import CONFIG
 
+def resolve_format_delta_dict(delta_dict: dict, stype: str) -> dict:
+    """Filters and maps format-specific delta keys (e.g. threshold_4p_offset -> threshold_offset)
+    so they only apply to games matching that player count.
+    """
+    if not delta_dict:
+        return {}
+    resolved = {}
+    for k, v in delta_dict.items():
+        if k == "card_overrides":
+            resolved["card_overrides"] = copy.deepcopy(v)
+        elif "_3p_" in k or k.endswith("_3p_offset"):
+            if stype == "3p":
+                base_k = k.replace("_3p_", "_").replace("_3p_offset", "_offset")
+                resolved[base_k] = v
+        elif "_4p_" in k or k.endswith("_4p_offset"):
+            if stype == "4p":
+                base_k = k.replace("_4p_", "_").replace("_4p_offset", "_offset")
+                resolved[base_k] = v
+        elif "_5p_" in k or k.endswith("_5p_offset"):
+            if stype == "5p":
+                base_k = k.replace("_5p_", "_").replace("_5p_offset", "_offset")
+                resolved[base_k] = v
+        else:
+            resolved[k] = v
+    return resolved
+
 def merge_override_dicts(base_dict: dict, delta_dict: dict) -> dict:
     """Deep merges delta_dict on top of base_dict."""
     out = copy.deepcopy(base_dict)
@@ -138,7 +164,8 @@ def run_batch(
     if win_overrides is None:
         effective_overrides = active_overrides
     else:
-        effective_overrides = merge_override_dicts(active_overrides, win_overrides)
+        resolved_win = resolve_format_delta_dict(win_overrides, stype)
+        effective_overrides = merge_override_dicts(active_overrides, resolved_win)
 
     if _HAS_NATIVE and inquisitio_native is not None:
         import multiprocessing

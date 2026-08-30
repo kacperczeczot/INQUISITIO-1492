@@ -38,40 +38,94 @@ def _pc(sec, delta: int = 0) -> str:
     return str(int(sec) + delta)
 
 def build_level2_tests():
-    """Generate ±1 tests dynamically from current CONFIG victory conditions."""
+    """Generate ±1 tests dynamically from current CONFIG victory conditions.
+    Includes independent format-specific tests (3p, 4p, 5p) and global victory offsets.
+    """
     v = CONFIG.victory
     so = v.swiete_oficjum
     caa = v.cienie_al_andalus
     kb = v.korona_borgiowie
     kt = v.kabala_toledo
     gc = v.gildia_cieni
+
     tests = [
         ("L2_BAZA", "Baza (Bieżące warunki zwycięstwa)", {}),
-        ("L2_SO_STACKS_MINUS1", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -1)}", {"so_stacks_offset": -1}),
-        ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, -1)}", {"so_condemns_offset": -1}),
-        ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie: {_pc(caa.relics)} → {_pc(caa.relics, 1)}", {"caa_relics_offset": 1}),
-        ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie: {_pc(caa.relics)} → {_pc(caa.relics, -1)}", {"caa_relics_offset": -1}),
-        ("L2_KB_DECREES_PLUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, 1)}", {"kb_decrees_offset": 1}),
-        ("L2_KB_DECREES_MINUS1", f"Korona Dekrety: {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
-        ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
-        ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
-        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, 1)}", {"gc_falls_offset": 1}),
-        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, -1)}", {"gc_falls_offset": -1}),
-        ("L2_GC_FALLS_MINUS2", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, -2)}", {"gc_falls_offset": -2}),
-        ("L2_GC_FALLS_MINUS3", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, -3)}", {"gc_falls_offset": -3}),
-        ("L2_KT_FRAGS_MINUS2", f"Kabała Fragmenty: {_pc(kt.fragments)} → {_pc(kt.fragments, -2)}", {"kt_frags_offset": -2}),
-        ("L2_SO_STACKS_MINUS2", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -2)}", {"so_stacks_offset": -2}),
-        ("L2_SO_STACKS_MINUS3", f"Oficjum Stosy: {_pc(so.stacks)} → {_pc(so.stacks, -3)}", {"so_stacks_offset": -3}),
-        ("L2_SO_CONDEMNS_MINUS2", f"Oficjum Skazania: {_pc(so.condemns)} → {_pc(so.condemns, -2)}", {"so_condemns_offset": -2}),
-        ("L2_CAA_RELICS_PLUS2", f"Cienie Relikwie: {_pc(caa.relics)} → {_pc(caa.relics, 2)}", {"caa_relics_offset": 2}),
-        ("L2_GC_FALLS_PLUS2", f"Gildia Upadki: {_pc(gc.falls)} → {_pc(gc.falls, 2)}", {"gc_falls_offset": 2}),
     ]
-    if hasattr(kt, "era"):
-        tests.extend([
-            ("L2_KT_ERA_PLUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, 1)}", {"kt_era_offset": 1}),
-            ("L2_KT_ERA_MINUS1", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, -1)}", {"kt_era_offset": -1}),
-            ("L2_KT_ERA_MINUS2", f"Kabała Era: {_pc(kt.era)} → {_pc(kt.era, -2)}", {"kt_era_offset": -2}),
-        ])
+
+    def _get_val(obj, p_key, default_val=1):
+        if isinstance(obj, dict) or hasattr(obj, "__getitem__"):
+            try:
+                return int(obj[p_key])
+            except (KeyError, TypeError):
+                pass
+        return int(obj) if obj is not None else default_val
+
+    # --- 1. Święte Oficjum: Stosy & Skazania (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_st = _get_val(so.stacks, p_key, 7)
+        for d in (1, 2, 3):
+            tests.append((f"L2_SO_STACKS_{p_key.upper()}_PLUS{d}", f"Oficjum Stosy ({p_key}): {cur_st} → {cur_st + d}", {f"so_stacks_{p_key}_offset": d}))
+            if cur_st - d >= 1:
+                tests.append((f"L2_SO_STACKS_{p_key.upper()}_MINUS{d}", f"Oficjum Stosy ({p_key}): {cur_st} → {cur_st - d}", {f"so_stacks_{p_key}_offset": -d}))
+
+        cur_cd = _get_val(so.condemns, p_key, 3)
+        max_rivals = {"3p": 2, "4p": 3, "5p": 4}[p_key]
+        for d in (1, 2):
+            if cur_cd + d <= max_rivals:
+                tests.append((f"L2_SO_CONDEMNS_{p_key.upper()}_PLUS{d}", f"Oficjum Skazania ({p_key}): {cur_cd} → {cur_cd + d}", {f"so_condemns_{p_key}_offset": d}))
+            if cur_cd - d >= 1:
+                tests.append((f"L2_SO_CONDEMNS_{p_key.upper()}_MINUS{d}", f"Oficjum Skazania ({p_key}): {cur_cd} → {cur_cd - d}", {f"so_condemns_{p_key}_offset": -d}))
+
+    # --- 2. Gildia Cieni: Upadki (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_fl = _get_val(gc.falls, p_key, 9)
+        for d in (1, 2, 3):
+            tests.append((f"L2_GC_FALLS_{p_key.upper()}_PLUS{d}", f"Gildia Upadki ({p_key}): {cur_fl} → {cur_fl + d}", {f"gc_falls_{p_key}_offset": d}))
+            if cur_fl - d >= 1:
+                tests.append((f"L2_GC_FALLS_{p_key.upper()}_MINUS{d}", f"Gildia Upadki ({p_key}): {cur_fl} → {cur_fl - d}", {f"gc_falls_{p_key}_offset": -d}))
+
+    # --- 3. Cienie Al-Andalus: Relikwie (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_rel = _get_val(caa.relics, p_key, 2)
+        tests.append((f"L2_CAA_RELICS_{p_key.upper()}_PLUS1", f"Cienie Relikwie ({p_key}): {cur_rel} → {cur_rel + 1}", {f"caa_relics_{p_key}_offset": 1}))
+        if cur_rel - 1 >= 1:
+            tests.append((f"L2_CAA_RELICS_{p_key.upper()}_MINUS1", f"Cienie Relikwie ({p_key}): {cur_rel} → {cur_rel - 1}", {f"caa_relics_{p_key}_offset": -1}))
+
+    # --- 4. Korona Borgiowie: Dekrety & Haki (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_dec = _get_val(kb.decrees, p_key, 2)
+        tests.append((f"L2_KB_DECREES_{p_key.upper()}_PLUS1", f"Korona Dekrety ({p_key}): {cur_dec} → {cur_dec + 1}", {f"kb_decrees_{p_key}_offset": 1}))
+        if cur_dec - 1 >= 1:
+            tests.append((f"L2_KB_DECREES_{p_key.upper()}_MINUS1", f"Korona Dekrety ({p_key}): {cur_dec} → {cur_dec - 1}", {f"kb_decrees_{p_key}_offset": -1}))
+
+        cur_hk = _get_val(getattr(kb, "hooks", 2), p_key, 2)
+        tests.append((f"L2_KB_HOOKS_{p_key.upper()}_PLUS1", f"Korona Haki ({p_key}): {cur_hk} → {cur_hk + 1}", {f"kb_hooks_{p_key}_offset": 1}))
+        if cur_hk - 1 >= 0:
+            tests.append((f"L2_KB_HOOKS_{p_key.upper()}_MINUS1", f"Korona Haki ({p_key}): {cur_hk} → {cur_hk - 1}", {f"kb_hooks_{p_key}_offset": -1}))
+
+    # --- 5. Kabała Toledo: Fragmenty (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_fr = _get_val(kt.fragments, p_key, 3)
+        for d in (1, 2):
+            tests.append((f"L2_KT_FRAGS_{p_key.upper()}_PLUS{d}", f"Kabała Fragmenty ({p_key}): {cur_fr} → {cur_fr + d}", {f"kt_frags_{p_key}_offset": d}))
+            if cur_fr - d >= 1:
+                tests.append((f"L2_KT_FRAGS_{p_key.upper()}_MINUS{d}", f"Kabała Fragmenty ({p_key}): {cur_fr} → {cur_fr - d}", {f"kt_frags_{p_key}_offset": -d}))
+
+    # --- 6. Global Victory Rules ---
+    tests.extend([
+        ("L2_SO_STACKS_PLUS1", f"Oficjum Stosy (global): {_pc(so.stacks)} → {_pc(so.stacks, 1)}", {"so_stacks_offset": 1}),
+        ("L2_SO_STACKS_MINUS1", f"Oficjum Stosy (global): {_pc(so.stacks)} → {_pc(so.stacks, -1)}", {"so_stacks_offset": -1}),
+        ("L2_SO_CONDEMNS_MINUS1", f"Oficjum Skazania (global): {_pc(so.condemns)} → {_pc(so.condemns, -1)}", {"so_condemns_offset": -1}),
+        ("L2_CAA_RELICS_PLUS1", f"Cienie Relikwie (global): {_pc(caa.relics)} → {_pc(caa.relics, 1)}", {"caa_relics_offset": 1}),
+        ("L2_CAA_RELICS_MINUS1", f"Cienie Relikwie (global): {_pc(caa.relics)} → {_pc(caa.relics, -1)}", {"caa_relics_offset": -1}),
+        ("L2_KB_DECREES_PLUS1", f"Korona Dekrety (global): {_pc(kb.decrees)} → {_pc(kb.decrees, 1)}", {"kb_decrees_offset": 1}),
+        ("L2_KB_DECREES_MINUS1", f"Korona Dekrety (global): {_pc(kb.decrees)} → {_pc(kb.decrees, -1)}", {"kb_decrees_offset": -1}),
+        ("L2_KT_FRAGS_PLUS1", f"Kabała Fragmenty (global): {_pc(kt.fragments)} → {_pc(kt.fragments, 1)}", {"kt_frags_offset": 1}),
+        ("L2_KT_FRAGS_MINUS1", f"Kabała Fragmenty (global): {_pc(kt.fragments)} → {_pc(kt.fragments, -1)}", {"kt_frags_offset": -1}),
+        ("L2_GC_FALLS_PLUS1", f"Gildia Upadki (global): {_pc(gc.falls)} → {_pc(gc.falls, 1)}", {"gc_falls_offset": 1}),
+        ("L2_GC_FALLS_MINUS1", f"Gildia Upadki (global): {_pc(gc.falls)} → {_pc(gc.falls, -1)}", {"gc_falls_offset": -1}),
+    ])
+
     return tests
 
 

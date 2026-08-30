@@ -39,13 +39,43 @@ def _pc(sec, delta: int = 0) -> str:
 
 
 def build_level1_tests():
-    """Generate ±1 tests dynamically as relative offsets from current CONFIG values."""
+    """Generate ±1 tests dynamically as relative offsets from current CONFIG values.
+    Includes independent format-specific tests (3p, 4p, 5p) and table-wide rules.
+    """
     s = CONFIG.system
     t, g, h = s.accusation_threshold, s.start_gold, s.hand_limit
-    return [
+
+    tests = [
         ("L1_BAZA", "Baza (Bieżące parametry systemowe)", {}),
-        ("L1_THRESHOLD_PLUS1", f"Próg Oskarżenia: {_pc(t)} → {_pc(t, 1)}", {"threshold_offset": 1}),
-        ("L1_THRESHOLD_MINUS1", f"Próg Oskarżenia: {_pc(t)} → {_pc(t, -1)}", {"threshold_offset": -1}),
+    ]
+
+    # --- 1. Format-specific Accusation Thresholds (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_t = t[p_key] if isinstance(t, dict) or hasattr(t, "__getitem__") else int(t)
+        for d in (1, 2):
+            tests.append((f"L1_THRESHOLD_{p_key.upper()}_PLUS{d}", f"Próg Oskarżenia ({p_key}): {cur_t} → {cur_t + d}", {f"threshold_{p_key}_offset": d}))
+            if cur_t - d >= 1:
+                tests.append((f"L1_THRESHOLD_{p_key.upper()}_MINUS{d}", f"Próg Oskarżenia ({p_key}): {cur_t} → {cur_t - d}", {f"threshold_{p_key}_offset": -d}))
+
+    # --- 2. Format-specific Starting Gold (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_g = g[p_key] if isinstance(g, dict) or hasattr(g, "__getitem__") else int(g)
+        for d in (1, 2):
+            tests.append((f"L1_START_GOLD_{p_key.upper()}_PLUS{d}", f"Złoto startowe ({p_key}): {cur_g}zł → {cur_g + d}zł", {f"start_gold_{p_key}_offset": d}))
+            if cur_g - d >= 0:
+                tests.append((f"L1_START_GOLD_{p_key.upper()}_MINUS{d}", f"Złoto startowe ({p_key}): {cur_g}zł → {cur_g - d}zł", {f"start_gold_{p_key}_offset": -d}))
+
+    # --- 3. Format-specific Hand Limit (3p, 4p, 5p) ---
+    for p_key in ("3p", "4p", "5p"):
+        cur_h = h[p_key] if isinstance(h, dict) or hasattr(h, "__getitem__") else int(h)
+        tests.append((f"L1_HAND_LIMIT_{p_key.upper()}_PLUS1", f"Limit ręki ({p_key}): {cur_h} → {cur_h + 1}", {f"hand_limit_{p_key}_offset": 1}))
+        if cur_h - 1 >= 2:
+            tests.append((f"L1_HAND_LIMIT_{p_key.upper()}_MINUS1", f"Limit ręki ({p_key}): {cur_h} → {cur_h - 1}", {f"hand_limit_{p_key}_offset": -1}))
+
+    # --- 4. Global System Rules ---
+    tests.extend([
+        ("L1_THRESHOLD_PLUS1", f"Próg Oskarżenia (global): {_pc(t)} → {_pc(t, 1)}", {"threshold_offset": 1}),
+        ("L1_THRESHOLD_MINUS1", f"Próg Oskarżenia (global): {_pc(t)} → {_pc(t, -1)}", {"threshold_offset": -1}),
         ("L1_OBSERVED_PLUS1", f"Próg Obserwowanej: {s.observed_threshold} → {s.observed_threshold + 1}", {"observed_threshold_offset": 1}),
         ("L1_OBSERVED_MINUS1", f"Próg Obserwowanej: {s.observed_threshold} → {s.observed_threshold - 1}", {"observed_threshold_offset": -1}),
         ("L1_CARDS_PER_ERA_PLUS1", f"Karty/Erę: {s.cards_per_era} → {s.cards_per_era + 1}", {"cards_per_era_offset": 1}),
@@ -54,18 +84,13 @@ def build_level1_tests():
         ("L1_INTRIGUE_GOLD_MINUS1", f"Akcja Gospodarcza: {s.intrigue_gold} → {s.intrigue_gold - 1}", {"intrigue_gold_offset": -1}),
         ("L1_MAX_ERAS_PLUS1", f"Limit Er: {s.max_eras} → {s.max_eras + 1}", {"max_eras_offset": 1}),
         ("L1_MAX_ERAS_MINUS1", f"Limit Er: {s.max_eras} → {s.max_eras - 1}", {"max_eras_offset": -1}),
-        ("L1_START_GOLD_PLUS1", f"Złoto startowe: {_pc(g)}zł → {_pc(g, 1)}zł", {"start_gold_offset": 1}),
-        ("L1_START_GOLD_MINUS1", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -1)}zł", {"start_gold_offset": -1}),
-        ("L1_START_GOLD_MINUS2", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -2)}zł", {"start_gold_offset": -2}),
-        ("L1_START_GOLD_MINUS3", f"Złoto startowe: {_pc(g)}zł → {_pc(g, -3)}zł", {"start_gold_offset": -3}),
         ("L1_AGENTS_PLUS1", f"Agenci: {s.agents_per_player} → {s.agents_per_player + 1}", {"agents_offset": 1}),
         ("L1_AGENTS_MINUS1", f"Agenci: {s.agents_per_player} → {s.agents_per_player - 1}", {"agents_offset": -1}),
-        ("L1_HAND_LIMIT_PLUS1", f"Limit ręki: {_pc(h)} → {_pc(h, 1)}", {"hand_limit_offset": 1}),
-        ("L1_HAND_LIMIT_MINUS1", f"Limit ręki: {_pc(h)} → {_pc(h, -1)}", {"hand_limit_offset": -1}),
         ("L1_AUTODAFE_COOLDOWN_PLUS1", f"Cooldown Autodafé: {s.autodafe_cooldown} → {s.autodafe_cooldown + 1} Ery", {"cooldown_offset": 1}),
         ("L1_AUTODAFE_COOLDOWN_MINUS1", f"Cooldown Autodafé: {s.autodafe_cooldown} → {s.autodafe_cooldown - 1} Ery", {"cooldown_offset": -1}),
-        ("L1_INTRIGUE_GOLD_DOUBLE", f"Akcja Gospodarcza: {s.intrigue_gold} → {s.intrigue_gold * 2} (podwojenie)", {"intrigue_gold": s.intrigue_gold * 2}),
-    ]
+    ])
+
+    return tests
 
 
 def _run_single_test_task(task_args: tuple[tuple[str, str, dict], int, int, list[str]]) -> dict:

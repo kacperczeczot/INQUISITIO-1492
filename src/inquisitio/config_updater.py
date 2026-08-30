@@ -62,7 +62,35 @@ def apply_mutation_to_config(
 
     descriptions: list[str] = []
 
-    # --- Level 1: System Parameters ---
+    # --- Level 1: System Parameters (Global & Per-Format) ---
+    for p_key in ("3p", "4p", "5p"):
+        k = f"threshold_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            if not isinstance(sys_cfg.get("accusation_threshold"), dict):
+                cur = int(sys_cfg.get("accusation_threshold", 7))
+                sys_cfg["accusation_threshold"] = {"3p": cur, "4p": cur, "5p": cur}
+            sys_cfg["accusation_threshold"][p_key] = max(1, int(sys_cfg["accusation_threshold"].get(p_key, 7)) + off)
+            descriptions.append(f"Próg oskarżenia ({p_key}): offset {off:+d} (nowy: {sys_cfg['accusation_threshold'][p_key]})")
+
+        k = f"start_gold_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            if not isinstance(sys_cfg.get("start_gold"), dict):
+                cur = int(sys_cfg.get("start_gold", 4))
+                sys_cfg["start_gold"] = {"3p": cur, "4p": cur, "5p": cur}
+            sys_cfg["start_gold"][p_key] = max(0, int(sys_cfg["start_gold"].get(p_key, 4)) + off)
+            descriptions.append(f"Startowe złoto ({p_key}): offset {off:+d} (nowe: {sys_cfg['start_gold'][p_key]}zł)")
+
+        k = f"hand_limit_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            if not isinstance(sys_cfg.get("hand_limit"), dict):
+                cur = int(sys_cfg.get("hand_limit", 5))
+                sys_cfg["hand_limit"] = {"3p": cur, "4p": cur, "5p": cur}
+            sys_cfg["hand_limit"][p_key] = max(1, int(sys_cfg["hand_limit"].get(p_key, 5)) + off)
+            descriptions.append(f"Limit kart na ręce ({p_key}): offset {off:+d} (nowy: {sys_cfg['hand_limit'][p_key]})")
+
     if "threshold_offset" in rule_params:
         off = rule_params["threshold_offset"]
         sys_cfg["accusation_threshold"] = _apply_offset_to_item(sys_cfg["accusation_threshold"], off, min_val=1)
@@ -116,7 +144,78 @@ def apply_mutation_to_config(
         sys_cfg["max_eras"] = max(1, int(rule_params["max_eras"]))
         descriptions.append(f"Limit Er: {sys_cfg['max_eras']}")
 
-    # --- Level 2: Victory Conditions ---
+    # --- Level 2: Victory Conditions (Global & Per-Format) ---
+    for p_key in ("3p", "4p", "5p"):
+        k = f"so_stacks_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            so = vic_cfg.setdefault("swiete_oficjum", {})
+            if not isinstance(so.get("stacks"), dict):
+                cur = int(so.get("stacks", 7))
+                so["stacks"] = {"3p": cur, "4p": cur, "5p": cur}
+            so["stacks"][p_key] = max(1, int(so["stacks"].get(p_key, 7)) + off)
+            descriptions.append(f"Święte Oficjum: Stosy ({p_key}) offset {off:+d} (nowe: {so['stacks'][p_key]})")
+
+        k = f"so_condemns_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            so = vic_cfg.setdefault("swiete_oficjum", {})
+            if not isinstance(so.get("condemns"), dict):
+                cur = int(so.get("condemns", 3))
+                so["condemns"] = {"3p": cur, "4p": cur, "5p": cur}
+            so["condemns"][p_key] = max(1, int(so["condemns"].get(p_key, 3)) + off)
+            descriptions.append(f"Święte Oficjum: Skazania ({p_key}) offset {off:+d} (nowe: {so['condemns'][p_key]})")
+
+        k = f"gc_falls_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            gc = vic_cfg.setdefault("gildia_cieni", {})
+            if not isinstance(gc.get("falls"), dict):
+                cur = int(gc.get("falls", 9))
+                gc["falls"] = {"3p": cur, "4p": cur, "5p": cur}
+            gc["falls"][p_key] = max(1, int(gc["falls"].get(p_key, 9)) + off)
+            descriptions.append(f"Gildia Cieni: Upadki ({p_key}) offset {off:+d} (nowe: {gc['falls'][p_key]})")
+
+        k = f"caa_relics_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            caa = vic_cfg.setdefault("cienie_al_andalus", {})
+            if not isinstance(caa.get("relics"), dict):
+                cur = int(caa.get("relics", 2))
+                caa["relics"] = {"3p": cur, "4p": cur, "5p": cur}
+            caa["relics"][p_key] = max(1, int(caa["relics"].get(p_key, 2)) + off)
+            descriptions.append(f"Cienie Al-Andalus: Relikwie ({p_key}) offset {off:+d} (nowe: {caa['relics'][p_key]})")
+
+        k = f"kb_decrees_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            kb = vic_cfg.setdefault("korona_borgiowie", {})
+            if not isinstance(kb.get("decrees"), dict):
+                cur = int(kb.get("decrees", 2))
+                kb["decrees"] = {"3p": cur, "4p": cur, "5p": cur}
+            kb["decrees"][p_key] = max(1, int(kb["decrees"].get(p_key, 2)) + off)
+            descriptions.append(f"Korona Borgiowie: Dekrety ({p_key}) offset {off:+d} (nowe: {kb['decrees'][p_key]})")
+
+        k = f"kb_hooks_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            kb = vic_cfg.setdefault("korona_borgiowie", {})
+            if not isinstance(kb.get("hooks"), dict):
+                cur = int(kb.get("hooks", 2))
+                kb["hooks"] = {"3p": cur, "4p": cur, "5p": cur}
+            kb["hooks"][p_key] = max(0, int(kb["hooks"].get(p_key, 2)) + off)
+            descriptions.append(f"Korona Borgiowie: Haki ({p_key}) offset {off:+d} (nowe: {kb['hooks'][p_key]})")
+
+        k = f"kt_frags_{p_key}_offset"
+        if k in rule_params:
+            off = rule_params[k]
+            kt = vic_cfg.setdefault("kabala_toledo", {})
+            if not isinstance(kt.get("fragments"), dict):
+                cur = int(kt.get("fragments", 3))
+                kt["fragments"] = {"3p": cur, "4p": cur, "5p": cur}
+            kt["fragments"][p_key] = max(1, int(kt["fragments"].get(p_key, 3)) + off)
+            descriptions.append(f"Kabała Toledo: Fragmenty ({p_key}) offset {off:+d} (nowe: {kt['fragments'][p_key]})")
+
     if "so_stacks_offset" in rule_params:
         off = rule_params["so_stacks_offset"]
         vic_cfg["swiete_oficjum"]["stacks"] = _apply_offset_to_item(vic_cfg["swiete_oficjum"]["stacks"], off, min_val=1)
@@ -180,7 +279,15 @@ def apply_mutation_to_config(
                     cards_cfg[cid] = {p_name: new_val}
                     descriptions.append(f"Karta `{cid}`: `{p_name}` → `{new_val}`")
 
-    # --- Level 4: Variants ---
+    # --- Level 4: Variants & Economy ---
+    if "card_cost_offset" in rule_params:
+        eco_cfg = raw_cfg.setdefault("economy", {})
+        eco_cfg["card_cost_offset"] = int(rule_params["card_cost_offset"])
+        descriptions.append(f"Ekonomia: Offset kosztu kart = {eco_cfg['card_cost_offset']}")
+    if "sig_cost_offset" in rule_params:
+        eco_cfg = raw_cfg.setdefault("economy", {})
+        eco_cfg["sig_cost_offset"] = int(rule_params["sig_cost_offset"])
+        descriptions.append(f"Ekonomia: Offset kosztu sygnatur = {eco_cfg['sig_cost_offset']}")
     if "time_deck_freq" in rule_params:
         var_cfg["time_deck_freq"] = rule_params["time_deck_freq"]
         descriptions.append(f"Wariant: Częstotliwość Talii Czasu = co {var_cfg['time_deck_freq']} Erę")
