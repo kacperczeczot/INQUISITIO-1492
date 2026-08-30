@@ -98,11 +98,11 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 - **Modyfikacja:** 
   - Karta `gc-08` (Zatrute Złoto): `cost: 1`, `gold: 1`, `target_heresy: 1`, `heresy: 1` — przywrócenie kanonicznego efektu (*„Zyskaj 1 złoto. Wskaż rywala: +1 Herezja.”*)
   - Usunięcie pasożytniczych iniekcji złota/herezji z kart taktycznych wprowadzonych przez mutacje audytora: `caa-03` (usunięto `gold: 4`), `caa-04` (usunięto `gold: 6`), `caa-05` (usunięto `gold: 4, target_heresy: 3`), `caa-06` (usunięto `gold: 1`), `caa-07` (usunięto `gold: 4`), `caa-08` (usunięto `gold: 1, target_heresy: 2`), `gc-07` (usunięto `gold: 3`), `so-04`/`so-05`/`so-07`/`so-08` (oczyszczono parametry z darmowego złota).
-- **Wynik Globalny:** 86.4 → **86.4 pkt**
-- **Balans 4P:** 91.8 → **91.8 pkt**
-- **Balans 3P:** 71.1 → **71.1 pkt**
-- **Balans 5P:** 96.2 → **96.2 pkt**
-- **Efekt:** Pełne przywrócenie tożsamości mechanicznej i ekonomicznej talii; eliminacja luk "darmowego bankomatu" w silniku i przywrócenie spójności zasad przy zachowaniu stabilnego balansu stołu.
+- **Wynik Globalny:** 86.4 → **75.6 pkt** (`🔻 -10.8`)
+- **Balans 4P:** 91.8 → **84.4 pkt** (`🔻 -7.4`)
+- **Balans 3P:** 71.1 → **69.2 pkt** (`🔻 -1.9`)
+- **Balans 5P:** 96.2 → **73.3 pkt** (`🔻 -22.9`)
+- **Efekt:** Pełne przywrócenie tożsamości mechanicznej i ekonomicznej talii; eliminacja fałszywych dopalaczy ("darmowego bankomatu") w silniku symulacji. Wynik spadł do realnego, niezafałszowanego stanu bazowego, ujawniając prawdziwe luki w balansie wymagające rzetelnego strojenia.
 
 ### 🟢 Patch v1.0-alpha.135 (2026-08-30) — Rekalibracja Gildii Cieni: Karta `gc-08` (Zatrute Złoto)
 - **Modyfikacja:** Karta `gc-08` (Zatrute Złoto): `cost: 1 → 2`, `gold: 0 → 1`
