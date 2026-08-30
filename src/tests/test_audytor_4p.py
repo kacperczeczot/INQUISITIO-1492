@@ -111,7 +111,7 @@ def test_macro_pool_is_pm1_only():
     assert "L1_CARDS_PER_ERA_PLUS1" in ids
     assert "L2_CAA_ERA_PLUS1" not in ids
     assert "L2_CAA_RELICS_PLUS1" in ids
-    assert "L2_SO_CONDEMNS_PLUS1" in ids
+    assert "L2_SO_CONDEMNS_PLUS1" not in ids
     assert "L4_SEA_ROUTE_ERA_PLUS1" in ids
     assert "L4_SEA_ROUTE_ERA_MINUS1" in ids
     assert "L1_AUTODAFE_DISABLED" not in ids

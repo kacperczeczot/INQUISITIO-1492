@@ -337,8 +337,13 @@ def _falls_n(falls: Any) -> int:
     if hasattr(falls, "default"):
         return int(falls.default)
     if isinstance(falls, dict):
-        val = falls.get("default", falls.get("no_oficjum", 4))
+        val = falls.get("4p", falls.get("default", falls.get("no_oficjum", 4)))
         return int(val) if val is not None else 4
+    if hasattr(falls, "__getitem__") and not isinstance(falls, (str, bytes)):
+        try:
+            return int(falls["4p"])
+        except Exception:
+            pass
     return int(falls) if falls is not None else 4
 
 

@@ -216,17 +216,19 @@ def test_ssot_win_paths_match_yaml():
     gc = st5.players[FactionId.GILDIA_CIENI]
     caa5.relics_evacuated = 0
     st5.era = 1
-    req_falls = int(CONFIG.victory.gildia_cieni.falls)
-    gc.falls = req_falls - 1
+    falls_val = CONFIG.victory.gildia_cieni.falls
+    req_falls_5p = int(falls_val.get("5p", 9) if hasattr(falls_val, "get") else falls_val)
+    gc.falls = req_falls_5p - 1
     assert check_winner_details(st5) is None
-    gc.falls = req_falls
+    gc.falls = req_falls_5p
     assert check_winner_details(st5) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     st_noso = new_game(setup="4p-no-oficjum", seed=1, layer="C")
     gc2 = st_noso.players[FactionId.GILDIA_CIENI]
-    gc2.falls = req_falls - 1
+    req_falls_4p = int(falls_val.get("4p", 9) if hasattr(falls_val, "get") else falls_val)
+    gc2.falls = req_falls_4p - 1
     assert check_winner_details(st_noso) is None
-    gc2.falls = req_falls
+    gc2.falls = req_falls_4p
     assert check_winner_details(st_noso) == (FactionId.GILDIA_CIENI, "gc_falls")
 
     assert heresy_zone(3, critical_min=7, observed_min=4) == "czysta"

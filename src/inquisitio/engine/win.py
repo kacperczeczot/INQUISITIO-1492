@@ -22,8 +22,8 @@ def _val(item: Any, pc: str) -> int:
     return int(item)
 
 
-def _gc_falls_need(falls: Any, ov: dict, *, no_oficjum: bool, layer: str = "C") -> int:
-    """One table-wide number. Legacy default/no_oficjum dict still reads for old YAML."""
+def _gc_falls_need(falls: Any, ov: dict, *, no_oficjum: bool, layer: str = "C", pc: str = "4p") -> int:
+    """One table-wide number or per-player-count dict. Legacy default/no_oficjum dict still reads for old YAML."""
     unified = int(ov.get("gc_falls_offset", 0) or 0)
     split_default = int(ov.get("gc_falls_default_offset", 0) or 0)
     split_noso = int(ov.get("gc_falls_no_oficjum_offset", 0) or 0)
@@ -32,9 +32,17 @@ def _gc_falls_need(falls: Any, ov: dict, *, no_oficjum: bool, layer: str = "C") 
         split = split_noso if no_oficjum else split_default
         return max(1, int(raw) + split + unified)
     if isinstance(falls, dict):
-        raw = falls["no_oficjum"] if no_oficjum else falls["default"]
-        split = split_noso if no_oficjum else split_default
-        return max(1, int(raw) + split + unified)
+        if "default" in falls or "no_oficjum" in falls:
+            raw = falls["no_oficjum"] if no_oficjum else falls["default"]
+            split = split_noso if no_oficjum else split_default
+            return max(1, int(raw) + split + unified)
+        raw = falls.get(pc, falls.get("4p", 9))
+        return max(1, int(raw) + unified)
+    if hasattr(falls, "__getitem__") and not isinstance(falls, (str, bytes)):
+        try:
+            return max(1, int(falls[pc]) + unified)
+        except Exception:
+            pass
     return max(1, int(falls) + unified + split_default + split_noso)
 
 
@@ -143,7 +151,7 @@ def check_winner_details(state: GameState, win_overrides: dict | None = None) ->
         elif fid == FactionId.GILDIA_CIENI:
             no_oficjum = FactionId.SWIETE_OFICJUM not in state.players
             falls_need = _gc_falls_need(
-                base["gc_falls_raw"], ov, no_oficjum=no_oficjum, layer=getattr(state, "layer", "C")
+                base["gc_falls_raw"], ov, no_oficjum=no_oficjum, layer=getattr(state, "layer", "C"), pc=pc
             )
 
             if pl.falls >= falls_need:

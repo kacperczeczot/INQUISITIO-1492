@@ -2469,6 +2469,7 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     long long total_poor_turns = 0;
     int win_paths[8] = {0};
     int card_plays[60] = {0};
+    int global_era_faction_wins[13][5] = {0};
 
     unsigned int n_threads = std::thread::hardware_concurrency();
     if (py_threads > 0) {
@@ -2481,6 +2482,7 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
 
     struct ThreadResult {
         int wins[5] = {0};
+        int era_faction_wins[13][5] = {0};
         int eras = 0;
         int dist[13] = {0};
         int deadlocks = 0;
@@ -2507,6 +2509,7 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
             uint8_t path_id = 0;
             uint8_t w = inq::play_game_fast(preset_id, seed + g, ov, eras, path_id, st);
             if (w < 5) r.wins[w]++;
+            if (w < 5 && eras >= 0 && eras <= 12) r.era_faction_wins[eras][w]++;
             r.eras += eras;
             if (eras >= 0 && eras <= 12) r.dist[eras]++;
             r.deadlocks += st.deadlocks;
@@ -2530,6 +2533,11 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
             }
         }
         for (int i = 0; i < 5; ++i) win_counts[i] += r.wins[i];
+        for (int e = 0; e <= 12; ++e) {
+            for (int w = 0; w < 5; ++w) {
+                global_era_faction_wins[e][w] += r.era_faction_wins[e][w];
+            }
+        }
         total_eras += r.eras;
         for (int i = 0; i <= 12; ++i) era_dist[i] += r.dist[i];
         deadlocks += r.deadlocks;
@@ -2563,6 +2571,7 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
                     uint8_t path_id = 0;
                     uint8_t w = inq::play_game_fast(preset_id, thread_seed + g, ov, eras, path_id, st);
                     if (w < 5) res.wins[w]++;
+                    if (w < 5 && eras >= 0 && eras <= 12) res.era_faction_wins[eras][w]++;
                     res.eras += eras;
                     if (eras >= 0 && eras <= 12) res.dist[eras]++;
                     res.deadlocks += st.deadlocks;
@@ -2594,6 +2603,11 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
         for (auto& f : futures) {
             ThreadResult r = f.get();
             for (int i = 0; i < 5; ++i) win_counts[i] += r.wins[i];
+            for (int e = 0; e <= 12; ++e) {
+                for (int w = 0; w < 5; ++w) {
+                    global_era_faction_wins[e][w] += r.era_faction_wins[e][w];
+                }
+            }
             total_eras += r.eras;
             for (int e = 0; e <= 12; ++e) era_dist[e] += r.dist[e];
             deadlocks += r.deadlocks;
@@ -2628,6 +2642,26 @@ static PyObject* py_run_batch_fast(PyObject* self, PyObject* args, PyObject* kwa
     }
     PyDict_SetItemString(py_res, "wins", py_wins);
     Py_DECREF(py_wins);
+
+    PyObject* py_era_faction_wins = PyDict_New();
+    for (int e = 0; e <= 12; ++e) {
+        PyObject* era_dict = PyDict_New();
+        bool has_wins = false;
+        for (int w = 0; w < 5; ++w) {
+            if (global_era_faction_wins[e][w] > 0) {
+                PyDict_SetItemString(era_dict, FACTION_NAMES[w], PyLong_FromLong(global_era_faction_wins[e][w]));
+                has_wins = true;
+            }
+        }
+        if (has_wins) {
+            PyObject* py_era = PyLong_FromLong(e);
+            PyDict_SetItem(py_era_faction_wins, py_era, era_dict);
+            Py_DECREF(py_era);
+        }
+        Py_DECREF(era_dict);
+    }
+    PyDict_SetItemString(py_res, "era_faction_wins", py_era_faction_wins);
+    Py_DECREF(py_era_faction_wins);
 
     // 2. win_paths dict
     static const char* PATH_NAMES[8] = {

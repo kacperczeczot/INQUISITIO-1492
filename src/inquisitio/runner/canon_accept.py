@@ -116,7 +116,7 @@ def table_has_share_foundation(res: dict) -> bool:
     return setup_shares_in_range(res.get("setup_shares") or {}, *RED_LINE_PCT)
 
 
-def canon_should_stop(base: dict, *, mode: str) -> bool:
+def canon_should_stop(base: dict) -> bool:
     """Always False — auditor runs until no candidate improves the score."""
     return False
 

@@ -173,6 +173,7 @@ def run_batch(
             avg_heresy_end=res.get("avg_heresy_end", 0.0),
             passes_forced_pct=res.get("passes_forced_pct", 0.0),
             card_plays_total=res.get("card_plays_total", {}),
+            era_faction_wins=res.get("era_faction_wins", {}),
         )
 
     wins: Counter[str] = Counter()

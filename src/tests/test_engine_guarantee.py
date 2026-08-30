@@ -187,28 +187,36 @@ def test_victory_conditions_strictly_follow_ssot_config():
     st = new_game(setup="5p-full", seed=99, layer="C")
     cfg_v = CONFIG.victory
 
+    def _v5(item: Any, default: int = 1) -> int:
+        if hasattr(item, "get"):
+            return int(item.get("5p", item.get("4p", default)))
+        if hasattr(item, "__getitem__") and not isinstance(item, (str, bytes)):
+            try:
+                return int(item["5p"])
+            except Exception:
+                pass
+        return int(item) if item is not None else default
+
     # SO Stacks
-    st.players[FactionId.SWIETE_OFICJUM].stacks = int(cfg_v.swiete_oficjum.stacks)
+    st.players[FactionId.SWIETE_OFICJUM].stacks = _v5(cfg_v.swiete_oficjum.stacks, 8)
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_stacks")
     st.players[FactionId.SWIETE_OFICJUM].stacks = 0
 
     # SO Condemns
-    condemns_5p = int(cfg_v.swiete_oficjum.condemns.get("5p", 3))
+    condemns_5p = _v5(cfg_v.swiete_oficjum.condemns, 3)
     st.players[FactionId.SWIETE_OFICJUM].condemned_rivals = set(list([FactionId.CIENIE_AL_ANDALUS, FactionId.KORONA_BORGIOWIE, FactionId.KABALA_TOLEDO])[:condemns_5p])
     assert check_winner_details(st) == (FactionId.SWIETE_OFICJUM, "so_condemns")
     st.players[FactionId.SWIETE_OFICJUM].condemned_rivals.clear()
 
     # CAA Relics
-    rel_5p = cfg_v.cienie_al_andalus.relics
-    relics_5p = int(rel_5p.get("5p", 3) if hasattr(rel_5p, "get") else rel_5p)
+    relics_5p = _v5(cfg_v.cienie_al_andalus.relics, 2)
     st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = relics_5p
     st.players[FactionId.CIENIE_AL_ANDALUS].shadow_exit = True
     assert check_winner_details(st) == (FactionId.CIENIE_AL_ANDALUS, "caa_sea_route")
     st.players[FactionId.CIENIE_AL_ANDALUS].relics_evacuated = 0
 
     # KB Decrees
-    dec_5p = cfg_v.korona_borgiowie.decrees
-    decrees_5p = int(dec_5p.get("5p", 3) if hasattr(dec_5p, "get") else dec_5p)
+    decrees_5p = _v5(cfg_v.korona_borgiowie.decrees, 2)
     st.players[FactionId.KORONA_BORGIOWIE].decrees_played = decrees_5p
     st.players[FactionId.KORONA_BORGIOWIE].hooks_on[FactionId.CIENIE_AL_ANDALUS] = 1
     st.players[FactionId.KORONA_BORGIOWIE].hooks_on[FactionId.KABALA_TOLEDO] = 1
@@ -217,15 +225,14 @@ def test_victory_conditions_strictly_follow_ssot_config():
     st.players[FactionId.KORONA_BORGIOWIE].hooks_on.clear()
 
     # KT Fragments
-    st.players[FactionId.KABALA_TOLEDO].fragments = int(cfg_v.kabala_toledo.fragments)
+    st.players[FactionId.KABALA_TOLEDO].fragments = _v5(cfg_v.kabala_toledo.fragments, 3)
     st.players[FactionId.KABALA_TOLEDO].heresy = 5
     st.players[FactionId.KABALA_TOLEDO].kt10_played = True
-    assert check_winner_details(st) == (FactionId.KABALA_TOLEDO, "kt_codex")
+    assert check_winner_details(st) == (FactionId.KORONA_BORGIOWIE if False else FactionId.KABALA_TOLEDO, "kt_codex")
     st.players[FactionId.KABALA_TOLEDO].fragments = 0
-    st.players[FactionId.KABALA_TOLEDO].kt10_played = False
 
     # GC Falls
-    st.players[FactionId.GILDIA_CIENI].falls = int(cfg_v.gildia_cieni.falls)
+    falls_5p = _v5(cfg_v.gildia_cieni.falls, 9)
+    st.players[FactionId.GILDIA_CIENI].falls = falls_5p
     assert check_winner_details(st) == (FactionId.GILDIA_CIENI, "gc_falls")
     st.players[FactionId.GILDIA_CIENI].falls = 0
-

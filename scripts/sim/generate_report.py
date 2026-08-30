@@ -52,7 +52,7 @@ def main():
 
     for sname in setups:
         setup_type = sname.split('-')[0]
-        thresh = int(getattr(CONFIG.system.accusation_threshold, setup_type, 7))
+        thresh = CONFIG.threshold_for(int(setup_type[0]))
         summary = run_batch(games=games_per_setup, setup=sname, seed=args.seed, layer="C", threshold=thresh)
         all_summaries.append(summary)
         score = calculate_setup_score(summary)

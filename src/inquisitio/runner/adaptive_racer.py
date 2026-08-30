@@ -243,7 +243,6 @@ class AdaptiveSequentialRacer:
         max_games: int = 6400,
         epsilon_indiff: float = 0.15,
         workers: int = 10,
-        accept_mode: str = "legacy",
         min_delta: float = 0.05,
     ):
         self.setups = setups
@@ -252,7 +251,6 @@ class AdaptiveSequentialRacer:
         self.max_games = max_games
         self.epsilon_indiff = epsilon_indiff
         self.workers = workers
-        self.accept_mode = accept_mode
         self.min_delta = min_delta
 
     def run_race(

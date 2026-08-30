@@ -451,7 +451,7 @@ def generate_and_save_telemetry_report(
     t0 = time.time()
     setup_data = []
     all_summaries = []
-    thresh = int(CONFIG.system.accusation_threshold)
+    thresh = CONFIG.threshold_for(4)
     ov = win_overrides or {}
 
     for sname in setups:
@@ -738,10 +738,6 @@ class Canon4PAutoBalancer:
         self._last_base_res: dict | None = None
 
         signal.signal(signal.SIGINT, self._handle_sigint)
-
-    def _accept_mode(self) -> str:
-        return "legacy"
-
     def _handle_sigint(self, signum, frame):
         print("\n\n⚠️ Otrzymano sygnał przerwania (Ctrl+C). Bezpiecznie kończę bieżącą iterację...")
         self.stop_requested = True
@@ -778,7 +774,6 @@ class Canon4PAutoBalancer:
         print(f"Zakres partii w wyścigu:    {self.args.min_games} – {self.args.max_games} gier/setup")
         print(f"Strefa Nierozróżnialności:  ε = {self.args.epsilon_indiff:.2f} pkt")
         print(f"Wątki procesora:            {self.args.workers}")
-        print(f"Tryb przyjęcia patcha:      {self._accept_mode()}")
         print(f"Archiwizacja raportów:     {REPORTS_DIR}/archive/<wersja>/")
         print("═══════════════════════════════════════════════════════════════════════\n")
 
@@ -867,7 +862,6 @@ class Canon4PAutoBalancer:
                 max_games=self.args.max_games,
                 epsilon_indiff=self.args.epsilon_indiff,
                 workers=self.args.workers,
-                accept_mode=self._accept_mode(),
                 min_delta=self.args.min_delta,
             )
 
@@ -899,20 +893,20 @@ class Canon4PAutoBalancer:
                 print(f"      • `{sname}`: {color_score(sc, bold=True)} pkt (balance {color_score(bal)})")
             print(f"   ⏱️ Średnia Er: {base_res['eras_avg']:.2f} | Deadlocks: {base_res['deadlock_pct']:.1f}% | Pas Biedy: {base_res['poverty_pct']:.1f}%")
 
-            if canon_should_stop(base_res, mode=self._accept_mode()):
+            if canon_should_stop(base_res):
                 print(f"\n🏁 Kanon 4P: {base_res['score_4p_balance']:.1f} pkt — optimum osiągnięte.")
                 break
 
             # 3. Evaluate Phase Finalists on the Mandatory 10k Ground-Truth Benchmark
             surviving_stats = [c for c in candidate_results if not c.is_pruned]
-            surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict(), mode=self._accept_mode()))
+            surviving_stats.sort(key=lambda x: rank_key(x.to_result_dict()))
             ranked_results = [c.to_result_dict() for c in surviving_stats]
 
             nominal_qualifiers = []
             for cand_stat in surviving_stats:
                 cand_res = cand_stat.to_result_dict()
                 decision = accept_candidate(
-                    base_res, cand_res, mode=self._accept_mode(), min_delta=self.args.min_delta
+                    base_res, cand_res, min_delta=self.args.min_delta
                 )
                 if decision.accepted:
                     nominal_qualifiers.append((cand_stat, cand_res, decision))
