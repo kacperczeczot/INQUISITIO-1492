@@ -174,6 +174,7 @@ def main():
     base_dict_10k = _run_full_diagnostic({}, games_per_setup=10000, seed=42)
     
     while True:
+        atomic_pool = generate_global_pool()
         print(f"\n=======================================================================")
         print(f"🔄 ITERACJA #{iteration} (Baza: {current_base_cand[1]})")
         print(f"=======================================================================")

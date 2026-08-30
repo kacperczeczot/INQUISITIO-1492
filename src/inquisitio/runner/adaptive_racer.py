@@ -31,6 +31,8 @@ from inquisitio.runner.scoring import (
 def _run_single_batch_task(task_args: tuple[int, str, int, int, str, dict | None, int]) -> tuple[int, BatchSummary]:
     """Runs a single micro-batch on a specific setup in a worker process."""
     task_idx, setup_name, seed, threshold, layer, win_overrides, games = task_args
+    from inquisitio.config import CONFIG
+    CONFIG.reload()
     summary = run_batch(
         games=games,
         setup=setup_name,

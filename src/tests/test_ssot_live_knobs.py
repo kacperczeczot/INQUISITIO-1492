@@ -18,7 +18,7 @@ def test_yaml_exposes_observed_and_income_and_no_split_zones():
 
 
 def test_observed_override_changes_autodafe_burn():
-    st = new_game(setup="4p-core", seed=1, layer="C", sys_overrides={"observed_threshold": 5})
+    st = new_game(setup="4p-core", seed=1, layer="C", sys_overrides={"threshold": 7, "observed_threshold": 5})
     assert st.observed_threshold == 5
     so = st.players[FactionId.SWIETE_OFICJUM]
     caa = st.players[FactionId.CIENIE_AL_ANDALUS]
