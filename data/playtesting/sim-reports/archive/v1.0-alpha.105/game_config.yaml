@@ -1,4 +1,4 @@
-version: v1.0-alpha.106
+version: v1.0-alpha.105
 date: '2026-08-30'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
@@ -25,7 +25,7 @@ victory:
       4p: 7
       5p: 8
     condemns:
-      3p: 2
+      3p: 3
       4p: 3
       5p: 3
   cienie_al_andalus:

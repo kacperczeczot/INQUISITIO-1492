@@ -45,7 +45,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **3** | **3** | **3** | Czysta to 0–2. Od **3** Autodafé pali na Stos (nie areszt). |
-| **Próg Oskarżenia (Krytyczna)** | **5** | **5** | **5** | Kanon 4p = **5**. Obserwowana kończy się na T−1. |
+| **Próg Oskarżenia (Krytyczna)** | **7** | **7** | **8** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **15** | **15** | **15** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
@@ -93,6 +93,21 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🟢 Patch v1.0-alpha.106 (2026-08-30) — Format 3P: SO Skazania (3p): 2 (Decyzja Projektowa)
+- **Wynik 3P:** Ręczna korekta balansu (Custom Base dla Audytora Globalnego).
+- **Modyfikacja:** `victory.swiete_oficjum.condemns.3p: 3 → 2`.
+- **Efekt:** Wymuszenie witalności ścieżki Skazań w 3P (przywrócenie podwójnej ścieżki wygranej jako opłacalnej alternatywy dla stosów). Baza dla optymalizacji globalnej kartami (L3).
+
+### 🟢 Patch v1.0-alpha.105 (2026-08-30) — Format 3P: Złoto startowe (3p): 5 (Zysk 3P Δ +6.9 pkt)
+- **Wynik 3P:** 3p **`61.1`** → **`68.0 pkt`** | Kanon 4P **`90.7`** | 5p **`88.9`** | Global **`73.5`**
+- **Modyfikacja (`L1_START_GOLD_PLUS1`):** Złoto startowe (3p): 5.
+- **Efekt:** Optymalizacja Formatu 3P (wyjątki `3p:`). Telemetria: Średnia Er 6.46, Deadlocks 0.1%, Pas Biedy 2.6%.
+
+### 🟢 Patch v1.0-alpha.104 (2026-08-30) — Format 3P: SO Stosy (3p): 6, GC Upadki (3p): 8 (Zysk 3P Δ +7.2 pkt)
+- **Wynik 3P:** 3p **`54.9`** → **`62.1 pkt`** | Kanon 4P **`90.7`** | 5p **`88.9`** | Global **`72.1`**
+- **Modyfikacja (`L2_GC_FALLS_MINUS1__L2_SO_STACKS_MINUS1`):** SO Stosy (3p): 6, GC Upadki (3p): 8.
+- **Efekt:** Optymalizacja Formatu 3P (wyjątki `3p:`). Telemetria: Średnia Er 6.62, Deadlocks 0.1%, Pas Biedy 3.3%.
 
 ### 🟢 Patch v1.0-alpha.99 (2026-08-29) — Kanon 4P: Karta `caa-01` (Przejście Podziemiami): `cost` → `1`, `heresy` → `1` + Karta `kb-08` (Przekupstwo Sędziego): `heresy` → `1`
 - **Wynik 4P:** Kanon **`94.7`** → **`93.9 pkt`** | Global **`51.2`** | 3p **`33.1`** | 5p **`25.8`**

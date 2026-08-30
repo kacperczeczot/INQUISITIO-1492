@@ -1,11 +1,8 @@
-version: v1.0-alpha.106
+version: v1.0-alpha.102
 date: '2026-08-30'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
-  start_gold:
-    3p: 5
-    4p: 4
-    5p: 4
+  start_gold: 4
   agents_per_player: 3
   hand_limit: 5
   max_eras: 15
@@ -21,7 +18,7 @@ system:
 victory:
   swiete_oficjum:
     stacks:
-      3p: 6
+      3p: 7
       4p: 7
       5p: 8
     condemns:
@@ -36,10 +33,7 @@ victory:
   kabala_toledo:
     fragments: 3
   gildia_cieni:
-    falls:
-      3p: 8
-      4p: 9
-      5p: 9
+    falls: 9
 economy:
   card_cost_offset: 0
   sig_cost_offset: 0
