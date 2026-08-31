@@ -32,10 +32,20 @@ def _pc(sec, delta: int = 0) -> str:
     """3p/4p/5p snapshot or scalar, optional ±delta on each."""
     if hasattr(sec, "__getitem__") and not isinstance(sec, (str, bytes)):
         try:
-            return f"{sec['3p'] + delta}/{sec['4p'] + delta}/{sec['5p'] + delta}"
-        except (KeyError, TypeError):
+            p3 = sec['3p']
+            if hasattr(p3, "get"):
+                p3 = p3.get('default', 6)
+            elif hasattr(p3, "__getitem__") and not isinstance(p3, (str, bytes, int)):
+                p3 = list(p3.values())[0] if hasattr(p3, "values") else p3[0]
+            p4 = sec['4p']
+            p5 = sec['5p']
+            return f"{int(p3) + delta}/{int(p4) + delta}/{int(p5) + delta}"
+        except (KeyError, TypeError, ValueError):
             pass
-    return str(int(sec) + delta)
+    try:
+        return str(int(sec) + delta)
+    except Exception:
+        return str(sec)
 
 
 def build_level1_tests():
@@ -49,9 +59,25 @@ def build_level1_tests():
         ("L1_BAZA", "Baza (Bieżące parametry systemowe)", {}),
     ]
 
+    def _get_int(obj, p_key, default_val=0):
+        if isinstance(obj, dict) or hasattr(obj, "__getitem__"):
+            try:
+                v = obj[p_key]
+                if isinstance(v, dict) or hasattr(v, "__getitem__"):
+                    if hasattr(v, "get"):
+                        return int(v.get("default", list(v.values())[0]))
+                    return int(v[0])
+                return int(v)
+            except (KeyError, TypeError, ValueError):
+                pass
+        try:
+            return int(obj)
+        except (TypeError, ValueError):
+            return default_val
+
     # --- 1. Format-specific Accusation Thresholds (3p, 4p, 5p) ---
     for p_key in ("3p", "4p", "5p"):
-        cur_t = t[p_key] if isinstance(t, dict) or hasattr(t, "__getitem__") else int(t)
+        cur_t = _get_int(t, p_key, 7)
         for d in (1, 2):
             tests.append((f"L1_THRESHOLD_{p_key.upper()}_PLUS{d}", f"Próg Oskarżenia ({p_key}): {cur_t} → {cur_t + d}", {f"threshold_{p_key}_offset": d}))
             if cur_t - d >= 6:
@@ -59,7 +85,7 @@ def build_level1_tests():
 
     # --- 2. Format-specific Starting Gold (3p, 4p, 5p) ---
     for p_key in ("3p", "4p", "5p"):
-        cur_g = g[p_key] if isinstance(g, dict) or hasattr(g, "__getitem__") else int(g)
+        cur_g = _get_int(g, p_key, 4)
         for d in (1, 2):
             tests.append((f"L1_START_GOLD_{p_key.upper()}_PLUS{d}", f"Złoto startowe ({p_key}): {cur_g}zł → {cur_g + d}zł", {f"start_gold_{p_key}_offset": d}))
             if cur_g - d >= 0:
@@ -67,7 +93,7 @@ def build_level1_tests():
 
     # --- 3. Format-specific Hand Limit (3p, 4p, 5p) ---
     for p_key in ("3p", "4p", "5p"):
-        cur_h = h[p_key] if isinstance(h, dict) or hasattr(h, "__getitem__") else int(h)
+        cur_h = _get_int(h, p_key, 5)
         tests.append((f"L1_HAND_LIMIT_{p_key.upper()}_PLUS1", f"Limit ręki ({p_key}): {cur_h} → {cur_h + 1}", {f"hand_limit_{p_key}_offset": 1}))
         if cur_h - 1 >= 2:
             tests.append((f"L1_HAND_LIMIT_{p_key.upper()}_MINUS1", f"Limit ręki ({p_key}): {cur_h} → {cur_h - 1}", {f"hand_limit_{p_key}_offset": -1}))

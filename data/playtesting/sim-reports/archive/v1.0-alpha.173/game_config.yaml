@@ -2,7 +2,10 @@ version: v1.0-alpha.173
 date: '2026-08-31'
 title: INQUISITIO-1492 — Game Balance Configuration (SSOT)
 system:
-  start_gold: 4
+  start_gold:
+    3p: 4
+    4p: 4
+    5p: 4
   agents_per_player: 3
   hand_limit: 5
   max_eras: 15

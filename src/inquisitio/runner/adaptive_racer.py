@@ -501,7 +501,12 @@ def extract_config_overrides(cfg: dict, setup_type: str = "4p") -> dict:
             return default
         if isinstance(val, dict):
             res = val.get(stype, val.get("4p", default))
-            return int(res) if res is not None else default
+            if isinstance(res, dict):
+                res = res.get("default", list(res.values())[0] if res else default)
+            try:
+                return int(res) if res is not None else default
+            except (ValueError, TypeError):
+                return default
         try:
             return int(val)
         except (ValueError, TypeError):

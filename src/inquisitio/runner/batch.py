@@ -97,17 +97,79 @@ def _run_single_game_tuple(args: tuple[str, int, int, str, dict | None]) -> dict
 import copy
 from inquisitio.config import CONFIG
 
-def resolve_format_delta_dict(delta_dict: dict, stype: str) -> dict:
+def resolve_format_delta_dict(delta_dict: dict, stype: str, setup_name: str | None = None) -> dict:
     """Filters and maps format-specific delta keys (e.g. threshold_4p_offset -> threshold_offset)
-    so they only apply to games matching that player count.
+    and contextual missing-faction keys (e.g. no_kb_threshold_offset -> threshold_offset when KB is absent)
+    so they only apply to games matching that setup/player count.
     """
     if not delta_dict:
         return {}
+    
+    from inquisitio.engine.setup import SETUP_PRESETS
+    present_factions = set(SETUP_PRESETS.get(setup_name, [])) if setup_name else set()
+    
+    MISSING_TAGS = {
+        "no_so": "swiete-oficjum",
+        "no_oficjum": "swiete-oficjum",
+        "no_caa": "cienie-al-andalus",
+        "no_cienie": "cienie-al-andalus",
+        "no_kb": "korona-borgiowie",
+        "no_korona": "korona-borgiowie",
+        "no_kt": "kabala-toledo",
+        "no_kabala": "kabala-toledo",
+        "no_gc": "gildia-cieni",
+        "no_gildia": "gildia-cieni",
+    }
+
+    WITH_TAGS = {
+        "with_so": "swiete-oficjum",
+        "has_so": "swiete-oficjum",
+        "with_caa": "cienie-al-andalus",
+        "has_caa": "cienie-al-andalus",
+        "with_kb": "korona-borgiowie",
+        "has_kb": "korona-borgiowie",
+        "with_kt": "kabala-toledo",
+        "has_kt": "kabala-toledo",
+        "with_gc": "gildia-cieni",
+        "has_gc": "gildia-cieni",
+    }
+    
     resolved = {}
     for k, v in delta_dict.items():
         if k == "card_overrides":
             resolved["card_overrides"] = copy.deepcopy(v)
-        elif "_3p_" in k or k.endswith("_3p_offset"):
+            continue
+            
+        # Check contextual missing faction tags (brak frakcji)
+        matched_tag = None
+        for tag, fid in MISSING_TAGS.items():
+            if tag in k:
+                matched_tag = (tag, fid, False)
+                break
+
+        if matched_tag is None:
+            # Check contextual presence faction tags (obecność frakcji)
+            for tag, fid in WITH_TAGS.items():
+                if tag in k:
+                    matched_tag = (tag, fid, True)
+                    break
+                
+        if matched_tag is not None:
+            tag, fid, must_be_present = matched_tag
+            if setup_name:
+                is_present = fid in present_factions
+                if must_be_present and not is_present:
+                    continue  # Faction absent, skip with_ rule
+                if not must_be_present and is_present:
+                    continue  # Faction present, skip no_ rule
+            # Strip format and tag prefixes
+            clean_k = k.replace("_3p_", "_").replace("3p_", "").replace("_4p_", "_").replace("4p_", "")
+            clean_k = clean_k.replace(f"{tag}_", "").replace(f"_{tag}", "")
+            clean_k = clean_k.replace("_3p_offset", "_offset").replace("_4p_offset", "_offset").replace("_5p_offset", "_offset")
+            resolved[clean_k] = v
+            continue
+
+        if "_3p_" in k or k.endswith("_3p_offset"):
             if stype == "3p":
                 base_k = k.replace("_3p_", "_").replace("_3p_offset", "_offset")
                 resolved[base_k] = v
@@ -164,7 +226,7 @@ def run_batch(
     if win_overrides is None:
         effective_overrides = active_overrides
     else:
-        resolved_win = resolve_format_delta_dict(win_overrides, stype)
+        resolved_win = resolve_format_delta_dict(win_overrides, stype, setup_name=setup_name)
         effective_overrides = merge_override_dicts(active_overrides, resolved_win)
 
     if _HAS_NATIVE and inquisitio_native is not None:

@@ -134,10 +134,10 @@ Kart: **12**
 | `faction` | swiete-oficjum |
 | `type` | akcja |
 | `layer` | A |
-| `cost_gold` | 1 |
+| `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | — |
-| `effect` | Wykonaj Przesłuchanie na aresztowanego Agenta rywala. Limit: 1 / gracza / Erę. |
+| `effect` | Wykonaj Przesłuchanie na aresztowanego Agenta rywala. Zyskaj 1 złoto. Limit: 1 / gracza / Erę. |
 | `lore` | W kamiennych podziemiach trybunału milczenie jest tylko chwilową iluzją przed nieuchronnym wyznaniem. |
 | `tags` | interrogation |
 | `status` | prototyp |
@@ -220,7 +220,7 @@ Kart: **12**
 | `type` | akcja |
 | `layer` | A |
 | `cost_gold` | 1 |
-| `heresy` | 3 |
+| `heresy` | 2 |
 | `heresy_text` | — |
 | `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. Wskaż rywala: +1 Herezja. |
 | `lore` | Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed oblicze sprawiedliwości. |
@@ -245,7 +245,7 @@ Kart: **12**
 | `cost_gold` | 0 |
 | `heresy` | 0 |
 | `heresy_text` | Tunele starej Toledo znane tylko wtajemniczonym w bractwie. |
-| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 1 złoto. |
+| `effect` | Przesuń swojego Agenta o 1 lokację. Zyskaj 2 złota. |
 | `lore` | Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów. |
 | `tags` | move, relic |
 | `status` | prototyp |

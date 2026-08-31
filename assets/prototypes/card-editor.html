@@ -1086,7 +1086,7 @@
             </div>
             <div class="card-footer-meta">
               <span id="prev-meta-id">SO-08</span>
-              <span id="prev-meta-ver">v1.0-alpha.170</span>
+              <span id="prev-meta-ver">v1.0-alpha.173</span>
             </div>
           </div>
         </div>
@@ -1213,7 +1213,7 @@
   "so-07": {
     "name": "Przesłuchanie Oficjum",
     "type": "akcja",
-    "cost": 1,
+    "cost": 0,
     "interrogate": true,
     "action": "interrogate",
     "target_loc": "dungeon",
@@ -1221,6 +1221,7 @@
     "tags": [
       "interrogation"
     ],
+    "gold": 1,
     "lore": "W kamiennych podziemiach trybunału milczenie jest tylko chwilową iluzją przed nieuchronnym wyznaniem."
   },
   "so-08": {
@@ -1293,7 +1294,7 @@
       "gold"
     ],
     "target_heresy": 1,
-    "heresy": 3,
+    "heresy": 2,
     "lore": "Zbrojna straż w żelaznych pancerzach pilnuje, by żaden heretyk nie zbiegł przed oblicze sprawiedliwości."
   },
   "caa-01": {
@@ -1307,7 +1308,7 @@
       "relic"
     ],
     "heresy": 0,
-    "gold": 1,
+    "gold": 2,
     "heresy_text": "Tunele starej Toledo znane tylko wtajemniczonym w bractwie.",
     "lore": "Podziemne akwedukty Maurów wciąż łączą pałace z ruinami dawnych meczetów."
   },
@@ -2336,7 +2337,7 @@
 
       document.getElementById('prev-lore').textContent = lore;
       document.getElementById('prev-meta-id').textContent = (cid || 'NOWA').toUpperCase();
-      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.170';
+      document.getElementById('prev-meta-ver').textContent = 'v1.0-alpha.173';
 
       // Generate YAML Snippet for game_config.yaml
       let yamlStr = `  ${cid}:\n`;

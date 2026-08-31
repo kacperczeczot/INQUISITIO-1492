@@ -45,7 +45,7 @@ Wszystkie wartości balansu są zsynchronizowane centralnie z pliku [`game_confi
 | Parametr Systemowy | 3 Graczy (3p) | 4 Graczy (4p) | 5 Graczy (5p Full) | Uzasadnienie Analityczne |
 | :--- | :---: | :---: | :---: | :--- |
 | **Próg Obserwowanej** | **3** | **3** | **3** | Czysta to 0–2. Od **3** Autodafé pali na Stos (nie areszt). |
-| **Próg Oskarżenia (Krytyczna)** | **6** | **7** | **8** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
+| **Próg Oskarżenia (Krytyczna)** | **{'default': 6, 'no_gc': 7}** | **7** | **8** | Kanon 4p = **7**. Obserwowana kończy się na T−1. |
 | **Maksymalna Liczba Er** | **15** | **15** | **15** | Zegar talii Kroniki Dziejów (11 kart edyktów czasu); tiebreak po wyczerpaniu talii. |
 | **Cooldown Autodafé** | **3 Ery** | **3 Ery** | **3 Ery** | Zunifikowany cooldown co 3 Ery (pierwsze możliwe od Ery 3). |
 | **Przebieg Ery (Rundy Kart)** | **2 Rundy** | **2 Rundy** | **2 Rundy** | 2 akcje/erę (karta **lub** Gospodarcza). |
@@ -93,6 +93,27 @@ Wszystkie ścieżki zwycięstwa są zunifikowane do wartości bazowych Kanonu 4P
 ---
 
 ## 📜 Chronologiczna Historia Zmian Balansu (Faza Prototypowa — Patch Notes)
+
+### 🌐 Patch v1.0-alpha.173 (2026-08-31) — Global Auditor: Karta `so-12` (Straż Trybunalska): `heresy` → `2` (Zysk Global Δ +0.2 pkt)
+- **Modyfikacja:** `BAZA__L3_SO-12_HERESY_MINUS1` -> Karta `so-12` (Straż Trybunalska): `heresy` → `2`
+- **Wynik Globalny:** 86.9 → **87.1**
+- **Balans 4P:** 90.7 → 91.0
+- **Balans 3P:** 72.5 → 72.1
+- **Balans 5P:** 97.5 → 98.3
+
+### 🌐 Patch v1.0-alpha.172 (2026-08-31) — Global Auditor: Karta `so-07` (Przesłuchanie Oficjum): `cost` → `0` + Karta `so-07` (Przesłuchanie Oficjum): `gold` → `1` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_SO-07_C0_G1` -> Karta `so-07` (Przesłuchanie Oficjum): `cost` → `0` + Karta `so-07` (Przesłuchanie Oficjum): `gold` → `1`
+- **Wynik Globalny:** 86.8 → **86.9**
+- **Balans 4P:** 90.4 → 90.7
+- **Balans 3P:** 72.2 → 72.5
+- **Balans 5P:** 97.8 → 97.5
+
+### 🌐 Patch v1.0-alpha.171 (2026-08-31) — Global Auditor: Karta `caa-01` (Przejście Podziemiami): `cost` → `0` + Karta `caa-01` (Przejście Podziemiami): `gold` → `2` (Zysk Global Δ +0.1 pkt)
+- **Modyfikacja:** `BAZA__L3_CAA-01_C0_G2` -> Karta `caa-01` (Przejście Podziemiami): `cost` → `0` + Karta `caa-01` (Przejście Podziemiami): `gold` → `2`
+- **Wynik Globalny:** 86.7 → **86.8**
+- **Balans 4P:** 90.6 → 90.4
+- **Balans 3P:** 72.3 → 72.2
+- **Balans 5P:** 97.2 → 97.8
 
 ### 🌐 Patch v1.0-alpha.170 (2026-08-30) — Przywrócenie kanonicznych progów oskarżenia (3p: 6, 4p: 7, 5p: 8)
 - **Modyfikacja:** Przywrócenie organicznej fizyki stołu i kanonicznych progów oskarżenia zgodnie z Konstytucją ADR i Hierarchią Balansowania.

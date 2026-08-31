@@ -29,38 +29,50 @@ def load_config() -> dict:
         return yaml.safe_load(f)
 
 
+def _u(val: Any) -> Any:
+    if isinstance(val, dict):
+        return val.get("default", list(val.values())[0] if val else 0)
+    return val
+
+
 def _threshold_text(cfg: dict) -> str:
     t = cfg["system"]["accusation_threshold"]
     if isinstance(t, dict):
-        return f"**{t.get('4p', 7)}**"
+        return f"**{_u(t.get('4p', 7))}**"
     return f"**{t}**"
 
 
 def _stacks_text(cfg: dict) -> str:
     s = cfg["victory"]["swiete_oficjum"]["stacks"]
     if isinstance(s, dict):
-        return f"**{s['3p']} Stosy**@3p / **{s['4p']} Stosy**@4–5p"
+        s_3p = _u(s.get("3p", 6))
+        s_4p = _u(s.get("4p", 7))
+        return f"**{s_3p} Stosy**@3p / **{s_4p} Stosy**@4–5p"
     return f"**{s} Stosy**"
 
 
 def _condemns_text(cfg: dict) -> str:
     c = cfg["victory"]["swiete_oficjum"]["condemns"]
     if isinstance(c, dict):
-        if c["3p"] == c["4p"] == c["5p"]:
-            return f"**{c['3p']}** Skazania"
-        return f"**{c['3p']}** przy 3p, **{c['4p']}** przy 4–5p"
+        c_3p = _u(c.get("3p", 2))
+        c_4p = _u(c.get("4p", 3))
+        c_5p = _u(c.get("5p", 3))
+        if c_3p == c_4p == c_5p:
+            return f"**{c_3p}** Skazania"
+        return f"**{c_3p}** przy 3p, **{c_4p}** przy 4–5p"
     return f"**{c} Skazania**"
 
 
 def _relics_text(cfg: dict) -> str:
     r = cfg["victory"]["cienie_al_andalus"]["relics"]
-    return f"**{r} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski)"
+    r_val = _u(r.get("4p", 2)) if isinstance(r, dict) else r
+    return f"**{r_val} Relikwie** + ścieżka (Marionetka / cichy exit / szlak morski)"
 
 
 def _korona_text(cfg: dict) -> str:
     kb = cfg["victory"]["korona_borgiowie"]
     d = kb["decrees"]
-    d_val = d["3p"] if isinstance(d, dict) else d
+    d_val = _u(d["3p"]) if isinstance(d, dict) else d
     return f"**{d_val}** Dekrety"
 
 

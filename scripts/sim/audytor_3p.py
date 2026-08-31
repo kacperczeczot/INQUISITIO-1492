@@ -105,7 +105,7 @@ def _run_full_diagnostic(raw_cfg: dict, delta_params: dict | None = None, games_
 
 
 def generate_all_atomic_candidates_3p() -> list[tuple[str, str, dict]]:
-    """L1/L2/L4 for 3P exceptions (table-wide L3 cards are fixed by 4P canon)."""
+    """L1/L2/L4 for 3P exceptions + Contextual L2 rules per missing faction."""
     tests = []
     for builder, baza in (
         (audit_level1.build_level1_tests, "L1_BAZA"),
@@ -118,6 +118,41 @@ def generate_all_atomic_candidates_3p() -> list[tuple[str, str, dict]]:
             cleaned = strip_table_wide_canon_params(p)
             if cleaned:
                 tests.append((tid, tname, cleaned))
+
+    # Contextual L2 rules per missing faction AND per present faction (all except missing) in 3P
+    CONTEXTUAL_MODES = [
+        ("no_so", "Brak Świętego Oficjum (setupy bez SO)"),
+        ("no_kb", "Brak Korony Borgiów (setupy bez KB)"),
+        ("no_gc", "Brak Gildii Cieni (setupy bez GC)"),
+        ("no_caa", "Brak Cieni Al-Andalus (setupy bez CAA)"),
+        ("no_kt", "Brak Kabały Toledo (setupy bez KT)"),
+        ("with_so", "Obecność Świętego Oficjum (wszystkie oprócz braku SO)"),
+        ("with_kb", "Obecność Korony Borgiów (wszystkie oprócz braku KB)"),
+        ("with_gc", "Obecność Gildii Cieni (wszystkie oprócz braku GC)"),
+        ("with_caa", "Obecność Cieni Al-Andalus (wszystkie oprócz braku CAA)"),
+        ("with_kt", "Obecność Kabały Toledo (wszystkie oprócz braku KT)"),
+    ]
+
+    L2_KNOBS = [
+        ("threshold_offset", "Próg oskarżenia", [-1, 1]),
+        ("start_gold_offset", "Złoto startowe", [-1, 1]),
+        ("so_stacks_offset", "SO Stosy", [-1, 1, 2]),
+        ("so_condemns_offset", "SO Skazania", [-1]),
+        ("gc_falls_offset", "GC Upadki", [-2, -1, 1, 2]),
+        ("kb_decrees_offset", "KB Dekrety", [-1, 1]),
+        ("kt_frags_offset", "KT Fragmenty", [-1, 1]),
+        ("caa_relics_offset", "CAA Relikwie", [-1, 1]),
+        ("cooldown_offset", "Autodafe Cooldown", [-1, 1]),
+    ]
+
+    for tag, tag_name in CONTEXTUAL_MODES:
+        for knob_key, knob_name, deltas in L2_KNOBS:
+            for d in deltas:
+                c_key = f"{tag}_{knob_key}"
+                sign = f"+{d}" if d > 0 else f"{d}"
+                tid = f"3P_CTX_{tag.upper()}_{knob_key.upper()}_{sign}"
+                tname = f"[3P Reguła 1D: {tag_name}] {knob_name} {sign}"
+                tests.append((tid, tname, {c_key: d}))
 
     seen = set()
     out = []
@@ -134,45 +169,87 @@ def apply_mutation_to_3p_config(raw_cfg: dict[str, Any], rule_params: dict[str, 
     rule_params = strip_table_wide_canon_params(rule_params)
     descs = []
 
-    def _set_3p(section_dict: dict, key: str, default_val: Any, offset: Any, desc_name: str):
+    def _set_3p(section_dict: dict, key: str, default_val: Any, offset: Any, desc_name: str, ctx_tag: str | None = None):
         if offset is None:
             return
         off = int(offset)
         cur = section_dict.get(key, default_val)
+        
+        # Mapping from with_ tag to canonical no_ tag
+        WITH_TO_NO = {
+            "with_so": "no_so", "has_so": "no_so",
+            "with_caa": "no_caa", "has_caa": "no_caa",
+            "with_kb": "no_kb", "has_kb": "no_kb",
+            "with_kt": "no_kt", "has_kt": "no_kt",
+            "with_gc": "no_gc", "has_gc": "no_gc",
+        }
+        
+        is_with = ctx_tag in WITH_TO_NO if ctx_tag else False
+        canonical_no_tag = WITH_TO_NO.get(ctx_tag) if is_with else ctx_tag
+
         if isinstance(cur, dict):
             val_cand = cur.get("3p", cur.get("4p", default_val))
-            base_v = int(val_cand) if val_cand is not None else int(default_val)
-            new_v = max(1, base_v + off)
-            cur["3p"] = new_v
+            if isinstance(val_cand, dict):
+                base_v = int(val_cand.get("default", default_val))
+                if is_with:
+                    # with_X: new default is base_v + off, and no_X retains base_v
+                    val_cand["default"] = max(1, base_v + off)
+                    val_cand[canonical_no_tag] = base_v
+                elif ctx_tag:
+                    val_cand[ctx_tag] = max(1, base_v + off)
+                else:
+                    val_cand["default"] = max(1, base_v + off)
+            else:
+                base_v = int(val_cand) if val_cand is not None else int(default_val)
+                new_v = max(1, base_v + off)
+                if is_with:
+                    cur["3p"] = {"default": new_v, canonical_no_tag: base_v}
+                elif ctx_tag:
+                    cur["3p"] = {"default": base_v, ctx_tag: new_v}
+                else:
+                    cur["3p"] = new_v
         else:
             base_v = int(cur) if cur is not None else int(default_val)
             new_v = max(1, base_v + off)
-            section_dict[key] = {"3p": new_v, "4p": cur, "5p": cur}
-        descs.append(f"{desc_name} (3p): {new_v}")
+            if is_with:
+                section_dict[key] = {"3p": {"default": new_v, canonical_no_tag: base_v}, "4p": cur, "5p": cur}
+            elif ctx_tag:
+                section_dict[key] = {"3p": {"default": base_v, ctx_tag: new_v}, "4p": cur, "5p": cur}
+            else:
+                section_dict[key] = {"3p": new_v, "4p": cur, "5p": cur}
+        ctx_info = f" ({canonical_no_tag})" if canonical_no_tag else ""
+        descs.append(f"{desc_name} (3p{ctx_info}): {new_v}")
 
-    # L1
-    if "start_gold_offset" in rule_params:
-        _set_3p(cfg.setdefault("system", {}), "start_gold", 4, rule_params["start_gold_offset"], "Złoto startowe")
-    if "threshold_offset" in rule_params:
-        _set_3p(cfg.setdefault("system", {}), "accusation_threshold", 6, rule_params["threshold_offset"], "Próg oskarżenia")
+    for k, v in rule_params.items():
+        ctx_tag = None
+        for tag in [
+            "no_so", "no_oficjum", "no_caa", "no_cienie", "no_kb", "no_korona", "no_kt", "no_kabala", "no_gc", "no_gildia",
+            "with_so", "has_so", "with_caa", "has_caa", "with_kb", "has_kb", "with_kt", "has_kt", "with_gc", "has_gc"
+        ]:
+            if tag in k:
+                ctx_tag = tag
+                break
+        
+        base_k = k.replace(f"{ctx_tag}_", "") if ctx_tag else k
 
-    # L2
-    vic = cfg.setdefault("victory", {})
-    if "so_stacks_offset" in rule_params:
-        _set_3p(vic.setdefault("swiete_oficjum", {}), "stacks", 5, rule_params["so_stacks_offset"], "SO Stosy")
-    if "so_condemns_offset" in rule_params:
-        _set_3p(vic.setdefault("swiete_oficjum", {}), "condemns", 2, rule_params["so_condemns_offset"], "SO Skazania")
-    if "caa_relics_offset" in rule_params:
-        _set_3p(vic.setdefault("cienie_al_andalus", {}), "relics", 2, rule_params["caa_relics_offset"], "CAA Relikwie")
-    if "kb_decrees_offset" in rule_params:
-        _set_3p(vic.setdefault("korona_borgiowie", {}), "decrees", 2, rule_params["kb_decrees_offset"], "KB Dekrety")
-    if "kt_frags_offset" in rule_params:
-        _set_3p(vic.setdefault("kabala_toledo", {}), "fragments", 3, rule_params["kt_frags_offset"], "KT Fragmenty")
-    if "kt_era_offset" in rule_params:
-        _set_3p(vic.setdefault("kabala_toledo", {}), "era", 6, rule_params["kt_era_offset"], "KT Era")
-    if "gc_falls_default_offset" in rule_params or "gc_falls_offset" in rule_params:
-        off = rule_params.get("gc_falls_offset", rule_params.get("gc_falls_default_offset", 0))
-        _set_3p(vic.setdefault("gildia_cieni", {}), "falls", 4, off, "GC Upadki")
+        if base_k == "start_gold_offset":
+            _set_3p(cfg.setdefault("system", {}), "start_gold", 4, v, "Złoto startowe", ctx_tag)
+        elif base_k == "threshold_offset":
+            _set_3p(cfg.setdefault("system", {}), "accusation_threshold", 6, v, "Próg oskarżenia", ctx_tag)
+        elif base_k == "so_stacks_offset":
+            _set_3p(cfg.setdefault("victory", {}).setdefault("swiete_oficjum", {}), "stacks", 6, v, "SO Stosy", ctx_tag)
+        elif base_k == "so_condemns_offset":
+            _set_3p(cfg.setdefault("victory", {}).setdefault("swiete_oficjum", {}), "condemns", 2, v, "SO Skazania", ctx_tag)
+        elif base_k == "caa_relics_offset":
+            _set_3p(cfg.setdefault("victory", {}).setdefault("cienie_al_andalus", {}), "relics", 2, v, "CAA Relikwie", ctx_tag)
+        elif base_k == "kb_decrees_offset":
+            _set_3p(cfg.setdefault("victory", {}).setdefault("korona_borgiowie", {}), "decrees", 2, v, "KB Dekrety", ctx_tag)
+        elif base_k == "kb_hooks_offset":
+            _set_3p(cfg.setdefault("victory", {}).setdefault("korona_borgiowie", {}), "hooks", 2, v, "KB Haki", ctx_tag)
+        elif base_k == "kt_frags_offset":
+            _set_3p(cfg.setdefault("victory", {}).setdefault("kabala_toledo", {}), "fragments", 3, v, "KT Fragmenty", ctx_tag)
+        elif base_k in ("gc_falls_offset", "gc_falls_default_offset"):
+            _set_3p(cfg.setdefault("victory", {}).setdefault("gildia_cieni", {}), "falls", 8, v, "GC Upadki", ctx_tag)
 
     desc = ", ".join(descs) if descs else "Modyfikacja parametrów 3P"
     return cfg, desc

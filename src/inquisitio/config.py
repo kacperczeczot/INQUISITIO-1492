@@ -55,6 +55,24 @@ class _Section:
             return _Section(val)
         return val
 
+    def keys(self):
+        return self._data.keys()
+
+    def values(self):
+        return self._data.values()
+
+    def items(self):
+        return self._data.items()
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self) -> int:
+        return len(self._data)
+
+    def __contains__(self, key: str) -> bool:
+        return key in self._data
+
     def raw(self) -> dict[str, Any]:
         """Return the underlying raw dict."""
         return self._data
@@ -92,7 +110,10 @@ class GameConfig:
 
         def _get_p_val(val: Any, p_key: str, default: int = 0) -> int:
             if isinstance(val, dict):
-                return int(val.get(p_key, val.get("4p", default)))
+                v_format = val.get(p_key, val.get("4p", default))
+                if isinstance(v_format, dict):
+                    return int(v_format.get("default", list(v_format.values())[0] if v_format else default))
+                return int(v_format)
             if val is None:
                 return default
             return int(val)
@@ -102,11 +123,24 @@ class GameConfig:
         condemns = so.get("condemns")
         if condemns is not None:
             for p_count, p_key in [(3, "3p"), (4, "4p"), (5, "5p")]:
-                c_val = _get_p_val(condemns, p_key, 3)
                 max_rivals = p_count - 1
-                if c_val > max_rivals:
+                if isinstance(condemns, dict):
+                    v_p = condemns.get(p_key, condemns.get("4p", 3))
+                    if isinstance(v_p, dict):
+                        for sub_k, sub_v in v_p.items():
+                            if int(sub_v) > max_rivals:
+                                raise ConfigValidationError(
+                                    f"Fizyczna niemożliwość: 'condemns.{p_key}.{sub_k}' ({sub_v}) "
+                                    f"przekracza maksymalną liczbę rywali przy stole ({max_rivals})!"
+                                )
+                    elif int(v_p) > max_rivals:
+                        raise ConfigValidationError(
+                            f"Fizyczna niemożliwość: 'condemns' ({v_p}) dla formatu {p_key} "
+                            f"przekracza maksymalną liczbę rywali przy stole ({max_rivals})!"
+                        )
+                elif int(condemns) > max_rivals:
                     raise ConfigValidationError(
-                        f"Fizyczna niemożliwość: 'condemns' ({c_val}) dla formatu {p_key} "
+                        f"Fizyczna niemożliwość: 'condemns' ({condemns}) dla formatu {p_key} "
                         f"przekracza maksymalną liczbę rywali przy stole ({max_rivals})!"
                     )
 
@@ -163,7 +197,10 @@ class GameConfig:
             return int(t)
         if isinstance(t, dict):
             key = f"{n_players}p"
-            return int(t.get(key, t.get("4p", 7)))
+            v = t.get(key, t.get("4p", 7))
+            if isinstance(v, dict):
+                return int(v.get("default", list(v.values())[0] if v else 7))
+            return int(v)
         return int(t)
 
     def observed_threshold(self) -> int:
@@ -182,7 +219,10 @@ class GameConfig:
         sg = self.system.start_gold
         if isinstance(sg, (_Section, dict)):
             key = f"{n_players}p"
-            return sg[key]
+            v = sg.get(key, sg.get("4p", 4)) if isinstance(sg, dict) else sg[key]
+            if isinstance(v, dict):
+                return int(v.get("default", list(v.values())[0] if v else 4))
+            return int(v)
         return int(sg)
 
     def hand_limit_for(self, n_players: int) -> int:
@@ -190,7 +230,10 @@ class GameConfig:
         hl = self.system.hand_limit
         if isinstance(hl, (_Section, dict)):
             key = f"{n_players}p"
-            return hl[key]
+            v = hl.get(key, hl.get("4p", 5)) if isinstance(hl, dict) else hl[key]
+            if isinstance(v, dict):
+                return int(v.get("default", list(v.values())[0] if v else 5))
+            return int(v)
         return int(hl)
 
     def victory_raw(self) -> dict[str, Any]:
@@ -201,7 +244,7 @@ class GameConfig:
         """Full raw dict."""
         return self._raw
 
-    def get_active_overrides(self, setup_type: str = "4p") -> dict:
+    def get_active_overrides(self, setup_type: str = "4p", setup_name: str | None = None) -> dict:
         """Returns overrides relative to the C++ hardcoded baseline snapshot."""
         ov = {}
         cards = self._raw.get("cards", {})
@@ -218,9 +261,35 @@ class GameConfig:
         if card_ov:
             ov["card_overrides"] = card_ov
 
+        from inquisitio.engine.setup import SETUP_PRESETS
+        present_factions = set(SETUP_PRESETS.get(setup_name, [])) if setup_name else set()
+
         def _get_val(val, stype):
             if isinstance(val, dict):
-                return val.get(stype, val.get("4p", 0))
+                v_format = val.get(stype, val.get("4p", 0))
+                if isinstance(v_format, dict):
+                    MISSING_TAGS = {
+                        "no_so": "swiete-oficjum", "no_oficjum": "swiete-oficjum",
+                        "no_caa": "cienie-al-andalus", "no_cienie": "cienie-al-andalus",
+                        "no_kb": "korona-borgiowie", "no_korona": "korona-borgiowie",
+                        "no_kt": "kabala-toledo", "no_kabala": "kabala-toledo",
+                        "no_gc": "gildia-cieni", "no_gildia": "gildia-cieni",
+                    }
+                    WITH_TAGS = {
+                        "with_so": "swiete-oficjum", "has_so": "swiete-oficjum",
+                        "with_caa": "cienie-al-andalus", "has_caa": "cienie-al-andalus",
+                        "with_kb": "korona-borgiowie", "has_kb": "korona-borgiowie",
+                        "with_kt": "kabala-toledo", "has_kt": "kabala-toledo",
+                        "with_gc": "gildia-cieni", "has_gc": "gildia-cieni",
+                    }
+                    for tag, fid in MISSING_TAGS.items():
+                        if tag in v_format and fid not in present_factions:
+                            return v_format[tag]
+                    for tag, fid in WITH_TAGS.items():
+                        if tag in v_format and fid in present_factions:
+                            return v_format[tag]
+                    return v_format.get("default", list(v_format.values())[0] if v_format else 0)
+                return v_format
             return val
 
         vic = self._raw.get("victory", {})

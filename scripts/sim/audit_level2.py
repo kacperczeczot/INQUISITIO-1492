@@ -55,10 +55,18 @@ def build_level2_tests():
     def _get_val(obj, p_key, default_val=1):
         if isinstance(obj, dict) or hasattr(obj, "__getitem__"):
             try:
-                return int(obj[p_key])
-            except (KeyError, TypeError):
+                v = obj[p_key]
+                if isinstance(v, dict) or hasattr(v, "__getitem__"):
+                    if hasattr(v, "get"):
+                        return int(v.get("default", list(v.values())[0]))
+                    return int(v[0])
+                return int(v)
+            except (KeyError, TypeError, ValueError):
                 pass
-        return int(obj) if obj is not None else default_val
+        try:
+            return int(obj)
+        except (TypeError, ValueError):
+            return default_val
 
     # --- 1. Święte Oficjum: Stosy & Skazania (3p, 4p, 5p) ---
     for p_key in ("3p", "4p", "5p"):
